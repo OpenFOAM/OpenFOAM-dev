@@ -35,175 +35,200 @@ const Foam::dimensionSet Foam::dimensions::invalid
 
 const Foam::dimensionSet Foam::dimensions::dimless(0, 0, 0, 0, 0, 0, 0);
 
-const Foam::dimensionSet Foam::dimensions::mass(1, 0, 0, 0, 0, 0, 0);
-const Foam::dimensionSet Foam::dimensions::length(0, 1, 0, 0, 0, 0, 0);
-const Foam::dimensionSet Foam::dimensions::time(0, 0, 1, 0, 0, 0, 0);
-const Foam::dimensionSet Foam::dimensions::temperature(0, 0, 0, 1, 0, 0, 0);
-const Foam::dimensionSet Foam::dimensions::moles(0, 0, 0, 0, 1, 0, 0);
-const Foam::dimensionSet Foam::dimensions::current(0, 0, 0, 0, 0, 1, 0);
+Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table;
+
+const Foam::dimensionSet Foam::dimensions::mass
+(
+    Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::MASS],
+    1, 0, 0, 0, 0, 0, 0
+);
+
+const Foam::dimensionSet Foam::dimensions::length
+(
+    Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::LENGTH],
+    0, 1, 0, 0, 0, 0, 0
+);
+
+const Foam::dimensionSet Foam::dimensions::time
+(
+    Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::TIME],
+    0, 0, 1, 0, 0, 0, 0
+);
+
+const Foam::dimensionSet Foam::dimensions::temperature
+(
+    Foam::dimensionSet::dimensionTypeNames_ [Foam::dimensionSet::TEMPERATURE],
+    0, 0, 0, 1, 0, 0, 0
+);
+
+const Foam::dimensionSet Foam::dimensions::moles
+(
+    Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::MOLES],
+    0, 0, 0, 0, 1, 0, 0
+);
+
+const Foam::dimensionSet Foam::dimensions::current
+(
+    Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::CURRENT],
+    0, 0, 0, 0, 0, 1, 0
+);
+
 const Foam::dimensionSet Foam::dimensions::luminousIntensity
 (
+    Foam::dimensionSet::dimensionTypeNames_
+    [
+        Foam::dimensionSet::LUMINOUS_INTENSITY
+    ],
     0, 0, 0, 0, 0, 0, 1
 );
 
-const Foam::dimensionSet Foam::dimensions::area(sqr(length));
-const Foam::dimensionSet Foam::dimensions::volume(pow3(length));
+const Foam::dimensionSet Foam::dimensions::area("area", sqr(length));
+const Foam::dimensionSet Foam::dimensions::volume("volume", pow3(length));
 
-const Foam::dimensionSet Foam::dimensions::rate(dimless/time);
+const Foam::dimensionSet Foam::dimensions::rate("rate", dimless/time);
 
-const Foam::dimensionSet Foam::dimensions::velocity(length/time);
-const Foam::dimensionSet Foam::dimensions::momentum(mass*velocity);
-const Foam::dimensionSet Foam::dimensions::acceleration(velocity/time);
+const Foam::dimensionSet Foam::dimensions::velocity("velocity", length/time);
+const Foam::dimensionSet Foam::dimensions::momentum("momentum", mass*velocity);
+const Foam::dimensionSet Foam::dimensions::acceleration
+(
+    "acceleration",
+    velocity/time
+);
 
-const Foam::dimensionSet Foam::dimensions::density(mass/volume);
-const Foam::dimensionSet Foam::dimensions::momentumDensity(momentum/volume);
-const Foam::dimensionSet Foam::dimensions::force(mass*acceleration);
-const Foam::dimensionSet Foam::dimensions::energy(force*length);
-const Foam::dimensionSet Foam::dimensions::kineticEnergy(energy);
+const Foam::dimensionSet Foam::dimensions::density("density", mass/volume);
+const Foam::dimensionSet Foam::dimensions::momentumDensity
+(
+    "momentumDensity",
+    momentum/volume
+);
+const Foam::dimensionSet Foam::dimensions::force("force", mass*acceleration);
+const Foam::dimensionSet Foam::dimensions::energy("energy", force*length);
+const Foam::dimensionSet Foam::dimensions::kineticEnergy
+(
+    "kineticEnergy",
+    energy
+);
 const Foam::dimensionSet Foam::dimensions::kineticEnergyDensity
 (
+    "kineticEnergyDensity",
     kineticEnergy/volume
 );
-const Foam::dimensionSet Foam::dimensions::power(energy/time);
+const Foam::dimensionSet Foam::dimensions::power("power", energy/time);
 
-const Foam::dimensionSet Foam::dimensions::pressure(force/area);
-const Foam::dimensionSet Foam::dimensions::kinematicPressure(pressure/density);
-const Foam::dimensionSet Foam::dimensions::compressibility(density/pressure);
+const Foam::dimensionSet Foam::dimensions::pressure("pressure", force/area);
+const Foam::dimensionSet Foam::dimensions::kinematicPressure
+(
+    "kinematicPressure",
+    pressure/density
+);
+const Foam::dimensionSet Foam::dimensions::compressibility
+(
+    "compressibility",
+    density/pressure
+);
 
-const Foam::dimensionSet Foam::dimensions::gasConstant(energy/mass/temperature);
-const Foam::dimensionSet Foam::dimensions::specificHeatCapacity(gasConstant);
+const Foam::dimensionSet Foam::dimensions::gasConstant
+(
+    "gasConstant",
+    energy/mass/temperature
+);
+const Foam::dimensionSet Foam::dimensions::specificHeatCapacity
+(
+    "specificHeatCapacity",
+    gasConstant
+);
 
-const Foam::dimensionSet Foam::dimensions::kinematicViscosity(area/time);
+const Foam::dimensionSet Foam::dimensions::kinematicViscosity
+(
+    "kinematicViscosity",
+    area/time
+);
 const Foam::dimensionSet Foam::dimensions::dynamicViscosity
 (
+    "dynamicViscosity",
     density*kinematicViscosity
 );
 const Foam::dimensionSet Foam::dimensions::thermalConductivity
 (
+    "thermalConductivity",
     power/length/temperature
 );
 const Foam::dimensionSet Foam::dimensions::dynamicDiffusivity
 (
+    "dynamicDiffusivity",
     dynamicViscosity
 );
 
 const Foam::dimensionSet Foam::dimensions::turbulentKineticEnergy
 (
+    "turbulentKineticEnergy",
     sqr(velocity)
 );
 const Foam::dimensionSet Foam::dimensions::kinematicStress
 (
+    "kinematicStress",
     turbulentKineticEnergy
 );
 const Foam::dimensionSet Foam::dimensions::ReynoldsStress
 (
+    "ReynoldsStress",
     kinematicStress
 );
 const Foam::dimensionSet Foam::dimensions::turbulentEpsilon
 (
+    "turbulentEpsilon",
     turbulentKineticEnergy/time
 );
 const Foam::dimensionSet Foam::dimensions::turbulentOmega
 (
+    "turbulentOmega",
     rate
 );
 const Foam::dimensionSet Foam::dimensions::turbulentViscosity
 (
+    "turbulentViscosity",
     kinematicViscosity
 );
 
-const Foam::dimensionSet Foam::dimensions::volumetricFlux(area*velocity);
-const Foam::dimensionSet Foam::dimensions::massFlux(density*volumetricFlux);
-const Foam::dimensionSet Foam::dimensions::heatFlux(power/area);
+const Foam::dimensionSet Foam::dimensions::volumetricFlux
+(
+    "volumetricFlux",
+    area*velocity
+);
+const Foam::dimensionSet Foam::dimensions::massFlux
+(
+    "massFlux",
+    density*volumetricFlux
+);
+const Foam::dimensionSet Foam::dimensions::heatFlux("heatFlux", power/area);
+
+const Foam::dimensionSet Foam::dimensions::charge
+(
+    "charge",
+    current*time
+);
+const Foam::dimensionSet Foam::dimensions::chargeDensity
+(
+    "chargeDensity",
+    charge/volume
+);
+const Foam::dimensionSet Foam::dimensions::electricPotential
+(
+    "electricPotential",
+    power/current
+);
 
 const Foam::dimensionSet Foam::dimensions::magneticFluxDensity
 (
+    "magneticFluxDensity",
     force/(length*current)
 );
 const Foam::dimensionSet Foam::dimensions::magneticFluxPressure
 (
+    "magneticFluxPressure",
     magneticFluxDensity*velocity
 );
 
-const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
-{
-    {
-        Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::MASS],
-        Foam::dimensions::mass
-    },
-    {
-        Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::LENGTH],
-        Foam::dimensions::length
-    },
-    {
-        Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::TIME],
-        Foam::dimensions::time
-    },
-    {
-        Foam::dimensionSet::dimensionTypeNames_
-        [
-            Foam::dimensionSet::TEMPERATURE
-        ],
-        Foam::dimensions::temperature
-    },
-    {
-        Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::MOLES],
-        Foam::dimensions::moles
-    },
-    {
-        Foam::dimensionSet::dimensionTypeNames_[Foam::dimensionSet::CURRENT],
-        Foam::dimensions::current
-    },
-    {
-        Foam::dimensionSet::dimensionTypeNames_
-        [
-            Foam::dimensionSet::LUMINOUS_INTENSITY
-        ],
-        Foam::dimensions::luminousIntensity
-    },
-    {"area", Foam::dimensions::area},
-    {"volume", Foam::dimensions::volume},
-
-    {"rate", Foam::dimensions::rate},
-
-    {"velocity", Foam::dimensions::velocity},
-    {"momentum", Foam::dimensions::momentum},
-    {"acceleration", Foam::dimensions::acceleration},
-
-    {"density", Foam::dimensions::density},
-    {"momentumDensity", Foam::dimensions::momentumDensity},
-    {"force", Foam::dimensions::force},
-    {"energy", Foam::dimensions::energy},
-    {"kineticEnergy", Foam::dimensions::kineticEnergy},
-    {"kineticEnergyDensity", Foam::dimensions::kineticEnergyDensity},
-    {"power", Foam::dimensions::power},
-
-    {"pressure", Foam::dimensions::pressure},
-    {"kinematicPressure", Foam::dimensions::kinematicPressure},
-    {"compressibility", Foam::dimensions::compressibility},
-
-    {"gasConstant", Foam::dimensions::gasConstant},
-    {"specificHeatCapacity", Foam::dimensions::specificHeatCapacity},
-
-    {"kinematicViscosity", Foam::dimensions::kinematicViscosity},
-    {"dynamicViscosity", Foam::dimensions::dynamicViscosity},
-    {"thermalConductivity", Foam::dimensions::thermalConductivity},
-    {"dynamicDiffusivity", Foam::dimensions::dynamicDiffusivity},
-
-    {"turbulentKineticEnergy", Foam::dimensions::turbulentKineticEnergy},
-    {"kinematicStress", Foam::dimensions::kinematicStress},
-    {"ReynoldsStress", Foam::dimensions::ReynoldsStress},
-    {"turbulentEpsilon", Foam::dimensions::turbulentEpsilon},
-    {"turbulentOmega", Foam::dimensions::turbulentOmega},
-    {"turbulentViscosity", Foam::dimensions::turbulentViscosity},
-
-    {"volumetricFlux", Foam::dimensions::volumetricFlux},
-    {"massFlux", Foam::dimensions::massFlux},
-    {"heatFlux", Foam::dimensions::heatFlux},
-
-    {"magneticFluxDensity", Foam::dimensions::magneticFluxDensity},
-    {"magneticFluxPressure", Foam::dimensions::magneticFluxPressure}
-};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

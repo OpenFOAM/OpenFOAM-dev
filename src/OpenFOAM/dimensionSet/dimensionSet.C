@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dimensionSet.H"
+#include "dimensions.H"
 #include "dimensionedScalar.H"
 #include "NamedEnum.H"
 #include "OStringStream.H"
@@ -39,7 +40,7 @@ const Foam::autoPtr<Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>>
     dimensionTypeNamesPtr_
     (
         new Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>
-        ({
+        {
             "mass",
             "length",
             "time",
@@ -47,7 +48,7 @@ const Foam::autoPtr<Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>>
             "moles",
             "current",
             "luminousIntensity"
-        })
+        }
     );
 
 const Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>&
@@ -81,6 +82,33 @@ Foam::dimensionSet::dimensionSet
 
 Foam::dimensionSet::dimensionSet
 (
+    const word& name,
+    const scalar mass,
+    const scalar length,
+    const scalar time,
+    const scalar temperature,
+    const scalar moles,
+    const scalar current,
+    const scalar luminousIntensity
+)
+:
+    dimensionSet
+    (
+        mass,
+        length,
+        time,
+        temperature,
+        moles,
+        current,
+        luminousIntensity
+    )
+{
+    dimensions::table.insert(name, *this);
+}
+
+
+Foam::dimensionSet::dimensionSet
+(
     const scalar mass,
     const scalar length,
     const scalar time,
@@ -101,6 +129,13 @@ Foam::dimensionSet::dimensionSet
 Foam::dimensionSet::dimensionSet(const dimensionSet& ds)
 {
     reset(ds);
+}
+
+
+Foam::dimensionSet::dimensionSet(const word& name, const dimensionSet& ds)
+{
+    reset(ds);
+    dimensions::table.insert(name, *this);
 }
 
 

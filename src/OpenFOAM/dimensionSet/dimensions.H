@@ -98,13 +98,17 @@ extern const dimensionSet volumetricFlux;
 extern const dimensionSet massFlux;
 extern const dimensionSet heatFlux;
 
+extern const dimensionSet charge;
+extern const dimensionSet chargeDensity;
+extern const dimensionSet electricPotential;
+
 extern const dimensionSet magneticFluxDensity;
 extern const dimensionSet magneticFluxPressure;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Table of dimensions
-extern const HashTable<dimensionSet> table;
+extern HashTable<dimensionSet> table;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

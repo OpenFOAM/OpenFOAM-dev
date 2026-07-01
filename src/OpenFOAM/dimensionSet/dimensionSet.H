@@ -193,6 +193,21 @@ public:
             const scalar luminousIntensity
         );
 
+        //- Construct a named dimensionSet given individual dimension exponents
+        //  for all seven dimensions.
+        //  The dimensionSet is added to the dimensions::table
+        dimensionSet
+        (
+            const word& name,
+            const scalar mass,
+            const scalar length,
+            const scalar time,
+            const scalar temperature,
+            const scalar moles,
+            const scalar current,
+            const scalar luminousIntensity
+        );
+
         //- Construct given individual dimension exponents for first
         //  five dimensions
         dimensionSet
@@ -206,6 +221,9 @@ public:
 
         //- Copy constructor
         dimensionSet(const dimensionSet& ds);
+
+        //- Named copy constructor
+        dimensionSet(const word& name, const dimensionSet& ds);
 
         //- Construct and return a clone
         autoPtr<dimensionSet> clone() const
