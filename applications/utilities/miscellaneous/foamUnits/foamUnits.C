@@ -283,9 +283,44 @@ int main(int argc, char *argv[])
         {
             Info<< "Dimension [" << name << "]" << nl;
             if (!isFundamental(dimension))
+            {
                 Info<< "+ Dimensions = " << dimension.info() << nl;
-            Info << "+ Exponents = " << dimension << nl
-                 << endl;
+            }
+            Info << "+ Exponents = " << dimension << nl;
+            const string standardName =
+                standardUnitName
+                (
+                    dimensionUnitNames,
+                    dimlessUnitNames,
+                    dimension
+                );
+            DynamicList<word> standardNames(1, standardName.c_str());
+            DynamicList<word> otherNames;
+            forAllConstIter(HashTable<unitSet>, units::table(), iter)
+            {
+                if
+                (
+                    iter.key() != standardName
+                 && iter().dimensions() == dimension
+                )
+                {
+                    (iter().standard() ? standardNames : otherNames).append
+                    (
+                        iter.key()
+                    );
+                }
+            }
+            Info<< "+ Standard Unit"
+                << (standardNames.size() > 1 ? "s" : "") << " =";
+            forAll(standardNames, i) Info<< " [" << standardNames[i] << "]";
+            Info<< nl;
+            if (otherNames.size())
+            {
+                Info<< "+ Other Units =";
+                forAll(otherNames, i) Info<< " [" << otherNames[i] << "]";
+                Info<< nl;
+            }
+            Info<< endl;
         }
     };
 
