@@ -212,9 +212,6 @@ const Foam::dimensionSet& Foam::dimLength = dimensions::length;
 const Foam::dimensionSet& Foam::dimTime = dimensions::time;
 const Foam::dimensionSet& Foam::dimTemperature = dimensions::temperature;
 const Foam::dimensionSet& Foam::dimMoles = dimensions::moles;
-const Foam::dimensionSet& Foam::dimCurrent = dimensions::current;
-const Foam::dimensionSet& Foam::dimLuminousIntensity =
-    dimensions::luminousIntensity;
 
 const Foam::dimensionSet& Foam::dimArea = dimensions::area;
 const Foam::dimensionSet& Foam::dimVolume = dimensions::volume;
@@ -222,7 +219,6 @@ const Foam::dimensionSet& Foam::dimVolume = dimensions::volume;
 const Foam::dimensionSet& Foam::dimRate = dimensions::rate;
 
 const Foam::dimensionSet& Foam::dimVelocity = dimensions::velocity;
-const Foam::dimensionSet& Foam::dimMomentum = dimensions::momentum;
 const Foam::dimensionSet& Foam::dimAcceleration = dimensions::acceleration;
 
 const Foam::dimensionSet& Foam::dimDensity = dimensions::density;
@@ -231,11 +227,6 @@ const Foam::dimensionSet& Foam::dimEnergy = dimensions::energy;
 const Foam::dimensionSet& Foam::dimPower = dimensions::power;
 
 const Foam::dimensionSet& Foam::dimPressure = dimensions::pressure;
-const Foam::dimensionSet& Foam::dimKinematicPressure =
-    dimensions::kinematicPressure;
-const Foam::dimensionSet& Foam::dimCompressibility =
-    dimensions::compressibility;
-const Foam::dimensionSet& Foam::dimGasConstant = dimensions::gasConstant;
 const Foam::dimensionSet& Foam::dimSpecificHeatCapacity =
     dimensions::specificHeatCapacity;
 const Foam::dimensionSet& Foam::dimKinematicViscosity =

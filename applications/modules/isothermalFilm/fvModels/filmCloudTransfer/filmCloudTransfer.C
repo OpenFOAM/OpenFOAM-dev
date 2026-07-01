@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,11 @@ void Foam::fv::filmCloudTransfer::addSup
 
     if (&U == &film_.U && &U == &film_.U)
     {
-        eqn += CloudToFilmTransferRate<vector>(momentumFromCloud_, dimMomentum);
+        eqn += CloudToFilmTransferRate<vector>
+        (
+            momentumFromCloud_,
+            dimensions::momentum
+        );
 
         if (ejection_.valid())
         {

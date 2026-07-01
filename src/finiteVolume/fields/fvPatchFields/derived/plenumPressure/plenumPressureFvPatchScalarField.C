@@ -40,7 +40,7 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF, dict),
     gamma_(dict.lookup<scalar>("gamma", dimless)),
-    R_(dict.lookup<scalar>("R", dimGasConstant)),
+    R_(dict.lookup<scalar>("R", dimensions::gasConstant)),
     supplyMassFlowRate_
     (
         dict.lookup<scalar>("supplyMassFlowRate", dimMass/dimTime)
