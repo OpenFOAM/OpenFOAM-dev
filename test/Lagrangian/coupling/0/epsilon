@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [energy/mass/time];
+dimensions      [turbulentEpsilon];
 
 Cmu             0.09;
 Lref            0.1;

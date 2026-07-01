@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Ubar            [0 1 -1 0 0 0 0] (0.05 0 0);
+Ubar            (0.05 0 0);
 
 viscosityModel  constant;
 nu              0.01;

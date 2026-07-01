@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [energy/mass];
+dimensions      [turbulentKineticEnergy];
 
 magUref         0.25;
 I               0.1;

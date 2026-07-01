@@ -126,7 +126,7 @@ FoamFile
 (
     fieldType=volScalarField,
     field=mag(smallU),
-    dimensions=[0 1 -1 0 0 0 0],
+    dimensions=[velocity],
     value=1e-16
 )
 #includeFunc add(mag(U), mag(smallU), result=stabilise(mag(U)))
@@ -141,7 +141,7 @@ FoamFile
 (
     fieldType=volScalarField,
     field=Ta,
-    dimensions=[0 0 0 1 0 0 0],
+    dimensions=[temperature],
     value=297
 )
 #includeFunc divide(T, Ta)
