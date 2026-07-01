@@ -59,6 +59,12 @@ inline bool Foam::unitSet::dimensionless() const
 }
 
 
+inline bool Foam::unitSet::unitless() const
+{
+    return compare(*this, newUnitless(), false);
+}
+
+
 inline bool Foam::unitSet::any() const
 {
     return multiplier_ == 0;

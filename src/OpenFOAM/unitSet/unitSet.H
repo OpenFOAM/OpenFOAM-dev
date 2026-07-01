@@ -176,6 +176,9 @@ public:
         //- Return true if it is dimensionless
         inline bool dimensionless() const;
 
+        //- Return true if it is unit-less
+        inline bool unitless() const;
+
         //- Convert a value to standard units
         template<class T>
         T toStandard(const T&) const;

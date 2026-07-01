@@ -298,11 +298,7 @@ int main(int argc, char *argv[])
             DynamicList<word> otherNames;
             forAllConstIter(HashTable<unitSet>, units::table(), iter)
             {
-                if
-                (
-                    iter.key() != standardName
-                 && iter().dimensions() == dimension
-                )
+                if (iter.key() != standardName && (iter()/dimension).unitless())
                 {
                     (iter().standard() ? standardNames : otherNames).append
                     (
