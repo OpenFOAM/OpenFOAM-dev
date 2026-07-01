@@ -16,8 +16,7 @@ FoamFile
 
 sInlet          1;
 
-dimensions      [0 0 0 0 0 0 0];  // s can represent any scalar
-                                  // with any dimensional units
+dimensions      []; // s can represent any scalar with any dimensional units
 internalField   uniform 0;
 
 boundaryField
