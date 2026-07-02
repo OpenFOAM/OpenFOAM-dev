@@ -57,7 +57,8 @@ Foam::pointMeshMovers::velocity::velocity
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        pointMesh::New(mesh)
+        pointMesh::New(mesh),
+        dimensions::velocity
     )
 {}
 

@@ -198,7 +198,8 @@ SpalartAllmaras<BasicMomentumTransportModel>::SpalartAllmaras
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentViscosity
     )
 {}
 

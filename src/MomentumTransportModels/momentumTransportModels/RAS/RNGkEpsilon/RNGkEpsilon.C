@@ -130,7 +130,8 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentKineticEnergy
     ),
     epsilon_
     (
@@ -142,7 +143,8 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentEpsilon
     )
 {
     bound(k_, this->kMin_);

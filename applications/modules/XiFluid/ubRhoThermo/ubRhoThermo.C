@@ -51,7 +51,8 @@ Foam::ubRhoThermo::ubRhoThermo(const fvMesh& mesh)
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimless
     ),
     c_("c", scalar(1) - b_),
     uThermo_(uRhoMulticomponentThermo::New(mesh, unburntPhaseName)),

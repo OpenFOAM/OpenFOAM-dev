@@ -136,7 +136,8 @@ LRR<BasicMomentumTransportModel>::LRR
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentEpsilon
     )
 {
     if (type == typeName)

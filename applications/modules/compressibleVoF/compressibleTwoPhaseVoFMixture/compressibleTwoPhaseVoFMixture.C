@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,8 @@ Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::pressure
     ),
     T_
     (
@@ -69,7 +70,8 @@ Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::temperature
     ),
 
     thermo1_(nullptr),

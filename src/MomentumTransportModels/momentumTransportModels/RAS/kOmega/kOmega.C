@@ -123,7 +123,8 @@ kOmega<BasicMomentumTransportModel>::kOmega
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentKineticEnergy
     ),
     omega_
     (
@@ -135,7 +136,8 @@ kOmega<BasicMomentumTransportModel>::kOmega
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentOmega
     )
 {
     bound(k_, this->kMin_);

@@ -126,7 +126,8 @@ displacementComponentLaplacian
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
                 ),
-                pointMesh::New(fvMotionSolver::mesh())
+                pointMesh::New(fvMotionSolver::mesh()),
+                dimensions::length
             )
         );
 

@@ -9,5 +9,5 @@
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         ),
-        dimAcceleration
+        dimensions::acceleration
     );

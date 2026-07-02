@@ -179,7 +179,8 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::kinematicStress
     )
 {
     if (nModes_ > 1)
@@ -215,7 +216,8 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
                             IOobject::MUST_READ,
                             IOobject::AUTO_WRITE
                         ),
-                        this->mesh_
+                        this->mesh_,
+                        dimensions::kinematicStress
                     )
                 );
             }

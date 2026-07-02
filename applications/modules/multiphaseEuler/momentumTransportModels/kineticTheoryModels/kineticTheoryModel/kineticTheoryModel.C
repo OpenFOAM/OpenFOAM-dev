@@ -162,7 +162,8 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        U.mesh()
+        U.mesh(),
+        dimensions::kinematicStress
     ),
 
     lambda_

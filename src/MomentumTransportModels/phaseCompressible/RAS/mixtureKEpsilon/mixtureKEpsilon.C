@@ -114,7 +114,8 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentKineticEnergy
     ),
     epsilon_
     (
@@ -126,7 +127,8 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentEpsilon
     )
 {
     bound(k_, this->kMin_);
@@ -148,7 +150,8 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
                 ),
-                this->mesh_
+                this->mesh_,
+                dimensions::turbulentKineticEnergy
             )
         );
 
@@ -164,7 +167,8 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
                 ),
-                this->mesh_
+                this->mesh_,
+                dimensions::turbulentEpsilon
             )
         );
 

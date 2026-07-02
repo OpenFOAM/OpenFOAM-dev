@@ -69,7 +69,8 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimless
     ),
     nuSoot_(dict.lookup<scalar>("nuSoot")),
     Wsoot_(dict.lookup<scalar>("Wsoot")),

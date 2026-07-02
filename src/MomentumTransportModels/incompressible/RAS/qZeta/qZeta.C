@@ -135,7 +135,8 @@ qZeta::qZeta
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::turbulentKineticEnergy
     ),
 
     epsilon_
@@ -148,7 +149,8 @@ qZeta::qZeta
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::turbulentEpsilon
     ),
 
     q_

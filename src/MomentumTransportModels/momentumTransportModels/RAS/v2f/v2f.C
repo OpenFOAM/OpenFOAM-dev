@@ -118,7 +118,8 @@ v2f<BasicMomentumTransportModel>::v2f
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentKineticEnergy
     ),
     epsilon_
     (
@@ -130,7 +131,8 @@ v2f<BasicMomentumTransportModel>::v2f
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentEpsilon
     ),
     v2_
     (
@@ -142,7 +144,8 @@ v2f<BasicMomentumTransportModel>::v2f
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentKineticEnergy
     ),
     f_
     (
@@ -154,7 +157,8 @@ v2f<BasicMomentumTransportModel>::v2f
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::rate
     ),
     v2Min_(dimensionedScalar(v2_.dimensions(), small)),
     fMin_(dimensionedScalar(f_.dimensions(), 0))

@@ -379,7 +379,8 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimless
     ),
 
     gammaInt_
@@ -392,7 +393,8 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimless
     ),
 
     gammaIntEff_

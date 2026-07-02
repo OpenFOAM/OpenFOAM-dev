@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,7 +192,7 @@ Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
             ILambda_.set
             (
                 lambdaI,
-                new volScalarField(IHeader, mesh_)
+                new volScalarField(IHeader, mesh_, dimensions::heatFlux)
             );
         }
         else
@@ -212,7 +212,8 @@ Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
                             IOobject::MUST_READ,
                             IOobject::NO_WRITE
                         ),
-                        mesh_
+                        mesh_,
+                        dimensions::heatFlux
                     )
                 );
             }

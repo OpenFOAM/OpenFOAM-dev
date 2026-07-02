@@ -152,7 +152,8 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::ReynoldsStress
     ),
 
     nut_
@@ -165,7 +166,8 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentViscosity
     )
 {
     if (couplingFactor_.value() < 0 || couplingFactor_.value() > 1)

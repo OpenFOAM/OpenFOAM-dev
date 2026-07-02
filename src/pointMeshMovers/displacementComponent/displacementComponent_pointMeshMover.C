@@ -105,7 +105,8 @@ Foam::pointMeshMovers::displacementComponent::displacementComponent
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        pointMesh::New(mesh)
+        pointMesh::New(mesh),
+        dimensions::length
     )
 {
     if (points0_.size() != mesh.nPoints())

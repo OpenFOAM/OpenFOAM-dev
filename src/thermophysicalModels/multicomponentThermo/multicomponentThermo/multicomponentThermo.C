@@ -159,7 +159,8 @@ Foam::multicomponentThermo::implementation::implementation
                         IOobject::MUST_READ,
                         IOobject::AUTO_WRITE
                     ),
-                    mesh
+                    mesh,
+                    dimless
                 )
             );
 
@@ -180,7 +181,8 @@ Foam::multicomponentThermo::implementation::implementation
                         IOobject::MUST_READ,
                         IOobject::NO_WRITE
                     ),
-                    mesh
+                    mesh,
+                    dimless
                 );
             }
 

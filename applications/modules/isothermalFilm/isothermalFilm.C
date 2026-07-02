@@ -310,7 +310,8 @@ Foam::solvers::isothermalFilm::isothermalFilm
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::length
     ),
 
     alpha_
@@ -339,7 +340,8 @@ Foam::solvers::isothermalFilm::isothermalFilm
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::velocity
     ),
 
     alphaRhoPhi_
@@ -381,7 +383,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         ),
-        dimAcceleration
+        dimensions::acceleration
     ),
 
     nHat(nHat_),

@@ -646,7 +646,8 @@ void Foam::fvMesh::postConstruct
                     IOobject::NO_WRITE,
                     true
                 ),
-                *this
+                *this,
+                dimensions::volume
             );
 
             V00();
@@ -666,7 +667,8 @@ void Foam::fvMesh::postConstruct
                     IOobject::NO_WRITE,
                     true
                 ),
-                *this
+                *this,
+                dimensions::volumetricFlux
             );
         }
     }

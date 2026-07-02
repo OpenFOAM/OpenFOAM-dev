@@ -57,7 +57,8 @@ Foam::reactionRateFlameArea::reactionRateFlameArea
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::momentumDensity
     )
 {}
 

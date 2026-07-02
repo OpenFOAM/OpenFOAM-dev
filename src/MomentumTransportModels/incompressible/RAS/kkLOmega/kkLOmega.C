@@ -287,7 +287,8 @@ kkLOmega::kkLOmega
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::turbulentKineticEnergy
     ),
     kl_
     (
@@ -299,7 +300,8 @@ kkLOmega::kkLOmega
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::turbulentKineticEnergy
     ),
     omega_
     (
@@ -311,7 +313,8 @@ kkLOmega::kkLOmega
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::turbulentOmega
     ),
     epsilon_
     (

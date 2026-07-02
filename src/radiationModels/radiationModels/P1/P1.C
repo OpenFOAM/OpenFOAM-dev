@@ -60,7 +60,8 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::heatFlux
     ),
     qr_
     (
@@ -73,7 +74,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimensions::heatFlux, 0)
     ),
     a_
     (
@@ -86,7 +87,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     ),
     e_
     (
@@ -99,7 +100,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     ),
     E_
     (
@@ -130,7 +131,8 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::heatFlux
     ),
     qr_
     (
@@ -143,7 +145,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimensions::heatFlux, 0)
     ),
     a_
     (
@@ -156,7 +158,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     ),
     e_
     (
@@ -169,7 +171,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     ),
     E_
     (

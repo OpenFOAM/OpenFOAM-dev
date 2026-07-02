@@ -95,7 +95,8 @@ kEqn<BasicMomentumTransportModel>::kEqn
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentKineticEnergy
     ),
 
     Ck_("Ck", this->typeDict(type), 0.094)

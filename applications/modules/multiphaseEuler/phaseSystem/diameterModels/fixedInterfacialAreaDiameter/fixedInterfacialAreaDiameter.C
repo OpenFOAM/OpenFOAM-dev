@@ -121,7 +121,8 @@ bool Foam::diameterModels::fixedInterfacialArea::read
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
                 ),
-                phase().mesh()
+                phase().mesh(),
+                dimensions::area/dimensions::volume
             );
 
         AvbyAlphaFieldPtr_->max

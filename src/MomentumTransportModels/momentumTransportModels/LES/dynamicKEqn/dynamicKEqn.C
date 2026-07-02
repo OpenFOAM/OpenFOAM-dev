@@ -175,7 +175,8 @@ dynamicKEqn<BasicMomentumTransportModel>::dynamicKEqn
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimensions::turbulentKineticEnergy
     ),
 
     simpleFilter_(this->mesh_),

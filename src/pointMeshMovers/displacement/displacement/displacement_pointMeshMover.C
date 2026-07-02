@@ -65,7 +65,8 @@ Foam::pointMeshMovers::displacement::displacement
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        pointMesh::New(mesh)
+        pointMesh::New(mesh),
+        dimensions::length
     )
 {}
 

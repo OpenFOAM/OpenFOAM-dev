@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,8 @@ const Foam::volScalarField& Foam::fv::volumeBlockage::volumeAlpha() const
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh()
+                mesh(),
+                dimless
             );
 
         alphaPtr->store();

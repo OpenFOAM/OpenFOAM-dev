@@ -95,7 +95,8 @@ incompressibleDenseParticleFluid
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::kinematicPressure
     ),
 
     pressureReference(p_, pimple.dict()),
@@ -110,7 +111,7 @@ incompressibleDenseParticleFluid
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         ),
-        dimAcceleration
+        dimensions::acceleration
     ),
 
     Uc_
@@ -123,7 +124,8 @@ incompressibleDenseParticleFluid
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::velocity
     ),
 
     phic_

@@ -122,7 +122,8 @@ Foam::fv::solidElectricalConduction::solidElectricalConduction
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh()
+        mesh(),
+        dimensions::electricPotential
     ),
     I_
     (

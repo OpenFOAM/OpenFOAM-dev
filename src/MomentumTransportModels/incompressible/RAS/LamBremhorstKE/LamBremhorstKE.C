@@ -143,7 +143,8 @@ LamBremhorstKE::LamBremhorstKE
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::turbulentKineticEnergy
     ),
 
     epsilon_
@@ -156,7 +157,8 @@ LamBremhorstKE::LamBremhorstKE
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh_
+        mesh_,
+        dimensions::turbulentEpsilon
     )
 {
     bound(k_, kMin_);

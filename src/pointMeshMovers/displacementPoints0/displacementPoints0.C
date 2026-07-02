@@ -67,7 +67,8 @@ Foam::pointVectorField Foam::pointMeshMovers::displacementPoints0::readPoints0
                 IOobject::NO_WRITE,
                 false
             ),
-            pointMesh::New(mesh)
+            pointMesh::New(mesh),
+            dimensions::length
         );
     }
     else

@@ -71,7 +71,8 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
                     IOobject::MUST_READ,
                     IOobject::AUTO_WRITE
                 ),
-                U.mesh()
+                U.mesh(),
+                dimensions::volumetricFlux
             )
         );
     }
@@ -173,7 +174,8 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        fluid.mesh()
+        fluid.mesh(),
+        dimensions::velocity
     ),
     phi_(phi(U_)),
     alphaPhi_

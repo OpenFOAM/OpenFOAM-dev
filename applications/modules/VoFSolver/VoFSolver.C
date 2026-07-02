@@ -103,7 +103,8 @@ Foam::solvers::VoFSolver::VoFSolver
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::velocity
     ),
 
     phi_

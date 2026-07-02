@@ -76,7 +76,8 @@ Foam::diameterModels::IATE::IATE
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        phase.mesh()
+        phase.mesh(),
+        inv(dimensions::length)
     ),
     dMax_("dMax", dimLength, diameterProperties),
     dMin_("dMin", dimLength, diameterProperties),

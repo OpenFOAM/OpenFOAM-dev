@@ -43,7 +43,7 @@ Foam::solvers::buoyancy::buoyancy(const fvMesh& mesh_)
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         ),
-        dimAcceleration
+        dimensions::acceleration
     ),
 
     hRef
@@ -88,7 +88,8 @@ Foam::solvers::buoyancy::buoyancy(const fvMesh& mesh_)
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::pressure
     )
 {
     mesh.schemes().setFluxRequired(p_rgh.name());

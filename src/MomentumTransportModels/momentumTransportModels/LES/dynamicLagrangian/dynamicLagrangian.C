@@ -90,7 +90,8 @@ dynamicLagrangian<BasicMomentumTransportModel>::dynamicLagrangian
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimless
     ),
     fmm_
     (
@@ -102,7 +103,8 @@ dynamicLagrangian<BasicMomentumTransportModel>::dynamicLagrangian
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        this->mesh_
+        this->mesh_,
+        dimless
     ),
     theta_("theta", this->typeDict(type), 1.5),
 

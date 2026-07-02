@@ -106,7 +106,8 @@ unityLewisEddyDiffusivity
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        momentumTransport.mesh()
+        momentumTransport.mesh(),
+        dimensions::dynamicDiffusivity
     )
 {}
 
