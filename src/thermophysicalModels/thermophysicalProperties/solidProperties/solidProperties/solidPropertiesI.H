@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "specie.H"
+#include "solidProperties.H"
+#include "thermodynamicConstants.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,7 +54,7 @@ inline Foam::scalar Foam::solidProperties::hf() const
 
 inline Foam::scalar Foam::solidProperties::hs(const scalar T) const
 {
-    return Cp_*(T - Tstd);
+    return Cp_*(T - constant::thermodynamic::Tstd);
 }
 
 

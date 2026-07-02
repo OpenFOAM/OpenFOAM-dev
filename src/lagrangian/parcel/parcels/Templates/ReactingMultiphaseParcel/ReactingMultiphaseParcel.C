@@ -28,6 +28,7 @@ License
 #include "NoDevolatilisation.H"
 #include "NoSurfaceReaction.H"
 #include "mathematicalConstants.H"
+#include "physicoChemicalConstants.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -592,7 +593,12 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     if (cloud.heatTransfer().BirdCorrection())
     {
         // Molar average molecular weight of carrier mix
-        const scalar Wc = max(small, td.rhoc()*RR*td.Tc()/td.pc());
+        const scalar Wc =
+            max
+            (
+                small,
+                td.rhoc()*constant::physicoChemical::RR.value()*td.Tc()/td.pc()
+            );
 
         // Note: hardcoded gaseous diffusivities for now
         // TODO: add to carrier thermo

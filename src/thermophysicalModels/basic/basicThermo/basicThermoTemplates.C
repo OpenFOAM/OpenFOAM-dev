@@ -34,8 +34,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
 (
     const dictionary& thermoTypeDict,
     Table* tablePtr,
-    const int nCmpt,
-    const char* cmptNames[],
+    const char* (&cmptNames)[7],
     const word& thermoTypeName
 )
 {
@@ -46,8 +45,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
     {
         if
         (
-            nCmpt == 7
-         && dynamicCode::allowSystemOperations
+            dynamicCode::allowSystemOperations
          && !dynamicCode::resolveTemplate(Thermo::typeName).empty()
         )
         {
@@ -101,7 +99,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
             DynamicList<wordList> validThermoTypeNameCmpts;
 
             // Set row zero to the column headers
-            validThermoTypeNameCmpts.append(wordList(nCmpt));
+            validThermoTypeNameCmpts.append(wordList(7));
             forAll(validThermoTypeNameCmpts[0], i)
             {
                 validThermoTypeNameCmpts[0][i] = cmptNames[i];
@@ -114,7 +112,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
             {
                 const wordList names
                 (
-                    splitThermoName(validThermoTypeNames[i], nCmpt)
+                    splitThermoName(validThermoTypeNames[i], 7)
                 );
 
                 if (names.size())
@@ -150,70 +148,36 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
         Info<< indentOrNl
             << "Selecting thermodynamics package " << thermoTypeDict;
 
-        if (thermoTypeDict.found("properties"))
+        const char* cmptNames[7] =
         {
-            const int nCmpt = 4;
-            const char* cmptNames[nCmpt] =
-            {
-                "type",
-                "mixture",
-                "properties",
-                "energy"
-            };
+            "type",
+            "mixture",
+            "transport",
+            "thermo",
+            "equationOfState",
+            "specie",
+            "energy"
+        };
 
-            // Construct the name of the thermo package from the components
-            const word thermoTypeName
-            (
-                word(thermoTypeDict.lookup("type")) + '<'
-              + word(mixtureName(thermoTypeDict)) + '<'
-              + word(thermoTypeDict.lookup("properties")) + ','
-              + word(thermoTypeDict.lookup("energy")) + ">>"
-            );
+        // Construct the name of the thermo package from the components
+        const word thermoTypeName
+        (
+            word(thermoTypeDict.lookup("type")) + '<'
+          + word(mixtureName(thermoTypeDict)) + '<'
+          + word(thermoTypeDict.lookup("transport")) + '<'
+          + word(thermoTypeDict.lookup("thermo")) + '<'
+          + word(thermoTypeDict.lookup("equationOfState")) + '<'
+          + word(thermoTypeDict.lookup("specie")) + ">>,"
+          + word(thermoTypeDict.lookup("energy")) + ">>>"
+        );
 
-            return lookupCstrIter<Thermo, Table>
-            (
-                thermoTypeDict,
-                tablePtr,
-                nCmpt,
-                cmptNames,
-                thermoTypeName
-            );
-        }
-        else
-        {
-            const int nCmpt = 7;
-            const char* cmptNames[nCmpt] =
-            {
-                "type",
-                "mixture",
-                "transport",
-                "thermo",
-                "equationOfState",
-                "specie",
-                "energy"
-            };
-
-            // Construct the name of the thermo package from the components
-            const word thermoTypeName
-            (
-                word(thermoTypeDict.lookup("type")) + '<'
-              + word(mixtureName(thermoTypeDict)) + '<'
-              + word(thermoTypeDict.lookup("transport")) + '<'
-              + word(thermoTypeDict.lookup("thermo")) + '<'
-              + word(thermoTypeDict.lookup("equationOfState")) + '<'
-              + word(thermoTypeDict.lookup("specie")) + ">>,"
-              + word(thermoTypeDict.lookup("energy")) + ">>>"
-            );
-
-            return lookupCstrIter<Thermo, Table>
-            (
-                thermoTypeDict,
-                tablePtr,
-                nCmpt,
-                cmptNames,
-                thermoTypeName
-            );
-        }
+        return lookupCstrIter<Thermo, Table>
+        (
+            thermoTypeDict,
+            tablePtr,
+            cmptNames,
+            thermoTypeName
+        );
     }
     else
     {

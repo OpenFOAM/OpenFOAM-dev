@@ -105,11 +105,11 @@ public:
         //- Construct from components
         solidProperties
         (
-            scalar rho,
-            scalar Cp,
-            scalar kappa,
-            scalar hf,
-            scalar emissivity
+            const scalar rho,
+            const scalar Cp,
+            const scalar kappa,
+            const scalar hf,
+            const scalar emissivity
         );
 
         //- Construct from dictionary
@@ -156,13 +156,13 @@ public:
             inline scalar hs(const scalar T) const;
 
             //- Absolute enthalpy [J/kg]
-            inline scalar ha(scalar T) const;
+            inline scalar ha(const scalar T) const;
 
             //- Sensible internal energy [J/kg]
             inline scalar es(const scalar T) const;
 
             //- Absolute internal energy [J/kg]
-            inline scalar ea(scalar T) const;
+            inline scalar ea(const scalar T) const;
 
             //- Thermal conductivity [W/m/K]
             inline scalar kappa() const;

@@ -21,7 +21,7 @@ LIB_LIBS = \
     -lphysicalProperties \
     -lfluidThermophysicalModels \
     -linterfaceCompression \
-    -lcompressibleInterfaceProperties \
+    -linterfaceProperties \
     -lcompressibleTwoPhases \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \

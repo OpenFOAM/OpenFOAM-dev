@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,8 @@ Foam::liquidProperties::liquidProperties
     scalar delta
 )
 :
-    thermophysicalProperties(W),
     name_(name),
+    W_(W),
     Tc_(Tc),
     Pc_(Pc),
     Vc_(Vc),
@@ -69,8 +69,8 @@ Foam::liquidProperties::liquidProperties
 
 Foam::liquidProperties::liquidProperties(const dictionary& dict)
 :
-    thermophysicalProperties(dict),
     name_(dict.dictName()),
+    W_(dict.lookup<scalar>("W")),
     Tc_(dict.lookup<scalar>("Tc")),
     Pc_(dict.lookup<scalar>("Pc")),
     Vc_(dict.lookup<scalar>("Vc")),
@@ -92,14 +92,14 @@ const Foam::word& Foam::liquidProperties::name() const
 }
 
 
-Foam::scalar Foam::liquidProperties::s(scalar p, scalar T) const
+Foam::scalar Foam::liquidProperties::s(const scalar p, const scalar T) const
 {
     NotImplemented;
     return 0;
 }
 
 
-Foam::scalar Foam::liquidProperties::pvInvert(scalar p) const
+Foam::scalar Foam::liquidProperties::pvInvert(const scalar p) const
 {
     // Check for critical and solid phase conditions
     if (p >= Pc_)
@@ -144,7 +144,7 @@ Foam::scalar Foam::liquidProperties::pvInvert(scalar p) const
 
 void Foam::liquidProperties::readIfPresent(const dictionary &dict)
 {
-    thermophysicalProperties::readIfPresent(dict);
+    dict.readIfPresent("W", W_);
     dict.readIfPresent("Tc", Tc_);
     dict.readIfPresent("Pc", Pc_);
     dict.readIfPresent("Vc", Vc_);
@@ -160,7 +160,7 @@ void Foam::liquidProperties::readIfPresent(const dictionary &dict)
 
 void Foam::liquidProperties::write(Ostream& os) const
 {
-    thermophysicalProperties::write(os);
+    writeEntry(os, "W", W_);
     writeEntry(os, "Tc", Tc_);
     writeEntry(os, "Pc", Pc_);
     writeEntry(os, "Vc", Vc_);

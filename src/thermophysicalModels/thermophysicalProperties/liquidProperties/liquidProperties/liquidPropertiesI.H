@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::liquidProperties::limit(const scalar T) const
+inline Foam::scalar Foam::liquidProperties::W() const
 {
-    return T;
+    return W_;
 }
 
 
@@ -99,25 +99,35 @@ inline Foam::scalar Foam::liquidProperties::delta() const
 }
 
 
-inline Foam::scalar Foam::liquidProperties::psi(scalar p, scalar T) const
+inline Foam::scalar Foam::liquidProperties::limit(const scalar T) const
+{
+    return T;
+}
+
+
+inline Foam::scalar
+Foam::liquidProperties::psi(const scalar p, const scalar T) const
 {
     return 0;
 }
 
 
-inline Foam::scalar Foam::liquidProperties::CpMCv(scalar p, scalar T) const
+inline Foam::scalar
+Foam::liquidProperties::CpMCv(const scalar p, const scalar T) const
 {
     return 0;
 }
 
 
-inline Foam::scalar Foam::liquidProperties::es(scalar p, const scalar T) const
+inline Foam::scalar
+Foam::liquidProperties::es(const scalar p, const scalar T) const
 {
     return hs(p, T);
 }
 
 
-inline Foam::scalar Foam::liquidProperties::ea(scalar p, const scalar T) const
+inline Foam::scalar
+Foam::liquidProperties::ea(const scalar p, const scalar T) const
 {
     return ha(p, T);
 }

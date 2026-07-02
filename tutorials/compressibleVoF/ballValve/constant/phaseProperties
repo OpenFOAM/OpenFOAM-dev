@@ -14,12 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-phases          (vapour water);
+phases  (vapour water);
 
 sigma
 {
-    type    liquidProperties;
-    phase   water;
+    type    temperatureDependent;
+    sigma
+    {
+        ${${FOAM_ETC}/thermoData/NSRDSinterfaceProperties!H2O/sigma}
+    }
 }
 
 // ************************************************************************* //

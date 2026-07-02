@@ -38,6 +38,12 @@ namespace Foam
 {
     forEnergyGases(makeLagrangianThermo, fluidLagrangianThermo, pureMixture);
     forEnergyLiquids(makeLagrangianThermo, fluidLagrangianThermo, pureMixture);
+    forNSRDSEnergyLiquids
+    (
+        makeLagrangianThermo,
+        fluidLagrangianThermo,
+        pureMixture
+    );
 }
 
 // ************************************************************************* //

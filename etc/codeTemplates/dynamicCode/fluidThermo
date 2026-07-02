@@ -48,6 +48,7 @@ transport
     tabulated
     WLF
     Andrade
+    NSRDS
 );
 
 thermo
@@ -63,6 +64,8 @@ thermo
     hPower
     hTabulated
     janaf
+    NSRDS
+    NSRDS14
 );
 
 equationOfState
@@ -73,6 +76,7 @@ equationOfState
     icoTabulated
     incompressiblePerfectGas
     linear
+    NSRDS
     PengRobinsonGas
     perfectFluid
     perfectGas
@@ -91,7 +95,6 @@ codeOptions
 EXE_INC = \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 #};

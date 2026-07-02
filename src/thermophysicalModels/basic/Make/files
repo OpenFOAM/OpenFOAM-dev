@@ -14,9 +14,6 @@ psiThermo/psiThermos.C
 rhoFluidThermo/rhoFluidThermo.C
 rhoFluidThermo/rhoFluidThermos.C
 
-liquidThermo/liquidThermo.C
-liquidThermo/liquidThermos.C
-
 derivedFvPatchFields/energyJump/energyJumpFvPatchScalarField.C
 derivedFvPatchFields/fixedEnergy/fixedEnergyFvPatchScalarField.C
 derivedFvPatchFields/gradientEnergy/gradientEnergyFvPatchScalarField.C

@@ -35,8 +35,8 @@ SourceFiles
 #ifndef liquidProperties_H
 #define liquidProperties_H
 
-#include "thermophysicalProperties.H"
-#include "dimensions.H"
+#include "dictionary.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,13 +55,14 @@ Ostream& operator<<(Ostream& os, const liquidProperties& l);
 \*---------------------------------------------------------------------------*/
 
 class liquidProperties
-:
-    public thermophysicalProperties
 {
     // Private Data
 
         //- Name of the liquid
         const word name_;
+
+        //- Molecular weight [kg/kmol]
+        scalar W_;
 
         //- Critical temperature [K]
         scalar Tc_;
@@ -177,6 +178,9 @@ public:
 
         // Physical constants which define the specie
 
+            //- Molecular weight [kg/kmol]
+            inline scalar W() const;
+
             //- Mass fraction of this specie in mixture
             //  Note Mixing of liquidProperties is not currently supported
             //  so Y = 1
@@ -218,28 +222,37 @@ public:
 
         // Fundamental equation of state properties
 
+            //- Density [kg/m^3]
+            virtual scalar rho(const scalar p, const scalar T) const = 0;
+
+            //- Volumetric coefficient of thermal expansion [1/T]
+            virtual scalar alphav(const scalar p, const scalar T) const = 0;
+
             //- Liquid compressibility [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
-            inline scalar psi(scalar p, scalar T) const;
+            inline scalar psi(const scalar p, const scalar T) const;
 
             //- Return (Cp - Cv) [J/(kg K]
             //  Note: currently it is assumed the liquid is incompressible
             //  so CpMCv = 0
-            inline scalar CpMCv(scalar p, scalar T) const;
+            inline scalar CpMCv(const scalar p, const scalar T) const;
 
 
         // Fundamental thermodynamic properties
+
+            //- Heat capacity at constant pressure [J/kg/K]
+            virtual scalar Cp(const scalar p, const scalar T) const = 0;
 
             //- Liquid heat of formation [J/kg]
             virtual scalar hf() const = 0;
 
             //- Liquid sensible enthalpy [J/kg]
             //  currently pressure effects are neglected
-            virtual scalar hs(scalar p, scalar T) const = 0;
+            virtual scalar hs(const scalar p, const scalar T) const = 0;
 
             //- Liquid absolute enthalpy [J/kg]
             //  currently pressure effects are neglected
-            virtual scalar ha(scalar p, scalar T) const = 0;
+            virtual scalar ha(const scalar p, const scalar T) const = 0;
 
             //- Sensible internal energy [J/kg]
             //  currently pressure effects are neglected
@@ -247,47 +260,52 @@ public:
 
             //- Absolute internal energy [J/kg]
             //  currently pressure effects are neglected
-            inline scalar ea(scalar p, scalar T) const;
+            inline scalar ea(const scalar p, const scalar T) const;
 
             //- Liquid entropy [J/kg/K]
-            scalar s(const scalar p, const scalar T) const;
+            virtual scalar s(const scalar p, const scalar T) const;
 
 
         // Physical properties
 
             //- Vapour pressure [Pa]
-            virtual scalar pv(scalar p, scalar T) const = 0;
+            virtual scalar pv(const scalar p, const scalar T) const = 0;
 
             //- Heat of vapourisation [J/kg]
-            virtual scalar hl(scalar p, scalar T) const = 0;
+            virtual scalar hl(const scalar p, const scalar T) const = 0;
 
             //- Vapour heat capacity [J/kg/K]
-            virtual scalar Cpg(scalar p, scalar T) const = 0;
+            virtual scalar Cpg(const scalar p, const scalar T) const = 0;
 
             //- Liquid viscosity [Pa s]
-            virtual scalar mu(scalar p, scalar T) const = 0;
+            virtual scalar mu(const scalar p, const scalar T) const = 0;
 
             //- Vapour viscosity [Pa s]
-            virtual scalar mug(scalar p, scalar T) const = 0;
+            virtual scalar mug(const scalar p, const scalar T) const = 0;
 
             //- Liquid thermal conductivity  [W/m/K]
-            virtual scalar kappa(scalar p, scalar T) const = 0;
+            virtual scalar kappa(const scalar p, const scalar T) const = 0;
 
             //- Vapour thermal conductivity  [W/m/K]
-            virtual scalar kappag(scalar p, scalar T) const = 0;
+            virtual scalar kappag(const scalar p, const scalar T) const = 0;
 
             //- Surface tension [N/m]
-            virtual scalar sigma(scalar p, scalar T) const = 0;
+            virtual scalar sigma(const scalar p, const scalar T) const = 0;
 
             //- Vapour diffusivity [m^2/s]
-            virtual scalar D(scalar p, scalar T) const = 0;
+            virtual scalar D(const scalar p, const scalar T) const = 0;
 
             //- Vapour diffusivity [m^2/s] with specified binary pair
-            virtual scalar D(scalar p, scalar T, scalar Wb) const = 0;
+            virtual scalar D
+            (
+                const scalar p,
+                const scalar T,
+                const scalar Wb
+            ) const = 0;
 
             //- Invert the vapour pressure relationship to retrieve the
             //  boiling temperature as a function of pressure
-            virtual scalar pvInvert(scalar p) const;
+            virtual scalar pvInvert(const scalar p) const;
 
 
     // I-O

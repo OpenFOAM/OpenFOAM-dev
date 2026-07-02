@@ -1,0 +1,745 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Reference:
+    Daubert, T. E., & Danner, R. P. (1985).
+    Data compilation tables of properties of pure compounds.
+
+Notes:
+    This file contains coefficients for NSRDS functions of temperature for
+    interface properties of various liquids. More properties are provided by
+    the reference. This is a subset containing only the properties that we
+    typically require.
+
+    The properties are provided for liquid compounds, but interface properties
+    relate to a boundary between two phases. It is assumed that these
+    properties relate to the specified liquid in contact with a gaseous phase,
+    and that the property values are insensitive to the state of that gas. It
+    is not clear over what range of conditions these assumptions remain valid.
+
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      NSRDSinterfaceProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+C16H34
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              720.6;
+        a               0.05699;
+        b               1.3929;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               233.1;
+        b               -17346;
+        c               -32.251;
+        d               0.02407;
+        e               1;
+    }
+}
+
+IDEA
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              618.074;
+        a               0.0083846525429;
+        b               -10.044759047;
+        c               27.261918781;
+        d               -25.529134309;
+        e               8.6488806234;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               84.817774623;
+        b               -8678.2398353;
+        c               -9.1277694857;
+        d               4.6153144498e-06;
+        e               2;
+    }
+}
+
+N2
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              126.1;
+        a               0.02898;
+        b               1.2457;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               59.826;
+        b               -1097.6;
+        c               -8.6689;
+        d               0.046346;
+        e               1;
+    }
+}
+
+C6H14
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              507.6;
+        a               0.055003;
+        b               1.2674;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               104.65;
+        b               -6995.5;
+        c               -12.702;
+        d               1.2381e-05;
+        e               2;
+    }
+}
+
+C6H6
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              562.16;
+        a               0.07195;
+        b               1.2389;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               78.05;
+        b               -6275.5;
+        c               -8.4443;
+        d               6.26e-06;
+        e               2;
+    }
+}
+
+C4H10O
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              466.7;
+        a               0.057356;
+        b               1.288;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               101.03;
+        b               -6311.5;
+        c               -12.27;
+        d               1.377e-05;
+        e               2;
+    }
+}
+
+C8H18
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              568.7;
+        a               0.052789;
+        b               1.2323;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               96.084;
+        b               -7900.2;
+        c               -11.003;
+        d               7.1802e-06;
+        e               2;
+    }
+}
+
+IC8H18
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              543.96;
+        a               0.047434;
+        b               1.1975;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               120.81;
+        b               -7550;
+        c               -16.111;
+        d               0.017099;
+        e               1;
+    }
+}
+
+CH4N2O
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              705;
+        a               1;
+        b               0;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               3015.15611544;
+        b               -185497.059684;
+        c               -430.223621983;
+        d               0.00017405122622;
+        e               2;
+    }
+}
+
+C3H8
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              369.83;
+        a               0.05092;
+        b               1.2197;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               59.078;
+        b               -3492.6;
+        c               -6.0669;
+        d               1.0919e-05;
+        e               2;
+    }
+}
+
+C2H6
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              305.32;
+        a               0.048643;
+        b               1.1981;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               51.857;
+        b               -2598.7;
+        c               -5.1283;
+        d               1.4913e-05;
+        e               2;
+    }
+}
+
+NH3
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              405.65;
+        a               0.0912;
+        b               1.1028;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               90.451;
+        b               -4669;
+        c               -11.601;
+        d               0.017183;
+        e               1;
+    }
+}
+
+MB
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              554.5;
+        a               0.064084;
+        b               1.2418;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               107.51;
+        b               -8112.9;
+        c               -12.77;
+        d               9.2919e-06;
+        e               2;
+    }
+}
+
+C10H22
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              617.7;
+        a               0.055435;
+        b               1.3095;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               112.73;
+        b               -9749.6;
+        c               -13.245;
+        d               7.1266e-06;
+        e               2;
+    }
+}
+
+C9H20
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              594.6;
+        a               0.054975;
+        b               1.2897;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               109.35;
+        b               -90304;
+        c               -12.882;
+        d               7.8544e-06;
+        e               2;
+    }
+}
+
+C2H5OH
+{
+    sigma
+    {
+        type            NSRDS0;
+        a               0.03764;
+        b               -2.157e-05;
+        c               -1.025e-07;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               59.796;
+        b               -6595;
+        c               -5.0474;
+        d               6.3e-07;
+        e               2;
+    }
+}
+
+Ar
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              150.86;
+        a               0.03823;
+        b               1.2927;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               39.233;
+        b               -1051.7;
+        c               -3.5895;
+        d               5.0444e-05;
+        e               2;
+    }
+}
+
+C14H30
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              692.4;
+        a               0.056436;
+        b               1.3658;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               249.21;
+        b               -16915;
+        c               -35.195;
+        d               0.028451;
+        e               1;
+    }
+}
+
+C13H28
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              675.8;
+        a               0.05561;
+        b               1.3361;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               118.27;
+        b               -11432;
+        c               -13.769;
+        d               5.9641e-06;
+        e               2;
+    }
+}
+
+iC3H8O
+{
+    sigma
+    {
+        type            NSRDS0;
+        a               0.03818;
+        b               -3.818e-05;
+        c               -6.51e-08;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               92.935;
+        b               -8177.1;
+        c               -10.031;
+        d               3.9988e-06;
+        e               2;
+    }
+}
+
+C2H6O
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              400.1;
+        a               0.06096;
+        b               1.2286;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               51.566;
+        b               -3664.4;
+        c               -4.653;
+        d               5.9e-06;
+        e               2;
+    }
+}
+
+C8H10
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              617.17;
+        a               0.066;
+        b               1.268;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               88.246;
+        b               -7691.1;
+        c               -9.797;
+        d               5.931e-06;
+        e               2;
+    }
+}
+
+CH3OH
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              512.58;
+        a               0.04327;
+        b               0.7676;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               109.93;
+        b               -7471.3;
+        c               -13.988;
+        d               0.015281;
+        e               1;
+    }
+}
+
+nC3H8O
+{
+    sigma
+    {
+        type            NSRDS0;
+        a               0.04533;
+        b               -6.88e-05;
+        c               -1.6e-08;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               77.46;
+        b               -7960;
+        c               -7.5235;
+        d               3e-07;
+        e               2;
+    }
+}
+
+C7H16
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              540.2;
+        a               0.054143;
+        b               1.2512;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               87.829;
+        b               -6996.4;
+        c               -9.8802;
+        d               7.2099e-06;
+        e               2;
+    }
+}
+
+C3H6O
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              508.2;
+        a               0.0622;
+        b               1.124;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               70.72;
+        b               -5685;
+        c               -7.351;
+        d               6.3e-06;
+        e               2;
+    }
+}
+
+bC11H10
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              761;
+        a               0.066442;
+        b               1.2634;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               134.31;
+        b               -12103;
+        c               -16.195;
+        d               6.9659e-06;
+        e               2;
+    }
+}
+
+aC11H10
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              772.04;
+        a               0.076;
+        b               1.33;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               73.716;
+        b               -9103.2;
+        c               -7.2253;
+        d               2.062e-06;
+        e               2;
+    }
+}
+
+C7H8
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              591.79;
+        a               0.06685;
+        b               1.2456;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               83.359;
+        b               -6995;
+        c               -9.1635;
+        d               6.225e-06;
+        e               2;
+    }
+}
+
+H2O
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              647.13;
+        a               0.18548;
+        b               2.717;
+        c               -3.554;
+        d               2.047;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               73.649;
+        b               -7258.2;
+        c               -7.3037;
+        d               4.1653e-06;
+        e               2;
+    }
+}
+
+C12H26
+{
+    sigma
+    {
+        type            NSRDS6;
+        Tc              658;
+        a               0.055493;
+        b               1.3262;
+        c               0;
+        d               0;
+        e               0;
+    }
+    pSat
+    {
+        type            NSRDS1;
+        a               137.47;
+        b               -11976;
+        c               -16.698;
+        d               8.0906e-06;
+        e               2;
+    }
+}
+
+
+// ************************************************************************* //

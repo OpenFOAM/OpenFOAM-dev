@@ -18,13 +18,16 @@ thermoType
 {
     type            heRhoThermo;
     mixture         pureMixture;
-    properties      liquid;
+    transport       NSRDS;
+    thermo          NSRDS;
+    equationOfState NSRDS;
+    specie          specie;
     energy          sensibleEnthalpy;
 }
 
 mixture
 {
-    H2O;
+    ${${FOAM_ETC}/thermoData/NSRDSphysicalProperties!H2O}
 }
 
 // ************************************************************************* //

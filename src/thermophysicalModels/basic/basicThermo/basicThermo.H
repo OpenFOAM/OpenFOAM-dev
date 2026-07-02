@@ -89,8 +89,7 @@ class basicThermo
         (
             const dictionary& thermoTypeDict,
             Table* tablePtr,
-            const int nCmpt,
-            const char* cmptNames[],
+            const char* (&cmptNames)[7],
             const word& thermoTypeName
         );
 

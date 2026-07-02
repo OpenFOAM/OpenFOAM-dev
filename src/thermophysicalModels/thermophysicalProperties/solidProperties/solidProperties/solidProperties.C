@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,11 +38,11 @@ namespace Foam
 
 Foam::solidProperties::solidProperties
 (
-    scalar rho,
-    scalar Cp,
-    scalar kappa,
-    scalar hf,
-    scalar emissivity
+    const scalar rho,
+    const scalar Cp,
+    const scalar kappa,
+    const scalar hf,
+    const scalar emissivity
 )
 :
     rho_(rho),

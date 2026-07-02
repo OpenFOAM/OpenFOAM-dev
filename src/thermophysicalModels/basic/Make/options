@@ -1,13 +1,11 @@
 EXE_INC = \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
     -lphysicalProperties \
     -lspecie \
-    -lthermophysicalProperties \
     -lfiniteVolume \
     -lmeshTools

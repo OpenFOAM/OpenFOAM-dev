@@ -1,6 +1,3 @@
-thermophysicalProperties/thermophysicalProperties.C
-
-
 liquidProperties/liquidProperties/liquidProperties.C
 liquidProperties/liquidProperties/liquidPropertiesNew.C
 liquidProperties/liquidMixtureProperties/liquidMixtureProperties.C
@@ -38,7 +35,6 @@ liquidProperties/nC3H8O/nC3H8O.C
 liquidProperties/iC3H8O/iC3H8O.C
 liquidProperties/NH3/NH3.C
 
-
 solidProperties/solidProperties/solidProperties.C
 solidProperties/solidProperties/solidPropertiesNew.C
 solidProperties/solidMixtureProperties/solidMixtureProperties.C
@@ -46,6 +42,5 @@ solidProperties/solidMixtureProperties/solidMixtureProperties.C
 solidProperties/ash/ash.C
 solidProperties/C/C.C
 solidProperties/CaCO3/CaCO3.C
-
 
 LIB = $(FOAM_LIBBIN)/libthermophysicalProperties

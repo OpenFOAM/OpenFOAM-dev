@@ -57,6 +57,7 @@ transport
     tabulated
     WLF
     Andrade
+    NSRDS
 );
 
 thermo
@@ -72,6 +73,8 @@ thermo
     hPower
     hTabulated
     janaf
+    NSRDS
+    NSRDS14
 );
 
 equationOfState
@@ -82,6 +85,7 @@ equationOfState
     icoTabulated
     incompressiblePerfectGas
     linear
+    NSRDS
     PengRobinsonGas
     perfectFluid
     perfectGas

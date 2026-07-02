@@ -1,0 +1,1541 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Reference:
+    Daubert, T. E., & Danner, R. P. (1985).
+    Data compilation tables of properties of pure compounds.
+
+Notes:
+    This file contains coefficients for NSRDS functions of temperature for the
+    properties of various incompressible liquids. More properties are provided
+    by the reference. This is a subset containing only the properties that we
+    typically require.
+
+    Note that the NSRDS functions used for specific heat have been modified
+    from the reference to be per unit mass, rather than per mole. Note also
+    that standard entropy is not defined by the reference, and is set to zero
+    in the data below.
+
+    These functions can be used directly as Function1-s. Or, they can be used
+    as part of a thermodynamic model. In the latter case, the thermodynamic
+    model will need to be selected in constant/physicalProperties as follows:
+
+        thermoType
+        {
+            type            heRhoThermo;
+            mixture         pureMixture;
+            transport       NSRDS;
+            thermo          NSRDS; // or NSRDS14
+            equationOfState NSRDS;
+            specie          specie;
+            energy          sensibleEnthalpy; // or sensibleInternalEnergy
+        }
+
+    These properties can then be used directly; e.g., for water:
+
+        mixture
+        {
+            ${${FOAM_ETC}/thermoData/NSRDSphysicalProperties!H2O}
+        }
+
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      NSRDSphysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+C16H34
+{
+    specie
+    {
+        molWeight       226.446;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               61.94656776;
+        b               0.25442;
+        c               720.6;
+        d               0.3238;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               3769.90540791182;
+        b               -12.5871068599136;
+        c               0.0247211255663602;
+        d               0;
+        e               0;
+        hf              -1994260.11787842;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -18.388;
+            b               2056.8;
+            c               0.98681;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.1963;
+            b               -0.00019;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+IDEA
+{
+    specie
+    {
+        molWeight       142.26;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               152.012105;
+        b               0.387150382;
+        c               618.073893;
+        d               0.400790044;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1660.4957;
+        b               -0.6250871;
+        c               0.0061778552;
+        d               0;
+        e               0;
+        hf              0;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -69.645853822;
+            b               4439.0635942;
+            c               8.4680722718;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.203684;
+            b               -0.00023168;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+N2
+{
+    specie
+    {
+        molWeight       28.014;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               88.8716136;
+        b               0.28479;
+        c               126.1;
+        d               0.2925;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               -1192.26101235097;
+        b               125.187406296852;
+        c               -1.66702363104162;
+        d               0.00759263225530092;
+        e               0;
+        hf              -1.02445483207703e-08;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -32.165;
+            b               496.9;
+            c               3.9069;
+            d               -1.08e-21;
+            e               10;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.7259;
+            b               -0.016728;
+            c               0.00016215;
+            d               -5.7605e-07;
+            e               0;
+        }
+    }
+}
+
+C6H14
+{
+    specie
+    {
+        molWeight       86.177;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               61.03399848;
+        b               0.26411;
+        c               507.6;
+        d               0.27537;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1997.28465831951;
+        b               -2.13258758137322;
+        c               0.0102964828202421;
+        d               0;
+        e               0;
+        hf              -2310518.09271608;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -20.715;
+            b               1207.5;
+            c               1.4993;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.22492;
+            b               -0.0003533;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C6H6
+{
+    specie
+    {
+        molWeight       78.114;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               80.5511568;
+        b               0.2667;
+        c               562.16;
+        d               0.2818;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1386.69124612745;
+        b               -0.416058581048212;
+        c               0.00542796425736744;
+        d               0;
+        e               0;
+        hf              629044.438457368;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               6.764;
+            b               336.4;
+            c               -2.687;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2407;
+            b               -0.0003202;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C4H10O
+{
+    specie
+    {
+        molWeight       74.123;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               75.2793188;
+        b               0.27608;
+        c               466.7;
+        d               0.29358;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               599.004357621791;
+        b               17.5519069654493;
+        c               -0.0742009902459426;
+        d               0.00011822241409549;
+        e               0;
+        hf              -3775614.13053487;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               10.197;
+            b               -63.8;
+            c               -3.226;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.249;
+            b               -0.0004005;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C8H18
+{
+    specie
+    {
+        molWeight       114.231;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               61.37745861;
+        b               0.26115;
+        c               568.7;
+        d               0.28034;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1968.20477803749;
+        b               -1.63379467920267;
+        c               0.00839448135795012;
+        d               0;
+        e               0;
+        hf              -2190423.02751015;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -20.463;
+            b               1497.4;
+            c               1.379;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2156;
+            b               -0.00029483;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+IC8H18
+{
+    specie
+    {
+        molWeight       114.231;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               67.2363666;
+        b               0.27373;
+        c               543.96;
+        d               0.2846;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1219.89652546156;
+        b               1.67205049417409;
+        c               0.00414073237562483;
+        d               0;
+        e               0;
+        hf              -2268664.41090155;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -15.811;
+            b               1282.5;
+            c               0.67791;
+            d               -3.8617e-28;
+            e               10;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.1508;
+            b               -0.0001712;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+CH4N2O
+{
+    specie
+    {
+        molWeight       60.056;
+    }
+    equationOfState
+    {
+        type            constant;
+        value           1230.006936;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               2006.46063673904;
+        b               0;
+        c               0;
+        d               0;
+        e               0;
+        hf              -5555881.1775676;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -51.964;
+            b               3670.6;
+            c               5.7331;
+            d               -5.3495e-29;
+            e               10;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               -0.4267;
+            b               0.0056903;
+            c               -8.0065e-06;
+            d               1.815e-09;
+            e               0;
+        }
+    }
+}
+
+C3H8
+{
+    specie
+    {
+        molWeight       44.096;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               60.6628672;
+        b               0.27453;
+        c               369.83;
+        d               0.29359;
+    }
+    thermodynamics
+    {
+        type            NSRDS14;
+        Tc              369.83;
+        a               9.48470319647089;
+        b               2576.87772133527;
+        c               95.3560311677331;
+        d               -131.535634282099;
+        hf              0;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -6.9281;
+            b               420.76;
+            c               -0.63276;
+            d               -1.713e-26;
+            e               10;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.26755;
+            b               -0.00066457;
+            c               2.774e-07;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C2H6
+{
+    specie
+    {
+        molWeight       30.07;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               57.499854;
+        b               0.27937;
+        c               305.32;
+        d               0.29187;
+    }
+    thermodynamics
+    {
+        type            NSRDS14;
+        Tc              305.32;
+        a               8.02554965861611;
+        b               2983.63817758563;
+        c               167.548325566287;
+        d               -343.93389207094;
+        hf              0;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -3.4134;
+            b               197.05;
+            c               -1.2193;
+            d               -9.2023e-26;
+            e               10;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.35758;
+            b               -0.0011458;
+            c               6.1866e-07;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+NH3
+{
+    specie
+    {
+        molWeight       17.03;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               60.33729;
+        b               0.25471;
+        c               405.65;
+        d               0.2887;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               63576.0422783324;
+        b               -912.566059894304;
+        c               5.22671755725191;
+        d               -0.0132196124486201;
+        e               1.25284791544334e-05;
+        hf              -2712272.46036406;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -1.643;
+            b               455.6;
+            c               -1.5637;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               1.1606;
+            b               -0.002284;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+MB
+{
+    specie
+    {
+        molWeight       102.133;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               76.6099633;
+        b               0.257;
+        c               554.5;
+        d               0.2772;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1135.77394182096;
+        b               2.89818178257762;
+        c               0;
+        d               0;
+        e               0;
+        hf              -4788520.49583522;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -12.206;
+            b               1141.7;
+            c               0.15014;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2298;
+            b               -0.0003002;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C10H22
+{
+    specie
+    {
+        molWeight       142.285;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               60.94208835;
+        b               0.25745;
+        c               617.7;
+        d               0.28912;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1958.18252099659;
+        b               -1.39094071757388;
+        c               0.00754612221948905;
+        d               0;
+        e               0;
+        hf              -2110760.37141572;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -16.468;
+            b               1533.5;
+            c               0.7511;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2063;
+            b               -0.000254;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C9H20
+{
+    specie
+    {
+        molWeight       128.258;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               62.06019846;
+        b               0.26147;
+        c               594.6;
+        d               0.28281;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               2986.79224687739;
+        b               -8.88677509395125;
+        c               0.0211300659607978;
+        d               0;
+        e               0;
+        hf              -2143430.23846192;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -21.149;
+            b               1658;
+            c               1.454;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.209;
+            b               -0.000264;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C2H5OH
+{
+    specie
+    {
+        molWeight       46.069;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               70.1308387;
+        b               0.26395;
+        c               516.25;
+        d               0.2367;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               2052.57331394213;
+        b               -0.121990926653498;
+        c               -0.00714146172046278;
+        d               5.20523562482363e-05;
+        e               0;
+        hf              -6106536.07423425;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               8.049;
+            b               776;
+            c               -3.068;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.253;
+            b               -0.000281;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+Ar
+{
+    specie
+    {
+        molWeight       39.948;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               151.922244;
+        b               0.286;
+        c               150.86;
+        d               0.2984;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               4562.43116050866;
+        b               -70.7770101131471;
+        c               0.367477721037349;
+        d               0;
+        e               0;
+        hf              -9.31322574615479e-10;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -8.868;
+            b               204.3;
+            c               -0.3831;
+            d               -1.3e-22;
+            e               10;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.1819;
+            b               -0.0003176;
+            c               -4.11e-06;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C14H30
+{
+    specie
+    {
+        molWeight       198.392;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               60.92023144;
+        b               0.2582;
+        c               692.4;
+        d               0.26628;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               2565.72845679261;
+        b               -4.78114036856325;
+        c               0.0120362716238558;
+        d               0;
+        e               0;
+        hf              -2031800.30666571;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -18.964;
+            b               2010.9;
+            c               1.0648;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.1957;
+            b               -0.0001993;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C13H28
+{
+    specie
+    {
+        molWeight       184.365;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               59.513022;
+        b               0.2504;
+        c               675.8;
+        d               0.312;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               4275.05220622135;
+        b               -16.6539202126217;
+        c               0.0325755973205326;
+        d               0;
+        e               0;
+        hf              -2038257.30492512;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -23.341;
+            b               2121.9;
+            c               1.7208;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.1981;
+            b               -0.0002046;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+iC3H8O
+{
+    specie
+    {
+        molWeight       60.096;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               70.91328;
+        b               0.26475;
+        c               508.31;
+        d               0.243;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               7760.91586794462;
+        b               -68.3672790202343;
+        c               0.241380457933972;
+        d               -0.000235057241746539;
+        e               0;
+        hf              -5284446.28104309;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -8.23;
+            b               2282.2;
+            c               -0.98495;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2029;
+            b               -0.0002278;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C2H6O
+{
+    specie
+    {
+        molWeight       46.069;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               69.472052;
+        b               0.26325;
+        c               400.1;
+        d               0.2806;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               1491.24139877141;
+        b               11.3099915344375;
+        c               -0.067273003538171;
+        d               0.000136556035511949;
+        e               0;
+        hf              -4402080.84954704;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -10.62;
+            b               448.99;
+            c               8.3967e-05;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.31276;
+            b               -0.0005677;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C8H10
+{
+    specie
+    {
+        molWeight       106.167;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               76.3765398;
+        b               0.26438;
+        c               617.17;
+        d               0.2921;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               818.521762883005;
+        b               6.66873887366131;
+        c               -0.0248005500767658;
+        d               4.23860521631015e-05;
+        e               0;
+        hf              -118923.833049318;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -10.452;
+            b               1048.4;
+            c               -0.0715;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.20149;
+            b               -0.00023988;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+CH3OH
+{
+    specie
+    {
+        molWeight       32.042;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               73.952936;
+        b               0.27192;
+        c               512.58;
+        d               0.2331;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               3358.09250358904;
+        b               -11.8781599151114;
+        c               0.0305536483365583;
+        d               0;
+        e               0;
+        hf              -7447277.22559716;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -7.288;
+            b               1065.3;
+            c               -0.6657;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2837;
+            b               -0.000281;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+nC3H8O
+{
+    specie
+    {
+        molWeight       60.096;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               75.300288;
+        b               0.272;
+        c               536.71;
+        d               0.2494;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               216.320553780618;
+        b               18.5203674121406;
+        c               -0.0751797124600639;
+        d               0.000126464323748669;
+        e               0;
+        hf              -5059772.04087796;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               0.571;
+            b               1521;
+            c               -2.0894;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.204;
+            b               -0.000169;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C7H16
+{
+    specie
+    {
+        molWeight       100.204;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               61.38396836;
+        b               0.26211;
+        c               540.2;
+        d               0.28141;
+    }
+    thermodynamics
+    {
+        type            NSRDS14;
+        Tc              540.2;
+        a               6.11976102401216;
+        b               3137.69909384855;
+        c               182.274175063868;
+        d               -254.530511150515;
+        hf              -2237496.08846327;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -24.451;
+            b               1533.1;
+            c               2.0087;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.215;
+            b               -0.000303;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C3H6O
+{
+    specie
+    {
+        molWeight       58.08;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               71.426784;
+        b               0.2576;
+        c               508.2;
+        d               0.29903;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               2334.71074380165;
+        b               -3.04752066115702;
+        c               0.00488464187327824;
+        d               1.18629476584022e-05;
+        e               0;
+        hf              -4278065.44966798;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -14.918;
+            b               1023.4;
+            c               0.5961;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2502;
+            b               -0.000298;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+bC11H10
+{
+    specie
+    {
+        molWeight       142.2;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               67.36014;
+        b               0.23843;
+        c               761;
+        d               0.2559;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               811.322081575246;
+        b               2.30225035161744;
+        c               0.0008628691983122;
+        d               0;
+        e               0;
+        hf              396847.405606348;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -63.276;
+            b               4219;
+            c               7.5549;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.1962;
+            b               -0.00018414;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+aC11H10
+{
+    specie
+    {
+        molWeight       142.2;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               60.92559;
+        b               0.22408;
+        c               772.04;
+        d               0.25709;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               965.893108298172;
+        b               1.16216596343179;
+        c               0.00298523206751055;
+        d               0;
+        e               0;
+        hf              404170.275309105;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -93.6;
+            b               5784;
+            c               12;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.19758;
+            b               -0.0001796;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+C7H8
+{
+    specie
+    {
+        molWeight       92.141;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               81.32088237;
+        b               0.27108;
+        c               591.79;
+        d               0.29889;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               2066.83235476064;
+        b               -8.14664481609707;
+        c               0.0322581695445024;
+        d               -3.01223125427334e-05;
+        e               0;
+        hf              126518.326293405;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -13.362;
+            b               1183;
+            c               0.333;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2043;
+            b               -0.000239;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+H2O
+{
+    specie
+    {
+        molWeight       18.015;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               98.343885;
+        b               0.30542;
+        c               647.13;
+        d               0.081;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               15341.1046350264;
+        b               -116.019983347211;
+        c               0.451013044684985;
+        d               -0.000783569247849015;
+        e               5.20127671384957e-07;
+        hf              -15858419.8191934;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -51.964;
+            b               3670.6;
+            c               5.7331;
+            d               -5.3495e-29;
+            e               10;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               -0.4267;
+            b               0.0056903;
+            c               -8.0065e-06;
+            d               1.815e-09;
+            e               0;
+        }
+    }
+}
+
+C12H26
+{
+    specie
+    {
+        molWeight       170.338;
+    }
+    equationOfState
+    {
+        type            NSRDS5;
+        a               60.53982858;
+        b               0.25511;
+        c               658;
+        d               0.29368;
+    }
+    thermodynamics
+    {
+        type            NSRDS0;
+        a               2983.53861146661;
+        b               -8.0352006011577;
+        c               0.018207916025784;
+        d               0;
+        e               0;
+        hf              -2061904.75939143;
+        sf              0;
+    }
+    transport
+    {
+        mu
+        {
+            type            NSRDS1;
+            a               -20.607;
+            b               1943;
+            c               1.3205;
+            d               0;
+            e               0;
+        }
+        kappa
+        {
+            type            NSRDS0;
+            a               0.2047;
+            b               -0.0002326;
+            c               0;
+            d               0;
+            e               0;
+        }
+    }
+}
+
+
+// ************************************************************************* //

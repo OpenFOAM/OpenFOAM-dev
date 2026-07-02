@@ -27,6 +27,7 @@ License
 #include "forceSuSp.H"
 #include "CompositionModel.H"
 #include "AtomisationModel.H"
+#include "physicoChemicalConstants.H"
 
 // * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * * //
 
@@ -164,8 +165,8 @@ void Foam::SprayParcel<ParcelType>::calcAtomisation
         cloud.atomisation();
 
     // Average molecular weight of carrier mix - assumes perfect gas
-    scalar Wc = td.rhoc()*RR*td.Tc()/td.pc();
-    scalar R = RR/Wc;
+    scalar Wc = td.rhoc()*constant::physicoChemical::RR.value()*td.Tc()/td.pc();
+    scalar R = constant::physicoChemical::RR.value()/Wc;
     scalar Tav = atomisation.Taverage(this->T(), td.Tc());
 
     // Calculate average gas density based on average temperature
@@ -237,8 +238,8 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
     }
 
     // Average molecular weight of carrier mix - assumes perfect gas
-    scalar Wc = td.rhoc()*RR*td.Tc()/td.pc();
-    scalar R = RR/Wc;
+    scalar Wc = td.rhoc()*constant::physicoChemical::RR.value()*td.Tc()/td.pc();
+    scalar R = constant::physicoChemical::RR.value()/Wc;
     scalar Tav = cloud.atomisation().Taverage(this->T(), td.Tc());
 
     // Calculate average gas density based on average temperature
