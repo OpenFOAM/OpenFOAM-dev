@@ -237,10 +237,12 @@ $(declareLocals)
     opts="\\
         -applications \\
         -coded \\
+        -C \\
         -dir \\
         -edit \\
         -files \\
         -help \\
+        -H \\
         -isearch \\
         -lnInclude \\
         -modules \\
@@ -251,6 +253,10 @@ $(declareLocals)
         -tutorials"
 
     for o in \$used ; do opts="\${opts/\$o/}" ; done
+
+    # use only one of '-C' and '-H'
+    local actions="-C -H"
+    _optSet "\$used" "\$actions" && opts="\$(_removeOpts "\$opts" "\$actions")"
 
     # use only one of '-edit', '-isearch', '-search', '-print'
     local actions="-edit -isearch -search -print"

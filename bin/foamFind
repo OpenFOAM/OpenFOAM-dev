@@ -38,10 +38,12 @@ options:
   -a | -applications     search for the file from the \$FOAM_APP directory
   -c | -coded <file>     insert entries to codeInclude, codeOptions and codeLibs
                          blocks of coded input in the specified file
+  -C                     only list .C files
   -d | -dir <dir>        specify search directory
   -e | -edit             open the file in a file editor, see below for info
   -f | -files            find wmake 'files' file associated with searched file
   -h | -help             help
+  -H                     only list .H files
   -i | -isearch <string> searches files for a <string>, case insensitive
   -l | -lnInclude        find 'lnInclude' directory for searched file, print
                          the corresponding '-I' flag and '-l' library for an
@@ -209,7 +211,7 @@ selectFile () {
     _nFiles="$(nParams "$_files")"
 
     # Return file if only one
-    [ "$_nFiles" -eq 1 ] && echo "$_files" && exit 0
+    [ "$_nFiles" -eq 1 ] && echo "$_files" && return 0
 
     printf "Multiple files" >&2
     [ "$_filename" ] && printf " with name '%s'" "$_filename" >&2
@@ -221,7 +223,7 @@ selectFile () {
         printf "%i) %s\n" "$_i" "$_f" >&2
         _i=$((_i + 1))
     done
-    printf "Type ENTER to select all, or " >&2
+    printf "Type ENTER to select all, 'l' to list files only or " >&2
     printf "enter file number (1-%s) for specific file: " \
            "$_nFiles" >&2
 
@@ -229,6 +231,9 @@ selectFile () {
 
     # Enter nothing
     [ -z "$_nFile" ] && echo "$_files" && return 0
+
+    # List files only
+    echo "$_nFile" | grep -q "^[lL]$" && printf "\n%s\n\n" "$_files" >&2 && return 0
 
     # Check incorrect number
     ! [ "$_nFile" -eq "$_nFile" ] 2>/dev/null && \
@@ -264,14 +269,14 @@ listFiles () {
 
     # Specify code files if _dir is in $FOAM_SRC or $FOAM_APP
     _name="*"
-    isSrcDir "$dir" && _name="*.[CHL]"
+    isSrcDir "$dir" && _name="*.$FILE_EXTS"
     [ "$_filename" ] && _name="$_filename"
 
     [ "$_search" ] && \
         find "$_dir" -name "$_name" \
             ! '(' -name '*gz' -or -name '*stl' -or -name '*obj' ')' \
             -type f -print0 | \
-            xargs -0 grep -l$_ins "$search" && \
+            xargs -0 grep -l$_ins "$_search" && \
         return 0
 
     # Remove "\n"
@@ -356,6 +361,7 @@ insensitive=""
 numbers=""
 filename=""
 codedFile=""
+FILE_EXTS='[CHL]'
 
 while [ "$#" -gt 0 ]
 do
@@ -371,6 +377,12 @@ do
        ! grep -Eq "code(Include|Options|Libs)" "$2" && error "$(codedError)"
        codedFile="$2"
        shift 2
+       ;;
+   -C)
+       [ "$FILE_EXTS" = '[H]' ] &&  \
+           error "'$1' option cannot be used with '-H'"
+       FILE_EXTS='[C]'
+       shift 1
        ;;
    -d | -dir)
        [ "$dir" ] && error "$(dirError)"
@@ -396,6 +408,12 @@ do
    -h | -help)
        usage
        exit
+       ;;
+   -H)
+       [ "$FILE_EXTS" = '[C]' ] &&  \
+           error "'$1' option cannot be used with '-C'"
+       FILE_EXTS='[H]'
+       shift 1
        ;;
    -i | -isearch)
        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
@@ -477,7 +495,8 @@ done
 files="$(listFiles "$dir" "$filename" "$search" "$insensitive")"
 
 # Ensure there is at least one file
-nParams "$files" > /dev/null || error "No file '$filename' found in '$dir'"
+[ "$filename" ] && msgPart="No file '$filename'" || msgPart="No files"
+nParams "$files" > /dev/null || error "$msgPart found in '$dir'"
 
 # Select files when more than one is found
 files="$(selectFile "$filename" "$files")" || error
