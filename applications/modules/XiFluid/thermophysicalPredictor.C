@@ -477,7 +477,11 @@ void Foam::solvers::XiFluid::HuSolve
         fvm::Sp(bSource, hu)
 
         // Other sources
-      + fvModels().source(b, rho, hu)
+      + (
+            buoyancy.valid()
+          ? fvModels().source(b, rho, hu) + b*rho*(U & buoyancy->g)
+          : fvModels().source(b, rho, hu)
+        )
     );
 
     HuEqn.relax();
@@ -518,7 +522,11 @@ void Foam::solvers::XiFluid::HbSolve
       - bSource*(uThermo.he()() + uThermo.hf()()() - bThermo.hf()()())
 
         // Other sources
-      + fvModels().source(c, rho, hb)
+      + (
+            buoyancy.valid()
+          ? fvModels().source(c, rho, hb) + c*rho*(U & buoyancy->g)
+          : fvModels().source(c, rho, hb)
+        )
     );
 
     HbEqn.relax();
