@@ -16,6 +16,8 @@ normal      <normal>;
 
 fields      (<fieldNames>);
 
+cellZone    all;
+
 interpolate true; // If false, write cell data to the surface triangles.
                   // If true, write interpolated data at the surface points.
 
