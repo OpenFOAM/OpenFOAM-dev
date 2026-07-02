@@ -103,12 +103,19 @@ public:
             const Type& defaultValue
         );
 
-        //- Construct from given FunctionalDimensionedField
-        //  with new mesh and field
+        //- Construct from given FunctionalDimensionedField with new mesh
         FunctionalDimensionedField
         (
             const FunctionalDimensionedField<Type, GeoMesh>&,
             const GeoMesh&
+        );
+
+        //- Construct by mapping given FunctionalDimensionedField
+        FunctionalDimensionedField
+        (
+            const FunctionalDimensionedField<Type, GeoMesh>&,
+            const GeoMesh&,
+            const fieldMapper&
         );
 
         //- Copy constructor
@@ -120,8 +127,12 @@ public:
 
     // Member Functions
 
-        //- Map and optionally evaluate
-        void map(const bool evaluate);
+        //- Map if mapping direct or evaluate if function defined
+        void map
+        (
+            const DimensionedField<Type, GeoMesh>& df,
+            const fieldMapper& mapper
+        );
 
         //- Reset
         void reset();

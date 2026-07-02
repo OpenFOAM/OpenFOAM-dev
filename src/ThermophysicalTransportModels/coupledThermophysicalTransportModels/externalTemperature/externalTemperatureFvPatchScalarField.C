@@ -223,7 +223,8 @@ externalTemperatureFvPatchScalarField
       ? new FunctionalDimensionedField<scalar, fvPatch>
         (
             ptf.h_(),
-            p
+            p,
+            mapper
         )
       : nullptr
     ),
@@ -303,17 +304,17 @@ void Foam::externalTemperatureFvPatchScalarField::map
 {
     mixedFvPatchScalarField::map(ptf, mapper);
 
+    const externalTemperatureFvPatchScalarField& etptf =
+        refCast<const externalTemperatureFvPatchScalarField>(ptf);
+
     if (h_.valid())
     {
-        h_->map(!mapper.direct());
+        h_->map(etptf.h_(), mapper);
     }
-
-    const externalTemperatureFvPatchScalarField& tiptf =
-        refCast<const externalTemperatureFvPatchScalarField>(ptf);
 
     if (qrName_ != word::null)
     {
-        mapper(qrPrevious_, tiptf.qrPrevious_);
+        mapper(qrPrevious_, etptf.qrPrevious_);
     }
 }
 

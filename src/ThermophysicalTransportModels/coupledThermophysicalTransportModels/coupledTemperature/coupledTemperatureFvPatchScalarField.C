@@ -222,7 +222,8 @@ coupledTemperatureFvPatchScalarField
       ? new FunctionalDimensionedField<scalar, fvPatch>
         (
             psf.h_(),
-            p
+            p,
+            mapper
         )
       : nullptr
     ),
@@ -308,11 +309,14 @@ void Foam::coupledTemperatureFvPatchScalarField::map
     const fieldMapper& mapper
 )
 {
-    map(refCast<const coupledTemperatureFvPatchScalarField>(ptf), mapper);
+    const coupledTemperatureFvPatchScalarField& ctptf =
+        refCast<const coupledTemperatureFvPatchScalarField>(ptf);
+
+    map(ctptf, mapper);
 
     if (h_.valid())
     {
-        h_->map(!mapper.direct());
+        h_->map(ctptf.h_(), mapper);
     }
 }
 

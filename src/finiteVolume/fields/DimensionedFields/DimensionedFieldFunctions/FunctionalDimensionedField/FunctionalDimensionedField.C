@@ -173,6 +173,39 @@ Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
 template<class Type, class GeoMesh>
 Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
 (
+    const FunctionalDimensionedField<Type, GeoMesh>& udff,
+    const GeoMesh& mesh,
+    const fieldMapper& mapper
+)
+:
+    DimensionedField<Type, GeoMesh>
+    (
+        udff,
+        mesh,
+        udff.dimensions(),
+        false
+    ),
+    funcName_(udff.funcName_),
+    funcPtr_
+    (
+        udff.funcPtr_.valid()
+      ? udff.funcPtr_->clone(*this)
+      : autoPtr<DimensionedFieldFunction<DimensionedField<Type, GeoMesh>>>
+        (
+            nullptr
+        )
+    )
+{
+    if (!funcPtr_.valid())
+    {
+        mapper(*this, udff);
+    }
+}
+
+
+template<class Type, class GeoMesh>
+Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
+(
     const FunctionalDimensionedField<Type, GeoMesh>& udff
 )
 :
@@ -193,14 +226,20 @@ Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>
-void Foam::FunctionalDimensionedField<Type, GeoMesh>::map(const bool evaluate)
+void Foam::FunctionalDimensionedField<Type, GeoMesh>::map
+(
+    const DimensionedField<Type, GeoMesh>& df,
+    const fieldMapper& mapper
+)
 {
-    InfoInFunction << endl;
-    this->setSize(this->mesh().size());
-
-    if (evaluate && funcPtr_.valid())
+    if (!mapper.direct() && funcPtr_.valid())
     {
+        this->setSize(this->mesh().size());
         funcPtr_->reset();
+    }
+    else
+    {
+        mapper(*this, df);
     }
 }
 
