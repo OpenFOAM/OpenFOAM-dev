@@ -35,24 +35,12 @@ License
 
 #define makeDimensionedSurfaceFieldFunctions(Type, nullArg)                    \
                                                                                \
-    typedef DimensionedField<Type, surfaceMesh, Field>                         \
-        DimensionedField##Type##surfaceMesh##Field;                            \
-    defineDimensionedFieldFunction                                             \
-    (                                                                          \
-        DimensionedField##Type##surfaceMesh##Field                             \
-    );                                                                         \
+    typedef DimensionedField<Type, surfaceMesh, Field> Type##SurfaceMesh;      \
+    defineDimensionedFieldFunction( Type##SurfaceMesh);                        \
     namespace DimensionedFieldFunctions                                        \
     {                                                                          \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            TimeFunction,                                                      \
-            DimensionedField##Type##surfaceMesh##Field                         \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            Zonal,                                                             \
-            DimensionedField##Type##surfaceMesh##Field                         \
-        );                                                                     \
+        addDimensionedFieldFunction(TimeFunction, Type##SurfaceMesh);          \
+        addDimensionedFieldFunction(Zonal, Type##SurfaceMesh);                 \
     }
 
 namespace Foam

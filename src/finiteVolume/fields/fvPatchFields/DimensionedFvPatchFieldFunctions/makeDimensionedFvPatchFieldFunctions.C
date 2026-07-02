@@ -41,44 +41,16 @@ License
 
 #define makeDimensionedFvPatchFieldFunctions(Type, nullArg)                    \
                                                                                \
-    typedef DimensionedField<Type, fvPatch, Field>                             \
-        DimensionedField##Type##fvPatch##Field;                                \
-    defineDimensionedFieldFunction                                             \
-    (                                                                          \
-        DimensionedField##Type##fvPatch##Field                                 \
-    );                                                                         \
+    typedef DimensionedField<Type, fvPatch, Field> Type##FvPatch;              \
+    defineDimensionedFieldFunction( Type##FvPatch);                            \
     namespace DimensionedFieldFunctions                                        \
     {                                                                          \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            TimeFunction,                                                      \
-            DimensionedField##Type##fvPatch##Field                             \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            Zonal,                                                             \
-            DimensionedField##Type##fvPatch##Field                             \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            DistanceFunction,                                                  \
-            DimensionedField##Type##fvPatch##Field                             \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            Coded,                                                             \
-            DimensionedField##Type##fvPatch##Field                             \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            Surfaces,                                                          \
-            DimensionedField##Type##fvPatch##Field                             \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            FieldFunction,                                                     \
-            DimensionedField##Type##fvPatch##Field                             \
-        );                                                                     \
+        addDimensionedFieldFunction(TimeFunction, Type##FvPatch);              \
+        addDimensionedFieldFunction(Zonal, Type##FvPatch);                     \
+        addDimensionedFieldFunction(DistanceFunction, Type##FvPatch);          \
+        addDimensionedFieldFunction(Coded, Type##FvPatch);                     \
+        addDimensionedFieldFunction(Surfaces, Type##FvPatch);                  \
+        addDimensionedFieldFunction(FieldFunction, Type##FvPatch);             \
     }
 
 namespace Foam

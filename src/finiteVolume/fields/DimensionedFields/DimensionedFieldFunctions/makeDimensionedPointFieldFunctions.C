@@ -38,39 +38,15 @@ License
 
 #define makeDimensionedPointFieldFunctions(Type, nullArg)                      \
                                                                                \
-    typedef DimensionedField<Type, pointMesh, Field>                           \
-        DimensionedField##Type##pointMesh##Field;                              \
-    defineDimensionedFieldFunction                                             \
-    (                                                                          \
-        DimensionedField##Type##pointMesh##Field                               \
-    );                                                                         \
+    typedef DimensionedField<Type, pointMesh, Field> Type##PointMesh;          \
+    defineDimensionedFieldFunction(Type##PointMesh);                           \
     namespace DimensionedFieldFunctions                                        \
     {                                                                          \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            TimeFunction,                                                      \
-            DimensionedField##Type##pointMesh##Field                           \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            Zonal,                                                             \
-            DimensionedField##Type##pointMesh##Field                           \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            DistanceFunction,                                                  \
-            DimensionedField##Type##pointMesh##Field                           \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            Coded,                                                             \
-            DimensionedField##Type##pointMesh##Field                           \
-        );                                                                     \
-        addDimensionedFieldFunction                                            \
-        (                                                                      \
-            FieldFunction,                                                     \
-            DimensionedField##Type##pointMesh##Field                           \
-        );                                                                     \
+        addDimensionedFieldFunction(TimeFunction, Type##PointMesh);            \
+        addDimensionedFieldFunction(Zonal, Type##PointMesh);                   \
+        addDimensionedFieldFunction(DistanceFunction, Type##PointMesh);        \
+        addDimensionedFieldFunction(Coded, Type##PointMesh);                   \
+        addDimensionedFieldFunction(FieldFunction, Type##PointMesh);           \
     }
 
 namespace Foam

@@ -33,20 +33,17 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeDimensionedFieldFunctions(MeshType)                                \
+#define makeDimensionedFieldFunctions(meshType, MeshType)                      \
                                                                                \
-    typedef DimensionedField<scalar, MeshType, Field>                          \
-        DimensionedField##scalar##MeshType##Field;                             \
-                                                                               \
-    typedef DimensionedField<vector, MeshType, Field>                          \
-        DimensionedField##vector##MeshType##Field;                             \
+    typedef DimensionedField<scalar, meshType, Field> scalar##MeshType;        \
+    typedef DimensionedField<vector, meshType, Field> vector##MeshType;        \
                                                                                \
     namespace DimensionedFieldFunctions                                        \
     {                                                                          \
         addDimensionedFieldFunction                                            \
         (                                                                      \
             AtmosphericBoundaryLayerVelocity,                                  \
-            DimensionedField##vector##MeshType##Field                          \
+            vector##MeshType                                                   \
         );                                                                     \
     }                                                                          \
                                                                                \
@@ -55,7 +52,7 @@ License
         addDimensionedFieldFunction                                            \
         (                                                                      \
             AtmosphericBoundaryLayerTurbulentKineticEnergy,                    \
-            DimensionedField##scalar##MeshType##Field                          \
+            scalar##MeshType                                                   \
         );                                                                     \
     }                                                                          \
                                                                                \
@@ -63,15 +60,15 @@ License
     {                                                                          \
         addDimensionedFieldFunction                                            \
         (                                                                      \
-            AtmosphericBoundaryLayerTurbulentEpsilon,                  \
-            DimensionedField##scalar##MeshType##Field                          \
+            AtmosphericBoundaryLayerTurbulentEpsilon,                          \
+            scalar##MeshType                                                   \
         );                                                                     \
     }
 
 namespace Foam
 {
-    makeDimensionedFieldFunctions(fvMesh);
-    makeDimensionedFieldFunctions(fvPatch);
+    makeDimensionedFieldFunctions(fvMesh, FvMesh);
+    makeDimensionedFieldFunctions(fvPatch, FvPatch);
 }
 
 

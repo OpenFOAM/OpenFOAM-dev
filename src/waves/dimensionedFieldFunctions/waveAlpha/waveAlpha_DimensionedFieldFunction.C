@@ -42,10 +42,10 @@ namespace DimensionedFieldFunctions
     );
 
     typedef DimensionedFieldFunction<DimensionedField<scalar, fvMesh>>
-        DimensionedFieldscalarfvMeshFieldDimensionedFieldFunction;
+        scalarFvMeshDimensionedFieldFunction;
     addToRunTimeSelectionTable
     (
-        DimensionedFieldscalarfvMeshFieldDimensionedFieldFunction,
+        scalarFvMeshDimensionedFieldFunction,
         waveAlpha,
         dictionary
     );

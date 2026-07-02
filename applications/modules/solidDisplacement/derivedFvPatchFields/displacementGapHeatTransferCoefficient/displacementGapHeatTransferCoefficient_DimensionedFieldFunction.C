@@ -41,10 +41,10 @@ namespace DimensionedFieldFunctions
     );
 
     typedef DimensionedFieldFunction<DimensionedField<scalar, fvPatch>>
-        DimensionedFieldFunctionScalarFvPatch;
+        scalarFvPatchDimensionedFieldFunction;
     addToRunTimeSelectionTable
     (
-        DimensionedFieldFunctionScalarFvPatch,
+        scalarFvPatchDimensionedFieldFunction,
         displacementGapHeatTransferCoefficient,
         dictionary
     );

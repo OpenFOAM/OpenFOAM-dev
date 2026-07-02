@@ -195,6 +195,7 @@ Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
 template<class Type, class GeoMesh>
 void Foam::FunctionalDimensionedField<Type, GeoMesh>::map(const bool evaluate)
 {
+    InfoInFunction << endl;
     this->setSize(this->mesh().size());
 
     if (evaluate && funcPtr_.valid())
