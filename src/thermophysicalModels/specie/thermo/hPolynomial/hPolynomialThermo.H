@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,16 +54,12 @@ Usage
     }
     \endverbatim
 
-    Note:
-        Specific heat at constant pressure polynomial coefficients evaluate to
-        an expression in [J/kg/K].
-
 SourceFiles
     hPolynomialThermoI.H
     hPolynomialThermo.C
 
 See also
-    Foam::Polynomial
+    Foam::FixedPolynomial
 
 \*---------------------------------------------------------------------------*/
 
@@ -71,7 +67,7 @@ See also
 #define hPolynomialThermo_H
 
 #include "scalar.H"
-#include "Polynomial.H"
+#include "FixedLaurentPolynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -130,20 +126,16 @@ class hPolynomialThermo
         scalar sf_;
 
         //- Specific heat at constant pressure polynomial coeffs [J/kg/K/K^i]
-        Polynomial<PolySize> CpCoeffs_;
+        FixedLaurentPolynomial<scalar, 0, PolySize> CpCoeffs_;
 
-        //- Enthalpy polynomial coeffs [J/kg/K^i]
-        //  Derived from Cp coeffs. Relative to Tstd.
-        typename Polynomial<PolySize>::intPolyType hCoeffs_;
+        //- Reference sensible enthalpy
+        scalar hsRef_;
 
-        //- Entropy polynomial coeffs [J/kg/K/K^i]
-        //  Derived from Cp coeffs. Relative to Tstd.
-        Polynomial<PolySize> sCoeffs_;
+        //- Reference entropy
+        scalar sRef_;
 
 
-public:
-
-    // Constructors
+    // Private Constructors
 
         //- Construct from components
         inline hPolynomialThermo
@@ -151,10 +143,15 @@ public:
             const EquationOfState& pt,
             const scalar hf,
             const scalar sf,
-            const Polynomial<PolySize>& CpCoeffs,
-            const typename Polynomial<PolySize>::intPolyType& hCoeffs,
-            const Polynomial<PolySize>& sCoeffs
+            const FixedLaurentPolynomial<scalar, 0, PolySize>& CpCoeffs,
+            const scalar hsRef,
+            const scalar sRef
         );
+
+
+public:
+
+    // Constructors
 
         //- Construct from name and dictionary
         hPolynomialThermo(const word& name, const dictionary& dict);

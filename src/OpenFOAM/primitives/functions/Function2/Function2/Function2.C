@@ -152,7 +152,7 @@ void Foam::writeEntry
     const Function2<Type>& f2
 )
 {
-    writeEntry(os, {xUnits, yUnits, valueUnits}, f2);
+    writeEntry(os, Function2s::unitSets({xUnits, yUnits, valueUnits}), f2);
 }
 
 

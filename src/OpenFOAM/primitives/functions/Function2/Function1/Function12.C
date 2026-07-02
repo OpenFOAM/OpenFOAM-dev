@@ -95,7 +95,7 @@ void Foam::Function2s::Function12<Type>::write
     const unitSets& units
 ) const
 {
-    writeEntry(os, {index_ ? units.y : units.x, units.value}, f_());
+    writeEntry(os, index_ ? units.y : units.x, units.value, f_());
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polynomialSolidTransport.H"
-#include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -38,9 +37,12 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
     Thermo(name, dict),
     kappaCoeffs_
     (
-        dict.subDict("transport").lookup
+        dict
+       .subDict("transport")
+       .lookup<FixedPolynomial<scalar, PolySize>>
         (
-            "kappaCoeffs<" + Foam::name(PolySize) + '>'
+            "kappaCoeffs<" + Foam::name(PolySize) + '>',
+            Function1s::unitSets({dimTemperature, dimThermalConductivity})
         )
     )
 {}
@@ -60,6 +62,7 @@ void Foam::polynomialSolidTransport<Thermo, PolySize>::write(Ostream& os) const
         word("kappaCoeffs<" + Foam::name(PolySize) + '>'),
         kappaCoeffs_
     );
+
     os  << indent << dict.dictName() << dict;
 }
 

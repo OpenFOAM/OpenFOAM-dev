@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "specie.H"
+#include "logPolynomialTransport.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -31,8 +31,8 @@ template<class Thermo, int PolySize>
 inline Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 (
     const Thermo& t,
-    const Polynomial<PolySize>& muLogCoeffs,
-    const Polynomial<PolySize>& kappaLogCoeffs
+    const FixedPolynomial<scalar, PolySize>& muLogCoeffs,
+    const FixedPolynomial<scalar, PolySize>& kappaLogCoeffs
 )
 :
     Thermo(t),

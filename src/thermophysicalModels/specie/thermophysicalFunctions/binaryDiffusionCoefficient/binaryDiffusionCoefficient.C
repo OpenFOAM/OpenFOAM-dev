@@ -42,7 +42,7 @@ namespace Function2s
 Foam::Function2s::binaryDiffusionCoefficient::binaryDiffusionCoefficient
 (
     const word& name,
-    const Polynomial<5> coeffs
+    const FixedPolynomial<scalar, 5> coeffs
 )
 :
     FieldFunction2<scalar, binaryDiffusionCoefficient>(name),
@@ -58,7 +58,14 @@ Foam::Function2s::binaryDiffusionCoefficient::binaryDiffusionCoefficient
 )
 :
     FieldFunction2<scalar, binaryDiffusionCoefficient>(name),
-    coeffs_(dict.lookup("coeffs"))
+    coeffs_
+    (
+        dict.lookup<FixedPolynomial<scalar, 5>>
+        (
+            "coeffs",
+            Function1s::unitSets({units.y, units.value})
+        )
+    )
 {}
 
 
@@ -70,7 +77,13 @@ void Foam::Function2s::binaryDiffusionCoefficient::write
     const unitSets& units
 ) const
 {
-    writeEntry(os, "coeffs", coeffs_);
+    writeEntry
+    (
+        os,
+        "coeffs",
+        Function1s::unitSets({units.y, units.value}),
+        coeffs_
+    );
 }
 
 

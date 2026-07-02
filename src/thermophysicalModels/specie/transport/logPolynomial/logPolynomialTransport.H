@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,14 +65,14 @@ SourceFiles
     logPolynomialTransport.C
 
 See also
-    Foam::Polynomial
+    Foam::FixedPolynomial
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef logPolynomialTransport_H
 #define logPolynomialTransport_H
 
-#include "Polynomial.H"
+#include "FixedPolynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -117,10 +117,10 @@ class logPolynomialTransport
     // Private Data
 
         //- Dynamic viscosity polynomial coefficients [Pa.s/K^i]
-        Polynomial<PolySize> muLogCoeffs_;
+        FixedPolynomial<scalar, PolySize> muLogCoeffs_;
 
         //- Thermal conductivity polynomial coefficients [W/m/K/K^i]
-        Polynomial<PolySize> kappaLogCoeffs_;
+        FixedPolynomial<scalar, PolySize> kappaLogCoeffs_;
 
 
 public:
@@ -131,8 +131,8 @@ public:
         inline logPolynomialTransport
         (
             const Thermo& t,
-            const Polynomial<PolySize>& muPoly,
-            const Polynomial<PolySize>& kappaPoly
+            const FixedPolynomial<scalar, PolySize>& muPoly,
+            const FixedPolynomial<scalar, PolySize>& kappaPoly
         );
 
         //- Construct as named copy

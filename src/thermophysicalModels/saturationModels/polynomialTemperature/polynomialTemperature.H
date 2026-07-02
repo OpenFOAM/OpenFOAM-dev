@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 #define polynomialTemperature_H
 
 #include "saturationTemperatureModel.H"
-#include "Polynomial.H"
+#include "FixedPolynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,7 +63,7 @@ class polynomialTemperature
     // Private Data
 
         //- Polynomial coefficients
-        Polynomial<8> C_;
+        FixedPolynomial<scalar, 8> C_;
 
 
 public:

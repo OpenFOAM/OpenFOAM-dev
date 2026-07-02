@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "hPolynomialThermo.H"
-#include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -40,33 +39,35 @@ Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
     (
         dict
        .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
+       .lookupBackwardsCompatible<scalar>
+        (
+            {"hf", "Hf"},
+            dimEnergy/dimMass
+        )
     ),
     sf_
     (
         dict
        .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>({"sf", "Sf"})
+       .lookupBackwardsCompatible<scalar>
+        (
+            {"sf", "Sf"},
+            dimEnergy/dimTemperature/dimMass
+        )
     ),
     CpCoeffs_
     (
-        dict.subDict("thermodynamics").lookup
+        dict
+       .subDict("thermodynamics")
+       .lookup<FixedLaurentPolynomial<scalar, 0, PolySize>>
         (
-            "CpCoeffs<" + Foam::name(PolySize) + '>'
+            "CpCoeffs<" + Foam::name(PolySize) + '>',
+            Function1s::unitSets({dimTemperature, dimSpecificHeatCapacity})
         )
     ),
-    hCoeffs_(),
-    sCoeffs_()
-{
-    hCoeffs_ = CpCoeffs_.integral();
-    sCoeffs_ = CpCoeffs_.integralMinus1();
-
-    // Offset h poly so that it is relative to the enthalpy at Tstd
-    hCoeffs_[0] += hf_ - hCoeffs_.value(Tstd);
-
-    // Offset s poly so that it is relative to the entropy at Tstd
-    sCoeffs_[0] += sf_ - sCoeffs_.value(Tstd);
-}
+    hsRef_(CpCoeffs_.integral(constant::thermodynamic::Tstd)),
+    sRef_(CpCoeffs_.byX().integral(constant::thermodynamic::Tstd))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -79,15 +80,12 @@ void Foam::hPolynomialThermo<EquationOfState, PolySize>::write
 {
     EquationOfState::write(os);
 
-    dictionary dict("thermodynamics");
-    dict.add("hf", hf_);
-    dict.add("sf", sf_);
-    dict.add
-    (
-        word("CpCoeffs<" + Foam::name(PolySize) + '>'),
-        CpCoeffs_
-    );
-    os  << indent << dict.dictName() << dict;
+    os  << indent << "thermodynamics" << dictionary::entries
+        (
+            "hf", hf_,
+            "sf", sf_,
+            word("CpCoeffs<" + Foam::name(PolySize) + '>'), CpCoeffs_
+        );
 }
 
 

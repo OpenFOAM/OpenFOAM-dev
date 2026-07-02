@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,6 @@ Description
     Transport package using polynomial functions for solid \c kappa.
 
 Usage
-
     \table
         Property        | Description
         kappaCoeffs<8>  | Thermal conductivity polynomial coefficients
@@ -48,23 +47,19 @@ Usage
             \kappa = 1000 - 0.05 T + 0.003 T^2
         \f]
 
-    Note:
-        Thermal conductivity polynomial coefficients evaluate to an expression
-        in [W/m/K].
-
 SourceFiles
     polynomialSolidTransportI.H
     polynomialSolidTransport.C
 
 See also
-    Foam::Polynomial
+    Foam::FixedPolynomial
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef polynomialSolidTransport_H
 #define polynomialSolidTransport_H
 
-#include "Polynomial.H"
+#include "FixedPolynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -109,20 +104,12 @@ class polynomialSolidTransport
     // Private Data
 
         //- Thermal conductivity polynomial coefficients
-        //  Note: input in [W/m/K]
-        Polynomial<PolySize> kappaCoeffs_;
+        FixedPolynomial<scalar, PolySize> kappaCoeffs_;
 
 
 public:
 
     // Constructors
-
-        //- Construct from components
-        inline polynomialSolidTransport
-        (
-            const Thermo& t,
-            const Polynomial<PolySize>& kappaPoly
-        );
 
         //- Construct as named copy
         inline polynomialSolidTransport

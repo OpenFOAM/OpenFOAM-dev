@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,16 +56,12 @@ Usage
     }
     \endverbatim
 
-    Note:
-        Specific heat at constant volume polynomial coefficients evaluate to an
-        expression in [J/kg/K].
-
 SourceFiles
     ePolynomialThermoI.H
     ePolynomialThermo.C
 
 See also
-    Foam::Polynomial
+    Foam::FixedLaurentPolynomial
 
 \*---------------------------------------------------------------------------*/
 
@@ -73,7 +69,7 @@ See also
 #define ePolynomialThermo_H
 
 #include "scalar.H"
-#include "Polynomial.H"
+#include "FixedLaurentPolynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -132,18 +128,16 @@ class ePolynomialThermo
         scalar sf_;
 
         //- Specific heat at constant volume polynomial coeffs [J/kg/K/K^i]
-        Polynomial<PolySize> CvCoeffs_;
+        FixedLaurentPolynomial<scalar, 0, PolySize> CvCoeffs_;
 
-        //- Internal energy polynomial coeffs [J/kg/K^i]
-        //  Derived from Cv coeffs. Relative to Tstd.
-        typename Polynomial<PolySize>::intPolyType eCoeffs_;
+        //- Reference sensible internal energy
+        scalar esRef_;
 
-        //- Entropy polynomial coeffs [J/kg/K/K^i]
-        //  Derived from Cv coeffs. Relative to Tstd.
-        Polynomial<PolySize> sCoeffs_;
+        //- Reference entropy
+        scalar sRef_;
 
 
-    // Private Member Functions
+    // Private Constructors
 
         //- Construct from components
         inline ePolynomialThermo
@@ -151,9 +145,9 @@ class ePolynomialThermo
             const EquationOfState& pt,
             const scalar hf,
             const scalar sf,
-            const Polynomial<PolySize>& CvCoeffs,
-            const typename Polynomial<PolySize>::intPolyType& eCoeffs,
-            const Polynomial<PolySize>& sCoeffs
+            const FixedLaurentPolynomial<scalar, 0, PolySize>& CvCoeffs,
+            const scalar esRef,
+            const scalar sRef
         );
 
 

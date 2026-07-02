@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ See also
 #ifndef polynomialTransport_H
 #define polynomialTransport_H
 
-#include "Polynomial.H"
+#include "FixedPolynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -116,10 +116,10 @@ class polynomialTransport
     // Private Data
 
         //- Dynamic viscosity polynomial coefficients [Pa.s/K^i]
-        Polynomial<PolySize> muCoeffs_;
+        FixedPolynomial<scalar, PolySize> muCoeffs_;
 
         //- Thermal conductivity polynomial coefficients [W/m/K/K^i]
-        Polynomial<PolySize> kappaCoeffs_;
+        FixedPolynomial<scalar, PolySize> kappaCoeffs_;
 
 
 public:
@@ -130,8 +130,8 @@ public:
         inline polynomialTransport
         (
             const Thermo& t,
-            const Polynomial<PolySize>& muPoly,
-            const Polynomial<PolySize>& kappaPoly
+            const FixedPolynomial<scalar, PolySize>& muPoly,
+            const FixedPolynomial<scalar, PolySize>& kappaPoly
         );
 
         //- Construct as named copy

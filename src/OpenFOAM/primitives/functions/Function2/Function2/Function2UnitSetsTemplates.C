@@ -23,51 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Radial2.H"
+#include "Function2UnitSets.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::Function2s::Radial<Type>::Radial
-(
-    const word& name,
-    const unitSets& units,
-    const dictionary& dict
-)
-:
-    FieldFunction2<Type, Radial<Type>>(name),
-    value_
-    (
-        Function1<Type>::New("value", {units.x + units.y, units.value}, dict)
-    )
-{}
-
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function2s::Radial<Type>::Radial(const Radial<Type>& se)
-:
-    FieldFunction2<Type, Radial<Type>>(se),
-    value_(se.value_, false)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::Function2s::Radial<Type>::~Radial()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function2s::Radial<Type>::write
+void Foam::writeEntry
 (
     Ostream& os,
-    const unitSets& units
-) const
+    const Function2s::unitSets& defaultUnits,
+    const Type& t
+)
 {
-    writeEntry(os, units.x + units.y, units.value, value_());
+    Type tUser(t);
+    convert(tUser, defaultUnits, unitSet::makeUserOp());
+    return writeEntry(os, tUser);
 }
 
 

@@ -149,7 +149,7 @@ void Foam::Function2s::ProductFunction1s<Type, rank>::write
     {
         if (fs[i].valid())
         {
-            writeEntry(os, {i ? units.y : units.x, units::any}, fs[i]());
+            writeEntry(os, i ? units.y : units.x, units::any, fs[i]());
         }
     }
 }
@@ -166,7 +166,7 @@ void Foam::Function2s::ProductFunction1s<Type, 0>::write
     {
         if (fs[i].valid())
         {
-            writeEntry(os, {i ? units.y : units.x, units::any}, fs[i]());
+            writeEntry(os, i ? units.y : units.x, units::any, fs[i]());
         }
     }
 }

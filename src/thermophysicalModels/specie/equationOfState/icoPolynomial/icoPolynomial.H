@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ SourceFiles
     icoPolynomial.C
 
 See also
-    Foam::Polynomial
+    Foam::FixedPolynomial
 
 \*---------------------------------------------------------------------------*/
 
@@ -64,7 +64,7 @@ See also
 #define icoPolynomial_H
 
 #include "autoPtr.H"
-#include "Polynomial.H"
+#include "FixedPolynomial.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -117,7 +117,7 @@ class icoPolynomial
     // Private Data
 
         //- Density polynomial coefficients [kg/m^3/K^i]
-        Polynomial<PolySize> rhoCoeffs_;
+        FixedPolynomial<scalar, PolySize> rhoCoeffs_;
 
 
 public:
@@ -128,7 +128,7 @@ public:
         inline icoPolynomial
         (
             const Specie& sp,
-            const Polynomial<PolySize>& rhoPoly
+            const FixedPolynomial<scalar, PolySize>& rhoPoly
         );
 
         //- Construct from name and dictionary

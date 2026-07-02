@@ -97,6 +97,10 @@ void assertNoConvertUnits
 //- Write a units entry
 void writeEntry(Ostream& os, const Function2s::unitSets& units);
 
+//- Write a type with Function2 unit conversion
+template<class Type>
+inline void writeEntry(Ostream& os, const Function2s::unitSets&, const Type&);
+
 
 // IOStream Operators
 
@@ -109,6 +113,12 @@ Ostream& operator<<(Ostream& os, const Function2s::unitSets&);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "Function2UnitSetsTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

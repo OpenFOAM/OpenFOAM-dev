@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,27 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Polynomial.H"
+#include "Function1UnitSets.H"
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-template<int PolySize>
-Foam::Ostream& Foam::operator<<
+template<class Type>
+void Foam::writeEntry
 (
     Ostream& os,
-    const Polynomial<PolySize>& poly
+    const Function1s::unitSets& defaultUnits,
+    const Type& t
 )
 {
-    os  << static_cast
-            <VectorSpace<Polynomial<PolySize>, scalar, PolySize>>(poly);
-
-    // Check state of Ostream
-    os.check
-    (
-        "Ostream& operator<<(Ostream&, const Polynomial<PolySize>&)"
-    );
-
-    return os;
+    Type tUser(t);
+    convert(tUser, defaultUnits, unitSet::makeUserOp());
+    return writeEntry(os, tUser);
 }
 
 

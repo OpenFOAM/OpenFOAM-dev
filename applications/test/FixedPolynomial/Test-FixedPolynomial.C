@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,14 +30,14 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "IStringStream.H"
-#include "Polynomial.H"
+#include "FixedPolynomial.H"
 #include "randomGenerator.H"
 #include "cpuTime.H"
 
 using namespace Foam;
 
 const int PolySize = 8;
-const scalar coeff[] = { 0.11, 0.45, -0.94, 1.58, -2.58, 0.08, 3.15, -4.78 };
+const scalar coeff[8] = { 0.11, 0.45, -0.94, 1.58, -2.58, 0.08, 3.15, -4.78 };
 const char* polyDef = "(0.11 0.45 -0.94 1.58 -2.58 0.08 3.15 -4.78)";
 
 
@@ -109,11 +109,11 @@ int main(int argc, char *argv[])
     const label nIters = 1000;
     scalar sum = 0.0;
 
-    Info<< "null poly = " << (Polynomial<8>()) << nl
+    Info<< "null poly = " << (FixedPolynomial<scalar, 8>(Zero)) << nl
         << endl;
 
-    Polynomial<8> poly(coeff);
-    Polynomial<9> intPoly(poly.integral(0.0));
+    FixedPolynomial<scalar, 8> poly(coeff);
+    FixedPolynomial<scalar,9> intPoly(poly.integralPolynomial(0));
 
     IStringStream is(polyDef);
 
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
     Info<< "intPoly = " << poly.integral(0.0) << nl
         << endl;
 
-    Polynomial<8> polyCopy = poly;
+    FixedPolynomial<scalar, 8> polyCopy = poly;
     Info<< "poly, polyCopy = " << poly << ", " << polyCopy << nl << endl;
     polyCopy = 2.5*poly;
     Info<< "2.5*poly = " << polyCopy << nl << endl;
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
 
 
     //
-    // test speed of Polynomial:
+    // test speed of FixedPolynomial:
     //
     Info<< "start timing loops" << nl
         << "~~~~~~~~~~~~~~~~~~" << endl;

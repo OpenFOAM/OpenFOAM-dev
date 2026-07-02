@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ePolynomialThermo.H"
+#include "thermodynamicConstants.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -33,17 +34,17 @@ inline Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
     const EquationOfState& pt,
     const scalar hf,
     const scalar sf,
-    const Polynomial<PolySize>& CvCoeffs,
-    const typename Polynomial<PolySize>::intPolyType& eCoeffs,
-    const Polynomial<PolySize>& sCoeffs
+    const FixedLaurentPolynomial<scalar, 0, PolySize>& CvCoeffs,
+    const scalar esRef,
+    const scalar sRef
 )
 :
     EquationOfState(pt),
     hf_(hf),
     sf_(sf),
     CvCoeffs_(CvCoeffs),
-    eCoeffs_(eCoeffs),
-    sCoeffs_(sCoeffs)
+    esRef_(esRef),
+    sRef_(sRef)
 {}
 
 
@@ -58,8 +59,8 @@ inline Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
     hf_(pt.hf_),
     sf_(pt.sf_),
     CvCoeffs_(pt.CvCoeffs_),
-    eCoeffs_(pt.eCoeffs_),
-    sCoeffs_(pt.sCoeffs_)
+    esRef_(pt.esRef_),
+    sRef_(pt.sRef_)
 {}
 
 
@@ -93,7 +94,7 @@ inline Foam::scalar Foam::ePolynomialThermo<EquationOfState, PolySize>::es
     const scalar T
 ) const
 {
-    return eCoeffs_.value(T) + EquationOfState::e(p, T);
+    return CvCoeffs_.integral(T) - esRef_ + EquationOfState::e(p, T);
 }
 
 
@@ -123,7 +124,9 @@ inline Foam::scalar Foam::ePolynomialThermo<EquationOfState, PolySize>::s
     const scalar T
 ) const
 {
-    return sCoeffs_.value(T) + EquationOfState::sv(p, T);
+    return
+        CvCoeffs_.byX().integral(T) - sRef_ + sf_
+      + EquationOfState::sv(p, T);
 }
 
 
@@ -133,8 +136,11 @@ inline Foam::scalar Foam::ePolynomialThermo<EquationOfState, PolySize>::gStd
     const scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     return
-        eCoeffs_.value(T) + hf() + pStd/EquationOfState::rho(pStd, T)
+        CvCoeffs_.integral(T) - esRef_ + hf()
+      + pStd/EquationOfState::rho(pStd, T)
       - s(pStd, T)*T;
 }
 
@@ -171,8 +177,8 @@ inline void Foam::ePolynomialThermo<EquationOfState, PolySize>::operator+=
         hf_ = Y1*hf_ + Y2*pt.hf_;
         sf_ = Y1*sf_ + Y2*pt.sf_;
         CvCoeffs_ = Y1*CvCoeffs_ + Y2*pt.CvCoeffs_;
-        eCoeffs_ = Y1*eCoeffs_ + Y2*pt.eCoeffs_;
-        sCoeffs_ = Y1*sCoeffs_ + Y2*pt.sCoeffs_;
+        esRef_ = Y1*esRef_ + Y2*pt.esRef_;
+        sRef_ = Y1*sRef_ + Y2*pt.sRef_;
     }
 }
 
@@ -207,8 +213,8 @@ inline Foam::ePolynomialThermo<EquationOfState, PolySize> Foam::operator+
             pt1.hf_,
             pt1.sf_,
             pt1.CvCoeffs_,
-            pt1.eCoeffs_,
-            pt1.sCoeffs_
+            pt1.esRef_,
+            pt1.sRef_
         );
     }
     {
@@ -221,8 +227,8 @@ inline Foam::ePolynomialThermo<EquationOfState, PolySize> Foam::operator+
             Y1*pt1.hf_ + Y2*pt2.hf_,
             Y1*pt1.sf_ + Y2*pt2.sf_,
             Y1*pt1.CvCoeffs_ + Y2*pt2.CvCoeffs_,
-            Y1*pt1.eCoeffs_ + Y2*pt2.eCoeffs_,
-            Y1*pt1.sCoeffs_ + Y2*pt2.sCoeffs_
+            Y1*pt1.esRef_ + Y2*pt2.esRef_,
+            Y1*pt1.sRef_ + Y2*pt2.sRef_
         );
     }
 }
@@ -241,8 +247,8 @@ inline Foam::ePolynomialThermo<EquationOfState, PolySize> Foam::operator*
         pt.hf_,
         pt.sf_,
         pt.CvCoeffs_,
-        pt.eCoeffs_,
-        pt.sCoeffs_
+        pt.esRef_,
+        pt.sRef_
     );
 }
 
@@ -269,8 +275,8 @@ inline Foam::ePolynomialThermo<EquationOfState, PolySize> Foam::operator==
         Y2*pt2.hf_       - Y1*pt1.hf_,
         Y2*pt2.sf_       - Y1*pt1.sf_,
         Y2*pt2.CvCoeffs_ - Y1*pt1.CvCoeffs_,
-        Y2*pt2.eCoeffs_  - Y1*pt1.eCoeffs_,
-        Y2*pt2.sCoeffs_  - Y1*pt1.sCoeffs_
+        Y2*pt2.esRef_    - Y1*pt1.esRef_,
+        Y2*pt2.sRef_     - Y1*pt1.sRef_
     );
 }
 
