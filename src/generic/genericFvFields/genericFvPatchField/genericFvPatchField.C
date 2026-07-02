@@ -453,39 +453,6 @@ void Foam::genericFvPatchField<Type>::write(Ostream& os) const
 
     forAllConstIter(dictionary, dict_, iter)
     {
-        if (iter().keyword() != "type")
-        {
-            if
-            (
-                iter().isStream()
-             && iter().stream().size()
-             && iter().stream()[0].isWord()
-             && iter().stream()[0].wordToken() == "nonuniform"
-            )
-            {
-                #define WriteTypeFieldEntry(Type, nullArg)                     \
-                    else if (Type##Fields_.found(iter().keyword()))            \
-                    {                                                          \
-                        writeEntry                                             \
-                        (                                                      \
-                            os,                                                \
-                            iter().keyword(),                                  \
-                            *Type##Fields_.find(iter().keyword())()            \
-                        );                                                     \
-                    }
-                if (false) {} FOR_ALL_FIELD_TYPES(WriteTypeFieldEntry)
-                #undef WriteTypeFieldEntry
-            }
-            else
-            {
-               iter().write(os);
-            }
-        }
-    }
-
-
-    forAllConstIter(dictionary, dict_, iter)
-    {
         if (iter().keyword() != "type" && iter().keyword() != "value")
         {
             if
