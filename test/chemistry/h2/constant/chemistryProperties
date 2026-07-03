@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type            standard;
-
 chemistry       on;
 
 initialChemicalTimeStep 1e-7;
@@ -24,7 +22,7 @@ ode
 {
     solver          seulex;
     absTol          1e-12;
-    relTol          1e-1;
+    relTol          1e-2;
 }
 
 #include "reactions"

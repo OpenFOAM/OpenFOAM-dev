@@ -24,7 +24,7 @@ ode
 {
     solver          seulex;
     absTol          1e-12;
-    relTol          1e-1;
+    relTol          1e-2;
 }
 
 reduction
