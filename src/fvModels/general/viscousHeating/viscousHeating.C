@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,13 +97,13 @@ void Foam::fv::viscousHeating::addSup
     const compressible::momentumTransportModel& momentumTransport =
         mesh().lookupType<compressible::momentumTransportModel>();
 
-    volVectorField& U = const_cast<volVectorField&>(momentumTransport.U());
-
-    mesh().schemes().setFluxRequired(U.name());
-
     eqn -= fvc::div
     (
-        fvc::dotInterpolate(momentumTransport.divDevTau(U)->flux(), U)
+        fvc::dotInterpolate
+        (
+            mesh().magSf()*momentumTransport.devTau(),
+            momentumTransport.U()
+        )
     );
 }
 
@@ -119,13 +119,13 @@ void Foam::fv::viscousHeating::addSup
     const compressible::momentumTransportModel& momentumTransport =
         mesh().lookupType<compressible::momentumTransportModel>(phaseName_);
 
-    volVectorField& U = const_cast<volVectorField&>(momentumTransport.U());
-
-    mesh().schemes().setFluxRequired(U.name());
-
     eqn -= fvc::div
     (
-        fvc::dotInterpolate(momentumTransport.divDevTau(U)->flux(), U)
+        fvc::dotInterpolate
+        (
+            mesh().magSf()*momentumTransport.devTau(),
+            momentumTransport.U()
+        )
     );
 }
 

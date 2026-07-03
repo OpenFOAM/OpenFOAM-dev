@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,13 @@ Class
     Foam::fv::viscousHeating
 
 Description
-    Applies the viscous heating source to the total energy equation.
+    Applies the viscous heating redistribution source
+    to the total energy equation.
+
+    Note this term does not generate energy it is a conservative redistribution
+    term, the enthalpy or internal energy source from viscous heating is a
+    consequence of the kinetic energy loss, i.e. a transfer of energy from the
+    kinetic energy part of the total energy to the thermal part.
 
 Usage
     Example usage:
