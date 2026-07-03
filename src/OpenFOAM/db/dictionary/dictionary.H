@@ -1022,6 +1022,18 @@ bool readConfigFile
 //- Write a dictionary entry
 void writeEntry(Ostream& os, const dictionary& dict);
 
+//- Write a named dictionary entry
+void writeEntry(Ostream& os, const word& entryName, const dictionary& dict);
+
+//- Write a named dictionary given a set of entries
+template<class ... Entries>
+void writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const std::tuple<const Entries& ...>&
+);
+
 //- Helper function to write the keyword and entry
 template<class EntryType>
 void writeEntry(Ostream& os, const word& entryName, const EntryType& value);

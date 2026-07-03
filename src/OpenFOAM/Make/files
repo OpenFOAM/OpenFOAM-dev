@@ -216,7 +216,10 @@ $(dictionary)/dictionary.C
 $(dictionary)/dictionaryIO.C
 
 $(dictionary)/keyType/keyType.C
+
 $(dictionary)/printDictionary/printDictionary.C
+
+$(dictionary)/delimitDictionary/delimitDictionary.C
 
 entry = $(dictionary)/entry
 $(entry)/entry.C

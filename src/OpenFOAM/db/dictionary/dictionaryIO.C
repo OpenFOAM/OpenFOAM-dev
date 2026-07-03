@@ -808,4 +808,15 @@ void Foam::writeEntry(Ostream& os, const dictionary& value)
 }
 
 
+void Foam::writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const dictionary& value
+)
+{
+    os << indent << entryName << value;
+}
+
+
 // ************************************************************************* //
