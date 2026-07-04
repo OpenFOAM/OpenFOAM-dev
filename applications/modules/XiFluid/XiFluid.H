@@ -212,7 +212,6 @@ protected:
         void uSolve
         (
             const volScalarField::Internal& bStab,
-            const surfaceScalarField& alphaPhiu,
             const volScalarField::Internal& bSource
         );
 
@@ -220,7 +219,6 @@ protected:
         void bSolve
         (
             const volScalarField::Internal& cStab,
-            const surfaceScalarField& alphaPhib,
             const volScalarField::Internal& bSource
         );
 
@@ -241,7 +239,7 @@ protected:
             const volScalarField& alpha,
             const volScalarField& bc,
             const volScalarField::Internal& bcStab,
-            const surfaceScalarField& alphaPhiuc,
+            const surfaceScalarField& alphaPhiub,
             const volScalarField& D,
             const thermophysicalTransportModel& thermophysicalTransport,
             const fvScalarMatrix& source,
@@ -254,7 +252,6 @@ protected:
             volScalarField& fu,
             const word& fuName,
             const volScalarField::Internal& bStab,
-            const surfaceScalarField& alphaPhiu,
             const fvScalarMatrix& source
         );
 
@@ -264,7 +261,6 @@ protected:
             volScalarField& fb,
             const word& fbName,
             const volScalarField::Internal& cStab,
-            const surfaceScalarField& alphaPhib,
             const fvScalarMatrix& source
         );
 
@@ -272,7 +268,6 @@ protected:
         void HuSolve
         (
             const volScalarField::Internal& bStab,
-            const surfaceScalarField& alphaPhiu,
             const volScalarField::Internal& bSource
         );
 
@@ -280,7 +275,6 @@ protected:
         void HbSolve
         (
             const volScalarField::Internal& cStab,
-            const surfaceScalarField& alphaPhib,
             const volScalarField::Internal& bSource
         );
 
