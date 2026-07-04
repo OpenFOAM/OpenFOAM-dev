@@ -127,15 +127,25 @@ const Foam::dimensionSet Foam::dimensions::compressibility
     density/pressure
 );
 
-const Foam::dimensionSet Foam::dimensions::gasConstant
+const Foam::dimensionSet Foam::dimensions::energyDensity
 (
-    "gasConstant",
-    energy/mass/temperature
+    "energyDensity",
+    energy/volume
+);
+const Foam::dimensionSet Foam::dimensions::specificEnergy
+(
+    "specificEnergy",
+    energy/mass
 );
 const Foam::dimensionSet Foam::dimensions::specificHeatCapacity
 (
     "specificHeatCapacity",
-    gasConstant
+    specificEnergy/temperature
+);
+const Foam::dimensionSet Foam::dimensions::gasConstant
+(
+    "gasConstant",
+    specificEnergy/temperature
 );
 
 const Foam::dimensionSet Foam::dimensions::kinematicViscosity

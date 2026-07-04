@@ -79,8 +79,10 @@ extern const dimensionSet pressure;
 extern const dimensionSet kinematicPressure;
 extern const dimensionSet compressibility;
 
-extern const dimensionSet gasConstant;
+extern const dimensionSet energyDensity;
+extern const dimensionSet specificEnergy;
 extern const dimensionSet specificHeatCapacity;
+extern const dimensionSet gasConstant;
 
 extern const dimensionSet kinematicViscosity;
 extern const dimensionSet dynamicViscosity;
