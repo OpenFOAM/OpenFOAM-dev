@@ -9,49 +9,11 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      fvSchemes;
+    location    "constant";
+    object      momentumTransport.b;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    default         Euler;
-}
-
-gradSchemes
-{
-    default         Gauss linear;
-}
-
-divSchemes
-{
-    default             none;
-
-    div(phi,U)          Gauss limitedLinearV 1;
-
-    div(phi,b)          Gauss vanLeer;
-
-    div(alphaPhi,h)     Gauss limitedLinear 1;
-    div(alphaPhi,K)     Gauss limitedLinear 1;
-
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
-}
-
-laplacianSchemes
-{
-    default         Gauss linear uncorrected;
-}
-
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         uncorrected;
-}
-
+simulationType  laminar;
 
 // ************************************************************************* //

@@ -51,12 +51,24 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     thermo_(refCast<ubRhoThermo>(isothermalFluid::thermo_)),
 
+    alphaPhiu_
+    (
+        IOobject::groupName("alphaPhi", thermo_.unburntPhaseName),
+        phi
+    ),
+
+    alphaPhib_
+    (
+        IOobject::groupName("alphaPhi", thermo_.burntPhaseName),
+        phi
+    ),
+
     uMomentumTransport_
     (
         thermo_.alphau(),
         thermo_.uThermo().rho(),
         U,
-        phi,
+        alphaPhiu_,
         phi,
         thermo_.uThermo(),
         isothermalFluid::momentumTransport()
@@ -67,7 +79,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         thermo_.alphab(),
         thermo_.bThermo().rho(),
         U,
-        phi,
+        alphaPhib_,
         phi,
         thermo_.bThermo(),
         isothermalFluid::momentumTransport()
@@ -211,7 +223,6 @@ void Foam::solvers::XiFluid::reset()
 
     thermo_.reset();
 
-    const surfaceScalarField phib("phib", phi);
     thermo_.b().correctBoundaryConditions();
     thermo_.c() = 1.0 - thermo_.b();
 

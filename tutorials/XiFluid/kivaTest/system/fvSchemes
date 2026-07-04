@@ -33,14 +33,11 @@ divSchemes
     div(phi,b)          Gauss vanAlbada01;
     div(phiXi,Xi)       Gauss limitedVanAlbada 1 10;
 
-    div(phib,fu.u)      Gauss vanAlbada01;
-    div(phib,egr.u)     Gauss vanAlbada01;
-    div(phib,h.u)       Gauss vanAlbada;
-    div(phib,K)         Gauss vanAlbada;
-
-    div(phic,ft.b)      Gauss vanAlbada01;
-    div(phic,h.b)       Gauss vanAlbada;
-    div(phic,K)         Gauss vanAlbada;
+    div(alphaPhi,fu)    Gauss vanAlbada01;
+    div(alphaPhi,ft)    Gauss vanAlbada01;
+    div(alphaPhi,egr)   Gauss vanAlbada01;
+    div(alphaPhi,h)     Gauss vanAlbada;
+    div(alphaPhi,K)     Gauss vanAlbada;
 
     div(phi,(p|rho))    Gauss vanAlbada;
     div(meshPhi,p)      Gauss vanAlbada;

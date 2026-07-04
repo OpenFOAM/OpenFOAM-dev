@@ -25,21 +25,21 @@ boundaryField
     inletFuel
     {
         type            inletOutlet;
-        phi             phib;
+        phi             alphaPhi.u;
         inletValue      uniform 1;
     }
 
     inlet
     {
         type            inletOutlet;
-        phi             phib;
+        phi             alphaPhi.u;
         inletValue      uniform 0;
     }
 
     outlet
     {
         type            inletOutlet;
-        phi             phib;
+        phi             alphaPhi.u;
         inletValue      uniform 0;
     }
 

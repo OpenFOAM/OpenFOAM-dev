@@ -33,11 +33,8 @@ divSchemes
     div(phi,b)          Gauss limitedLinear01 1;
     div(phiXi,Xi)       Gauss limitedLinear 1;
 
-    div(phib,h.u)       Gauss limitedLinear 1;
-    div(phib,K)         Gauss limitedLinear 1;
-
-    div(phic,h.b)       Gauss limitedLinear 1;
-    div(phic,K)         Gauss limitedLinear 1;
+    div(alphaPhi,h)     Gauss limitedLinear 1;
+    div(alphaPhi,K)     Gauss limitedLinear 1;
 
     div(phi,k)          Gauss limitedLinear 1;
     div(phi,epsilon)    Gauss limitedLinear 1;

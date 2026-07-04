@@ -141,21 +141,10 @@ public:
         }
 
         //- Return the effective surface stress
-        virtual tmp<surfaceVectorField> devTau() const
-        {
-            NotImplemented;
-            return tmp<surfaceVectorField>(nullptr);
-        }
+        virtual tmp<surfaceVectorField> devTau() const;
 
         //- Return the source term for the momentum equation
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const;
-
-        //- Return the source term for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevTau
-        (
-            const volScalarField& rho,
-            volVectorField& U
-        ) const;
 
         //- Predict the turbulence transport coefficients if possible
         //  without solving turbulence transport model equations

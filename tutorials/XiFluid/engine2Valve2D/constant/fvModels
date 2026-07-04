@@ -46,5 +46,17 @@ correction
     }
 }
 
+viscousHeating.u
+{
+    type viscousHeating;
+    phase u;
+}
+
+viscousHeating.b
+{
+    type viscousHeating;
+    phase b;
+}
+
 
 // ************************************************************************* //

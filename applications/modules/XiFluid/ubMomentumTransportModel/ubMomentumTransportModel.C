@@ -68,18 +68,15 @@ bool ubMomentumTransportModel::read()
 }
 
 
-tmp<fvVectorMatrix> ubMomentumTransportModel::divDevTau(volVectorField& U) const
+tmp<surfaceVectorField> ubMomentumTransportModel::devTau() const
 {
-    NotImplemented;
-    return tmp<fvVectorMatrix>(nullptr);
+    return
+        fvc::interpolate(alpha()*rho()/mixtureMomentumTransport_.rho())
+       *mixtureMomentumTransport_.devTau();
 }
 
 
-tmp<fvVectorMatrix> ubMomentumTransportModel::divDevTau
-(
-    const volScalarField& rho,
-    volVectorField& U
-) const
+tmp<fvVectorMatrix> ubMomentumTransportModel::divDevTau(volVectorField& U) const
 {
     NotImplemented;
     return tmp<fvVectorMatrix>(nullptr);

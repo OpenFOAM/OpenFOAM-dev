@@ -86,7 +86,7 @@ void Foam::solvers::XiFluid::burn()
 
     const dimensionedScalar mgbStab(2*dMgb/bMin_/mgbCoeff_);
 
-    surfaceScalarField phib("phib", phi + phiSt);
+    alphaPhiu_ = phi + phiSt;
 
     tmp<surfaceScalarField> tbPhiUD;
     tmp<surfaceScalarField> tbPhiStUD;
@@ -98,7 +98,7 @@ void Foam::solvers::XiFluid::burn()
     // Bounded implicit b predictor
     {
         // Construct the bounded upwind interpolator for b
-        const upwind<scalar> bUD(mesh, phib);
+        const upwind<scalar> bUD(mesh, alphaPhiu_);
 
         // Construct the corrected Laplacian
         fvScalarMatrix bLaplacian(fvm::laplacian(Db, b));
@@ -109,13 +109,15 @@ void Foam::solvers::XiFluid::burn()
         // Construct the b convection matrix
         fvScalarMatrix bPhi
         (
-            fv::gaussConvectionScheme<scalar>(mesh, phib, bUD).fvmDiv(phi, b)
+            fv::gaussConvectionScheme<scalar>(mesh, alphaPhiu_, bUD)
+           .fvmDiv(phi, b)
         );
 
         // Construct the b flame propagation matrix
         fvScalarMatrix bPhiSt
         (
-            fv::gaussConvectionScheme<scalar>(mesh, phib, bUD).fvmDiv(phiSt, b)
+            fv::gaussConvectionScheme<scalar>(mesh, alphaPhiu_, bUD)
+           .fvmDiv(phiSt, b)
         );
 
         const volScalarField::Internal divPhiSt(fvc::div(phiSt));
@@ -169,9 +171,9 @@ void Foam::solvers::XiFluid::burn()
         fv::convectionScheme<scalar>::New
         (
             mesh,
-            phib,
+            alphaPhiu_,
             mesh.schemes().div(divbName)
-        )().interpolate(phib, b)
+        )().interpolate(alphaPhiu_, b)
     );
 
     // Higher-order convection and flame-propagation face-fluxes
@@ -216,11 +218,11 @@ void Foam::solvers::XiFluid::burn()
 
     // Set the b-equation convection+diffusion flux
     // for the solution of the unburnt gas energy and species
-    phib = tbPhiUD() + tbLaplacianPhi() + bPhiCorr;
+    alphaPhiu_ = tbPhiUD() + tbLaplacianPhi() + bPhiCorr;
 
     // Set the c-equation convection+diffusion flux
     // for the solution of the burnt gas energy and species
-    const surfaceScalarField phic("phic", phi - phib);
+    alphaPhib_ = phi - alphaPhiu_;
 
     // Set the b-equation source term
     // for the solution of the unburnt and burnt gas energy and species
@@ -236,17 +238,17 @@ void Foam::solvers::XiFluid::burn()
     const volScalarField::Internal cStab(max(bMin_ - c, scalar(0)));
 
     // Solve for the unburnt gas energy and species
-    uSolve(bStab, phib, bSource);
+    uSolve(bStab, alphaPhiu_, bSource);
 
     // Solve for the burnt gas energy and species
-    bSolve(cStab, phic, bSource);
+    bSolve(cStab, alphaPhib_, bSource);
 }
 
 
 void Foam::solvers::XiFluid::uSolve
 (
     const volScalarField::Internal& bStab,
-    const surfaceScalarField& phib,
+    const surfaceScalarField& alphaPhiu,
     const volScalarField::Internal& bSource
 )
 {
@@ -265,7 +267,7 @@ void Foam::solvers::XiFluid::uSolve
                 Yui,
                 Yu.size() > 2 ? "Yi" : Yui.name(),
                 bStab,
-                phib,
+                alphaPhiu,
                 fvm::Sp(bSource, Yui)
             );
         }
@@ -277,14 +279,14 @@ void Foam::solvers::XiFluid::uSolve
 
     thermo_.uThermo().normaliseY();
 
-    HuSolve(bStab, phib, bSource);
+    HuSolve(bStab, alphaPhiu, bSource);
 }
 
 
 void Foam::solvers::XiFluid::bSolve
 (
     const volScalarField::Internal& cStab,
-    const surfaceScalarField& phic,
+    const surfaceScalarField& alphaPhib,
     const volScalarField::Internal& bSource
 )
 {
@@ -307,7 +309,7 @@ void Foam::solvers::XiFluid::bSolve
                     Ybi,
                     Yb.size() > 2 ? "Yi" : Ybi.name(),
                     cStab,
-                    phic,
+                    alphaPhib,
                     fvm::Su(-bSource*Yp[i], Ybi)
                 );
             }
@@ -320,7 +322,7 @@ void Foam::solvers::XiFluid::bSolve
         thermo_.bThermo().normaliseY();
     }
 
-    HbSolve(cStab, phic, bSource);
+    HbSolve(cStab, alphaPhib, bSource);
 }
 
 
@@ -359,7 +361,7 @@ void Foam::solvers::XiFluid::ubSolve
     const volScalarField& alpha,
     const volScalarField& bc,
     const volScalarField::Internal& bcStab,
-    const surfaceScalarField& phibc,
+    const surfaceScalarField& alphaPhiuc,
     const volScalarField& D,
     const thermophysicalTransportModel& thermophysicalTransport,
     const fvScalarMatrix& combustionRate,
@@ -369,7 +371,7 @@ void Foam::solvers::XiFluid::ubSolve
     fvScalarMatrix fEqn
     (
         fvm::ddt(bc, rho, f)
-      + fvm::div(phibc, f, "div(" + phibc.name() + ',' + fName + ')')
+      + fvm::div(alphaPhiuc, f, "div(" + alphaPhiuc.name() + ',' + fName + ')')
 
         // Advective-diffusive stabilisation for bc -> 0
       + fvmStab(bc, bcStab, D, f)
@@ -399,7 +401,7 @@ void Foam::solvers::XiFluid::uSolve
     volScalarField& fu,
     const word& fuName,
     const volScalarField::Internal& bStab,
-    const surfaceScalarField& phib,
+    const surfaceScalarField& alphaPhiu,
     const fvScalarMatrix& source
 )
 {
@@ -411,7 +413,7 @@ void Foam::solvers::XiFluid::uSolve
         thermo_.alphau(),
         b,
         bStab,
-        phib,
+        alphaPhiu,
         Du,
         uThermophysicalTransport_(),
         source,
@@ -425,7 +427,7 @@ void Foam::solvers::XiFluid::bSolve
     volScalarField& fb,
     const word& fbName,
     const volScalarField::Internal& cStab,
-    const surfaceScalarField& phic,
+    const surfaceScalarField& alphaPhib,
     const fvScalarMatrix& source
 )
 {
@@ -437,7 +439,7 @@ void Foam::solvers::XiFluid::bSolve
         thermo_.alphab(),
         c,
         cStab,
-        phic,
+        alphaPhib,
         Db,
         bThermophysicalTransport_(),
         source,
@@ -449,7 +451,7 @@ void Foam::solvers::XiFluid::bSolve
 void Foam::solvers::XiFluid::HuSolve
 (
     const volScalarField::Internal& bStab,
-    const surfaceScalarField& phib,
+    const surfaceScalarField& alphaPhiu,
     const volScalarField::Internal& bSource
 )
 {
@@ -461,13 +463,13 @@ void Foam::solvers::XiFluid::HuSolve
 
     fvScalarMatrix HuEqn
     (
-        fvm::ddt(b, rho, hu) + fvm::div(phib, hu)
+        fvm::ddt(b, rho, hu) + fvm::div(alphaPhiu, hu)
 
         // Advective-diffusive stabilisation for b -> 0
       + fvmStab(b, bStab, Du, hu)
 
         // Pressure-work
-      + fvc::ddt(b, rho, K) + fvc::div(phib, K)
+      + fvc::ddt(b, rho, K) + fvc::div(alphaPhiu, K)
       + (b + bStab)*rhoByRhou*pressureWork(-dpdt)
 
         // Diffusive transport within the unburnt gas
@@ -494,7 +496,7 @@ void Foam::solvers::XiFluid::HuSolve
 void Foam::solvers::XiFluid::HbSolve
 (
     const volScalarField::Internal& cStab,
-    const surfaceScalarField& phic,
+    const surfaceScalarField& alphaPhib,
     const volScalarField::Internal& bSource
 )
 {
@@ -506,13 +508,13 @@ void Foam::solvers::XiFluid::HbSolve
 
     fvScalarMatrix HbEqn
     (
-        fvm::ddt(c, rho, hb) + fvm::div(phic, hb)
+        fvm::ddt(c, rho, hb) + fvm::div(alphaPhib, hb)
 
         // Advective-diffusive stabilisation for b -> 0
       + fvmStab(c, cStab, Db, hb)
 
         // Pressure-work
-      + fvc::ddt(c, rho, K) + fvc::div(phic, K)
+      + fvc::ddt(c, rho, K) + fvc::div(alphaPhib, K)
       + (c + cStab)*rhoByRhob*pressureWork(-dpdt)
 
         // Diffusive transport within the burnt gas
@@ -566,9 +568,6 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
         {
             const PtrList<volScalarField::Internal> Yp(thermo_.prompt());
 
-            // Approximate phic for Ybi boundary condition correction
-            const surfaceScalarField phic("phic", phi);
-
             forAll(Yp, i)
             {
                 thermo_.bThermo().Y(i).internalFieldRef() = Yp[i];
@@ -598,8 +597,6 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
             scalar(0)
         );
 
-        const surfaceScalarField phib("phib", phi);
-
         const volScalarField::Internal bSource
         (
             IOobject
@@ -612,7 +609,13 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
             dimensionedScalar(dimDensity/dimTime, 0)
         );
 
-        uSolve(bStab, phib, bSource);
+        // Pre-ignition alphaPhiu = phi
+        alphaPhiu_ = phi;
+
+        // Pre-ignition alphaPhib = 0
+        alphaPhib_ = Zero;
+
+        uSolve(bStab, alphaPhiu_, bSource);
     }
 
     thermo_.correct();
