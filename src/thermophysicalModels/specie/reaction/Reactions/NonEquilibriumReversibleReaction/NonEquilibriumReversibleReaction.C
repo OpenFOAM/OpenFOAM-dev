@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "NonEquilibriumReversibleReaction.H"
+#include "delimitDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -226,20 +227,14 @@ void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::write
 ) const
 {
     Reaction<ThermoType>::write(os);
-
-    os  << indent << "forward" << nl;
-    os  << indent << token::BEGIN_BLOCK << nl;
-    os  << incrIndent;
-    kf_.write(os);
-    os  << decrIndent;
-    os  << indent << token::END_BLOCK << nl;
-
-    os  << indent << "reverse" << nl;
-    os  << indent << token::BEGIN_BLOCK << nl;
-    os  << incrIndent;
-    kr_.write(os);
-    os  << decrIndent;
-    os  << indent << token::END_BLOCK << nl;
+    {
+        const delimitDictionary delimitForward(os, "forward");
+        kf_.write(os);
+    }
+    {
+        const delimitDictionary delimitReverse(os, "reverse");
+        kr_.write(os);
+    }
 }
 
 

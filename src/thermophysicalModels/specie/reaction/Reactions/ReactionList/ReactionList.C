@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "ReactionList.H"
 #include "HashPtrTable.H"
+#include "delimitDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -109,29 +110,20 @@ Foam::ReactionList<ThermoType>::ReactionList
 template<class ThermoType>
 void Foam::ReactionList<ThermoType>::write(Ostream& os) const
 {
-    os  << "reactions" << nl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
-    forAll(*this, i)
     {
-        const Reaction<ThermoType>& r = this->operator[](i);
+        const delimitDictionary delimitReactions(os, "reactions");
 
-        os  << indent << r.name() << nl
-            << indent << token::BEGIN_BLOCK << incrIndent << nl;
-
-        writeEntry(os, "type", r.type());
-
-        r.write(os);
-
-        os  << decrIndent << indent << token::END_BLOCK << nl;
+        forAll(*this, i)
+        {
+            const Reaction<ThermoType>& r = this->operator[](i);
+            const delimitDictionary delimitReaction(os, r.name());
+            writeEntry(os, "type", r.type());
+            r.write(os);
+        }
     }
-
-    os << decrIndent << token::END_BLOCK << nl;
 
     writeEntry(os, "Tlow", Reaction<ThermoType>::TlowDefault);
     writeEntry(os, "Thigh", Reaction<ThermoType>::ThighDefault);
-
-    os << nl;
 }
 
 
