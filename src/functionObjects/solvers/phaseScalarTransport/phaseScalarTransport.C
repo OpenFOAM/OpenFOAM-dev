@@ -364,11 +364,6 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
             break;
     }
 
-    nCorr_ = dict.lookupOrDefaultBackwardsCompatible<label>
-    (
-        {"nCorrectors", "nCorr"},
-        0
-    );
     residualAlpha_ = dict.lookupOrDefault<scalar>("residualAlpha", rootSmall);
     writeAlphaField_ = dict.lookupOrDefault<bool>("writeAlphaField", true);
 
@@ -393,6 +388,14 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
     tmp<surfaceScalarField> tAlphaPhi(this->alphaPhi());
     const surfaceScalarField& alphaPhi = tAlphaPhi();
 
+    const int nCorr =
+        mesh_.solution().solverDict(schemesField_)
+       .lookupOrDefaultBackwardsCompatible<label>
+        (
+            {"nCorrectors", "nCorr"},
+            0
+        );
+
     // Get the relaxation coefficient
     const scalar relaxCoeff =
         mesh_.solution().relaxEquation(schemesField_)
@@ -406,7 +409,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
     // Solve
     if (alphaPhi.dimensions() == dimVolume/dimTime)
     {
-        for (int i=0; i<=nCorr_; i++)
+        for (int i=0; i<=nCorr; i++)
         {
             fvScalarMatrix fieldEqn
             (
@@ -447,7 +450,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
 
-        for (int i=0; i<=nCorr_; i++)
+        for (int i=0; i<=nCorr; i++)
         {
             fvScalarMatrix fieldEqn
             (

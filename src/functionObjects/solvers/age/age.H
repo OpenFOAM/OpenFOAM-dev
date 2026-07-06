@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,9 +96,6 @@ class age
 
         //- The name of the density field
         word rhoName_;
-
-        //- Number of corrections
-        int nCorr_;
 
         //- Name of field from which schemes are taken
         word schemesField_;

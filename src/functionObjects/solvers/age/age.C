@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,11 +115,6 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
 {
     phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
-    nCorr_ = dict.lookupOrDefaultBackwardsCompatible<int>
-    (
-        {"nCorrectors", "nCorr"},
-        5
-    );
     schemesField_ = dict.lookupOrDefault<word>("schemesField", typeName);
     diffusion_ = dict.lookupOrDefault<Switch>("diffusion", false);
     tolerance_ = dict.lookupOrDefault<scalar>("tolerance", 1e-5);
@@ -158,6 +153,14 @@ bool Foam::functionObjects::age::execute()
 
     const word divScheme("div(phi," + schemesField_ + ")");
 
+    const int nCorr =
+        mesh_.solution().solverDict(schemesField_)
+       .lookupOrDefaultBackwardsCompatible<label>
+        (
+            {"nCorrectors", "nCorr"},
+            5
+        );
+
     // Set under-relaxation coeff
     scalar relaxCoeff = 0.0;
     if (mesh_.solution().relaxEquation(schemesField_))
@@ -187,7 +190,7 @@ bool Foam::functionObjects::age::execute()
             tnuEff = mesh_.lookupType<momentumTransportModel>().nuEff();
         }
 
-        for (int i=0; i<=nCorr_; i++)
+        for (int i=0; i<=nCorr; i++)
         {
             fvScalarMatrix ageEqn
             (
@@ -224,7 +227,7 @@ bool Foam::functionObjects::age::execute()
                 "laplacian(" + tnuEff().name() + ',' + schemesField_ + ")";
         }
 
-        for (int i=0; i<=nCorr_; i++)
+        for (int i=0; i<=nCorr; i++)
         {
             fvScalarMatrix ageEqn
             (
