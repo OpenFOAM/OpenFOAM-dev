@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "timeVaryingMappedFvPatchField.H"
-#include "Time.H"
+#include "pointToPointPlanarInterpolation.H"
 #include "AverageField.H"
 #include "IFstream.H"
 #include "OSspecific.H"
@@ -71,23 +71,60 @@ Foam::timeVaryingMappedFvPatchField<Type>::findFieldFile
 
 
 template<class Type>
-void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
+Foam::fileName
+Foam::timeVaryingMappedFvPatchField<Type>::findPointsFile
+(
+    const word& timeName
+) const
 {
-    // Initialise
-    if (mapperPtr_.empty())
-    {
-        // Reread values and interpolate
-        const fileName samplePointsFile(dataDir_/pointsName_);
+    // Points file specific to this sample time, provided if the surface
+    // from which the data was obtained changes in time
+    const fileName timePointsFile
+    (
+        dataDir_/timeName/sampleName_/pointsName_.name()
+    );
 
-        pointField samplePoints((IFstream(samplePointsFile)()));
+    // Static points file name used for all sample times
+    const fileName pointsFile(dataDir_/pointsName_);
+
+    if (exists(timePointsFile))
+    {
+        return timePointsFile;
+    }
+    else if (exists(pointsFile))
+    {
+        return pointsFile;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Cannot find points file "
+            << timePointsFile << " " << pointsFile
+            << exit(FatalError);
+
+        return fileName::null;
+    }
+}
+
+
+template<class Type>
+const Foam::pointToPointPlanarInterpolation&
+Foam::timeVaryingMappedFvPatchField<Type>::mapper(const word& timeName)
+{
+    const fileName pointsFile(findPointsFile(timeName));
+
+    // If the points file has changed update the mapper
+    if (mapperPtr_.empty() || mapperPointsFile_ != pointsFile)
+    {
+        // Reread the sample points
+        const pointField samplePoints((IFstream(pointsFile)()));
 
         if (debug)
         {
             Info<< "timeVaryingMappedFvPatchField :"
                 << " Read " << samplePoints.size() << " sample points from "
-                << samplePointsFile << endl;
+                << pointsFile << endl;
         }
-
 
         // tbd: run-time selection
         const bool nearestOnly
@@ -108,6 +145,19 @@ void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
             )
         );
 
+        mapperPointsFile_ = pointsFile;
+    }
+
+    return mapperPtr_();
+}
+
+
+template<class Type>
+void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
+{
+    // Initialise
+    if (startSampleTime_ == -1 && endSampleTime_ == -1)
+    {
         // Read the times for which data is available
         sampleTimes_ = patch_.time().findTimes(dataDir_);
 
@@ -125,7 +175,7 @@ void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
     label lo = -1;
     label hi = -1;
 
-    bool foundTime = mapperPtr_().findTime
+    const bool foundTime = pointToPointPlanarInterpolation::findTime
     (
         sampleTimes_,
         startSampleTime_,
@@ -173,6 +223,10 @@ void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
                     << endl;
             }
 
+            // Update the mapper, re-mapping if the points have changed
+            const pointToPointPlanarInterpolation& mapper =
+                this->mapper(sampleTimes_[startSampleTime_].name());
+
             // Reread values and interpolate
             const fileName valsFile
             (
@@ -192,16 +246,16 @@ void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
                 (IFstream(valsFile)()) >> vals;
             }
 
-            if (vals.size() != mapperPtr_().sourceSize())
+            if (vals.size() != mapper.sourceSize())
             {
                 FatalErrorInFunction
                     << "Number of values (" << vals.size()
                     << ") differs from the number of points ("
-                    <<  mapperPtr_().sourceSize()
+                    <<  mapper.sourceSize()
                     << ") in file " << valsFile << exit(FatalError);
             }
 
-            startSampledValues_ = mapperPtr_().interpolate(vals);
+            startSampledValues_ = mapper.interpolate(vals);
         }
     }
 
@@ -227,6 +281,10 @@ void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
                     << endl;
             }
 
+            // Update the mapper, re-mapping if the points have changed
+            const pointToPointPlanarInterpolation& mapper =
+                this->mapper(sampleTimes_[endSampleTime_].name());
+
             // Reread values and interpolate
             const fileName valsFile
             (
@@ -246,16 +304,16 @@ void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
                 (IFstream(valsFile)()) >> vals;
             }
 
-            if (vals.size() != mapperPtr_().sourceSize())
+            if (vals.size() != mapper.sourceSize())
             {
                 FatalErrorInFunction
                     << "Number of values (" << vals.size()
                     << ") differs from the number of points ("
-                    <<  mapperPtr_().sourceSize()
+                    <<  mapper.sourceSize()
                     << ") in file " << valsFile << exit(FatalError);
             }
 
-            endSampledValues_ = mapperPtr_().interpolate(vals);
+            endSampledValues_ = mapper.interpolate(vals);
         }
     }
 }
