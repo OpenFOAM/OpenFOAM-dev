@@ -50,6 +50,13 @@ Description
     dataDir/\<time\>/\<sample\>/\<points name\>. Points files found in the
     time directories take precedence over the static points file.
 
+    Note: unfortunately if the points files exist in any of the time directories
+    they MUST exist in ALL of the time directories and read from each.  It would
+    be much better if this functionality were changed for consistency with
+    polyMesh and on restart the time directories are scanned backwards for the
+    most recent points file, that way the points files are only read for times
+    at which they change.
+
     The default mode of operation (mapMethod planarInterpolation) is to project
     the points onto a plane (constructed from the first three points) and
     construct a 2D triangulation and finds for the face centres the triangle it
