@@ -15,7 +15,7 @@ FoamFile
 
 radius 0.015875; // Pipe radius (z-axis)
 length 0.44;     // Pipe length (x-axis)
-angle  1;        // Center (wedge) angle
+angle  1 [deg];  // Center (wedge) angle
 
 // Number of cells
 xCells 220;
@@ -23,8 +23,8 @@ yCells 1;
 zCells 16;
 
 // Derived parameters
-zr           #calc "$radius*cos(degToRad(0.5*$angle))";
-halfWidth    #calc "$radius*sin(degToRad(0.5*$angle))";
+zr           #calc "$radius*cos(0.5*$<scalar>angle)";
+halfWidth    #calc "$radius*sin(0.5*$<scalar>angle)";
 negHalfWidth #neg $halfWidth;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

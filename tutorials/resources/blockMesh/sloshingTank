@@ -13,22 +13,22 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//depth     ?;      // Depth of tank (x-direction)
-width       40;     // Width of tank (y-direction)
-height      30;     // Depth of tank (z-direction)
+//depth     ?;          // Depth of tank (x-direction)
+width       40;         // Width of tank (y-direction)
+height      30;         // Depth of tank (z-direction)
 
-lowerHeight 5;      // Height to the top of lower chamfer
-upperHeight 10;     // Height of upper chamfer
+lowerHeight 5;          // Height to the top of lower chamfer
+upperHeight 10;         // Height of upper chamfer
 
-angleLower  45;     // Angle of lower chamfer to the horizontal
-angleUpper  45;     // Angle of upper chamfer to the horizontal
-moveZ       -10;    // Moving tank in z direction
+angleLower  45 [deg];   // Angle of lower chamfer to the horizontal
+angleUpper  45 [deg];   // Angle of upper chamfer to the horizontal
+moveZ       -10;        // Moving tank in z direction
 
-//xCells    ?;      // Number of cells in the depth
-yCells      40;     // Number of cells in the width
-zLowCells   6;      // Number of cells in the height of the lower chamfer
-zMidCells   16;     // Number of cells in the height between the chamfers
-zUpCells    12;     // Number of cells in the height of the upper chamfer
+//xCells    ?;          // Number of cells in the depth
+yCells      40;         // Number of cells in the width
+zLowCells   6;          // Number of cells in the height of the lower chamfer
+zMidCells   16;         // Number of cells in the height between the chamfers
+zUpCells    12;         // Number of cells in the height of the upper chamfer
 
 //frontAndBackPatchType ?; // Type of the front and back patch
 
@@ -47,9 +47,9 @@ vertices #codeStream
         const scalar halfWidth = ($width)/2.0;
 
         const scalar yBottom =
-            halfWidth - ($lowerHeight)/tan(degToRad($angleLower));
+            halfWidth - ($lowerHeight)/tan($<scalar>angleLower);
         const scalar yTop =
-            halfWidth - ($upperHeight)/tan(degToRad($angleUpper));
+            halfWidth - ($upperHeight)/tan($<scalar>angleUpper);
 
         const scalar zMid = $height - $upperHeight;
 

@@ -17,7 +17,7 @@ FoamFile
 
 units [mm];
 
-angle 45;
+angle 45 [deg];
 
 width     50;
 lenInlet  150;
@@ -55,7 +55,7 @@ vertices #codeStream
         });
 
         // Rotate points around z-axis
-        points = transform(Rz(degToRad($angle)), points);
+        points = transform(Rz($<scalar>angle), points);
 
         // Append points 6 and 7
         points.append(point(-$lenInlet, points[0].y(), points[0].z()));  // pt 6

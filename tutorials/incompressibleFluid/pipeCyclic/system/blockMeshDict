@@ -14,16 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Half angle of wedge in degrees [deg]
-halfAngle 45;
+//- Half angle of wedge
+halfAngle 45 [deg];
 
-//- Radius of pipe [m]
+//- Radius of pipe
 radius 0.5;
 
 //- Derived quantities
-radHalfAngle #calc "degToRad($halfAngle)";
-y #calc "$radius*sin($radHalfAngle)";
-z #calc "$radius*cos($radHalfAngle)";
+y #calc "$radius*sin($<scalar>halfAngle)";
+z #calc "$radius*cos($<scalar>halfAngle)";
 
 vertices
 (

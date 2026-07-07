@@ -15,14 +15,13 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 plateLen      0.3;
-plateAngle    10;
-plateAngleRad #calc "degToRad($plateAngle)";
+plateAngle    10 [deg];
 
 xTopPlateStart  0.023;
-xTopPlateEnd    #calc "$xTopPlateStart + $plateLen*cos($plateAngleRad)";
+xTopPlateEnd    #calc "$xTopPlateStart + $plateLen*cos($<scalar>plateAngle)";
 xBottomPlateEnd 0.5;
 zTopPlateStart  0.115;
-zTopPlateEnd    #calc "$zTopPlateStart - $plateLen*sin($plateAngleRad)";
+zTopPlateEnd    #calc "$zTopPlateStart - $plateLen*sin($<scalar>plateAngle)";
 
 plateWidth    0.01; // For 2D simulation; experimental width = 0.4m
 yMax #calc "0.5*$plateWidth";

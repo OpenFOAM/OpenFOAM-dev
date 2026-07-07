@@ -405,7 +405,7 @@ T Foam::dictionary::lookupScoped
             << name() << exit(FatalIOError);
     }
 
-    return pTraits<T>(entryPtr->stream());
+    return Foam::readAndMaybeConvert<T>(entryPtr->stream());
 }
 
 

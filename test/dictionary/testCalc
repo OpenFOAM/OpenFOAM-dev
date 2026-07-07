@@ -53,9 +53,7 @@ fileName2 #calc #{ "movingBox_" + name($time) + ".obj" #};
 
 // Additional include files for the #calc code compilation can be specified
 // using the #codeInclude entry, e.g. if functions from transform.H are used
-angleOfAttack   5; // degs
-
-angle           #calc "-degToRad($angleOfAttack)";
+angle           -5 [deg];
 
 #codeInclude    "transform.H"
 liftDir         #calc "transform(Ry($<scalar>angle), vector(0, 0, 1))";
@@ -71,7 +69,7 @@ k               #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
 // This is equivalent to #codeStream but with a more compact syntax
 // but include files must be specified using separate #codeInclude statements
 #codeInclude    "transform.H"
-maxAngle        30;
+maxAngle        30 [deg];
 nAngles         7;
 Us              #stream
 #{
@@ -81,7 +79,7 @@ Us              #stream
     List<vector> Us(nAngles);
     for(int i=0; i<nAngles; i++)
     {
-        const scalar angle = degToRad(i*angleStep);
+        const scalar angle = i*angleStep;
         Us[i] = transform(Ry(angle), U);
     }
     os << Us;
@@ -108,7 +106,7 @@ magU21          #calc "mag($listU2[1])";
 
 // Complex conditionals are also possible using #if and #calculate
 // but not within #codeBlock...#endCodeBlock
-#if (#calc "$angle < 0")
+#if (#calc "$<scalar>angle < 0")
     negativeAngle $angle;
 #else
     positiveAngle $angle;

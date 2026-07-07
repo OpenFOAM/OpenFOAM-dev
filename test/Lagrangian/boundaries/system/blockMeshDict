@@ -22,8 +22,8 @@ c           (25 -8.523150547392271 0);
 ys0         (25 20 15 10 5 1);
 ys1         (25 20 15 10 5 -1);
 zs          (-1 1);
-theta       12;
-phi         3;
+theta       12 [deg];
+phi         3 [deg];
 
 // Zones
 zoneNames   (open symmetry symmetryPlane cyclic nonConformalCyclic);
@@ -48,8 +48,8 @@ vertices
             const List<scalar> ys0($<List<scalar>>ys0);
             const List<scalar> ys1($<List<scalar>>ys1);
             const List<scalar> zs($<List<scalar>>zs);
-            const scalar tanTheta = tan(degToRad($<scalar>theta));
-            const scalar tanPhi = tan(degToRad($<scalar>phi));
+            const scalar tanTheta = tan($<scalar>theta);
+            const scalar tanPhi = tan($<scalar>phi);
 
             forAll(ys0, yi)
             {
@@ -129,7 +129,7 @@ edges
             const List<scalar> ys0($<List<scalar>>ys0);
 
             const scalar theta = $<scalar>theta;
-            const scalar tanPhi = tan(degToRad($<scalar>phi));
+            const scalar tanPhi = tan($<scalar>phi);
 
             forAll(ys0, yi)
             {
