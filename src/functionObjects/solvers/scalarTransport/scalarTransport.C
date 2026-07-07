@@ -211,7 +211,7 @@ bool Foam::functionObjects::scalarTransport::execute()
     const word divScheme("div(phi," + schemesField_ + ")");
 
     const int nCorr =
-        mesh_.solution().solverDict(fieldName_)
+        mesh_.solution().solverDict(schemesField_)
        .lookupOrDefaultBackwardsCompatible<label>
         (
             {"nCorrectors", "nCorr"},
