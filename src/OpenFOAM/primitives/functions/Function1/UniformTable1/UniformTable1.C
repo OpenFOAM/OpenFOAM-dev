@@ -83,6 +83,25 @@ Type Foam::Function1s::UniformTable<Type>::value(scalar x) const
 
 
 template<class Type>
+Type Foam::Function1s::UniformTable<Type>::derivative(scalar x) const
+{
+    const scalar nd = (x - low_)/delta_;
+    const label i = nd;
+
+    if (nd < 0 || i > values_.size() - 2)
+    {
+        FatalErrorInFunction
+            << x << " out of range "
+            << low_ << " to " << high_ << nl
+            << "    of table " << dictName_
+            << exit(FatalError);
+    }
+
+    return (values_[i + 1] - values_[i])/delta_;
+}
+
+
+template<class Type>
 Type Foam::Function1s::UniformTable<Type>::integral
 (
     const scalar x1,

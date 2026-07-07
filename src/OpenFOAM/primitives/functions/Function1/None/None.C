@@ -71,6 +71,19 @@ Type Foam::Function1s::None<Type>::value(const scalar) const
 
 
 template<class Type>
+Type Foam::Function1s::None<Type>::derivative(const scalar) const
+{
+    FatalErrorInFunction
+        << "Required function " << this->name() << " in " << nl
+        << "    " << dictName_ << nl
+        << "    is not defined."
+        << exit(FatalError);
+
+    return pTraits<Type>::zero;
+}
+
+
+template<class Type>
 Type Foam::Function1s::None<Type>::integral(const scalar, const scalar) const
 {
     FatalErrorInFunction

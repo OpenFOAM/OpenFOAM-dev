@@ -114,14 +114,17 @@ public:
 
     // Member Functions
 
-        //- Evaluate the function and return the result
-        virtual Type value(scalar x) const;
+        //- Return the value at a scalar coordinate
+        virtual inline Type value(const scalar x) const;
 
-        //- Integrate between two scalar values
-        virtual Type integral(const scalar x1, const scalar x2) const;
+        //- Return the derivative at a scalar coordinate
+        virtual inline Type derivative(const scalar x) const;
 
-        //- Write the function coefficients
-        void write(Ostream& os, const unitSets& units) const;
+        //- Return the integral between two scalar coordinates
+        virtual inline Type integral(const scalar x1, const scalar x2) const;
+
+        //- Write in dictionary format
+        virtual void write(Ostream& os, const unitSets& units) const;
 };
 
 

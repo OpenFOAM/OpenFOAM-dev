@@ -146,6 +146,20 @@ Type Foam::Function1s::Polynomial<Type>::value(const scalar x) const
 
 
 template<class Type>
+Type Foam::Function1s::Polynomial<Type>::derivative(const scalar x) const
+{
+    Type y = coeffs_[coeffs_.size() - 1]*(coeffs_.size() - 1);
+
+    for (label i = coeffs_.size() - 2; i >= 1; i --)
+    {
+        y = y*x + coeffs_[i]*i;
+    }
+
+    return y;
+}
+
+
+template<class Type>
 Type Foam::Function1s::Polynomial<Type>::integral
 (
     const scalar x1,

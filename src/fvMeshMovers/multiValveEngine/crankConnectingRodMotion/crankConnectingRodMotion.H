@@ -118,6 +118,12 @@ public:
         virtual inline tmp<Field<scalar>> value(const scalarField&) const;
 
         //- Not implemented
+        virtual inline scalar derivative(const scalar) const;
+
+        //- Not implemented
+        virtual inline tmp<Field<scalar>> derivative(const scalarField&) const;
+
+        //- Not implemented
         virtual inline scalar integral
         (
             const scalar,
@@ -131,8 +137,7 @@ public:
             const scalarField&
         ) const;
 
-
-        //- Write data to dictionary stream
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 
 

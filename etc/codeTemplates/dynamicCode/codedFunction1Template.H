@@ -95,7 +95,7 @@ public:
 
     // Member Functions
 
-        //- Return value as a function of scalar variable
+        //- Return the value at a scalar coordinate
         inline virtual ${TemplateType} value(const scalar x) const
         {
 //{{{ begin code
@@ -103,14 +103,13 @@ public:
 //}}} end code
         }
 
-        //- Integrate between two values
-        virtual ${TemplateType} integral
-        (
-            const scalar x1,
-            const scalar x2
-        ) const;
+        //- Return the derivative at a scalar coordinate
+        virtual ${TemplateType} derivative(const scalar) const;
 
-        //- Write data to dictionary stream
+        //- Return the integral between two scalar coordinates
+        virtual ${TemplateType} integral(const scalar, const scalar) const;
+
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets&) const;
 
 

@@ -119,6 +119,20 @@ Type Foam::Function1s::NonUniformTable<Type>::value
 
 
 template<class Type>
+Type Foam::Function1s::NonUniformTable<Type>::derivative
+(
+    const scalar x
+) const
+{
+    const label i = index(x);
+
+    return
+        (values_[i + 1].second() - values_[i].second())
+       /(values_[i + 1].first() - values_[i].first());
+}
+
+
+template<class Type>
 Type Foam::Function1s::NonUniformTable<Type>::integral
 (
     const scalar x1,
@@ -127,20 +141,6 @@ Type Foam::Function1s::NonUniformTable<Type>::integral
 {
     NotImplemented;
     return Zero;
-}
-
-
-template<class Type>
-Type Foam::Function1s::NonUniformTable<Type>::dfdT
-(
-    scalar T
-) const
-{
-    const label i = index(T);
-
-    return
-        (values_[i + 1].second() - values_[i].second())
-       /(values_[i + 1].first() - values_[i].first());
 }
 
 

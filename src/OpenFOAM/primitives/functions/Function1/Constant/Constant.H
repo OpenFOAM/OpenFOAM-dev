@@ -106,7 +106,10 @@ public:
         //- Return constant value
         virtual inline Type value(const scalar) const;
 
-        //- Integrate between two values
+        //- Return zero
+        virtual inline Type derivative(const scalar x) const;
+
+        //- Return the integral between two scalar coordinates
         virtual inline Type integral(const scalar x1, const scalar x2) const;
 
         //- Is this function guaranteed to be constant?

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,20 @@ inline Foam::scalar Foam::Function1s::exponentialSqrRamp::value
     using namespace constant::mathematical;
 
     return (exp(sqr(linearRamp(t))) - 1)/(e - 1);
+}
+
+
+inline Foam::scalar Foam::Function1s::exponentialSqrRamp::derivative
+(
+    const scalar t
+) const
+{
+    using namespace constant::mathematical;
+
+    return
+        pos(t - start_)*pos(end() - t)
+       *exp(sqr(linearRamp(t)))/(e - 1)
+       *2*linearRamp(t)*dLinearRampDt();
 }
 
 

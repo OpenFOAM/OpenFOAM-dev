@@ -114,22 +114,37 @@ public:
 
     // Member Functions
 
-        //- Evaluate the function and return the result
-        virtual scalar value(scalar T) const
+        //- Return the value at a scalar coordinate
+        virtual scalar value(const scalar T) const
         {
             return ((((f_*T + e_)*T + d_)*T + c_)*T + b_)*T + a_;
         }
 
-        using FieldFunction1<scalar, NSRDS0>::integral;
+        //- Return the derivative at a scalar coordinate
+        virtual scalar derivative(const scalar T) const
+        {
+            return (((5*f_*T + 4*e_)*T + 3*d_)*T + 2*c_)*T + b_;
+        }
 
-        //- Integrate between two scalar values
-        virtual scalar integral(const scalar x1, const scalar x2) const;
+        //- Indefinite integral at a scalar value
+        inline scalar integral(const scalar T) const
+        {
+            return (((((f_*T/6 + e_/5)*T + d_/4)*T + c_/3)*T + b_/2)*T + a_)*T;
+        }
+
+        //- Return the integral between two scalar coordinates
+        virtual scalar integral(const scalar T1, const scalar T2) const
+        {
+            return integral(T2) - integral(T1);
+        }
+
+        using FieldFunction1<scalar, NSRDS0>::integral;
 
         //- Return the integral as a function. Note that this will error if the
         //  "f" coefficient is not zero.
         NSRDS0 integral(const word& name, const scalar a) const;
 
-        //- Write the function coefficients
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 };
 

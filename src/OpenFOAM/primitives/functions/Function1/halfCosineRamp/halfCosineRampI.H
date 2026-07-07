@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,18 @@ inline Foam::scalar Foam::Function1s::halfCosineRamp::value
 ) const
 {
     return 0.5*(1 - cos(constant::mathematical::pi*linearRamp(t)));
+}
+
+
+inline Foam::scalar Foam::Function1s::halfCosineRamp::derivative
+(
+    const scalar t
+) const
+{
+    return
+         0.5*pos(t - start_)*pos(end() - t)
+        *sin(constant::mathematical::pi*linearRamp(t))
+        *constant::mathematical::pi*dLinearRampDt();
 }
 
 

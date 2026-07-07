@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,27 +27,36 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::Function1s::squarePulse::value(const scalar t) const
+inline Foam::scalar Foam::Function1s::squarePulse::value(const scalar x) const
 {
-    return start_ < t && t < start_ + duration_;
+    return start_ < x && x < start_ + duration_;
+}
+
+
+inline Foam::scalar Foam::Function1s::squarePulse::derivative
+(
+    const scalar x
+) const
+{
+    return scalar(0);
 }
 
 
 inline Foam::scalar Foam::Function1s::squarePulse::integral
 (
-    const scalar t1,
-    const scalar t2
+    const scalar x1,
+    const scalar x2
 ) const
 {
-    scalar sign = t1 < t2 ? +1 : -1;
+    const scalar sign = x1 < x2 ? +1 : -1;
 
-    const scalar tL = min(t1, t2);
-    const scalar tR = max(t1, t2);
+    const scalar xL = min(x1, x2);
+    const scalar xR = max(x1, x2);
 
-    const scalar tLStar = min(max(tL, start_), tR);
-    const scalar tRStar = max(min(tR, start_ + duration_), tL);
+    const scalar xLStar = min(max(xL, start_), xR);
+    const scalar xRStar = max(min(xR, start_ + duration_), xL);
 
-    return sign*(tRStar - tLStar);
+    return sign*(xRStar - xLStar);
 }
 
 

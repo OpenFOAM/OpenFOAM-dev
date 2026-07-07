@@ -81,17 +81,6 @@ Foam::Function1s::NSRDS0::NSRDS0
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Function1s::NSRDS0::integral
-(
-    const scalar x1,
-    const scalar x2
-) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
 Foam::Function1s::NSRDS0 Foam::Function1s::NSRDS0::integral
 (
     const word& name,

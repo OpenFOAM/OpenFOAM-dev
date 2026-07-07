@@ -231,11 +231,14 @@ public:
             return values_;
         }
 
-        //- Return Table value as a function of scalar x
+        //- Return the value at a scalar coordinate
         virtual Type value(const scalar x) const;
 
-        //- Integrate between two scalars
-        virtual Type integral(const scalar xA, const scalar xB) const;
+        //- Return the derivative at a scalar coordinate
+        virtual Type derivative(const scalar x) const;
+
+        //- Return the integral between two scalar coordinates
+        virtual Type integral(const scalar x1, const scalar x2) const;
 
         //- Return the reference values
         virtual tmp<scalarField> x() const;
@@ -243,7 +246,7 @@ public:
         //- Return the dependent values
         virtual tmp<Field<Type>> y() const;
 
-        //- Write data to dictionary stream
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,16 @@ License
 
 template<class Type>
 inline Type Foam::Function1s::ZeroConstant<Type>::value
+(
+    const scalar x
+) const
+{
+    return pTraits<Type>::zero;
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::ZeroConstant<Type>::derivative
 (
     const scalar x
 ) const

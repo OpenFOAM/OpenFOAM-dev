@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,22 @@ bool stepInterpolationWeights::valueWeights
         indices[1] = index_ + 1;
         weights[1] = 0;
     }
+
+    return changed;
+}
+
+
+bool stepInterpolationWeights::derivativeWeights
+(
+    const scalar t,
+    labelList& indices,
+    scalarField& weights
+) const
+{
+    const bool changed = !indices.empty();
+
+    indices.clear();
+    weights.clear();
 
     return changed;
 }

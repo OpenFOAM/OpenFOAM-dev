@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "linearInterpolationWeights.H"
-#include "addToRunTimeSelectionTable.H"
 #include "ListOps.H"
-#include "Pair.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,6 +41,39 @@ addToRunTimeSelectionTable
     linearInterpolationWeights,
     word
 );
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool linearInterpolationWeights::updateIndex(const scalar t) const
+{
+    // Check if current index is still valid
+    if
+    (
+        (
+            index_ == -1
+         && t <= samples_.first()
+        )
+     || (
+            index_ >= 0
+         && index_ < samples_.size() - 1
+         && t >= samples_[index_]
+         && t <= samples_[index_ + 1]
+        )
+     || (
+            index_ == samples_.size() - 1
+         && t >= samples_.last()
+        )
+    )
+    {
+        // The index is still in the correct slot
+        return false;
+    }
+
+    // The index is no longer in the correct slot, so search for a new one
+    index_ = findLower(samples_, t);
+    return true;
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -65,34 +97,7 @@ bool linearInterpolationWeights::valueWeights
     scalarField& weights
 ) const
 {
-    // Check if current index is still valid
-    bool changed = false;
-    if
-    (
-        (
-            index_ == -1
-         && t <= samples_.first()
-        )
-     || (
-            index_ >= 0
-         && index_ < samples_.size() - 1
-         && t >= samples_[index_]
-         && t <= samples_[index_ + 1]
-        )
-     || (
-            index_ == samples_.size() - 1
-         && t >= samples_.last()
-        )
-    )
-    {
-        // The index is still in the correct slot
-    }
-    else
-    {
-        // The index is no longer in the correct slot, so search for a new one
-        index_ = findLower(samples_, t);
-        changed = true;
-    }
+    const bool changed = updateIndex(t);
 
     // Calculate the number of indices and weights and resize the result
     const label n = index_ == -1 || index_ == samples_.size() - 1 ? 1 : 2;
@@ -121,6 +126,39 @@ bool linearInterpolationWeights::valueWeights
         weights[0] = 1 - f;
         indices[1] = index_ + 1;
         weights[1] = f;
+    }
+
+    return changed;
+}
+
+
+bool linearInterpolationWeights::derivativeWeights
+(
+    const scalar t,
+    labelList& indices,
+    scalarField& weights
+) const
+{
+    const bool changed = updateIndex(t);
+
+    // Calculate the number of indices and weights and resize the result
+    const label n = index_ == -1 || index_ == samples_.size() - 1 ? 0 : 2;
+    indices.resize(n);
+    weights.resize(n);
+
+    // Compute the value
+    if (index_ == -1 || index_ == samples_.size() - 1)
+    {
+        indices.clear();
+        weights.clear();
+    }
+    else
+    {
+        // Return the gradient of the interval
+        indices[0] = index_;
+        weights[0] = - 1/(samples_[index_ + 1] - samples_[index_]);
+        indices[1] = index_ + 1;
+        weights[1] = 1/(samples_[index_ + 1] - samples_[index_]);
     }
 
     return changed;

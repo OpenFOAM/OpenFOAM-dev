@@ -183,16 +183,22 @@ public:
         //- Return the name of the entry
         const word& name() const;
 
-        //- Return value as a function of scalar x
+        //- Return the value at a scalar coordinate
         virtual Type value(const scalar x) const = 0;
 
-        //- Return value as a function of a scalar field x
+        //- Return a field of values at given scalar coordinates
         virtual tmp<Field<Type>> value(const scalarField& x) const = 0;
 
-        //- Integrate between two scalars
+        //- Return the derivative at a scalar coordinate
+        virtual Type derivative(const scalar x) const = 0;
+
+        //- Return a field of derivatives at given scalar coordinates
+        virtual tmp<Field<Type>> derivative(const scalarField& x) const = 0;
+
+        //- Return the integral between two scalar coordinates
         virtual Type integral(const scalar x1, const scalar x2) const = 0;
 
-        //- Integrate between two scalar fields
+        //- Return a field of integrals given two fields of scalar coordinates
         virtual tmp<Field<Type>> integral
         (
             const scalarField& x1,
@@ -202,12 +208,8 @@ public:
         //- Is this function guaranteed to be constant?
         virtual bool constant() const;
 
-        //- Write data to dictionary stream
-        virtual void write
-        (
-            Ostream& os,
-            const Function1s::unitSets&
-        ) const = 0;
+        //- Write in dictionary format
+        virtual void write(Ostream& os, const Function1s::unitSets&) const = 0;
 
 
     // Member Operators
@@ -275,16 +277,22 @@ public:
 
     // Member Functions
 
-        //- Return value as a function of one scalars
+        //- Return the value at a scalar coordinate
         virtual Type value(const scalar x) const = 0;
 
-        //- Return value as a function of one scalar field
+        //- Return a field of values at given scalar coordinates
         virtual tmp<Field<Type>> value(const scalarField& x) const;
 
-        //- Integrate between two scalar values
+        //- Return the derivative at a scalar coordinate
+        virtual Type derivative(const scalar x) const = 0;
+
+        //- Return a field of derivatives at given scalar coordinates
+        virtual tmp<Field<Type>> derivative(const scalarField& x) const;
+
+        //- Return the integral between two scalar coordinates
         virtual Type integral(const scalar x1, const scalar x2) const = 0;
 
-        //- Integrate between two scalar fields
+        //- Return a field of integrals given two fields of scalar coordinates
         virtual tmp<Field<Type>> integral
         (
             const scalarField& x1,

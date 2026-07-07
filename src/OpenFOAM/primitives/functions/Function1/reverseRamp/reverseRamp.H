@@ -116,10 +116,13 @@ public:
 
     // Member Functions
 
-        //- Return value for time t
+        //- Return the value at a scalar coordinate
         virtual inline scalar value(const scalar t) const;
 
-        //- Return the integral between times t1 and t2
+        //- Return the derivative at a scalar coordinate
+        virtual inline scalar derivative(const scalar t) const;
+
+        //- Return the integral between two scalar coordinates
         virtual inline scalar integral
         (
             const scalar t1,

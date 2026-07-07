@@ -144,6 +144,28 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::value
 
 
 template<class Type>
+inline Type Foam::Function1s::Coded<Type>::derivative
+(
+    const scalar x
+) const
+{
+    NotImplemented;
+    return pTraits<Type>::zero;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::derivative
+(
+    const scalarField& x
+) const
+{
+    NotImplemented;
+    return tmp<Field<Type>>();
+}
+
+
+template<class Type>
 inline Type Foam::Function1s::Coded<Type>::integral
 (
     const scalar x1,

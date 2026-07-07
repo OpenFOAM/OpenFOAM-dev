@@ -113,16 +113,26 @@ public:
 
     // Member Functions
 
-        //- Evaluate the function and return the result
-        virtual scalar value(scalar T) const
+        //- Return the value at a scalar coordinate
+        virtual scalar value(const scalar T) const
         {
             return exp(a_ + b_/T + c_*log(T) + d_*pow(T, e_));
         }
 
-        //- Integrate between two scalar values
-        virtual scalar integral(const scalar x1, const scalar x2) const;
+        //- Return the derivative at a scalar coordinate
+        virtual scalar derivative(const scalar T) const
+        {
+            return (- b_/sqr(T) + c_/T + d_*e_*pow(T, e_ - 1))*value(T);
+        }
 
-        //- Write the function coefficients
+        //- Return the integral between two scalar coordinates
+        virtual scalar integral(const scalar T1, const scalar T2) const
+        {
+            NotImplemented;
+            return 0;
+        }
+
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 };
 

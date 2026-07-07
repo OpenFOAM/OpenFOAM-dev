@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,16 +27,25 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::Function1s::turbulentBL::value(const scalar t) const
+inline Foam::scalar Foam::Function1s::turbulentBL::value(const scalar x) const
 {
-    return pow(t, exponent_);
+    return pow(x, exponent_);
+}
+
+
+inline Foam::scalar Foam::Function1s::turbulentBL::derivative
+(
+    const scalar x
+) const
+{
+    return exponent_*pow(x, exponent_ - 1);
 }
 
 
 inline Foam::scalar Foam::Function1s::turbulentBL::integral
 (
-    const scalar t1,
-    const scalar t2
+    const scalar x1,
+    const scalar x2
 ) const
 {
     NotImplemented;

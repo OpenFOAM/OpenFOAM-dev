@@ -81,17 +81,6 @@ Foam::Function1s::NSRDS6::NSRDS6
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Function1s::NSRDS6::integral
-(
-    const scalar x1,
-    const scalar x2
-) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
 void Foam::Function1s::NSRDS6::write
 (
     Ostream& os,

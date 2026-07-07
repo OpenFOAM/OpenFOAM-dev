@@ -132,13 +132,16 @@ public:
 
     // Member Functions
 
-        //- Return value
+        //- Return the value at a scalar coordinate
         virtual inline scalar value(const scalar x) const;
 
-        //- Integrate between two values
+        //- Return the derivative at a scalar coordinate
+        virtual inline scalar derivative(const scalar x) const;
+
+        //- Return the integral between two scalar coordinates
         virtual inline scalar integral(const scalar x1, const scalar x2) const;
 
-        //- Write data to dictionary stream
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 
 

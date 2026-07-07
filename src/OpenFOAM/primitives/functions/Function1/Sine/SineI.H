@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,19 @@ inline Type Foam::Function1s::Sine<Type>::value(const scalar x) const
     const scalar phi = constant::mathematical::twoPi*frequency_*(x - start_);
 
     return amplitude_->value(x)*sin(phi) + level_->value(x);
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::Sine<Type>::derivative(const scalar x) const
+{
+    const scalar twoPiF = constant::mathematical::twoPi*frequency_;
+    const scalar phi = twoPiF*(x - start_);
+
+    return
+        amplitude_->derivative(x)*sin(phi)
+      + amplitude_->value(x)*cos(phi)*twoPiF
+      + level_->derivative(x);
 }
 
 

@@ -153,10 +153,10 @@ public:
 
     // Member Functions
 
-        //- Return value for time t
+        //- Return the value at a scalar coordinate
         virtual scalar value(const scalar t) const = 0;
 
-        //- Write data to dictionary stream
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 
 

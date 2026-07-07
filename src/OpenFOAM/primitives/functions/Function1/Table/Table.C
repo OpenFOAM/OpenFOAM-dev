@@ -279,6 +279,61 @@ Type Foam::Function1s::Table<Type>::value
 
 
 template<class Type>
+Type Foam::Function1s::Table<Type>::derivative
+(
+    const scalar xArg
+) const
+{
+    scalar x(xArg);
+
+    checkX(x);
+
+    const scalar x0 = values_.first().first();
+    const scalar x1 = values_.last().first();
+
+    Type y = Zero;
+
+    switch (boundsHandling_)
+    {
+        case tableBase::boundsHandling::clamp:
+        {
+            // Integration weights clamp by default, so do nothing
+            break;
+        }
+        case tableBase::boundsHandling::zero:
+        {
+            // Return zero if outside the range
+            if (x <= x0 || x >= x1)
+            {
+                return Zero;
+            }
+            break;
+        }
+        case tableBase::boundsHandling::repeat:
+        {
+            // Shift the value into the range of the table
+            const scalar n = floor((x - x0)/(x1 - x0));
+            x -= n*(x1 - x0);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    // Evaluate
+    interpolator().derivativeWeights(x, indices_, weights_);
+    forAll(indices_, i)
+    {
+        y += weights_[i]*values_[indices_[i]].second();
+    }
+
+    return y;
+}
+
+
+template<class Type>
 Type Foam::Function1s::Table<Type>::integral
 (
     const scalar xAarg,

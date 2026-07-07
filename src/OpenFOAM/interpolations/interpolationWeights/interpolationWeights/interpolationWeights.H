@@ -108,8 +108,8 @@ public:
 
     // Member Functions
 
-        //- Calculate weights and indices to calculate t from samples.
-        //  Returns true if indices changed.
+        //- Calculate weights and indices to calculate the value at a
+        //  coordinate t from the samples. Returns true if indices changed.
         virtual bool valueWeights
         (
             const scalar t,
@@ -117,8 +117,18 @@ public:
             scalarField& weights
         ) const = 0;
 
-        //- Calculate weights and indices to calculate integrand of t1..t2
-        //  from samples. Returns true if indices changed.
+        //- Calculate weights and indices to calculate the derivative at a
+        //  coordinate t from the samples. Returns true if indices changed.
+        virtual bool derivativeWeights
+        (
+            const scalar t,
+            labelList& indices,
+            scalarField& weights
+        ) const = 0;
+
+        //- Calculate weights and indices to calculate integral between the
+        //  coordinates t1 and t2 from the samples. Returns true if indices
+        //  changed.
         virtual bool integrationWeights
         (
             const scalar t1,
@@ -133,8 +143,7 @@ public:
         <
             typename ListType1::value_type,
             typename ListType2::value_type
-        >::type
-        weightedSum(const ListType1& f1, const ListType2& f2);
+        >::type weightedSum(const ListType1& f1, const ListType2& f2);
 
 
     // Member Operators

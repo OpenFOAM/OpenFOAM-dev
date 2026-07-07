@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,15 @@ License
 inline Foam::scalar Foam::Function1s::normalise::value(const scalar x) const
 {
     return scale_*value_->value(x);
+}
+
+
+inline Foam::scalar Foam::Function1s::normalise::derivative
+(
+    const scalar x
+) const
+{
+    return scale_*value_->derivative(x);
 }
 
 

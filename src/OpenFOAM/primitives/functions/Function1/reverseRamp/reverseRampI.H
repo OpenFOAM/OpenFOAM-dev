@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,15 @@ inline Foam::scalar Foam::Function1s::reverseRamp::value
 ) const
 {
     return 1 - ramp_->value(t);
+}
+
+
+inline Foam::scalar Foam::Function1s::reverseRamp::derivative
+(
+    const scalar t
+) const
+{
+    return - ramp_->derivative(t);
 }
 
 

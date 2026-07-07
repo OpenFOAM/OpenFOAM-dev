@@ -86,6 +86,9 @@ public:
         virtual Type value(const scalar x) const;
 
         //- Generates an error
+        virtual Type derivative(const scalar x) const;
+
+        //- Generates an error
         virtual Type integral(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
@@ -103,6 +106,8 @@ public:
 
 } // End namespace Function1s
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
     #include "None.C"

@@ -194,16 +194,19 @@ public:
 
     // Member Functions
 
-        //- Return value
+        //- Return the value at a scalar coordinate
         virtual inline Type value(const scalar x) const;
 
-        //- Integrate between two values
+        //- Return the derivative at a scalar coordinate
+        virtual inline Type derivative(const scalar x) const;
+
+        //- Return the integral between two scalar coordinates
         virtual inline Type integral(const scalar x1, const scalar x2) const;
 
         //- Is this function guaranteed to be constant?
         virtual inline bool constant() const;
 
-        //- Write data to dictionary stream
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 
 

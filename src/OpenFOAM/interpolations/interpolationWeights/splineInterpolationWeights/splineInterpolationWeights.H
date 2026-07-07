@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,8 @@ public:
 
     // Member Functions
 
-        //- Calculate weights and indices to calculate t from samples.
-        //  Returns true if indices changed.
+        //- Calculate weights and indices to calculate the value at a
+        //  coordinate t from the samples. Returns true if indices changed.
         virtual bool valueWeights
         (
             const scalar t,
@@ -89,8 +89,22 @@ public:
             scalarField& weights
         ) const;
 
-        //- Calculate weights and indices to calculate integrand of t1..t2
-        //  from samples. Returns true if indices changed.
+        //- Calculate weights and indices to calculate the derivative at a
+        //  coordinate t from the samples. Returns true if indices changed.
+        virtual bool derivativeWeights
+        (
+            const scalar t,
+            labelList& indices,
+            scalarField& weights
+        ) const
+        {
+            NotImplemented;
+            return false;
+        }
+
+        //- Calculate weights and indices to calculate integral between the
+        //  coordinates t1 and t2 from the samples. Returns true if indices
+        //  changed.
         virtual bool integrationWeights
         (
             const scalar t1,
@@ -102,7 +116,6 @@ public:
             NotImplemented;
             return false;
         }
-
 };
 
 

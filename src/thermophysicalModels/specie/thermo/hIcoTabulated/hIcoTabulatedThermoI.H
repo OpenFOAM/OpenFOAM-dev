@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::dCpdT
     const scalar T
 ) const
 {
-    return Cp_.dfdT(T);
+    return Cp_.derivative(T);
 }
 
 

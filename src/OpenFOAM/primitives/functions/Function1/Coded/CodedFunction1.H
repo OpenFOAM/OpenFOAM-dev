@@ -140,23 +140,29 @@ public:
 
     // Member Functions
 
-        //- Return value as a function of a scalar
+        //- Return the value at a scalar coordinate
         virtual inline Type value(const scalar x) const;
 
-        //- Return value as a function of a scalar field
+        //- Return a field of values at given scalar coordinates
         virtual tmp<Field<Type>> value(const scalarField& x) const;
 
-        //- Integrate between two scalars
+        //- Return the derivative at a scalar coordinate
+        virtual Type derivative(const scalar x) const;
+
+        //- Return a field of derivatives at given scalar coordinates
+        virtual tmp<Field<Type>> derivative(const scalarField& x) const;
+
+        //- Return the integral between two scalar coordinates
         virtual Type integral(const scalar x1, const scalar x2) const;
 
-        //- Integrate between two scalar fields
+        //- Return a field of integrals given two fields of scalar coordinates
         virtual tmp<Field<Type>> integral
         (
             const scalarField& x1,
             const scalarField& x2
         ) const;
 
-        //- Write data to dictionary stream
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 
 

@@ -121,14 +121,14 @@ public:
 
     // Member Functions
 
-        // Evaluation
+        //- Return the value at a scalar coordinate
+        virtual inline Type value(const scalar x) const;
 
-            //- Return Polynomial value as a function of scalar x
-            virtual Type value(const scalar x) const;
+        //- Return the derivative at a scalar coordinate
+        virtual inline Type derivative(const scalar x) const;
 
-            //- Integrate between two scalar fields
-            virtual Type integral(const scalar x1, const scalar x2) const;
-
+        //- Return the integral between two scalar coordinates
+        virtual inline Type integral(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;

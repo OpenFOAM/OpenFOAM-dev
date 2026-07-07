@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,26 @@ inline Type Foam::Function1s::Scale<Type>::value(const scalar x) const
     {
         const scalar sx = xScale_->value(x)*x;
         return scale_->value(sx)*value_->value(sx);
+    }
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::Scale<Type>::derivative(const scalar x) const
+{
+    if (constantScale_ && constantValue_)
+    {
+        return pTraits<Type>::zero;
+    }
+    else
+    {
+        const scalar s = xScale_->value(x), sx = s*x;
+        return
+            (s + xScale_->derivative(x)*x)
+           *(
+               scale_->derivative(sx)*value_->value(sx)
+             + scale_->value(sx)*value_->derivative(sx)
+            );
     }
 }
 

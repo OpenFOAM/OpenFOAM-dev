@@ -119,19 +119,19 @@ public:
         template<class Type>
         void setValueUnits(const unitSet&) const;
 
-        //- Return value as a function of scalar x
+        //- Return the value at a scalar coordinate
         template<class Type>
         Type value(const scalar x) const;
 
-        //- Return value as a function of scalarField x
+        //- Return a field of values at given scalar coordinates
         template<class Type>
         tmp<Field<Type>> value(const scalarField& x) const;
 
-        //- Integrate between two scalars
+        //- Return the integral between two scalar coordinates
         template<class Type>
         Type integral(const scalar x1, const scalar x2) const;
 
-        //- Integrate between two scalar fields
+        //- Return a field of integrals given two fields of scalar coordinates
         template<class Type>
         tmp<Field<Type>> integral
         (

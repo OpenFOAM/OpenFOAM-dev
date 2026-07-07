@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,13 @@ template<class Type>
 inline Type Foam::Function1s::Shift<Type>::value(const scalar x) const
 {
     return value_->value(x - start_);
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::Shift<Type>::derivative(const scalar x) const
+{
+    return value_->derivative(x - start_);
 }
 
 

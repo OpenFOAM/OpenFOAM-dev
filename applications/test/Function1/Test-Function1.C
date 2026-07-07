@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
         Function1<scalar>::New("function", units::none, units::none, dict);
     const Function1<scalar>& function = functionPtr();
 
+    const bool derivative = dict.lookupOrDefault<bool>("derivative", true);
     const bool integral = dict.lookupOrDefault<bool>("integral", true);
     const scalar x0 = dict.lookup<scalar>("x0");
     const scalar x1 = dict.lookup<scalar>("x1");
@@ -61,7 +62,12 @@ int main(int argc, char *argv[])
     Info<< "Calculating values\n" << endl;
 
     const scalarField ys(function.value(xs));
-
+    tmp<scalarField> derivativeYs
+    (
+        derivative
+      ? function.derivative(xs)
+      : tmp<scalarField>()
+    );
     tmp<scalarField> integralYs
     (
         integral
@@ -69,7 +75,20 @@ int main(int argc, char *argv[])
       : tmp<scalarField>()
     );
 
+    tmp<scalarField> finiteDerivativeYs;
     tmp<scalarField> trapezoidIntegralYs;
+    if (derivative)
+    {
+        finiteDerivativeYs = tmp<scalarField>(new scalarField(nX, 0));
+        finiteDerivativeYs.ref().first() =
+            (-3*ys[0] + 4*ys[1] - ys[2])/(2*dx);
+        for (label i = 1; i < nX-1; ++ i)
+        {
+            finiteDerivativeYs.ref()[i] = (ys[i+1] - ys[i-1])/(2*dx);
+        }
+        finiteDerivativeYs.ref().last() =
+            (3*ys[nX-1] - 4*ys[nX-2] + ys[nX-3])/(2*dx);
+    }
     if (integral)
     {
         trapezoidIntegralYs = tmp<scalarField>(new scalarField(nX, 0));
@@ -84,6 +103,10 @@ int main(int argc, char *argv[])
     Info<< "Writing to " << ofs.name() << "\n" << endl;
 
     ofs << "# x y";
+    if (derivative)
+    {
+        ofs << " derivativeY finiteDerivativeY";
+    }
     if (integral)
     {
         ofs << " integralY trapezoidIntegralY";
@@ -93,6 +116,10 @@ int main(int argc, char *argv[])
     forAll(xs, i)
     {
         ofs << xs[i] << ' ' << ys[i];
+        if (derivative)
+        {
+            ofs << ' ' << derivativeYs()[i] << ' ' << finiteDerivativeYs()[i];
+        }
         if (integral)
         {
             ofs << ' ' << integralYs()[i] << ' ' << trapezoidIntegralYs()[i];

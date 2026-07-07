@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,15 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interpolationWeights.H"
-#include "ListOps.H"
-#include "IOobject.H"
-#include "HashSet.H"
-#include "objectRegistry.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -41,8 +32,7 @@ typename Foam::outerProduct
 <
     typename ListType1::value_type,
     typename ListType2::value_type
->::type
-Foam::interpolationWeights::weightedSum
+>::type Foam::interpolationWeights::weightedSum
 (
     const ListType1& f1,
     const ListType2& f2
@@ -69,9 +59,5 @@ Foam::interpolationWeights::weightedSum
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

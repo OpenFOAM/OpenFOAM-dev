@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,15 @@ inline Type Foam::Function1s::Repeat<Type>::value(const scalar x) const
     const label n = floor((x - start_)/period_);
     const scalar xStar = x - start_ - n*period_;
     return value_->value(xStar);
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::Repeat<Type>::derivative(const scalar x) const
+{
+    const label n = floor((x - start_)/period_);
+    const scalar xStar = x - start_ - n*period_;
+    return value_->derivative(xStar);
 }
 
 

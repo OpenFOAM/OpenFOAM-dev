@@ -85,10 +85,13 @@ public:
 
     // Member Functions
 
-        //- Return constant value
-        virtual inline Type value(const scalar) const;
+        //- Return zero
+        virtual inline Type value(const scalar x) const;
 
-        //- Integrate between two values
+        //- Return zero
+        virtual inline Type derivative(const scalar x) const;
+
+        //- Return zero
         virtual inline Type integral(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format

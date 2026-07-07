@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ bool splineInterpolationWeights::valueWeights
         );
     }
 
-    // Check if current timeIndex is still valid
+    // Check if current index is still valid
     if
     (
         index_ >= 0
@@ -138,8 +138,6 @@ bool splineInterpolationWeights::valueWeights
         weights[0] = 1;
         return indexChanged;
     }
-
-
 
     label lo = index_;
     label hi = index_+1;

@@ -120,6 +120,17 @@ Foam::Function1s::${typeName}Function1${TemplateType}::
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::${TemplateType}
+Foam::Function1s::${typeName}Function1${TemplateType}::derivative
+(
+    const scalar x
+) const
+{
+    NotImplemented;
+    return pTraits<${TemplateType}>::zero;
+}
+
+
+Foam::${TemplateType}
 Foam::Function1s::${typeName}Function1${TemplateType}::integral
 (
     const scalar x1,

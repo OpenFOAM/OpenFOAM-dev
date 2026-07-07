@@ -112,24 +112,28 @@ public:
 
     // Member Functions
 
-        //- Evaluate the function and return the result
+        //- Return the value at a scalar coordinate
         virtual scalar value(const scalar T) const
         {
             const scalar p = pow(1 - T/c_, d_);
             return a_/pow(b_, 1 + p);
         }
 
-        //- Evaluate the derivative and return the result
+        //- Return the derivative at a scalar coordinate
         virtual scalar derivative(const scalar T) const
         {
             const scalar p = pow(1 - T/c_, d_);
             return (a_*log(b_)/c_*d_)*p/(1 - T/c_)/pow(b_, 1 + p);
         }
 
-        //- Integrate between two scalar values
-        virtual scalar integral(const scalar x1, const scalar x2) const;
+        //- Return the integral between two scalar coordinates
+        virtual scalar integral(const scalar T1, const scalar T2) const
+        {
+            NotImplemented;
+            return 0;
+        }
 
-        //- Write the function coefficients
+        //- Write in dictionary format
         virtual void write(Ostream& os, const unitSets& units) const;
 };
 

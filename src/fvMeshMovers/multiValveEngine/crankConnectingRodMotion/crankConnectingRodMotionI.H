@@ -55,6 +55,27 @@ Foam::Function1s::crankConnectingRodMotion::value
 }
 
 
+inline Foam::scalar Foam::Function1s::crankConnectingRodMotion::derivative
+(
+    const scalar
+) const
+{
+    NotImplemented;
+    return NaN;
+}
+
+
+inline Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::Function1s::crankConnectingRodMotion::derivative
+(
+    const scalarField&
+) const
+{
+    NotImplemented;
+    return tmp<Field<scalar>>(nullptr);
+}
+
+
 inline Foam::scalar Foam::Function1s::crankConnectingRodMotion::integral
 (
     const scalar,
