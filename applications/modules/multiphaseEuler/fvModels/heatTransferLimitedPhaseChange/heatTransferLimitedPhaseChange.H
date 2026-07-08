@@ -51,11 +51,7 @@ Usage
         energySemiImplicit yes;
         pressureImplicit no;
 
-        saturationTemperature
-        {
-            type            constant;
-            value           372.76;
-        }
+        Tsat            constant 372.76;
     }
     \endverbatim
 
@@ -69,7 +65,7 @@ SourceFiles
 
 #include "phaseChange.H"
 #include "phaseSystem.H"
-#include "saturationTemperatureModel.H"
+#include "DimensionedFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -109,8 +105,8 @@ private:
         //- Phase 2
         const phaseModel& phase2_;
 
-        //- The saturation curve
-        autoPtr<saturationTemperatureModel> saturationModelPtr_;
+        //- Saturation temperature as a function of pressure
+        autoPtr<DimensionedFunction1<scalar>> Tsat_;
 
         //- Should this phase change be linearised in the pressure equation?
         bool pressureImplicit_;

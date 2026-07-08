@@ -30,7 +30,6 @@ License
 #include "diameterModel.H"
 #include "twoResistanceHeatTransfer.H"
 
-#include "saturationTemperatureModel.H"
 #include "partitioningModel.H"
 #include "nucleationSiteModel.H"
 #include "departureDiameterModel.H"
@@ -56,11 +55,12 @@ void Foam::fv::phaseSurfaceBoiling::readCoeffs(const dictionary& dict)
 {
     reReadSpecie(dict);
 
-    saturationModelPtr_.reset
+    Tsat_.reset
     (
-        saturationTemperatureModel::New
+        DimensionedFunction1<scalar>::New
         (
             "saturationTemperature",
+            {dimPressure, dimTemperature},
             dict
         ).ptr()
     );
@@ -140,7 +140,7 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
 
     const volScalarField::Internal Tsat
     (
-        saturationModelPtr_->Tsat(liquid_.fluidThermo().p()())
+        Tsat_->value(liquid_.fluidThermo().p()())
     );
 
     const volScalarField::Internal L(this->L(Tsat));
@@ -272,7 +272,7 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
     liquid_(fluid_.phases()[phaseNames().first()]),
     vapour_(fluid_.phases()[phaseNames().second()]),
     solid_(fluid_.phases()[dict.lookup("phase")]),
-    saturationModelPtr_(nullptr),
+    Tsat_(nullptr),
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
     departureDiameterModel_(nullptr),

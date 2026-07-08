@@ -29,7 +29,6 @@ License
 
 #include "fluidThermophysicalTransportModel.H"
 
-#include "saturationTemperatureModel.H"
 #include "partitioningModel.H"
 #include "nucleationSiteModel.H"
 #include "departureDiameterModel.H"
@@ -204,12 +203,9 @@ struct Foam::fv::wallBoiling::laggedProperties
         ),
         Tsat
         (
-            model.saturationModelPtr_->Tsat
+            model.Tsat_->value
             (
-                static_cast<const scalarField&>
-                (
-                    model.liquid_.fluidThermo().p().boundaryField()[patchi]
-                )
+                model.liquid_.fluidThermo().p().boundaryField()[patchi]
             )
         ),
         L
@@ -242,11 +238,12 @@ void Foam::fv::wallBoiling::readCoeffs(const dictionary& dict)
 {
     reReadSpecie(dict);
 
-    saturationModelPtr_.reset
+    Tsat_.reset
     (
-        saturationTemperatureModel::New
+        Function1<scalar>::New
         (
             "saturationTemperature",
+            {dimPressure, dimTemperature},
             dict
         ).ptr()
     );
@@ -724,7 +721,7 @@ Foam::fv::wallBoiling::wallBoiling
     liquidTemperatureWallFunction_(true),
     Prt_(NaN),
     bubbleWaitingTimeRatio_(NaN),
-    saturationModelPtr_(nullptr),
+    Tsat_(nullptr),
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
     departureDiameterModel_(nullptr),

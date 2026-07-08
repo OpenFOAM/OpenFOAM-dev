@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,15 @@ Foam::interfaceCompositionModels::saturated::saturated
     interfaceCompositionModel(dict, interface),
     saturatedName_(species()[0]),
     saturatedIndex_(thermo().species()[saturatedName_]),
-    saturationModel_(saturationPressureModel::New("pSat", dict))
+    pSat_
+    (
+        DimensionedFunction1<scalar>::New
+        (
+            "pSat",
+            {dimTemperature, dimPressure},
+            dict
+        )
+    )
 {
     if (species().size() != 1)
     {
@@ -97,7 +105,7 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::saturated::Yf
 {
     if (saturatedName_ == speciesName)
     {
-        return wRatioByP()*saturationModel_->pSat(Tf);
+        return wRatioByP()*pSat_->value(Tf);
     }
     else
     {
@@ -105,7 +113,7 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::saturated::Yf
 
         return
             thermo().Y()[speciesIndex]
-           *(scalar(1) - wRatioByP()*saturationModel_->pSat(Tf))
+           *(scalar(1) - wRatioByP()*pSat_->value(Tf))
            /max(scalar(1) - thermo().Y()[saturatedIndex_], small);
     }
 }
@@ -120,7 +128,7 @@ Foam::interfaceCompositionModels::saturated::YfPrime
 {
     if (saturatedName_ == speciesName)
     {
-        return wRatioByP()*saturationModel_->pSatPrime(Tf);
+        return wRatioByP()*pSat_->derivative(Tf);
     }
     else
     {
@@ -128,7 +136,7 @@ Foam::interfaceCompositionModels::saturated::YfPrime
 
         return
           - thermo().Y()[speciesIndex]
-           *wRatioByP()*saturationModel_->pSatPrime(Tf)
+           *wRatioByP()*pSat_->derivative(Tf)
            /max(scalar(1) - thermo().Y()[saturatedIndex_], small);
     }
 }

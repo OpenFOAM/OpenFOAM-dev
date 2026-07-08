@@ -30,7 +30,6 @@ License
 #include "diameterModel.H"
 #include "twoResistanceHeatTransfer.H"
 #include "generateBlendedInterfacialModels.H"
-#include "saturationPressureModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -76,11 +75,12 @@ void Foam::fv::phaseSurfaceCondensation::readCoeffs(const dictionary& dict)
         ).ptr()
     );
 
-    saturationModelPtr_.reset
+    pSat_.reset
     (
-        saturationPressureModel::New
+        DimensionedFunction1<scalar>::New
         (
             "saturationPressure",
+            {dimTemperature, dimPressure},
             dict
         ).ptr()
     );
@@ -119,10 +119,7 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
        /max(solidH + vapourH, rootVSmallH)
     );
 
-    const volScalarField::Internal pSat
-    (
-        saturationModelPtr_->pSat(Tsurface)
-    );
+    const volScalarField::Internal pSat(pSat_->value(Tsurface));
 
     const volScalarField::Internal L(this->L(Tsurface));
 
@@ -199,7 +196,7 @@ Foam::fv::phaseSurfaceCondensation::phaseSurfaceCondensation
     vapour_(fluid_.phases()[phaseNames().first()]),
     solid_(fluid_.phases()[dict.lookup("phase")]),
     diffusiveMassTransferModel_(nullptr),
-    saturationModelPtr_(nullptr),
+    pSat_(nullptr),
     pressureEquationIndex_(-1),
     specieSemiImplicit_(false),
     q_

@@ -133,8 +133,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class saturationTemperatureModel;
-
 namespace wallBoilingModels
 {
     class partitioningModel;
@@ -195,8 +193,8 @@ private:
         //- Bubble waiting time ratio
         scalar bubbleWaitingTimeRatio_;
 
-        //- The saturation curve
-        autoPtr<saturationTemperatureModel> saturationModelPtr_;
+        //- Saturation temperature as a function of pressure
+        autoPtr<Function1<scalar>> Tsat_;
 
         //- Run-time selected heat flux partitioning model
         autoPtr<wallBoilingModels::partitioningModel> partitioningModel_;

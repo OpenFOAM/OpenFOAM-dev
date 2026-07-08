@@ -36,9 +36,9 @@ phaseChange
                  beta           0.0;
                  interaction
                  {
-                     type           Antoine;
-                     A              6.8284;
-                     B              -1283.46;
+                     type           logAntoine;
+                     A              2.965536440228;
+                     B              557.399595743548;
                      C              0;
                  }
                  type           saturated;
@@ -52,9 +52,9 @@ phaseChange
                  beta           0.0;
                  interaction
                  {
-                     type           Antoine;
-                     A              -1.3115;
-                     B              426.398;
+                     type           logAntoine;
+                     A              -0.569577213016;
+                     B              -185.182298494583;
                      C              0;
                  }
                  type           saturated;
@@ -63,8 +63,8 @@ phaseChange
                  pSat
                  {
                      type           Antoine;
-                     A              22.7057916;
-                     B              -3125.59117503;
+                     A              9.861;
+                     B              1357.43;
                      C              -75.814;
                  }
             }

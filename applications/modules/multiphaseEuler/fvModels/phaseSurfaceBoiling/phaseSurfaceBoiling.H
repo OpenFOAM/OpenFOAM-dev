@@ -93,6 +93,7 @@ SourceFiles
 #include "phaseChange.H"
 #include "nucleation.H"
 #include "phaseSystem.H"
+#include "DimensionedFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -104,8 +105,6 @@ namespace solvers
 {
     class multiphaseEuler;
 }
-
-class saturationTemperatureModel;
 
 namespace wallBoilingModels
 {
@@ -144,8 +143,8 @@ class phaseSurfaceBoiling
         //- Reference to the solid phase on which the boiling occurs
         const phaseModel& solid_;
 
-        //- The saturation curve
-        autoPtr<saturationTemperatureModel> saturationModelPtr_;
+        //- Saturation temperature as a function of pressure
+        autoPtr<DimensionedFunction1<scalar>> Tsat_;
 
         //- Run-time selected heat flux partitioning model
         autoPtr<Foam::wallBoilingModels::partitioningModel>

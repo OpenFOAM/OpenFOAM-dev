@@ -58,7 +58,7 @@ SourceFiles
 #define MaxwellStefan_H
 
 #include "MeshObjects.H"
-#include "Function2.H"
+#include "DimensionedFunction2.H"
 #include "LUscalarMatrix.H"
 #include "fvMatricesFwd.H"
 #include "volFieldsFwd.H"
@@ -88,11 +88,11 @@ class MaxwellStefan
 
             //- Array of specie binary mass diffusion coefficient functions
             //  [m^2/s]
-            List<PtrList<Function2<scalar>>> DFuncs_;
+            List<PtrList<DimensionedFunction2<scalar>>> DFuncs_;
 
             //- List of specie Soret thermal diffusion coefficient
             //  functions [kg/m/s]
-            PtrList<Function2<scalar>> DTFuncs_;
+            PtrList<DimensionedFunction2<scalar>> DTFuncs_;
 
             //- Generalised Fick's law diffusion coefficients field list.
             //  This is the diagonal of the mass diffusion coefficient matrix

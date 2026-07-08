@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,79 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polynomialTemperature.H"
+#include "Antoine.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationModels
+namespace Function1s
 {
-    defineTypeNameAndDebug(polynomialTemperature, 0);
-    addToRunTimeSelectionTable
-    (
-        saturationTemperatureModel,
-        polynomialTemperature,
-        dictionary
-    );
+    addScalarFunction1(Antoine);
+    addScalarFunction1(logAntoine);
+    addScalarFunction1(inverseAntoine);
 }
 }
+
+
+const Foam::scalar Foam::Function1s::AntoineCoeffs::ln10_ = log(scalar(10));
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationModels::polynomialTemperature::polynomialTemperature
+Foam::Function1s::AntoineCoeffs::AntoineCoeffs
 (
+    const word& typeName,
+    const unitSets& units,
     const dictionary& dict
 )
 :
-    saturationTemperatureModel(),
-    C_(dict.lookup("C<8>"))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::saturationModels::polynomialTemperature::~polynomialTemperature()
-{}
+    A_(dict.lookup<scalar>("A", dimless)),
+    B_(dict.lookup<scalar>("B", units.x)),
+    C_(dict.lookup<scalar>("C", units.x))
+{
+    assertNoConvertUnits(typeName, {units::any, units.value}, dict);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField>
-Foam::saturationModels::polynomialTemperature::Tsat
+void Foam::Function1s::AntoineCoeffs::write
 (
-    const scalarField& p
+    Ostream& os,
+    const unitSets& units
 ) const
 {
-    tmp<scalarField> tTsat(new scalarField(p.size(), scalar(0)));
-    scalarField& Tsat = tTsat.ref();
-
-    forAll(Tsat, celli)
-    {
-        Tsat[celli] = C_.value(p[celli]);
-    }
-
-    return tTsat;
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::saturationModels::polynomialTemperature::TsatPrime
-(
-    const scalarField& p
-) const
-{
-    tmp<scalarField> tTsatPrime(new scalarField(p.size(), scalar(0)));
-    scalarField& TsatPrime = tTsatPrime.ref();
-
-    forAll(TsatPrime, celli)
-    {
-        TsatPrime[celli] = C_.derivative(p[celli]);
-    }
-
-    return tTsatPrime;
+    writeEntry(os, "A", units::unitless, A_);
+    writeEntry(os, "B", units.x, B_);
+    writeEntry(os, "C", units.x, C_);
 }
 
 

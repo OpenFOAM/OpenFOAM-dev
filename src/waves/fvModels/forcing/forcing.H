@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SourceFiles
 #define forcing_H
 
 #include "fvModel.H"
-#include "Function1.H"
+#include "DimensionedFunction1.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,7 +72,7 @@ protected:
         mutable dimensionedScalar lambdaBoundary_;
 
         //- The scaling function
-        autoPtr<Function1<scalar>> scale_;
+        autoPtr<DimensionedFunction1<scalar>> scale_;
 
         //- Origins of the scaling coordinate
         vectorField origins_;

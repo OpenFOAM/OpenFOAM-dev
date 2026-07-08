@@ -46,17 +46,15 @@ heatTransferLimitedPhaseChange
 
     saturationTemperature
     {
-        type            function1;
-        function
-        {
-            type            table;
-            format          csv;
-            nHeaderLine     1;
-            units           ([MPa] [K]);
-            columns         (1 0);
-            mergeSeparators no;
-            file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
-        }
+        type            table;
+        format          csv;
+        nHeaderLine     1;
+        units           ([MPa] [K]);
+        columns         (1 0);
+        mergeSeparators no;
+        file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
+        outOfBounds     clamp;
+        interpolationScheme linear;
     }
 }
 

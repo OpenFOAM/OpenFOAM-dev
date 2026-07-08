@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationModels::ArdenBuck
+    Foam::Function1s::ArdenBuck
 
 Description
-    ArdenBuck equation for the vapour pressure of moist air.
+    Arden-Buck equation for the vapour pressure of moist air
 
 SourceFiles
     ArdenBuck.C
@@ -35,40 +35,36 @@ SourceFiles
 #ifndef ArdenBuck_H
 #define ArdenBuck_H
 
-#include "saturationPressureModel.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationModels
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class ArdenBuck Declaration
+                           Class ArdenBuck Declaration
 \*---------------------------------------------------------------------------*/
 
 class ArdenBuck
 :
-    public saturationPressureModel
+    public FieldFunction1<scalar, ArdenBuck>
 {
+    // Private Static Member Data
+
+        //- Zero degrees Celcius, in whatever the standard temperature units are
+        static const scalar zeroC_;
+
+        //- Coefficients
+        static const scalar A_, B_, C_, D_;
+
+
     // Private Member Functions
 
         //- Exponent divided by the temperature
-        template<class FieldType>
-        tmp<FieldType> xByTC(const FieldType& TC) const;
-
-        //- Saturation pressure
-        template<class FieldType>
-        tmp<FieldType> pSat(const FieldType& T) const;
-
-        //- Saturation pressure derivative w.r.t. temperature
-        template<class FieldType>
-        tmp<FieldType> pSatPrime(const FieldType& T) const;
-
-        //- Natural log of the saturation pressure
-        template<class FieldType>
-        tmp<FieldType> lnPSat(const FieldType& T) const;
+        inline scalar xByTC(const scalar TC) const;
 
 
 public:
@@ -79,11 +75,16 @@ public:
 
     // Constructors
 
-        //- Construct default
-        ArdenBuck();
+        //- Construct from a name and dictionary
+        ArdenBuck
+        (
+            const word& name,
+            const unitSets& units,
+            const dictionary& dict
+        );
 
-        //- Construct from a dictionary
-        ArdenBuck(const dictionary& dict);
+        //- Construct from name and Istream
+        ArdenBuck(const word& name, const unitSets& units, Istream& is);
 
 
     //- Destructor
@@ -92,21 +93,28 @@ public:
 
     // Member Functions
 
-        //- Saturation pressure for scalarField
-        DEFINE_PSAT(scalarField, );
+        //- Return the value at a scalar coordinate
+        virtual inline scalar value(const scalar T) const;
 
-        //- Saturation pressure for volScalarField::Internal
-        DEFINE_PSAT(volScalarField::Internal, );
+        //- Return the derivative at a scalar coordinate
+        virtual inline scalar derivative(const scalar T) const;
 
-        //- Saturation pressure for volScalarField
-        DEFINE_PSAT(volScalarField, );
+        //- Return the integral between two scalar coordinates
+        virtual inline scalar integral(const scalar T1, const scalar T2) const;
+
+        //- Write in dictionary format
+        virtual void write(Ostream& os, const unitSets& units) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace saturationModels
+} // End namespace Function1s
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "ArdenBuckI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

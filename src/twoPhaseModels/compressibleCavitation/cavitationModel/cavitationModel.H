@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #include "compressibleTwoPhases.H"
 #include "fvMatricesFwd.H"
 #include "Pair.H"
-#include "saturationPressureModel.H"
+#include "DimensionedFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,8 +63,8 @@ protected:
         //- Index of the liquid
         const bool liquidIndex_;
 
-        //- The saturation pressure model
-        autoPtr<saturationPressureModel> saturationModel_;
+        //- The saturation pressure as a function of temperature
+        autoPtr<DimensionedFunction1<scalar>> pSat_;
 
 
     // Protected Member Functions
@@ -108,13 +108,13 @@ protected:
         //- Return the saturation vapour pressure for the liquid
         inline tmp<volScalarField::Internal> pSatl() const
         {
-            return saturationModel_->pSat(thermol().T()());
+            return pSat_->value(thermol().T()());
         }
 
         //- Return the saturation vapour pressure for the vapour
         inline tmp<volScalarField::Internal> pSatv() const
         {
-            return saturationModel_->pSat(thermov().T()());
+            return pSat_->value(thermov().T()());
         }
 
 

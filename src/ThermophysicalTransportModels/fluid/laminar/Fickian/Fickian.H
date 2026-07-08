@@ -43,7 +43,11 @@ SourceFiles
 #ifndef Fickian_H
 #define Fickian_H
 
-#include "Function2.H"
+#include "MeshObjects.H"
+#include "DimensionedFunction2.H"
+#include "fvMatricesFwd.H"
+#include "volFieldsFwd.H"
+#include "surfaceFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,15 +74,15 @@ class Fickian
 
             //- Array of specie binary mass diffusion coefficient functions
             //  [m^2/s]
-            List<PtrList<Function2<scalar>>> DFuncs_;
+            List<PtrList<DimensionedFunction2<scalar>>> DFuncs_;
 
             //- List of specie mass diffusion coefficient functions
             //  w.r.t the mixture [m^2/s]
-            PtrList<Function2<scalar>> DmFuncs_;
+            PtrList<DimensionedFunction2<scalar>> DmFuncs_;
 
             //- List of specie Soret thermal diffusion coefficient
             //  functions [kg/m/s]
-            PtrList<Function2<scalar>> DTFuncs_;
+            PtrList<DimensionedFunction2<scalar>> DTFuncs_;
 
             //- Mass diffusion coefficients in the mixture
             mutable PtrList<volScalarField> Dm_;

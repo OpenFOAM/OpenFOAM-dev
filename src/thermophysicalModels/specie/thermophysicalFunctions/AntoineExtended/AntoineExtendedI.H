@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,58 +21,39 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::Function1Evaluate
-
-Description
-    Global functions to evaluate Function1 of GeometricFields
-
-SourceFiles
-    Function1Evaluate.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef Function1Evaluate_H
-#define Function1Evaluate_H
+#include "AntoineExtended.H"
 
-#include "Function1.H"
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+inline Foam::scalar Foam::Function1s::AntoineExtended::value
+(
+    const scalar T
+) const
 {
+    return exp(A_ + B_/(C_ + T) + D_*T + E_*log(T) + F_*pow(T, G_));
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-void evaluate
+inline Foam::scalar Foam::Function1s::AntoineExtended::derivative
 (
-    GeometricField<Type, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, GeoMesh>& x
-);
+    const scalar T
+) const
+{
+    return value(T)*(- B_/sqr(C_ + T) + D_ + E_/T + F_*G_*pow(T, G_ - 1));
+}
 
-template<class Type, class GeoMesh>
-tmp<GeometricField<Type, GeoMesh>> evaluate
+
+inline Foam::scalar Foam::Function1s::AntoineExtended::integral
 (
-    const Function1<Type>& func,
-    const dimensionSet& dims,
-    const GeometricField<Type, GeoMesh>& x
-);
+    const scalar T1,
+    const scalar T2
+) const
+{
+    NotImplemented;
+    return NaN;
+}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "Function1Evaluate.C"
-#endif
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

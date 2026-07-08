@@ -71,19 +71,15 @@ heatTransferLimitedPhaseChange
 
     saturationTemperature
     {
-        type            function1;
-        function
-        {
-            type            table;
-            format          csv;
-            nHeaderLine     1;
-            units           ([bar] [K]);
-            columns         (1 0);
-            mergeSeparators no;
-            file            "constant/water-saturation.csv";
-            outOfBounds     clamp;
-            interpolationScheme linear;
-        }
+        type            table;
+        format          csv;
+        nHeaderLine     1;
+        units           ([bar] [K]);
+        columns         (1 0);
+        mergeSeparators no;
+        file            "constant/water-saturation.csv";
+        outOfBounds     clamp;
+        interpolationScheme linear;
     }
 }
 

@@ -30,8 +30,6 @@ License
 #include "fluidMulticomponentThermo.H"
 #include "fluidThermophysicalTransportModel.H"
 
-#include "saturationPressureModel.H"
-
 #include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
 #include "wallCondensationPhaseChangeRateFvPatchScalarField.H"
@@ -152,10 +150,7 @@ struct Foam::fv::wallCondensation::properties
         ),
         pSat
         (
-            model.saturationModelPtr_->pSat
-            (
-                TwVapour
-            )
+            model.pSat_->value(TwVapour)
         ),
         L
         (
@@ -187,11 +182,12 @@ void Foam::fv::wallCondensation::readCoeffs(const dictionary& dict)
 {
     reReadSpecie(dict);
 
-    saturationModelPtr_.reset
+    pSat_.reset
     (
-        saturationPressureModel::New
+        Function1<scalar>::New
         (
             "saturationPressure",
+            {dimTemperature, dimPressure},
             dict
         ).ptr()
     );
@@ -348,7 +344,7 @@ Foam::fv::wallCondensation::wallCondensation
     ),
     Prt_(NaN),
     Sct_(NaN),
-    saturationModelPtr_(nullptr),
+    pSat_(nullptr),
     pressureEquationIndex_(-1),
     specieSemiImplicit_(false),
     mDot_

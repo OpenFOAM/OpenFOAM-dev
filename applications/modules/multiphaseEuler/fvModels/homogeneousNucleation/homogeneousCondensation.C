@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,14 @@ namespace fv
 
 void Foam::fv::homogeneousCondensation::readCoeffs(const dictionary& dict)
 {
-    saturationModel_.reset
+    pSat_.reset
     (
-        saturationPressureModel::New("pSat", dict).ptr()
+        DimensionedFunction1<scalar>::New
+        (
+            "pSat",
+            {dimTemperature, dimPressure},
+            dict
+        ).ptr()
     );
 }
 
@@ -106,7 +111,7 @@ Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
     );
 
     // Saturation pressure and concentration
-    const volScalarField::Internal pSat(saturationModel_->pSat(T()));
+    const volScalarField::Internal pSat(pSat_->value(T()));
     const volScalarField::Internal cSat(pSat/p()*rhoGas/WGas);
     infoFieldVariable(pSat, debug);
     infoFieldVariable(cSat, debug);
@@ -169,7 +174,7 @@ Foam::fv::homogeneousCondensation::homogeneousCondensation
 )
 :
     homogeneousNucleation(name, modelType, mesh, dict),
-    saturationModel_(nullptr)
+    pSat_(nullptr)
 {
     readCoeffs(coeffs(dict));
 }

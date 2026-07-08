@@ -116,19 +116,21 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         dict.subDict(species2Name_).lookup("beta")
     );
 
-    saturationModel12_.reset
+    interaction12_.reset
     (
-        saturationPressureModel::New
+        DimensionedFunction1<scalar>::New
         (
             "interaction",
+            {dimTemperature, dimless},
             dict.subDict(species1Name_)
         ).ptr()
     );
-    saturationModel21_.reset
+    interaction21_.reset
     (
-        saturationPressureModel::New
+        DimensionedFunction1<scalar>::New
         (
             "interaction",
+            {dimTemperature, dimless},
             dict.subDict(species2Name_)
         ).ptr()
     );
@@ -180,8 +182,8 @@ void Foam::interfaceCompositionModels::nonRandomTwoLiquid::update
     const volScalarField alpha12(alpha12_ + Tf*beta12_);
     const volScalarField alpha21(alpha21_ + Tf*beta21_);
 
-    const volScalarField tau12(saturationModel12_->lnPSat(Tf));
-    const volScalarField tau21(saturationModel21_->lnPSat(Tf));
+    const volScalarField tau12(interaction12_->value(Tf));
+    const volScalarField tau21(interaction21_->value(Tf));
 
     const volScalarField G12(exp(- alpha12*tau12));
     const volScalarField G21(exp(- alpha21*tau21));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,84 +23,73 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "saturationModels.H"
-#include "constantTemperature.H"
+#include "ArdenBuck.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationModels
+namespace Function1s
 {
-    defineTypeNameAndDebug(constantTemperature, 0);
-    addToRunTimeSelectionTable
-    (
-        saturationTemperatureModel,
-        constantTemperature,
-        dictionary
-    );
-
-    static const dimensionedScalar zeroTbyP(dimTemperature/dimPressure, 0);
+    addStreamConstructableScalarFunction1(ArdenBuck);
 }
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+const Foam::scalar Foam::Function1s::ArdenBuck::zeroC_ =
+    Foam::units::lookup("K").toStandard(273.15);
 
-template<class FieldType>
-Foam::tmp<FieldType>
-Foam::saturationModels::constantTemperature::Tsat(const FieldType& p) const
-{
-    return evaluate(p, "Tsat", Tsat_);
-}
+const Foam::scalar Foam::Function1s::ArdenBuck::A_ =
+    Foam::units::lookup("Pa").toStandard(611.21);
 
+const Foam::scalar Foam::Function1s::ArdenBuck::B_ = 18.678;
 
-template<class FieldType>
-Foam::tmp<FieldType>
-Foam::saturationModels::constantTemperature::TsatPrime(const FieldType& p) const
-{
-    return evaluate(p, "TsatPrime", zeroTbyP);
-}
+const Foam::scalar Foam::Function1s::ArdenBuck::C_ =
+    Foam::units::lookup("K").toStandard(234.5);
+
+const Foam::scalar Foam::Function1s::ArdenBuck::D_ =
+    Foam::units::lookup("K").toStandard(257.14);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationModels::constantTemperature::constantTemperature
+Foam::Function1s::ArdenBuck::ArdenBuck
 (
+    const word& name,
+    const unitSets& units,
     const dictionary& dict
 )
 :
-    saturationTemperatureModel(),
-    Tsat_("value", dimTemperature, dict)
-{}
+    FieldFunction1<scalar, ArdenBuck>(name)
+{
+    assertNoConvertUnits(typeName, units, dict);
+}
 
 
-Foam::saturationModels::constantTemperature::constantTemperature
+Foam::Function1s::ArdenBuck::ArdenBuck
 (
-    const dimensionedScalar& Tsat
+    const word& name,
+    const unitSets& units,
+    Istream& is
 )
 :
-    saturationTemperatureModel(),
-    Tsat_(Tsat)
+    FieldFunction1<scalar, ArdenBuck>(name)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::saturationModels::constantTemperature::~constantTemperature()
+Foam::Function1s::ArdenBuck::~ArdenBuck()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-IMPLEMENT_TSAT(saturationModels::constantTemperature, scalarField);
-
-
-IMPLEMENT_TSAT(saturationModels::constantTemperature, volScalarField::Internal);
-
-
-IMPLEMENT_TSAT(saturationModels::constantTemperature, volScalarField);
+void Foam::Function1s::ArdenBuck::write
+(
+    Ostream& os,
+    const unitSets& units
+) const
+{}
 
 
 // ************************************************************************* //

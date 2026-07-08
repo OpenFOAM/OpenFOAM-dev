@@ -88,8 +88,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class saturationPressureModel;
-
 class wallCondensationPhaseChangeRateFvPatchScalarField;
 
 namespace fv
@@ -134,8 +132,8 @@ private:
         //- Turbulent Schmidt number
         scalar Sct_;
 
-        //- The saturation curve
-        autoPtr<saturationPressureModel> saturationModelPtr_;
+        //- Saturation pressure as a function of temperature
+        autoPtr<Function1<scalar>> pSat_;
 
         //- Counter for the evaluations of the pressure equation sources
         mutable label pressureEquationIndex_;

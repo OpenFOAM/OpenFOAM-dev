@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ SourceFiles
 #define homogeneousCondensation_H
 
 #include "homogeneousNucleation.H"
-#include "saturationPressureModel.H"
+#include "DimensionedFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,8 +81,8 @@ private:
 
     // Private Data
 
-        //- Saturation pressure model
-        autoPtr<saturationPressureModel> saturationModel_;
+        //- Saturation pressure as a function of temperature
+        autoPtr<DimensionedFunction1<scalar>> pSat_;
 
 
     // Private Member Functions

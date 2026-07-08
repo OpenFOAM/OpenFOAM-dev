@@ -19,4 +19,8 @@ $(NSRDS)/NSRDS6/NSRDS6.C
 $(NSRDS)/NSRDS7/NSRDS7.C
 $(NSRDS)/NSRDS14/NSRDS14.C
 
+thermophysicalFunctions/Antoine/Antoine.C
+thermophysicalFunctions/AntoineExtended/AntoineExtended.C
+thermophysicalFunctions/ArdenBuck/ArdenBuck.C
+
 LIB = $(FOAM_LIBBIN)/libspecie

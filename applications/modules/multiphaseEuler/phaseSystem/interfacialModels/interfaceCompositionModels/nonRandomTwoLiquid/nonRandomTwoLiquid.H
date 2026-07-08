@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 #define nonRandomTwoLiquid_H
 
 #include "interfaceCompositionModel.H"
-#include "saturationPressureModel.H"
+#include "DimensionedFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -90,11 +90,11 @@ class nonRandomTwoLiquid
         //- Non-randomness linear parameter for species 2
         dimensionedScalar beta21_;
 
-        //- Interaction parameter model for species 1
-        autoPtr<saturationPressureModel> saturationModel12_;
+        //- Interaction parameter for species 1
+        autoPtr<DimensionedFunction1<scalar>> interaction12_;
 
-        //- Interaction parameter model for species 2
-        autoPtr<saturationPressureModel> saturationModel21_;
+        //- Interaction parameter for species 2
+        autoPtr<DimensionedFunction1<scalar>> interaction21_;
 
         //- Composition model for species 1
         autoPtr<interfaceCompositionModel> speciesModel1_;

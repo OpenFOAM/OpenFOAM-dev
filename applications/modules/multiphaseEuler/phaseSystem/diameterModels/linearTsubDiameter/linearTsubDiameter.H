@@ -46,7 +46,7 @@ SourceFiles
 #define linearTsubDiameter_H
 
 #include "sphericalDiameter.H"
-#include "saturationTemperatureModel.H"
+#include "DimensionedFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,8 +81,8 @@ class linearTsub
         //- Subcooling temperature where high subcooling diameter is reached
         dimensionedScalar Tsub1_;
 
-        //- The saturation curve
-        autoPtr<saturationTemperatureModel> saturationModelPtr_;
+        //- Saturation temperature as a function of pressure
+        autoPtr<DimensionedFunction1<scalar>> Tsat_;
 
         //- Diameter field
         volScalarField d_;

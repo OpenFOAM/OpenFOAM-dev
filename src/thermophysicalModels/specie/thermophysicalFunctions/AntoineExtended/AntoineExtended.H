@@ -22,80 +22,95 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::saturationModels::polynomialTemperature
+    Foam::Function1s::AntoineExtended
 
 Description
-    Polynomial equation for the saturation vapour temperature in terms of
-    the vapour pressure (in Pa).
+    Extended Antoine equation, used to describe vapour pressure as a function
+    of temperature
 
     \f[
-        T_sat = \sum_i C_i p^i
+        \log (p) = A + \frac{B}{C + T} + D T + E \log (T) + F T^G
     \f]
 
-    where \f$p\f$ is the pressure in Pa and \f$C\f$ are the coefficients.
+    Note that unlike the non-extended Antoine equation, this uses natural
+    logarithms and the second term has a positive sign
 
 SourceFiles
-    polynomialTemperature.C
+    AntoineExtended.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polynomialTemperature_H
-#define polynomialTemperature_H
+#ifndef AntoineExtended_H
+#define AntoineExtended_H
 
-#include "saturationTemperatureModel.H"
-#include "FixedPolynomial.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace saturationModels
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class polynomialTemperature Declaration
+                           Class AntoineExtended Declaration
 \*---------------------------------------------------------------------------*/
 
-class polynomialTemperature
+class AntoineExtended
 :
-    public saturationTemperatureModel
+    public FieldFunction1<scalar, AntoineExtended>
 {
-    // Private Data
+    // Private data
 
-        //- Polynomial coefficients
-        FixedPolynomial<scalar, 8> C_;
+        //- Coefficients
+        const scalar A_, B_, C_, D_, E_, G_, F_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("polynomial");
+    TypeName("AntoineExtended");
 
 
     // Constructors
 
-        //- Construct from a dictionary
-        polynomialTemperature(const dictionary& dict);
+        //- Construct from a name and dictionary
+        AntoineExtended
+        (
+            const word& name,
+            const unitSets& units,
+            const dictionary& dict
+        );
 
 
     //- Destructor
-    virtual ~polynomialTemperature();
+    virtual ~AntoineExtended();
 
 
     // Member Functions
 
-        //- Saturation temperature for scalarField
-        virtual tmp<scalarField> Tsat(const scalarField& p) const;
+        //- Return the value at a scalar coordinate
+        virtual inline scalar value(const scalar T) const;
 
-        //- Saturation temperature derivative w.r.t. pressure for scalarField
-        virtual tmp<scalarField> TsatPrime(const scalarField& p) const;
+        //- Return the derivative at a scalar coordinate
+        virtual inline scalar derivative(const scalar T) const;
+
+        //- Return the integral between two scalar coordinates
+        virtual inline scalar integral(const scalar T1, const scalar T2) const;
+
+        //- Write in dictionary format
+        virtual void write(Ostream& os, const unitSets& units) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace saturationModels
+} // End namespace Function1s
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "AntoineExtendedI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

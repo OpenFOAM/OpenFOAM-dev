@@ -358,6 +358,12 @@ public:
     addToRunTimeSelectionTable(scalarFunction1, SS, dictionary)
 
 
+#define addStreamConstructableScalarFunction1(SS)                              \
+                                                                               \
+    addScalarFunction1(SS);                                                    \
+    addToRunTimeSelectionTable(scalarFunction1, SS, Istream)
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository

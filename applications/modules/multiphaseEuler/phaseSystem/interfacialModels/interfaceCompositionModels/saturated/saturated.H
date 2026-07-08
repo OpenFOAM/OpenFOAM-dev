@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #define saturated_H
 
 #include "interfaceCompositionModel.H"
-#include "saturationPressureModel.H"
+#include "DimensionedFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,14 +58,14 @@ protected:
 
     // Private Data
 
-        //- saturated species name
+        //- Saturated specie name
         word saturatedName_;
 
-        //- saturated species index
+        //- Saturated specie index
         label saturatedIndex_;
 
-        //- Saturation pressure model
-        autoPtr<saturationPressureModel> saturationModel_;
+        //- Saturation pressure as a function of temperature
+        autoPtr<DimensionedFunction1<scalar>> pSat_;
 
 
     // Private Member Functions

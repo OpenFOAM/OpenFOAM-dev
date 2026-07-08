@@ -53,11 +53,12 @@ Foam::diameterModels::linearTsub::linearTsub
     Tsub2_("Tsub2", dimensions::temperature, diameterProperties, 0),
     d1_("d1", dimensions::length, diameterProperties, 0.00015),
     Tsub1_("Tsub1", dimensions::temperature, diameterProperties, 13.5),
-    saturationModelPtr_
+    Tsat_
     (
-        saturationTemperatureModel::New
+        DimensionedFunction1<scalar>::New
         (
             "saturationTemperature",
+            {dimPressure, dimTemperature},
             diameterProperties
         ).ptr()
     ),
@@ -100,8 +101,7 @@ void Foam::diameterModels::linearTsub::correct()
 
     const volScalarField Tsub
     (
-        saturationModelPtr_->Tsat(liquid.fluidThermo().p())
-      - liquid.thermo().T()
+        Tsat_->value(liquid.fluidThermo().p()) - liquid.thermo().T()
     );
 
     const volScalarField f((Tsub - Tsub1_)/(Tsub2_ - Tsub1_));
@@ -122,11 +122,12 @@ bool Foam::diameterModels::linearTsub::read
     d1_.readIfPresent(diameterProperties);
     Tsub1_.readIfPresent(diameterProperties);
 
-    saturationModelPtr_.reset
+    Tsat_.reset
     (
-        saturationTemperatureModel::New
+        DimensionedFunction1<scalar>::New
         (
             "saturationTemperature",
+            {dimPressure, dimTemperature},
             diameterProperties
         ).ptr()
     );

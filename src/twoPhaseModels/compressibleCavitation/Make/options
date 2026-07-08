@@ -3,7 +3,6 @@ EXE_INC = \
     -I$(LIB_SRC)/twoPhaseModels/compressibleTwoPhases/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/saturationModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
@@ -11,6 +10,5 @@ LIB_LIBS = \
     -lcompressibleTwoPhases \
     -lphysicalProperties \
     -lfluidThermophysicalModels \
-    -lsaturationModels \
     -lfiniteVolume \
     -lmeshTools

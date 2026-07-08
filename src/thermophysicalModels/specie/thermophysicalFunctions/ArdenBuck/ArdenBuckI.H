@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,54 +23,47 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1Evaluate.H"
+#include "ArdenBuck.H"
 
-// * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-void Foam::evaluate
-(
-    GeometricField<Type, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, GeoMesh>& x
-)
+inline Foam::scalar
+Foam::Function1s::ArdenBuck::xByTC(const scalar TC) const
 {
-    result.primitiveFieldRef() = func.value(x());
-
-    typename GeometricField<Type, GeoMesh>::Boundary& bresult =
-        result.boundaryFieldRef();
-
-    const typename GeometricField<Type, GeoMesh>::Boundary& bx =
-        x.boundaryField();
-
-    forAll(bresult, patchi)
-    {
-        bresult[patchi] = func.value(bx[patchi]);
-    }
+    return (B_ - TC/C_)/(D_ + TC);
 }
 
 
-template<class Type, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, GeoMesh>> Foam::evaluate
-(
-    const Function1<Type>& func,
-    const dimensionSet& dims,
-    const GeometricField<Type, GeoMesh>& x
-)
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline Foam::scalar Foam::Function1s::ArdenBuck::value(const scalar T) const
 {
-    tmp<GeometricField<Type, GeoMesh>> tresult
-    (
-        GeometricField<Type, GeoMesh>::New
-        (
-            func.name() + "(" + x.name() + ')',
-            x.mesh(),
-            dims
-        )
-    );
+    const scalar TC = T - zeroC_;
 
-    evaluate(tresult.ref(), func, x);
+    return A_*exp(TC*xByTC(TC));
+}
 
-    return tresult;
+
+inline Foam::scalar Foam::Function1s::ArdenBuck::derivative
+(
+    const scalar T
+) const
+{
+    const scalar TC = T - zeroC_;
+    const scalar x = xByTC(TC);
+
+    return A_*exp(TC*x)*(D_*x - TC/C_)/(D_ + TC);
+}
+
+
+inline Foam::scalar Foam::Function1s::ArdenBuck::integral
+(
+    const scalar T1,
+    const scalar T2
+) const
+{
+    NotImplemented;
+    return NaN;
 }
 
 
