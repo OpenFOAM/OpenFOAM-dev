@@ -70,19 +70,29 @@ extern const dimensionSet acceleration;
 extern const dimensionSet density;
 extern const dimensionSet momentumDensity;
 extern const dimensionSet force;
+
 extern const dimensionSet energy;
+extern const dimensionSet energyDensity;
+extern const dimensionSet specificEnergy;
+
 extern const dimensionSet kineticEnergy;
 extern const dimensionSet kineticEnergyDensity;
+
 extern const dimensionSet power;
+extern const dimensionSet powerDensity;
+extern const dimensionSet specificPower;
+
+extern const dimensionSet entropy;
+extern const dimensionSet specificEntropy;
+
+extern const dimensionSet heatCapacity;
+extern const dimensionSet specificHeatCapacity;
+
+extern const dimensionSet gasConstant;
 
 extern const dimensionSet pressure;
 extern const dimensionSet kinematicPressure;
 extern const dimensionSet compressibility;
-
-extern const dimensionSet energyDensity;
-extern const dimensionSet specificEnergy;
-extern const dimensionSet specificHeatCapacity;
-extern const dimensionSet gasConstant;
 
 extern const dimensionSet kinematicViscosity;
 extern const dimensionSet dynamicViscosity;

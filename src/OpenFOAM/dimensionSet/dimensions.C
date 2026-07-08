@@ -102,7 +102,19 @@ const Foam::dimensionSet Foam::dimensions::momentumDensity
     momentum/volume
 );
 const Foam::dimensionSet Foam::dimensions::force("force", mass*acceleration);
+
 const Foam::dimensionSet Foam::dimensions::energy("energy", force*length);
+const Foam::dimensionSet Foam::dimensions::energyDensity
+(
+    "energyDensity",
+    energy/volume
+);
+const Foam::dimensionSet Foam::dimensions::specificEnergy
+(
+    "specificEnergy",
+    energy/mass
+);
+
 const Foam::dimensionSet Foam::dimensions::kineticEnergy
 (
     "kineticEnergy",
@@ -113,7 +125,46 @@ const Foam::dimensionSet Foam::dimensions::kineticEnergyDensity
     "kineticEnergyDensity",
     kineticEnergy/volume
 );
+
 const Foam::dimensionSet Foam::dimensions::power("power", energy/time);
+const Foam::dimensionSet Foam::dimensions::powerDensity
+(
+    "powerDensity",
+    power/volume
+);
+const Foam::dimensionSet Foam::dimensions::specificPower
+(
+    "specificPower",
+    power/mass
+);
+
+const Foam::dimensionSet Foam::dimensions::entropy
+(
+    "entropy",
+    energy/temperature
+);
+const Foam::dimensionSet Foam::dimensions::specificEntropy
+(
+    "specificEntropy",
+    entropy/mass
+);
+
+const Foam::dimensionSet Foam::dimensions::heatCapacity
+(
+    "heatCapacity",
+    energy/temperature
+);
+const Foam::dimensionSet Foam::dimensions::specificHeatCapacity
+(
+    "specificHeatCapacity",
+    heatCapacity/mass
+);
+
+const Foam::dimensionSet Foam::dimensions::gasConstant
+(
+    "gasConstant",
+    specificHeatCapacity
+);
 
 const Foam::dimensionSet Foam::dimensions::pressure("pressure", force/area);
 const Foam::dimensionSet Foam::dimensions::kinematicPressure
@@ -125,27 +176,6 @@ const Foam::dimensionSet Foam::dimensions::compressibility
 (
     "compressibility",
     density/pressure
-);
-
-const Foam::dimensionSet Foam::dimensions::energyDensity
-(
-    "energyDensity",
-    energy/volume
-);
-const Foam::dimensionSet Foam::dimensions::specificEnergy
-(
-    "specificEnergy",
-    energy/mass
-);
-const Foam::dimensionSet Foam::dimensions::specificHeatCapacity
-(
-    "specificHeatCapacity",
-    specificEnergy/temperature
-);
-const Foam::dimensionSet Foam::dimensions::gasConstant
-(
-    "gasConstant",
-    specificEnergy/temperature
 );
 
 const Foam::dimensionSet Foam::dimensions::kinematicViscosity
