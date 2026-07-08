@@ -20,6 +20,7 @@ Description
 
 field           flueGas;
 schemesField    k;
+solverField     k;
 
 diffusivity     viscosity;
 

@@ -25,8 +25,9 @@ libs            ("libsolverFunctionObjects.so");
 
 phi             phi;
 rho             rho;
-nCorr           5;
+nCorrectors     5;
 schemesField    age;
+solverField     age;
 diffusion       false;
 tolerance       1e-5;
 

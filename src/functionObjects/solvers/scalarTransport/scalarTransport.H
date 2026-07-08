@@ -30,6 +30,8 @@ Description
     - To specify the field name set the \c field entry
     - To employ the same numerical schemes as another field set
       the \c schemesField entry,
+    - To employ the same solver settings as another field set
+      the \c solverField entry,
     - The \c diffusivity entry can be set to \c none, \c constant, \c viscosity
     - A constant diffusivity is specified with the \c D entry,
     - If a momentum transport model is available and the \c viscosity
@@ -152,6 +154,9 @@ private:
 
         //- Name of field whose schemes are used (optional)
         word schemesField_;
+
+        //- Name of field whose solver is used (optional)
+        word solverField_;
 
         //- The scalar field
         volScalarField s_;

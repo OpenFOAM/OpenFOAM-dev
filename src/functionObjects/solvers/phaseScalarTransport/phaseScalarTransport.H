@@ -155,6 +155,9 @@ class phaseScalarTransport
         //- Name of field whose schemes are used (optional)
         word schemesField_;
 
+        //- Name of field whose solver is used (optional)
+        word solverField_;
+
         //- Flag to indicate whether to write the field multiplied by the phase
         //  fraction
         bool writeAlphaField_;

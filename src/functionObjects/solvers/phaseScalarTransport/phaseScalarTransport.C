@@ -136,8 +136,8 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
     // Get the potential field
     volScalarField& Phi(this->Phi());
 
-    // Construct the scheme names
-    const word laplacianScheme = "laplacian(" + pName_ + ")";
+    // Construct the Phi Laplacian scheme names
+    const word PhiLaplacianScheme = "laplacian(" + pName_ + ")";
 
     // Debug writing. Write the material derivative of alpha, before and after
     // the solution of the potential and the correction of alphaPhi. Before
@@ -178,7 +178,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
         {
             fvScalarMatrix PhiEqn
             (
-                fvm::laplacian(Phi, laplacianScheme)
+                fvm::laplacian(Phi, PhiLaplacianScheme)
               + fvc::ddt(alpha)
               + fvc::div(alphaPhi)
             );
@@ -200,7 +200,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
         {
             fvScalarMatrix PhiEqn
             (
-                fvm::laplacian(Phi, laplacianScheme)
+                fvm::laplacian(Phi, PhiLaplacianScheme)
               + fvc::ddt(rho, alpha)
               + fvc::div(alphaPhi)
             );
@@ -342,7 +342,9 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
             IOobject::groupName("rho", phaseName_)
         );
     pName_ = dict.lookupOrDefault<word>("p", "p");
+
     schemesField_ = dict.lookupOrDefault<word>("schemesField", fieldName_);
+    solverField_ = dict.lookupOrDefault<word>("solverField", fieldName_);
 
     diffusivity_ =
         scalarTransport::diffusivityTypeNames_.read(dict.lookup("diffusivity"));
@@ -389,7 +391,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
     const surfaceScalarField& alphaPhi = tAlphaPhi();
 
     const int nCorr =
-        mesh_.solution().solverDict(schemesField_)
+        mesh_.solution().solverDict(solverField_)
        .lookupOrDefaultBackwardsCompatible<label>
         (
             {"nCorrectors", "nCorr"},
@@ -398,8 +400,8 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
 
     // Get the relaxation coefficient
     const scalar relaxCoeff =
-        mesh_.solution().relaxEquation(schemesField_)
-      ? mesh_.solution().equationRelaxationFactor(schemesField_)
+        mesh_.solution().relaxEquation(solverField_)
+      ? mesh_.solution().equationRelaxationFactor(solverField_)
       : 0;
 
     // Models and constraints
@@ -435,13 +437,16 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                     (
                         fvc::interpolate(alpha)*fvc::interpolate(D),
                         s_,
-                        "laplacian(" + D.name() + "," + schemesField_ + ")"
+                        "laplacian("
+                      + alphaPhi.name() + ","
+                      + D.name() + ","
+                      + schemesField_ + ")"
                     );
             }
 
             fieldEqn.relax(relaxCoeff);
             fvConstraints.constrain(fieldEqn);
-            fieldEqn.solve(schemesField_);
+            fieldEqn.solve(solverField_);
             fvConstraints.constrain(s_);
         }
     }
@@ -476,13 +481,16 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                     (
                         fvc::interpolate(alpha)*fvc::interpolate(rho*D),
                         s_,
-                        "laplacian(" + D.name() + "," + schemesField_ + ")"
+                        "laplacian("
+                      + alphaPhi.name() + ","
+                      + D.name() + ","
+                      + schemesField_ + ")"
                     );
             }
 
             fieldEqn.relax(relaxCoeff);
             fvConstraints.constrain(fieldEqn);
-            fieldEqn.solve(schemesField_);
+            fieldEqn.solve(solverField_);
             fvConstraints.constrain(s_);
         }
     }

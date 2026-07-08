@@ -19,8 +19,9 @@ Description
 #includeEtc     "caseDicts/functions/solvers/scalarTransport.cfg"
 
 field           <fieldName>;    // Name of the transported scalar
-schemesField    $field;         // Name of the field from which to use schemes
-                                // and solvers settings
+schemesField    $field;         // Name of the field for the schemes
+solverField     $field;         // Name of the field for the solver settings
+
 diffusivity     viscosity;
 
 alphal          1;
