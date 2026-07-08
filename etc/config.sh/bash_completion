@@ -5423,7 +5423,7 @@ _wmake_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-all -help -j -j -non-stop -no-scheduler -queue -silent -update"
+    opts="-all -help -j -non-stop -no-scheduler -page -queue -silent -update"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 
@@ -5532,7 +5532,7 @@ _wmakeLnIncludeAll_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-help -j -j"
+    opts="-help -j"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 

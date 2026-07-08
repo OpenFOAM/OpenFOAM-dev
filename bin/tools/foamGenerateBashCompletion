@@ -542,7 +542,7 @@ do
     # shellcheck disable=SC2086
     allOpts=$(printf '%s\n' \
         $arglessOpts $dirOpts $fileOpts $handlerOpts $rangesOpts $argOpts $specialOpts | \
-        sort)
+        sort -u)
 
     # Write the completion function ...
     # shellcheck disable=SC2086
