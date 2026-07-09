@@ -164,6 +164,8 @@ public:
 
         // Thermodynamic Properties
 
+            using BasicThermoType::rho;
+
             //- Density for an injection [kg/m^3]
             virtual tmp<LagrangianSubScalarField> rho
             (
@@ -183,6 +185,8 @@ public:
                 const LagrangianSubScalarField& T,
                 const LagrangianInjection&
             ) const;
+
+            using BasicThermoType::Cv;
 
             //- Heat capacity at constant volume for an injection [J/kg/K]
             virtual tmp<LagrangianSubScalarField> Cv
@@ -205,6 +209,8 @@ public:
 
 
         // Transport Properties
+
+            using BasicThermoType::kappa;
 
             //- Thermal conductivity for an injection [W/m/K]
             virtual tmp<LagrangianSubScalarField> kappa
