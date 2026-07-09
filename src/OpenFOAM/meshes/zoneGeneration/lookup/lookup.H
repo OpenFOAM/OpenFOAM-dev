@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ Class
     Foam::zoneGenerators::lookup
 
 Description
-    A zoneGenerator which looks-up and returns a zoneSet containing point,
-    and/or cell and/or faces zones.
+    A zoneGenerator which looks up and returns a zoneSet containing point,
+    cell and/or faces zones.
 
 Usage
     \table
