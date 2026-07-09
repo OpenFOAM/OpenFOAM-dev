@@ -25,8 +25,23 @@ Class
     Foam::zoneGenerators::print
 
 Description
-    A zoneGenerator which prints pointZones and/or cellZone and/or faceZones
-    from the mesh
+    Print a summary of one or more zones to the terminal
+
+    All zone types
+        The number of elements (points, faces or cells) in the zone
+        The bounding box containing the elements
+        The bounding sphere containing the elements
+
+    pointZones
+        The average position of all the points
+
+    faceZones
+        The total face area magnitude
+        The centroid of the faces
+
+    cellZones
+        The total volume
+        The centroid of the cells
 
 Usage
     \table
@@ -37,14 +52,43 @@ Usage
         zones        | List of zone names to print | no       |
         geometry     | Print the geometry?         | no       | true
     \endtable
-    If no zone or zones are specified then all the zones will be printed
 
-    Example:
+    Examples:
+    Print a summary of a zone named 'fan'
     \verbatim
-        printCellZones
+        printOneZone
+        {
+            type        print;
+
+            zone        fan;
+        }
+    \endverbatim
+
+    Print a summary of a zone named 'fan' and a zone named 'baffle'
+    \verbatim
+        printTwoZones
+        {
+            type        print;
+
+            zones
+            (
+                fan
+                baffle
+            );
+        }
+    \endverbatim
+
+    Print a summary of all the zones, by ommitting 'zone' and 'zones'
+    \verbatim
+        printAllZones
         {
             type        print;
         }
+    \endverbatim
+
+    In createZonesDict, shorthand notation can be used to print all zones
+    \verbatim
+        print;
     \endverbatim
 
 SourceFiles
