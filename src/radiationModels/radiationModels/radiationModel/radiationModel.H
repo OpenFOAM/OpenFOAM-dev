@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ private:
     // Private Member Functions
 
         //- Create IO object if dictionary is present
-        IOobject createIOobject(const fvMesh& mesh) const;
+        static IOobject createIOobject(const fvMesh& mesh);
 
         //- Initialise
         void initialise();

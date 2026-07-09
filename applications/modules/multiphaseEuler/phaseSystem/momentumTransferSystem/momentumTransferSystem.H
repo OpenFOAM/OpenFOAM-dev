@@ -133,7 +133,7 @@ class momentumTransferSystem
     // Private Member Functions
 
         //- Create IO object for an optional constant/momentumTransfer file
-        IOobject io(const phaseSystem&) const;
+        static IOobject io(const phaseSystem&);
 
         //- Return the models dictionary
         template<class ModelType>

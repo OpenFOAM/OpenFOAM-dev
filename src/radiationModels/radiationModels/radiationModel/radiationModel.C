@@ -42,7 +42,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::IOobject Foam::radiationModel::createIOobject(const fvMesh& mesh) const
+Foam::IOobject Foam::radiationModel::createIOobject(const fvMesh& mesh)
 {
     typeIOobject<IOdictionary> io
     (

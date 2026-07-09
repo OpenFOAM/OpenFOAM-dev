@@ -38,7 +38,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::IOobject Foam::zonesGenerator::io(const polyMesh& mesh) const
+Foam::IOobject Foam::zonesGenerator::io(const polyMesh& mesh)
 {
     typeIOobject<IOdictionary> result
     (

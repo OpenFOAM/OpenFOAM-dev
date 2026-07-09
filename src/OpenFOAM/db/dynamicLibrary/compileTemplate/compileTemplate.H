@@ -62,10 +62,7 @@ class compileTemplate
 
         fileName name(const word& instantiatedName) const;
 
-        dictionary optionsDict
-        (
-            const word& templateName
-        ) const;
+        static dictionary optionsDict(const word& templateName);
 
         void setSubstitution(const Pair<word>& substitution);
 

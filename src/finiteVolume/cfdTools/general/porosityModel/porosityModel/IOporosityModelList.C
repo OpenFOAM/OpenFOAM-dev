@@ -29,10 +29,7 @@ License
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::IOobject Foam::IOporosityModelList::createIOobject
-(
-    const fvMesh& mesh
-) const
+Foam::IOobject Foam::IOporosityModelList::createIOobject(const fvMesh& mesh)
 {
     typeIOobject<IOdictionary> io
     (

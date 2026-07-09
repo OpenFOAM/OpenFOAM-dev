@@ -69,7 +69,7 @@ class zonesGenerator
     // Private Member Functions
 
         //- Create IO object for an optional zonesGenerator
-        IOobject io(const polyMesh& mesh) const;
+        static IOobject io(const polyMesh& mesh);
 
         void generate();
 

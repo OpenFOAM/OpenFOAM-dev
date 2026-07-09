@@ -78,7 +78,7 @@ class MRFZones
     // Private Member Functions
 
         //- Create IO object if dictionary is present
-        IOobject createIOobject(const fvMesh& mesh) const;
+        static IOobject createIOobject(const fvMesh& mesh);
 
 
 protected:

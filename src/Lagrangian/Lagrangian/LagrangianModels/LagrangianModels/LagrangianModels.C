@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::IOobject Foam::LagrangianModels::io(const LagrangianMesh& mesh) const
+Foam::IOobject Foam::LagrangianModels::io(const LagrangianMesh& mesh)
 {
     typeIOobject<IOdictionary> result
     (

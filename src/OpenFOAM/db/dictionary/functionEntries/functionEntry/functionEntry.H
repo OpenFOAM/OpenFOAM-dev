@@ -69,7 +69,7 @@ class functionEntry
 
         //- Read the rest of the argument list following the part attached
         // to the function name
-        void readRestOfArgs(string& fNameArgs, Istream& is) const;
+        static void readRestOfArgs(string& fNameArgs, Istream& is);
 
 
 protected:
@@ -113,35 +113,35 @@ protected:
 
     // Protected Member Functions
 
-        tokenList readArgList
+        static tokenList readArgList
         (
             const functionName& functionType,
             Istream& is,
             const bool optional = false
-        ) const;
+        );
 
         //- Read the function name and optional argument list
         //  The argument list can be on one or more lines.
-        tokenList readFuncNameArgList
+        static tokenList readFuncNameArgList
         (
             const functionName& functionType,
             Istream& is
-        ) const;
+        );
 
         //- Read the filen name and optional argument list
         //  The argument list can be on one or more lines.
-        tokenList readFileNameArgList
+        static tokenList readFileNameArgList
         (
             const functionName& functionType,
             Istream& is
-        ) const;
+        );
 
         //- Read a single argument or list
-        tokenList readArgOrList
+        static tokenList readArgOrList
         (
             const functionName& functionType,
             Istream& is
-        ) const;
+        );
 
         //- Read entry starting from token t and insert into contextDict
         static bool insert

@@ -35,10 +35,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::IOobject Foam::MRFZones::createIOobject
-(
-    const fvMesh& mesh
-) const
+Foam::IOobject Foam::MRFZones::createIOobject(const fvMesh& mesh)
 {
     typeIOobject<IOdictionary> io
     (

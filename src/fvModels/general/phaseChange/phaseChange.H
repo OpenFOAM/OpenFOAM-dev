@@ -92,10 +92,10 @@ protected:
     // Protected Member Functions
 
         //- Read the names of the transferring specie
-        wordList readSpecie(const dictionary& dict, const bool required) const;
+        static wordList readSpecie(const dictionary&, const bool required);
 
         //- Read the names of the transferring species
-        wordList readSpecies(const dictionary& dict, const bool required) const;
+        static wordList readSpecies(const dictionary&, const bool required);
 
         //- Re-read the names of the transferring specie
         void reReadSpecie(const dictionary& dict) const;

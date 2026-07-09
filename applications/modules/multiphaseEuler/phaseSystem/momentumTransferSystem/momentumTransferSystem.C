@@ -61,7 +61,7 @@ const Foam::word Foam::momentumTransferSystem::propertiesName
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::IOobject Foam::momentumTransferSystem::io(const phaseSystem& fluid) const
+Foam::IOobject Foam::momentumTransferSystem::io(const phaseSystem& fluid)
 {
     typeIOobject<IOdictionary> result
     (

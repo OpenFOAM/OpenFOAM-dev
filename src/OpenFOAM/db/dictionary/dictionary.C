@@ -35,7 +35,7 @@ Foam::fileName Foam::dictionary::pathName
 (
     const dictionary& parentDict,
     const fileName& name
-) const
+)
 {
     return
         parentDict.currentName().size()

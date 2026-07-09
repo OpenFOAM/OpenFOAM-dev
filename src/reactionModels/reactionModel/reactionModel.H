@@ -55,11 +55,11 @@ class reactionModel
     // Private Member Functions
 
         //- Construct the base IO object
-        IOobject createIOobject
+        static IOobject createIOobject
         (
             const fluidMulticomponentThermo& thermo,
             const word& reactionProperties
-        ) const;
+        );
 
 
 protected:

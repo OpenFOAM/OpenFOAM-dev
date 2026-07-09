@@ -185,11 +185,11 @@ class dictionary
         //  and the given name.
         //  A '/' separator is used unless the parent dictionary is top-level
         //  and hence has the name of the file in which case a '!' is used
-        fileName pathName
+        static fileName pathName
         (
             const dictionary& parentDict,
             const fileName& name
-        ) const;
+        );
 
         //- Find and return an entry data stream pointer if present
         //  otherwise return nullptr.

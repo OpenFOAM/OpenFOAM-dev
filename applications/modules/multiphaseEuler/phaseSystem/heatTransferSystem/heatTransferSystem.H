@@ -93,7 +93,7 @@ class heatTransferSystem
     // Private Member Functions
 
         //- Create IO object for an optional constant/heatTransfer file
-        IOobject io(const phaseSystem&) const;
+        static IOobject io(const phaseSystem&);
 
         //- Return the models dictionary
         const dictionary& modelsDict() const;

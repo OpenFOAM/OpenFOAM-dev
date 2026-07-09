@@ -45,7 +45,7 @@ Foam::IOobject Foam::reactionModel::createIOobject
 (
     const fluidMulticomponentThermo& thermo,
     const word& reactionProperties
-) const
+)
 {
     typeIOobject<IOdictionary> io
     (

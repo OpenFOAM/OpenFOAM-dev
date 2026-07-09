@@ -76,7 +76,7 @@ class LagrangianModels
     // Private Member Functions
 
         //- Create IO object for an optional LagrangianModels file
-        IOobject io(const LagrangianMesh& mesh) const;
+        static IOobject io(const LagrangianMesh& mesh);
 
         //- Helper for modelTypeFieldSourceTypes. Inserts the field source type
         //  into to the table if the model is of the required type.

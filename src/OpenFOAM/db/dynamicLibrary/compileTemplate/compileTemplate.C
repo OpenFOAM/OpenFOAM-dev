@@ -56,9 +56,10 @@ Foam::fileName Foam::compileTemplate::name
 Foam::dictionary Foam::compileTemplate::optionsDict
 (
     const word& templateName
-) const
+)
 {
     IFstream optionsFile(dynamicCode::resolveTemplate(templateName));
+
     if (!optionsFile.good())
     {
         FatalErrorInFunction

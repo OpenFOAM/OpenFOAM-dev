@@ -48,7 +48,7 @@ const Foam::word Foam::heatTransferSystem::propertiesName
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::IOobject Foam::heatTransferSystem::io(const phaseSystem& fluid) const
+Foam::IOobject Foam::heatTransferSystem::io(const phaseSystem& fluid)
 {
     typeIOobject<IOdictionary> result
     (

@@ -79,7 +79,7 @@ class fvConstraints
     // Private Member Functions
 
         //- Create IO object if dictionary is present
-        IOobject createIOobject(const fvMesh& mesh) const;
+        static IOobject createIOobject(const fvMesh& mesh);
 
         //- Check that all fvConstraints have been applied
         void checkApplied() const;

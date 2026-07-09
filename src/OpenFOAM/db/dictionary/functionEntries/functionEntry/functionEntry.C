@@ -44,7 +44,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionEntry::readRestOfArgs(string& fNameArgs, Istream& is) const
+void Foam::functionEntry::readRestOfArgs(string& fNameArgs, Istream& is)
 {
     int listDepth = 1
       + fNameArgs.count(token::BEGIN_LIST) - fNameArgs.count(token::END_LIST);
@@ -124,7 +124,7 @@ Foam::tokenList Foam::functionEntry::readArgList
     const functionName& functionType,
     Istream& is,
     const bool optional
-) const
+)
 {
     tokenList argList;
 
@@ -195,7 +195,7 @@ Foam::tokenList Foam::functionEntry::readFuncNameArgList
 (
     const functionName& functionType,
     Istream& is
-) const
+)
 {
     tokenList funcNameArgList;
     string::size_type argsStart = string::npos;
@@ -260,7 +260,7 @@ Foam::tokenList Foam::functionEntry::readFileNameArgList
 (
     const functionName& functionType,
     Istream& is
-) const
+)
 {
     tokenList fileNameArgList;
 
@@ -290,7 +290,7 @@ Foam::tokenList Foam::functionEntry::readArgOrList
 (
     const functionName& functionType,
     Istream& is
-) const
+)
 {
     tokenList argList;
 
