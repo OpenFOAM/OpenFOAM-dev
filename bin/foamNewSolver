@@ -1,0 +1,155 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamNewSolver
+#
+# Description
+#     Create directory of source and compilation files for a new solver
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+dir="$FOAM_ETC/codeTemplates/solver"
+
+usage() {
+    cat<<USAGE
+
+Usage: $Script [OPTIONS] <parentSolverName> <solverName>
+options:
+  -help  | -h         print the usage
+
+Create directory of source and compilation files for a new solver
+<solverName>, derived from <parentSolverName>
+  - .C and .H source files
+  - Make (dir)
+    - files
+    - options
+  Compiles a library named lib<solverName>.so in \$FOAM_USER_LIBBIN:
+  $FOAM_USER_LIBBIN
+
+Example:
+   foamNewSolver fluid myFluid
+
+USAGE
+    exit 1
+}
+
+error() {
+    while [ "$#" -ge 1 ]; do echo "Error: $1"; shift; done
+    usage
+    exit 1
+}
+
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -h | -help)
+      usage && exit 0
+      ;;
+   -*)
+      error "invalid option '$1'"
+      ;;
+   *)
+      break
+      ;;
+    esac
+done
+
+[ "$#" -eq 2 ] || error "Wrong number of arguments"
+
+parent=$1
+name=$2
+year=$(date +%Y)
+
+solvers="$(foamToC -table solver \
+             | sed '1,/Contents/d' \
+             | awk '{print $1}' \
+             | xargs)"
+
+# Check parent solver exists
+echo "${solvers}" \
+    | grep -q "${parent}" \
+    || error "Parent solver '${parent}' not found"
+
+# Check name is different to parent
+[ "$name" = "$parent" ] \
+    && error "Solver name: '${name}' already exists"
+
+# Prevent over-writing of existing directory
+[ -d "$name" ] && error "$name directory already exists, aborting..."
+echo "Creating $name directory" && mkdir "$name"
+
+# Establish solver template files to copy
+files=$(find "${dir}" -name "*.*" -type f -exec basename {} \;)
+
+# Make substitutions in solver template files
+for f in $files
+do
+    fName="${f%%.*}"
+    ext=".${f##*.}"
+    [ "${f}" = SOLVER.C ] || [ "${f}" = SOLVER.H ] && fName="${name}"
+
+    echo "   Adding file ${fName}${ext}..."
+
+    file="${name}"/"${fName}${ext}"
+
+    sed -e "s#NAME#${name}#g" \
+        -e "s#PARENT#${parent}#g" \
+        -e "s#YEAR#${year}#g" \
+        "${dir}"/"${f}" > "$file"
+
+    tmpfile="$(mktemp "/tmp/${0##*/}.XXXXXX")"
+
+    while read -r line
+    do
+        [ "${#line}" -gt 80 ] && echo "$line" >> "$tmpfile"
+    done < "$file"
+
+    while read -r line
+    do
+        sed -i "s@\(${line%::*}::\)\(${line##*::}\)@\1\n//\2@" "$file"
+    done < "$tmpfile"
+done
+
+# Make substitutions in Make/files
+echo "Creating Make subdirectory" && mkdir "${name}/Make"
+sed -e "s#NAME#${name}#g" \
+    -e "s#PARENT#${parent}#g" \
+    "${dir}/Make/files" > "${name}/Make/files"
+
+# Add parent header to Make/options
+sed -e "/EXE_INC/a\    -I\$(FOAM_MODULES)/${parent}/lnInclude \\\\" \
+    "${FOAM_MODULES}/${parent}/Make/options" \
+    > "${name}/Make/options"
+
+# Change local paths to global paths
+# shellcheck disable=SC2016
+sed -i '/-I/{/-I\$/!s/-I/-I\$(FOAM_MODULES)\/'"${parent}"'\//g}' \
+    "${name}/Make/options"
+
+# Add parent lib to Make/options
+lib="${parent}"
+echo "${lib}" | grep -q "Solver$" || lib="${lib}Solver"
+sed -i "/LIB_LIBS/a\    -l${lib} \\\\" \
+    "${name}/Make/options"

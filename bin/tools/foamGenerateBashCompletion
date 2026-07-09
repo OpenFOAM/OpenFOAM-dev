@@ -431,6 +431,27 @@ complete -o filenames -o nospace -F _foamUnits_ foamUnits
 EOF
 }
 
+# shellcheck disable=SC2154
+_foamNewSolver () {
+    cat<<EOF
+_foamNewSolver_ ()
+{
+$(declareLocals)
+
+    opts="-help \$(_solver)"
+    for o in \$used ; do opts="\${opts/\$o/}" ; done
+    extra=""
+
+$(caseStart)
+        -*) ;;
+        *) opts="" ;;
+$(caseEnd)
+}
+complete -o filenames -o nospace -F _foamNewSolver_ foamNewSolver
+
+EOF
+}
+
 #------------------------------------------------------------------------------
 
 apps="$(ls "$FOAM_APPBIN") \
@@ -443,6 +464,7 @@ specialApps="\
     foamCloneCase \
     foamInfo \
     foamUnits \
+    foamNewSolver \
     surfaceTransformPoints"
 
 banner > "$file"
