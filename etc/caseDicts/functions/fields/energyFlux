@@ -7,7 +7,7 @@
 -------------------------------------------------------------------------------
 Description
     Calculate the total energy-flux (i.e., advective plus diffusive) and write
-    it as a surfaceScalarField 'energyAdvectiveFlux'.
+    it as a surfaceScalarField 'energyFlux'.
 
 \*---------------------------------------------------------------------------*/
 
