@@ -9,5 +9,6 @@ volScalarField p
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
     ),
-    mesh
+    mesh,
+    dimensions::kinematicPressure // dimensions::pressure for compressible flow
 );
