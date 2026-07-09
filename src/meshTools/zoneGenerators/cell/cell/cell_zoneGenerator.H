@@ -24,9 +24,14 @@ License
 Class
     Foam::zoneGenerators::cell
 
+<<<<<<< HEAD
 Description-
     A zoneGenerator which converts the pointZones, faceZones and cellZones
     from a list of zoneGenerators into a single cellZone.
+=======
+Description
+    Create a new cellZone from pointZones, faceZones and cellZones.
+>>>>>>> 01783ad491a44ace5b6618db417f06297781ed3b
 
     For pointZones the cells containing any of the points are included.
     For faceZones the cells on either side of the faces are included.
