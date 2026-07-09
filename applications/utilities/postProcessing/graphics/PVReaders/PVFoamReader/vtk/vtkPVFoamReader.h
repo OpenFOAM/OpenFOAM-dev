@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class vtkPVFoamReader
 public:
     vtkTypeMacro(vtkPVFoamReader, vtkMultiBlockDataSetAlgorithm);
 
-    void PrintSelf(ostream&, vtkIndent);
+    void PrintSelf(ostream&, vtkIndent) override;
 
     static vtkPVFoamReader* New();
 
@@ -201,7 +201,7 @@ protected:
         vtkInformation*,
         vtkInformationVector**,
         vtkInformationVector*
-    );
+    ) override;
 
     //- Get the mesh/fields for a particular time
     virtual int RequestData
@@ -209,10 +209,10 @@ protected:
         vtkInformation*,
         vtkInformationVector**,
         vtkInformationVector*
-    );
+    ) override;
 
     //- Fill in additional port information
-    virtual int FillOutputPortInformation(int, vtkInformation*);
+    virtual int FillOutputPortInformation(int, vtkInformation*) override;
 
     //- The observer to modify this object when array selections are modified
     vtkCallbackCommand* SelectionModifiedObserver;
