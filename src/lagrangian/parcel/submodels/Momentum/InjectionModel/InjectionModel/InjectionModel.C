@@ -236,7 +236,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
 )
 {
     // Subroutine for finding the cell
-    auto findProcAndCell = [this,&searchEngine](const point& pos)
+    auto findProcAndCell = [&searchEngine](const point& pos)
     {
         // Find the containing cell
         label celli = searchEngine.findCell(pos);
