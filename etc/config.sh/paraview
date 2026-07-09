@@ -73,28 +73,28 @@ system)
         # Set the ParaView installation
         export ParaView_LIB_DIR=$(unset LD_LIBRARY_PATH && ldd $pvserverExe | \
                                   grep -o "/[^ ]\+/libvtk.*-pv$ParaView_MAJOR\.so[^ ]*" | \
-                                  head -n 1 | xargs dirname)
+                                  head -n 1 | xargs dirname 2> /dev/null)
         export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-$ParaView_MAJOR
-        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$LD_LIBRARY_PATH
 
-        # Optionally look for a separate VTK installation
-        vtkMajor=$(ldd $pvserverExe | \
-                   sed -n "s/[ \t]\+libvtkCommonCore-\([^ ]\+\).so[^ ]* => .*/\1/p")
-        vtkLibDir=$(unset LD_LIBRARY_PATH && ldd $pvserverExe | \
-                    grep -o "/[^ ]\+/libvtk.*-$vtkMajor\.so[^ ]*" |
-                    head -n 1 | xargs dirname)
-        vtkIncludeDir=$ParaView_DIR/include/vtk-$vtkMajor
-        if [ -n "$vtkMajor" ] && [ -d "$vtkLibDir" ] && [ -d "$vtkIncludeDir" ]
+        # Set the VTK installation, if it is not bundled inside ParaView
+        if [ ! -f $ParaView_INCLUDE_DIR/vtkMultiBlockDataSetAlgorithm.h ]
         then
-            export VTK_LIB_DIR=$vtkLibDir
-            export VTK_INCLUDE_DIR=$vtkIncludeDir
-            if [ "$VTK_LIB_DIR" != "$ParaView_LIB_DIR" ]
-            then
-                export LD_LIBRARY_PATH=$VTK_LIB_DIR:$LD_LIBRARY_PATH
-            fi
+            libvtkCommonCore=$(unset LD_LIBRARY_PATH && ldd $pvserverExe | \
+                               grep -o "/[^ \t]\+libvtkCommonCore[^ \t]\+" | \
+                               xargs readlink -f)
+            export VTK_LIB_DIR=$(dirname $libvtkCommonCore 2> /dev/null)
+            export VTK_INCLUDE_DIR=$ParaView_DIR/include/vtk-${libvtkCommonCore#*.so.}
+            unset libvtkCommonCore
         else
             export VTK_LIB_DIR=$ParaView_LIB_DIR
             export VTK_INCLUDE_DIR=$ParaView_INCLUDE_DIR
+        fi
+
+        # Add to the library paths
+        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$LD_LIBRARY_PATH
+        if [ $ParaView_LIB_DIR != $VTK_LIB_DIR ]
+        then
+            export LD_LIBRARY_PATH=$VTK_LIB_DIR:$LD_LIBRARY_PATH
         fi
 
         # Set the plugin directory
