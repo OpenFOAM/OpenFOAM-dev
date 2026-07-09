@@ -25,7 +25,7 @@ Class
     Foam::zoneGenerators::cell
 
 Description
-    Create a new cellZone from existing pointZones, faceZones and cellZones.
+    Create a new cellZone from pointZones, faceZones and cellZones.
 
     pointZone
         Select cells with any points that are in the pointZone.
