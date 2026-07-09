@@ -80,6 +80,7 @@ options:
   -no-scheduler     Compile without wmakeScheduler
   -non-stop | -k    Compile without stopping when errors occur
   -page     | -p    pipes wmake ouput to pager to scroll for 'error'
+                    hit 'space bar' to scroll through output, 'q' to quit
   -queue    | -q    wmakeCollect all sub-directories, running Allwmake if present
   -silent   | -s    Quiet mode (does not echo commands)
   -update           Update lnInclude directories, dep files, remove deprecated
@@ -147,7 +148,7 @@ do
             export WM_QUIET=1
             ;;
         -p | -page)
-            page="2>&1 | less -R"
+            page="2>&1 | less -RX"
             export WM_COLOUR=1
             ;;
         -a | -all | all)
