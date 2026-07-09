@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
     vtkCellArray* vtkcells = vtkCellArray::New();
 
     vtkpoints->Allocate(cloud.size());
-    vtkcells->Allocate(cloud.size());
+    vtkcells->AllocateExact(cloud.size(), cloud.size());
 
     vtkIdType particleId = 0;
     forAllConstIter(lagrangian::Cloud<passiveParticle>, cloud, iter)
@@ -147,7 +147,7 @@ vtkPolyData* Foam::vtkPVFoam::LagrangianVTKMesh
     vtkCellArray* vtkcells = vtkCellArray::New();
 
     vtkpoints->Allocate(Lmesh.size());
-    vtkcells->Allocate(Lmesh.size());
+    vtkcells->AllocateExact(Lmesh.size(), Lmesh.size());
 
     for (vtkIdType i = 0; i < Lmesh.size(); ++ i)
     {
