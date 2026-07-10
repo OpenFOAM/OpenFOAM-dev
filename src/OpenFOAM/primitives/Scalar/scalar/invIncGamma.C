@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -321,7 +321,7 @@ Foam::scalar Foam::invIncGammaRatio_P(const scalar a, const scalar P)
             }
 
             // Quick return condition (c)
-            if (z < 0.006*ap1 && (a > 1 || a < 100 || mag(1 - w/a) > 1e-4))
+            if (z < 0.006*ap1 && ((a > 1 && a < 100) || mag(1 - w/a) > 1e-4))
             {
                 return z;
             }
