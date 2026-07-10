@@ -79,7 +79,7 @@ options:
   -j <N>    | -j<N> Compile using N cores/hyperthreads
   -no-scheduler     Compile without wmakeScheduler
   -non-stop | -k    Compile without stopping when errors occur
-  -page     | -p    pipes wmake ouput to pager to scroll for 'error'
+  -page     | -p    pipes wmake output to pager to scroll for 'error'
                     hit 'space bar' to scroll through output, 'q' to quit
   -queue    | -q    wmakeCollect all sub-directories, running Allwmake if present
   -silent   | -s    Quiet mode (does not echo commands)

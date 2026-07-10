@@ -78,7 +78,7 @@ Usage
         }
     \endverbatim
 
-    Print a summary of all the zones, by ommitting 'zone' and 'zones'
+    Print a summary of all the zones, by omitting 'zone' and 'zones'
     \verbatim
         printAllZones
         {
