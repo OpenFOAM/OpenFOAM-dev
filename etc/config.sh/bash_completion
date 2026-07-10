@@ -4784,6 +4784,26 @@ _foamNewFunctionObject_ ()
 }
 complete -o filenames -o nospace -F _foamNewFunctionObject_ foamNewFunctionObject
 
+_foamNewSolver_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-help $(_solver)"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -*) ;;
+        *) opts="" ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _foamNewSolver_ foamNewSolver
+
 _foamRunTutorials_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
