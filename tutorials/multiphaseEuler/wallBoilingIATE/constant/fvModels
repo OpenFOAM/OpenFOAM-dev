@@ -92,6 +92,7 @@ wallBoiling
     departureDiameterModel
     {
         type            TolubinskiKostanchuk;
+        dRef            0.00024;
     }
 
     departureFrequencyModel
