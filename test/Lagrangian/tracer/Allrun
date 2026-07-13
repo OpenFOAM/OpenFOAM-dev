@@ -43,8 +43,10 @@ set ytics $y0,($y1-$y0)/$n,$y1 scale 0 format ''
 set grid xtics ytics
 set parametric
 set samples 40
+set xrange [$x0:$x1]
+set yrange [$y0:$y1]
 
-plot [0:2*pi][$x0:$x1][$y0:$y1] \
+plot [0:2*pi] \
     "${fileHead}linear${fileTail}" us 2:3 w l t 'Linear', \
     "${fileHead}parabolic${fileTail}" us 2:3 w l t 'Parabolic', \
     $xC+$r*cos(t),$yC+$r*sin(t) w p pt 7 t 'Analytic'
@@ -58,6 +60,7 @@ unset grid
 set xlabel "Time [s]"
 set ylabel "Error [mm]"
 set log y
+set autoscale
 
 plot \
     "${fileHead}linear${fileTail}" \
