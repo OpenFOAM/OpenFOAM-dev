@@ -188,15 +188,20 @@ const Foam::dimensionSet Foam::dimensions::dynamicViscosity
     "dynamicViscosity",
     density*kinematicViscosity
 );
-const Foam::dimensionSet Foam::dimensions::thermalConductivity
+const Foam::dimensionSet Foam::dimensions::kinematicDiffusivity
 (
-    "thermalConductivity",
-    power/length/temperature
+    "kinematicDiffusivity",
+    kinematicViscosity
 );
 const Foam::dimensionSet Foam::dimensions::dynamicDiffusivity
 (
     "dynamicDiffusivity",
     dynamicViscosity
+);
+const Foam::dimensionSet Foam::dimensions::thermalConductivity
+(
+    "thermalConductivity",
+    power/length/temperature
 );
 
 const Foam::dimensionSet Foam::dimensions::turbulentKineticEnergy

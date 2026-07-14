@@ -96,8 +96,9 @@ extern const dimensionSet compressibility;
 
 extern const dimensionSet kinematicViscosity;
 extern const dimensionSet dynamicViscosity;
-extern const dimensionSet thermalConductivity;
+extern const dimensionSet kinematicDiffusivity;
 extern const dimensionSet dynamicDiffusivity;
+extern const dimensionSet thermalConductivity;
 
 extern const dimensionSet turbulentKineticEnergy;
 extern const dimensionSet kinematicStress;
