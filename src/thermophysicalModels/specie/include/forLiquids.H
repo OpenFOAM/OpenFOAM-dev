@@ -147,7 +147,6 @@ License
     forNSRDSEnergyLiquidEqns(Mu, He, NSRDS14Thermo, Macro, Args)
 
 #define forNSRDSEnergyLiquidEnergies(Mu, Macro, Args...)                       \
-    forNSRDSEnergyLiquidThermos(Mu, sensibleEnthalpy, Macro, Args);            \
     forNSRDSEnergyLiquidThermos(Mu, sensibleInternalEnergy, Macro, Args)
 
 #define forNSRDSEnergyLiquidTransports(Macro, Args...)                         \

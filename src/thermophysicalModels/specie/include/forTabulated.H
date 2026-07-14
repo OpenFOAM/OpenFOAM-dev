@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,24 @@ License
 #define forTabulated(Macro, Args...)                                           \
     forTabulatedTransport(Macro, Args);                                        \
     forIcoTabulatedTransport(Macro, Args)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define forEnergyTabulatedEnergiesAndThermos(Mu, Macro, Args...)               \
+    forTabulatedEqns(Mu, sensibleInternalEnergy, eTabulatedThermo, Macro, Args)
+
+#define forEnergyIcoTabulatedEnergiesAndThermos(Mu, Args...)                   \
+    forIcoTabulatedEqns(Mu, sensibleInternalEnergy, eIcoTabulatedThermo, Args)
+
+#define forEnergyTabulatedTransport(Macro, Args...)                            \
+    forEnergyTabulatedEnergiesAndThermos(tabulatedTransport, Macro, Args)
+
+#define forEnergyIcoTabulatedTransport(Macro, Args...)                         \
+    forEnergyIcoTabulatedEnergiesAndThermos(icoTabulatedTransport, Macro, Args)
+
+#define forEnergyTabulated(Macro, Args...)                                     \
+    forEnergyTabulatedTransport(Macro, Args);                                  \
+    forEnergyIcoTabulatedTransport(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

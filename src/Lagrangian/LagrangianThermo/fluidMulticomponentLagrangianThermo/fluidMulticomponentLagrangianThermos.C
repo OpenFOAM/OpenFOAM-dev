@@ -69,7 +69,7 @@ namespace Foam
         valueMulticomponentMixture
     );
 
-    forTabulated
+    forEnergyTabulated
     (
         makeLagrangianThermos,
         multicomponentLagrangianThermo,

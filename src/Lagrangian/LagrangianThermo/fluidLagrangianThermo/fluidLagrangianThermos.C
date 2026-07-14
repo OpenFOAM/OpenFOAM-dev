@@ -29,6 +29,7 @@ License
 
 #include "forGases.H"
 #include "forLiquids.H"
+#include "forTabulated.H"
 
 #include "makeLagrangianThermo.H"
 
@@ -39,6 +40,12 @@ namespace Foam
     forEnergyGases(makeLagrangianThermo, fluidLagrangianThermo, pureMixture);
     forEnergyLiquids(makeLagrangianThermo, fluidLagrangianThermo, pureMixture);
     forNSRDSEnergyLiquids
+    (
+        makeLagrangianThermo,
+        fluidLagrangianThermo,
+        pureMixture
+    );
+    forEnergyTabulated
     (
         makeLagrangianThermo,
         fluidLagrangianThermo,
