@@ -54,7 +54,7 @@ Foam::zoneGenerators::nearPatchCells::nearPatchCells
 :
     zoneGenerator(name, mesh, dict),
     patchSet_(mesh.boundary().patchSet(dict)),
-    distance_(dict.lookup<scalar>("distance", dimLength))
+    distance_(dict.lookup<scalar>("distance", dimensions::length))
 {}
 
 

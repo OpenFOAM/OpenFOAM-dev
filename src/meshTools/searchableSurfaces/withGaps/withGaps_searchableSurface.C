@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,7 +194,7 @@ Foam::searchableSurfaces::withGaps::withGaps
 )
 :
     searchableSurface(io),
-    gap_(dict.lookup<scalar>("gap", dimLength)),
+    gap_(dict.lookup<scalar>("gap", dimensions::length)),
     subGeom_(1)
 {
     const word subGeomName(dict.lookup("surface"));

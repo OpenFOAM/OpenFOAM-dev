@@ -322,7 +322,7 @@ Foam::mappedExtrudedPatchBase::patchLocalPoints() const
             //         (
             //             typedName("pointOffset"),
             //             pointMesh::New(mesh),
-            //             dimensionedVector(dimLength, Zero)
+            //             dimensionedVector(dimensions::length, Zero)
             //         )
             //     );
             //     forAll(pp.meshPoints(), ppPointi)

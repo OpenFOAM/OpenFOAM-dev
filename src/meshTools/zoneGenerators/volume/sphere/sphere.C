@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ Foam::zoneGenerators::sphere::sphere
 )
 :
     volume(name, mesh, dict),
-    centre_(dict.lookup<point>("centre", dimLength)),
-    radius_(dict.lookup<scalar>("radius", dimLength)),
+    centre_(dict.lookup<point>("centre", dimensions::length)),
+    radius_(dict.lookup<scalar>("radius", dimensions::length)),
     radiusSqr_(sqr(radius_))
 {}
 

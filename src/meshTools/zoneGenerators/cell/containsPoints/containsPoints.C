@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::zoneGenerators::containsPoints::containsPoints
 )
 :
     zoneGenerator(name, mesh, dict),
-    points_(dict.lookup<List<point>>("points", dimLength))
+    points_(dict.lookup<List<point>>("points", dimensions::length))
 {}
 
 

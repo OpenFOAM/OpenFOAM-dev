@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ Foam::zoneGenerators::annulus::annulus
 )
 :
     volume(name, mesh, dict),
-    point1_(dict.lookup<point>("point1", dimLength)),
-    point2_(dict.lookup<point>("point2", dimLength)),
-    outerRadius_(dict.lookup<scalar>("outerRadius", dimLength)),
-    innerRadius_(dict.lookup<scalar>("innerRadius", dimLength)),
+    point1_(dict.lookup<point>("point1", dimensions::length)),
+    point2_(dict.lookup<point>("point2", dimensions::length)),
+    outerRadius_(dict.lookup<scalar>("outerRadius", dimensions::length)),
+    innerRadius_(dict.lookup<scalar>("innerRadius", dimensions::length)),
     axis_(point2_ - point1_),
     magAxis2_(magSqr(axis_)),
     outerRadius2_(sqr(outerRadius_)),

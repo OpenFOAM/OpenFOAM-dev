@@ -64,7 +64,7 @@ Foam::zoneGenerators::plane::plane
 )
 :
     zoneGenerator(name, mesh, dict),
-    point_(dict.lookup<vector>("point", dimLength)),
+    point_(dict.lookup<vector>("point", dimensions::length)),
     normal_(dict.lookup<vector>("normal", dimless)),
     include_(includeNames.lookupOrDefault("include", dict, include::all))
 {}

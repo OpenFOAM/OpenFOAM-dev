@@ -69,7 +69,7 @@ Foam::zoneGenerators::box::box
         boundBox::found(dict)
       ? List<boundBox>(1, boundBox(dict))
       : dict.found("boxes")
-      ? dict.lookup<List<boundBox>>("boxes", dimLength)
+      ? dict.lookup<List<boundBox>>("boxes", dimensions::length)
       : List<boundBox>(1, boundBox(dict))
     )
 {}

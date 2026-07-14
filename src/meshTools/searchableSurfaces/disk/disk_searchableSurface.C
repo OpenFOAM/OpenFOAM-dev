@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,9 +176,9 @@ Foam::searchableSurfaces::disk::disk
 )
 :
     searchableSurface(io),
-    origin_(dict.lookup<point>("origin", dimLength)),
+    origin_(dict.lookup<point>("origin", dimensions::length)),
     normal_(dict.lookup<vector>("normal", dimless)),
-    radius_(dict.lookup<scalar>("radius", dimLength))
+    radius_(dict.lookup<scalar>("radius", dimensions::length))
 {
     normal_ /= mag(normal_);
 
