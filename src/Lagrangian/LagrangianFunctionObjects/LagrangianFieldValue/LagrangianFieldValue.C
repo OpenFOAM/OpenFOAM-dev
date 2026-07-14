@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -465,7 +465,6 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
 
 void Foam::functionObjects::LagrangianFieldValue::writeFileHeader(const label)
 {
-    writeHeader(file(), "Lagrangian Sum");
     writeCommented(file(), "Time");
 
     forAll(fields_, fieldi)
