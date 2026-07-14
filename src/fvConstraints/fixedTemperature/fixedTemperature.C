@@ -78,7 +78,7 @@ void Foam::fv::fixedTemperature::readCoeffs(const dictionary& dict)
                 (
                     "temperature",
                     mesh().time().userUnits(),
-                    dimTemperature,
+                    dimensions::temperature,
                     dict
                 ).ptr()
             );

@@ -148,8 +148,8 @@ Foam::fv::limitPressure::limitPressure
 :
     fvConstraint(name, modelType, mesh, dict),
     pName_(word::null),
-    pMin_("pMin", dimPressure, 0),
-    pMax_("pMax", dimPressure, great),
+    pMin_("pMin", dimensions::pressure, 0),
+    pMax_("pMax", dimensions::pressure, great),
     limitMinP_(false),
     limitMaxP_(false)
 {

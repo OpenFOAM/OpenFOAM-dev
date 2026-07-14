@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,18 +89,18 @@ Foam::fv::zeroDimensionalFixedPressureConstraint::massSource
             (
                 typedName("source"),
                 mesh(),
-                dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+                dimensionedScalar(dimensions::density/dimensions::time, 0)
             );
     }
 
     // Source for mass-based pressure equations
-    if (sourcePtr_->dimensions() == dimMass/dimVolume/dimTime)
+    if (sourcePtr_->dimensions() == dimensions::density/dimensions::time)
     {
         return alpha*sourcePtr_();
     }
 
     // Source for volume-based pressure equations
-    if (sourcePtr_->dimensions() == dimless/dimTime)
+    if (sourcePtr_->dimensions() == dimensions::rate)
     {
         return alpha*rho*sourcePtr_();
     }
@@ -128,7 +128,7 @@ void Foam::fv::zeroDimensionalFixedPressureConstraint::readCoeffs
         (
             "pressure",
             mesh().time().userUnits(),
-            dimPressure,
+            dimensions::pressure,
             dict
         ).ptr()
     );
@@ -198,16 +198,16 @@ Foam::fv::zeroDimensionalFixedPressureConstraint::pEqnSource
             (
                 typedName("source"),
                 mesh(),
-                dimensionedScalar(pEqn.dimensions()/dimVolume, 0)
+                dimensionedScalar(pEqn.dimensions()/dimensions::volume, 0)
             );
     }
 
     // Return the source, multiplying by density if needed
-    if (sourcePtr_->dimensions() == pEqn.dimensions()/dimVolume)
+    if (sourcePtr_->dimensions() == pEqn.dimensions()/dimensions::volume)
     {
         return sourcePtr_();
     }
-    else if (sourcePtr_->dimensions() == pEqn.dimensions()/dimMass)
+    else if (sourcePtr_->dimensions() == pEqn.dimensions()/dimensions::mass)
     {
         return rho()*sourcePtr_();
     }
@@ -266,7 +266,7 @@ bool Foam::fv::zeroDimensionalFixedPressureConstraint::constrain
                     IOobject::AUTO_WRITE
                 ),
                 mesh(),
-                dimensionedScalar(pEqn.dimensions()/dimVolume, 0)
+                dimensionedScalar(pEqn.dimensions()/dimensions::volume, 0)
             )
         );
     }
@@ -284,7 +284,7 @@ bool Foam::fv::zeroDimensionalFixedPressureConstraint::constrain
             mesh(),
             dimensionedScalar
             (
-                dimPressure,
+                dimensions::pressure,
                 p_->value(mesh().time().value())
             )
         );

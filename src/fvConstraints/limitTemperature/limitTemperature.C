@@ -102,7 +102,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
     zone_.regenerate();
     const labelList& cells = zone_.zone();
 
-    if (he.dimensions() == dimTemperature)
+    if (he.dimensions() == dimensions::temperature)
     {
         scalarField& Tc = he.primitiveFieldRef();
 

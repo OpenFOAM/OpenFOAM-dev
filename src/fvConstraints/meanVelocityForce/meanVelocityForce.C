@@ -169,7 +169,7 @@ bool Foam::fv::meanVelocityForce::constrain
             IOobject::NO_WRITE
         ),
         mesh(),
-        dimensionedVector(eqn.dimensions()/dimVolume, Zero)
+        dimensionedVector(eqn.dimensions()/dimensions::volume, Zero)
     );
 
     const scalar gradP = gradP0_ + dGradP_;
