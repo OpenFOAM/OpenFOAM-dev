@@ -117,7 +117,10 @@ contactAngleProperties::contactAngleProperties(const dictionary& dict)
 :
     theta0_(dict.lookup<scalar>("theta0", units::degrees)),
     dynamic_(dict.found("uTheta")),
-    uTheta_(dynamic_ ? dict.lookup<scalar>("uTheta", dimVelocity) : NaN),
+    uTheta_
+    (
+        dynamic_ ? dict.lookup<scalar>("uTheta", dimensions::velocity) : NaN
+    ),
     thetaA_(dynamic_ ? dict.lookup<scalar>("thetaA", units::degrees) : NaN),
     thetaR_(dynamic_ ? dict.lookup<scalar>("thetaR", units::degrees) : NaN)
 {}
@@ -174,7 +177,7 @@ contactAngleProperties::write(Ostream& os) const
     writeEntry(os, "theta0", units::degrees, theta0_);
     if (dynamic())
     {
-        writeEntry(os, "uTheta", dimVelocity, uTheta_);
+        writeEntry(os, "uTheta", dimensions::velocity, uTheta_);
         writeEntry(os, "thetaA", units::degrees, thetaA_);
         writeEntry(os, "thetaR", units::degrees, thetaR_);
     }
