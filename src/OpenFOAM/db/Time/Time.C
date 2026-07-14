@@ -801,7 +801,7 @@ Foam::dimensionedScalar Foam::Time::beginTime() const
     return dimensionedScalar
     (
         timeName(timeToUserTime(beginTime_)),
-        dimTime,
+        dimensions::time,
         beginTime_
     );
 }
@@ -812,7 +812,7 @@ Foam::dimensionedScalar Foam::Time::startTime() const
     return dimensionedScalar
     (
         timeName(timeToUserTime(startTime_)),
-        dimTime,
+        dimensions::time,
         startTime_
     );
 }
@@ -823,7 +823,7 @@ Foam::dimensionedScalar Foam::Time::endTime() const
     return dimensionedScalar
     (
         timeName(timeToUserTime(endTime_)),
-        dimTime,
+        dimensions::time,
         endTime_
     );
 }
@@ -882,7 +882,7 @@ const Foam::unitSet& Foam::Time::userUnits() const
 
 const Foam::unitSet& Foam::Time::writeIntervalUnits() const
 {
-    static const unitSet unitSeconds(dimTime);
+    static const unitSet unitSeconds(dimensions::time);
 
     switch (writeControl_)
     {

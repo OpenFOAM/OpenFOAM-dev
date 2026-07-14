@@ -167,19 +167,23 @@ Foam::plane::plane(const dictionary& dict)
     {
         case specification::planeEquation:
         {
-            const scalar a = subDict.lookup<scalar>("a", units::none);
-            const scalar b = subDict.lookup<scalar>("b", units::none);
-            const scalar c = subDict.lookup<scalar>("c", units::none);
-            const scalar d = subDict.lookup<scalar>("d", units::none);
-            calcPntAndVec(a, b, c, d);
+            calcPntAndVec
+            (
+                subDict.lookup<scalar>("a", units::none),
+                subDict.lookup<scalar>("b", units::none),
+                subDict.lookup<scalar>("c", units::none),
+                subDict.lookup<scalar>("d", units::none)
+            );
             break;
         }
         case specification::embeddedPoints:
         {
-            const point point1 = subDict.lookup<point>("point1", dimLength);
-            const point point2 = subDict.lookup<point>("point2", dimLength);
-            const point point3 = subDict.lookup<point>("point3", dimLength);
-            calcPntAndVec(point1, point2, point3);
+            calcPntAndVec
+            (
+                subDict.lookup<point>("point1", dimensions::length),
+                subDict.lookup<point>("point2", dimensions::length),
+                subDict.lookup<point>("point3", dimensions::length)
+            );
             break;
         }
         case specification::pointAndNormal:
@@ -188,7 +192,7 @@ Foam::plane::plane(const dictionary& dict)
                 subDict.lookupBackwardsCompatible<point>
                 (
                     {"point", "basePoint"},
-                    dimLength
+                    dimensions::length
                 );
             normal_ =
                 normalised

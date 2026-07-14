@@ -74,7 +74,7 @@ Foam::word Foam::userTimes::real::unitName() const
 
 const Foam::unitSet& Foam::userTimes::real::units() const
 {
-    static const unitSet unitSeconds(dimTime, 0, 0, 1);
+    static const unitSet unitSeconds(dimensions::time, 0, 0, 1);
     return unitSeconds;
 }
 

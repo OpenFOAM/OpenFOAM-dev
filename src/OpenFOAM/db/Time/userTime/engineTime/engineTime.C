@@ -49,7 +49,7 @@ Foam::userTimes::engine::engine(const dictionary& controlDict)
     units::add
     (
         unitName(),
-        unitSet(dimTime, 0, 0, userTimeToTime(1))
+        unitSet(dimensions::time, 0, 0, userTimeToTime(1))
     );
 }
 
@@ -92,7 +92,7 @@ const Foam::unitSet& Foam::userTimes::engine::units() const
 bool Foam::userTimes::engine::read(const dictionary& controlDict)
 {
     omega_ = omega(dict(controlDict));
-    units::add(unitName(), unitSet(dimTime, 0, 0, userTimeToTime(1)));
+    units::add(unitName(), unitSet(dimensions::time, 0, 0, userTimeToTime(1)));
     return true;
 }
 

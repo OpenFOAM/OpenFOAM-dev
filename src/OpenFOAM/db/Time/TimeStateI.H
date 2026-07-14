@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,13 +45,13 @@ inline Foam::scalar Foam::TimeState::deltaT0Value() const
 
 inline Foam::dimensionedScalar Foam::TimeState::deltaT() const
 {
-    return dimensionedScalar("deltaT", dimTime, deltaT_);
+    return dimensionedScalar("deltaT", dimensions::time, deltaT_);
 }
 
 
 inline Foam::dimensionedScalar Foam::TimeState::deltaT0() const
 {
-    return dimensionedScalar("deltaT0", dimTime, deltaT0_);
+    return dimensionedScalar("deltaT0", dimensions::time, deltaT0_);
 }
 
 

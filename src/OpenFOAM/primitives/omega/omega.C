@@ -30,7 +30,7 @@ License
 
 Foam::omega::omega(const dictionary& dict)
 :
-    dimensionedScalar("omega", dimless/dimTime, NaN)
+    dimensionedScalar("omega", dimless/dimensions::time, NaN)
 {
     const bool foundOmega = dict.found("omega");
     const bool foundRpm = dict.found("rpm");
@@ -51,7 +51,7 @@ Foam::omega::omega(const dictionary& dict)
 
     value() =
         foundOmega
-      ? dict.lookup<scalar>("omega", units::radians/dimTime)
+      ? dict.lookup<scalar>("omega", units::radians/dimensions::time)
       : dict.lookup<scalar>("rpm", units::lookup("rpm"));
 }
 

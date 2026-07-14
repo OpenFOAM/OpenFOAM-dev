@@ -357,7 +357,7 @@ void Foam::units::setLength(const unitSet& length)
 
 void Foam::units::setLength(const scalar length)
 {
-    length_.reset(unitSet(dimLength, 0, 0, length));
+    length_.reset(unitSet(dimensions::length, 0, 0, length));
 }
 
 

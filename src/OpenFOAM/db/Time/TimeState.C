@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 Foam::TimeState::TimeState()
 :
-    dimensionedScalar(Time::timeName(0), dimTime, 0),
+    dimensionedScalar(Time::timeName(0), dimensions::time, 0),
     timeIndex_(0),
     deltaT_(0),
     deltaTSave_(0),

@@ -63,14 +63,14 @@ inline Foam::boundBox::boundBox(const dictionary& dict)
 
     if (haveBox && !haveMinMax)
     {
-        *this = dict.lookup<boundBox>("box", dimLength);
+        *this = dict.lookup<boundBox>("box", dimensions::length);
         return;
     }
 
     if (!haveBox && haveMinMax)
     {
-        min_ = dict.lookup<point>("min", dimLength);
-        max_ = dict.lookup<point>("max", dimLength);
+        min_ = dict.lookup<point>("min", dimensions::length);
+        max_ = dict.lookup<point>("max", dimensions::length);
         return;
     }
 
