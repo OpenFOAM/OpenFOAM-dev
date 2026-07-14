@@ -79,8 +79,8 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
                 false,
                 true
             ).keyword(),
-            dimLength,
-            dimArea/dimVolume,
+            dimensions::length,
+            dimensions::area/dimensions::volume,
             dict
         )
     );
@@ -356,7 +356,7 @@ void Foam::porosityModels::powerLawLopesdaCosta::correct
     const scalarField& V = mesh_.V();
     scalarField& Udiag = UEqn.diag();
 
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimensions::force)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
@@ -393,7 +393,7 @@ void Foam::porosityModels::powerLawLopesdaCosta::correct
 {
     const vectorField& U = UEqn.psi();
 
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimensions::force)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);

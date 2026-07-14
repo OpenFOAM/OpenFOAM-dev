@@ -262,7 +262,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     ),
     betap_
     (

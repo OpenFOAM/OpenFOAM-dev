@@ -85,16 +85,16 @@ Foam::atmosphericBoundaryLayer::atmosphericBoundaryLayer
     yDir_(zDir_ ^ flowDir_),
     kappa_(lookupOrDefault<scalar>("kappa", dimless, kappaDefault_)),
     Cmu_(lookupOrDefault<scalar>("Cmu", dimless, CmuDefault_)),
-    Uref_(lookup<scalar>("Uref", dimVelocity)),
-    Zref_(lookup<scalar>("Zref", dimLength)),
+    Uref_(lookup<scalar>("Uref", dimensions::velocity)),
+    Zref_(lookup<scalar>("Zref", dimensions::length)),
     z0_
     (
         Function2<scalar>::New
         (
             "z0",
-            dimLength,
-            dimLength,
-            dimLength,
+            dimensions::length,
+            dimensions::length,
+            dimensions::length,
             *this
         )
     ),
@@ -103,21 +103,24 @@ Foam::atmosphericBoundaryLayer::atmosphericBoundaryLayer
         Function2<scalar>::New
         (
             "zGround",
-            dimLength,
-            dimLength,
-            dimLength,
+            dimensions::length,
+            dimensions::length,
+            dimensions::length,
             *this
         )
     ),
     offset_(found("Ulower")),
-    Ulower_(lookupOrDefault<scalar>("Ulower", dimVelocity, 0)),
-    kLower_(lookupOrDefault<scalar>("kLower", dimEnergy/dimMass, 0)),
+    Ulower_(lookupOrDefault<scalar>("Ulower", dimensions::velocity, 0)),
+    kLower_
+    (
+        lookupOrDefault<scalar>("kLower", dimensions::turbulentKineticEnergy, 0)
+    ),
     epsilonLower_
     (
         lookupOrDefault<scalar>
         (
             "epsilonLower",
-            dimEnergy/dimMass/dimTime,
+            dimensions::turbulentEpsilon,
             0
         )
     )
@@ -254,18 +257,18 @@ void Foam::atmosphericBoundaryLayer::write(Ostream& os) const
     writeEntry
     (
         os,
-        dimLength,
-        dimLength,
-        dimLength,
+        dimensions::length,
+        dimensions::length,
+        dimensions::length,
         z0_()
     );
 
     writeEntry
     (
         os,
-        dimLength,
-        dimLength,
-        dimLength,
+        dimensions::length,
+        dimensions::length,
+        dimensions::length,
         zGround_()
     );
 }
