@@ -122,6 +122,17 @@ class polynomialTransport
         FixedPolynomial<scalar, PolySize> kappaCoeffs_;
 
 
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        polynomialTransport
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
+
+
 public:
 
     // Constructors

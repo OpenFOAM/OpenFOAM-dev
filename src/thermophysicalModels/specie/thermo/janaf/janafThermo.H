@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,8 +83,7 @@ SourceFiles
 #ifndef janafThermo_H
 #define janafThermo_H
 
-#include "scalar.H"
-#include "FixedList.H"
+#include "VectorSpace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -133,19 +132,17 @@ class janafThermo
 :
     public EquationOfState
 {
-
 public:
 
-    // Public static data
+    // Public Classes
 
-        //- Number of coefficients
-        static const int nCoeffs_ = 7;
-
-
-    // Public typdefs
-
-        //- Coefficient array type
-        typedef FixedList<scalar, nCoeffs_> coeffArray;
+        //- Coefficient list class
+        struct coeffArray
+        :
+            public VectorSpace<coeffArray, scalar, 7>
+        {
+            using VectorSpace<coeffArray, scalar, 7>::VectorSpace;
+        };
 
 
 private:
@@ -160,6 +157,17 @@ private:
 
         //- Cp coefficients for the low temperature range (Tlow to Tcommon)
         coeffArray lowCpCoeffs_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        janafThermo
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
     // Private Member Functions

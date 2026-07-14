@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,49 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "eConstThermo.H"
-#include "IOstreams.H"
+#include "dictionary.H"
+#include "delimitDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class EquationOfState>
+Foam::eConstThermo<EquationOfState>::eConstThermo
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    EquationOfState(name, dict),
+    Cv_(subDict.lookup<scalar>("Cv", dimSpecificHeatCapacity)),
+    hf_
+    (
+        subDict.lookupBackwardsCompatible<scalar>
+        (
+            {"hf", "Hf"},
+            dimEnergy/dimMass
+        )
+    ),
+    Tref_
+    (
+        subDict.lookupOrDefault<scalar>
+        (
+            "Tref",
+            dimTemperature,
+            constant::thermodynamic::Tstd
+        )
+    ),
+    esRef_
+    (
+        subDict.lookupOrDefaultBackwardsCompatible<scalar>
+        (
+            {"esRef", "Esref"},
+            dimEnergy/dimMass,
+            0
+        )
+    )
+{}
+
 
 template<class EquationOfState>
 Foam::eConstThermo<EquationOfState>::eConstThermo
@@ -35,21 +75,7 @@ Foam::eConstThermo<EquationOfState>::eConstThermo
     const dictionary& dict
 )
 :
-    EquationOfState(name, dict),
-    Cv_(dict.subDict("thermodynamics").lookup<scalar>("Cv")),
-    hf_
-    (
-        dict
-       .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
-    ),
-    Tref_(dict.subDict("thermodynamics").lookupOrDefault<scalar>("Tref", Tstd)),
-    esRef_
-    (
-        dict
-       .subDict("thermodynamics")
-       .lookupOrDefaultBackwardsCompatible<scalar>({"esRef", "Esref"}, 0)
-    )
+    eConstThermo(name, dict, dict.subDict("thermodynamics"))
 {}
 
 
@@ -60,18 +86,11 @@ void Foam::eConstThermo<EquationOfState>::write(Ostream& os) const
 {
     EquationOfState::write(os);
 
-    dictionary dict("thermodynamics");
-    dict.add("Cv", Cv_);
-    dict.add("hf", hf_);
-    if (Tref_ != Tstd)
-    {
-        dict.add("Tref", Tref_);
-    }
-    if (esRef_ != 0)
-    {
-        dict.add("esRef", esRef_);
-    }
-    os  << indent << dict.dictName() << dict;
+    const delimitDictionary delimit(os, "thermodynamics");
+    writeEntry(os, "Cv", Cv_);
+    writeEntry(os, "hf", hf_);
+    writeEntryIfDifferent(os, "Tref", constant::thermodynamic::Tstd, Tref_);
+    writeEntryIfDifferent(os, "esRef", scalar(0), esRef_);
 }
 
 

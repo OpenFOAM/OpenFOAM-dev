@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constTransport.H"
-#include "IOstreams.H"
+#include "dictionary.H"
+#include "delimitDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,7 +40,7 @@ Foam::constTransport<Thermo>::constTransport
 {
     const dictionary& transportDict = dict.subDict("transport");
 
-    mu_ = transportDict.lookup<scalar>("mu");
+    mu_ = transportDict.lookup<scalar>("mu", dimDynamicViscosity);
 
     const bool foundPr = transportDict.found("Pr");
     const bool foundKappa = transportDict.found("kappa");
@@ -52,8 +53,14 @@ Foam::constTransport<Thermo>::constTransport
     }
 
     constPr_ = foundPr;
-    rPr_ = constPr_ ? 1/transportDict.lookup<scalar>("Pr") : NaN;
-    kappa_ = constPr_ ? NaN : transportDict.lookup<scalar>("kappa");
+    rPr_ =
+        constPr_
+      ? 1/transportDict.lookup<scalar>("Pr", dimless)
+      : NaN;
+    kappa_ =
+        constPr_
+      ? NaN
+      : transportDict.lookup<scalar>("kappa", dimThermalConductivity);
 }
 
 
@@ -62,25 +69,18 @@ Foam::constTransport<Thermo>::constTransport
 template<class Thermo>
 void Foam::constTransport<Thermo>::constTransport::write(Ostream& os) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK  << incrIndent << nl;
-
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add("mu", mu_);
+    const delimitDictionary delimit(os, "transport");
+    writeEntry(os, "mu", mu_);
     if (constPr_)
     {
-        dict.add("Pr", 1.0/rPr_);
+        writeEntry(os, "Pr", 1/rPr_);
     }
     else
     {
-        dict.add("kappa", kappa_);
+        writeEntry(os, "kappa", kappa_);
     }
-
-    os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 

@@ -38,8 +38,7 @@ SourceFiles
 #ifndef thermo_H
 #define thermo_H
 
-#include "thermodynamicConstants.H"
-using namespace Foam::constant::thermodynamic;
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

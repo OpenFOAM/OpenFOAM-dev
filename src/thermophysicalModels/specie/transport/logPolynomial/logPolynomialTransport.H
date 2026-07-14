@@ -123,6 +123,17 @@ class logPolynomialTransport
         FixedPolynomial<scalar, PolySize> kappaLogCoeffs_;
 
 
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        logPolynomialTransport
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
+
+
 public:
 
     // Constructors

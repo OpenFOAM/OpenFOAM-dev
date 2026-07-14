@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,33 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tabulatedTransport.H"
-#include "IOstreams.H"
+#include "delimitDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Thermo>
+Foam::tabulatedTransport<Thermo>::tabulatedTransport
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    Thermo(name, dict),
+    mu_
+    (
+        "mu",
+        {dimPressure, dimTemperature, dimDynamicViscosity},
+        subDict.subDict("mu")
+    ),
+    kappa_
+    (
+        "kappa",
+        {dimPressure, dimTemperature, dimThermalConductivity},
+        subDict.subDict("kappa")
+    )
+{}
+
 
 template<class Thermo>
 Foam::tabulatedTransport<Thermo>::tabulatedTransport
@@ -35,19 +59,7 @@ Foam::tabulatedTransport<Thermo>::tabulatedTransport
     const dictionary& dict
 )
 :
-    Thermo(name, dict),
-    mu_
-    (
-        "mu",
-        {dimPressure, dimTemperature, dimDynamicViscosity},
-        dict.subDict("transport").subDict("mu")
-    ),
-    kappa_
-    (
-        "kappa",
-        {dimPressure, dimTemperature, dimThermalConductivity},
-        dict.subDict("transport").subDict("kappa")
-    )
+    tabulatedTransport(name, dict, dict.subDict("transport"))
 {}
 
 
@@ -56,24 +68,17 @@ Foam::tabulatedTransport<Thermo>::tabulatedTransport
 template<class Thermo>
 void Foam::tabulatedTransport<Thermo>::write(Ostream& os) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
     Thermo::write(os);
 
-    dictionary dict("transport");
-
-    dictionary muDict("mu");
-    muDict.add("values", mu_.values());
-    dict.add("mu", muDict);
-
-    dictionary kappaDict("kappa");
-    kappaDict.add("values", kappa_.values());
-    dict.add("kappa", kappaDict);
-
-    os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
+    const delimitDictionary delimit(os, "transport");
+    {
+        const delimitDictionary delimitMu(os, "mu");
+        mu_.write(os, {dimPressure, dimTemperature, dimDynamicViscosity});
+    }
+    {
+        const delimitDictionary delimitKappa(os, "kappa");
+        kappa_.write(os, {dimPressure, dimTemperature, dimThermalConductivity});
+    }
 }
 
 

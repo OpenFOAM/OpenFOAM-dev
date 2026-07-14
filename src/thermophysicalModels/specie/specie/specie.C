@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "specie.H"
+#include "delimitDictionary.H"
 
 /* * * * * * * * * * * * * * * public constants  * * * * * * * * * * * * * * */
 
@@ -35,11 +36,22 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::specie::specie(const word& name, const dictionary& dict)
+Foam::specie::specie
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
 :
     name_(name),
-    Y_(dict.subDict("specie").lookupOrDefault("massFraction", 1.0)),
-    molWeight_(dict.subDict("specie").lookup<scalar>("molWeight"))
+    Y_(subDict.lookupOrDefault("massFraction", dimless, scalar(1))),
+    molWeight_(subDict.lookup<scalar>("molWeight", dimMass/dimMoles))
+{}
+
+
+Foam::specie::specie(const word& name, const dictionary& dict)
+:
+    specie(name, dict, dict.subDict("specie"))
 {}
 
 
@@ -47,13 +59,9 @@ Foam::specie::specie(const word& name, const dictionary& dict)
 
 void Foam::specie::write(Ostream& os) const
 {
-    dictionary dict("specie");
-    if (Y_ != 1)
-    {
-        dict.add("massFraction", Y_);
-    }
-    dict.add("molWeight", molWeight_);
-    os  << indent << dict.dictName() << dict;
+    const delimitDictionary delimit(os, "specie");
+    writeEntryIfDifferent(os, "massFraction", scalar(1), Y_);
+    writeEntry(os, "molWeight", molWeight_);
 }
 
 

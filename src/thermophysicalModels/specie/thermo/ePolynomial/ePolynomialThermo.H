@@ -139,6 +139,14 @@ class ePolynomialThermo
 
     // Private Constructors
 
+        //- Construct from name and parent dictionary and dictionary
+        ePolynomialThermo
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
+
         //- Construct from components
         inline ePolynomialThermo
         (

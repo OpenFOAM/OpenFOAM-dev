@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "AndradeTransport.H"
-#include "IOstreams.H"
+#include "dictionary.H"
+#include "units.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Thermo>
+Foam::AndradeTransport<Thermo>::AndradeTransport
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    Thermo(name, dict),
+    muCoeffs_(subDict.lookup<coeffList>("muCoeffs", units::none)),
+    kappaCoeffs_(subDict.lookup<coeffList>("kappaCoeffs", units::none))
+{}
+
 
 template<class Thermo>
 Foam::AndradeTransport<Thermo>::AndradeTransport
@@ -35,9 +50,7 @@ Foam::AndradeTransport<Thermo>::AndradeTransport
     const dictionary& dict
 )
 :
-    Thermo(name, dict),
-    muCoeffs_(dict.subDict("transport").lookup("muCoeffs")),
-    kappaCoeffs_(dict.subDict("transport").lookup("kappaCoeffs"))
+    AndradeTransport(name, dict, dict.subDict("transport"))
 {}
 
 
@@ -46,17 +59,18 @@ Foam::AndradeTransport<Thermo>::AndradeTransport
 template<class Thermo>
 void Foam::AndradeTransport<Thermo>::write(Ostream& os) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add("muCoeffs", muCoeffs_);
-    dict.add("kappaCoeffs", kappaCoeffs_);
-    os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
+    writeEntry
+    (
+        os,
+        "transport",
+        dictionary::entries
+        (
+            "muCoeffs", muCoeffs_,
+            "kappaCoeffs", kappaCoeffs_
+        )
+    );
 }
 
 

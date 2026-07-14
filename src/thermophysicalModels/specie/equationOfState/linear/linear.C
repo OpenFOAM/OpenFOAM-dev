@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,16 +24,28 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "linear.H"
-#include "IOstreams.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::linear<Specie>::linear(const word& name, const dictionary& dict)
+Foam::linear<Specie>::linear
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
 :
     Specie(name, dict),
-    psi_(dict.subDict("equationOfState").lookup<scalar>("psi")),
-    rho0_(dict.subDict("equationOfState").lookup<scalar>("rho0"))
+    psi_(subDict.lookup<scalar>("psi", dimDensity/dimPressure)),
+    rho0_(subDict.lookup<scalar>("rho0", dimDensity))
+{}
+
+
+template<class Specie>
+Foam::linear<Specie>::linear(const word& name, const dictionary& dict)
+:
+    linear(name, dict, dict.subDict("equationOfState"))
 {}
 
 
@@ -44,11 +56,12 @@ void Foam::linear<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
 
-    dictionary dict("equationOfState");
-    dict.add("psi", psi_);
-    dict.add("rho0", rho0_);
-
-    os  << indent << dict.dictName() << dict;
+    writeEntry
+    (
+        os,
+        "equationOfState",
+        dictionary::entries("psi", psi_, "rho0", rho0_)
+    );
 }
 
 

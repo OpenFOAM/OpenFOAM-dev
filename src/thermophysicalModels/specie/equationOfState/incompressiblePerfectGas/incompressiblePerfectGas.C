@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressiblePerfectGas.H"
-#include "IOstreams.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -36,7 +36,7 @@ Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 )
 :
     Specie(name, dict),
-    pRef_(dict.subDict("equationOfState").lookup<scalar>("pRef"))
+    pRef_(dict.subDict("equationOfState").lookup<scalar>("pRef", dimPressure))
 {}
 
 
@@ -46,10 +46,8 @@ template<class Specie>
 void Foam::incompressiblePerfectGas<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
-    dictionary dict("equationOfState");
-    dict.add("pRef", pRef_);
 
-    os  << indent << dict.dictName() << dict;
+    writeEntry(os, "equationOfState", dictionary::entries("pRef", pRef_));
 }
 
 

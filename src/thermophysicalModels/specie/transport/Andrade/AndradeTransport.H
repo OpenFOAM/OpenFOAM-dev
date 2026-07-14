@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ SourceFiles
 #ifndef AndradeTransport_H
 #define AndradeTransport_H
 
-#include "FixedList.H"
+#include "VectorSpace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -119,8 +119,13 @@ class AndradeTransport
 {
     // Private Typedefs
 
-        //- Coefficient list type
-        typedef FixedList<scalar, 5> coeffList;
+        //- Coefficient list class
+        struct coeffList
+        :
+            public VectorSpace<coeffList, scalar, 5>
+        {
+            using VectorSpace<coeffList, scalar, 5>::VectorSpace;
+        };
 
 
     // Private Data
@@ -130,6 +135,17 @@ class AndradeTransport
 
         //- Thermal conductivity coefficients
         coeffList kappaCoeffs_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        AndradeTransport
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:
@@ -146,7 +162,6 @@ public:
 
         //- Construct as named copy
         inline AndradeTransport
-
         (
             const word&,
             const AndradeTransport&

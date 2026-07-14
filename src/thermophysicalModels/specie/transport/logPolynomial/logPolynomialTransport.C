@@ -31,26 +31,38 @@ template<class Thermo, int PolySize>
 Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 (
     const word& name,
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& subDict
 )
 :
     Thermo(name, dict),
     muLogCoeffs_
     (
-        dict.subDict("transport").lookup<FixedPolynomial<scalar, PolySize>>
+        subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
             "muLogCoeffs<" + Foam::name(PolySize) + '>',
-            Function1s::unitSets({units::none, dimSpecificHeatCapacity})
+            Function1s::unitSets({units::none, units::none})
         )
     ),
     kappaLogCoeffs_
     (
-        dict.subDict("transport").lookup<FixedPolynomial<scalar, PolySize>>
+        subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
             "kappaLogCoeffs<" + Foam::name(PolySize) + '>',
-            Function1s::unitSets({units::none, dimThermalConductivity})
+            Function1s::unitSets({units::none, units::none})
         )
     )
+{}
+
+
+template<class Thermo, int PolySize>
+Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    logPolynomialTransport(name, dict, dict.subDict("transport"))
 {}
 
 
@@ -59,25 +71,20 @@ Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 template<class Thermo, int PolySize>
 void Foam::logPolynomialTransport<Thermo, PolySize>::write(Ostream& os) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add
+    writeEntry
     (
-        word("muLogCoeffs<" + Foam::name(PolySize) + '>'),
-        muLogCoeffs_
+        os,
+        "transport",
+        dictionary::entries
+        (
+            word("muLogCoeffs<" + Foam::name(PolySize) + '>'),
+            muLogCoeffs_,
+            word("kappaLogCoeffs<" + Foam::name(PolySize) + '>'),
+            kappaLogCoeffs_
+        )
     );
-    dict.add
-    (
-        word("kappaLogCoeffs<" + Foam::name(PolySize) + '>'),
-        kappaLogCoeffs_
-    );
-    os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 

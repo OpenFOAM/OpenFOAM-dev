@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,22 +24,34 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sutherlandTransport.H"
-#include "IOstreams.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Thermo>
-Foam::scalar Foam::sutherlandTransport<Thermo>::readCoeff
-(
-    const word& coeffName,
-    const dictionary& dict
-)
-{
-    return dict.subDict("transport").lookup<scalar>(coeffName);
-}
-
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Thermo>
+Foam::sutherlandTransport<Thermo>::sutherlandTransport
+(
+    const Thermo& thermo,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    Thermo(thermo),
+    As_(subDict.lookup<scalar>("As", dimDynamicViscosity/sqrt(dimTemperature))),
+    Ts_(subDict.lookup<scalar>("Ts", dimTemperature))
+{}
+
+
+template<class Thermo>
+Foam::sutherlandTransport<Thermo>::sutherlandTransport
+(
+    const Thermo& thermo,
+    const dictionary& dict
+)
+:
+    sutherlandTransport(thermo, dict, dict.subDict("transport"))
+{}
+
 
 template<class Thermo>
 Foam::sutherlandTransport<Thermo>::sutherlandTransport
@@ -48,22 +60,7 @@ Foam::sutherlandTransport<Thermo>::sutherlandTransport
     const dictionary& dict
 )
 :
-    Thermo(name, dict),
-    As_(readCoeff("As", dict)),
-    Ts_(readCoeff("Ts", dict))
-{}
-
-
-template<class Thermo>
-Foam::sutherlandTransport<Thermo>::sutherlandTransport
-(
-    const Thermo& t,
-    const dictionary& dict
-)
-:
-    Thermo(t),
-    As_(readCoeff("As", dict)),
-    Ts_(readCoeff("Ts", dict))
+    sutherlandTransport(Thermo(name, dict), dict)
 {}
 
 
@@ -72,17 +69,14 @@ Foam::sutherlandTransport<Thermo>::sutherlandTransport
 template<class Thermo>
 void Foam::sutherlandTransport<Thermo>::write(Ostream& os) const
 {
-    os  << this->specie::name() << endl
-        << token::BEGIN_BLOCK  << incrIndent << nl;
-
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add("As", As_);
-    dict.add("Ts", Ts_);
-
-    os  << indent << dict.dictName() << dict
-        << decrIndent << token::END_BLOCK << nl;
+    writeEntry
+    (
+        os,
+        "transport",
+        dictionary::entries("As", As_, "Ts", Ts_)
+    );
 }
 
 

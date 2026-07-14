@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,6 +127,17 @@ class PengRobinsonGas
 
         //- Acentric factor [-]
         scalar omega_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        PengRobinsonGas
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:

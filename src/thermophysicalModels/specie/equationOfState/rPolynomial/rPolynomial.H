@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,23 +114,11 @@ class rPolynomial
     // Private Classes
 
         //- Coefficient list class
-        class coeffList
+        struct coeffList
         :
             public VectorSpace<coeffList, scalar, 5>
         {
-        public:
-
-            // Constructors
-
-                //- Construct null
-                inline coeffList()
-                {}
-
-                //- Construct from Istream
-                inline coeffList(Istream& is)
-                :
-                    VectorSpace<coeffList, scalar, 5>(is)
-                {}
+            using VectorSpace<coeffList, scalar, 5>::VectorSpace;
         };
 
 

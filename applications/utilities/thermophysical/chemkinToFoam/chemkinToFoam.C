@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ Description
 #include "OFstream.H"
 #include "OStringStream.H"
 #include "IStringStream.H"
+#include "delimitDictionary.H"
 
 using namespace Foam;
 
@@ -81,7 +82,16 @@ int main(int argc, char *argv[])
     // Add the species thermo formatted entries
     {
         OStringStream os;
-        cr.speciesThermo().write(os);
+        forAllConstIter
+        (
+            HashPtrTable<chemkinReader::thermoPhysics>,
+            cr.speciesThermo(),
+            iter
+        )
+        {
+            const delimitDictionary block(os, iter.key());
+            iter()->write(os);
+        }
         dictionary speciesThermoDict(IStringStream(os.str())());
         thermoDict.merge(speciesThermoDict);
     }

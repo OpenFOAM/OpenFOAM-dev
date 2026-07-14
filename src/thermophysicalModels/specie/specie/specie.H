@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,6 +75,17 @@ class specie
 
         //- Molecular weight of specie [kg/kmol]
         scalar molWeight_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        specie
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:

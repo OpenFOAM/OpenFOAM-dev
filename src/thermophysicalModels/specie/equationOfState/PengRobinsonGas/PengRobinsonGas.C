@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,30 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PengRobinsonGas.H"
-#include "IOstreams.H"
+#include "dictionary.H"
+#include <cfenv>
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Specie>
+Foam::PengRobinsonGas<Specie>::PengRobinsonGas
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+
+)
+:
+    Specie(name, dict),
+    Tc_(subDict.lookup<scalar>("Tc", dimTemperature)),
+    Vc_(subDict.lookup<scalar>("Vc", dimVolume/dimMoles)),
+    Zc_(1.0),
+    Pc_(subDict.lookup<scalar>("Pc", dimPressure)),
+    omega_(subDict.lookup<scalar>("omega", dimless))
+{
+    Zc_ = Pc_*Vc_/(constant::thermodynamic::RR*Tc_);
+}
+
 
 template<class Specie>
 Foam::PengRobinsonGas<Specie>::PengRobinsonGas
@@ -35,15 +56,8 @@ Foam::PengRobinsonGas<Specie>::PengRobinsonGas
     const dictionary& dict
 )
 :
-    Specie(name, dict),
-    Tc_(dict.subDict("equationOfState").lookup<scalar>("Tc")),
-    Vc_(dict.subDict("equationOfState").lookup<scalar>("Vc")),
-    Zc_(1.0),
-    Pc_(dict.subDict("equationOfState").lookup<scalar>("Pc")),
-    omega_(dict.subDict("equationOfState").lookup<scalar>("omega"))
-{
-    Zc_ = Pc_*Vc_/(RR*Tc_);
-}
+    PengRobinsonGas(name, dict, dict.subDict("equationOfState"))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -53,6 +67,13 @@ template<class Specie>
 void Foam::PengRobinsonGas<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
+
+    writeEntry
+    (
+        os,
+        "equationOfState",
+        dictionary::entries("Tc", Tc_, "Vc", Vc_, "Pc", Pc_, "omega", omega_)
+    );
 }
 
 

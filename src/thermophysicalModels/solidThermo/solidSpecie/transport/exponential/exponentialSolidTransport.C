@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "exponentialSolidTransport.H"
-#include "IOstreams.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Thermo>
+Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    Thermo(name, dict),
+    kappa0_(subDict.lookup<scalar>("kappa0", dimThermalConductivity)),
+    n0_(subDict.lookup<scalar>("n0", dimless)),
+    Tref_(subDict.lookup<scalar>("Tref", dimTemperature))
+{}
+
 
 template<class Thermo>
 Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
@@ -35,16 +50,8 @@ Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
     const dictionary& dict
 )
 :
-    Thermo(name, dict),
-    kappa0_(0.0),
-    n0_(0.0),
-    Tref_(0.0)
-{
-    const dictionary& subDict = dict.subDict("transport");
-    kappa0_ = subDict.lookup<scalar>("kappa0");
-    n0_ = subDict.lookup<scalar>("n0");
-    Tref_ = subDict.lookup<scalar>("Tref");
-}
+    exponentialSolidTransport(name, dict, dict.subDict("transport"))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -57,11 +64,12 @@ void Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport::write
 {
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add("kappa0", kappa0_);
-    dict.add("n0", n0_);
-    dict.add("Tref", Tref_);
-    os  << indent << dict.dictName() << dict;
+    writeEntry
+    (
+        os,
+        "transport",
+        dictionary::entries("kappa0", kappa0_, "n0", n0_, "Tref", Tref_)
+    );
 }
 
 

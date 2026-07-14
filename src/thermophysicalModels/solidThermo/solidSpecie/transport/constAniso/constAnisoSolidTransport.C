@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constAnisoSolidTransport.H"
-#include "IOstreams.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -36,7 +36,14 @@ Foam::constAnisoSolidTransport<Thermo>::constAnisoSolidTransport
 )
 :
     Thermo(name, dict),
-    kappa_(dict.subDict("transport").lookup("kappa"))
+    kappa_
+    (
+        dict.subDict("transport").lookup<vector>
+        (
+            "kappa",
+            dimThermalConductivity
+        )
+    )
 {}
 
 
@@ -50,9 +57,7 @@ void Foam::constAnisoSolidTransport<Thermo>::constAnisoSolidTransport::write
 {
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add("kappa", kappa_);
-    os  << indent << dict.dictName() << dict;
+    writeEntry(os, "transport", dictionary::entries("kappa", kappa_));
 }
 
 

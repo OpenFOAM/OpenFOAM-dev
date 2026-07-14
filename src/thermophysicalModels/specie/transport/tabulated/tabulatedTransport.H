@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,39 +41,23 @@ Usage
     {
         mu
         {
-            pLow    1e3;
-            pHigh   1e6;
-
-            Tlow    200;
-            Thigh   1500;
-
-            values
-            <m> <n>
+            low     (1e3 200);
+            high    (1e6 1500);
+            values  3 4
             (
-                (..........)
-                .
-                .
-                .
-                (..........)
+                (1.21e-6 1.12e-6 1.05e-6 1.03e-6)
+                (1.43e-6 1.31e-6 1.22e-6 1.16e-6)
+                (1.56e-6 1.45e-6 1.38e-6 1.28e-6)
             );
         }
-
         kappa
         {
-            pLow    1e3;
-            pHigh   1e6;
-
-            Tlow    200;
-            Thigh   1500;
-
-            values
-            <m> <n>
+            low     (1e3 200);
+            high    (1e6 1500);
+            values  2 3
             (
-                (..........)
-                .
-                .
-                .
-                (..........)
+                (0.026 0.024 0.027)
+                (0.023 0.019 0.022)
             );
         }
     }
@@ -130,6 +114,17 @@ class tabulatedTransport
 
         //- Thermal conductivity table [W/m/K]
         table2D kappa_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        tabulatedTransport
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:

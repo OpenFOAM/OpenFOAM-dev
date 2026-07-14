@@ -23,6 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "eConstThermo.H"
+#include "thermodynamicConstants.H"
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
@@ -128,6 +131,8 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::s
     const scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     return Cp(p, T)*log(T/Tstd) + EquationOfState::sv(p, T);
 }
 
@@ -138,6 +143,8 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::gStd
     const scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     return
         Cv_*(T - Tref_) + esRef_ + hf()
       + pStd/EquationOfState::rho(pStd, T)

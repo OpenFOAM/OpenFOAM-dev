@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,6 +111,17 @@ class eIcoTabulatedThermo
 
         //- Specific heat at constant volume table [J/kg/K]
         integratedNonUniformTable Cv_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        eIcoTabulatedThermo
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:

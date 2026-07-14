@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,38 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "eIcoTabulatedThermo.H"
-#include "IOstreams.H"
+#include "delimitDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class EquationOfState>
+Foam::eIcoTabulatedThermo<EquationOfState>::eIcoTabulatedThermo
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    EquationOfState(name, dict),
+    hf_
+    (
+        subDict.lookupBackwardsCompatible<scalar>
+        (
+            {"hf", "Hf"},
+            dimEnergy/dimMass
+        )
+    ),
+    sf_
+    (
+        subDict.lookupBackwardsCompatible<scalar>
+        (
+            {"sf", "Sf"},
+            dimEnergy/dimTemperature/dimMass
+        )
+    ),
+    Cv_("Cv", {dimTemperature, dimSpecificHeatCapacity}, subDict.subDict("Cv"))
+{}
+
 
 template<class EquationOfState>
 Foam::eIcoTabulatedThermo<EquationOfState>::eIcoTabulatedThermo
@@ -35,25 +64,7 @@ Foam::eIcoTabulatedThermo<EquationOfState>::eIcoTabulatedThermo
     const dictionary& dict
 )
 :
-    EquationOfState(name, dict),
-    hf_
-    (
-        dict
-       .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
-    ),
-    sf_
-    (
-        dict
-       .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>({"sf", "Sf"})
-    ),
-    Cv_
-    (
-        "Cv",
-        {dimTemperature, dimSpecificHeatCapacity},
-        dict.subDict("thermodynamics").subDict("Cv")
-    )
+    eIcoTabulatedThermo(name, dict, dict.subDict("thermodynamics"))
 {}
 
 
@@ -67,11 +78,11 @@ void Foam::eIcoTabulatedThermo<EquationOfState>::write
 {
     EquationOfState::write(os);
 
-    dictionary dict("thermodynamics");
-    dict.add("hf", hf_);
-    dict.add("sf", sf_);
-    dict.add("Cv", Cv_.values());
-    os  << indent << dict.dictName() << dict;
+    const delimitDictionary delimit(os, "thermodynamics");
+    writeEntry(os, "hf", hf_);
+    writeEntry(os, "sf", sf_);
+    const delimitDictionary delimitCv(os, "Cv");
+    Cv_.write(os, {dimTemperature, dimSpecificHeatCapacity});
 }
 
 

@@ -31,15 +31,14 @@ template<class EquationOfState, int PolySize>
 Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
 (
     const word& name,
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& subDict
 )
 :
     EquationOfState(name, dict),
     hf_
     (
-        dict
-       .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>
+        subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
             dimEnergy/dimMass
@@ -47,9 +46,7 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
     ),
     sf_
     (
-        dict
-       .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>
+        subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
             dimEnergy/dimTemperature/dimMass
@@ -57,9 +54,7 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
     ),
     CvCoeffs_
     (
-        dict
-       .subDict("thermodynamics")
-       .lookup<FixedLaurentPolynomial<scalar, 0, PolySize>>
+        subDict.lookup<FixedLaurentPolynomial<scalar, 0, PolySize>>
         (
             "CvCoeffs<" + Foam::name(PolySize) + '>',
             Function1s::unitSets({dimTemperature, dimSpecificHeatCapacity})
@@ -67,6 +62,17 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
     ),
     esRef_(CvCoeffs_.integral(constant::thermodynamic::Tstd)),
     sRef_(CvCoeffs_.byX().integral(constant::thermodynamic::Tstd))
+{}
+
+
+template<class EquationOfState, int PolySize>
+Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    ePolynomialThermo(name, dict, dict.subDict("thermodynamics"))
 {}
 
 
@@ -80,12 +86,17 @@ void Foam::ePolynomialThermo<EquationOfState, PolySize>::write
 {
     EquationOfState::write(os);
 
-    os  << indent << "thermodynamics" << dictionary::entries
+    writeEntry
+    (
+        os,
+        "thermodynamics",
+        dictionary::entries
         (
             "hf", hf_,
             "sf", sf_,
             word("CvCoeffs<" + Foam::name(PolySize) + '>'), CvCoeffs_
-        );
+        )
+    );
 }
 
 

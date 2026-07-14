@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -315,8 +315,8 @@ List<specieElement> currentSpecieComposition(5);
 scalar currentLowT = 0;
 scalar currentHighT = 0;
 scalar currentCommonT = 0;
-chemkinReader::thermoPhysics::coeffArray highCpCoeffs(scalarList(7));
-chemkinReader::thermoPhysics::coeffArray lowCpCoeffs(scalarList(7));
+chemkinReader::thermoPhysics::coeffArray highCpCoeffs(Zero);
+chemkinReader::thermoPhysics::coeffArray lowCpCoeffs(Zero);
 
 specieCoeffs currentSpecieCoeff;
 

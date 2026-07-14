@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,25 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "adiabaticPerfectFluid.H"
-#include "IOstreams.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Specie>
+Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    Specie(name, dict),
+    p0_(subDict.lookup<scalar>("p0", dimPressure)),
+    rho0_(subDict.lookup<scalar>("rho0", dimDensity)),
+    gamma_(subDict.lookup<scalar>("gamma", dimless)),
+    B_(subDict.lookup<scalar>("B", dimPressure))
+{}
+
 
 template<class Specie>
 Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
@@ -35,11 +51,7 @@ Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
     const dictionary& dict
 )
 :
-    Specie(name, dict),
-    p0_(dict.subDict("equationOfState").lookup<scalar>("p0")),
-    rho0_(dict.subDict("equationOfState").lookup<scalar>("rho0")),
-    gamma_(dict.subDict("equationOfState").lookup<scalar>("gamma")),
-    B_(dict.subDict("equationOfState").lookup<scalar>("B"))
+    adiabaticPerfectFluid(name, dict, dict.subDict("equationOfState"))
 {}
 
 
@@ -50,13 +62,12 @@ void Foam::adiabaticPerfectFluid<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
 
-    dictionary dict("equationOfState");
-    dict.add("p0", p0_);
-    dict.add("rho0", rho0_);
-    dict.add("gamma", gamma_);
-    dict.add("B", B_);
-
-    os  << indent << dict.dictName() << dict;
+    writeEntry
+    (
+        os,
+        "equationOfState",
+        dictionary::entries("p0", p0_, "rho0", rho0_, "gamma", gamma_, "B", B_)
+    );
 }
 
 

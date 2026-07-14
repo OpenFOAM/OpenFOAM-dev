@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,8 @@ SourceFiles
 #ifndef WLFTransport_H
 #define WLFTransport_H
 
+#include "autoPtr.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -131,10 +133,15 @@ class WLFTransport
         scalar rPr_;
 
 
-    // Private Member Functions
+    // Private Constructors
 
-        //- Read coefficient from dictionary
-        scalar readCoeff(const word& coeffName, const dictionary& dict);
+        //- Construct from name and parent dictionary and dictionary
+        WLFTransport
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:

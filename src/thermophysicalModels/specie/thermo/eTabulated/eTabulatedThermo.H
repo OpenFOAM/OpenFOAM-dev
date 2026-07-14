@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ Usage
         hf          | Heat of formation
         sf          | Standard entropy
         es          | Sensible internal energy vs pressure and temperature table
+        Cp          | Specific heat capacity vs pressure and temperature table
         Cv          | Specific heat capacity vs pressure and temperature table
     \endtable
 
@@ -42,44 +43,37 @@ Usage
     \verbatim
     thermodynamics
     {
-        hf              0;
-        sf              0;
-
+        hf      0;
+        sf      0;
         es
         {
-            pLow    1e4;
-            pHigh   5e5;
-
-            Tlow    200;
-            Thigh   1500;
-
-            values
-            <m> <n>
+            low     (1e4 200);
+            high    (5e5 1500);
+            values  3 4
             (
-                (..........)
-                .
-                .
-                .
-                (..........)
+                (3.9e6 4.1e6 4.8e6 5.0e6)
+                (4.1e6 4.3e6 4.6e6 5.1e6)
+                (4.0e6 4.4e6 4.6e6 5.2e6)
             );
         }
-
+        Cp
+        {
+            low     (1e3 200);
+            high    (1e6 1500);
+            values  2 3
+            (
+                (4243 4267 4301)
+                (4245 4278 4321)
+            );
+        }
         Cv
         {
-            pLow    1e3;
-            pHigh   1e6;
-
-            Tlow    200;
-            Thigh   1500;
-
-            values
-            <m> <n>
+            low     (1e3 200);
+            high    (1e6 1500);
+            values  2 3
             (
-                (..........)
-                .
-                .
-                .
-                (..........)
+                (4134 4342 4565)
+                (4138 4346 4572)
             );
         }
     }
@@ -148,6 +142,17 @@ class eTabulatedThermo
 
         //- Specific heat at constant volume table [J/kg/K]
         table2D Cv_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        eTabulatedThermo
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:

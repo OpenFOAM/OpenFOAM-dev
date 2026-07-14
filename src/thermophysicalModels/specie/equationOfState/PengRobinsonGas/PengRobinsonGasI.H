@@ -25,6 +25,7 @@ License
 
 #include "PengRobinsonGas.H"
 #include "mathematicalConstants.H"
+#include "thermodynamicConstants.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -114,6 +115,8 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::h(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::PengRobinsonGas<Specie>::Cp(scalar p, scalar T) const
 {
+    using namespace constant::thermodynamic;
+
     const scalar Tr = T/Tc_;
     const scalar a = 0.45724*sqr(RR*Tc_)/Pc_;
     const scalar b = 0.07780*RR*Tc_/Pc_;
@@ -166,6 +169,8 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::e(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::PengRobinsonGas<Specie>::Cv(scalar p, scalar T) const
 {
+    using namespace constant::thermodynamic;
+
     const scalar a = 0.45724*sqr(RR*Tc_)/Pc_;
     const scalar b = 0.07780*RR*Tc_/Pc_;
     const scalar kappa = 0.37464 + 1.54226*omega_ - 0.26992*sqr(omega_);
@@ -193,6 +198,8 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::sp
     scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     const scalar Pr = p/Pc_;
     const scalar Tr = T/Tc_;
     const scalar B = 0.07780*Pr/Tr;
@@ -245,6 +252,8 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::Z
     scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     const scalar Tr = T/Tc_;
     const scalar a = 0.45724*sqr(RR*Tc_)/Pc_;
     const scalar b = 0.07780*RR*Tc_/Pc_;
@@ -307,6 +316,8 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::CpMCv
     scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     const scalar Tr = T/Tc_;
     const scalar a = 0.45724*sqr(RR*Tc_)/Pc_;
     const scalar b = 0.07780*RR*Tc_/Pc_;
@@ -346,6 +357,8 @@ inline void Foam::PengRobinsonGas<Specie>::operator+=
     const PengRobinsonGas<Specie>& pg
 )
 {
+    using namespace constant::thermodynamic;
+
     scalar X1 = this->Y()/this->W();
     Specie::operator+=(pg);
 
@@ -380,6 +393,8 @@ Foam::PengRobinsonGas<Specie> Foam::operator+
     const PengRobinsonGas<Specie>& pg2
 )
 {
+    using namespace constant::thermodynamic;
+
     Specie sp
     (
         static_cast<const Specie&>(pg1)

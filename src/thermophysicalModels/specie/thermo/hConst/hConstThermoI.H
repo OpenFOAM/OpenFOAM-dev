@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,9 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "hConstThermo.H"
+#include "thermodynamicConstants.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -128,6 +131,8 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::s
     const scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     return Cp_*log(T/Tstd) + EquationOfState::sp(p, T);
 }
 
@@ -138,6 +143,8 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::gStd
     const scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     return Cp_*(T - Tref_) + hsRef_ + hf() - Cp_*T*log(T/Tstd);
 }
 

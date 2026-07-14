@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "linear.H"
+#include "thermodynamicConstants.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -104,6 +105,8 @@ inline Foam::scalar Foam::linear<Specie>::Cv(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::linear<Specie>::sp(scalar p, scalar T) const
 {
+    using namespace constant::thermodynamic;
+
     return -log((rho0_ + psi_*p)/(rho0_ + psi_*pStd))/(T*psi_);
 }
 

@@ -31,13 +31,14 @@ template<class Thermo, int PolySize>
 Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
 (
     const word& name,
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& subDict
 )
 :
     Thermo(name, dict),
     muCoeffs_
     (
-        dict.subDict("transport").lookup<FixedPolynomial<scalar, PolySize>>
+        subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
             "muCoeffs<" + Foam::name(PolySize) + '>',
             Function1s::unitSets({dimTemperature, dimDynamicViscosity})
@@ -45,7 +46,7 @@ Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
     ),
     kappaCoeffs_
     (
-        dict.subDict("transport").lookup<FixedPolynomial<scalar, PolySize>>
+        subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
             "kappaCoeffs<" + Foam::name(PolySize) + '>',
             Function1s::unitSets({dimTemperature, dimThermalConductivity})
@@ -54,30 +55,34 @@ Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
 {}
 
 
+template<class Thermo, int PolySize>
+Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    polynomialTransport(name, dict, dict.subDict("transport"))
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo, int PolySize>
 void Foam::polynomialTransport<Thermo, PolySize>::write(Ostream& os) const
 {
-    os  << this->name() << endl;
-    os  << token::BEGIN_BLOCK << incrIndent << nl;
-
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add
+    writeEntry
     (
-        word("muCoeffs<" + Foam::name(PolySize) + '>'),
-        muCoeffs_
+        os,
+        "transport",
+        dictionary::entries
+        (
+            word("muCoeffs<" + Foam::name(PolySize) + '>'), muCoeffs_,
+            word("kappaCoeffs<" + Foam::name(PolySize) + '>'), kappaCoeffs_
+        )
     );
-    dict.add
-    (
-        word("kappaCoeffs<" + Foam::name(PolySize) + '>'),
-        kappaCoeffs_
-    );
-    os  << indent << dict.dictName() << dict;
-
-    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 

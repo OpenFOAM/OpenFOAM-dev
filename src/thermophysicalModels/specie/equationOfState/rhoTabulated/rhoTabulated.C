@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rhoTabulated.H"
-#include "IOstreams.H"
+#include "delimitDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -52,13 +52,8 @@ void Foam::rhoTabulated<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
 
-    dictionary dict("equationOfState");
-
-    dictionary rhoDict("rho");
-    rhoDict.add("values", rho_.values());
-    dict.add("rho", rhoDict);
-
-    os  << indent << dict.dictName() << dict;
+    const delimitDictionary dlmt(os, "equationOfState"), dlmtRho(os, "rho");
+    rho_.write(os, {dimPressure, dimTemperature, dimDensity});
 }
 
 

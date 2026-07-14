@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rPolynomial.H"
-#include "IOstreams.H"
+#include "dictionary.H"
+#include "units.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -36,7 +37,7 @@ Foam::rPolynomial<Specie>::rPolynomial
 )
 :
     Specie(name, dict),
-    C_(dict.subDict("equationOfState").lookup("C"))
+    C_(dict.subDict("equationOfState").lookup<coeffList>("C", units::none))
 {}
 
 
@@ -47,10 +48,7 @@ void Foam::rPolynomial<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
 
-    dictionary dict("equationOfState");
-    dict.add("C", C_);
-
-    os  << indent << dict.dictName() << dict;
+    writeEntry(os, "equationOfState", dictionary::entries("C", C_));
 }
 
 

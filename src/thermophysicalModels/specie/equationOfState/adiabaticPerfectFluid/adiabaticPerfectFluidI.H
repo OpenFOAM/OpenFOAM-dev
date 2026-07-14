@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "adiabaticPerfectFluid.H"
+#include "thermodynamicConstants.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -137,9 +138,12 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::sp
     scalar T
 ) const
 {
+    using namespace constant::thermodynamic;
+
     scalar n = 1 - 1.0/gamma_;
     return
-       -pow(p0_ + B_, 1.0/gamma_)*(pow((p + B_), n) - pow((pStd + B_), n))
+       -pow(p0_ + B_, 1.0/gamma_)
+       *(pow((p + B_), n) - pow((pStd + B_), n))
        /(rho0_*T*n);
 }
 

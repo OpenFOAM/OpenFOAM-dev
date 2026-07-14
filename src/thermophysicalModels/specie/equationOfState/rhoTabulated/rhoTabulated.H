@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,20 +47,13 @@ Usage
     {
         rho
         {
-            pLow    1e4;
-            pHigh   5e5;
-
-            Tlow    200;
-            Thigh   1500;
-
-            values
-            <m> <n>
+            low     (1e4 200);
+            high    (5e5 1500);
+            values  3 4
             (
-                (..........)
-                .
-                .
-                .
-                (..........)
+                (1.21 1.12 1.05 1.03)
+                (1.43 1.31 1.22 1.16)
+                (1.56 1.45 1.38 1.28)
             );
         }
     }

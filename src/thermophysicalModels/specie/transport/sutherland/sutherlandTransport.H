@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
 Usage
     \table
         Property     | Description
-        As           | Sutherland constant kg/(ms K^1/2)
+        As           | Sutherland constant [kg/(m s K^1/2)]
         Ts           | Sutherland temperature [K]
     \endtable
 
@@ -61,6 +61,8 @@ SourceFiles
 
 #ifndef sutherlandTransport_H
 #define sutherlandTransport_H
+
+#include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -108,6 +110,17 @@ class sutherlandTransport
         scalar As_, Ts_;
 
 
+    // Private Constructors
+
+        //- Construct from base thermo and parent dictionary and dictionary
+        sutherlandTransport
+        (
+            const Thermo& thermo,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
+
+
     // Private Member Functions
 
         //- Calculate the Sutherland coefficients
@@ -119,9 +132,6 @@ class sutherlandTransport
             const scalar mu2,
             const scalar T2
         );
-
-        //- Read coefficient from dictionary
-        scalar readCoeff(const word& coeffName, const dictionary& dict);
 
 
 public:
@@ -149,11 +159,11 @@ public:
         //- Construct as named copy
         inline sutherlandTransport(const word&, const sutherlandTransport&);
 
+        //- Construct from base thermo and dictionary
+        sutherlandTransport(const Thermo& thermo, const dictionary& dict);
+
         //- Construct from name and dictionary
         sutherlandTransport(const word& name, const dictionary& dict);
-
-        //- Construct from base thermo and dictionary
-        sutherlandTransport(const Thermo& t,const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<sutherlandTransport> clone() const;

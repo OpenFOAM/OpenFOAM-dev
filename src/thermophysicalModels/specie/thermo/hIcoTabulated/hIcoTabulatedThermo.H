@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,8 +41,8 @@ Usage
     \verbatim
     thermodynamics
     {
-        hf              0;
-        sf              0;
+        hf      0;
+        sf      0;
         Cp
         {
             values
@@ -112,6 +112,17 @@ class hIcoTabulatedThermo
 
         //- Specific heat at constant pressure table [J/kg/K]
         integratedNonUniformTable Cp_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        hIcoTabulatedThermo
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:

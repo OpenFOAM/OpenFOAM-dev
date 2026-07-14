@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,22 +24,26 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WLFTransport.H"
-#include "IOstreams.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Thermo>
-Foam::scalar Foam::WLFTransport<Thermo>::readCoeff
-(
-    const word& coeffName,
-    const dictionary& dict
-)
-{
-    return dict.subDict("transport").lookup<scalar>(coeffName);
-}
-
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Thermo>
+Foam::WLFTransport<Thermo>::WLFTransport
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    Thermo(name, dict),
+    mu0_(subDict.lookup<scalar>("mu0", dimDynamicViscosity)),
+    Tr_(subDict.lookup<scalar>("Tr", dimTemperature)),
+    C1_(subDict.lookup<scalar>("C1", dimless)),
+    C2_(subDict.lookup<scalar>("C2", dimTemperature)),
+    rPr_(1.0/subDict.lookup<scalar>("Pr", dimless))
+{}
+
 
 template<class Thermo>
 Foam::WLFTransport<Thermo>::WLFTransport
@@ -48,12 +52,7 @@ Foam::WLFTransport<Thermo>::WLFTransport
     const dictionary& dict
 )
 :
-    Thermo(name, dict),
-    mu0_(readCoeff("mu0", dict)),
-    Tr_(readCoeff("Tr", dict)),
-    C1_(readCoeff("C1", dict)),
-    C2_(readCoeff("C2", dict)),
-    rPr_(1.0/dict.subDict("transport").lookup<scalar>("Pr"))
+    WLFTransport(name, dict, dict.subDict("transport"))
 {}
 
 
@@ -62,20 +61,21 @@ Foam::WLFTransport<Thermo>::WLFTransport
 template<class Thermo>
 void Foam::WLFTransport<Thermo>::write(Ostream& os) const
 {
-    os  << this->specie::name() << endl
-        << token::BEGIN_BLOCK  << incrIndent << nl;
-
     Thermo::write(os);
 
-    dictionary dict("transport");
-    dict.add("mu0", mu0_);
-    dict.add("Tr", Tr_);
-    dict.add("C1", C1_);
-    dict.add("C2", C2_);
-    dict.add("Pr", 1.0/rPr_);
-
-    os  << indent << dict.dictName() << dict
-        << decrIndent << token::END_BLOCK << nl;
+    writeEntry
+    (
+        os,
+        "transport",
+        dictionary::entries
+        (
+            "mu0", mu0_,
+            "Tr", Tr_,
+            "C1", C1_,
+            "C2", C2_,
+            "Pr", 1.0/rPr_
+        )
+    );
 }
 
 

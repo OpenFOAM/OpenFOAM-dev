@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,32 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ePowerThermo.H"
-#include "IOstreams.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class EquationOfState>
+Foam::ePowerThermo<EquationOfState>::ePowerThermo
+(
+    const word& name,
+    const dictionary& dict,
+    const dictionary& subDict
+)
+:
+    EquationOfState(name, dict),
+    c0_(subDict.lookup<scalar>("c0", dimSpecificHeatCapacity)),
+    n0_(subDict.lookup<scalar>("n0", dimless)),
+    Tref_(subDict.lookup<scalar>("Tref", dimTemperature)),
+    hf_
+    (
+        subDict.lookupBackwardsCompatible<scalar>
+        (
+            {"hf", "Hf"},
+            dimEnergy/dimMass
+        )
+    )
+{}
+
 
 template<class EquationOfState>
 Foam::ePowerThermo<EquationOfState>::ePowerThermo
@@ -35,17 +58,27 @@ Foam::ePowerThermo<EquationOfState>::ePowerThermo
     const dictionary& dict
 )
 :
-    EquationOfState(name, dict),
-    c0_(dict.subDict("thermodynamics").lookup<scalar>("c0")),
-    n0_(dict.subDict("thermodynamics").lookup<scalar>("n0")),
-    Tref_(dict.subDict("thermodynamics").lookup<scalar>("Tref")),
-    hf_
-    (
-        dict
-       .subDict("thermodynamics")
-       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
-    )
+    ePowerThermo(name, dict, dict.subDict("thermodynamics"))
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class EquationOfState>
+void Foam::ePowerThermo<EquationOfState>::write
+(
+    Ostream& os
+) const
+{
+    EquationOfState::write(os);
+
+    writeEntry
+    (
+        os,
+        "thermodynamics",
+        dictionary::entries("c0", c0_, "n0", n0_, "Tref", Tref_, "hf", hf_)
+    );
+}
 
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //

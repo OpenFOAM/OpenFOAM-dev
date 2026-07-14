@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Boussinesq.H"
-#include "IOstreams.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -32,13 +32,21 @@ template<class Specie>
 Foam::Boussinesq<Specie>::Boussinesq
 (
     const word& name,
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& subDict
 )
 :
     Specie(name, dict),
-    rho0_(dict.subDict("equationOfState").lookup<scalar>("rho0")),
-    T0_(dict.subDict("equationOfState").lookup<scalar>("T0")),
-    beta_(dict.subDict("equationOfState").lookup<scalar>("beta"))
+    rho0_(subDict.lookup<scalar>("rho0", dimDensity)),
+    T0_(subDict.lookup<scalar>("T0", dimTemperature)),
+    beta_(subDict.lookup<scalar>("beta", inv(dimTemperature)))
+{}
+
+
+template<class Specie>
+Foam::Boussinesq<Specie>::Boussinesq(const word& name, const dictionary& dict)
+:
+    Boussinesq(name, dict, dict.subDict("equationOfState"))
 {}
 
 
@@ -48,12 +56,13 @@ template<class Specie>
 void Foam::Boussinesq<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
-    dictionary dict("equationOfState");
-    dict.add("rho0", rho0_);
-    dict.add("T0", T0_);
-    dict.add("beta", beta_);
 
-    os  << indent << dict.dictName() << dict;
+    writeEntry
+    (
+        os,
+        "equationOfState",
+        dictionary::entries("rho0", rho0_, "T0", T0_, "beta", beta_)
+    );
 }
 
 

@@ -37,9 +37,7 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
     Thermo(name, dict),
     kappaCoeffs_
     (
-        dict
-       .subDict("transport")
-       .lookup<FixedPolynomial<scalar, PolySize>>
+        dict.subDict("transport").lookup<FixedPolynomial<scalar, PolySize>>
         (
             "kappaCoeffs<" + Foam::name(PolySize) + '>',
             Function1s::unitSets({dimTemperature, dimThermalConductivity})
@@ -55,15 +53,15 @@ void Foam::polynomialSolidTransport<Thermo, PolySize>::write(Ostream& os) const
 {
     Thermo::write(os);
 
-    dictionary dict("transport");
-
-    dict.add
+    writeEntry
     (
-        word("kappaCoeffs<" + Foam::name(PolySize) + '>'),
-        kappaCoeffs_
+        os,
+        "transport",
+        dictionary::entries
+        (
+            word("kappaCoeffs<" + Foam::name(PolySize) + '>'), kappaCoeffs_
+        )
     );
-
-    os  << indent << dict.dictName() << dict;
 }
 
 

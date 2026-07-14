@@ -37,9 +37,10 @@ Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
     Specie(name, dict),
     rhoCoeffs_
     (
-        dict
-       .subDict("equationOfState")
-       .lookup<FixedPolynomial<scalar, PolySize>>
+        dict.subDict("equationOfState").lookup
+        <
+            FixedPolynomial<scalar, PolySize>
+        >
         (
             "rhoCoeffs<" + Foam::name(PolySize) + '>',
             Function1s::unitSets({dimTemperature, dimDensity})
@@ -55,15 +56,15 @@ void Foam::icoPolynomial<Specie, PolySize>::write(Ostream& os) const
 {
     Specie::write(os);
 
-    dictionary dict("equationOfState");
-
-    dict.add
+    writeEntry
     (
-        word("rhoCoeffs<" + Foam::name(PolySize) + '>'),
-        rhoCoeffs_
+        os,
+        "equationOfState",
+        dictionary::entries
+        (
+            word("rhoCoeffs<" + Foam::name(PolySize) + '>'), rhoCoeffs_
+        )
     );
-
-    os  << indent << dict.dictName() << dict;
 }
 
 

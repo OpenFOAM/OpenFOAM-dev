@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,19 +67,13 @@ inline Foam::janafThermo<EquationOfState>::janafThermo
 {
     if (convertCoeffs)
     {
-        for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
-        {
-            highCpCoeffs_[coefLabel] = highCpCoeffs[coefLabel]*this->R();
-            lowCpCoeffs_[coefLabel] = lowCpCoeffs[coefLabel]*this->R();
-        }
+        highCpCoeffs_ = highCpCoeffs*this->R();
+        lowCpCoeffs_ = lowCpCoeffs*this->R();
     }
     else
     {
-        for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
-        {
-            highCpCoeffs_[coefLabel] = highCpCoeffs[coefLabel];
-            lowCpCoeffs_[coefLabel] = lowCpCoeffs[coefLabel];
-        }
+        highCpCoeffs_ = highCpCoeffs;
+        lowCpCoeffs_ = lowCpCoeffs;
     }
 }
 
@@ -94,14 +88,10 @@ inline Foam::janafThermo<EquationOfState>::janafThermo
     EquationOfState(name, jt),
     Tlow_(jt.Tlow_),
     Thigh_(jt.Thigh_),
-    Tcommon_(jt.Tcommon_)
-{
-    for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
-    {
-        highCpCoeffs_[coefLabel] = jt.highCpCoeffs_[coefLabel];
-        lowCpCoeffs_[coefLabel] = jt.lowCpCoeffs_[coefLabel];
-    }
-}
+    Tcommon_(jt.Tcommon_),
+    highCpCoeffs_(jt.highCpCoeffs_),
+    lowCpCoeffs_(jt.lowCpCoeffs_)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -302,21 +292,8 @@ inline void Foam::janafThermo<EquationOfState>::operator+=
                 << exit(FatalError);
         }
 
-        for
-        (
-            label coefLabel=0;
-            coefLabel<janafThermo<EquationOfState>::nCoeffs_;
-            coefLabel++
-        )
-        {
-            highCpCoeffs_[coefLabel] =
-                Y1*highCpCoeffs_[coefLabel]
-              + Y2*jt.highCpCoeffs_[coefLabel];
-
-            lowCpCoeffs_[coefLabel] =
-                Y1*lowCpCoeffs_[coefLabel]
-              + Y2*jt.lowCpCoeffs_[coefLabel];
-        }
+        highCpCoeffs_ = Y1*highCpCoeffs_ + Y2*jt.highCpCoeffs_;
+        lowCpCoeffs_ = Y1*lowCpCoeffs_ + Y2*jt.lowCpCoeffs_;
     }
 }
 
@@ -350,24 +327,10 @@ inline Foam::janafThermo<EquationOfState> Foam::operator+
         const scalar Y1 = jt1.Y()/eofs.Y();
         const scalar Y2 = jt2.Y()/eofs.Y();
 
-        typename janafThermo<EquationOfState>::coeffArray highCpCoeffs;
-        typename janafThermo<EquationOfState>::coeffArray lowCpCoeffs;
-
-        for
-        (
-            label coefLabel=0;
-            coefLabel<janafThermo<EquationOfState>::nCoeffs_;
-            coefLabel++
-        )
-        {
-            highCpCoeffs[coefLabel] =
-                Y1*jt1.highCpCoeffs_[coefLabel]
-              + Y2*jt2.highCpCoeffs_[coefLabel];
-
-            lowCpCoeffs[coefLabel] =
-                Y1*jt1.lowCpCoeffs_[coefLabel]
-              + Y2*jt2.lowCpCoeffs_[coefLabel];
-        }
+        const typename janafThermo<EquationOfState>::coeffArray highCpCoeffs =
+            Y1*jt1.highCpCoeffs_ + Y2*jt2.highCpCoeffs_;
+        const typename janafThermo<EquationOfState>::coeffArray lowCpCoeffs =
+            Y1*jt1.lowCpCoeffs_ + Y2*jt2.lowCpCoeffs_;
 
         if
         (
@@ -431,24 +394,10 @@ inline Foam::janafThermo<EquationOfState> Foam::operator==
     const scalar Y1 = jt2.Y()/eofs.Y();
     const scalar Y2 = jt1.Y()/eofs.Y();
 
-    typename janafThermo<EquationOfState>::coeffArray highCpCoeffs;
-    typename janafThermo<EquationOfState>::coeffArray lowCpCoeffs;
-
-    for
-    (
-        label coefLabel=0;
-        coefLabel<janafThermo<EquationOfState>::nCoeffs_;
-        coefLabel++
-    )
-    {
-        highCpCoeffs[coefLabel] =
-            Y1*jt2.highCpCoeffs_[coefLabel]
-          - Y2*jt1.highCpCoeffs_[coefLabel];
-
-        lowCpCoeffs[coefLabel] =
-            Y1*jt2.lowCpCoeffs_[coefLabel]
-          - Y2*jt1.lowCpCoeffs_[coefLabel];
-    }
+    const typename janafThermo<EquationOfState>::coeffArray highCpCoeffs =
+        Y1*jt2.highCpCoeffs_ - Y2*jt1.highCpCoeffs_;
+    const typename janafThermo<EquationOfState>::coeffArray lowCpCoeffs =
+        Y1*jt2.lowCpCoeffs_ - Y2*jt1.lowCpCoeffs_;
 
     if
     (

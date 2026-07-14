@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "janafThermo.H"
-#include "IOstreams.H"
+#include "units.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -60,25 +60,33 @@ template<class EquationOfState>
 Foam::janafThermo<EquationOfState>::janafThermo
 (
     const word& name,
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& subDict
 )
 :
     EquationOfState(name, dict),
-    Tlow_(dict.subDict("thermodynamics").lookup<scalar>("Tlow")),
-    Thigh_(dict.subDict("thermodynamics").lookup<scalar>("Thigh")),
-    Tcommon_(dict.subDict("thermodynamics").lookup<scalar>("Tcommon")),
-    highCpCoeffs_(dict.subDict("thermodynamics").lookup("highCpCoeffs")),
-    lowCpCoeffs_(dict.subDict("thermodynamics").lookup("lowCpCoeffs"))
+    Tlow_(subDict.lookup<scalar>("Tlow", dimTemperature)),
+    Thigh_(subDict.lookup<scalar>("Thigh", dimTemperature)),
+    Tcommon_(subDict.lookup<scalar>("Tcommon", dimTemperature)),
+    highCpCoeffs_(subDict.lookup<coeffArray>("highCpCoeffs", units::none)),
+    lowCpCoeffs_(subDict.lookup<coeffArray>("lowCpCoeffs", units::none))
 {
-    // Convert coefficients to mass-basis
-    for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
-    {
-        highCpCoeffs_[coefLabel] *= this->R();
-        lowCpCoeffs_[coefLabel] *= this->R();
-    }
+    highCpCoeffs_ *= this->R();
+    lowCpCoeffs_ *= this->R();
 
     checkInputData();
 }
+
+
+template<class EquationOfState>
+Foam::janafThermo<EquationOfState>::janafThermo
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    janafThermo(name, dict, dict.subDict("thermodynamics"))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -88,22 +96,19 @@ void Foam::janafThermo<EquationOfState>::write(Ostream& os) const
 {
     EquationOfState::write(os);
 
-    // Convert coefficients back to dimensionless form
-    coeffArray highCpCoeffs;
-    coeffArray lowCpCoeffs;
-    for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
-    {
-        highCpCoeffs[coefLabel] = highCpCoeffs_[coefLabel]/this->R();
-        lowCpCoeffs[coefLabel] = lowCpCoeffs_[coefLabel]/this->R();
-    }
-
-    dictionary dict("thermodynamics");
-    dict.add("Tlow", Tlow_);
-    dict.add("Thigh", Thigh_);
-    dict.add("Tcommon", Tcommon_);
-    dict.add("highCpCoeffs", highCpCoeffs);
-    dict.add("lowCpCoeffs", lowCpCoeffs);
-    os  << indent << dict.dictName() << dict;
+    writeEntry
+    (
+        os,
+        "thermodynamics",
+        dictionary::entries
+        (
+            "Tlow", Tlow_,
+            "Thigh", Thigh_,
+            "Tcommon", Tcommon_,
+            "highCpCoeffs", highCpCoeffs_/this->R(),
+            "lowCpCoeffs", lowCpCoeffs_/this->R()
+        )
+    );
 }
 
 

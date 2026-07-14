@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,8 @@ SourceFiles
 
 #ifndef hConstThermo_H
 #define hConstThermo_H
+
+#include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -120,6 +122,17 @@ class hConstThermo
 
         //- Reference sensible enthalpy around which to linearise [J/kg]
         scalar hsRef_;
+
+
+    // Private Constructors
+
+        //- Construct from name and parent dictionary and dictionary
+        hConstThermo
+        (
+            const word& name,
+            const dictionary& dict,
+            const dictionary& subDict
+        );
 
 
 public:
