@@ -63,7 +63,7 @@ Foam::SuModel::SuModel
             IOobject::NO_WRITE
         ),
         thermo_.mesh(),
-        dimensionedScalar(dimVelocity, 0)
+        dimensionedScalar(dimensions::velocity, 0)
     )
 {}
 

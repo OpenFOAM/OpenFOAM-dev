@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,13 @@ populationBalanceSetSizeDistribution
     phaseName_(dict.lookupOrDefault("phase", word::null)),
     distribution_
     (
-        distribution::New(dimLength, dict.subDict("distribution"), 3, -1)
+        distribution::New
+        (
+            dimensions::length,
+            dict.subDict("distribution"),
+            3,
+            -1
+        )
     )
 {
     const bool havePopBal = popBalName_ != word::null;

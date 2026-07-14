@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::XiEqModels::instability::instability
 :
     XiEqModel(thermo, turbulence, Su),
     XiEqIn_("XiEqIn", dimless, dict),
-    lambdaIn_("lambdaIn", dimLength, dict),
+    lambdaIn_("lambdaIn", dimensions::length, dict),
     XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su))
 {}
 

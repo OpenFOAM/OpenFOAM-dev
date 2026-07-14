@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -342,7 +342,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::k() const
     (
         IOobject::groupName("k", this->name()),
         this->mesh(),
-        dimensionedScalar(sqr(dimVelocity), 0)
+        dimensionedScalar(sqr(dimensions::velocity), 0)
     );
 }
 

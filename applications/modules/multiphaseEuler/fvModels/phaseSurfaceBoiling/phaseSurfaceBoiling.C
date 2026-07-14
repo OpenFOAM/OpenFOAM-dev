@@ -103,8 +103,16 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
 {
     using constant::mathematical::pi;
 
-    static const dimensionedScalar rooVSmallT(dimTemperature, rootVSmall);
-    static const dimensionedScalar rootVSmallF(dimless/dimTime, rootVSmall);
+    static const dimensionedScalar rooVSmallT
+    (
+        dimensions::temperature,
+        rootVSmall
+    );
+    static const dimensionedScalar rootVSmallF
+    (
+        dimensions::rate,
+        rootVSmall
+    );
     static const dimensionedScalar rootVSmallH
     (
         heatTransferModel::dimK,
@@ -294,7 +302,7 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimLength, vGreat)
+        dimensionedScalar(dimensions::length, vGreat)
     ),
     fDeparture_
     (
@@ -307,7 +315,7 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(inv(dimTime), scalar(0))
+        dimensionedScalar(inv(dimensions::time), scalar(0))
     ),
     nucleationSiteDensity_
     (
@@ -320,7 +328,7 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(inv(dimArea), scalar(0))
+        dimensionedScalar(inv(dimensions::area), scalar(0))
     ),
     qQuenching_
     (
@@ -333,7 +341,7 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimEnergy/dimVolume/dimTime, scalar(0))
+        dimensionedScalar(dimensions::powerDensity, scalar(0))
     ),
     qEvaporative_
     (
@@ -346,7 +354,7 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimEnergy/dimVolume/dimTime, scalar(0))
+        dimensionedScalar(dimensions::powerDensity, scalar(0))
     ),
     mDot_
     (
@@ -359,7 +367,7 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, scalar(0))
+        dimensionedScalar(dimensions::density/dimensions::time, scalar(0))
     )
 {
     readCoeffs(coeffs(dict));

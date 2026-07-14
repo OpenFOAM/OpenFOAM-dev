@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ void Foam::solvers::shockFluid::fluxPredictor()
         interpolate(c, neg(), T.name())*mesh.magSf()
     );
 
-    const dimensionedScalar v_zero("v_zero", dimVolume/dimTime, 0);
+    const dimensionedScalar v_zero("v_zero", dimensions::volumetricFlux, 0);
 
     const surfaceScalarField ap
     (

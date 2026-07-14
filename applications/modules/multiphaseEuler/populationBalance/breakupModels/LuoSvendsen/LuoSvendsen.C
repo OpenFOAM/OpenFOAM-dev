@@ -70,7 +70,7 @@ Foam::populationBalance::breakupModels::LuoSvendsen::LuoSvendsen
         dimensionedScalar
         (
             "kolmogorovLengthScale",
-            dimLength,
+            dimensions::length,
             Zero
         )
     )

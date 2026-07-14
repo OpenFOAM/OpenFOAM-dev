@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,11 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
         const volScalarField& alpha = phase;
         volScalarField& rho = phase.rho();
 
-        pEqnComps.set(phasei, new fvScalarMatrix(p_rgh, dimVolume/dimTime));
+        pEqnComps.set
+        (
+            phasei,
+            new fvScalarMatrix(p_rgh, dimensions::volume/dimensions::time)
+        );
         fvScalarMatrix& pEqnComp = pEqnComps[phasei];
 
         // Density variation

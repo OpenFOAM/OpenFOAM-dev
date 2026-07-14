@@ -213,7 +213,7 @@ Foam::fv::phaseSurfaceCondensation::phaseSurfaceCondensation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimEnergy/dimVolume/dimTime, scalar(0))
+        dimensionedScalar(dimensions::powerDensity, scalar(0))
     ),
     mDot_
     (
@@ -226,7 +226,7 @@ Foam::fv::phaseSurfaceCondensation::phaseSurfaceCondensation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, scalar(0))
+        dimensionedScalar(dimensions::density/dimensions::time, scalar(0))
     ),
     mDotDy_
     (
@@ -239,7 +239,7 @@ Foam::fv::phaseSurfaceCondensation::phaseSurfaceCondensation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, scalar(0))
+        dimensionedScalar(dimensions::density/dimensions::time, scalar(0))
     )
 {
     readCoeffs(coeffs(dict));

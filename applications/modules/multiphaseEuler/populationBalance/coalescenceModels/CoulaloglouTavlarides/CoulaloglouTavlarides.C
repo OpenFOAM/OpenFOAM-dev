@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ CoulaloglouTavlarides
 :
     coalescenceModel(popBal, dict),
     C1_("C1", dimless, dict, 2.8),
-    C2_("C2", inv(dimArea), dict, 1.83e9)
+    C2_("C2", inv(dimensions::area), dict, 1.83e9)
 {}
 
 

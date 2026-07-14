@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ Foam::fv::reactionDrivenPhaseChange::mDot(const label mDoti) const
         (
             name() + ":mDot_" + species()[mDoti],
             mesh(),
-            dimensionedScalar(dimDensity/dimTime, 0)
+            dimensionedScalar(dimensions::density/dimensions::time, 0)
         );
 
     tResult.ref() += alpha1*phase1_.R(specieis.first());

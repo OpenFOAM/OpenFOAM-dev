@@ -52,8 +52,20 @@ wallCondensationPhaseChangeRateFvPatchScalarField
 :
     calculatedFvPatchScalarField(p, iF, dict),
     condensing_("condensing", dimless, dict, p.size()),
-    alphatLiquid_("alphatLiquid", dimMass/dimTime/dimLength, dict, p.size()),
-    alphatVapour_("alphatVapour", dimMass/dimTime/dimLength, dict, p.size())
+    alphatLiquid_
+    (
+        "alphatLiquid",
+        dimensions::dynamicDiffusivity,
+        dict,
+        p.size()
+    ),
+    alphatVapour_
+    (
+        "alphatVapour",
+        dimensions::dynamicDiffusivity,
+        dict,
+        p.size()
+    )
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::populationBalance::breakupModels::Kusters::Kusters
 :
     daughterSizeDistribution(popBal, dict),
     B_("B", dimensionSet(0, 3, -3, 0, 0), dict),
-    dP_("dP", dimLength, dict),
+    dP_("dP", dimensions::length, dict),
     kc_("kc", dimless, dict, 1),
     Df_("Df", dimless, dict)
 {}

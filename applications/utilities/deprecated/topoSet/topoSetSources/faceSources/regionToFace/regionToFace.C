@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ Foam::regionToFace::regionToFace
 :
     topoSetSource(mesh),
     setName_(dict.lookup("set")),
-    nearPoint_(dict.lookup<point>("nearPoint", dimLength))
+    nearPoint_(dict.lookup<point>("nearPoint", dimensions::length))
 {}
 
 

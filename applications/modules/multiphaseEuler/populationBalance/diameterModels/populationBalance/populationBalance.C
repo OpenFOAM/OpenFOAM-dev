@@ -72,7 +72,7 @@ Foam::diameterModels::populationBalance::populationBalance
             IOobject::AUTO_WRITE
         ),
         phase.mesh(),
-        dimensionedScalar("d", dimLength, NaN)
+        dimensionedScalar("d", dimensions::length, NaN)
     )
 {}
 
@@ -145,7 +145,7 @@ Foam::diameterModels::populationBalance::Av() const
         (
             "sumFiAbyV",
             phase().mesh(),
-            dimensionedScalar(inv(dimLength), Zero)
+            dimensionedScalar(inv(dimensions::length), Zero)
         )
     );
     volScalarField& sumFiAbyV = tsumFiAbyV.ref();
@@ -208,7 +208,7 @@ void Foam::diameterModels::populationBalance::correct()
         (
             "sumFiAbyV",
             phase().mesh(),
-            dimensionedScalar(inv(dimLength), Zero)
+            dimensionedScalar(inv(dimensions::length), Zero)
         )
     );
     volScalarField& sumFi = tsumFi.ref();

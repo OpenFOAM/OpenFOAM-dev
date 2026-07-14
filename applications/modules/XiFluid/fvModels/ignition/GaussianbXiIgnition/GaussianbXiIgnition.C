@@ -88,7 +88,7 @@ void Foam::fv::GaussianbXiIgnition::readCoeffs(const dictionary& dict)
         (
             "rate",
             mesh().time().userUnits(),
-            dimRate,
+            dimensions::rate,
             dict
         ).ptr()
     );
@@ -110,8 +110,8 @@ Foam::fv::GaussianbXiIgnition::GaussianbXiIgnition
     bXiTimedIgnition(name, modelType, mesh, dict),
     zone_(mesh, coeffs(dict)),
     kernelShape_(kernelShape::New(mesh, coeffs(dict))),
-    position_("position", dimLength, Zero),
-    diameter_("diameter", dimLength, 0)
+    position_("position", dimensions::length, Zero),
+    diameter_("diameter", dimensions::length, 0)
 {
     readCoeffs(coeffs(dict));
 }

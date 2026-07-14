@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::incompressibleMultiphaseVoFMixture::incompressibleMultiphaseVoFMixture
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("rho", dimDensity, 0)
+        dimensionedScalar("rho", dimensions::density, 0)
     ),
 
     nu_
@@ -67,7 +67,7 @@ Foam::incompressibleMultiphaseVoFMixture::incompressibleMultiphaseVoFMixture
             mesh
         ),
         mesh,
-        dimensionedScalar(dimKinematicViscosity, 0),
+        dimensionedScalar(dimensions::kinematicViscosity, 0),
         calculatedFvPatchScalarField::typeName
     )
 {

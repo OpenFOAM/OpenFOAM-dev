@@ -53,19 +53,21 @@ wallBoilingPhaseChangeRateFvPatchScalarField::propertyPtrs_
     &wallBoilingPhaseChangeRateFvPatchScalarField::qEvaporative_
 });
 
-const dimensionSet dimInvArea(inv(dimArea));
-const dimensionSet dimHeatFlux(dimEnergy*inv(dimTime*dimArea));
+namespace dimensions
+{
+    const dimensionSet invArea(inv(dimensions::area));
+}
 
 const List<const dimensionSet*>
 wallBoilingPhaseChangeRateFvPatchScalarField::propertyDimensions_
-({
-    &dimless,
-    &dimLength,
-    &dimRate,
-    &dimInvArea,
-    &dimHeatFlux,
-    &dimHeatFlux
-});
+{
+    &dimensions::dimless,
+    &dimensions::length,
+    &dimensions::rate,
+    &dimensions::invArea,
+    &dimensions::heatFlux,
+    &dimensions::heatFlux
+};
 
 }
 
@@ -103,13 +105,31 @@ wallBoilingPhaseChangeRateFvPatchScalarField
     calculatedFvPatchScalarField(p, iF, dict),
     boiling_("boiling", dimless, dict, p.size()),
     wetFraction_("wetFraction", dimless, dict, p.size()),
-    dDeparture_("dDeparture", dimLength, dict, p.size()),
-    fDeparture_("fDeparture", dimRate, dict, p.size()),
-    nucleationSiteDensity_("nucleationSiteDensity", dimInvArea, dict, p.size()),
-    qQuenching_("qQuenching", dimHeatFlux, dict, p.size()),
-    qEvaporative_("qEvaporative", dimHeatFlux, dict, p.size()),
-    alphatLiquid_("alphatLiquid", dimMass/dimTime/dimLength, dict, p.size()),
-    alphatVapour_("alphatVapour", dimMass/dimTime/dimLength, dict, p.size())
+    dDeparture_("dDeparture", dimensions::length, dict, p.size()),
+    fDeparture_("fDeparture", dimensions::rate, dict, p.size()),
+    nucleationSiteDensity_
+    (
+        "nucleationSiteDensity",
+        dimensions::invArea,
+        dict,
+        p.size()
+    ),
+    qQuenching_("qQuenching", dimensions::heatFlux, dict, p.size()),
+    qEvaporative_("qEvaporative", dimensions::heatFlux, dict, p.size()),
+    alphatLiquid_
+    (
+        "alphatLiquid",
+        dimensions::dynamicDiffusivity,
+        dict,
+        p.size()
+    ),
+    alphatVapour_
+    (
+        "alphatVapour",
+        dimensions::dynamicDiffusivity,
+        dict,
+        p.size()
+    )
 {}
 
 

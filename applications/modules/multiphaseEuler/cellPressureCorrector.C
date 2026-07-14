@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,7 +279,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 mesh
             ),
             mesh,
-            dimensionedScalar(dimVolumetricFlux, 0)
+            dimensionedScalar(dimensions::volumetricFlux, 0)
         );
 
         forAll(movingPhases, movingPhasei)
@@ -302,7 +302,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 mesh
             ),
             mesh,
-            dimensionedScalar(dimTime/dimDensity, 0)
+            dimensionedScalar(dimensions::time/dimensions::density, 0)
         );
 
         forAll(movingPhases, movingPhasei)

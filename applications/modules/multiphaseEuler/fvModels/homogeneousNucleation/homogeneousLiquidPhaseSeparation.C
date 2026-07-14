@@ -58,7 +58,7 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs
         Function1<scalar>::New
         (
             "solubility",
-            dimTemperature,
+            dimensions::temperature,
             units::fraction,
             dict
         ).ptr()

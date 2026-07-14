@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::wallLubricationModels::TomiyamaWallLubrication::TomiyamaWallLubrication
 )
 :
     dispersedWallLubricationModel(dict, interface),
-    D_("Cwd", dimLength, dict)
+    D_("Cwd", dimensions::length, dict)
 {}
 
 

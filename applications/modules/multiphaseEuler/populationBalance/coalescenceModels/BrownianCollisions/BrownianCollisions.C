@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ BrownianCollisions
     A1_(dict.lookupOrDefault<scalar>("A1", 2.514)),
     A2_(dict.lookupOrDefault<scalar>("A2", 0.8)),
     A3_(dict.lookupOrDefault<scalar>("A3", 0.55)),
-    sigma_("sigma", dimLength, dict),
+    sigma_("sigma", dimensions::length, dict),
     lambda_
     (
         IOobject
@@ -73,7 +73,7 @@ BrownianCollisions
         dimensionedScalar
         (
             "lambda",
-            dimLength,
+            dimensions::length,
             Zero
         )
     )

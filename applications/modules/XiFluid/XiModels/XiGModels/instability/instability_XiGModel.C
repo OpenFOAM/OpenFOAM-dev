@@ -61,7 +61,7 @@ Foam::XiGModels::instability::instability
 )
 :
     XiGModel(thermo, thermoTransport, Su),
-    Gin_("Gin", dimless/dimTime, dict),
+    Gin_("Gin", dimless/dimensions::time, dict),
     XiGModel_(XiGModel::New(dict, thermo, thermoTransport, Su))
 {}
 

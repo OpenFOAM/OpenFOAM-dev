@@ -116,7 +116,7 @@ Foam::functionObjects::adjustTimeStepToNucleation::maxDeltaT() const
             (
                 typedName("tau"),
                 mesh(),
-                dimensionedScalar(dimTime, vGreat)
+                dimensionedScalar(dimensions::time, vGreat)
             );
 
         forAll(fvModels, fvModeli)

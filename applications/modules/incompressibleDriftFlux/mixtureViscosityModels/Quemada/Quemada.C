@@ -57,7 +57,7 @@ Foam::mixtureViscosityModels::Quemada::Quemada
     muMax_
     (
         "muMax",
-        dimDynamicViscosity,
+        dimensions::dynamicViscosity,
         optionalTypeDict(typeName).lookup("muMax")
     )
 {}

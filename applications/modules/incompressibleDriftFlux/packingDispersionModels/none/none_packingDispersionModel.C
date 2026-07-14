@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ Foam::packingDispersionModels::none::Dd() const
     (
         typedName("Dd"),
         relativeVelocity_.mixture().mesh(),
-        dimensionedScalar(dimKinematicViscosity, 0)
+        dimensionedScalar(dimensions::kinematicViscosity, 0)
     );
 }
 

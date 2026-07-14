@@ -131,37 +131,37 @@ int main(int argc, char *argv[])
         (
             IOobject("h", runTime.name(), mesh),
             mesh,
-            dimensionedScalar(dimLength, 0)
+            dimensionedScalar(dimensions::length, 0)
         );
         pointScalarField hp
         (
             IOobject("hp", runTime.name(), mesh),
             pMesh,
-            dimensionedScalar(dimLength, 0)
+            dimensionedScalar(dimensions::length, 0)
         );
         volVectorField uGas
         (
             IOobject("uGas", runTime.name(), mesh),
             mesh,
-            dimensionedVector(dimVelocity, vector::zero)
+            dimensionedVector(dimensions::velocity, vector::zero)
         );
         pointVectorField uGasp
         (
             IOobject("uGasp", runTime.name(), mesh),
             pMesh,
-            dimensionedVector(dimVelocity, vector::zero)
+            dimensionedVector(dimensions::velocity, vector::zero)
         );
         volVectorField uLiq
         (
             IOobject("uLiq", runTime.name(), mesh),
             mesh,
-            dimensionedVector(dimVelocity, vector::zero)
+            dimensionedVector(dimensions::velocity, vector::zero)
         );
         pointVectorField uLiqp
         (
             IOobject("uLiqp", runTime.name(), mesh),
             pMesh,
-            dimensionedVector(dimVelocity, vector::zero)
+            dimensionedVector(dimensions::velocity, vector::zero)
         );
 
         // Cell centres and points

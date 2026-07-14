@@ -80,7 +80,7 @@ volScalarField dpdt
         mesh
     ),
     mesh,
-    dimensionedScalar(p.dimensions()/dimTime, 0)
+    dimensionedScalar(p.dimensions()/dimensions::time, 0)
 );
 
 Info<< "Creating field kinetic energy K\n" << endl;

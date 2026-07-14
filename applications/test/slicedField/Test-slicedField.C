@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
             mesh
         ),
         mesh,
-        dimLength,
+        dimensions::length,
         mesh.cellCentres(),
         mesh.faceCentres()
     );
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
             mesh
         ),
         mesh,
-        dimArea,
+        dimensions::area,
         mesh.faceAreas()
     );
 

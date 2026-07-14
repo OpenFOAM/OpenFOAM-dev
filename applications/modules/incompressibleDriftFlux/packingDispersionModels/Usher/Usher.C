@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ Foam::packingDispersionModels::Usher::Usher
     alphaMax_("alphaMax", dimless, dict),
     b1_("b1", dimless, dict),
     n1_("n1", dimless, dict),
-    sigma01_("sigma01", sqr(dimVelocity), dict),
+    sigma01_("sigma01", sqr(dimensions::velocity), dict),
     b2_("b2", dimless, dict),
     n2_
     (

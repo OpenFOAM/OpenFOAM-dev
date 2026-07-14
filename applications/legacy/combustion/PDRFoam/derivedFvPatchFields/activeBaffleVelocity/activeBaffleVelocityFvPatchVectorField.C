@@ -54,7 +54,7 @@ activeBaffleVelocityFvPatchVectorField
         ).neighbFvPatch().Sf()
     ),
     openFraction_(dict.lookup<scalar>("openFraction", units::fraction)),
-    openingTime_(dict.lookup<scalar>("openingTime", dimTime)),
+    openingTime_(dict.lookup<scalar>("openingTime", dimensions::time)),
     maxOpenFractionDelta_
     (
         dict.lookup<scalar>("maxOpenFractionDelta", units::fraction)

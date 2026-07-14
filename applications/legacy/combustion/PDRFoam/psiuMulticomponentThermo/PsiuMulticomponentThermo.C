@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,7 +194,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::PsiuMulticomponentThermo
         this->volScalarFieldProperty
         (
             BaseThermo::mixtureType::thermoType::heName() + 'u',
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             &BaseThermo::mixtureType::reactants,
             &BaseThermo::mixtureType::thermoMixtureType::he,
             this->p_,
@@ -323,7 +323,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::Tb() const
     return this->volScalarFieldProperty
     (
         "Tb",
-        dimTemperature,
+        dimensions::temperature,
         &BaseThermo::mixtureType::products,
         &BaseThermo::mixtureType::thermoMixtureType::The,
         this->he_,
@@ -341,14 +341,14 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::hr() const
         this->volScalarFieldProperty
         (
             "hf",
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             &BaseThermo::mixtureType::reactants,
             &BaseThermo::mixtureType::thermoMixtureType::hf
         )
       - this->volScalarFieldProperty
         (
             "hf",
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             &BaseThermo::mixtureType::products,
             &BaseThermo::mixtureType::thermoMixtureType::hf
         );
@@ -396,7 +396,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::muu() const
     return this->volScalarFieldProperty
     (
         "muu",
-        dimDynamicViscosity,
+        dimensions::dynamicViscosity,
         &BaseThermo::mixtureType::reactants,
         &BaseThermo::mixtureType::transportMixtureType::mu,
         this->p_,
@@ -414,7 +414,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::mub() const
     return this->volScalarFieldProperty
     (
         "mub",
-        dimDynamicViscosity,
+        dimensions::dynamicViscosity,
         &BaseThermo::mixtureType::products,
         &BaseThermo::mixtureType::transportMixtureType::mu,
         this->p_,

@@ -59,7 +59,7 @@ Foam::SuModels::linearEquilibrium::linearEquilibrium
 )
 :
     unstrained(dict, thermo, turbulence),
-    sigmaExt_("sigmaExt", dimless/dimTime, dict)
+    sigmaExt_("sigmaExt", dimless/dimensions::time, dict)
 {
     Su_.writeOpt() = IOobject::AUTO_WRITE;
 }

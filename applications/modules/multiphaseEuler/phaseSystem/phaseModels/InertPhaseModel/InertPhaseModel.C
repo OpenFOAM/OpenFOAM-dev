@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::InertPhaseModel<BasePhaseModel>::R(const label speciei) const
         (
             IOobject::groupName("R_" + this->Y()[speciei].name(), this->name()),
             this->mesh(),
-            dimensionedScalar(dimDensity/dimTime, 0)
+            dimensionedScalar(dimensions::density/dimensions::time, 0)
         );
 }
 
@@ -78,7 +78,7 @@ Foam::InertPhaseModel<BasePhaseModel>::R(volScalarField& Yi) const
 {
     return tmp<fvScalarMatrix>
     (
-        new fvScalarMatrix(Yi, dimMass/dimTime)
+        new fvScalarMatrix(Yi, dimensions::mass/dimensions::time)
     );
 }
 
@@ -91,7 +91,7 @@ Foam::InertPhaseModel<BasePhaseModel>::Qdot() const
     (
         IOobject::groupName("Qdot", this->name()),
         this->mesh(),
-        dimensionedScalar(dimEnergy/dimTime/dimVolume, 0)
+        dimensionedScalar(dimensions::powerDensity, 0)
     );
 }
 

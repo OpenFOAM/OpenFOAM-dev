@@ -25,7 +25,7 @@ const volScalarField h0
         IOobject::READ_IF_PRESENT
     ),
     mesh,
-    dimensionedScalar(dimLength, 0)
+    dimensionedScalar(dimensions::length, 0)
 );
 
 Info<< "Creating field hU\n" << endl;

@@ -49,7 +49,7 @@ Foam::populationBalance::LiaoBase::LiaoBase
         dimensionedScalar
         (
             "kolmogorovLengthScale",
-            dimLength,
+            dimensions::length,
             Zero
         )
     ),
@@ -116,28 +116,28 @@ void Foam::populationBalance::LiaoBase::precompute()
         const dimensionedScalar nuc
         (
             "nuc",
-            dimKinematicViscosity,
+            dimensions::kinematicViscosity,
             gAverage(popBal_.continuousPhase().fluidThermo().nu()())
         );
 
         const dimensionedScalar rhoc
         (
             "rhoc",
-            dimDensity,
+            dimensions::density,
             gAverage(popBal_.continuousPhase().rho())
         );
 
         const dimensionedScalar rhod
         (
             "rhod",
-            dimDensity,
+            dimensions::density,
             gAverage(popBal_.phases().first().rho())
         );
 
         const dimensionedScalar sigma
         (
             "sigma",
-            dimForce/dimLength,
+            dimensions::force/dimensions::length,
             gAverage(popBal_.sigmaWithContinuousPhase(0)())
         );
 
@@ -145,7 +145,7 @@ void Foam::populationBalance::LiaoBase::precompute()
         {
             const dimensionedScalar& dSph = popBal_.dSph(i);
 
-            dimensionedScalar uTerminal("uTerminal", dimVelocity, 0.2);
+            dimensionedScalar uTerminal("uTerminal", dimensions::velocity, 0.2);
             dimensionedScalar Cd("Cd", dimless, 0.44);
             dimensionedScalar CdEllipse("CdEllipse", dimless, 1);
 
@@ -153,12 +153,27 @@ void Foam::populationBalance::LiaoBase::precompute()
 
             const dimensionedScalar Eo(mag(g)*mag(rhoc - rhod)*sqr(dSph)/sigma);
 
-            dimensionedScalar F("F", dimForce/dimArea, 1);
-            dimensionedScalar dF("dF", dimForce/dimArea/dimVelocity, 1);
-            const dimensionedScalar uTerminalX("uTerminalX", dimVelocity, 1e-5);
+            dimensionedScalar F("F", dimensions::pressure, 1);
+            dimensionedScalar dF
+            (
+                "dF",
+                dimensions::pressure/dimensions::velocity,
+                1
+            );
+            const dimensionedScalar uTerminalX
+            (
+                "uTerminalX",
+                dimensions::velocity,
+                1e-5
+            );
             dimensionedScalar ReX("ReX", dimless, Re.value());
             dimensionedScalar CdX("CdX", dimless, Cd.value());
-            dimensionedScalar dCd("dCd", Cd.dimensions()/dimVelocity, Zero);
+            dimensionedScalar dCd
+            (
+                "dCd",
+                Cd.dimensions()/dimensions::velocity,
+                Zero
+            );
 
             int n = 0;
 

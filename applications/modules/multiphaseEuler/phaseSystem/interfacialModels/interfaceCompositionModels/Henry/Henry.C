@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::Henry::YfPrime
     (
         IOobject::groupName("YfPrime", interface().name()),
         interface().mesh(),
-        dimensionedScalar(dimless/dimTemperature, 0)
+        dimensionedScalar(dimless/dimensions::temperature, 0)
     );
 }
 

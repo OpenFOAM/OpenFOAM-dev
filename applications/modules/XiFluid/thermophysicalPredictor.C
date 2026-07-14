@@ -598,7 +598,7 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
                 mesh
             ),
             mesh,
-            dimensionedScalar(dimDensity/dimTime, 0)
+            dimensionedScalar(dimensions::density/dimensions::time, 0)
         );
 
         // Pre-ignition alphaPhiu = phi

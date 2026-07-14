@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,10 @@ namespace fv
 
 Foam::dimensionSet Foam::fv::KochFriedlanderSintering::CsDims() const
 {
-    return pow(dimLength, -n_)*pow(dimTemperature, -m_)*dimTime;
+    return
+        pow(dimensions::length, -n_)
+       *pow(dimensions::temperature, -m_)
+       *dimensions::time;
 }
 
 
@@ -86,8 +89,8 @@ Foam::fv::KochFriedlanderSintering::KochFriedlanderSintering
     n_(coeffs(dict).lookup<scalar>("n")),
     m_(coeffs(dict).lookup<scalar>("m")),
     Cs_("Cs", CsDims(), coeffs(dict)),
-    Ta_("Ta", dimTemperature, coeffs(dict)),
-    dpMin_("dpMin", dimLength, coeffs(dict), scalar(0))
+    Ta_("Ta", dimensions::temperature, coeffs(dict)),
+    dpMin_("dpMin", dimensions::length, coeffs(dict), scalar(0))
 {
     readCoeffs(coeffs(dict));
 

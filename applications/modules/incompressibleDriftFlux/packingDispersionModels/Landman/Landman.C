@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::packingDispersionModels::Landman::Landman
 )
 :
     packingDispersionModel(relativeVelocity),
-    sigma0_("sigma0", sqr(dimVelocity), dict),
+    sigma0_("sigma0", sqr(dimensions::velocity), dict),
     n_("n", dimless, dict),
     alphaGel_("alphaGel", dimless, dict)
 {}

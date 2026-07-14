@@ -58,7 +58,7 @@ Foam::populationBalance::shapeModels::fractal::dColl(const label i) const
         (
             "dColl",
             popBal_.mesh(),
-            dimensionedScalar(dimLength, Zero)
+            dimensionedScalar(dimensions::length, Zero)
         )
     );
 
@@ -81,8 +81,11 @@ Foam::populationBalance::shapeModels::fractal::fractal
 )
 :
     SecondaryPropertyModel<shapeModel>(popBal),
-    Df_(Function1<scalar>::New("Df", {dimLength, dimless}, dict)),
-    alphaC_(Function1<scalar>::New("alphaC", {dimLength, dimless}, dict)),
+    Df_(Function1<scalar>::New("Df", {dimensions::length, dimless}, dict)),
+    alphaC_
+    (
+        Function1<scalar>::New("alphaC", {dimensions::length, dimless}, dict)
+    ),
     kappas_(popBal.nGroups()),
     dColls_(popBal.nGroups()),
     Sus_(popBal.nGroups())
@@ -138,7 +141,11 @@ Foam::populationBalance::shapeModels::fractal::fractal
                     popBal_.phases()[i]
                 ),
                 popBal_.mesh(),
-                dimensionedScalar(kappas_[i].dimensions()/dimTime, Zero)
+                dimensionedScalar
+                (
+                    kappas_[i].dimensions()/dimensions::time,
+                    Zero
+                )
             )
         );
     }

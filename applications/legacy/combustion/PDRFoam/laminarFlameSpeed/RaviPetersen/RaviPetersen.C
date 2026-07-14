@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -311,7 +311,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
         (
             "Su0",
             p.mesh(),
-            dimensionedScalar(dimVelocity, 0)
+            dimensionedScalar(dimensions::velocity, 0)
         )
     );
 

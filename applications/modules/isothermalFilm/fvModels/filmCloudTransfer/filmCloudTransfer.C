@@ -109,7 +109,7 @@ inline Foam::fv::filmCloudTransfer::CloudToFilmTransferRate
         (
             "Su",
             mesh(),
-            dimensioned<Type>(dimProp/dimVolume/dimTime, Zero)
+            dimensioned<Type>(dimProp/dimensions::volume/dimensions::time, Zero)
         )
     );
 
@@ -146,7 +146,11 @@ void Foam::fv::filmCloudTransfer::addSup
 
     if (&alpha == &film_.alpha && &eqn.psi() == &film_.alpha)
     {
-        eqn += CloudToFilmTransferRate<scalar>(massFromCloud_, dimMass);
+        eqn += CloudToFilmTransferRate<scalar>
+        (
+            massFromCloud_,
+            dimensions::mass
+        );
 
         if (ejection_.valid())
         {
@@ -177,7 +181,11 @@ void Foam::fv::filmCloudTransfer::addSup
 
     if (&he == &film_.thermo.he() && &eqn.psi() == &film_.thermo.he())
     {
-        eqn += CloudToFilmTransferRate<scalar>(energyFromCloud_, dimEnergy);
+        eqn += CloudToFilmTransferRate<scalar>
+        (
+            energyFromCloud_,
+            dimensions::energy
+        );
 
         if (ejection_.valid())
         {

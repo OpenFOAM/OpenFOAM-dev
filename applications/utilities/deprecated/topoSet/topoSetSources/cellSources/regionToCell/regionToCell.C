@@ -394,8 +394,8 @@ Foam::regionToCell::regionToCell
     insidePoints_
     (
         dict.found("insidePoint")
-      ? List<point>(1, dict.lookup<point>("insidePoint", dimLength))
-      : dict.lookup<List<point>>("insidePoints", dimLength)
+      ? List<point>(1, dict.lookup<point>("insidePoint", dimensions::length))
+      : dict.lookup<List<point>>("insidePoints", dimensions::length)
     ),
     nErode_(dict.lookupOrDefault("nErode", 0))
 {}

@@ -62,7 +62,7 @@ displacementGapHeatTransferCoefficient::displacementGapHeatTransferCoefficient
 )
 :
     DimensionedFieldFunction<DimensionedField<scalar, fvPatch>>(dict, field),
-    kappa_("kappa", dimThermalConductivity, dict)
+    kappa_("kappa", dimensions::thermalConductivity, dict)
 {}
 
 

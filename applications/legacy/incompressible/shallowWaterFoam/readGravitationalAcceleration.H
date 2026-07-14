@@ -12,11 +12,16 @@ IOdictionary gravitationalProperties
     )
 );
 
-const dimensionedVector g("g", dimAcceleration, gravitationalProperties);
+const dimensionedVector g
+(
+    "g",
+    dimensions::acceleration,
+    gravitationalProperties
+);
 const Switch rotating(gravitationalProperties.lookup("rotating"));
 const dimensionedVector Omega =
     rotating
-  ? dimensionedVector("Omega", dimless/dimTime, gravitationalProperties)
-  : dimensionedVector("Omega", dimless/dimTime, vector::zero);
+  ? dimensionedVector("Omega", dimensions::rate, gravitationalProperties)
+  : dimensionedVector("Omega", dimensions::rate, vector::zero);
 const dimensionedScalar magg = mag(g);
 const dimensionedVector gHat = g/magg;

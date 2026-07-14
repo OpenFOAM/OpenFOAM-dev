@@ -53,8 +53,8 @@ Foam::diameterModels::residualDiameter::residualDiameter
 )
 :
     spherical(diameterProperties, phase),
-    d_("d", dimLength, diameterProperties),
-    dResidual_("dResidual", dimLength, diameterProperties)
+    d_("d", dimensions::length, diameterProperties),
+    dResidual_("dResidual", dimensions::length, diameterProperties)
 {}
 
 

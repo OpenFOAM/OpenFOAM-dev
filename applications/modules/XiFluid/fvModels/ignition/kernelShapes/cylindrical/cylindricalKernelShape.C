@@ -59,7 +59,7 @@ Foam::kernelShapes::cylindrical::cylindrical
 )
 :
     kernelShape(mesh, dict),
-    thickness_("thickness", dimLength, 0),
+    thickness_("thickness", dimensions::length, 0),
     cylinderFraction_("cylinderFraction", dimless, 1)
 {
     readCoeffs(dict);

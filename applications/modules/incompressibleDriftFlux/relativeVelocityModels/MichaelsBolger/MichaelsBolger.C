@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::relativeVelocityModels::MichaelsBolger::MichaelsBolger
     relativeVelocityModel(dict, mixture, g),
     a0_("a0", dimless, dict),
     a1_("a1", dimless, dict),
-    Vc_("Vc", dimTime, dict)
+    Vc_("Vc", dimensions::time, dict)
 {}
 
 

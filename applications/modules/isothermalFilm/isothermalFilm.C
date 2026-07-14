@@ -282,7 +282,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
             mesh
         ),
         mesh,
-        dimensionedScalar(dimArea, 0)
+        dimensionedScalar(dimensions::area, 0)
     ),
 
     VbyA_
@@ -294,7 +294,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
             mesh
         ),
         mesh,
-        dimensionedScalar(dimLength, 0),
+        dimensionedScalar(dimensions::length, 0),
         zeroGradientFvPatchField<vector>::typeName
     ),
 
@@ -328,7 +328,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
         alphaTypes()
     ),
 
-    deltaWet("deltaWet", dimLength, thermo_.properties()),
+    deltaWet("deltaWet", dimensions::length, thermo_.properties()),
 
     U_
     (

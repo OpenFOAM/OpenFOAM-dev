@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,11 @@ Foam::wallDampingModels::cosine::limiter() const
             constant::mathematical::pi
            *min
             (
-                max(yWall() - zeroWallDist_, dimensionedScalar(dimLength, 0))
-               /(Cd_*interface_.dispersed().d()),
+                max
+                (
+                    yWall() - zeroWallDist_,
+                    dimensionedScalar(dimensions::length, 0)
+                )/(Cd_*interface_.dispersed().d()),
                 scalar(1)
             )
         )

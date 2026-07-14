@@ -120,7 +120,7 @@ Foam::wordList Foam::fv::massDiffusionLimitedPhaseChange::getSpecies() const
 
 void Foam::fv::massDiffusionLimitedPhaseChange::correctMDot() const
 {
-    mDot_ = dimensionedScalar(dimDensity/dimTime, 0);
+    mDot_ = dimensionedScalar(dimensions::density/dimensions::time, 0);
 
     forAll(phaseNames(), i)
     {
@@ -192,7 +192,7 @@ Foam::fv::massDiffusionLimitedPhaseChange::massDiffusionLimitedPhaseChange
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, 0)
+        dimensionedScalar(dimensions::density/dimensions::time, 0)
     )
 {
     readCoeffs(coeffs(dict));
@@ -228,7 +228,7 @@ Foam::fv::massDiffusionLimitedPhaseChange::massDiffusionLimitedPhaseChange
                         mesh
                     ),
                     mesh,
-                    dimensionedScalar(dimDensity/dimTime, 0)
+                    dimensionedScalar(dimensions::density/dimensions::time, 0)
                 )
             );
 
@@ -244,7 +244,7 @@ Foam::fv::massDiffusionLimitedPhaseChange::massDiffusionLimitedPhaseChange
                         mesh
                     ),
                     mesh,
-                    dimensionedScalar(dimDensity/dimTime, 0)
+                    dimensionedScalar(dimensions::density/dimensions::time, 0)
                 )
             );
         }
@@ -291,7 +291,7 @@ Foam::fv::massDiffusionLimitedPhaseChange::mDot(const label mDoti) const
         (
             name() + ":mDot" + specieName.capitalise(),
             this->mesh(),
-            dimensionedScalar(dimDensity/dimTime, 0)
+            dimensionedScalar(dimensions::density/dimensions::time, 0)
         );
 
     forAll(phaseNames(), i)
@@ -469,14 +469,18 @@ void Foam::fv::massDiffusionLimitedPhaseChange::correct()
             (
                 name() + ":mDotL",
                 this->mesh(),
-                dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
+                dimensionedScalar(dimensions::powerDensity, 0)
             );
         tmp<volScalarField::Internal> mDotLPrime =
             volScalarField::Internal::New
             (
                 name() + ":mDotLPrime",
                 this->mesh(),
-                dimensionedScalar(mDotL().dimensions()/dimTemperature, 0)
+                dimensionedScalar
+                (
+                    mDotL().dimensions()/dimensions::temperature,
+                    0
+                )
             );
 
         // Add latent heats from forward and backward models

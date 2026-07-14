@@ -282,7 +282,7 @@ Foam::populationBalanceSystem::heatTransfer() const
         eqns.insert
         (
             phase.name(),
-            new fvScalarMatrix(phase.thermo().he(), dimEnergy/dimTime)
+            new fvScalarMatrix(phase.thermo().he(), dimensions::power)
         );
     }
 

@@ -65,7 +65,7 @@ Foam::SuModels::transport::transport
 )
 :
     unstrained(dict, thermo, turbulence),
-    sigmaExt_("sigmaExt", dimless/dimTime, dict),
+    sigmaExt_("sigmaExt", dimless/dimensions::time, dict),
     SuMin_(0.01*Su_.average()),
     SuMax_(4*Su_.average())
 {

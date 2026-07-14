@@ -357,7 +357,7 @@ Foam::planeToFaceZone::planeToFaceZone
 )
 :
     topoSetSource(mesh),
-    point_(dict.lookup<vector>("point", dimLength)),
+    point_(dict.lookup<vector>("point", dimensions::length)),
     normal_(dict.lookup<vector>("normal", dimless)),
     include_
     (

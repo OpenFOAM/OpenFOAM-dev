@@ -61,7 +61,7 @@ Foam::SuModels::uniformConstant::uniformConstant
 )
 :
     SuModel(thermo, turbulence),
-    Su_("Su", dimVelocity, dict)
+    Su_("Su", dimensions::velocity, dict)
 {
     SuModel::Su_ == Su_;
 }

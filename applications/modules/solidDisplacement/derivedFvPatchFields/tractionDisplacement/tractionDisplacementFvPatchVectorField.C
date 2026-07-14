@@ -53,14 +53,14 @@ tractionDisplacementFvPatchVectorField
 )
 :
     fixedGradientFvPatchVectorField(p, iF),
-    traction_("traction", dimPressure, dict, p.size()),
+    traction_("traction", dimensions::pressure, dict, p.size()),
     pressure_
     (
         Function1<scalar>::New
         (
             "pressure",
             time().userUnits(),
-            dimPressure,
+            dimensions::pressure,
             dict
         )
     )
@@ -144,7 +144,7 @@ void Foam::tractionDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     writeEntry(os, "traction", traction_);
-    writeEntry(os, time().userUnits(), dimPressure, pressure_());
+    writeEntry(os, time().userUnits(), dimensions::pressure, pressure_());
     writeEntry(os, "value", *this);
 }
 

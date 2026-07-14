@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,9 +87,23 @@ Foam::cylinderToFace::cylinderToFace
 )
 :
     topoSetSource(mesh),
-    point1_(dict.lookupBackwardsCompatible<point>({"point1", "p1"}, dimLength)),
-    point2_(dict.lookupBackwardsCompatible<point>({"point2", "p2"}, dimLength)),
-    radius_(dict.lookup<scalar>("radius", dimLength))
+    point1_
+    (
+        dict.lookupBackwardsCompatible<point>
+        (
+            {"point1", "p1"},
+            dimensions::length
+        )
+    ),
+    point2_
+    (
+        dict.lookupBackwardsCompatible<point>
+        (
+            {"point2", "p2"},
+            dimensions::length
+        )
+    ),
+    radius_(dict.lookup<scalar>("radius", dimensions::length))
 {}
 
 

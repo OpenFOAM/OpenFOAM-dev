@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
                 {
                     fld.dimensions().reset
                     (
-                        pow(dimVolume, order_)/dimVolume
+                        pow(dimensions::volume, order_)/dimensions::volume
                     );
 
                     break;
@@ -217,7 +217,7 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
                 {
                     fld.dimensions().reset
                     (
-                        pow(dimArea, order_)/dimVolume
+                        pow(dimensions::area, order_)/dimensions::volume
                     );
 
                     break;
@@ -226,7 +226,7 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
                 {
                     fld.dimensions().reset
                     (
-                        pow(dimLength, order_)/dimVolume
+                        pow(dimensions::length, order_)/dimensions::volume
                     );
 
                     break;
@@ -237,13 +237,13 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
             {
                 case weightType::volumeConcentration:
                 {
-                    fld.dimensions().reset(fld.dimensions()*dimVolume);
+                    fld.dimensions().reset(fld.dimensions()*dimensions::volume);
 
                     break;
                 }
                 case weightType::areaConcentration:
                 {
-                    fld.dimensions().reset(fld.dimensions()*dimArea);
+                    fld.dimensions().reset(fld.dimensions()*dimensions::area);
 
                     break;
                 }
@@ -261,19 +261,19 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
             {
                 case coordinateType::volume:
                 {
-                    fld.dimensions().reset(dimVolume);
+                    fld.dimensions().reset(dimensions::volume);
 
                     break;
                 }
                 case coordinateType::area:
                 {
-                    fld.dimensions().reset(dimArea);
+                    fld.dimensions().reset(dimensions::area);
 
                     break;
                 }
                 case coordinateType::diameter:
                 {
-                    fld.dimensions().reset(dimLength);
+                    fld.dimensions().reset(dimensions::length);
 
                     break;
                 }
@@ -287,19 +287,19 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
             {
                 case coordinateType::volume:
                 {
-                    fld.dimensions().reset(sqr(dimVolume));
+                    fld.dimensions().reset(sqr(dimensions::volume));
 
                     break;
                 }
                 case coordinateType::area:
                 {
-                    fld.dimensions().reset(sqr(dimArea));
+                    fld.dimensions().reset(sqr(dimensions::area));
 
                     break;
                 }
                 case coordinateType::diameter:
                 {
-                    fld.dimensions().reset(sqr(dimLength));
+                    fld.dimensions().reset(sqr(dimensions::length));
 
                     break;
                 }
@@ -318,19 +318,19 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
             {
                 case coordinateType::volume:
                 {
-                    fld.dimensions().reset(dimVolume);
+                    fld.dimensions().reset(dimensions::volume);
 
                     break;
                 }
                 case coordinateType::area:
                 {
-                    fld.dimensions().reset(dimArea);
+                    fld.dimensions().reset(dimensions::area);
 
                     break;
                 }
                 case coordinateType::diameter:
                 {
-                    fld.dimensions().reset(dimLength);
+                    fld.dimensions().reset(dimensions::length);
 
                     break;
                 }
@@ -359,7 +359,7 @@ Foam::functionObjects::populationBalanceMoments::totalConcentration
         (
             "totalConcentration",
             mesh_,
-            dimensionedScalar(inv(dimVolume), Zero)
+            dimensionedScalar(inv(dimensions::volume), Zero)
         )
     );
 
@@ -371,7 +371,7 @@ Foam::functionObjects::populationBalanceMoments::totalConcentration
         {
             totalConcentration.dimensions().reset
             (
-                totalConcentration.dimensions()*dimVolume
+                totalConcentration.dimensions()*dimensions::volume
             );
 
             break;
@@ -380,7 +380,7 @@ Foam::functionObjects::populationBalanceMoments::totalConcentration
         {
             totalConcentration.dimensions().reset
             (
-                totalConcentration.dimensions()*dimArea
+                totalConcentration.dimensions()*dimensions::area
             );
 
             break;
@@ -484,7 +484,7 @@ Foam::functionObjects::populationBalanceMoments::mean
                 {
                     case coordinateType::volume:
                     {
-                        dimensionedScalar unitVolume(dimVolume, 1);
+                        dimensionedScalar unitVolume(dimensions::volume, 1);
 
                         mean +=
                             Foam::log(vi/unitVolume)
@@ -494,7 +494,7 @@ Foam::functionObjects::populationBalanceMoments::mean
                     }
                     case coordinateType::area:
                     {
-                        dimensionedScalar unitArea(dimArea, 1);
+                        dimensionedScalar unitArea(dimensions::area, 1);
 
                         mean +=
                             Foam::log(popBal.a(i)/unitArea)
@@ -504,7 +504,7 @@ Foam::functionObjects::populationBalanceMoments::mean
                     }
                     case coordinateType::diameter:
                     {
-                        dimensionedScalar unitLength(dimLength, 1);
+                        dimensionedScalar unitLength(dimensions::length, 1);
 
                         mean +=
                             Foam::log(popBal.d(i)/unitLength)

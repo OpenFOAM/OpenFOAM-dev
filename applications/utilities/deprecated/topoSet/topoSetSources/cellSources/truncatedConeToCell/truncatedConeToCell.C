@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,10 @@ Foam::truncatedConeToCell::truncatedConeToCell
 )
 :
     topoSetSource(mesh),
-    point1_(dict.lookup<point>("point1", dimLength)),
-    point2_(dict.lookup<point>("point2", dimLength)),
-    radius1_(dict.lookup<scalar>("radius1", dimLength)),
-    radius2_(dict.lookup<scalar>("radius2", dimLength))
+    point1_(dict.lookup<point>("point1", dimensions::length)),
+    point2_(dict.lookup<point>("point2", dimensions::length)),
+    radius1_(dict.lookup<scalar>("radius1", dimensions::length)),
+    radius2_(dict.lookup<scalar>("radius2", dimensions::length))
 {}
 
 

@@ -111,7 +111,11 @@ bool Foam::functionObjects::phaseForces::execute()
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
+                        dimensionedVector
+                        (
+                            dimensions::force/dimensions::volume,
+                            Zero
+                        )
                     )
                 );
             }
@@ -134,7 +138,11 @@ bool Foam::functionObjects::phaseForces::execute()
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
+                        dimensionedVector
+                        (
+                            dimensions::force/dimensions::volume,
+                            Zero
+                        )
                     )
                 );
             }
@@ -153,7 +161,11 @@ bool Foam::functionObjects::phaseForces::execute()
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
+                        dimensionedVector
+                        (
+                            dimensions::force/dimensions::volume,
+                            Zero
+                        )
                     )
                 );
             }
@@ -182,7 +194,11 @@ bool Foam::functionObjects::phaseForces::execute()
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
+                        dimensionedVector
+                        (
+                            dimensions::force/dimensions::volume,
+                            Zero
+                        )
                     )
                 );
             }
@@ -211,7 +227,11 @@ bool Foam::functionObjects::phaseForces::execute()
                             mesh_
                         ),
                         mesh_,
-                        dimensionedVector(dimForce/dimVolume, Zero)
+                        dimensionedVector
+                        (
+                            dimensions::force/dimensions::volume,
+                            Zero
+                        )
                     )
                 );
             }

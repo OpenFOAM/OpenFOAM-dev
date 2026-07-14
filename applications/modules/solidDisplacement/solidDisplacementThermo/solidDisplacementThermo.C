@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,9 @@ Foam::solidDisplacementThermo::solidDisplacementThermo
     constSolidThermo(mesh, phaseName),
     planeStress_(lookup("planeStress")),
     thermalStress_(lookup("thermalStress")),
-    E_(readProperty<scalar>("E", dimPressure)),
+    E_(readProperty<scalar>("E", dimensions::pressure)),
     nu_(readProperty<scalar>("nu", dimless)),
-    alphav_(readProperty<scalar>("alphav", dimless/dimTemperature))
+    alphav_(readProperty<scalar>("alphav", dimless/dimensions::temperature))
 {}
 
 

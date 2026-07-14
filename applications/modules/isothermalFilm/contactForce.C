@@ -38,7 +38,7 @@ Foam::solvers::isothermalFilm::contactForce(const volScalarField& sigma) const
         (
             typedName("contactForce"),
             mesh,
-            dimensionedVector(dimForce/dimVolume, Zero)
+            dimensionedVector(dimensions::force/dimensions::volume, Zero)
         )
     );
 

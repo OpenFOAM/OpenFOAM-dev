@@ -32,6 +32,7 @@ Description
 #include "pointMesh.H"
 #include "OSspecific.H"
 #include "IFstream.H"
+#include "pointFields.H"
 #include "pointEdgePoint.H"
 #include "PointEdgeWave.H"
 
@@ -117,7 +118,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         pointMesh::New(mesh),
-        dimensionedScalar(dimLength, 0)
+        dimensionedScalar(dimensions::length, 0)
     );
 
     forAll(allPointInfo, pointi)

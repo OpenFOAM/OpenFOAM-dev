@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -236,7 +236,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
         (
             "Su0",
             p.mesh(),
-            dimensionedScalar(dimVelocity, 0)
+            dimensionedScalar(dimensions::velocity, 0)
         )
     );
 
@@ -278,7 +278,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
         (
             "Su0",
             p.mesh(),
-            dimensionedScalar(dimVelocity, 0)
+            dimensionedScalar(dimensions::velocity, 0)
         )
     );
 

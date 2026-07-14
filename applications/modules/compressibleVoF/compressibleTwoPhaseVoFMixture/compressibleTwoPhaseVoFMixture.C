@@ -88,7 +88,7 @@ Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("rho", dimDensity, 0)
+        dimensionedScalar("rho", dimensions::density, 0)
     ),
 
     nu_
@@ -100,7 +100,7 @@ Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
             mesh
         ),
         mesh,
-        dimensionedScalar(dimKinematicViscosity, 0),
+        dimensionedScalar(dimensions::kinematicViscosity, 0),
         calculatedFvPatchScalarField::typeName
     )
 {

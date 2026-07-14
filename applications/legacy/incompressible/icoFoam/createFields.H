@@ -15,7 +15,7 @@ IOdictionary physicalProperties
 dimensionedScalar nu
 (
     "nu",
-    dimKinematicViscosity,
+    dimensions::kinematicViscosity,
     physicalProperties.lookup("nu")
 );
 

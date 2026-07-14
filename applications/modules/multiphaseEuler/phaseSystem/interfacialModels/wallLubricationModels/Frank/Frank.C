@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::Fi() const
         )
        *max
         (
-            dimensionedScalar(dimless/dimLength, 0),
+            dimensionedScalar(dimless/dimensions::length, 0),
             (1 - yTilde)/(Cwd_*y*pow(yTilde, p_ - 1))
         )
        *interface_.continuous().rho()

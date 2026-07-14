@@ -55,8 +55,13 @@ Foam::mixtureViscosityModels::HerschelBulkley::HerschelBulkley
 :
     mixtureViscosityModel(mixture),
     n_("n", dimless, typeDict()),
-    k_("k", dimDynamicViscosity*pow(dimTime, n_ - 1), typeDict()),
-    tau0_("tau0", dimDynamicViscosity/dimTime, typeDict())
+    k_
+    (
+        "k",
+        dimensions::dynamicViscosity*pow(dimensions::time, n_ - 1),
+        typeDict()
+    ),
+    tau0_("tau0", dimensions::dynamicViscosity/dimensions::time, typeDict())
 {}
 
 
@@ -75,7 +80,7 @@ Foam::mixtureViscosityModels::HerschelBulkley::mu
     (
         muc,
         (tau0_ + k_*pow(strainRate, n_))
-       /max(strainRate, dimensionedScalar(dimless/dimTime, rootVSmall))
+       /max(strainRate, dimensionedScalar(dimless/dimensions::time, rootVSmall))
     );
 }
 

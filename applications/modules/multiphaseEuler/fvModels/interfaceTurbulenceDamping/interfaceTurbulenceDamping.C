@@ -187,7 +187,7 @@ Foam::fv::interfaceTurbulenceDamping::interfaceTurbulenceDamping
 :
     fvModel(sourceName, modelType, mesh, dict),
     phaseName_(dict.lookup("phase")),
-    delta_("delta", dimLength, dict),
+    delta_("delta", dimensions::length, dict),
     phase_
     (
         mesh.lookupObject<phaseModel>(IOobject::groupName("alpha", phaseName_))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ Foam::blendedWallLubricationModel::Ff() const
             (
                 &wallLubricationModel::Ff,
                 "Ff",
-                wallLubricationModel::dimF*dimArea
+                wallLubricationModel::dimF*dimensions::area
             )
         );
 }

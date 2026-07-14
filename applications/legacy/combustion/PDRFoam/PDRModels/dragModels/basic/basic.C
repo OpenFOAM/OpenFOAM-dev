@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::PDRDragModels::basic::Dcu() const
             U_.mesh(),
             dimensionedSymmTensor
             (
-                dimMass/dimTime/pow(dimLength, 3),
+                dimensions::density/dimensions::time,
                 Zero
             )
         )
@@ -128,7 +128,12 @@ Foam::tmp<Foam::volScalarField> Foam::PDRDragModels::basic::Gk() const
         (
             "tGk",
             U_.mesh(),
-            dimensionedScalar(dimMass/dimLength/pow(dimTime, 3), 0)
+            dimensionedScalar
+            (
+                dimensions::density
+               *dimensions::turbulentKineticEnergy/dimensions::time,
+                0
+            )
         )
     );
 

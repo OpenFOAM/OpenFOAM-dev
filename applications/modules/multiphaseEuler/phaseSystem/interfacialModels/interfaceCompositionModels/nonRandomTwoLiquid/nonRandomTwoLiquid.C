@@ -74,8 +74,8 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         interface.mesh(),
         dimensionedScalar(dimless, 1)
     ),
-    beta12_("", dimless/dimTemperature, 0),
-    beta21_("", dimless/dimTemperature, 0)
+    beta12_("", dimless/dimensions::temperature, 0),
+    beta21_("", dimless/dimensions::temperature, 0)
 {
     if (species().size() != 2)
     {
@@ -106,13 +106,13 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
     beta12_ = dimensionedScalar
     (
         "beta12",
-        dimless/dimTemperature,
+        dimless/dimensions::temperature,
         dict.subDict(species1Name_).lookup("beta")
     );
     beta21_ = dimensionedScalar
     (
         "beta21",
-        dimless/dimTemperature,
+        dimless/dimensions::temperature,
         dict.subDict(species2Name_).lookup("beta")
     );
 

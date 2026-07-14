@@ -225,7 +225,7 @@ Foam::phaseSystem::phaseSystem
             mesh
         ),
         mesh,
-        dimensionedScalar(dimVolumetricFlux, 0)
+        dimensionedScalar(dimensions::volumetricFlux, 0)
     ),
 
     dpdt_
@@ -237,7 +237,7 @@ Foam::phaseSystem::phaseSystem
             mesh
         ),
         mesh,
-        dimensionedScalar(dimPressure/dimTime, 0)
+        dimensionedScalar(dimensions::pressure/dimensions::time, 0)
     ),
 
     cAlphas_
@@ -650,7 +650,7 @@ void Foam::phaseSystem::correctContinuityError
             (
                 IOobject::groupName("source", phase.name()),
                 mesh_,
-                dimensionedScalar(dimDensity/dimTime, 0)
+                dimensionedScalar(dimensions::density/dimensions::time, 0)
             )
         );
 
@@ -875,7 +875,7 @@ void Foam::phaseSystem::correctPhi
             (
                 "psi",
                 mesh_,
-                dimensionedScalar(dimless/dimPressure, 0)
+                dimensionedScalar(dimless/dimensions::pressure, 0)
             )
         );
 

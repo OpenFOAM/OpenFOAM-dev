@@ -59,8 +59,8 @@ Foam::populationBalance::coalescenceModels::PrinceBlanch::PrinceBlanch
 :
     coalescenceModel(popBal, dict),
     C1_("C1", dimless, dict, 0.356),
-    h0_("h0", dimLength, dict, 1e-4),
-    hf_("hf", dimLength, dict, 1e-8),
+    h0_("h0", dimensions::length, dict, 1e-4),
+    hf_("hf", dimensions::length, dict, 1e-8),
     turbulence_(dict.lookup("turbulence")),
     buoyancy_(dict.lookup("buoyancy")),
     laminarShear_(dict.lookup("laminarShear"))

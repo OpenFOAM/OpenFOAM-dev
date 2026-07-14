@@ -155,7 +155,7 @@ incompressibleDenseParticleFluid
         dimensionedScalar
         (
             IOobject::groupName("rho", continuousPhaseName),
-            dimDensity,
+            dimensions::density,
             viscosity->lookup
             (
                 IOobject::groupName("rho", continuousPhaseName)
@@ -310,7 +310,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::prePredictor()
                 mesh
             ),
             mesh,
-            dimensionedVector(dimAcceleration, Zero),
+            dimensionedVector(dimensions::acceleration, Zero),
             zeroGradientFvPatchVectorField::typeName
         );
 
@@ -323,7 +323,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::prePredictor()
                 mesh
             ),
             mesh,
-            dimensionedScalar(dimless/dimTime, Zero),
+            dimensionedScalar(dimless/dimensions::time, Zero),
             zeroGradientFvPatchVectorField::typeName
         );
 

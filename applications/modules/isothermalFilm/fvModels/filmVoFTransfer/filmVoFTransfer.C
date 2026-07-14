@@ -79,7 +79,7 @@ Foam::fv::filmVoFTransfer::filmVoFTransfer
         (
             "transferRate",
             mesh,
-            dimensionedScalar(dimless/dimTime, 0)
+            dimensionedScalar(dimless/dimensions::time, 0)
         )
     )
 {}
@@ -221,7 +221,7 @@ inline Foam::fv::filmVoFTransfer::VoFToFilmTransferRate
         (
             "Su",
             mesh(),
-            dimensioned<Type>(dimProp/dimTime, Zero)
+            dimensioned<Type>(dimProp/dimensions::time, Zero)
         )
     );
 
@@ -254,7 +254,7 @@ void Foam::fv::filmVoFTransfer::addSup
             VoFToFilmTransferRate<scalar>
             (
                 &VoFFilmTransfer::rhoTransferRate,
-                dimMass
+                dimensions::mass
             );
 
         // Potentially implicit transfer out of the film
@@ -296,7 +296,7 @@ void Foam::fv::filmVoFTransfer::addSup
             VoFToFilmTransferRate<scalar>
             (
                 &VoFFilmTransfer::heTransferRate,
-                dimEnergy
+                dimensions::energy
             );
 
         // Potentially implicit transfer out of the film

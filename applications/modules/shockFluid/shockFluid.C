@@ -224,7 +224,7 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar(dimless/dimTime, 1),
+                dimensionedScalar(dimless/dimensions::time, 1),
                 extrapolatedCalculatedFvPatchScalarField::typeName
             )
         );

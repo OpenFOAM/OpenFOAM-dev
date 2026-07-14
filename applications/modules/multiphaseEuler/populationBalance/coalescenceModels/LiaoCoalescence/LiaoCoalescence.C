@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Foam::populationBalance::coalescenceModels::LiaoCoalescence::LiaoCoalescence
     coalescenceModel(popBal, dict),
     LiaoBase(popBal, dict),
     PMax_("PMax", dimless, dict, 0.8),
-    AH_("AH", dimEnergy, dict, 3.7e-20),
+    AH_("AH", dimensions::energy, dict, 3.7e-20),
     CEff_("CEff", dimless, dict, 2.5),
     CTurb_("CTurb", dimless, dict, 1),
     CBuoy_("CBuoy", dimless, dict, 1),
@@ -100,7 +100,7 @@ Foam::populationBalance::coalescenceModels::LiaoCoalescence::LiaoCoalescence
         dimensionedScalar
         (
             "dCrit",
-            dimLength,
+            dimensions::length,
             Zero
         )
     ),
@@ -116,7 +116,7 @@ Foam::populationBalance::coalescenceModels::LiaoCoalescence::LiaoCoalescence
         dimensionedScalar
         (
             "uRelTurb",
-            dimVelocity,
+            dimensions::velocity,
             Zero
         )
     ),
@@ -132,7 +132,7 @@ Foam::populationBalance::coalescenceModels::LiaoCoalescence::LiaoCoalescence
         dimensionedScalar
         (
             "uRelBuoy",
-            dimVelocity,
+            dimensions::velocity,
             Zero
         )
     ),
@@ -148,7 +148,7 @@ Foam::populationBalance::coalescenceModels::LiaoCoalescence::LiaoCoalescence
         dimensionedScalar
         (
             "uRelShear",
-            dimVelocity,
+            dimensions::velocity,
             Zero
         )
     )
@@ -250,7 +250,7 @@ Foam::populationBalance::coalescenceModels::LiaoCoalescence::rate
         (
             "coalescenceRate",
             popBal_.mesh(),
-            dimensionedScalar(dimVolume/dimTime, scalar(0))
+            dimensionedScalar(dimensions::volume/dimensions::time, scalar(0))
         );
     volScalarField::Internal& coalescenceRate = tcoalescenceRate.ref();
 

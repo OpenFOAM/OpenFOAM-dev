@@ -71,7 +71,7 @@ volScalarField p
     (
         pHeader,
         mesh,
-        dimensionedScalar(pName, sqr(dimVelocity), 0),
+        dimensionedScalar(pName, sqr(dimensions::velocity), 0),
         pBCTypes
     )
 );
@@ -105,7 +105,7 @@ volScalarField Phi
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar(dimLength*dimVelocity, 0),
+    dimensionedScalar(dimensions::length*dimensions::velocity, 0),
     PhiBCTypes
 );
 

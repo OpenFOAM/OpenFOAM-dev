@@ -67,7 +67,7 @@ Foam::interfaceCompositionModels::Raoult::Raoult
             interface.mesh()
         ),
         interface.mesh(),
-        dimensionedScalar(dimless/dimTemperature, 0)
+        dimensionedScalar(dimless/dimensions::temperature, 0)
     )
 {
     forAllConstIter(hashedWordList, species(), iter)

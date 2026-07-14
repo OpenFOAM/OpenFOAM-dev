@@ -36,7 +36,7 @@ autoPtr<incompressible::momentumTransportModel> turbulence
     incompressible::momentumTransportModel::New(U, phi, viscosity)
 );
 
-dimensionedVector Ubar("Ubar", dimVelocity, viscosity);
+dimensionedVector Ubar("Ubar", dimensions::velocity, viscosity);
 
 vector flowDirection = (Ubar/mag(Ubar)).value();
 tensor flowMask = sqr(flowDirection);

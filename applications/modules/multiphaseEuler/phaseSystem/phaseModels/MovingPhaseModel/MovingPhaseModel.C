@@ -229,7 +229,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             fluid.mesh()
         ),
         fluid.mesh(),
-        dimensionedScalar(dimDensity/dimTime, 0)
+        dimensionedScalar(dimensions::density/dimensions::time, 0)
     ),
     K_(nullptr)
 {

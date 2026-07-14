@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,7 +189,7 @@ void Foam::phaseSystem::solve
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar(dimless/dimTime, 0)
+                dimensionedScalar(dimless/dimensions::time, 0)
             )
         );
 
@@ -213,7 +213,7 @@ void Foam::phaseSystem::solve
                 (
                     "vDot",
                     mesh_,
-                    dimensionedScalar(dimless/dimTime, 0)
+                    dimensionedScalar(dimless/dimensions::time, 0)
                 )
             );
 

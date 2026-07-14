@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,12 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
         const boundBox bb(dict.lookup("box"));
         const vector c
         (
-            dict.lookupOrDefault<point>("centre", dimLength, bb.midpoint())
+            dict.lookupOrDefault<point>
+            (
+                "centre",
+                dimensions::length,
+                bb.midpoint()
+            )
         );
         const vector n1(normalised(dict.lookup<vector>("n1", dimless)));
         const vector n2(normalised(dict.lookup<vector>("n2", dimless)));
@@ -151,10 +156,10 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
     }
     else
     {
-        origin_ = dict.lookup<point>("origin", dimLength);
-        i_ = dict.lookup<vector>("i", dimLength);
-        j_ = dict.lookup<vector>("j", dimLength);
-        k_ = dict.lookup<vector>("k", dimLength);
+        origin_ = dict.lookup<point>("origin", dimensions::length);
+        i_ = dict.lookup<vector>("i", dimensions::length);
+        j_ = dict.lookup<vector>("j", dimensions::length);
+        k_ = dict.lookup<vector>("k", dimensions::length);
     }
 }
 

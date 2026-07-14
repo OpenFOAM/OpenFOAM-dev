@@ -79,8 +79,8 @@ Foam::diameterModels::IATE::IATE
         phase.mesh(),
         inv(dimensions::length)
     ),
-    dMax_("dMax", dimLength, diameterProperties),
-    dMin_("dMin", dimLength, diameterProperties),
+    dMax_("dMax", dimensions::length, diameterProperties),
+    dMin_("dMin", dimensions::length, diameterProperties),
     residualAlpha_("residualAlpha", dimless, diameterProperties),
     d_
     (

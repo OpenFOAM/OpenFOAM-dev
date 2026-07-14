@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::LemmertChawla
 :
     nucleationSiteModel(),
     Cn_("Cn", dimless, dict, 1),
-    NRef_("NRef", dimless/dimArea, dict, 9.922e5),
-    deltaTRef_("deltaTRef", dimTemperature, dict, 10)
+    NRef_("NRef", dimless/dimensions::area, dict, 9.922e5),
+    deltaTRef_("deltaTRef", dimensions::temperature, dict, 10)
 {}
 
 

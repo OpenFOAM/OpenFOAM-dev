@@ -12,8 +12,13 @@ IOdictionary financialProperties
     )
 );
 
-const dimensionedScalar strike("strike", dimLength, financialProperties);
-const dimensionedScalar r("r", dimless/dimTime, financialProperties);
+const dimensionedScalar strike
+(
+    "strike",
+    dimensions::length,
+    financialProperties
+);
+const dimensionedScalar r("r", dimless/dimensions::time, financialProperties);
 
 const dimensionedScalar sigma
 (

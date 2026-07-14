@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,8 @@ Foam::ignitionSite::ignitionSite
     db_(db),
     mesh_(mesh),
     ignitionSiteDict_(is),
-    location_(ignitionSiteDict_.lookup<vector>("location", dimLength)),
-    diameter_(ignitionSiteDict_.lookup<scalar>("diameter", dimLength)),
+    location_(ignitionSiteDict_.lookup<vector>("location", dimensions::length)),
+    diameter_(ignitionSiteDict_.lookup<scalar>("diameter", dimensions::length)),
     time_
     (
         ignitionSiteDict_.lookup<scalar>("start", db.time().userUnits())

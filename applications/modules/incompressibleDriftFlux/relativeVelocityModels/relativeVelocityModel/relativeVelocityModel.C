@@ -89,7 +89,7 @@ Foam::relativeVelocityModel::relativeVelocityModel
             IOobject::AUTO_WRITE
         ),
         mixture_.mesh(),
-        dimensionedVector(dimVelocity, Zero),
+        dimensionedVector(dimensions::velocity, Zero),
         UdmPatchFieldTypes()
     )
 {}

@@ -122,7 +122,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
             mesh
         ),
         mesh,
-        dimensionedScalar(p_.dimensions()/dimTime, 0)
+        dimensionedScalar(p_.dimensions()/dimensions::time, 0)
     ),
 
     buoyancy(buoyancy::New(mesh)),
@@ -243,7 +243,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar(dimless/dimTime, 1),
+                dimensionedScalar(dimless/dimensions::time, 1),
                 extrapolatedCalculatedFvPatchScalarField::typeName
             )
         );

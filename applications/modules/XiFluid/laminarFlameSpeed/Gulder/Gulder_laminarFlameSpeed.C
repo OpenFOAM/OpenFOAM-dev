@@ -120,7 +120,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulder::Su
         (
             "Su0",
             p.mesh(),
-            dimensionedScalar(dimVelocity, 0)
+            dimensionedScalar(dimensions::velocity, 0)
         )
     );
 
@@ -166,7 +166,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulder::Su
         (
             "Su0",
             p.mesh(),
-            dimensionedScalar(dimVelocity, 0)
+            dimensionedScalar(dimensions::velocity, 0)
         )
     );
 

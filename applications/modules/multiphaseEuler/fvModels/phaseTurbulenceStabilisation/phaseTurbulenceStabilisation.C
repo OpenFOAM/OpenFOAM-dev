@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
         (
             "transferRate",
             mesh,
-            dimensionedScalar(dimless/dimTime, 0)
+            dimensionedScalar(dimless/dimensions::time, 0)
         )
     );
     volScalarField::Internal psiTransferRate
@@ -85,7 +85,12 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
         (
             "psiTransferRate",
             mesh,
-            dimensionedScalar((turbulence_.*psi)()().dimensions()/dimTime, 0)
+            dimensionedScalar
+            (
+                (turbulence_.*psi)()().dimensions()
+               /dimensions::time,
+                0
+            )
         )
     );
 

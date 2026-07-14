@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,8 +46,8 @@ Foam::incompressibleDriftFluxMixture::incompressibleDriftFluxMixture
     nucModel_(viscosityModel::New(mesh, phase2Name())),
     muModel_(mixtureViscosityModel::New(*this)),
 
-    rhod_("rho", dimDensity, muModel_()),
-    rhoc_("rho", dimDensity, nucModel_()),
+    rhod_("rho", dimensions::density, muModel_()),
+    rhoc_("rho", dimensions::density, nucModel_()),
 
     alphaMax_(lookupOrDefault("alphaMax", 1.0)),
 
@@ -62,7 +62,7 @@ Foam::incompressibleDriftFluxMixture::incompressibleDriftFluxMixture
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("rho", dimDensity, 0)
+        dimensionedScalar("rho", dimensions::density, 0)
     ),
 
     nu_
@@ -74,7 +74,7 @@ Foam::incompressibleDriftFluxMixture::incompressibleDriftFluxMixture
             mesh
         ),
         mesh,
-        dimensionedScalar(dimKinematicViscosity, 0),
+        dimensionedScalar(dimensions::kinematicViscosity, 0),
         calculatedFvPatchScalarField::typeName
     ),
 

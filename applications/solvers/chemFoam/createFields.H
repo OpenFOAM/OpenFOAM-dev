@@ -41,11 +41,7 @@ volScalarField Rspecific
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar
-    (
-        dimensionSet(dimEnergy/dimMass/dimTemperature),
-        0
-    )
+    dimensionedScalar(dimensions::gasConstant, 0)
 );
 
 volVectorField U
@@ -59,7 +55,7 @@ volVectorField U
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedVector(dimVelocity, Zero)
+    dimensionedVector(dimensions::velocity, Zero)
 );
 
 #include "createPhi.H"

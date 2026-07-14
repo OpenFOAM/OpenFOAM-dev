@@ -15,14 +15,14 @@ IOdictionary physicalProperties
 const dimensionedScalar rho
 (
     "rho",
-    dimDensity,
+    dimensions::density,
     physicalProperties
 );
 
 const dimensionedScalar nu
 (
     "nu",
-    dimKinematicViscosity,
+    dimensions::kinematicViscosity,
     physicalProperties
 );
 

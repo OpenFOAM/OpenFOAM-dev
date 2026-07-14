@@ -6,10 +6,10 @@
         dimensionedScalar Vk
         (
             "Vk",
-            dimVolume,
+            dimensions::volume,
             gSum(c*mesh.V().primitiveField())
         );
-        dimensionedScalar Ak("Ak", dimArea, 0.0);
+        dimensionedScalar Ak("Ak", dimensions::area, 0.0);
 
         if (Vk.value() > small)
         {

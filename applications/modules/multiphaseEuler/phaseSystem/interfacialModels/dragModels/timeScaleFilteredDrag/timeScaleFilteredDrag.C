@@ -50,7 +50,7 @@ Foam::dragModels::timeScaleFilteredDrag::timeScaleFilteredDrag
 :
     dispersedDragModel(dict.subDict("dragModel"), interface, registerObject),
     dragModel_(dragModel::New(dict.subDict("dragModel"), interface)),
-    minRelaxTime_("minRelaxTime", dimTime, dict)
+    minRelaxTime_("minRelaxTime", dimensions::time, dict)
 {
     if (!isA<dispersedDragModel>(dragModel_()))
     {

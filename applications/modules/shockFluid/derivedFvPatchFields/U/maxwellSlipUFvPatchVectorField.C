@@ -45,7 +45,7 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     muName_(dict.lookupOrDefault<word>("mu", "mu")),
     accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
-    Uwall_("Uwall", dimVelocity, dict, p.size()),
+    Uwall_("Uwall", dimensions::velocity, dict, p.size()),
     thermalCreep_(dict.lookupOrDefault("thermalCreep", true)),
     curvature_(dict.lookupOrDefault("curvature", true))
 {

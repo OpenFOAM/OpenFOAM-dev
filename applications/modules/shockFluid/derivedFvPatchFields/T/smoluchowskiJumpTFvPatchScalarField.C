@@ -45,7 +45,7 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     muName_(dict.lookupOrDefault<word>("mu", "mu")),
     accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff", dimless)),
-    Twall_("Twall", dimTemperature, dict, p.size()),
+    Twall_("Twall", dimensions::temperature, dict, p.size()),
     gamma_(dict.lookupOrDefault<scalar>("gamma", dimless, 1.4))
 {
     if (mag(accommodationCoeff_) < small || mag(accommodationCoeff_) > 2.0)

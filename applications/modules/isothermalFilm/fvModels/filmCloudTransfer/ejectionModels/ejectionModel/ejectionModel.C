@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::ejectionModel::ejectionModel
         (
             "ejectionRate",
             film.mesh,
-            dimensionedScalar(dimless/dimTime, 0)
+            dimensionedScalar(dimless/dimensions::time, 0)
         )
     ),
     diameter_
@@ -58,7 +58,7 @@ Foam::ejectionModel::ejectionModel
         (
             "ejectionDiameter",
             film.mesh,
-            dimensionedScalar(dimLength, 0)
+            dimensionedScalar(dimensions::length, 0)
         )
     )
 {}

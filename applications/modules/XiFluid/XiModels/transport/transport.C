@@ -150,7 +150,7 @@ void Foam::XiModels::transport::correct()
            *max
             (
                 (n() & n())*tr(gradU) - (n & gradU & n),
-                dimensionedScalar(dimless/dimTime, 0)
+                dimensionedScalar(dimless/dimensions::time, 0)
             )
         );
 
@@ -168,7 +168,7 @@ void Foam::XiModels::transport::correct()
            *max
             (
                 (n() & n())*tr(gradSt) - (n & gradSt & n),
-                dimensionedScalar(dimless/dimTime, 0)
+                dimensionedScalar(dimless/dimensions::time, 0)
             )
         );
 

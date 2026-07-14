@@ -63,5 +63,5 @@
     //     Y[i] = Y0[i];
     // }
 
-    // thermo.he() = dimensionedScalar(dimEnergy/dimMass, h0);
+    // thermo.he() = dimensionedScalar(dimensions::specificEnergy, h0);
     // thermo.correct();

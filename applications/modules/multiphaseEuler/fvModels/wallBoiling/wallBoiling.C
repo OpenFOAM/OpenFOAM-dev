@@ -677,7 +677,7 @@ void Foam::fv::wallBoiling::correctMDot() const
         infoField
         (
             "mDot[" + mesh().boundary()[patchi].name() + "]",
-            dimDensity/dimTime,
+            dimensions::density/dimensions::time,
             mDot
         );
 
@@ -741,7 +741,7 @@ Foam::fv::wallBoiling::wallBoiling
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, scalar(0)),
+        dimensionedScalar(dimensions::density/dimensions::time, scalar(0)),
         mDotBoundaryTypes
         (
             wallBoilingPhaseChangeRateFvPatchScalarField::typeName
@@ -799,7 +799,12 @@ Foam::fv::wallBoiling::d() const
 
     const volScalarField::Internal mask
     (
-        neg(mag(mDot_) - dimensionedScalar(dimDensity/dimTime, rootVSmall))
+        neg
+        (
+            mag(mDot_) - dimensionedScalar(dimensions::density/dimensions::time,
+            rootVSmall
+            )
+        )
     );
 
     tmp<volScalarField::Internal> td =
@@ -836,7 +841,7 @@ Foam::fv::wallBoiling::nDot() const
         (
             name() + ":nDot",
             mesh(),
-            dimensionedScalar(inv(dimTime), scalar(0))
+            dimensionedScalar(inv(dimensions::time), scalar(0))
         );
     volScalarField::Internal& nDot = tnDot.ref();
 

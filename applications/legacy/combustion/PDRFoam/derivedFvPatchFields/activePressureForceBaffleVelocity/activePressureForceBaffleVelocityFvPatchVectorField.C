@@ -48,13 +48,16 @@ activePressureForceBaffleVelocityFvPatchVectorField
     initCyclicSf_(0),
     nbrCyclicSf_(0),
     openFraction_(dict.lookup<scalar>("openFraction", units::fraction)),
-    openingTime_(dict.lookup<scalar>("openingTime", dimTime)),
+    openingTime_(dict.lookup<scalar>("openingTime", dimensions::time)),
     maxOpenFractionDelta_
     (
         dict.lookup<scalar>("maxOpenFractionDelta", units::fraction)
     ),
     curTimeIndex_(-1),
-    minThresholdValue_(dict.lookup<scalar>("minThresholdValue", dimPressure)),
+    minThresholdValue_
+    (
+        dict.lookup<scalar>("minThresholdValue", dimensions::pressure)
+    ),
     fBased_(dict.lookup<bool>("forceBased")),
     baffleActivated_(0)
 {

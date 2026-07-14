@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::blendedLiftModel::Ff() const
         correctFixedFluxBCs
         (
             interface(),
-            evaluate(&liftModel::Ff, "Ff", liftModel::dimF*dimArea)
+            evaluate(&liftModel::Ff, "Ff", liftModel::dimF*dimensions::area)
         );
 }
 

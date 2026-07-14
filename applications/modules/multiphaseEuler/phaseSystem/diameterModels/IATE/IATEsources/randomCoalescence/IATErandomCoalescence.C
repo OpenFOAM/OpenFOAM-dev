@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::diameterModels::IATEsources::randomCoalescence::R
             iate_.phase().mesh()
         ),
         iate_.phase().mesh(),
-        dimensionedScalar(dimless/dimTime, 0)
+        dimensionedScalar(dimless/dimensions::time, 0)
     );
 
     const scalar Crc = Crc_.value();

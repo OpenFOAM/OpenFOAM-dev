@@ -56,7 +56,7 @@ Foam::mixtureViscosityModels::plastic::plastic
     plasticViscosityCoeff_
     (
         "coeff",
-        dimDynamicViscosity,
+        dimensions::dynamicViscosity,
         typeDict()
     ),
     plasticViscosityExponent_
@@ -68,7 +68,7 @@ Foam::mixtureViscosityModels::plastic::plastic
     muMax_
     (
         "muMax",
-        dimDynamicViscosity,
+        dimensions::dynamicViscosity,
         typeDict()
     )
 {}

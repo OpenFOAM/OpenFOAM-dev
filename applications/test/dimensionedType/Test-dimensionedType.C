@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,25 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    dimensionedTensor dt("dt", dimLength, tensor(0, 1, 2, 3, 4, 5, 6, 7, 8));
+    dimensionedTensor dt
+    (
+        "dt",
+        dimensions::length,
+        tensor(0, 1, 2, 3, 4, 5, 6, 7, 8)
+    );
 
     Info<< "dt.component(tensor::XX): " << dt.component(tensor::XX) << endl;
 
-    dimensionedScalar ds("ds", dimTime, 1.0);
+    dimensionedScalar ds("ds", dimensions::time, 1.0);
 
     Info<< "ds*dt dt*ds: " << ds*dt << " " << dt*ds << endl;
 
-    dimensionedTensor dt2("dt2", dimLength, tensor(1, 1, 2, 3, 4, 5, 6, 7, 8));
+    dimensionedTensor dt2
+    (
+        "dt2",
+        dimensions::length,
+        tensor(1, 1, 2, 3, 4, 5, 6, 7, 8)
+    );
 
     Info<< "cmptMultiply(dt, dt2): " << cmptMultiply(dt, dt2) << endl;
     Info<< "cmptDivide(dt, dt2): " << cmptDivide(dt, dt2) << endl;
@@ -69,7 +79,7 @@ int main(int argc, char *argv[])
             <<  dimensionedScalar
                 (
                     "ABC",
-                    dimLength,
+                    dimensions::length,
                     IStringStream("bla [mm] 3.0")()
                 ) << endl;
         {

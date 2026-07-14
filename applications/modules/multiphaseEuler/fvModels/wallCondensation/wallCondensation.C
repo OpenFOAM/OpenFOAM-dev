@@ -303,7 +303,7 @@ void Foam::fv::wallCondensation::correctMDot() const
         infoField
         (
             "mDot[" + mesh().boundary()[patchi].name() + "]",
-            dimDensity/dimTime,
+            dimensions::density/dimensions::time,
             mDot
         );
 
@@ -362,7 +362,7 @@ Foam::fv::wallCondensation::wallCondensation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, scalar(0)),
+        dimensionedScalar(dimensions::density/dimensions::time, scalar(0)),
         mDotBoundaryTypes
         (
             wallCondensationPhaseChangeRateFvPatchScalarField::typeName
@@ -379,7 +379,7 @@ Foam::fv::wallCondensation::wallCondensation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, scalar(0))
+        dimensionedScalar(dimensions::density/dimensions::time, scalar(0))
     )
 {
     readCoeffs(coeffs(dict));

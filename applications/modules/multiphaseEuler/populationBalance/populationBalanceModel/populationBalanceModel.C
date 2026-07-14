@@ -661,7 +661,7 @@ Foam::Pair<Foam::dimensionedScalar> Foam::populationBalanceModel::etaVCoeffs0
       ? Pair<dimensionedScalar>
         (
             dimensionedScalar(dimless, scalar(1)),
-            dimensionedScalar(dimVolume, scalar(0))
+            dimensionedScalar(dimensions::volume, scalar(0))
         )
       : Pair<dimensionedScalar>
         (
@@ -681,7 +681,7 @@ Foam::Pair<Foam::dimensionedScalar> Foam::populationBalanceModel::etaVCoeffs1
       ? Pair<dimensionedScalar>
         (
             dimensionedScalar(dimless, scalar(1)),
-            dimensionedScalar(dimVolume, scalar(0))
+            dimensionedScalar(dimensions::volume, scalar(0))
         )
       : Pair<dimensionedScalar>
         (
@@ -815,7 +815,7 @@ Foam::populationBalanceModel::populationBalanceModel
         oneDimensionalDiscretisation::New
         (
             "dSph",
-            dimLength,
+            dimensions::length,
             nGroups(),
             typeDict().subDict("sphericalDiameters")
         )->dimensionedCoordinates();
@@ -874,7 +874,7 @@ Foam::populationBalanceModel::populationBalanceModel
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar(inv(dimTime), 0)
+                dimensionedScalar(inv(dimensions::time), 0)
             )
         );
 
@@ -890,7 +890,7 @@ Foam::populationBalanceModel::populationBalanceModel
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar(inv(dimTime), 0)
+                dimensionedScalar(inv(dimensions::time), 0)
             )
         );
     }
@@ -927,7 +927,7 @@ Foam::populationBalanceModel::populationBalanceModel
                         mesh()
                     ),
                     mesh(),
-                    dimensionedScalar(dimDensity/dimTime, 0)
+                    dimensionedScalar(dimensions::density/dimensions::time, 0)
                 )
             );
 
@@ -947,7 +947,7 @@ Foam::populationBalanceModel::populationBalanceModel
                         mesh()
                     ),
                     mesh(),
-                    dimensionedScalar(dimDensity/dimTime, 0)
+                    dimensionedScalar(dimensions::density/dimensions::time, 0)
                 )
             );
 
@@ -967,7 +967,7 @@ Foam::populationBalanceModel::populationBalanceModel
                         mesh()
                     ),
                     mesh(),
-                    dimensionedScalar(dimDensity/dimTime, 0)
+                    dimensionedScalar(dimensions::density/dimensions::time, 0)
                 )
             );
         }
@@ -1038,7 +1038,7 @@ Foam::populationBalanceModel::populationBalanceModel
                         vMid0 < 0.5*vs_[j] && 0.5*vs_[j] < vMid1
                       ? mag(0.5*vs_[j] - vMid0)
                       : 0.5*vs_[j] < vMid0
-                      ? dimensionedScalar(dimVolume, scalar(0))
+                      ? dimensionedScalar(dimensions::volume, scalar(0))
                       : vMid1 - vMid0
                     )
                 );
@@ -1418,7 +1418,7 @@ Foam::populationBalanceModel::modelSourceSu
 
     const dimensionedScalar zeroSu
     (
-        (flds.empty() ? dimless : flds[i].dimensions())/dimTime,
+        (flds.empty() ? dimless : flds[i].dimensions())/dimensions::time,
         scalar(0)
     );
 
@@ -1614,7 +1614,7 @@ void Foam::populationBalanceModel::correct()
         (
             "invDsm",
             mesh_,
-            dimensionedScalar(inv(dimLength), Zero)
+            dimensionedScalar(inv(dimensions::length), Zero)
         )
     );
     volScalarField& invDsm = tInvDsm.ref();
@@ -1670,7 +1670,7 @@ void Foam::populationBalanceModel::correct()
                     IOobject::AUTO_WRITE
                 ),
                 mesh_,
-                dimensionedVector(dimVelocity, Zero)
+                dimensionedVector(dimensions::velocity, Zero)
             )
         );
     }

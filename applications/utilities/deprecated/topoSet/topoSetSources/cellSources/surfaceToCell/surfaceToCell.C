@@ -393,7 +393,10 @@ Foam::surfaceToCell::surfaceToCell
 :
     topoSetSource(mesh),
     surfName_(fileName(dict.lookup("file")).expand()),
-    outsidePoints_(dict.lookup<List<point>>("outsidePoints", dimLength)),
+    outsidePoints_
+    (
+        dict.lookup<List<point>>("outsidePoints", dimensions::length)
+    ),
     includeCut_(readBool(dict.lookup("includeCut"))),
     includeInside_(readBool(dict.lookup("includeInside"))),
     includeOutside_(readBool(dict.lookup("includeOutside"))),
@@ -401,7 +404,7 @@ Foam::surfaceToCell::surfaceToCell
     (
         dict.lookupOrDefault<bool>("useSurfaceOrientation", false)
     ),
-    nearDist_(dict.lookup<scalar>("nearDistance", dimLength)),
+    nearDist_(dict.lookup<scalar>("nearDistance", dimensions::length)),
     curvature_(dict.lookup<scalar>("curvature", units::none)),
     surfPtr_(new triSurface(surfName_)),
     querySurfPtr_(new triSurfaceSearch(*surfPtr_)),

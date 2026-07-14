@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ KocamustafaogullariIshiiNucleationSite::calculate
 {
     const ScalarFieldType rhoM((rhoLiquid - rhoVapour)/rhoVapour);
 
-    const dimensionedScalar zeroT_(dimTemperature, 0);
+    const dimensionedScalar zeroT_(dimensions::temperature, 0);
     auto zeroT = coefficient<ScalarFieldType>::value(zeroT_);
 
     auto Cn = coefficient<ScalarFieldType>::value(Cn_);

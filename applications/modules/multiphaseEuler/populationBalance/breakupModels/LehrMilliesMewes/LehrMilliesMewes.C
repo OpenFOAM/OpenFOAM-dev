@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ Foam::populationBalance::breakupModels::LehrMilliesMewes::rate
 
     // Reset of dimension to pure length to avoid problems in transcendental
     // functions due to small exponents
-    L.dimensions().reset(dimLength);
+    L.dimensions().reset(dimensions::length);
 
     const volScalarField::Internal T
     (

@@ -76,7 +76,7 @@ Foam::patchDistanceToCell::patchDistanceToCell
       ? dict.lookup<wordReList>("patches")
       : wordReList(1, dict.lookup<wordRe>("patch"))
     ),
-    distance_(dict.lookup<scalar>("distance", dimLength))
+    distance_(dict.lookup<scalar>("distance", dimensions::length))
 {}
 
 

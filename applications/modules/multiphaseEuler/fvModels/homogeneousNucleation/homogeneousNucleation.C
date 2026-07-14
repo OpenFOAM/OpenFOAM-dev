@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ Foam::fv::homogeneousNucleation::homogeneousNucleation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimLength, 0)
+        dimensionedScalar(dimensions::length, 0)
     ),
     mDotByAlphaSolution_
     (
@@ -123,7 +123,7 @@ Foam::fv::homogeneousNucleation::homogeneousNucleation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, 0)
+        dimensionedScalar(dimensions::density/dimensions::time, 0)
     ),
     mDot_
     (
@@ -136,7 +136,7 @@ Foam::fv::homogeneousNucleation::homogeneousNucleation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, 0)
+        dimensionedScalar(dimensions::density/dimensions::time, 0)
     )
 {
     readCoeffs(coeffs(dict));
@@ -188,7 +188,7 @@ Foam::fv::homogeneousNucleation::tau() const
 {
     static const dimensionedScalar mDotRootVSmall
     (
-        dimDensity/dimTime,
+        dimensions::density/dimensions::time,
         rootVSmall
     );
 

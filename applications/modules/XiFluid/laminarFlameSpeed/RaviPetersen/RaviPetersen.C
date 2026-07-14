@@ -305,7 +305,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::Su
         (
             "Su0",
             p.mesh(),
-            dimensionedScalar(dimVelocity, 0)
+            dimensionedScalar(dimensions::velocity, 0)
         )
     );
 

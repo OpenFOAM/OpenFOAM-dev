@@ -61,7 +61,7 @@ dripping::dripping
     (
         distribution::New
         (
-            dimLength,
+            dimensions::length,
             dict.optionalTypeDict(typeName)
            .subDict("parcelDistribution"),
             0,

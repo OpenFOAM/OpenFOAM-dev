@@ -47,7 +47,7 @@ Foam::diameterModels::fixedInterfacialArea::fixedInterfacialArea
 )
 :
     diameterModel(diameterProperties, phase),
-    AvbyAlpha_("AvbyAlpha", inv(dimLength), diameterProperties, -1),
+    AvbyAlpha_("AvbyAlpha", inv(dimensions::length), diameterProperties, -1),
     AvbyAlphaFieldPtr_()
 {
     read(diameterProperties);

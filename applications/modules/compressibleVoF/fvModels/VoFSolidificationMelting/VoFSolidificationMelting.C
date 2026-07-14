@@ -64,14 +64,14 @@ void Foam::fv::VoFSolidificationMelting::readCoeffs(const dictionary& dict)
         Function1<scalar>::New
         (
             "alphaSolidT",
-            dimTemperature,
+            dimensions::temperature,
             units::fraction,
             dict
         ).ptr()
     );
-    L_ = dimensionedScalar("L", dimEnergy/dimMass, dict);
+    L_ = dimensionedScalar("L", dimensions::specificEnergy, dict);
     relax_ = dict.lookupOrDefault<scalar>("relax", dimless, 0.9);
-    Cu_ = dict.lookupOrDefault<scalar>("Cu", dimless/dimTime, 100000);
+    Cu_ = dict.lookupOrDefault<scalar>("Cu", dimless/dimensions::time, 100000);
     q_ = dict.lookupOrDefault<scalar>("q", dimless, 0.001);
 }
 
@@ -105,7 +105,7 @@ Foam::fv::VoFSolidificationMelting::VoFSolidificationMelting
     fvModel(name, modelType, mesh, dict),
     zone_(mesh, coeffs(dict)),
     alphaSolidT_(),
-    L_("L", dimEnergy/dimMass, NaN),
+    L_("L", dimensions::specificEnergy, NaN),
     relax_(NaN),
     Cu_(NaN),
     q_(NaN),

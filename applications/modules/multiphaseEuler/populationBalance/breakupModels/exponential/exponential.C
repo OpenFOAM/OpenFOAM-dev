@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,8 @@ Foam::populationBalance::breakupModels::exponential::exponential
 )
 :
     daughterSizeDistribution(popBal, dict),
-    exponent_("exponent", inv(dimVolume), dict),
-    C_("C", inv(dimTime), dict)
+    exponent_("exponent", inv(dimensions::volume), dict),
+    C_("C", inv(dimensions::time), dict)
 {}
 
 

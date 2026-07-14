@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ void Foam::solvers::incompressibleDriftFlux::alphaSuSp
 {
     if (!divergent()) return;
 
-    const dimensionedScalar Szero(dimless/dimTime, 0);
+    const dimensionedScalar Szero(dimless/dimensions::time, 0);
 
     tSp = volScalarField::Internal::New("Sp", mesh, Szero);
     tSu = volScalarField::Internal::New("Su", mesh, Szero);

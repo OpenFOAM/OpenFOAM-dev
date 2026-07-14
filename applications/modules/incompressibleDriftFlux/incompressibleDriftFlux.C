@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::solvers::incompressibleDriftFlux::surfaceTensionForce() const
     (
         "surfaceTensionForce",
         mesh,
-        dimensionedScalar(dimForce/dimVolume, 0)
+        dimensionedScalar(dimensions::force/dimensions::volume, 0)
     );
 }
 
@@ -145,7 +145,7 @@ Foam::solvers::incompressibleDriftFlux::incompressibleDriftFlux(fvMesh& mesh)
                 IOobject::AUTO_WRITE
             ),
             mesh,
-            dimensionedScalar(dimTime/dimDensity, 1)
+            dimensionedScalar(dimensions::time/dimensions::density, 1)
         );
     }
 

@@ -49,10 +49,10 @@ Foam::diameterModels::linearTsub::linearTsub
 :
     spherical(diameterProperties, phase),
     liquidPhaseName_(diameterProperties.lookup("liquidPhase")),
-    d2_("d2", dimLength, diameterProperties, 0.0015),
-    Tsub2_("Tsub2", dimTemperature, diameterProperties, 0),
-    d1_("d1", dimLength, diameterProperties, 0.00015),
-    Tsub1_("Tsub1", dimTemperature, diameterProperties, 13.5),
+    d2_("d2", dimensions::length, diameterProperties, 0.0015),
+    Tsub2_("Tsub2", dimensions::temperature, diameterProperties, 0),
+    d1_("d1", dimensions::length, diameterProperties, 0.00015),
+    Tsub1_("Tsub1", dimensions::temperature, diameterProperties, 13.5),
     saturationModelPtr_
     (
         saturationTemperatureModel::New

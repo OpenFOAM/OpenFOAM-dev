@@ -41,7 +41,13 @@ distributionGroupFractionFvPatchScalarField
     groupPropertyFvScalarField(iF),
     distribution_
     (
-        distribution::New(dimLength, dict.subDict("distribution"), 3, -1)
+        distribution::New
+        (
+            dimensions::length,
+            dict.subDict("distribution"),
+            3,
+            -1
+        )
     ),
     etaPtr_(nullptr)
 {}
@@ -109,7 +115,15 @@ void Foam::distributionGroupFractionFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    writeEntry(os, "distribution", dimLength, distribution_(), true, false);
+    writeEntry
+    (
+        os,
+        "distribution",
+        dimensions::length,
+        distribution_(),
+        true,
+        false
+    );
     writeEntry(os, "value", *this);
 }
 

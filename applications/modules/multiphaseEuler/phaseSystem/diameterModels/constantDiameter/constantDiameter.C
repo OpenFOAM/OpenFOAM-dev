@@ -47,7 +47,7 @@ Foam::diameterModels::constant::constant
 )
 :
     spherical(diameterProperties, phase),
-    d_("d", dimLength, diameterProperties)
+    d_("d", dimensions::length, diameterProperties)
 {}
 
 

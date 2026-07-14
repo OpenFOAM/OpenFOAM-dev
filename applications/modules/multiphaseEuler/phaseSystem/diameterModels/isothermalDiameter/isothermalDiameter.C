@@ -47,8 +47,8 @@ Foam::diameterModels::isothermal::isothermal
 )
 :
     spherical(diameterProperties, phase),
-    d0_("d0", dimLength, diameterProperties),
-    p0_("p0", dimPressure, diameterProperties),
+    d0_("d0", dimensions::length, diameterProperties),
+    p0_("p0", dimensions::pressure, diameterProperties),
     d_
     (
         IOobject

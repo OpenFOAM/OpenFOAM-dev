@@ -56,7 +56,7 @@ Foam::BRhoFluidMulticomponentThermo<BaseThermo>::hf() const
     return this->volScalarFieldProperty
     (
         "hf",
-        dimEnergy/dimMass,
+        dimensions::specificEnergy,
         &BaseThermo::mixtureType::thermoMixture,
         &BaseThermo::mixtureType::thermoMixtureType::hf
     );

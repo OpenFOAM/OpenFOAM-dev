@@ -156,7 +156,7 @@ Info<< "Creating base fields for time " << runTime.name() << endl;
             false
         ),
         mesh,
-        dimensionedScalar(dimPressure, p0)
+        dimensionedScalar(dimensions::pressure, p0)
     ).write();
 
     volScalarField
@@ -171,6 +171,6 @@ Info<< "Creating base fields for time " << runTime.name() << endl;
             false
         ),
         mesh,
-        dimensionedScalar(dimTemperature, T0)
+        dimensionedScalar(dimensions::temperature, T0)
     ).write();
 }

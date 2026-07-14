@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::liftModels::noLift::Ff() const
     (
         "Ff",
         interface_.mesh(),
-        dimensionedScalar(dimF*dimArea, 0)
+        dimensionedScalar(dimF*dimensions::area, 0)
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,11 @@ void Foam::fv::heatTransferLimitedPhaseChange::readCoeffs
                     IOobject::NO_WRITE
                 ),
                 mesh(),
-                dimensionedScalar(dimDensity/dimTime/dimPressure, 0)
+                dimensionedScalar
+                (
+                    dimensions::density/dimensions::time/dimensions::pressure,
+                    0
+                )
             )
         );
     }
@@ -164,7 +168,7 @@ Foam::fv::heatTransferLimitedPhaseChange::heatTransferLimitedPhaseChange
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimDensity/dimTime, 0)
+        dimensionedScalar(dimensions::density/dimensions::time, 0)
     ),
     dmDotdpPtr_(nullptr)
 {
