@@ -51,10 +51,16 @@ void Foam::ConeInjection<CloudType>::setInjectionMethod()
     {
         injectionMethod_ = imDisc;
 
-        dInner_ =
-            this->typeDict().template lookup<scalar>("dInner", dimLength);
-        dOuter_ =
-            this->typeDict().template lookup<scalar>("dOuter", dimLength);
+        dInner_ = this->typeDict().template lookup<scalar>
+        (
+            "dInner",
+            dimensions::length
+        );
+        dOuter_ = this->typeDict().template lookup<scalar>
+        (
+            "dOuter",
+            dimensions::length
+        );
     }
     else
     {
@@ -85,7 +91,7 @@ void Foam::ConeInjection<CloudType>::setFlowType()
             (
                 "Umag",
                 this->owner().time().userUnits(),
-                dimVelocity,
+                dimensions::velocity,
                 this->typeDict()
             ).ptr()
         );
@@ -100,7 +106,7 @@ void Foam::ConeInjection<CloudType>::setFlowType()
             (
                 "Pinj",
                 this->owner().time().userUnits(),
-                dimPressure,
+                dimensions::pressure,
                 this->typeDict()
             ).ptr()
         );
@@ -109,10 +115,16 @@ void Foam::ConeInjection<CloudType>::setFlowType()
     {
         flowType_ = ftFlowRateAndDischarge;
 
-        dInner_ =
-            this->typeDict().template lookup<scalar>("dInner", dimLength);
-        dOuter_ =
-            this->typeDict().template lookup<scalar>("dOuter", dimLength);
+        dInner_ = this->typeDict().template lookup<scalar>
+        (
+            "dInner",
+            dimensions::length
+        );
+        dOuter_ = this->typeDict().template lookup<scalar>
+        (
+            "dOuter",
+            dimensions::length
+        );
 
         Cd_.reset
         (
@@ -154,7 +166,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
         (
             "position",
             this->owner().time().userUnits(),
-            dimLength,
+            dimensions::length,
             this->typeDict()
         )
     ),
@@ -199,7 +211,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
     (
         distribution::New
         (
-            dimLength,
+            dimensions::length,
             this->typeDict().subDict("sizeDistribution"),
             this->sizeSampleQ(),
             owner.rndGen().generator()

@@ -40,7 +40,7 @@ void Foam::SuppressionCollision<CloudType>::collide
 
     volScalarField vDotSweep(sc.vDotSweep());
 
-    dimensionedScalar Dt("dt", dimTime, td.trackTime());
+    dimensionedScalar Dt("dt", dimensions::time, td.trackTime());
     volScalarField P(typedName("p"), 1.0 - exp(-vDotSweep*Dt));
 
     forAllIter(typename CloudType, this->owner(), iter)

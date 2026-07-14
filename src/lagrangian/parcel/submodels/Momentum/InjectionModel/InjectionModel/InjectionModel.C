@@ -60,7 +60,7 @@ Foam::scalar Foam::InjectionModel<CloudType>::readMassTotal
         return NaN;
     }
 
-    return dict.lookup<scalar>("massTotal", dimMass);
+    return dict.lookup<scalar>("massTotal", dimensions::mass);
 }
 
 
@@ -130,7 +130,11 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
                 new Function1s::Constant<scalar>
                 (
                     "massFlowRate",
-                    dict.lookup<scalar>("massFlowRate", dimMass/dimTime)
+                    dict.lookup<scalar>
+                    (
+                        "massFlowRate",
+                        dimensions::mass/dimensions::time
+                    )
                 )
             );
     }
@@ -142,12 +146,12 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
             (
                 "massFlowRate",
                 this->owner().time().userUnits(),
-                dimMass/dimTime,
+                dimensions::mass/dimensions::time,
                 dict
             );
     }
 
-    const scalar massTotal = dict.lookup<scalar>("massTotal", dimMass);
+    const scalar massTotal = dict.lookup<scalar>("massTotal", dimensions::mass);
 
     if (!dict.found("flowRateProfile"))
     {
@@ -202,7 +206,7 @@ Foam::InjectionModel<CloudType>::readParcelsPerSecond
         (
             "parcelsPerSecond",
             this->owner().time().userUnits(),
-            dimless/dimTime,
+            dimensions::rate,
             dict
         );
 }

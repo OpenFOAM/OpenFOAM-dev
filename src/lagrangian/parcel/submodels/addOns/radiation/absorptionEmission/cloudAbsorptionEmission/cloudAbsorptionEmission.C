@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::radiationModels::absorptionEmissionModels::cloud::aDisp(const label) const
         (
             "a",
             mesh_,
-            dimensionedScalar(dimless/dimLength, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
 
@@ -106,7 +106,7 @@ Foam::radiationModels::absorptionEmissionModels::cloud::eDisp
         (
             "e",
             mesh_,
-            dimensionedScalar(dimless/dimLength, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
 
@@ -126,7 +126,7 @@ Foam::radiationModels::absorptionEmissionModels::cloud::EDisp
         (
             "E",
             mesh_,
-            dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
+            dimensionedScalar(dimensions::powerDensity, 0)
         )
     );
 

@@ -109,7 +109,7 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
                 (
                     this->name() + ":rhoTrans",
                     this->mesh(),
-                    dimensionedScalar(dimMass/dimTime/dimVolume, 0)
+                    dimensionedScalar(dimensions::density/dimensions::time, 0)
                 )
             );
 
@@ -127,7 +127,10 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
         }
         else
         {
-            tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(Yi, dimMass/dimTime));
+            tmp<fvScalarMatrix> tfvm
+            (
+                new fvScalarMatrix(Yi, dimensions::mass/dimensions::time)
+            );
             fvScalarMatrix& fvm = tfvm.ref();
 
             fvm.source() = -rhoTrans_[i]/this->time().deltaTValue();
@@ -136,7 +139,10 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
         }
     }
 
-    return tmp<fvScalarMatrix>(new fvScalarMatrix(Yi, dimMass/dimTime));
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix(Yi, dimensions::mass/dimensions::time)
+    );
 }
 
 
@@ -152,7 +158,7 @@ Foam::ReactingCloud<CloudType>::Srho() const
             this->mesh(),
             dimensionedScalar
             (
-                rhoTrans_[0].dimensions()/dimTime/dimVolume,
+                rhoTrans_[0].dimensions()/dimensions::time/dimensions::volume,
                 0
             )
         )
@@ -186,7 +192,7 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
                 (
                     this->name() + ":rhoTrans",
                     this->mesh(),
-                    dimensionedScalar(dimMass/dimTime/dimVolume, 0)
+                    dimensionedScalar(dimensions::density/dimensions::time, 0)
                 );
 
             scalarField& sourceField = trhoTrans.ref();
@@ -202,7 +208,10 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
         }
         else
         {
-            tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(rho, dimMass/dimTime));
+            tmp<fvScalarMatrix> tfvm
+            (
+                new fvScalarMatrix(rho, dimensions::mass/dimensions::time)
+            );
             fvScalarMatrix& fvm = tfvm.ref();
 
             tmp<volScalarField> trhoTransV =
@@ -210,7 +219,7 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
                 (
                     this->name() + ":rhoTransV",
                     this->mesh(),
-                    dimensionedScalar(dimMass/dimTime, 0)
+                    dimensionedScalar(dimensions::mass/dimensions::time, 0)
                 );
 
             scalarField& sourceField = trhoTransV.ref();
@@ -226,7 +235,10 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
         }
     }
 
-    return tmp<fvScalarMatrix>(new fvScalarMatrix(rho, dimMass/dimTime));
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix(rho, dimensions::mass/dimensions::time)
+    );
 }
 
 

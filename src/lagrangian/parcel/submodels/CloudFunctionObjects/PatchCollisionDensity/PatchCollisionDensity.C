@@ -48,7 +48,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
             this->owner().mesh()
         ),
         this->owner().mesh(),
-        dimless/dimArea,
+        inv(dimensions::area),
         z,
         numberCollisionDensity_
     )
@@ -63,7 +63,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
             this->owner().mesh()
         ),
         this->owner().mesh(),
-        dimless/dimArea/dimTime,
+        inv(dimensions::area)/dimensions::time,
         z,
         (numberCollisionDensity_ - numberCollisionDensity0_)
        /(this->owner().mesh().time().value() - time0_)
@@ -79,7 +79,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
             this->owner().mesh()
         ),
         this->owner().mesh(),
-        dimMass/dimArea,
+        dimensions::mass/dimensions::area,
         z,
         massCollisionDensity_
     )
@@ -94,7 +94,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
             this->owner().mesh()
         ),
         this->owner().mesh(),
-        dimMass/dimArea/dimTime,
+        dimensions::mass/dimensions::area/dimensions::time,
         z,
         (massCollisionDensity_ - massCollisionDensity0_)
        /(this->owner().mesh().time().value() - time0_)

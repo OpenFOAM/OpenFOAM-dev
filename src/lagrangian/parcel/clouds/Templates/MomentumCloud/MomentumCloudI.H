@@ -450,7 +450,7 @@ Foam::MomentumCloud<CloudType>::SU(const volVectorField& U) const
         }
         else
         {
-            tmp<fvVectorMatrix> tfvm(new fvVectorMatrix(U, dimForce));
+            tmp<fvVectorMatrix> tfvm(new fvVectorMatrix(U, dimensions::force));
             fvVectorMatrix& fvm = tfvm.ref();
 
             fvm.source() = -UTrans()/(this->time().deltaT());
@@ -459,7 +459,7 @@ Foam::MomentumCloud<CloudType>::SU(const volVectorField& U) const
         }
     }
 
-    return tmp<fvVectorMatrix>(new fvVectorMatrix(U, dimForce));
+    return tmp<fvVectorMatrix>(new fvVectorMatrix(U, dimensions::force));
 }
 
 
@@ -473,7 +473,7 @@ Foam::MomentumCloud<CloudType>::vDotSweep() const
         (
             this->name() + ":vDotSweep",
             this->mesh(),
-            dimensionedScalar(dimless/dimTime, 0),
+            dimensionedScalar(inv(dimensions::time), 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -564,7 +564,7 @@ Foam::MomentumCloud<CloudType>::rhoEff() const
         (
             this->name() + ":rhoEff",
             this->mesh(),
-            dimensionedScalar(dimDensity, 0)
+            dimensionedScalar(dimensions::density, 0)
         )
     );
 

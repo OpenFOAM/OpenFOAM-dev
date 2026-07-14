@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::radiationModels::scatterModels::cloud::sigmaEff() const
         (
             "sigma",
             mesh_,
-            dimensionedScalar(dimless/dimLength, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
 

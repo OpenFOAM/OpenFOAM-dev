@@ -256,7 +256,7 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
             const volScalarField::Internal
                 Vdt(this->mesh().V()*this->time().deltaT());
 
-            if (hs.dimensions() == dimTemperature)
+            if (hs.dimensions() == dimensions::temperature)
             {
                 return
                     hsTrans()/Vdt
@@ -273,7 +273,10 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
         }
         else
         {
-            tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(hs, dimEnergy/dimTime));
+            tmp<fvScalarMatrix> tfvm
+            (
+                new fvScalarMatrix(hs, dimensions::energy/dimensions::time)
+            );
             fvScalarMatrix& fvm = tfvm.ref();
 
             fvm.source() = -hsTrans()/(this->time().deltaT());
@@ -282,7 +285,10 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
         }
     }
 
-    return tmp<fvScalarMatrix>(new fvScalarMatrix(hs, dimEnergy/dimTime));
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix(hs, dimensions::energy/dimensions::time)
+    );
 }
 
 
@@ -295,7 +301,7 @@ inline Foam::tmp<Foam::volScalarField> Foam::ThermoCloud<CloudType>::Ep() const
         (
             this->name() + ":radiation:Ep",
             this->mesh(),
-            dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
+            dimensionedScalar(dimensions::powerDensity, 0)
         )
     );
 
@@ -323,7 +329,7 @@ inline Foam::tmp<Foam::volScalarField> Foam::ThermoCloud<CloudType>::ap() const
         (
             this->name() + ":radiation:ap",
             this->mesh(),
-            dimensionedScalar(dimless/dimLength, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
 
@@ -352,7 +358,7 @@ Foam::ThermoCloud<CloudType>::sigmap() const
         (
             this->name() + ":radiation:sigmap",
             this->mesh(),
-            dimensionedScalar(dimless/dimLength, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
 

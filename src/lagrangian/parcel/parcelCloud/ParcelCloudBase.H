@@ -144,7 +144,7 @@ public:
                 {
                     return tmp<fvVectorMatrix>
                     (
-                        new fvVectorMatrix(U, dimensions::mass*dimAcceleration)
+                        new fvVectorMatrix(U, dimensions::force)
                     );
                 }
 
@@ -155,7 +155,7 @@ public:
                     (
                         this->name() + ":UTrans",
                         this->mesh(),
-                        dimensionedVector(dimensions::mass*dimVelocity, Zero)
+                        dimensionedVector(dimensions::momentum, Zero)
                     );
                 }
 
@@ -178,7 +178,7 @@ public:
                 {
                     return tmp<fvScalarMatrix>
                     (
-                        new fvScalarMatrix(hs, dimEnergy/dimensions::time)
+                        new fvScalarMatrix(hs, dimensions::power)
                     );
                 }
 
@@ -189,7 +189,7 @@ public:
                     (
                         this->name() + ":hsTrans",
                         this->mesh(),
-                        dimensionedScalar(dimEnergy, Zero)
+                        dimensionedScalar(dimensions::energy, Zero)
                     );
                 }
 
@@ -200,7 +200,11 @@ public:
                     (
                         this->name() + ":hsCoeffs",
                         this->mesh(),
-                        dimensionedScalar(dimEnergy/dimTemperature, Zero)
+                        dimensionedScalar
+                        (
+                            dimensions::energy/dimensions::temperature,
+                            Zero
+                        )
                     );
                 }
 
@@ -211,13 +215,7 @@ public:
                     (
                         this->name() + ":radiation:Ep",
                         this->mesh(),
-                        dimensionedScalar
-                        (
-                            dimensions::mass
-                           /dimensions::length
-                           /pow3(dimensions::time),
-                            Zero
-                        )
+                        dimensionedScalar(dimensions::powerDensity, Zero)
                     );
                 }
 
@@ -228,7 +226,7 @@ public:
                     (
                         this->name() + ":radiation:ap",
                         this->mesh(),
-                        dimensionedScalar(dimless/dimensions::length, 0)
+                        dimensionedScalar(inv(dimensions::length), 0)
                     );
                 }
 
@@ -239,7 +237,7 @@ public:
                     (
                         this->name() + ":radiation:sigmap",
                         this->mesh(),
-                        dimensionedScalar(dimless/dimensions::length, 0)
+                        dimensionedScalar(inv(dimensions::length), 0)
                     );
                 }
 

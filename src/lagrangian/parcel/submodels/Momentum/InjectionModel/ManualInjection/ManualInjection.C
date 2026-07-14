@@ -63,7 +63,7 @@ Foam::ManualInjection<CloudType>::ManualInjection
     (
         distribution::New
         (
-            dimLength,
+            dimensions::length,
             this->typeDict().subDict("sizeDistribution"),
             this->sizeSampleQ(),
             owner.rndGen().generator()

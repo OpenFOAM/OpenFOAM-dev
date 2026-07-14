@@ -98,7 +98,7 @@ Foam::PatchInjection<CloudType>::PatchInjection
     (
         distribution::New
         (
-            dimLength,
+            dimensions::length,
             this->typeDict().subDict("sizeDistribution"),
             this->sizeSampleQ(),
             owner.rndGen().generator()

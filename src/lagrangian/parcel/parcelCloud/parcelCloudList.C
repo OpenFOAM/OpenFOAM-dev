@@ -181,7 +181,7 @@ Foam::tmp<Foam::fvVectorMatrix> Foam::parcelCloudList::SU
 {
     tmp<fvVectorMatrix> tSU
     (
-        new fvVectorMatrix(U, dimensions::mass*dimAcceleration)
+        new fvVectorMatrix(U, dimensions::mass*dimensions::acceleration)
     );
 
     forAll(*this, i)
@@ -236,7 +236,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::parcelCloudList::Sh
     const volScalarField& hs
 ) const
 {
-    tmp<fvScalarMatrix> tSh(new fvScalarMatrix(hs, dimEnergy/dimensions::time));
+    tmp<fvScalarMatrix> tSh(new fvScalarMatrix(hs, dimensions::power));
     forAll(*this, i)
     {
         tSh.ref() += operator[](i).Sh(hs);
@@ -253,7 +253,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::hsTrans() const
         (
             cloudNamesName + ":hsTrans",
             mesh_,
-            dimensionedScalar(dimEnergy, Zero)
+            dimensionedScalar(dimensions::energy, Zero)
         )
     );
     forAll(*this, i)
@@ -272,7 +272,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::hsCoeff() const
         (
             cloudNamesName + ":hsCoeff",
             mesh_,
-            dimensionedScalar(dimEnergy/dimTemperature, Zero)
+            dimensionedScalar(dimensions::energy/dimensions::temperature, Zero)
         )
     );
     forAll(*this, i)
@@ -316,7 +316,7 @@ Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::ap() const
         (
             cloudNamesName + ":radiation:ap",
             mesh_,
-            dimensionedScalar(dimless/dimensions::length, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
     forAll(*this, i)
@@ -336,7 +336,7 @@ Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::sigmap() const
         (
             cloudNamesName + ":radiation:sigmap",
             mesh_,
-            dimensionedScalar(dimless/dimensions::length, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
     forAll(*this, i)

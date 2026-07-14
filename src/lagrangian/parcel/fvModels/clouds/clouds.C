@@ -67,7 +67,7 @@ Foam::fv::clouds::clouds
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
-        dimensionedVector(dimAcceleration, Zero)
+        dimensionedVector(dimensions::acceleration, Zero)
     ),
     carrierHasThermo_
     (
@@ -106,7 +106,12 @@ Foam::fv::clouds::clouds
                     mesh
                 ),
                 mesh,
-                dimensionedScalar("rho", dimDensity, tCarrierViscosity_())
+                dimensionedScalar
+                (
+                    "rho",
+                    dimensions::density,
+                    tCarrierViscosity_()
+                )
             )
         )
     ),

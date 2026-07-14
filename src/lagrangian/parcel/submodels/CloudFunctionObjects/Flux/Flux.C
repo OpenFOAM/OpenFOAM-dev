@@ -29,15 +29,15 @@ License
 
 template<class CloudType>
 const Foam::dimensionSet Foam::NumberFlux<CloudType>::dimensions =
-    dimless/dimTime;
+    dimensions::rate;
 
 template<class CloudType>
 const Foam::dimensionSet Foam::VolumeFlux<CloudType>::dimensions =
-    dimVolume/dimTime;
+    dimensions::volume/dimensions::time;
 
 template<class CloudType>
 const Foam::dimensionSet Foam::MassFlux<CloudType>::dimensions =
-    dimMass/dimTime;
+    dimensions::mass/dimensions::time;
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //

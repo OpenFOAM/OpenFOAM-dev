@@ -118,7 +118,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar(dimMass, 0)
+                dimensionedScalar(dimensions::mass, 0)
             )
         );
     }
