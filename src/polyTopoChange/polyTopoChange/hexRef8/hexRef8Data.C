@@ -92,7 +92,7 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
 
             level0EdgePtr_.reset
             (
-                new localUniformDimensionedScalarField(rio, dimLength)
+                new localUniformDimensionedScalarField(rio, dimensions::length)
             );
         }
     }
@@ -312,7 +312,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
                 new localUniformDimensionedScalarField
                 (
                     rio,
-                    dimensionedScalar(dimLength, masterLen)
+                    dimensionedScalar(dimensions::length, masterLen)
                 )
             );
         }

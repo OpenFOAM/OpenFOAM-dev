@@ -1832,7 +1832,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar(dimLength, getLevel0EdgeLength())
+        dimensionedScalar(dimensions::length, getLevel0EdgeLength())
     ),
     history_
     (
@@ -1965,7 +1965,7 @@ Foam::hexRef8::hexRef8
         ),
         dimensionedScalar
         (
-            dimLength,
+            dimensions::length,
             (level0Edge >= 0 ? level0Edge : getLevel0EdgeLength())
         )
     ),
@@ -2077,7 +2077,7 @@ Foam::hexRef8::hexRef8
         ),
         dimensionedScalar
         (
-            dimLength,
+            dimensions::length,
             (level0Edge >= 0 ? level0Edge : getLevel0EdgeLength())
         )
     ),
