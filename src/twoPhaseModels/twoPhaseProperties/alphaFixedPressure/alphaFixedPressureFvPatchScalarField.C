@@ -41,7 +41,7 @@ alphaFixedPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict, false),
-    p_("p", dimPressure, dict, p.size())
+    p_("p", dimensions::pressure, dict, p.size())
 {
     if (dict.found("value"))
     {

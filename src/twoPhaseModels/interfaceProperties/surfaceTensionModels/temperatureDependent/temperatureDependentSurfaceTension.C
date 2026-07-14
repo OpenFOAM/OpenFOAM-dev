@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,8 @@ Foam::surfaceTensionModels::temperatureDependent::temperatureDependent
         Function1<scalar>::New
         (
             "sigma",
-            dimTemperature,
-            dimForce/dimLength,
+            dimensions::temperature,
+            dimensions::force/dimensions::length,
             dict
         )
     )
@@ -112,8 +112,8 @@ bool Foam::surfaceTensionModels::temperatureDependent::readDict
         Function1<scalar>::New
         (
             "sigma",
-            dimTemperature,
-            dimForce/dimLength,
+            dimensions::temperature,
+            dimensions::force/dimensions::length,
             sigmaDict
         );
 

@@ -236,7 +236,8 @@ Foam::twoPhaseMixture::interfaceFraction() const
     const volVectorField::Internal gradAlpha(fvc::grad(alpha1_));
     const volVectorField::Internal n
     (
-        gradAlpha/(mag(gradAlpha) + dimensionedScalar(dimless/dimLength, small))
+        gradAlpha
+       /(mag(gradAlpha) + dimensionedScalar(inv(dimensions::length), small))
     );
 
     const scalarField& ialpha = alpha1_;

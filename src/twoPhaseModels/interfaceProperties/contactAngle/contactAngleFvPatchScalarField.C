@@ -57,8 +57,13 @@ Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 {
     if (dict.found("gradient"))
     {
-        gradient() =
-            scalarField("gradient", iF.dimensions()/dimLength, dict, p.size());
+        gradient() = scalarField
+        (
+            "gradient",
+            iF.dimensions()/dimensions::length,
+            dict,
+            p.size()
+        );
         fixedGradientFvPatchScalarField::updateCoeffs();
         fixedGradientFvPatchScalarField::evaluate();
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,8 @@ Foam::cavitationModels::SchnerrSauer::SchnerrSauer
 :
     cavitationModel(dict, phases),
 
-    n_("n", dimless/dimVolume, dict),
-    dNuc_("dNuc", dimLength, dict),
+    n_("n", dimless/dimensions::volume, dict),
+    dNuc_("dNuc", dimensions::length, dict),
     Cv_("Cv", dimless, dict),
     Cc_("Cc", dimless, dict),
 

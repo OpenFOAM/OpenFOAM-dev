@@ -54,7 +54,13 @@ Foam::contactAngleModels::temperatureDependent::temperatureDependent
     TName_(dict.lookupOrDefault<word>("T", "T")),
     theta0_
     (
-        Function1<scalar>::New("theta0", dimTemperature, units::degrees, dict)
+        Function1<scalar>::New
+        (
+            "theta0",
+            dimensions::temperature,
+            units::degrees,
+            dict
+        )
     )
 {}
 

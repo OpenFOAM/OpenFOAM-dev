@@ -43,7 +43,7 @@ namespace contactAngleModels
 Foam::contactAngleModels::dynamic::dynamic(const dictionary& dict)
 :
     theta0_(dict.lookup<scalar>("theta0", units::degrees)),
-    uTheta_(dict.lookup<scalar>("uTheta", dimVelocity)),
+    uTheta_(dict.lookup<scalar>("uTheta", dimensions::velocity)),
     thetaAdv_(dict.lookup<scalar>("thetaAdv", units::degrees)),
     thetaRec_(dict.lookup<scalar>("thetaRec", units::degrees))
 {}
@@ -90,7 +90,7 @@ Foam::contactAngleModels::dynamic::cosTheta
 void Foam::contactAngleModels::dynamic::write(Ostream& os) const
 {
     writeEntry(os, "theta0", units::degrees, theta0_);
-    writeEntry(os, "uTheta", dimVelocity, uTheta_);
+    writeEntry(os, "uTheta", dimensions::velocity, uTheta_);
     writeEntry(os, "thetaAdv", units::degrees, thetaAdv_);
     writeEntry(os, "thetaRec", units::degrees, thetaRec_);
 }

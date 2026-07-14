@@ -44,7 +44,7 @@ namespace contactAngleModels
 Foam::contactAngleModels::gravitational::gravitational(const dictionary& dict)
 :
     theta0_(dict.lookup<scalar>("theta0", units::degrees)),
-    gTheta_(dict.lookup<scalar>("gTheta", dimAcceleration)),
+    gTheta_(dict.lookup<scalar>("gTheta", dimensions::acceleration)),
     thetaAdv_(dict.lookup<scalar>("thetaAdv", units::degrees)),
     thetaRec_(dict.lookup<scalar>("thetaRec", units::degrees))
 {}
@@ -82,7 +82,7 @@ Foam::contactAngleModels::gravitational::cosTheta
 void Foam::contactAngleModels::gravitational::write(Ostream& os) const
 {
     writeEntry(os, "theta0", units::degrees, theta0_);
-    writeEntry(os, "gTheta", dimAcceleration, gTheta_);
+    writeEntry(os, "gTheta", dimensions::acceleration, gTheta_);
     writeEntry(os, "thetaAdv", units::degrees, thetaAdv_);
     writeEntry(os, "thetaRec", units::degrees, thetaRec_);
 }

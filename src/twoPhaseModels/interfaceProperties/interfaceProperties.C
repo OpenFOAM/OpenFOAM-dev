@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ Foam::interfaceProperties::interfaceProperties
             alpha1_.mesh()
         ),
         alpha1_.mesh(),
-        dimensionedScalar(dimArea, 0)
+        dimensionedScalar(dimensions::area, 0)
     ),
 
     K_
@@ -187,7 +187,7 @@ Foam::interfaceProperties::interfaceProperties
             alpha1_.mesh()
         ),
         alpha1_.mesh(),
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     )
 {
     calculateK();
