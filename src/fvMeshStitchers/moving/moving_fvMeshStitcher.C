@@ -471,7 +471,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
         (
             "phi",
             subMesh,
-            dimensionedScalar(dimVolume/dimTime, 0)
+            dimensionedScalar(dimensions::volume/dimensions::time, 0)
         )
     );
     forAll(subPhi, subFacei)
@@ -548,7 +548,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
             IOobject::NO_WRITE
         ),
         subMesh,
-        dimensionedScalar(dimArea, 0),
+        dimensionedScalar(dimensions::area, 0),
         MeshPhiPatchTypes,
         subMesh.poly().boundary().types()
     );
@@ -929,7 +929,7 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
         (
             "nccMeshMagUf",
             mesh(),
-            dimensionedScalar(dimVelocity, Zero)
+            dimensionedScalar(dimensions::velocity, Zero)
         );
     surfaceScalarField::Boundary& tnccMeshMagUfb =
         tnccMeshMagUf.ref().boundaryFieldRef();
