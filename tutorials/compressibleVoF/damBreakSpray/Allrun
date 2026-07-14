@@ -1,0 +1,44 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Merge the source case
+isTest "$@" && path=.. || path=$FOAM_TUTORIALS/compressibleVoF
+foamMergeCase $path/damBreak || exit 1
+
+# Run
+runApplication blockMesh
+runApplication foamRun
+
+join postProcessing/timeStep/0/timeStep.dat \
+    postProcessing/cloudTotalMass/0/LagrangianFieldValue.dat | join - \
+    postProcessing/cloudMassTransfer/*/volFieldValue.dat | join - \
+    postProcessing/cloudAtmosphereMassFlowRate/0/surfaceFieldValue.dat \
+    > postProcessing/postProcessing.dat
+
+dat="postProcessing/postProcessing.dat"
+
+gnuplot << EOF
+
+set terminal postscript eps color enhanced size 4,3
+set output "mass.eps"
+
+set xlabel "Time [s]"
+set ylabel "Mass [g]"
+
+set key top left Left reverse
+
+plot \
+    "$dat" us 1:(6*\$1) w l lc 'web-blue' t "Injected", \
+    "$dat" us 1:(1e3*\$3) w l lc 'dark-blue' t "Total", \
+    "$dat" us 1:(1e3*\$4) smooth cumulative lc 'web-green' t "Transferred", \
+    "$dat" us 1:(1e3*(\$2*\$5)) smooth cumulative lc 'dark-green' t "Escaped", \
+    "$dat" every 10 us 1:(6*\$1-1e3*\$3) w l lc 'goldenrod' t "", \
+    0/0 w l dt '-' lc 'goldenrod' t "Injected Minus Total", \
+    "$dat" us 1:(1e3*(\$4+\$2*\$5)) smooth cumulative lc 'red' dt '-' t "Transferred Plus Escaped"
+
+EOF
+
+#------------------------------------------------------------------------------

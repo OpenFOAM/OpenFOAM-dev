@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+cloudMass
+{
+    type        cloudMass;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       cloud;
+    writeControl writeTime;
+}
+
+cloudTotalMass
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  cloud;
+    operation   sum;
+    field       m;
+    weightField number;
+}
+
+cloudMassFlux
+{
+    type        cloudMassFlux;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       cloud;
+}
+
+#includeFunc patchFlowRate
+(
+    patch=atmosphere,
+    cloud:phim,
+    name=cloudAtmosphereMassFlowRate
+)
+
+#includeFunc cellSum
+(
+    cloud:rhoEqn.water:Su,
+    name=cloudMassTransfer
+)
+
+#includeFunc timeStep
+
+// ************************************************************************* //
