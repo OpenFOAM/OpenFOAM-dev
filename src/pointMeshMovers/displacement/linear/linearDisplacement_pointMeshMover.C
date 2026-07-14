@@ -54,15 +54,15 @@ Foam::pointMeshMovers::linearDisplacement::linearDisplacement
 :
     displacementPoints0(mesh, dict, typeName),
     axis_(normalised(dict.lookup<vector>("axis", dimless))),
-    xFixed_(dict.lookup<scalar>("xFixed", dimLength)),
-    xMoving_(dict.lookup<scalar>("xMoving", dimLength)),
+    xFixed_(dict.lookup<scalar>("xFixed", dimensions::length)),
+    xMoving_(dict.lookup<scalar>("xMoving", dimensions::length)),
     displacement_
     (
         Function1<scalar>::New
         (
             "displacement",
             mesh.time().userUnits(),
-            dimLength,
+            dimensions::length,
             dict
         )
     )

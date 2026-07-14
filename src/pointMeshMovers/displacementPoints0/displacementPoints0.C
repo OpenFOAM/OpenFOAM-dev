@@ -101,7 +101,7 @@ Foam::pointVectorField Foam::pointMeshMovers::displacementPoints0::readPoints0
                 false
             ),
             pointMesh::New(mesh),
-            dimensionedVector(dimLength, Zero)
+            dimensionedVector(dimensions::length, Zero)
         );
 
         points0.primitiveFieldRef() = points;

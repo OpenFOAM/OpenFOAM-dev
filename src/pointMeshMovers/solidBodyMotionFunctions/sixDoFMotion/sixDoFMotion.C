@@ -98,7 +98,7 @@ bool Foam::solidBodyMotionFunctions::sixDoFMotion::read
         (
             "translation",
             time_.userUnits(),
-            dimLength,
+            dimensions::length,
             SBMFCoeffs_
         ).ptr()
     );

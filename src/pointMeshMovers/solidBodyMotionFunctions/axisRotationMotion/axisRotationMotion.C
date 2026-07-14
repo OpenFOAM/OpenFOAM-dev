@@ -98,8 +98,12 @@ bool Foam::solidBodyMotionFunctions::axisRotationMotion::read
 {
     solidBodyMotionFunction::read(SBMFCoeffs);
 
-    origin_ = SBMFCoeffs_.lookup<vector>("origin", dimLength);
-    omega_ = SBMFCoeffs_.lookup<vector>("omega", units::radians/dimTime);
+    origin_ = SBMFCoeffs_.lookup<vector>("origin", dimensions::length);
+    omega_ = SBMFCoeffs_.lookup<vector>
+    (
+        "omega",
+        units::radians/dimensions::time
+    );
 
     return true;
 }
