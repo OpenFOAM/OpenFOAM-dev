@@ -83,7 +83,10 @@ flowRateOutletVelocityFvPatchVectorField
     flowRate_(),
     volumetric_(),
     rhoName_("rho"),
-    rhoOutlet_(dict.lookupOrDefault<scalar>("rhoOutlet", dimDensity, -vGreat))
+    rhoOutlet_
+    (
+        dict.lookupOrDefault<scalar>("rhoOutlet", dimensions::density, -vGreat)
+    )
 {
     if (dict.found("volumetricFlowRate"))
     {
@@ -92,7 +95,7 @@ flowRateOutletVelocityFvPatchVectorField
             (
                 "volumetricFlowRate",
                 time().userUnits(),
-                dimVolumetricFlux,
+                dimensions::volumetricFlux,
                 dict
             );
         volumetric_ = true;
@@ -104,7 +107,7 @@ flowRateOutletVelocityFvPatchVectorField
             (
                 "massFlowRate",
                 time().userUnits(),
-                dimMassFlux,
+                dimensions::massFlux,
                 dict
             );
         volumetric_ = false;

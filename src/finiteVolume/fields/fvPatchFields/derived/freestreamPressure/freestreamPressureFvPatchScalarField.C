@@ -45,7 +45,7 @@ freestreamPressureFvPatchScalarField
     )
 {
     freestreamValue() =
-        scalarField("freestreamValue", dimPressure, dict, p.size());
+        scalarField("freestreamValue", dimensions::pressure, dict, p.size());
 
     if (dict.found("value"))
     {

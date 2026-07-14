@@ -163,7 +163,7 @@ CoEulerDdtScheme<Type>::fvcDdt
                 dimensioned<Type>
                 (
                     "0",
-                    dt.dimensions()/dimTime,
+                    dt.dimensions()/dimensions::time,
                     Zero
                 )
             )
@@ -186,7 +186,7 @@ CoEulerDdtScheme<Type>::fvcDdt
                 dimensioned<Type>
                 (
                     "0",
-                    dt.dimensions()/dimTime,
+                    dt.dimensions()/dimensions::time,
                     Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
@@ -406,7 +406,7 @@ CoEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime
+            vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 
@@ -442,7 +442,7 @@ CoEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -479,7 +479,7 @@ CoEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -522,8 +522,8 @@ CoEulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()
            *rho.dimensions()
            *vf.dimensions()
-           *dimVolume
-           /dimTime
+           *dimensions::volume
+           /dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -613,7 +613,7 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
 
     if
     (
-        U.dimensions() == dimVelocity
+        U.dimensions() == dimensions::velocity
      && rhoUf.dimensions() == dimensions::momentumDensity
     )
     {
@@ -680,8 +680,8 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 
     if
     (
-        U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         VolField<Type> rhoU0
@@ -708,8 +708,8 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         fluxFieldType phiCorr
@@ -750,7 +750,7 @@ tmp<surfaceScalarField> CoEulerDdtScheme<Type>::meshPhi
     (
         "meshPhi",
         mesh(),
-        dimensionedScalar(dimVolume/dimTime, 0)
+        dimensionedScalar(dimensions::volume/dimensions::time, 0)
     );
 }
 

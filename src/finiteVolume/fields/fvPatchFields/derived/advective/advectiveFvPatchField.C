@@ -64,7 +64,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 
-    if (dict.readIfPresent<scalar>("lInf", dimLength, lInf_))
+    if (dict.readIfPresent<scalar>("lInf", dimensions::length, lInf_))
     {
         if (lInf_ < 0.0)
         {
@@ -129,7 +129,7 @@ Foam::advectiveFvPatchField<Type>::advectionSpeed() const
             phiName_
         );
 
-    if (phi.dimensions() == dimMassFlux)
+    if (phi.dimensions() == dimensions::massFlux)
     {
         const fvPatchScalarField& rhop =
             this->patch().template lookupPatchField<volScalarField, scalar>

@@ -43,7 +43,7 @@ transonicEntrainmentPressureFvPatchScalarField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     gamma_(dict.lookup<scalar>("gamma", dimless)),
     Mb_(dict.lookupOrDefault<scalar>("Mb", dimless, 0.5)),
-    p0_("p0", dimPressure, dict, p.size())
+    p0_("p0", dimensions::pressure, dict, p.size())
 {
     if (dict.found("value"))
     {
@@ -148,7 +148,7 @@ void Foam::transonicEntrainmentPressureFvPatchScalarField::updateCoeffs()
 
     scalarField Unp(phip/patch().magSf());
 
-    if (phi.dimensions() == dimMassFlux)
+    if (phi.dimensions() == dimensions::massFlux)
     {
         const fvPatchField<scalar>& rhop =
             patch().lookupPatchField<volScalarField, scalar>(rhoName_);

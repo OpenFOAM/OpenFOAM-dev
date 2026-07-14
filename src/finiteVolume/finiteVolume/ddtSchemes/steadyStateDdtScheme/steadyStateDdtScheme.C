@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ steadyStateDdtScheme<Type>::fvcDdt
         dimensioned<Type>
         (
             "0",
-            dt.dimensions()/dimTime,
+            dt.dimensions()/dimensions::time,
             Zero
         )
     );
@@ -74,7 +74,7 @@ steadyStateDdtScheme<Type>::fvcDdt
         dimensioned<Type>
         (
             "0",
-            vf.dimensions()/dimTime,
+            vf.dimensions()/dimensions::time,
             Zero
         )
     );
@@ -96,7 +96,7 @@ steadyStateDdtScheme<Type>::fvcDdt
         dimensioned<Type>
         (
             "0",
-            rho.dimensions()*vf.dimensions()/dimTime,
+            rho.dimensions()*vf.dimensions()/dimensions::time,
             Zero
         )
     );
@@ -118,7 +118,7 @@ steadyStateDdtScheme<Type>::fvcDdt
         dimensioned<Type>
         (
             "0",
-            rho.dimensions()*vf.dimensions()/dimTime,
+            rho.dimensions()*vf.dimensions()/dimensions::time,
             Zero
         )
     );
@@ -141,7 +141,7 @@ steadyStateDdtScheme<Type>::fvcDdt
         dimensioned<Type>
         (
             "0",
-            rho.dimensions()*vf.dimensions()/dimTime,
+            rho.dimensions()*vf.dimensions()/dimensions::time,
             Zero
         )
     );
@@ -160,7 +160,7 @@ steadyStateDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime
+            vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 }
@@ -179,7 +179,7 @@ steadyStateDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 }
@@ -198,7 +198,7 @@ steadyStateDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 }
@@ -221,8 +221,8 @@ steadyStateDdtScheme<Type>::fvmDdt
             alpha.dimensions()
            *rho.dimensions()
            *vf.dimensions()
-           *dimVolume
-           /dimTime
+           *dimensions::volume
+           /dimensions::time
         )
     );
 }
@@ -243,7 +243,7 @@ steadyStateDdtScheme<Type>::fvcDdtUfCorr
         dimensioned<typename flux<Type>::type>
         (
             "0",
-            Uf.dimensions()*dimArea/dimTime,
+            Uf.dimensions()*dimensions::area/dimensions::time,
             Zero
         )
     );
@@ -265,7 +265,7 @@ steadyStateDdtScheme<Type>::fvcDdtPhiCorr
         dimensioned<typename flux<Type>::type>
         (
             "0",
-            phi.dimensions()/dimTime,
+            phi.dimensions()/dimensions::time,
             Zero
         )
     );
@@ -288,7 +288,7 @@ steadyStateDdtScheme<Type>::fvcDdtUfCorr
         dimensioned<typename flux<Type>::type>
         (
             "0",
-            rhoUf.dimensions()*dimArea/dimTime,
+            rhoUf.dimensions()*dimensions::area/dimensions::time,
             Zero
         )
     );
@@ -311,7 +311,7 @@ steadyStateDdtScheme<Type>::fvcDdtPhiCorr
         dimensioned<typename flux<Type>::type>
         (
             "0",
-            phi.dimensions()/dimTime,
+            phi.dimensions()/dimensions::time,
             Zero
         )
     );
@@ -328,7 +328,7 @@ tmp<surfaceScalarField> steadyStateDdtScheme<Type>::meshPhi
     (
         "meshPhi",
         mesh(),
-        dimensionedScalar(dimVolume/dimTime, 0)
+        dimensionedScalar(dimensions::volume/dimensions::time, 0)
     );
 }
 

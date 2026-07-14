@@ -44,7 +44,7 @@ translatingWallVelocityFvPatchVectorField
         (
             "U",
             time().userUnits(),
-            dimVelocity,
+            dimensions::velocity,
             dict
         )
     )
@@ -102,7 +102,7 @@ void Foam::translatingWallVelocityFvPatchVectorField::updateCoeffs()
 void Foam::translatingWallVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    writeEntry(os, time().userUnits(), dimVelocity, U_());
+    writeEntry(os, time().userUnits(), dimensions::velocity, U_());
     writeEntry(os, "value", *this);
 }
 

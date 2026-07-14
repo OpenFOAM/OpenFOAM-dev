@@ -50,7 +50,7 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
         return;
     }
 
-    if (internalField().dimensions() == dimPressure)
+    if (internalField().dimensions() == dimensions::pressure)
     {
         if (psiName_ == "none")
         {
@@ -94,7 +94,7 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
         FatalErrorInFunction
             << " Incorrect pressure dimensions " << internalField().dimensions()
             << nl
-            << "    Should be " << dimPressure
+            << "    Should be " << dimensions::pressure
             << " for compressible/variable density flow" << nl
             << "    or " << dimensions::kinematicPressure
             << " for incompressible flow," << nl

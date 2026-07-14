@@ -127,7 +127,7 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    if (internalField().dimensions() == dimPressure)
+    if (internalField().dimensions() == dimensions::pressure)
     {
         if (psiName_ == "none")
         {
@@ -176,7 +176,7 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
         FatalErrorInFunction
             << " Incorrect pressure dimensions " << internalField().dimensions()
             << nl
-            << "    Should be " << dimPressure
+            << "    Should be " << dimensions::pressure
             << " for compressible/variable density flow" << nl
             << "    or " << dimensions::kinematicPressure
             << " for incompressible flow," << nl

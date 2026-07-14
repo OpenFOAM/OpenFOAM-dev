@@ -92,7 +92,7 @@ surfaceIntegrate
             dimensioned<Type>
             (
                 "0",
-                ssf.dimensions()/dimVolume,
+                ssf.dimensions()/dimensions::volume,
                 Zero
             )
         )
@@ -137,7 +137,7 @@ surfaceIntegrateExtrapolate
             dimensioned<Type>
             (
                 "0",
-                ssf.dimensions()/dimVolume,
+                ssf.dimensions()/dimensions::volume,
                 Zero
             ),
             extrapolatedCalculatedFvPatchField<Type>::typeName

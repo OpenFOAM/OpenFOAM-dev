@@ -103,7 +103,7 @@ void Foam::DimensionedFieldFunctions::TimeFunction<DimensionedFieldType>::write
     Ostream& os
 ) const
 {
-    writeEntry(os, dimLength, this->field_.dimensions(), funcPtr_());
+    writeEntry(os, dimensions::length, this->field_.dimensions(), funcPtr_());
 }
 
 

@@ -63,7 +63,7 @@ Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
                 Function1<scalar>::New
                 (
                     "jumpTable",
-                    dimVelocity,
+                    dimensions::velocity,
                     iF.dimensions(),
                     dict
                 );
@@ -75,7 +75,7 @@ Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
                 Function1<scalar>::New
                 (
                     "fanCurve",
-                    dimVolumetricFlux,
+                    dimensions::volumetricFlux,
                     iF.dimensions(),
                     dict
                 );
@@ -138,13 +138,13 @@ void Foam::fanPressureJumpFvPatchScalarField::updateCoeffs()
 
             scalar volFlowRate = 0;
 
-            if (phip.internalField().dimensions() == dimVolumetricFlux)
+            if (phip.internalField().dimensions() == dimensions::volumetricFlux)
             {
                 volFlowRate = gSum(phip);
             }
             else if
             (
-                phip.internalField().dimensions() == dimMassFlux
+                phip.internalField().dimensions() == dimensions::massFlux
             )
             {
                 const scalarField& rhop =
@@ -170,13 +170,13 @@ void Foam::fanPressureJumpFvPatchScalarField::updateCoeffs()
 
             scalarField Un(max(sign*phip/patch().magSf(), scalar(0)));
 
-            if (phip.internalField().dimensions() == dimVolumetricFlux)
+            if (phip.internalField().dimensions() == dimensions::volumetricFlux)
             {
                 // Do nothing
             }
             else if
             (
-                phip.internalField().dimensions() == dimMassFlux
+                phip.internalField().dimensions() == dimensions::massFlux
             )
             {
                 const fvPatchField<scalar>& rhop =

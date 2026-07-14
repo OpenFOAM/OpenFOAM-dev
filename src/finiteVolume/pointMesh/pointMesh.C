@@ -94,7 +94,7 @@ Foam::pointMesh::C() const
                 true
             ),
             *this,
-            dimLength,
+            dimensions::length,
             mesh_.points()
         );
     }

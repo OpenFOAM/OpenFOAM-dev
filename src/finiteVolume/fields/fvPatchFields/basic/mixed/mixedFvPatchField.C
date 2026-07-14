@@ -81,7 +81,7 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
                 Field<Type>
                 (
                     "refGradient",
-                    iF.dimensions()/dimLength,
+                    iF.dimensions()/dimensions::length,
                     dict,
                     p.size()
                 );

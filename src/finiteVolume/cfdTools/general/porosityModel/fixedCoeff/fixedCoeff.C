@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,8 +98,8 @@ Foam::porosityModels::fixedCoeff::fixedCoeff
 )
 :
     porosityModel(name, mesh, dict, coeffDict, cellZoneName),
-    alphaXYZ_("alpha", dimless/dimTime, coeffDict),
-    betaXYZ_("beta", dimless/dimLength, coeffDict),
+    alphaXYZ_("alpha", dimless/dimensions::time, coeffDict),
+    betaXYZ_("beta", dimless/dimensions::length, coeffDict),
     rhoRefFound_(coeffDict.found("rhoRef")),
     rhoRef_(coeffDict.lookupOrDefault<scalar>("rhoRef", 1.0))
 {
@@ -202,7 +202,7 @@ void Foam::porosityModels::fixedCoeff::correct
     scalarField& Udiag = UEqn.diag();
     vectorField& Usource = UEqn.source();
 
-    if (UEqn.dimensions() == dimForce && !rhoRefFound_)
+    if (UEqn.dimensions() == dimensions::force && !rhoRefFound_)
     {
         FatalErrorInFunction
             << "rhoRef not specified" << exit(FatalError);
@@ -220,7 +220,7 @@ void Foam::porosityModels::fixedCoeff::correct
 {
     const vectorField& U = UEqn.psi();
 
-    if (UEqn.dimensions() == dimForce && !rhoRefFound_)
+    if (UEqn.dimensions() == dimensions::force && !rhoRefFound_)
     {
         FatalErrorInFunction
             << "rhoRef not specified" << exit(FatalError);

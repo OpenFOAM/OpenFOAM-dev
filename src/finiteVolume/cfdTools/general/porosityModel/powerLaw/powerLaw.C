@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ void Foam::porosityModels::powerLaw::correct
     const scalarField& V = mesh_.V();
     scalarField& Udiag = UEqn.diag();
 
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimensions::force)
     {
         const volScalarField& rho = mesh_.lookupObject<volScalarField>
         (
@@ -122,7 +122,7 @@ void Foam::porosityModels::powerLaw::correct
 {
     const volVectorField& U = UEqn.psi();
 
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimensions::force)
     {
         const volScalarField& rho = mesh_.lookupObject<volScalarField>
         (

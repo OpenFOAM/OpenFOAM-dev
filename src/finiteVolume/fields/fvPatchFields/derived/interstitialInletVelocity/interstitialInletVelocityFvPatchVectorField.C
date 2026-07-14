@@ -40,7 +40,7 @@ interstitialInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF, dict),
-    inletVelocity_("inletVelocity", dimVelocity, dict, p.size()),
+    inletVelocity_("inletVelocity", dimensions::velocity, dict, p.size()),
     alphaName_(dict.lookupOrDefault<word>("alpha", "alpha"))
 {}
 

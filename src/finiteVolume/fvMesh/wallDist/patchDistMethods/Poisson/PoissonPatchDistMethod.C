@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ bool Foam::patchDistMethods::Poisson::correct
             (
                 "yPsi",
                 mesh_,
-                dimensionedScalar(sqr(dimLength), 0),
+                dimensionedScalar(sqr(dimensions::length), 0),
                 y.boundaryFieldRef().types()
             )
         );
@@ -112,7 +112,7 @@ bool Foam::patchDistMethods::Poisson::correct
            /max
             (
                 magGradyPsi,
-                dimensionedScalar(dimLength, small)
+                dimensionedScalar(dimensions::length, small)
             );
     }
 

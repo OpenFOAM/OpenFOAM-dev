@@ -39,7 +39,10 @@ MRFFreestreamVelocityFvPatchVectorField
 :
     freestreamVelocityFvPatchVectorField(p, iF, dict),
     MRFPatchField(dict),
-    freestreamValue0_(dict.lookup<vector>("freestreamValue0", dimVelocity))
+    freestreamValue0_
+    (
+        dict.lookup<vector>("freestreamValue0", dimensions::velocity)
+    )
 {}
 
 

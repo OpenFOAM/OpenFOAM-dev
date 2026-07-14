@@ -43,17 +43,17 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
     R_(dict.lookup<scalar>("R", dimensions::gasConstant)),
     supplyMassFlowRate_
     (
-        dict.lookup<scalar>("supplyMassFlowRate", dimMass/dimTime)
+        dict.lookup<scalar>("supplyMassFlowRate", dimensions::massFlux)
     ),
     supplyTotalTemperature_
     (
-        dict.lookup<scalar>("supplyTotalTemperature", dimTemperature)
+        dict.lookup<scalar>("supplyTotalTemperature", dimensions::temperature)
     ),
-    plenumVolume_(dict.lookup<scalar>("plenumVolume", dimVolume)),
-    plenumDensity_(dict.lookup<scalar>("plenumDensity", dimDensity)),
+    plenumVolume_(dict.lookup<scalar>("plenumVolume", dimensions::volume)),
+    plenumDensity_(dict.lookup<scalar>("plenumDensity", dimensions::density)),
     plenumTemperature_
     (
-        dict.lookup<scalar>("plenumTemperature", dimTemperature)
+        dict.lookup<scalar>("plenumTemperature", dimensions::temperature)
     ),
     rho_(1.0),
     hasRho_(false),
@@ -62,13 +62,16 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
     (
         dict.lookup<scalar>("inletDischargeCoefficient", units::fraction)
     ),
-    timeScale_(dict.lookupOrDefault<scalar>("timeScale", dimTime, 0.0)),
+    timeScale_
+    (
+        dict.lookupOrDefault<scalar>("timeScale", dimensions::time, 0.0)
+    ),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     UName_(dict.lookupOrDefault<word>("U", "U"))
 {
     if (dict.found("rho"))
     {
-        rho_ = dict.lookup<scalar>("rho", dimDensity);
+        rho_ = dict.lookup<scalar>("rho", dimensions::density);
         hasRho_ = true;
     }
 }
@@ -159,7 +162,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
 
     // Calculate the current mass flow rate
     scalar massFlowRate(1.0);
-    if (phi.internalField().dimensions() == dimVolumetricFlux)
+    if (phi.internalField().dimensions() == dimensions::volumetricFlux)
     {
         if (hasRho_)
         {
@@ -175,7 +178,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
     else if
     (
         phi.internalField().dimensions()
-     == dimMassFlux
+     == dimensions::massFlux
     )
     {
         if (hasRho_)

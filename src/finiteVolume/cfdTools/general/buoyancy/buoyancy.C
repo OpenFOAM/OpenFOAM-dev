@@ -56,7 +56,7 @@ Foam::solvers::buoyancy::buoyancy(const fvMesh& mesh_)
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar(dimLength, 0)
+        dimensionedScalar(dimensions::length, 0)
     ),
 
     pRef
@@ -69,7 +69,7 @@ Foam::solvers::buoyancy::buoyancy(const fvMesh& mesh_)
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar(dimPressure, 0)
+        dimensionedScalar(dimensions::pressure, 0)
     ),
 
     ghRef(-mag(g)*hRef),

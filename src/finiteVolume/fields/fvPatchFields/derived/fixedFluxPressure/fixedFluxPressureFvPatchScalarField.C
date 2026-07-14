@@ -47,8 +47,13 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
-        gradient() =
-            scalarField("gradient", iF.dimensions()/dimLength, dict, p.size());
+        gradient() = scalarField
+        (
+            "gradient",
+            iF.dimensions()/dimensions::length,
+            dict,
+            p.size()
+        );
     }
     else
     {

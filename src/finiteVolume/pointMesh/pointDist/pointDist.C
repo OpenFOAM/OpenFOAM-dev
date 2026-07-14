@@ -47,7 +47,7 @@ Foam::pointDist::pointDist
             pMesh.db()
         ),
         pMesh,
-        dimensionedScalar(dimLength, great)
+        dimensionedScalar(dimensions::length, great)
     ),
     points_(points),
     startPatchIDs_(startPatchIDs),
@@ -77,7 +77,7 @@ Foam::pointDist::pointDist
             pMesh.db()
         ),
         pMesh,
-        dimensionedScalar(dimLength, great)
+        dimensionedScalar(dimensions::length, great)
     ),
     points_(points),
     startPatchIDs_(startPatchIDs),

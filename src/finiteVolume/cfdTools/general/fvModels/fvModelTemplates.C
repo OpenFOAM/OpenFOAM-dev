@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::sourceProxy
     const VolField<Type>& eqnField
 ) const
 {
-    return sourceTerm(eqnField, dimVolume/dimTime);
+    return sourceTerm(eqnField, dimensions::volume/dimensions::time);
 }
 
 
@@ -107,7 +107,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
     const VolField<Type>& field
 ) const
 {
-    return sourceTerm(field, dimVolume/dimTime, field);
+    return sourceTerm(field, dimensions::volume/dimensions::time, field);
 }
 
 
@@ -118,7 +118,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::sourceProxy
     const VolField<Type>& eqnField
 ) const
 {
-    return sourceTerm(eqnField, dimVolume/dimTime, field);
+    return sourceTerm(eqnField, dimensions::volume/dimensions::time, field);
 }
 
 
@@ -129,7 +129,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
     const VolField<Type>& field
 ) const
 {
-    return sourceTerm(field, dimVolume/dimTime, rho, field);
+    return sourceTerm(field, dimensions::volume/dimensions::time, rho, field);
 }
 
 
@@ -141,7 +141,13 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::sourceProxy
     const VolField<Type>& eqnField
 ) const
 {
-    return sourceTerm(eqnField, dimVolume/dimTime, rho, field);
+    return sourceTerm
+    (
+        eqnField,
+        dimensions::volume/dimensions::time,
+        rho,
+        field
+    );
 }
 
 
@@ -153,7 +159,14 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
     const VolField<Type>& field
 ) const
 {
-    return sourceTerm(field, dimVolume/dimTime, alpha, rho, field);
+    return sourceTerm
+    (
+        field,
+        dimensions::volume/dimensions::time,
+        alpha,
+        rho,
+        field
+    );
 }
 
 
@@ -166,7 +179,14 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::sourceProxy
     const VolField<Type>& eqnField
 ) const
 {
-    return sourceTerm(eqnField, dimVolume/dimTime, alpha, rho, field);
+    return sourceTerm
+    (
+        eqnField,
+        dimensions::volume/dimensions::time,
+        alpha,
+        rho,
+        field
+    );
 }
 
 
@@ -212,7 +232,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::d2dt2
     const VolField<Type>& field
 ) const
 {
-    return sourceTerm(field, dimVolume/sqr(dimTime), field);
+    return sourceTerm(field, dimensions::volume/sqr(dimensions::time), field);
 }
 
 

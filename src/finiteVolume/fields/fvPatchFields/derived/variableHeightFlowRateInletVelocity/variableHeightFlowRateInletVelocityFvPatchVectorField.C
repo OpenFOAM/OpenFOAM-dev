@@ -44,7 +44,7 @@ variableHeightFlowRateInletVelocityFvPatchVectorField
         (
             "flowRate",
             time().userUnits(),
-            dimVolumetricFlux,
+            dimensions::volumetricFlux,
             dict
         )
     ),
@@ -115,7 +115,7 @@ void Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchField<vector>::write(os);
-    writeEntry(os, time().userUnits(), dimVolumetricFlux, flowRate_());
+    writeEntry(os, time().userUnits(), dimensions::volumetricFlux, flowRate_());
     writeEntry(os, "alpha", alphaName_);
     writeEntry(os, "value", *this);
 }

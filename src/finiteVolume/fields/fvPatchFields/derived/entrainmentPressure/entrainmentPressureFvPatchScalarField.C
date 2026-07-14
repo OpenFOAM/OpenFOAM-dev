@@ -81,7 +81,7 @@ void Foam::entrainmentPressureFvPatchScalarField::updateCoeffs()
 
     scalarField Unp(phip/patch().magSf());
 
-    if (phi.dimensions() == dimMassFlux)
+    if (phi.dimensions() == dimensions::massFlux)
     {
         const fvPatchField<scalar>& rhop =
             patch().lookupPatchField<volScalarField, scalar>(rhoName_);

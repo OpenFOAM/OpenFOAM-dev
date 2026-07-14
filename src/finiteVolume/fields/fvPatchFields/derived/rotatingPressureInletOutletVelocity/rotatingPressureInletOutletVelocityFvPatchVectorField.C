@@ -57,7 +57,7 @@ rotatingPressureInletOutletVelocityFvPatchVectorField
 )
 :
     pressureInletOutletVelocityFvPatchVectorField(p, iF, dict),
-    origin_(dict.lookup<vector>("origin", dimLength)),
+    origin_(dict.lookup<vector>("origin", dimensions::length)),
     axis_(dict.lookup<vector>("axis", dimless)),
     omega_(time(), dict)
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,7 @@ public:
                 stencil.weightedSum(vf, cfd.coeffs())
             );
 
-            sft.ref().dimensions() /= dimLength;
+            sft.ref().dimensions() /= dimensions::length;
 
             return sft;
         }

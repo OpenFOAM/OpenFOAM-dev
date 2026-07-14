@@ -42,9 +42,9 @@ supersonicFreestreamFvPatchVectorField
     TName_(dict.lookupOrDefault<word>("T", "T")),
     pName_(dict.lookupOrDefault<word>("p", "p")),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
-    UInf_(dict.lookup<vector>("UInf", dimVelocity)),
-    pInf_(dict.lookup<scalar>("pInf", dimPressure)),
-    TInf_(dict.lookup<scalar>("TInf", dimTemperature)),
+    UInf_(dict.lookup<vector>("UInf", dimensions::velocity)),
+    pInf_(dict.lookup<scalar>("pInf", dimensions::pressure)),
+    TInf_(dict.lookup<scalar>("TInf", dimensions::temperature)),
     gamma_(dict.lookup<scalar>("gamma"))
 {
     if (dict.found("value"))

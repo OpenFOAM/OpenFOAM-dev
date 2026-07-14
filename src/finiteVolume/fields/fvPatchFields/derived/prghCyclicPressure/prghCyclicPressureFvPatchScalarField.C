@@ -49,7 +49,7 @@ Foam::prghCyclicPressureFvPatchScalarField::prghCyclicPressureFvPatchScalarField
     rhoInf_
     (
         cyclicPatch().owner()
-      ? dict.lookup<scalar>("rhoInf", dimDensity)
+      ? dict.lookup<scalar>("rhoInf", dimensions::density)
       : NaN
     ),
     jump_(p.size(), Zero)

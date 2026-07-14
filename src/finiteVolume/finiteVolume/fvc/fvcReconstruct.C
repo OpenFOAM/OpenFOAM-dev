@@ -61,7 +61,7 @@ reconstruct
         (
             "volIntegrate("+ssf.name()+')',
             mesh,
-            dimensioned<GradType>("0", ssf.dimensions()/dimArea, Zero),
+            dimensioned<GradType>("0", ssf.dimensions()/dimensions::area, Zero),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );

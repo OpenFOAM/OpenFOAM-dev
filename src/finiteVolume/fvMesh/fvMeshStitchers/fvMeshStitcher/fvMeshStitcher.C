@@ -319,7 +319,7 @@ void Foam::fvMeshStitcher::getOrigNbrBfs
         (
             "origSf",
             mesh_,
-            dimensionedVector("NaN", dimArea, vector::uniform(NaN))
+            dimensionedVector("NaN", dimensions::area, vector::uniform(NaN))
         )
     );
     surfaceVectorField origCf
@@ -328,7 +328,7 @@ void Foam::fvMeshStitcher::getOrigNbrBfs
         (
             "origCf",
             mesh_,
-            dimensionedVector("NaN", dimLength, vector::uniform(NaN))
+            dimensionedVector("NaN", dimensions::length, vector::uniform(NaN))
         )
     );
 

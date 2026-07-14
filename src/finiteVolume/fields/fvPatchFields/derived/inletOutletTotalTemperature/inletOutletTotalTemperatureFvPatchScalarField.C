@@ -43,7 +43,7 @@ inletOutletTotalTemperatureFvPatchScalarField
     UName_(dict.lookupOrDefault<word>("U", "U")),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     gamma_(dict.lookup<scalar>("gamma", dimless)),
-    T0_("T0", dimTemperature, dict, p.size())
+    T0_("T0", dimensions::temperature, dict, p.size())
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 

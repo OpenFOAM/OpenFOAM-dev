@@ -812,7 +812,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::A() const
         (
             "A(" + psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/psi_.dimensions()/dimVolume,
+            dimensions_/psi_.dimensions()/dimensions::volume,
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -833,7 +833,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMatrix<Type>::Su() const
         (
             "Su(" +psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/dimVolume,
+            dimensions_/dimensions::volume,
             -source()/psi_.mesh().V()
         )
     );
@@ -851,7 +851,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fvMatrix<Type>::Sp() const
         (
             "Sp(" + psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/psi_.dimensions()/dimVolume,
+            dimensions_/psi_.dimensions()/dimensions::volume,
             hasDiag()
           ? diag()/psi_.mesh().V()
           : tmp<scalarField>(new scalarField(lduAddr().size(), scalar(0)))
@@ -872,7 +872,7 @@ Foam::fvMatrix<Type>::H() const
         (
             "H(" + psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/dimVolume,
+            dimensions_/dimensions::volume,
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -927,7 +927,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::H1() const
         (
             "H(1)",
             psi_.mesh(),
-            dimensions_/(dimVolume*psi_.dimensions()),
+            dimensions_/(dimensions::volume*psi_.dimensions()),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -1440,9 +1440,11 @@ void Foam::checkMethod
         FatalErrorInFunction
             << "incompatible dimensions for operation "
             << endl << "    "
-            << "[" << fvm1.psi().name() << fvm1.dimensions()/dimVolume << " ] "
+            << "[" << fvm1.psi().name()
+            << fvm1.dimensions()/dimensions::volume << " ] "
             << op
-            << " [" << fvm2.psi().name() << fvm2.dimensions()/dimVolume << " ]"
+            << " [" << fvm2.psi().name()
+            << fvm2.dimensions()/dimensions::volume << " ]"
             << abort(FatalError);
     }
 }
@@ -1456,11 +1458,16 @@ void Foam::checkMethod
     const char* op
 )
 {
-    if (dimensionSet::debug && fvm.dimensions()/dimVolume != df.dimensions())
+    if
+    (
+        dimensionSet::debug
+     && fvm.dimensions()/dimensions::volume != df.dimensions()
+    )
     {
         FatalErrorInFunction
             << endl << "    "
-            << "[" << fvm.psi().name() << fvm.dimensions()/dimVolume << " ] "
+            << "[" << fvm.psi().name()
+            << fvm.dimensions()/dimensions::volume << " ] "
             << op
             << " [" << df.name() << df.dimensions() << " ]"
             << abort(FatalError);
@@ -1476,12 +1483,17 @@ void Foam::checkMethod
     const char* op
 )
 {
-    if (dimensionSet::debug && fvm.dimensions()/dimVolume != dt.dimensions())
+    if
+    (
+        dimensionSet::debug
+     && fvm.dimensions()/dimensions::volume != dt.dimensions()
+    )
     {
         FatalErrorInFunction
             << "incompatible dimensions for operation "
             << endl << "    "
-            << "[" << fvm.psi().name() << fvm.dimensions()/dimVolume << " ] "
+            << "[" << fvm.psi().name()
+            << fvm.dimensions()/dimensions::volume << " ] "
             << op
             << " [" << dt.name() << dt.dimensions() << " ]"
             << abort(FatalError);
@@ -2477,7 +2489,7 @@ Foam::operator&
         (
             "M&" + psi.name(),
             psi.mesh(),
-            M.dimensions()/dimVolume,
+            M.dimensions()/dimensions::volume,
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );

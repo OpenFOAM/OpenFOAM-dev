@@ -38,9 +38,15 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
     fixedValueFvPatchField<Type>(p, iF, dict, false),
     profile_
     (
-        Function1<Type>::New("profile", dimLength, iF.dimensions(), dict)
+        Function1<Type>::New
+        (
+            "profile",
+            dimensions::length,
+            iF.dimensions(),
+            dict
+        )
     ),
-    origin_(dict.lookup<scalar>("origin", dimLength)),
+    origin_(dict.lookup<scalar>("origin", dimensions::length)),
     direction_(dict.lookup<vector>("direction", dimless))
 {
     if (mag(direction_) == 0)

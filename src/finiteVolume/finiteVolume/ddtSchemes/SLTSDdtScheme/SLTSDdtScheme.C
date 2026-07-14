@@ -101,7 +101,7 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
         (
             "rDeltaT",
             mesh(),
-            dimensionedScalar(dimless/dimTime, 0),
+            dimensionedScalar(dimless/dimensions::time, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -167,7 +167,7 @@ SLTSDdtScheme<Type>::fvcDdt
                 dimensioned<Type>
                 (
                     "0",
-                    dt.dimensions()/dimTime,
+                    dt.dimensions()/dimensions::time,
                     Zero
                 )
             )
@@ -189,7 +189,7 @@ SLTSDdtScheme<Type>::fvcDdt
                 dimensioned<Type>
                 (
                     "0",
-                    dt.dimensions()/dimTime,
+                    dt.dimensions()/dimensions::time,
                     Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
@@ -395,7 +395,7 @@ SLTSDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime
+            vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 
@@ -431,7 +431,7 @@ SLTSDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -468,7 +468,7 @@ SLTSDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -511,8 +511,8 @@ SLTSDdtScheme<Type>::fvmDdt
             alpha.dimensions()
            *rho.dimensions()
            *vf.dimensions()
-           *dimVolume
-           /dimTime
+           *dimensions::volume
+           /dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -603,7 +603,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
 
     if
     (
-        U.dimensions() == dimVelocity
+        U.dimensions() == dimensions::velocity
      && rhoUf.dimensions() == dimensions::momentumDensity
     )
     {
@@ -670,8 +670,8 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
 
     if
     (
-        U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         VolField<Type> rhoU0
@@ -698,8 +698,8 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         fluxFieldType phiCorr
@@ -740,7 +740,7 @@ tmp<surfaceScalarField> SLTSDdtScheme<Type>::meshPhi
     (
         "meshPhi",
         mesh(),
-        dimensionedScalar(dimVolume/dimTime, 0)
+        dimensionedScalar(dimensions::volume/dimensions::time, 0)
     );
 }
 

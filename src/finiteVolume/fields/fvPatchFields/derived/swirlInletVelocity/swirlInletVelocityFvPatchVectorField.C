@@ -42,7 +42,7 @@ swirlInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "origin",
-            dimLength,
+            dimensions::length,
             returnReduce(patch().size(), sumOp<label>())
           ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
           : Zero
@@ -65,8 +65,8 @@ swirlInletVelocityFvPatchVectorField
         (
             "axialVelocity",
             time().userUnits(),
-            dimLength,
-            dimVelocity,
+            dimensions::length,
+            dimensions::velocity,
             dict
         )
     ),
@@ -76,8 +76,8 @@ swirlInletVelocityFvPatchVectorField
         (
             "radialVelocity",
             time().userUnits(),
-            dimLength,
-            dimVelocity,
+            dimensions::length,
+            dimensions::velocity,
             dict
         )
     ),
@@ -95,8 +95,8 @@ swirlInletVelocityFvPatchVectorField
             (
                 "tangentialVelocity",
                 time().userUnits(),
-                dimLength,
-                dimVelocity,
+                dimensions::length,
+                dimensions::velocity,
                 dict
             );
     }
@@ -210,16 +210,16 @@ void Foam::swirlInletVelocityFvPatchVectorField::write(Ostream& os) const
     (
         os,
         time().userUnits(),
-        dimLength,
-        dimVelocity,
+        dimensions::length,
+        dimensions::velocity,
         axialVelocity_()
     );
     writeEntry
     (
         os,
         time().userUnits(),
-        dimLength,
-        dimVelocity,
+        dimensions::length,
+        dimensions::velocity,
         radialVelocity_()
     );
     if (omega_.valid())
@@ -232,8 +232,8 @@ void Foam::swirlInletVelocityFvPatchVectorField::write(Ostream& os) const
         (
             os,
             time().userUnits(),
-            dimLength,
-            dimVelocity,
+            dimensions::length,
+            dimensions::velocity,
             tangentialVelocity_()
         );
     }

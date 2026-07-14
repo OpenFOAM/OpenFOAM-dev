@@ -60,7 +60,7 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
                 Field<Type>
                 (
                     "gradient",
-                    iF.dimensions()/dimLength,
+                    iF.dimensions()/dimensions::length,
                     dict,
                     p.size()
                 );

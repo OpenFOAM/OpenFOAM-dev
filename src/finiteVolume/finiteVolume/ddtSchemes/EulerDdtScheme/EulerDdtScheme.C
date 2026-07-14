@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ EulerDdtScheme<Type>::fvcDdt
                 dimensioned<Type>
                 (
                     "0",
-                    dt.dimensions()/dimTime,
+                    dt.dimensions()/dimensions::time,
                     Zero
                 )
             )
@@ -82,7 +82,7 @@ EulerDdtScheme<Type>::fvcDdt
             dimensioned<Type>
             (
                 "0",
-                dt.dimensions()/dimTime,
+                dt.dimensions()/dimensions::time,
                 Zero
             ),
             calculatedFvPatchField<Type>::typeName
@@ -296,7 +296,7 @@ EulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime
+            vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 
@@ -332,7 +332,7 @@ EulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -369,7 +369,7 @@ EulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -412,8 +412,8 @@ EulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()
            *rho.dimensions()
            *vf.dimensions()
-           *dimVolume
-           /dimTime
+           *dimensions::volume
+           /dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -503,8 +503,8 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
 
     if
     (
-        U.dimensions() == dimVelocity
-     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
+        U.dimensions() == dimensions::velocity
+     && rhoUf.dimensions() == rho.dimensions()*dimensions::velocity
     )
     {
         VolField<Type> rhoU0(rho.oldTime()*U.oldTime());
@@ -520,8 +520,8 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && rhoUf.dimensions() == rho.dimensions()*dimensions::velocity
     )
     {
         fluxFieldType phiUf0(mesh().Sf() & rhoUf.oldTime());
@@ -566,8 +566,8 @@ EulerDdtScheme<Type>::fvcDdtPhiCorr
 
     if
     (
-        U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         VolField<Type> rhoU0
@@ -594,8 +594,8 @@ EulerDdtScheme<Type>::fvcDdtPhiCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         fluxFieldType phiCorr
@@ -638,7 +638,11 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    if (U.dimensions() == dimVelocity && Uf.dimensions() == dimVelocity)
+    if
+    (
+        U.dimensions() == dimensions::velocity
+     && Uf.dimensions() == dimensions::velocity
+    )
     {
         const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
 
@@ -681,7 +685,11 @@ EulerDdtScheme<Type>::fvcDdtPhiCorr
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    if (U.dimensions() == dimVelocity && phi.dimensions() == dimVolumetricFlux)
+    if
+    (
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == dimensions::volumetricFlux
+    )
     {
         const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
 

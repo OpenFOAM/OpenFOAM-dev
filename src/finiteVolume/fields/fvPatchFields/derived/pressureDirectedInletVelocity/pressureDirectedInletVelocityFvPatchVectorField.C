@@ -124,11 +124,11 @@ void Foam::pressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
     tmp<vectorField> n = patch().nf();
     tmp<scalarField> ndmagS = (n & inletDir_)*patch().magSf();
 
-    if (phi.dimensions() == dimVolumetricFlux)
+    if (phi.dimensions() == dimensions::volumetricFlux)
     {
         operator==(inletDir_*phip/ndmagS);
     }
-    else if (phi.dimensions() == dimMassFlux)
+    else if (phi.dimensions() == dimensions::massFlux)
     {
         const fvPatchField<scalar>& rhop =
             patch().lookupPatchField<volScalarField, scalar>(rhoName_);

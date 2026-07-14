@@ -140,7 +140,10 @@ flowRateInletVelocityFvPatchVectorField
     volumetric_(),
     profile_(),
     rhoName_("rho"),
-    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", dimDensity, -vGreat)),
+    rhoInlet_
+    (
+        dict.lookupOrDefault<scalar>("rhoInlet", dimensions::density, -vGreat)
+    ),
     alphaName_(dict.lookupOrDefault<word>("alpha", word::null)),
     y_(),
     area_(-vGreat)
@@ -154,7 +157,7 @@ flowRateInletVelocityFvPatchVectorField
             (
                 "meanVelocity",
                 time().userUnits(),
-                dimVelocity,
+                dimensions::velocity,
                 dict
             );
     }
@@ -167,7 +170,7 @@ flowRateInletVelocityFvPatchVectorField
             (
                 "volumetricFlowRate",
                 time().userUnits(),
-                dimVolumetricFlux,
+                dimensions::volumetricFlux,
                 dict
             );
     }
@@ -180,7 +183,7 @@ flowRateInletVelocityFvPatchVectorField
             (
                 "massFlowRate",
                 time().userUnits(),
-                dimMassFlux,
+                dimensions::massFlux,
                 dict
             );
         rhoName_ = word(dict.lookupOrDefault<word>("rho", "rho"));

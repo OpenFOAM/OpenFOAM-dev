@@ -41,10 +41,13 @@ uniformDensityHydrostaticPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict, false),
-    rho_(dict.lookup<scalar>("rhoRef", dimDensity)),
-    pRef_(dict.lookup<scalar>("pRef", dimPressure)),
+    rho_(dict.lookup<scalar>("rhoRef", dimensions::density)),
+    pRef_(dict.lookup<scalar>("pRef", dimensions::pressure)),
     pRefPointSpecified_(dict.found("pRefPoint")),
-    pRefPoint_(dict.lookupOrDefault<vector>("pRefPoint", dimLength, Zero))
+    pRefPoint_
+    (
+        dict.lookupOrDefault<vector>("pRefPoint", dimensions::length, Zero)
+    )
 {
     if (dict.found("value"))
     {

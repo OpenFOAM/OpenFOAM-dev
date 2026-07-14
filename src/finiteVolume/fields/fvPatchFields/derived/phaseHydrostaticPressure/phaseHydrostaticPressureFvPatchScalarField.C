@@ -42,9 +42,9 @@ phaseHydrostaticPressureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF, dict, false),
     phaseFraction_(dict.lookupOrDefault<word>("phaseFraction", "alpha")),
-    rho_(dict.lookup<scalar>("rho", dimDensity)),
-    pRefValue_(dict.lookup<scalar>("pRefValue", dimPressure)),
-    pRefPoint_(dict.lookup<vector>("pRefPoint", dimLength))
+    rho_(dict.lookup<scalar>("rho", dimensions::density)),
+    pRefValue_(dict.lookup<scalar>("pRefValue", dimensions::pressure)),
+    pRefPoint_(dict.lookup<vector>("pRefPoint", dimensions::length))
 {
     this->refValue() = pRefValue_;
 

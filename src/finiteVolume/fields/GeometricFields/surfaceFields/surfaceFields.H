@@ -64,8 +64,8 @@ template<>
 inline bool isFlux<scalar>(const DimensionedField<scalar, surfaceMesh>& df)
 {
     return
-        df.dimensions() == dimVolumetricFlux
-     || df.dimensions() == dimMassFlux;
+        df.dimensions() == dimensions::volumetricFlux
+     || df.dimensions() == dimensions::massFlux;
 }
 
 }

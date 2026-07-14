@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
         dimensioned<Type>
         (
             "0",
-            vf.dimensions()/dimTime/dimTime,
+            vf.dimensions()/sqr(dimensions::time),
             Zero
         )
     );
@@ -75,7 +75,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
         dimensioned<Type>
         (
             "0",
-            rho.dimensions()*vf.dimensions()/dimTime/dimTime,
+            rho.dimensions()*vf.dimensions()/sqr(dimensions::time),
             Zero
         )
     );
@@ -94,7 +94,7 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime/dimTime
+            vf.dimensions()*dimensions::volume/sqr(dimensions::time)
         )
     );
 
@@ -115,7 +115,8 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime/dimTime
+            rho.dimensions()*vf.dimensions()
+           *dimensions::volume/sqr(dimensions::time)
         )
     );
 
@@ -136,7 +137,8 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime/dimTime
+            rho.dimensions()*vf.dimensions()
+           *dimensions::volume/sqr(dimensions::time)
         )
     );
 

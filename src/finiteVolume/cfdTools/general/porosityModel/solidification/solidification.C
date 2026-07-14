@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,16 @@ Foam::porosityModels::solidification::solidification
     TName_(coeffDict.lookupOrDefault<word>("T", "T")),
     alphaName_(coeffDict.lookupOrDefault<word>("alpha", "none")),
     rhoName_(coeffDict.lookupOrDefault<word>("rho", "rho")),
-    D_(Function1<scalar>::New("D", dimTemperature, dimless/dimTime, coeffDict))
+    D_
+    (
+        Function1<scalar>::New
+        (
+            "D",
+            dimensions::temperature,
+            dimensions::rate,
+            coeffDict
+        )
+    )
 {}
 
 
@@ -97,7 +106,7 @@ void Foam::porosityModels::solidification::correct
     const scalarField& V = mesh_.V();
     scalarField& Udiag = UEqn.diag();
 
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimensions::force)
     {
         const volScalarField& rho = mesh_.lookupObject<volScalarField>
         (
@@ -121,7 +130,7 @@ void Foam::porosityModels::solidification::correct
 {
     const volVectorField& U = UEqn.psi();
 
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimensions::force)
     {
         const volScalarField& rho = mesh_.lookupObject<volScalarField>
         (

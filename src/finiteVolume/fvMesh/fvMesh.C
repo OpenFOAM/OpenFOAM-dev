@@ -1282,7 +1282,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
                 true
             ),
             *this,
-            dimVolume/dimTime,
+            dimensions::volumetricFlux,
             fvsPatchField<scalar>::calculatedType()
         );
     }
@@ -1538,7 +1538,7 @@ void Foam::fvMesh::unconform
 
     // Set the face geometry
     SfRef() == Sf;
-    magSfRef() == max(mag(Sf), dimensionedScalar(dimArea, rootVSmall));
+    magSfRef() == max(mag(Sf), dimensionedScalar(dimensions::area, rootVSmall));
     CRef().boundaryFieldRef() == Cf.boundaryField();
     CfRef() == Cf;
 

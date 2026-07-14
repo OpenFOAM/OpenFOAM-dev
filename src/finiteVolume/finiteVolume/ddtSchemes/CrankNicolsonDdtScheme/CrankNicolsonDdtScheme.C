@@ -164,7 +164,7 @@ CrankNicolsonDdtScheme<Type>::ddt0_
                     dimensioned<typename GeoField::value_type>
                     (
                         "0",
-                        dims/dimTime,
+                        dims/dimensions::time,
                         Zero
                     )
                 )
@@ -371,7 +371,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             dimensioned<Type>
             (
                 "0",
-                dt.dimensions()/dimTime,
+                dt.dimensions()/dimensions::time,
                 Zero
             )
         )
@@ -773,7 +773,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime
+            vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 
@@ -856,7 +856,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -938,7 +938,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -1032,8 +1032,8 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
             alpha.dimensions()
            *rho.dimensions()
            *vf.dimensions()
-           *dimVolume
-           /dimTime
+           *dimensions::volume
+           /dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -1241,8 +1241,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 {
     if
     (
-        U.dimensions() == dimVelocity
-     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
+        U.dimensions() == dimensions::velocity
+     && rhoUf.dimensions() == rho.dimensions()*dimensions::velocity
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =
@@ -1302,8 +1302,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && rhoUf.dimensions() == rho.dimensions()*dimensions::velocity
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =
@@ -1380,8 +1380,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 {
     if
     (
-        U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =
@@ -1437,8 +1437,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =
@@ -1503,7 +1503,7 @@ tmp<surfaceScalarField> CrankNicolsonDdtScheme<Type>::meshPhi
 )
 {
     DDt0Field<surfaceScalarField>& meshPhi0 =
-        ddt0_<surfaceScalarField>("meshPhi0", dimVolume);
+        ddt0_<surfaceScalarField>("meshPhi0", dimensions::volume);
 
     if (evaluate(meshPhi0))
     {
@@ -1527,7 +1527,7 @@ tmp<scalarField> CrankNicolsonDdtScheme<Type>::meshPhi
 )
 {
     DDt0Field<surfaceScalarField>& meshPhi0 =
-        ddt0_<surfaceScalarField>("meshPhi0", dimVolume);
+        ddt0_<surfaceScalarField>("meshPhi0", dimensions::volume);
 
     if (evaluate(meshPhi0))
     {

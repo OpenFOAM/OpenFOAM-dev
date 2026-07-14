@@ -235,7 +235,7 @@ void Foam::surfaceInterpolation::makeDeltaCoeffs() const
             false // Do not register
         ),
         mesh_,
-        dimless/dimLength,
+        dimless/dimensions::length,
         fvsPatchField<scalar>::calculatedType()
     );
     surfaceScalarField& deltaCoeffs = *deltaCoeffs_;
@@ -286,7 +286,7 @@ void Foam::surfaceInterpolation::makeNonOrthDeltaCoeffs() const
             false // Do not register
         ),
         mesh_,
-        dimless/dimLength,
+        dimless/dimensions::length,
         fvsPatchField<scalar>::calculatedType()
     );
     surfaceScalarField& nonOrthDeltaCoeffs = *nonOrthDeltaCoeffs_;

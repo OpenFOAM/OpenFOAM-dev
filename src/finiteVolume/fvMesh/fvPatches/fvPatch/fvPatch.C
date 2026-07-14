@@ -105,7 +105,7 @@ Foam::fvPatch::C() const
                 false
             ),
             *this,
-            dimLength,
+            dimensions::length,
             Cf()
         );
     }

@@ -43,7 +43,7 @@ Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
         (
             "uniformGradient",
             this->time().userUnits(),
-            iF.dimensions()/dimLength,
+            iF.dimensions()/dimensions::length,
             dict
         )
     )
@@ -130,7 +130,7 @@ void Foam::uniformFixedGradientFvPatchField<Type>::write(Ostream& os) const
     (
         os,
         this->time().userUnits(),
-        this->internalField().dimensions()/dimLength,
+        this->internalField().dimensions()/dimensions::length,
         uniformGradient_()
     );
     writeEntry(os, "value", *this);

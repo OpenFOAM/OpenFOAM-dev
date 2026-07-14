@@ -88,7 +88,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
             mesh
         ),
         mesh,
-        dimensionedScalar("y" & patchTypeName_, dimLength, small),
+        dimensionedScalar("y" & patchTypeName_, dimensions::length, small),
         patchDistMethod::patchTypes<scalar>(mesh, patchIndices_)
     ),
     nRequired_
@@ -139,7 +139,7 @@ Foam::wallDist::wallDist
             mesh
         ),
         mesh,
-        dimensionedScalar("y" & patchTypeName_, dimLength, small),
+        dimensionedScalar("y" & patchTypeName_, dimensions::length, small),
         patchDistMethod::patchTypes<scalar>(mesh, patchIndices_)
     ),
     nRequired_

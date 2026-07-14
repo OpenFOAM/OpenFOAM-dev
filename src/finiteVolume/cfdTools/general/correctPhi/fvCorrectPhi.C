@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ void Foam::fv::correctPhi
             dimensionedScalar
             (
                 "rAU",
-                phi.dimensions()/p.dimensions()/dimLength,
+                phi.dimensions()/p.dimensions()/dimensions::length,
                 1
             ),
             divU,
@@ -105,7 +105,7 @@ void Foam::fv::correctPhi
             dimensionedScalar
             (
                 "rAU",
-                phi.dimensions()/p.dimensions()/dimLength,
+                phi.dimensions()/p.dimensions()/dimensions::length,
                 1
             ),
             divRhoU,

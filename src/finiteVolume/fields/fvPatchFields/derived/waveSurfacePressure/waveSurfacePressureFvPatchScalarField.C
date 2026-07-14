@@ -80,7 +80,7 @@ waveSurfacePressureFvPatchScalarField
                     IOobject::AUTO_WRITE
                 ),
                 patch().mesh(),
-                dimensionedVector(dimLength, Zero)
+                dimensionedVector(dimensions::length, Zero)
             )
         );
 
@@ -154,7 +154,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
     // Change in zeta due to flux
     vectorField dZetap(dt*nf()*phi.boundaryField()[patchi]/patch().magSf());
 
-    if (phi.dimensions() == dimMassFlux)
+    if (phi.dimensions() == dimensions::massFlux)
     {
         dZetap /= rhop;
     }

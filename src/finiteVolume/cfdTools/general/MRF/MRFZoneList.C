@@ -122,7 +122,7 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZoneList::DDt
         (
             "MRFZoneList:DDt",
             U.mesh(),
-            dimensionedVector(U.dimensions()/dimTime, Zero)
+            dimensionedVector(U.dimensions()/dimensions::time, Zero)
         )
     );
     volVectorField& DDt = tDDt.ref();
@@ -155,7 +155,7 @@ Foam::MRFZoneList::centrifugalAcceleration() const
         (
             "MRFZoneList:centrifugalAcceleration",
             mesh_,
-            dimensionedVector(dimAcceleration, Zero)
+            dimensionedVector(dimensions::acceleration, Zero)
         )
     );
     volVectorField& centrifugalAcceleration = tcentrifugalAcceleration.ref();

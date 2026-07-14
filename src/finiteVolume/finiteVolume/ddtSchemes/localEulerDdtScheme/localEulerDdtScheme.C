@@ -71,7 +71,7 @@ localEulerDdtScheme<Type>::fvcDdt
             dimensioned<Type>
             (
                 "0",
-                dt.dimensions()/dimTime,
+                dt.dimensions()/dimensions::time,
                 Zero
             ),
             calculatedFvPatchField<Type>::typeName
@@ -207,7 +207,7 @@ localEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime
+            vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 
@@ -235,7 +235,7 @@ localEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -264,7 +264,7 @@ localEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -298,8 +298,8 @@ localEulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()
            *rho.dimensions()
            *vf.dimensions()
-           *dimVolume
-           /dimTime
+           *dimensions::volume
+           /dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -442,7 +442,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
 
     if
     (
-        U.dimensions() == dimVelocity
+        U.dimensions() == dimensions::velocity
      && rhoUf.dimensions() == dimensions::momentumDensity
     )
     {
@@ -527,8 +527,8 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
 
     if
     (
-        U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         VolField<Type> rhoU0
@@ -564,8 +564,8 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         fluxFieldType phiCorr
@@ -617,7 +617,11 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
 
-    if (U.dimensions() == dimVelocity && Uf.dimensions() == dimVelocity)
+    if
+    (
+        U.dimensions() == dimensions::velocity
+     && Uf.dimensions() == dimensions::velocity
+    )
     {
         const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
 
@@ -660,7 +664,11 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
 
-    if (U.dimensions() == dimVelocity && phi.dimensions() == dimVolumetricFlux)
+    if
+    (
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == dimensions::volumetricFlux
+    )
     {
         const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
 
@@ -698,7 +706,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::meshPhi
     (
         "meshPhi",
         mesh(),
-        dimensionedScalar(dimVolume/dimTime, 0)
+        dimensionedScalar(dimensions::volume/dimensions::time, 0)
     );
 }
 

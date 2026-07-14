@@ -65,7 +65,7 @@ reconstruct
             dimensioned<GradType>
             (
                 "0",
-                ssf.dimensions()/dimArea,
+                ssf.dimensions()/dimensions::area,
                 Zero
             ),
             extrapolatedCalculatedFvPatchField<GradType>::typeName

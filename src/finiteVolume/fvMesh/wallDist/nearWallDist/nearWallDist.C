@@ -52,7 +52,7 @@ Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
         calculatedFvPatchScalarField::typeName
     )
 {
-    volScalarField yVf(volScalarField::New("y", mesh, dimLength));
+    volScalarField yVf(volScalarField::New("y", mesh, dimensions::length));
 
     fvPatchDistWave::correct
     (

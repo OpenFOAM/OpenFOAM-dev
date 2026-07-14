@@ -46,7 +46,7 @@ outletPhaseMeanVelocityFvPatchVectorField
         (
             "UnMean",
             time().userUnits(),
-            dimVelocity,
+            dimensions::velocity,
             dict
         )
     ),
@@ -146,7 +146,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::write
 {
     fvPatchField<vector>::write(os);
 
-    writeEntry(os, time().userUnits(), dimVelocity, UnMean_());
+    writeEntry(os, time().userUnits(), dimensions::velocity, UnMean_());
     writeEntry(os, "alpha", alphaName_);
     writeEntry(os, "value", *this);
 }

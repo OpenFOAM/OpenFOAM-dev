@@ -42,7 +42,7 @@ DistanceFunction
         Foam::Function1<typename DimensionedFieldType::Type_>::New
         (
             "function",
-            dimLength,
+            dimensions::length,
             field.dimensions(),
             dict
         )
@@ -97,7 +97,7 @@ write
     Ostream& os
 ) const
 {
-    writeEntry(os, dimLength, this->field_.dimensions(), funcPtr_());
+    writeEntry(os, dimensions::length, this->field_.dimensions(), funcPtr_());
     writeEntry(os, "direction", direction_);
 }
 

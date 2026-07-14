@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ backwardDdtScheme<Type>::fvcDdt
                 dimensioned<Type>
                 (
                     "0",
-                    dt.dimensions()/dimTime,
+                    dt.dimensions()/dimensions::time,
                     Zero
                 )
             )
@@ -124,7 +124,7 @@ backwardDdtScheme<Type>::fvcDdt
                 dimensioned<Type>
                 (
                     "0",
-                    dt.dimensions()/dimTime,
+                    dt.dimensions()/dimensions::time,
                     Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
@@ -423,7 +423,7 @@ backwardDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVolume/dimTime
+            vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
 
@@ -475,7 +475,7 @@ backwardDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -526,7 +526,7 @@ backwardDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
+            rho.dimensions()*vf.dimensions()*dimensions::volume/dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -584,8 +584,8 @@ backwardDdtScheme<Type>::fvmDdt
             alpha.dimensions()
            *rho.dimensions()
            *vf.dimensions()
-           *dimVolume
-           /dimTime
+           *dimensions::volume
+           /dimensions::time
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -727,8 +727,8 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
 
     if
     (
-        U.dimensions() == dimVelocity
-     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
+        U.dimensions() == dimensions::velocity
+     && rhoUf.dimensions() == rho.dimensions()*dimensions::velocity
     )
     {
         const VolField<Type> rhoU0
@@ -765,8 +765,8 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && rhoUf.dimensions() == rho.dimensions()*dimensions::velocity
     )
     {
         return fluxFieldType::New
@@ -826,8 +826,8 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
 
     if
     (
-        U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         const VolField<Type> rhoU0
@@ -857,8 +857,8 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
     }
     else if
     (
-        U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
+        U.dimensions() == rho.dimensions()*dimensions::velocity
+     && phi.dimensions() == rho.dimensions()*dimensions::volumetricFlux
     )
     {
         return fluxFieldType::New
@@ -906,7 +906,11 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
     const scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     const scalar coefft0  = coefft + coefft00;
 
-    if (U.dimensions() == dimVelocity && Uf.dimensions() == dimVelocity)
+    if
+    (
+        U.dimensions() == dimensions::velocity
+     && Uf.dimensions() == dimensions::velocity
+    )
     {
         const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
         const volScalarField alphaRho00
@@ -968,7 +972,11 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
     const scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     const scalar coefft0  = coefft + coefft00;
 
-    if (U.dimensions() == dimVelocity && phi.dimensions() == dimVolumetricFlux)
+    if
+    (
+        U.dimensions() == dimensions::velocity
+     && phi.dimensions() == dimensions::volumetricFlux
+    )
     {
         const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
         const volScalarField alphaRho00

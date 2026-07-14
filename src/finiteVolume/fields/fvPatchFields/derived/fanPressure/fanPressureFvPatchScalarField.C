@@ -56,7 +56,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
         Function1<scalar>::New
         (
             "fanCurve",
-            dimVolumetricFlux,
+            dimensions::volumetricFlux,
             iF.dimensions(),
             dict
         )
@@ -110,13 +110,13 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
 
     // Get the volumetric flow rate
     scalar volFlowRate = 0;
-    if (phip.internalField().dimensions() == dimVolumetricFlux)
+    if (phip.internalField().dimensions() == dimensions::volumetricFlux)
     {
         volFlowRate = sign*gSum(phip);
     }
     else if
     (
-        phip.internalField().dimensions() == dimMassFlux
+        phip.internalField().dimensions() == dimensions::massFlux
     )
     {
         const scalarField& rhop =
