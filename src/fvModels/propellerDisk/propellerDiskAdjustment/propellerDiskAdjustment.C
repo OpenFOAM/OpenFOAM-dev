@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ Foam::fv::propellerDiskAdjustment::propellerDiskAdjustment
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        dimensionedScalar("n", dimless/dimTime, mag(dict.lookup<scalar>("n")))
+        dimensionedScalar("n", dimensions::rate, mag(dict.lookup<scalar>("n")))
     )
 {
     readCoeffs(dict);
@@ -115,7 +115,7 @@ void Foam::fv::propellerDiskAdjustment::correctn(const scalar T) const
         const scalar magDeltaN = min(mag(deltaN), nFraction_*n);
         deltaN = sign(deltaN)*magDeltaN;
 
-        n_ = n_.oldTime() + dimensionedScalar(dimRate, deltaN);
+        n_ = n_.oldTime() + dimensionedScalar(dimensions::rate, deltaN);
     }
 }
 

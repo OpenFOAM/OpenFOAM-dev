@@ -375,7 +375,7 @@ Foam::fv::phaseChange::Tchange() const
         (
             name() + ":Tchange",
             mesh(),
-            dimTemperature
+            dimensions::temperature
         );
     volScalarField::Internal& Tchange = tTchange.ref();
 
@@ -487,7 +487,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot() const
         (
             "mDot",
             mesh(),
-            dimensionedScalar(dimDensity/dimTime, Zero)
+            dimensionedScalar(dimensions::density/dimensions::time, Zero)
         );
 
     forAll(species(), mDoti)

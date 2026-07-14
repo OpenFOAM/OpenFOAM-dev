@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ void Foam::fv::heatTransfer::readCoeffs(const dictionary& dict)
 
     TName_ = dict.lookupOrDefault<word>("T", "T");
 
-    Ta_ = dimensionedScalar("Ta", dimTemperature, dict);
+    Ta_ = dimensionedScalar("Ta", dimensions::temperature, dict);
 
     heatTransferAv_.reset(new heatTransferAv(dict, mesh()));
 
@@ -92,7 +92,7 @@ void Foam::fv::heatTransfer::add
 
     if (semiImplicit_)
     {
-        if (he.dimensions() == dimEnergy/dimMass)
+        if (he.dimensions() == dimensions::specificEnergy)
         {
             const basicThermo& thermo =
                mesh().lookupObject<basicThermo>
@@ -104,7 +104,7 @@ void Foam::fv::heatTransfer::add
 
             eqn += htcAv*(Ta_ - T) + htcAvByCpv*he - fvm::Sp(htcAvByCpv, he);
         }
-        else if (he.dimensions() == dimTemperature)
+        else if (he.dimensions() == dimensions::temperature)
         {
             eqn += htcAv*Ta_ - fvm::Sp(htcAv, he);
         }
@@ -131,7 +131,7 @@ Foam::fv::heatTransfer::heatTransfer
     phaseName_(word::null),
     semiImplicit_(false),
     TName_(word::null),
-    Ta_("Ta", dimTemperature, NaN),
+    Ta_("Ta", dimensions::temperature, NaN),
     heatTransferAv_(nullptr),
     heatTransferCoefficientModel_(nullptr)
 {

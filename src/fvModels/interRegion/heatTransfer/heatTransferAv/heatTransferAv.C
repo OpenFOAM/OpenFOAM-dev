@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,22 +49,22 @@ void Foam::fv::heatTransferAv::readCoeffs(const dictionary& dict)
 
     if (dict.found("Av"))
     {
-        Av_ = dimensionedScalar("Av", dimless/dimLength, dict);
+        Av_ = dimensionedScalar("Av", inv(dimensions::length), dict);
         AvPtr_.clear();
     }
     else if (dict.found("AoV"))
     {
-        Av_ = dimensionedScalar("AoV", dimless/dimLength, dict);
+        Av_ = dimensionedScalar("AoV", inv(dimensions::length), dict);
         AvPtr_.clear();
     }
     else if (AvIO.headerOk())
     {
-        Av_ = dimensionedScalar("Av", dimless/dimLength, NaN);
+        Av_ = dimensionedScalar("Av", inv(dimensions::length), NaN);
         AvPtr_.set(new volScalarField(AvIO, mesh_));
     }
     else if (AoVIO.headerOk())
     {
-        Av_ = dimensionedScalar("AoV", dimless/dimLength, NaN);
+        Av_ = dimensionedScalar("AoV", inv(dimensions::length), NaN);
         AvPtr_.set(new volScalarField(AoVIO, mesh_));
     }
     else
@@ -86,7 +86,7 @@ Foam::fv::heatTransferAv::heatTransferAv
 )
 :
     mesh_(mesh),
-    Av_("Av", dimless/dimLength, NaN),
+    Av_("Av", inv(dimensions::length), NaN),
     AvPtr_(nullptr)
 {
     readCoeffs(dict);

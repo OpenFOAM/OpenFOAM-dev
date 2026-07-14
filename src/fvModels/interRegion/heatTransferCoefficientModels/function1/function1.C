@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ void Foam::fv::heatTransferCoefficientModels::function1::readCoeffs
         Function1<scalar>::New
         (
             "htcFunc",
-            dimVelocity,
-            dimPower/dimArea/dimTemperature,
+            dimensions::velocity,
+            dimensions::power/dimensions::area/dimensions::temperature,
             dict
         ).ptr()
     );
@@ -108,7 +108,7 @@ Foam::fv::heatTransferCoefficientModels::function1::htc() const
         (
             typedName("htc"),
             mesh_,
-            dimPower/dimTemperature/dimArea,
+            dimensions::power/dimensions::temperature/dimensions::area,
             zeroGradientFvPatchScalarField::typeName
         );
 

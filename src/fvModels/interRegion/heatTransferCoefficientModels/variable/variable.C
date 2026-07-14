@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ void Foam::fv::heatTransferCoefficientModels::variable::readCoeffs
     a_ = dict.lookup<scalar>("a");
     b_ = dict.lookup<scalar>("b");
     c_ = dict.lookup<scalar>("c");
-    L_ = dimensionedScalar("L", dimLength, dict);
+    L_ = dimensionedScalar("L", dimensions::length, dict);
     Pr_ = dimensionedScalar("Pr", dimless, dict);
 }
 
@@ -74,7 +74,7 @@ Foam::fv::heatTransferCoefficientModels::variable::variable
     a_(NaN),
     b_(NaN),
     c_(NaN),
-    L_("L", dimLength, NaN),
+    L_("L", dimensions::length, NaN),
     Pr_("Pr", dimless, NaN),
     htc_
     (
@@ -87,7 +87,11 @@ Foam::fv::heatTransferCoefficientModels::variable::variable
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimPower/dimTemperature/dimArea, 0),
+        dimensionedScalar
+        (
+            dimensions::power/dimensions::temperature/dimensions::area,
+            0
+        ),
         zeroGradientFvPatchScalarField::typeName
     )
 {

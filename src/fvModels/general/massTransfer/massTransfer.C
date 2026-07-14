@@ -115,7 +115,12 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransfer::rho
                 (
                     rhoNames()[i],
                     mesh(),
-                    dimensionedScalar("rho", dimDensity, physicalProperties)
+                    dimensionedScalar
+                    (
+                        "rho",
+                        dimensions::density,
+                        physicalProperties
+                    )
                 );
         }
     }

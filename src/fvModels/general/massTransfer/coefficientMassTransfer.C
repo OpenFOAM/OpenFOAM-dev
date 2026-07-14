@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
 )
 :
     massTransfer(name, modelType, mesh, dict),
-    C_("C", dimMass/dimArea/dimTime, NaN)
+    C_("C", dimensions::mass/dimensions::area/dimensions::time, NaN)
 {
     readCoeffs(coeffs(dict));
 }

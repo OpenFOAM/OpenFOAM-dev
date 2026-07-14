@@ -60,7 +60,7 @@ void Foam::fv::acceleration::readCoeffs(const dictionary& dict)
         (
             "velocity",
             mesh().time().userUnits(),
-            dimVelocity,
+            dimensions::velocity,
             dict
         );
 }

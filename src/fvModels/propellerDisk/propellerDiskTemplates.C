@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,11 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
                 IOobject::AUTO_WRITE
             ),
             mesh(),
-            dimensionedVector(rho.dimensions()*U.dimensions()/dimTime, Zero)
+            dimensionedVector
+            (
+                rho.dimensions()*U.dimensions()/dimensions::time,
+                Zero
+            )
         );
     }
 

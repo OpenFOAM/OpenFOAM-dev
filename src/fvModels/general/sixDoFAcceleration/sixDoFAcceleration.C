@@ -61,7 +61,7 @@ void Foam::fv::sixDoFAcceleration::readCoeffs(const dictionary& dict)
         (
             "acceleration",
             mesh().time().userUnits(),
-            dimAcceleration,
+            dimensions::acceleration,
             dict
         ).ptr()
     );
@@ -72,7 +72,7 @@ void Foam::fv::sixDoFAcceleration::readCoeffs(const dictionary& dict)
         (
             "angularVelocity",
             mesh().time().userUnits(),
-            units::radians/dimTime,
+            units::radians/dimensions::time,
             dict
         ).ptr()
     );
@@ -83,7 +83,7 @@ void Foam::fv::sixDoFAcceleration::readCoeffs(const dictionary& dict)
         (
             "angularAcceleration",
             mesh().time().userUnits(),
-            units::radians/sqr(dimTime),
+            units::radians/sqr(dimensions::time),
             dict
         ).ptr()
     );
@@ -102,7 +102,7 @@ void Foam::fv::sixDoFAcceleration::addForce
     const dimensionedVector a
    (
        "a",
-       dimAcceleration,
+       dimensions::acceleration,
        acceleration_->value(mesh().time().value())
    );
 
@@ -133,14 +133,14 @@ void Foam::fv::sixDoFAcceleration::addForce
     const dimensionedVector Omega
     (
         "Omega",
-        dimless/dimTime,
+        dimensions::rate,
         angularVelocity_->value(mesh().time().value())
     );
 
     const dimensionedVector dOmegaDT
     (
         "dOmegaDT",
-        dimless/sqr(dimTime),
+        sqr(dimensions::rate),
         angularAcceleration_->value(mesh().time().value())
     );
 
@@ -172,7 +172,7 @@ Foam::fv::sixDoFAcceleration::sixDoFAcceleration
     (
         mesh.foundObject<uniformDimensionedVectorField>("g")
       ? dimensionedVector(mesh.lookupObject<uniformDimensionedVectorField>("g"))
-      : dimensionedVector("g", dimAcceleration, Zero)
+      : dimensionedVector("g", dimensions::acceleration, Zero)
     )
 {
     readCoeffs(coeffs(dict));

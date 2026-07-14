@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,14 +65,19 @@ void Foam::fv::heatTransferCoefficientModels::constant::readCoeffs
             dimensionedScalar
             (
                 "htc",
-                dimPower/dimTemperature/dimArea,
+                dimensions::power/dimensions::temperature/dimensions::area,
                 dict
             );
         htcPtr_.clear();
     }
     else if (htcIO.headerOk())
     {
-        htc_ = dimensionedScalar("htc", dimPower/dimTemperature/dimArea, NaN);
+        htc_ = dimensionedScalar
+        (
+            "htc",
+            dimensions::power/dimensions::temperature/dimensions::area,
+            NaN
+        );
         htcPtr_.set(new volScalarField(htcIO, mesh_));
     }
     else
@@ -95,7 +100,12 @@ Foam::fv::heatTransferCoefficientModels::constant::constant
 )
 :
     heatTransferCoefficientModel(typeName, dict, mesh),
-    htc_("htc", dimPower/dimTemperature/dimArea, NaN),
+    htc_
+    (
+        "htc",
+        dimensions::power/dimensions::temperature/dimensions::area,
+        NaN
+    ),
     htcPtr_(nullptr)
 {
     readCoeffs(dict);

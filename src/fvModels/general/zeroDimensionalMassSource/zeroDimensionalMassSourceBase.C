@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::fv::zeroDimensionalMassSourceBase::calcM0D() const
         (
             typedName("m0D"),
             mesh(),
-            dimensionedScalar(dimMass, 0)
+            dimensionedScalar(dimensions::mass, 0)
         );
 
     HashTable<const basicThermo*> thermos(mesh().lookupClass<basicThermo>());
@@ -119,7 +119,7 @@ const Foam::volScalarField& Foam::fv::zeroDimensionalMassSourceBase::m() const
             (
                 mIo,
                 mesh(),
-                dimensionedScalar(dimMass, 0)
+                dimensionedScalar(dimensions::mass, 0)
             );
 
         mPtr->store();
@@ -211,7 +211,7 @@ Foam::dimensionedScalar Foam::fv::zeroDimensionalMassSourceBase::S() const
     return
         dimensionedScalar
         (
-            dimMass/dimTime,
+            dimensions::mass/dimensions::time,
             massFlowRate()*m0D_[0]/m()[0]
         );
 }
@@ -262,7 +262,7 @@ void Foam::fv::zeroDimensionalMassSourceBase::correct()
                     mesh()
                 ),
                 mesh(),
-                dimensionedScalar(dimMass, 0)
+                dimensionedScalar(dimensions::mass, 0)
             );
 
         dMPtr->store();
@@ -273,7 +273,7 @@ void Foam::fv::zeroDimensionalMassSourceBase::correct()
 
     deltaM +=
         mesh().time().deltaT()
-       *dimensionedScalar(dimMass/dimTime, massFlowRate());
+       *dimensionedScalar(dimensions::mass/dimensions::time, massFlowRate());
 }
 
 

@@ -101,14 +101,14 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeBlockage::D
     const surfaceScalarField& phi =
         mesh().lookupObject<surfaceScalarField>(phiName);
 
-    if (phi.dimensions() == dimVolume/dimTime)
+    if (phi.dimensions() == dimensions::volume/dimensions::time)
     {
         const momentumTransportModel& turbulence =
             mesh().lookupType<momentumTransportModel>();
 
         return turbulence.nuEff();
     }
-    else if (phi.dimensions() == dimMass/dimTime)
+    else if (phi.dimensions() == dimensions::mass/dimensions::time)
     {
         const fluidThermophysicalTransportModel& ttm =
             mesh().lookupType<fluidThermophysicalTransportModel>();

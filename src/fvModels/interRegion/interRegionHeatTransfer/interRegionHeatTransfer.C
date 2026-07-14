@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ void Foam::fv::interRegionHeatTransfer::addSup
 
     if (semiImplicit_)
     {
-        if (he.dimensions() == dimEnergy/dimMass)
+        if (he.dimensions() == dimensions::specificEnergy)
         {
             const basicThermo& thermo =
                mesh().lookupObject<basicThermo>(physicalProperties::typeName);
@@ -181,7 +181,7 @@ void Foam::fv::interRegionHeatTransfer::addSup
                 htcAv*(Tnbr - T)
               + htcAvByCpv*he - fvm::Sp(htcAvByCpv, he);
         }
-        else if (he.dimensions() == dimTemperature)
+        else if (he.dimensions() == dimensions::temperature)
         {
             eqn += htcAv*Tnbr - fvm::Sp(htcAv, he);
         }

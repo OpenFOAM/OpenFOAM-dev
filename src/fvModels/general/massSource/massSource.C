@@ -51,7 +51,7 @@ void Foam::fv::massSource::readCoeffs(const dictionary& dict)
         (
             "massFlowRate",
             mesh().time().userUnits(),
-            dimMass/dimTime,
+            dimensions::mass/dimensions::time,
             dict
         ).ptr()
     );
@@ -95,7 +95,7 @@ Foam::dimensionedScalar Foam::fv::massSource::S() const
     return
         dimensionedScalar
         (
-            dimMass/dimTime,
+            dimensions::mass/dimensions::time,
             massFlowRate_->value(mesh().time().value())
         );
 }

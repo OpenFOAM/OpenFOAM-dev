@@ -121,7 +121,7 @@ Foam::fv::solidificationMelting::Cp() const
                     mesh(),
                     dimensionedScalar
                     (
-                        dimEnergy/dimMass/dimTemperature,
+                        dimensions::specificHeatCapacity,
                         CpRef_
                     ),
                     extrapolatedCalculatedFvPatchScalarField::typeName
@@ -239,10 +239,10 @@ void Foam::fv::solidificationMelting::apply
 
     update(Cp);
 
-    dimensionedScalar L("L", dimEnergy/dimMass, L_);
+    dimensionedScalar L("L", dimensions::specificEnergy, L_);
 
     // Contributions added to rhs of solver equation
-    if (eqn.psi().dimensions() == dimTemperature)
+    if (eqn.psi().dimensions() == dimensions::temperature)
     {
         eqn -= L/Cp*(fvc::ddt(rho, alpha1_));
     }

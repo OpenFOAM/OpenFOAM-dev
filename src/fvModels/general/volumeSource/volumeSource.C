@@ -61,7 +61,7 @@ void Foam::fv::volumeSource::readCoeffs(const dictionary& dict)
         (
             "volumetricFlowRate",
             mesh().time().userUnits(),
-            dimVolume/dimTime,
+            dimensions::volume/dimensions::time,
             dict
         ).ptr()
     );
@@ -148,12 +148,12 @@ void Foam::fv::volumeSource::addSupType
     (
         phaseName() != word::null
      && alphaOrRho.group() == word::null
-     && alphaOrRho.dimensions() == dimDensity
+     && alphaOrRho.dimensions() == dimensions::density
      && field.group() == word::null
     )
     {
         // First we construct the volumetric source...
-        fvMatrix<Type> volEqn(eqn.psi(), eqn.dimensions()/dimDensity);
+        fvMatrix<Type> volEqn(eqn.psi(), eqn.dimensions()/dimensions::density);
         fvTotalSource::addSupType(field, volEqn);
 
         // Then, to apply it to the mixture equation, we need to multiply by
@@ -165,7 +165,7 @@ void Foam::fv::volumeSource::addSupType
         const dimensionedScalar rhoi
         (
             "rho",
-            dimDensity,
+            dimensions::density,
             mesh().lookupObject<IOdictionary>
             (
                 IOobject::groupName
@@ -247,7 +247,7 @@ Foam::dimensionedScalar Foam::fv::volumeSource::S() const
     return
         dimensionedScalar
         (
-            dimVolume/dimTime,
+            dimensions::volume/dimensions::time,
             volumetricFlowRate_->value(mesh().time().value())
         );
 }

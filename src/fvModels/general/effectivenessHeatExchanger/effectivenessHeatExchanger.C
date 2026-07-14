@@ -53,20 +53,31 @@ namespace fv
 
 void Foam::fv::effectivenessHeatExchanger::readCoeffs(const dictionary& dict)
 {
-    secondaryMassFlowRate_ =
-        dict.lookup<scalar>("secondaryMassFlowRate", dimMass/dimTime);
-    secondaryInletT_ =
-        dict.lookup<scalar>("secondaryInletT", dimTemperature);
-    primaryInletT_ =
-        dict.lookup<scalar>("primaryInletT", dimTemperature);
+    secondaryMassFlowRate_ = dict.lookup<scalar>
+    (
+        "secondaryMassFlowRate",
+        dimensions::mass/dimensions::time
+    );
+
+    secondaryInletT_ = dict.lookup<scalar>
+    (
+        "secondaryInletT",
+        dimensions::temperature
+    );
+
+    primaryInletT_ = dict.lookup<scalar>
+    (
+        "primaryInletT",
+        dimensions::temperature
+    );
 
     eTable_.reset
     (
         Function2<scalar>::New
         (
             "effectiveness",
-            dimMass/dimTime,
-            dimMass/dimTime,
+            dimensions::mass/dimensions::time,
+            dimensions::mass/dimensions::time,
             dimless,
             dict
         ).ptr()

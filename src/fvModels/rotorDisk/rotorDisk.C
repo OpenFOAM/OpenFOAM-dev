@@ -274,7 +274,7 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
                 IOobject::NO_WRITE
             ),
             mesh(),
-            dimensionedScalar(dimArea, 0)
+            dimensionedScalar(dimensions::area, 0)
         );
         UIndirectList<scalar>(area.primitiveField(), zone_.zone()) = area_;
 
@@ -549,7 +549,7 @@ void Foam::fv::rotorDisk::addSup
         dimensionedVector
         (
             "zero",
-            eqn.dimensions()/dimVolume,
+            eqn.dimensions()/dimensions::volume,
             Zero
         )
     );
@@ -594,7 +594,7 @@ void Foam::fv::rotorDisk::addSup
         dimensionedVector
         (
             "zero",
-            eqn.dimensions()/dimVolume,
+            eqn.dimensions()/dimensions::volume,
             Zero
         )
     );

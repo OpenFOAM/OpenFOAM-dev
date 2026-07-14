@@ -127,7 +127,7 @@ void Foam::fv::semiImplicitSource::addSupType
         dimensioned<Type>
         (
             "zero",
-            eqn.dimensions()/dimVolume,
+            eqn.dimensions()/dimensions::volume,
             Zero
         ),
         false

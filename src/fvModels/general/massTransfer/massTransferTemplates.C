@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,11 @@ void Foam::fv::massTransfer::addSupType
         // require a field source specification.
         else
         {
-            fvMatrix<Type> rhoEqn(eqn.psi(), dimDensity*eqn.dimensions());
+            fvMatrix<Type> rhoEqn
+            (
+                eqn.psi(),
+                dimensions::density*eqn.dimensions()
+            );
 
             fvSpecificSource::addSupType(alphaOrRho, field, rhoEqn);
 
@@ -132,7 +136,7 @@ void Foam::fv::massTransfer::addSupType
     else if
     (
         alphaOrRho.group() == word::null
-     && alphaOrRho.dimensions() == dimDensity
+     && alphaOrRho.dimensions() == dimensions::density
      && field.group() == word::null
     )
     {
