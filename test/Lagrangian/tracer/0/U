@@ -27,7 +27,7 @@ internalField
         const dimensionedVector omega =
             $<dimensionedScalar>omega*vector(0, 0, 1);
 
-        const dimensionedVector O(dimLength, field.mesh().bounds().midpoint());
+        const dimensionedVector O(dimensions::length, field.mesh().bounds().midpoint());
 
         field = omega^(C - O);
     #};

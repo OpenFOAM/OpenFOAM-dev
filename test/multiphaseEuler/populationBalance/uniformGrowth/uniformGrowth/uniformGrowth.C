@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ void Foam::fv::uniformGrowth::readCoeffs(const dictionary& dict)
         (
             "massFlowRate",
             mesh().time().userUnits(),
-            dimMass/dimTime,
+            dimensions::mass/dimensions::time,
             dict
         ).ptr()
     );
@@ -150,7 +150,7 @@ void Foam::fv::uniformGrowth::addSupType
     if
     (
         rho.group() == word::null
-     && rho.dimensions() == dimDensity
+     && rho.dimensions() == dimensions::density
      && field.group() == word::null
     )
     {
@@ -261,14 +261,14 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::uniformGrowth::S
         (
             IOobject::groupName(name() + ":sumN", phase.name()),
             mesh(),
-            dimensionedScalar(inv(dimVolume), scalar(0))
+            dimensionedScalar(inv(dimensions::volume), scalar(0))
         );
     tmp<volScalarField::Internal> tSumN =
         volScalarField::Internal::New
         (
             name() + ":sumN",
             mesh(),
-            dimensionedScalar(inv(dimVolume), scalar(0))
+            dimensionedScalar(inv(dimensions::volume), scalar(0))
         );
 
     forAll(popBal_.fs(), i)
@@ -286,10 +286,10 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::uniformGrowth::S
 
     return
         tSumNPhase
-       /max(tSumN, dimensionedScalar(inv(dimVolume), rootVSmall))
+       /max(tSumN, dimensionedScalar(inv(dimensions::volume), rootVSmall))
        *dimensionedScalar
         (
-            dimMass/dimTime,
+            dimensions::mass/dimensions::time,
             massFlowRate_->value(mesh().time().value())
         )
        /sum(mesh().V());

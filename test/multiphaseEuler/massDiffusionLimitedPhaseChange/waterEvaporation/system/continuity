@@ -41,7 +41,7 @@ codeRead
         (
             IOobject("dMass", mesh().time().name(), mesh()),
             mesh(),
-            dimensionedScalar(dimMass/dimVolume, 0)
+            dimensionedScalar(dimensions::density, 0)
         );
     volScalarField* dMassGas = new volScalarField("dMass.gas", *dMass);
     volScalarField* mass0Gas = new volScalarField("mass0.gas", *dMass);
@@ -52,7 +52,7 @@ codeRead
         (
             IOobject("dEnergy", mesh().time().name(), mesh()),
             mesh(),
-            dimensionedScalar(dimEnergy/dimVolume, 0)
+            dimensionedScalar(dimensions::energyDensity, 0)
         );
     volScalarField* dEnergyLiq = new volScalarField("dEnergy.liquid", *dEnergy);
     volScalarField* energy0Liq = new volScalarField("energy0.liquid", *dEnergy);
