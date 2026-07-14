@@ -212,7 +212,7 @@ Foam::radiationModels::absorptionEmissionModels::wideBand::aCont
         (
             "a",
             mesh(),
-            dimensionedScalar(dimless/dimLength, 0)
+            dimensionedScalar(inv(dimensions::length), 0)
         )
     );
 
@@ -301,7 +301,7 @@ void Foam::radiationModels::absorptionEmissionModels::wideBand::correct
     PtrList<volScalarField>& aLambda
 ) const
 {
-    a = dimensionedScalar(dimless/dimLength, 0);
+    a = dimensionedScalar(inv(dimensions::length), 0);
 
     for (label j=0; j<nBands_; j++)
     {

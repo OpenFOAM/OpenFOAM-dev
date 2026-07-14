@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::radiationModels::absorptionEmissionModel::aCont(const label bandI) const
     (
         "aCont",
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     );
 }
 
@@ -81,7 +81,7 @@ Foam::radiationModels::absorptionEmissionModel::aDisp(const label bandI) const
     (
         "aDisp",
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     );
 }
 
@@ -100,7 +100,7 @@ Foam::radiationModels::absorptionEmissionModel::eCont(const label bandI) const
     (
         "eCont",
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     );
 }
 
@@ -112,7 +112,7 @@ Foam::radiationModels::absorptionEmissionModel::eDisp(const label bandI) const
     (
         "eDisp",
         mesh_,
-        dimensionedScalar(dimless/dimLength, 0)
+        dimensionedScalar(inv(dimensions::length), 0)
     );
 }
 
@@ -131,7 +131,7 @@ Foam::radiationModels::absorptionEmissionModel::ECont(const label bandI) const
     (
         "ECont",
         mesh_,
-        dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
+        dimensionedScalar(dimensions::powerDensity, 0)
     );
 }
 
@@ -143,7 +143,7 @@ Foam::radiationModels::absorptionEmissionModel::EDisp(const label bandI) const
     (
         "EDisp",
         mesh_,
-        dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
+        dimensionedScalar(dimensions::powerDensity, 0)
     );
 }
 

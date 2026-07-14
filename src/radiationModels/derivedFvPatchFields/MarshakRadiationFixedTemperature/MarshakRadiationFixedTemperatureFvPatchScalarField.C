@@ -42,7 +42,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
-    Trad_("Trad", dimTemperature, dict, p.size())
+    Trad_("Trad", dimensions::temperature, dict, p.size())
 {
     // refValue updated on each call to updateCoeffs()
     refValue() = 4.0*constant::physicoChemical::sigma.value()*pow4(Trad_);

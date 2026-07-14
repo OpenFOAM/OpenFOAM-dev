@@ -40,7 +40,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
-    qro_("qro", dimPower/dimArea, dict, p.size())
+    qro_("qro", dimensions::power/dimensions::area, dict, p.size())
 {
     if (dict.found("value"))
     {

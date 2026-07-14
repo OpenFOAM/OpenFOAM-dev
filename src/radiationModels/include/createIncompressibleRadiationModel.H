@@ -3,7 +3,7 @@
     dimensionedScalar rhoCpRef
     (
         "rhoCpRef",
-        dimDensity*dimEnergy/dimMass/dimTemperature,
+        dimensions::density*dimensions::specificHeatCapacity
         1.0
     );
 
@@ -25,14 +25,14 @@
         dimensionedScalar rhoRef
         (
             "rhoRef",
-            dimDensity,
+            dimensions::density,
             physicalProperties
         );
 
         dimensionedScalar CpRef
         (
             "CpRef",
-            dimSpecificHeatCapacity,
+            dimensions::specificHeatCapacity,
             physicalProperties
         );
 

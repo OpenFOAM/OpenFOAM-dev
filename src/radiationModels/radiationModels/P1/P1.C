@@ -113,7 +113,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
+        dimensionedScalar(dimensions::powerDensity, 0)
     )
 {}
 
@@ -184,7 +184,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimMass/dimLength/pow3(dimTime), 0)
+        dimensionedScalar(dimensions::powerDensity, 0)
     )
 {}
 

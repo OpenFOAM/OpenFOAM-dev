@@ -56,7 +56,7 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
             scalarField
             (
                 "refGradient",
-                iF.dimensions()/dimLength,
+                iF.dimensions()/dimensions::length,
                 dict,
                 p.size()
             );
