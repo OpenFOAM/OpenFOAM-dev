@@ -116,7 +116,7 @@ Foam::RBD::pointMasses::pointMasses
       ? TableReader<point, scalar>::New
         (
             "pointMasses",
-            {dimLength, dimMass},
+            {dimensions::length, dimensions::mass},
             dict.subDict("pointMasses")
         ).ptr()
       : nullptr
@@ -130,12 +130,12 @@ Foam::RBD::pointMasses::pointMasses
         reader_.valid()
       ? reader_->read
         (
-            {dimLength, dimMass},
+            {dimensions::length, dimensions::mass},
             dict.subDict("pointMasses")
         )
       : TableReaders::Embedded<point, scalar>().read
         (
-            {dimLength, dimMass},
+            {dimensions::length, dimensions::mass},
             dict,
             "pointMasses"
         );
@@ -262,7 +262,12 @@ void Foam::RBD::pointMasses::write(Ostream& os) const
         os  << indent <<  "pointMasses" << endl
             << indent << token::BEGIN_BLOCK << endl
             << incrIndent;
-        reader_->write(os, {dimLength, dimMass}, pointsAndMasses);
+        reader_->write
+        (
+            os,
+            {dimensions::length, dimensions::mass},
+            pointsAndMasses
+        );
         os  << decrIndent
             << indent << token::END_BLOCK << endl;
     }
@@ -271,7 +276,7 @@ void Foam::RBD::pointMasses::write(Ostream& os) const
         TableReaders::Embedded<point, scalar>().write
         (
             os,
-            {dimLength, dimMass},
+            {dimensions::length, dimensions::mass},
             pointsAndMasses,
             "pointMasses"
         );

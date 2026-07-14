@@ -133,7 +133,7 @@ Foam::pointMeshMovers::rigidBodyDisplacement::rigidBodyDisplacement
 
     if (dict.found("ramp"))
     {
-        ramp_ = Function1<scalar>::New("ramp", dimTime, dimless, dict);
+        ramp_ = Function1<scalar>::New("ramp", dimensions::time, dimless, dict);
     }
     else
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,10 +75,10 @@ bool Foam::functionObjects::sixDoFRigidBodyControl::read(const dictionary& dict)
 {
     sixDoFRigidBodyState::read(dict);
 
-    w_ = dict.lookup<scalar>("window", dimTime);
+    w_ = dict.lookup<scalar>("window", dimensions::time);
 
     convergedVelocity_ =
-        dict.lookup<vector>("convergedVelocity", dimVelocity);
+        dict.lookup<vector>("convergedVelocity", dimensions::velocity);
     convergedAngularVelocity_ =
         dict.lookup<vector>("convergedAngularVelocity", angularVelocityUnits());
 

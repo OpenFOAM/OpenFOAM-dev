@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,8 +106,13 @@ bool Foam::RBD::restraints::externalForce::read
 
     coeffs_.lookup("location") >> location_;
 
-    externalForce_ =
-        Function1<vector>::New("force", dimTime, dimForce, coeffs_);
+    externalForce_ = Function1<vector>::New
+    (
+        "force",
+        dimensions::time,
+        dimensions::force,
+        coeffs_
+    );
 
     return true;
 }

@@ -174,7 +174,7 @@ Foam::pointMeshMovers::sixDoFRigidBodyMotion::sixDoFRigidBodyMotion
     test_(dict.lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    g_("g", dimAcceleration, dict, vector::zero),
+    g_("g", dimensions::acceleration, dict, vector::zero),
     curTimeIndex_(-1)
 {
     if (rhoName_ == "rhoInf")

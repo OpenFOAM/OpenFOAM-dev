@@ -166,7 +166,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::read
         (
             "moment",
             units::radians,
-            dimForce/dimLength,
+            dimensions::force/dimensions::length,
             sDoFRBMRCoeffs_
         );
 
