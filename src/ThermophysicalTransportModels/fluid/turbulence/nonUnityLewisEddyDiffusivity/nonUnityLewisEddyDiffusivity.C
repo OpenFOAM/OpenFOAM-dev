@@ -113,7 +113,11 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
             (
                 "hGradY",
                 Y[0].mesh(),
-                dimensionedScalar(dimEnergy/dimMass/dimLength, 0)
+                dimensionedScalar
+                (
+                    dimensions::specificEnergy/dimensions::length,
+                    0
+                )
             )
         );
 
@@ -212,7 +216,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
         (
             "hGradY",
             he.mesh(),
-            dimensionedScalar(he.dimensions()/dimLength, 0)
+            dimensionedScalar(he.dimensions()/dimensions::length, 0)
         )
     );
 

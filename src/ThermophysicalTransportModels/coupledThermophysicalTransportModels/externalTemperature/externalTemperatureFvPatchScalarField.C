@@ -106,7 +106,7 @@ externalTemperatureFvPatchScalarField
     Q_
     (
         haveQ_
-      ? Function1<scalar>::New("Q", time().userUnits(), dimPower, dict)
+      ? Function1<scalar>::New("Q", time().userUnits(), dimensions::power, dict)
       : autoPtr<Function1<scalar>>()
     ),
     haveq_(dict.found("q")),
@@ -117,7 +117,7 @@ externalTemperatureFvPatchScalarField
         (
             "q",
             time().userUnits(),
-            dimPower/dimArea,
+            dimensions::power/dimensions::area,
             dict
         )
       : autoPtr<Function1<scalar>>()
@@ -130,7 +130,7 @@ externalTemperatureFvPatchScalarField
             iF.name(),
             "h",
             p,
-            dimPower/dimArea/dimTemperature,
+            dimensions::power/dimensions::area/dimensions::temperature,
             dict
         )
       : nullptr
@@ -149,7 +149,7 @@ externalTemperatureFvPatchScalarField
         (
             "Ta",
             time().userUnits(),
-            dimTemperature,
+            dimensions::temperature,
             dict
         ).ptr()
       : nullptr
@@ -161,7 +161,13 @@ externalTemperatureFvPatchScalarField
     (
         qrName_ != word::null
       ? dict.found("qrPrevious")
-      ? scalarField("qrPrevious", dimPower/dimArea, dict, p.size())
+      ? scalarField
+        (
+            "qrPrevious",
+            dimensions::power/dimensions::area,
+            dict,
+            p.size()
+        )
       : scalarField(p.size(), 0)
       : scalarField()
     )
@@ -186,7 +192,7 @@ externalTemperatureFvPatchScalarField
             scalarField
             (
                 "refGradient",
-                iF.dimensions()/dimLength,
+                iF.dimensions()/dimensions::length,
                 dict,
                 p.size()
             );
@@ -500,12 +506,18 @@ void Foam::externalTemperatureFvPatchScalarField::write
 
     if (haveQ_)
     {
-        writeEntry(os, time().userUnits(), dimPower, Q_());
+        writeEntry(os, time().userUnits(), dimensions::power, Q_());
     }
 
     if (haveq_)
     {
-        writeEntry(os, time().userUnits(), dimPower/dimArea, q_());
+        writeEntry
+        (
+            os,
+            time().userUnits(),
+            dimensions::power/dimensions::area,
+            q_()
+        );
     }
 
     if (h_.valid())
@@ -520,7 +532,7 @@ void Foam::externalTemperatureFvPatchScalarField::write
 
     if (h_.valid() || haveEmissivity_)
     {
-        writeEntry(os, time().userUnits(), dimTemperature, Ta_());
+        writeEntry(os, time().userUnits(), dimensions::temperature, Ta_());
     }
 
     writeEntryIfDifferent(os, "relaxation", scalar(1), relax_);

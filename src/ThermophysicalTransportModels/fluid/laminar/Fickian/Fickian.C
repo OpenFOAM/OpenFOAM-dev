@@ -51,7 +51,11 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
     {
         forAll(Y, i)
         {
-            Dm_.set(i, evaluate(DmFuncs_[i], dimKinematicViscosity, p, T));
+            Dm_.set
+            (
+                i,
+                evaluate(DmFuncs_[i], dimensions::kinematicDiffusivity, p, T)
+            );
         }
     }
     else
@@ -63,7 +67,7 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
             (
                 "sumXbyD",
                 T.mesh(),
-                dimless/dimKinematicViscosity/Wm.dimensions()
+                inv(dimensions::kinematicDiffusivity)/Wm.dimensions()
             )
         );
 
@@ -84,14 +88,14 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
                               ? evaluate
                                 (
                                     DFuncs_[i][j],
-                                    dimKinematicViscosity,
+                                    dimensions::kinematicDiffusivity,
                                     p,
                                     T
                                 )
                               : evaluate
                                 (
                                     DFuncs_[j][i],
-                                    dimKinematicViscosity,
+                                    dimensions::kinematicDiffusivity,
                                     p,
                                     T
                                 )
@@ -184,9 +188,9 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
                     Function2<scalar>::New
                     (
                         species[i],
-                        dimPressure,
-                        dimTemperature,
-                        dimKinematicViscosity,
+                        dimensions::pressure,
+                        dimensions::temperature,
+                        dimensions::kinematicDiffusivity,
                         Ddict
                     ).ptr()
                 );
@@ -246,9 +250,9 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
                             Function2<scalar>::New
                             (
                                 Dname,
-                                dimPressure,
-                                dimTemperature,
-                                dimKinematicViscosity,
+                                dimensions::pressure,
+                                dimensions::temperature,
+                                dimensions::kinematicDiffusivity,
                                 Ddict
                             ).ptr()
                         );
@@ -271,9 +275,9 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
                     Function2<scalar>::New
                     (
                         species[i],
-                        dimPressure,
-                        dimTemperature,
-                        dimDynamicViscosity,
+                        dimensions::pressure,
+                        dimensions::temperature,
+                        dimensions::dynamicDiffusivity,
                         DTdict
                     ).ptr()
                 );
@@ -374,7 +378,11 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
             (
                 "sumJ",
                 Y[0].mesh(),
-                dimensionedScalar(dimMass/dimArea/dimTime, 0)
+                dimensionedScalar
+                (
+                    dimensions::mass/dimensions::area/dimensions::time,
+                    0
+                )
             )
         );
 
@@ -384,7 +392,11 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
             (
                 "sumJh",
                 Y[0].mesh(),
-                dimensionedScalar(sumJ.dimensions()*dimEnergy/dimMass, 0)
+                dimensionedScalar
+                (
+                    sumJ.dimensions()*dimensions::specificEnergy,
+                    0
+                )
             )
         );
 
@@ -498,7 +510,11 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
         (
             "sumJ",
             he.mesh(),
-            dimensionedScalar(dimMass/dimArea/dimTime, 0)
+            dimensionedScalar
+            (
+                dimensions::mass/dimensions::area/dimensions::time,
+                0
+            )
         )
     );
 
@@ -558,7 +574,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
                 evaluate
                 (
                     DTFuncs_[this->thermo().specieIndex(Yi)],
-                    dimDynamicViscosity,
+                    dimensions::dynamicDiffusivity,
                     p,
                     T
                 )
@@ -616,7 +632,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
                     evaluate
                     (
                         DTFuncs_[this->thermo().specieIndex(Yi)],
-                        dimDynamicViscosity,
+                        dimensions::dynamicDiffusivity,
                         p,
                         T
                     )

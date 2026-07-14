@@ -121,7 +121,13 @@ coupledTemperatureFvPatchScalarField
     (
         qrName_ != word::null
       ? dict.found("qrPrevious")
-      ? scalarField("qrPrevious", dimPower/dimArea, dict, p.size())
+      ? scalarField
+        (
+            "qrPrevious",
+            dimensions::power/dimensions::area,
+            dict,
+            p.size()
+        )
       : scalarField(p.size(), 0)
       : scalarField()
     ),
@@ -133,7 +139,7 @@ coupledTemperatureFvPatchScalarField
             iF.name(),
             "h",
             p,
-            dimPower/dimArea/dimTemperature,
+            dimensions::power/dimensions::area/dimensions::temperature,
             dict
         )
       : nullptr
@@ -158,7 +164,13 @@ coupledTemperatureFvPatchScalarField
                 << exit(FatalIOError);
         }
 
-        qs_ = new scalarField("qs", dimPower/dimTime, dict, p.size());
+        qs_ = new scalarField
+        (
+            "qs",
+            dimensions::power/dimensions::time,
+            dict,
+            p.size()
+       );
     }
     else if (dict.found("Qs"))
     {
@@ -179,7 +191,7 @@ coupledTemperatureFvPatchScalarField
             scalarField
             (
                 "refGradient",
-                iF.dimensions()/dimLength,
+                iF.dimensions()/dimensions::length,
                 dict,
                 p.size()
             );
