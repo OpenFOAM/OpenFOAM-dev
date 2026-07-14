@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      basicLagrangianThermo;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type
+(
+    heRhoThermo
+);
+
+typeRenamed
+(
+    heRhoThermo fluidLagrangianThermo
+    heSolidThermo solidLagrangianThermo
+);
+
+energy
+(
+    sensibleEnthalpy
+    absoluteEnthalpy
+    sensibleInternalEnergy
+    absoluteInternalEnergy
+);
+
+mixture
+(
+    pureMixture
+);
+
+transport
+(
+    const
+    icoTabulated
+    logPolynomial
+    polynomial
+    sutherland
+    tabulated
+    WLF
+    Andrade
+    NSRDS
+);
+
+thermo
+(
+    eConst
+    eIcoTabulated
+    ePolynomial
+    ePower
+    eTabulated
+    hConst
+    hIcoTabulated
+    hPolynomial
+    hPower
+    hTabulated
+    janaf
+    NSRDS
+    NSRDS14
+);
+
+equationOfState
+(
+    adiabaticPerfectFluid
+    Boussinesq
+    icoPolynomial
+    icoTabulated
+    incompressiblePerfectGas
+    linear
+    NSRDS
+    PengRobinsonGas
+    perfectFluid
+    perfectGas
+    rhoConst
+    rhoTabulated
+    rPolynomial
+);
+
+specie
+(
+    specie
+);
+
+codeOptions
+#{
+EXE_INC = \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/Lagrangian/Lagrangian/lnInclude \
+    -I$(LIB_SRC)/Lagrangian/LagrangianThermo/lnInclude
+#};
+
+
+// ************************************************************************* //
