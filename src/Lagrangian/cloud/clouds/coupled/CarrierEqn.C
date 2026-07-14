@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,12 @@ Foam::CarrierEqn<Type>::residual
     // Check the dimensions
     if (Su.valid())
     {
-        Su.S().dimensions() = dims*dimTime*dimVolume;
+        Su.S().dimensions() = dims*dimensions::time*dimensions::volume;
     }
     if (Sp.valid())
     {
-        Sp.S().dimensions()*psi.dimensions() = dims*dimTime*dimVolume;
+        Sp.S().dimensions()*psi.dimensions() =
+            dims*dimensions::time*dimensions::volume;
     }
 
     // Build the residual
@@ -274,14 +275,14 @@ void Foam::operator+=(fvMatrix<Type>& fvEqn, const CarrierEqn<Type>& cEqn)
 
     if (cEqn.Su.valid())
     {
-        fvEqn.dimensions() -= cEqn.Su.S().dimensions()/dimTime;
+        fvEqn.dimensions() -= cEqn.Su.S().dimensions()/dimensions::time;
         fvEqn.source() -= cEqn.Su.S().primitiveField()/deltaT.value();
     }
 
     if (cEqn.Sp.valid())
     {
         fvEqn.dimensions() +=
-            cEqn.Sp.S().dimensions()/dimTime*fvEqn.psi().dimensions();
+            cEqn.Sp.S().dimensions()/dimensions::time*fvEqn.psi().dimensions();
         fvEqn.diag() += cEqn.Sp.S().primitiveField()/deltaT.value();
     }
 }
@@ -302,14 +303,14 @@ void Foam::operator-=(fvMatrix<Type>& fvEqn, const CarrierEqn<Type>& cEqn)
 
     if (cEqn.Su.valid())
     {
-        fvEqn.dimensions() += cEqn.Su.S().dimensions()/dimTime;
+        fvEqn.dimensions() += cEqn.Su.S().dimensions()/dimensions::time;
         fvEqn.source() += cEqn.Su.S().primitiveField()/deltaT.value();
     }
 
     if (cEqn.Sp.valid())
     {
         fvEqn.dimensions() -=
-            cEqn.Sp.S().dimensions()/dimTime*fvEqn.psi().dimensions();
+            cEqn.Sp.S().dimensions()/dimensions::time*fvEqn.psi().dimensions();
         fvEqn.diag() -= cEqn.Sp.S().primitiveField()/deltaT.value();
     }
 }

@@ -89,7 +89,10 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
     {
         return
             ctcdfCloud.rhoByRhoc
-           *coupledCloud_.carrierEqn<scalar>("1").residual(dimless/dimTime);
+           *coupledCloud_.carrierEqn<scalar>("1").residual
+            (
+                inv(dimensions::time)
+            );
     }
     if (!isPhase && isMultiphase && dims == dimless && notNull(ctcdfCloud))
     {
@@ -98,7 +101,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
             (
                 "S",
                 mesh(),
-                dimensionedScalar(dimless/dimTime, scalar(0))
+                dimensionedScalar(inv(dimensions::time), scalar(0))
             );
         volScalarField::Internal& S = tS.ref();
 
@@ -115,7 +118,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
 
             S +=
                 ctcdfCloud.rho()/rhoPhase
-               *iter()->residual(dimless/dimTime);
+               *iter()->residual(inv(dimensions::time));
         }
 
         return tS;
@@ -134,18 +137,22 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
             ctcdfCloud.rho()/rhoPhase
            *coupledCloud_
            .carrierEqn<scalar>(IOobject::groupName("1", phaseName))
-           .residual(dimless/dimTime);
+           .residual(inv(dimensions::time));
     }
 
     // Mass source
-    if (!isPhase && dims == dimDensity)
+    if (!isPhase && dims == dimensions::density)
     {
         tmp<volScalarField::Internal> tS =
             volScalarField::Internal::New
             (
                 "S",
                 mesh(),
-                dimensionedScalar(dimDensity/dimTime, scalar(0))
+                dimensionedScalar
+                (
+                    dimensions::density/dimensions::time,
+                    scalar(0)
+                )
             );
         volScalarField::Internal& S = tS.ref();
 
@@ -154,19 +161,19 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
 
         forAllConstIter(carrierEqnTable, carrierEqns, iter)
         {
-            S += iter()->residual(dimDensity/dimTime);
+            S += iter()->residual(dimensions::density/dimensions::time);
         }
 
         return tS;
     }
 
     // Phase mass source
-    if (isPhase && dims == dimDensity)
+    if (isPhase && dims == dimensions::density)
     {
         return
             coupledCloud_
            .carrierEqn<scalar>(IOobject::groupName("rho", phaseName))
-           .residual(dimDensity/dimTime);
+           .residual(dimensions::density/dimensions::time);
     }
 
     FatalError
@@ -265,7 +272,7 @@ void Foam::fv::cloud::addSupType
      && alphaRhoOrField.dimensions() == dimless;
     const bool isRho =
         alphaRhoOrField.member() == "rho"
-     && alphaRhoOrField.dimensions() == dimDensity;
+     && alphaRhoOrField.dimensions() == dimensions::density;
 
     const word oneName = IOobject::groupName("1", phaseName);
     const word rhoName = IOobject::groupName("rho", phaseName);
@@ -318,7 +325,7 @@ void Foam::fv::cloud::addSupType
      && alphaOrRho.dimensions() == dimless;
     const bool isRho =
         alphaOrRho.member() == "rho"
-     && alphaOrRho.dimensions() == dimDensity;
+     && alphaOrRho.dimensions() == dimensions::density;
 
     const bool hasCarrierEqn = coupledCloud_.hasCarrierEqn(field);
 
@@ -349,7 +356,7 @@ void Foam::fv::cloud::addSupType
     // Generic material source into a mass-weighted property equation
     else if (!isPhase && isRho && !hasCarrierEqn)
     {
-        eqn += Sfield(field, dimDensity);
+        eqn += Sfield(field, dimensions::density);
     }
     // Volume-weighted cloud source into a volume-weighted phase property
     // equation
@@ -390,7 +397,7 @@ void Foam::fv::cloud::addSupType
      && alphaOrRho.dimensions() == dimless;
     const bool isRhoField =
         rhoOrField.member() == "rho"
-     && rhoOrField.dimensions() == dimDensity;
+     && rhoOrField.dimensions() == dimensions::density;
 
     DebugInFunction
         << "alphaOrRho=" << alphaOrRho.name()
@@ -440,7 +447,7 @@ void Foam::fv::cloud::addSupType
     // Generic material source into a mass-weighted phase property equation
     else
     {
-        eqn += Sfield(field, dimDensity);
+        eqn += Sfield(field, dimensions::density);
     }
 }
 

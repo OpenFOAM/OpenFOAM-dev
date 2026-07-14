@@ -52,7 +52,7 @@ void Foam::Lagrangian::diskInjection::readCoeffs(const dictionary& modelDict)
         (
             "centre",
             mesh().time().userUnits(),
-            dimLength,
+            dimensions::length,
             modelDict
         ).ptr()
     );
@@ -92,12 +92,15 @@ void Foam::Lagrangian::diskInjection::readCoeffs(const dictionary& modelDict)
     if (haveDiameter)
     {
         innerDiameter_ = 0;
-        outerDiameter_ = modelDict.lookup<scalar>("diameter", dimLength);
+        outerDiameter_ =
+            modelDict.lookup<scalar>("diameter", dimensions::length);
     }
     else
     {
-        innerDiameter_ = modelDict.lookup<scalar>("innerDiameter", dimLength);
-        outerDiameter_ = modelDict.lookup<scalar>("outerDiameter", dimLength);
+        innerDiameter_ =
+            modelDict.lookup<scalar>("innerDiameter", dimensions::length);
+        outerDiameter_ =
+            modelDict.lookup<scalar>("outerDiameter", dimensions::length);
     }
 
     numberRate_.reset
@@ -106,7 +109,7 @@ void Foam::Lagrangian::diskInjection::readCoeffs(const dictionary& modelDict)
         (
             "numberRate",
             mesh().time().userUnits(),
-            dimRate,
+            dimensions::rate,
             modelDict
         ).ptr()
     );
@@ -146,7 +149,7 @@ const Foam::dimensionedScalar Foam::Lagrangian::diskInjection::area() const
     return
         dimensionedScalar
         (
-            dimArea,
+            dimensions::area,
             constant::mathematical::pi
            *(sqr(outerDiameter_) - sqr(innerDiameter_))
         );

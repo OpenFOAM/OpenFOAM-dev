@@ -156,7 +156,7 @@ Foam::Lagrangian::turbulentDispersion::turbulentDispersion
         )
     ),
     fractionTurb_(initialiseTurbField("fractionTurb", dimless, vGreat)),
-    tTurb_(initialiseTurbField("tTurb", dimTime, NaN)),
+    tTurb_(initialiseTurbField("tTurb", dimensions::time, NaN)),
     Uturb_
     (
         initialiseTurbField("Uturb", dimensions::velocity, vector::uniform(NaN))

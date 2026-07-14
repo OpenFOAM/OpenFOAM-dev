@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,11 @@ bool Foam::Lagrangian::ddtSchemes::CrankNicolson<Type>::LagrangianmInitDdt
                     false
                 ),
                 mesh,
-                dimensioned<Type>(mDims*psi.dimensions()/dimTime, Zero),
+                dimensioned<Type>
+                (
+                    mDims*psi.dimensions()/dimensions::time,
+                    Zero
+                ),
                 wordList
                 (
                     mesh.boundary().size(),

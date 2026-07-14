@@ -58,7 +58,7 @@ Foam::fluidLagrangianThermo::implementation::implementation
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("NaN", dimPressure, NaN),
+        dimensionedScalar("NaN", dimensions::pressure, NaN),
         wordList
         (
             mesh.boundary().size(),
@@ -87,7 +87,7 @@ Foam::fluidLagrangianThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("NaN", dimDensity/dimPressure, NaN),
+        dimensionedScalar("NaN", dimensions::density/dimensions::pressure, NaN),
         wordList
         (
             mesh.boundary().size(),
@@ -108,7 +108,7 @@ Foam::fluidLagrangianThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("NaN", dimDynamicViscosity, NaN),
+        dimensionedScalar("NaN", dimensions::dynamicViscosity, NaN),
         wordList
         (
             mesh.boundary().size(),

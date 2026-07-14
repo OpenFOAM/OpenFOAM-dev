@@ -39,7 +39,7 @@ LaplacePressureLagrangianScalarFieldSource
 :
     LagrangianScalarFieldSource(iIo, dict),
     cloudLagrangianFieldSource(*this),
-    sigma_("sigma", dimForce/dimLength, dict)
+    sigma_("sigma", dimensions::force/dimensions::length, dict)
 {}
 
 

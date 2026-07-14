@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,11 @@ Foam::Lagrangian::constantFluxCarrierTransfer::Sp
     tmp<LagrangianSubScalarField> tSByV =
         cloud<clouds::shaped>().aByV(subMesh)*flux_;
 
-    if (flux_.dimensions() == dimMass/dimArea/dimTime)
+    if
+    (
+        flux_.dimensions()
+     == dimensions::mass/dimensions::area/dimensions::time
+    )
     {
         assertCloud
         <
@@ -224,9 +228,19 @@ Foam::Lagrangian::constantFluxCarrierTransfer::constantFluxCarrierTransfer
     flux_
     (
         modelDict.found("volumeFlux")
-      ? dimensionedScalar("volumeFlux", dimVolume/dimArea/dimTime, modelDict)
+      ? dimensionedScalar
+        (
+            "volumeFlux",
+            dimensions::volume/dimensions::area/dimensions::time,
+            modelDict
+        )
       : modelDict.found("massFlux")
-      ? dimensionedScalar("massFlux", dimMass/dimArea/dimTime, modelDict)
+      ? dimensionedScalar
+        (
+            "massFlux",
+            dimensions::mass/dimensions::area/dimensions::time,
+            modelDict
+        )
       : dimensionedScalar()
     ),
     sumDeltaTSp_()
@@ -287,7 +301,10 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::calculate
        *cbrt(cloud<clouds::shaped>().v(subMesh))
        /aByVPowTwoThirds
        /flux_;
-    if (flux_.dimensions() == dimMass/dimArea/dimTime)
+    if
+    (
+        flux_.dimensions() == dimensions::mass/dimensions::area/dimensions::time
+    )
     {
         assertCloud
         <

@@ -258,7 +258,7 @@ void Foam::Lagrangian::collisionPhaseTransfer::calculate
         (
             "L",
             subMesh,
-            dimLength,
+            dimensions::length,
             cbrt
             (
                 scalarField

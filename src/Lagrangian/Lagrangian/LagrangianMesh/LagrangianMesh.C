@@ -1312,7 +1312,7 @@ Foam::LagrangianMesh::position() const
         (
             positionName,
             *this,
-            dimLength
+            dimensions::length
         );
     LagrangianInternalVectorField& result = tresult.ref();
 
@@ -1333,7 +1333,7 @@ Foam::LagrangianMesh::position(const LagrangianSubMesh& subMesh) const
         (
             positionName,
             subMesh,
-            dimLength
+            dimensions::length
         );
     LagrangianSubVectorField& result = tresult.ref();
 

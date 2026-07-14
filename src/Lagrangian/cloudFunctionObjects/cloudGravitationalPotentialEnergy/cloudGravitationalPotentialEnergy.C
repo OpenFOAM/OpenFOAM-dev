@@ -67,7 +67,7 @@ cloudGravitationalPotentialEnergy
         (
             mesh().time(),
             "g",
-            dimAcceleration
+            dimensions::acceleration
         )
     )
 {}

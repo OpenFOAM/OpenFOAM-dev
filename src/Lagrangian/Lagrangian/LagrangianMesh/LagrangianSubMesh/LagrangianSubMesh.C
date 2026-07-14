@@ -275,7 +275,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::Uf
         (
             subMesh.sub("Uf"),
             subMesh,
-            dimVelocity,
+            dimensions::velocity,
             Uf<vectorField>(fraction)
         );
 }
@@ -319,7 +319,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::Uf
         (
             sub("Uf"),
             *this,
-            dimVelocity,
+            dimensions::velocity,
             Uf<vectorField>(fraction)
         );
 }

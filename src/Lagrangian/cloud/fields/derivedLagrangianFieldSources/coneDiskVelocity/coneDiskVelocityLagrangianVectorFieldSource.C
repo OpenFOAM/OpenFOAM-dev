@@ -44,7 +44,7 @@ coneDiskVelocityLagrangianVectorFieldSource
         (
             "Umag",
             iIo.time().userUnits(),
-            dimVelocity,
+            dimensions::velocity,
             dict
         )
     )
@@ -81,7 +81,12 @@ Foam::coneDiskVelocityLagrangianVectorFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    return value(subMesh, dimVelocity, Umag_())*direction(injection, subMesh);
+    return value
+    (
+        subMesh,
+        dimensions::velocity,
+        Umag_()
+    )*direction(injection, subMesh);
 }
 
 
@@ -91,7 +96,7 @@ void Foam::coneDiskVelocityLagrangianVectorFieldSource::write(Ostream& os) const
 
     coneDiskDirectionLagrangianVectorFieldSource::write(os);
 
-    writeEntry(os, time().userUnits(), dimVelocity, Umag_());
+    writeEntry(os, time().userUnits(), dimensions::velocity, Umag_());
 }
 
 

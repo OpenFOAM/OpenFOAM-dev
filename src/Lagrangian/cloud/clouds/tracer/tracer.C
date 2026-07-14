@@ -103,7 +103,12 @@ Foam::clouds::tracer::tracer
         (
             "U",
             mesh,
-            dimensionedVector("NaN", dimVelocity, vector::uniform(NaN)),
+            dimensionedVector
+            (
+                "NaN",
+                dimensions::velocity,
+                vector::uniform(NaN)
+            ),
             escapeVelocityLagrangianPatchVectorField::typeName
         )
     ),

@@ -144,7 +144,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
 
         return sqrt(2*deltaP/ctcdfCloud.rhoByRhoc);
     }
-    else if (pcVf.dimensions() == dimPressure)
+    else if (pcVf.dimensions() == dimensions::pressure)
     {
         cloudField_.assertCloud
         <

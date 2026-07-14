@@ -100,7 +100,7 @@ bool Foam::clouds::dynamicParcel::reCalculateModified()
     }
 
     {
-        result = Lagrangianm::initDdt(dimMass, U, dUdt) || result;
+        result = Lagrangianm::initDdt(dimensions::mass, U, dUdt) || result;
 
         if (context == cloud::contextType::fvModel)
         {

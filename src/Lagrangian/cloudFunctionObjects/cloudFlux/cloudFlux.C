@@ -105,7 +105,7 @@ Foam::functionObjects::cloudFlux::cloudFlux
             IOobject::AUTO_WRITE
         ),
         mesh(),
-        dimensionedScalar(qDims/dimTime, scalar(0))
+        dimensionedScalar(qDims/dimensions::time, scalar(0))
     )
 {}
 

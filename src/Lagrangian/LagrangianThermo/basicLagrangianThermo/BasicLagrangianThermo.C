@@ -179,7 +179,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::BasicLagrangianThermo
         LagrangianInternalScalarFieldProperty
         (
             "e",
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::es,
             this->p_,
@@ -242,7 +242,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::W
         (
             subMesh,
             "W",
-            dimMass/dimMoles,
+            dimensions::mass/dimensions::moles,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::W
         );
@@ -263,7 +263,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::rho
             injection,
             T.mesh(),
             "rho",
-            dimDensity,
+            dimensions::density,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::rho,
             this->p(injection, T.mesh())(),
@@ -302,7 +302,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::e
             injection,
             T.mesh(),
             "e",
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::es,
             this->p(injection, T.mesh())(),
@@ -325,7 +325,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::Cv
             injection,
             T.mesh(),
             "Cv",
-            dimSpecificHeatCapacity,
+            dimensions::specificHeatCapacity,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::Cv,
             this->p(injection, T.mesh())(),
@@ -346,7 +346,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::Cp
         (
             subMesh,
             "Cp",
-            dimSpecificHeatCapacity,
+            dimensions::specificHeatCapacity,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::Cp,
             this->p(subMesh)(),
@@ -367,7 +367,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::alphav
         (
             subMesh,
             "alphav",
-            dimless/dimTemperature,
+            inv(dimensions::temperature),
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::alphav,
             this->p(subMesh)(),
@@ -400,7 +400,7 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::kappa
             injection,
             T.mesh(),
             "kappa",
-            dimThermalConductivity,
+            dimensions::thermalConductivity,
             mixture,
             &MixtureType::transportMixtureType::kappa,
             this->p(injection, T.mesh())(),

@@ -94,7 +94,7 @@ bool Foam::clouds::particle::reCalculateModified()
     }
 
     {
-        result = Lagrangianm::initDdt(dimMass, e, dUdt) || result;
+        result = Lagrangianm::initDdt(dimensions::mass, e, dUdt) || result;
 
         if (context == cloud::contextType::fvModel)
         {
@@ -110,7 +110,7 @@ bool Foam::clouds::particle::reCalculateModified()
     }
 
     {
-        result = Lagrangianm::initDdt(dimMass, U, dUdt) || result;
+        result = Lagrangianm::initDdt(dimensions::mass, U, dUdt) || result;
 
         if (context == cloud::contextType::fvModel)
         {

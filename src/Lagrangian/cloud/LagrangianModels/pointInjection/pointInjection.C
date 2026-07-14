@@ -49,7 +49,7 @@ void Foam::Lagrangian::pointInjection::readCoeffs(const dictionary& modelDict)
         (
             "point",
             mesh().time().userUnits(),
-            dimLength,
+            dimensions::length,
             modelDict
         ).ptr()
     );
@@ -60,7 +60,7 @@ void Foam::Lagrangian::pointInjection::readCoeffs(const dictionary& modelDict)
         (
             "numberRate",
             mesh().time().userUnits(),
-            dimRate,
+            dimensions::rate,
             modelDict
         ).ptr()
     );

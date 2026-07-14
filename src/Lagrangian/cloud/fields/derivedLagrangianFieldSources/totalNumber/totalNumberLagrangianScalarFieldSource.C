@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,9 @@ totalNumberLagrangianScalarFieldSource
     volumeOrMass_
     (
         haveVolume_
-      ? dict.lookup<scalar>("volume", dimVolume)
+      ? dict.lookup<scalar>("volume", dimensions::volume)
       : dict.found("mass")
-      ? dict.lookup<scalar>("mass", dimMass)
+      ? dict.lookup<scalar>("mass", dimensions::mass)
       : NaN
     )
 {
@@ -102,13 +102,13 @@ Foam::totalNumberLagrangianScalarFieldSource::value
     // the specified total
     if (haveVolume_)
     {
-        const dimensionedScalar V(dimVolume, volumeOrMass_);
+        const dimensionedScalar V(dimensions::volume, volumeOrMass_);
 
         return V/size()/sum(v()/size());
     }
     else
     {
-        const dimensionedScalar M(dimMass, volumeOrMass_);
+        const dimensionedScalar M(dimensions::mass, volumeOrMass_);
 
         return M/size()/sum(m()/size());
     }

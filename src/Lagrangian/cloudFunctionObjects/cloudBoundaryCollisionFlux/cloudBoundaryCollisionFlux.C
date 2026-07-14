@@ -148,7 +148,7 @@ void Foam::functionObjects::cloudBoundaryCollisionFlux::preCrossFaces
                 cloud().mesh()
             ),
             cloud().mesh(),
-            dimensionedScalar(phiDims_*dimTime, scalar(0))
+            dimensionedScalar(phiDims_*dimensions::time, scalar(0))
         )
     );
 }

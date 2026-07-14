@@ -65,7 +65,8 @@ void Foam::Lagrangian::manualInjection::readCoeffs(const dictionary& modelDict)
 
     if (havePositions)
     {
-        positions_ = modelDict.lookup<List<point>>("positions", dimLength);
+        positions_ =
+            modelDict.lookup<List<point>>("positions", dimensions::length);
     }
 
     if (haveFile)
@@ -98,7 +99,7 @@ Foam::Lagrangian::manualInjection::manualInjection
     LagrangianInjection(name, mesh),
     positions_(),
     fileName_(fileName::null),
-    units_(dimLength),
+    units_(dimensions::length),
     time_(NaN)
 {
     readCoeffs(modelDict);

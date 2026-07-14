@@ -55,7 +55,7 @@ void Foam::Lagrangian::patchInjection::readCoeffs(const dictionary& modelDict)
         (
             "numberRate",
             mesh().time().userUnits(),
-            dimRate,
+            dimensions::rate,
             modelDict
         ).ptr()
     );

@@ -120,7 +120,7 @@ Foam::dimensionedScalar Foam::MulticomponentLagrangianThermo<BaseThermo>::Wi
         dimensionedScalar
         (
             "W",
-            dimMass/dimMoles,
+            dimensions::mass/dimensions::moles,
             this->specieThermo(speciei).W()
         );
 }
@@ -139,7 +139,7 @@ Foam::MulticomponentLagrangianThermo<BaseThermo>::rhoi
     (
         p.mesh(),
         "rho",
-        dimDensity,
+        dimensions::density,
         &BaseThermo::mixtureType::thermoType::rho,
         speciei,
         p,
@@ -161,7 +161,7 @@ Foam::MulticomponentLagrangianThermo<BaseThermo>::hsi
     (
         p.mesh(),
         "hs",
-        dimEnergy/dimMass,
+        dimensions::specificEnergy,
         &BaseThermo::mixtureType::thermoType::hs,
         speciei,
         p,
@@ -180,7 +180,7 @@ Foam::dimensionedScalar Foam::MulticomponentLagrangianThermo<BaseThermo>::hfi
         dimensionedScalar
         (
             "hf",
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             this->specieThermo(speciei).hf()
         );
 }
@@ -199,7 +199,7 @@ Foam::MulticomponentLagrangianThermo<BaseThermo>::Cvi
     (
         p.mesh(),
         "Cv",
-        dimSpecificHeatCapacity,
+        dimensions::specificHeatCapacity,
         &BaseThermo::mixtureType::thermoType::Cv,
         speciei,
         p,
@@ -221,7 +221,7 @@ Foam::MulticomponentLagrangianThermo<BaseThermo>::Cpi
     (
         p.mesh(),
         "Cp",
-        dimSpecificHeatCapacity,
+        dimensions::specificHeatCapacity,
         &BaseThermo::mixtureType::thermoType::Cp,
         speciei,
         p,

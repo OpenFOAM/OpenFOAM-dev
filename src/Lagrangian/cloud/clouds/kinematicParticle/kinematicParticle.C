@@ -94,7 +94,7 @@ bool Foam::clouds::kinematicParticle::reCalculateModified()
     }
 
     {
-        result = Lagrangianm::initDdt(dimVolume, U, dUdt) || result;
+        result = Lagrangianm::initDdt(dimensions::volume, U, dUdt) || result;
 
         if (context == cloud::contextType::fvModel)
         {

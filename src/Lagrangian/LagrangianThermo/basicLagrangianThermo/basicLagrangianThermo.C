@@ -102,7 +102,7 @@ Foam::basicLagrangianThermo::implementation::implementation
             mesh
         ),
         mesh,
-        dimensionedScalar("NaN", dimDensity, NaN),
+        dimensionedScalar("NaN", dimensions::density, NaN),
         wordList
         (
             mesh.boundary().size(),
@@ -121,7 +121,7 @@ Foam::basicLagrangianThermo::implementation::implementation
             mesh
         ),
         mesh,
-        dimensionedScalar("NaN", dimSpecificHeatCapacity, NaN),
+        dimensionedScalar("NaN", dimensions::specificHeatCapacity, NaN),
         wordList
         (
             mesh.boundary().size(),
@@ -140,7 +140,7 @@ Foam::basicLagrangianThermo::implementation::implementation
             mesh
         ),
         mesh,
-        dimensionedScalar("NaN", dimThermalConductivity, NaN),
+        dimensionedScalar("NaN", dimensions::thermalConductivity, NaN),
         wordList
         (
             mesh.boundary().size(),

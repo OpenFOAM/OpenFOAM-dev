@@ -43,7 +43,7 @@ flowRateNumberLagrangianScalarFieldSource
         (
             "volumetricFlowRate",
             time().userUnits(),
-            dimVolumetricFlux,
+            dimensions::volumetricFlux,
             dict
         ).ptr()
       : nullptr
@@ -55,7 +55,7 @@ flowRateNumberLagrangianScalarFieldSource
         (
             "massFlowRate",
             time().userUnits(),
-            dimMassFlux,
+            dimensions::massFlux,
             dict
         ).ptr()
       : nullptr
@@ -110,7 +110,7 @@ Foam::dimensionedScalar Foam::flowRateNumberLagrangianScalarFieldSource::Q
         return
             dimensionedScalar
             (
-                dimVolumetricFlux,
+                dimensions::volumetricFlux,
                 volumetricFlowRate_->integral(t0, t1)
             );
     }
@@ -130,7 +130,7 @@ Foam::dimensionedScalar Foam::flowRateNumberLagrangianScalarFieldSource::Q
         return
             dimensionedScalar
             (
-                dimMassFlux,
+                dimensions::massFlux,
                 massFlowRate_->integral(t0, t1)
             )*sum(v/size())/sum(m/size());
     }
@@ -164,7 +164,7 @@ Foam::flowRateNumberLagrangianScalarFieldSource::value
     {
         const dimensionedScalar V
         (
-            dimVolume,
+            dimensions::volume,
             volumetricFlowRate_->integral(t0, t1)
         );
 
@@ -174,7 +174,7 @@ Foam::flowRateNumberLagrangianScalarFieldSource::value
     {
         const dimensionedScalar M
         (
-            dimMass,
+            dimensions::mass,
             massFlowRate_->integral(t0, t1)
         );
 

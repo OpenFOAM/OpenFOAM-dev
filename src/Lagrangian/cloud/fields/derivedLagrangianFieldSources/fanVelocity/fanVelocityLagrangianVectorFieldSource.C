@@ -44,7 +44,7 @@ fanVelocityLagrangianVectorFieldSource
         (
             "Ucentre",
             iIo.time().userUnits(),
-            dimVelocity,
+            dimensions::velocity,
             dict
         )
     )
@@ -95,7 +95,7 @@ void Foam::fanVelocityLagrangianVectorFieldSource::write(Ostream& os) const
 
     fanDirectionLagrangianVectorFieldSource::write(os);
 
-    writeEntry(os, time().userUnits(), dimVelocity, Ucentre_());
+    writeEntry(os, time().userUnits(), dimensions::velocity, Ucentre_());
 }
 
 

@@ -62,7 +62,7 @@ void Foam::Lagrangian::volumeInjection::readCoeffs(const dictionary& modelDict)
     numberOrNumberDensity_ =
         haveNumber_
       ? modelDict.lookup<scalar>("number", dimless)
-      : modelDict.lookup<scalar>("numberDensity", dimless/dimVolume);
+      : modelDict.lookup<scalar>("numberDensity", inv(dimensions::volume));
 
     time_ =
         modelDict.lookupOrDefault<scalar>

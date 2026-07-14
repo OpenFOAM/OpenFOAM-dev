@@ -72,7 +72,12 @@ Foam::solidLagrangianThermo::implementation::implementation
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar(IOobject::groupName("p", phaseName), dimPressure, NaN)
+        dimensionedScalar
+        (
+            IOobject::groupName("p", phaseName),
+            dimensions::pressure,
+            NaN
+        )
     )
 {}
 

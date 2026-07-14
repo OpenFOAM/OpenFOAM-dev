@@ -238,7 +238,7 @@ Foam::CarrierFieldGradBase<Type>::interpolateGrad
                 false
             ),
             subMesh,
-            this->psi().dimensions()/dimLength,
+            this->psi().dimensions()/dimensions::length,
             tpsic
         )
     );

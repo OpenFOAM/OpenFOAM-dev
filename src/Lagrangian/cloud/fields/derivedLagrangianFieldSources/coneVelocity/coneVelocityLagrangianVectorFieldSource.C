@@ -44,7 +44,7 @@ coneVelocityLagrangianVectorFieldSource
         (
             "Ucentre",
             iIo.time().userUnits(),
-            dimVelocity,
+            dimensions::velocity,
             dict
         )
     )
@@ -95,7 +95,7 @@ void Foam::coneVelocityLagrangianVectorFieldSource::write(Ostream& os) const
 
     coneDirectionLagrangianVectorFieldSource::write(os);
 
-    writeEntry(os, time().userUnits(), dimVelocity, Ucentre_());
+    writeEntry(os, time().userUnits(), dimensions::velocity, Ucentre_());
 }
 
 
