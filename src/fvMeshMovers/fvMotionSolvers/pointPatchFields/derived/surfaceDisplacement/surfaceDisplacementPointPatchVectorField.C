@@ -302,7 +302,7 @@ surfaceDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchVectorField(p, iF, dict),
-    velocity_(dict.lookup<vector>("velocity", dimVelocity)),
+    velocity_(dict.lookup<vector>("velocity", dimensions::velocity)),
     surfacesDict_(dict.subDict("geometry")),
     projectMode_(projectModeNames_.read(dict.lookup("projectMode"))),
     projectDir_(dict.lookup<vector>("projectDirection", dimless)),

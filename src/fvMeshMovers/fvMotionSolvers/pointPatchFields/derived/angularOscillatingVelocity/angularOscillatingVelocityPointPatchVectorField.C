@@ -45,10 +45,10 @@ angularOscillatingVelocityPointPatchVectorField
 :
     fixedValuePointPatchVectorField(p, iF, dict),
     axis_(dict.lookup<vector>("axis", dimless)),
-    origin_(dict.lookup<vector>("origin", dimLength)),
+    origin_(dict.lookup<vector>("origin", dimensions::length)),
     angle0_(dict.lookup<scalar>("angle0", units::radians)),
     amplitude_(dict.lookup<scalar>("amplitude", units::radians)),
-    omega_(dict.lookup<scalar>("omega", units::radians/dimTime))
+    omega_(dict.lookup<scalar>("omega", units::radians/dimensions::time))
 {
     if (!dict.found("value"))
     {
@@ -57,7 +57,7 @@ angularOscillatingVelocityPointPatchVectorField
 
     if (dict.found("p0"))
     {
-        p0_ = vectorField("p0", dimLength, dict, p.size());
+        p0_ = vectorField("p0", dimensions::length, dict, p.size());
     }
     else
     {

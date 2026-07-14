@@ -271,19 +271,37 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
     meshMover_(engine),
     name(objectName),
     axis(dict.lookup<vector>("axis", dimless)),
-    motion_(Function1<scalar>::New("motion", units::none, dimLength, dict)),
+    motion_
+    (
+        Function1<scalar>::New("motion", units::none, dimensions::length, dict)
+    ),
     patchNames_(dict.lookup("patches")),
     maxMotionDistance_
     (
-        dict.lookupOrDefault<scalar>("maxMotionDistance", dimLength, great)
+        dict.lookupOrDefault<scalar>
+        (
+            "maxMotionDistance",
+            dimensions::length,
+            great
+        )
     ),
     movingFrozenLayerThickness_
     (
-        dict.lookupOrDefault<scalar>("movingFrozenLayerThickness", dimLength, 0)
+        dict.lookupOrDefault<scalar>
+        (
+            "movingFrozenLayerThickness",
+            dimensions::length,
+            0
+        )
     ),
     staticFrozenLayerThickness_
     (
-        dict.lookupOrDefault<scalar>("staticFrozenLayerThickness", dimLength, 0)
+        dict.lookupOrDefault<scalar>
+        (
+            "staticFrozenLayerThickness",
+            dimensions::length,
+            0
+        )
     ),
     movingPointZones_
     (
@@ -312,7 +330,12 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
     ),
     travelInterval_
     (
-        dict.lookupOrDefault<scalar>("travelInterval", dimLength, great)
+        dict.lookupOrDefault<scalar>
+        (
+            "travelInterval",
+            dimensions::length,
+            great
+        )
     ),
     executionCount_(0),
     position0_(-great),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::fvMeshMovers::multiValveEngine::valveObject::valveObject
 )
 :
     movingObject(name, engine, dict),
-    minLift_(dict.lookup<scalar>("minLift", dimLength))
+    minLift_(dict.lookup<scalar>("minLift", dimensions::length))
 {}
 
 

@@ -40,11 +40,16 @@ waveDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchVectorField(p, iF, dict),
-    amplitude_(dict.lookup<vector>("amplitude", dimLength)),
-    omega_(dict.lookup<scalar>("omega", units::radians/dimTime)),
+    amplitude_(dict.lookup<vector>("amplitude", dimensions::length)),
+    omega_(dict.lookup<scalar>("omega", units::radians/dimensions::time)),
     waveNumber_
     (
-        dict.lookupOrDefault<vector>("waveNumber", dimless/dimLength, Zero)
+        dict.lookupOrDefault<vector>
+        (
+            "waveNumber",
+            inv(dimensions::length),
+            Zero
+        )
     ),
     startRamp_
     (
@@ -67,7 +72,7 @@ waveDisplacementPointPatchVectorField
     timeRamp_
     (
         dict.found("timeRamp")
-      ? Function1<scalar>::New("timeRamp", dimTime, dimless, dict)
+      ? Function1<scalar>::New("timeRamp", dimensions::time, dimless, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::OneConstant<scalar>("timeRamp")

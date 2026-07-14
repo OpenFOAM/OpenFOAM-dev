@@ -44,8 +44,8 @@ oscillatingVelocityPointPatchVectorField
 )
 :
     fixedValuePointPatchVectorField(p, iF, dict),
-    amplitude_(dict.lookup<vector>("amplitude", dimLength)),
-    omega_(dict.lookup<scalar>("omega", units::radians/dimTime))
+    amplitude_(dict.lookup<vector>("amplitude", dimensions::length)),
+    omega_(dict.lookup<scalar>("omega", units::radians/dimensions::time))
 {
     if (!dict.found("value"))
     {
@@ -54,7 +54,7 @@ oscillatingVelocityPointPatchVectorField
 
     if (dict.found("p0"))
     {
-        p0_ = vectorField("p0", dimLength, dict, p.size());
+        p0_ = vectorField("p0", dimensions::length, dict, p.size());
     }
     else
     {

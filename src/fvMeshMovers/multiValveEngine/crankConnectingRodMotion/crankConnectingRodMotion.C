@@ -47,8 +47,8 @@ Foam::Function1s::crankConnectingRodMotion::crankConnectingRodMotion
 )
 :
     Function1<scalar>(name),
-    conRodLength_(dict.lookup<scalar>("conRodLength", dimLength)),
-    stroke_(dict.lookup<scalar>("stroke", dimLength))
+    conRodLength_(dict.lookup<scalar>("conRodLength", dimensions::length)),
+    stroke_(dict.lookup<scalar>("stroke", dimensions::length))
 {}
 
 
