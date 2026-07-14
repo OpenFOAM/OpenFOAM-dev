@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ Foam::fv::waveForcing::forceCoeff() const
     {
         const dimensionedScalar waveSpeed
         (
-            dimVelocity,
+            dimensions::velocity,
             waves_.maxWaveSpeed(mesh().time().deltaTValue())
         );
 
@@ -105,7 +105,7 @@ Foam::fv::waveForcing::waveForcing
     forcing(name, modelType, mesh, dict),
     lambdaCoeff_(0),
     lambdaBoundaryCoeff_(0),
-    regionLength_("regionLength", dimLength, 0),
+    regionLength_("regionLength", dimensions::length, 0),
     waves_(waveSuperposition::New(mesh)),
     liquidPhaseName_(dict.lookup<word>("liquidPhase")),
     alphaName_(IOobject::groupName("alpha", liquidPhaseName_)),
@@ -221,7 +221,7 @@ void Foam::fv::waveForcing::correct()
     (
         "Uwaves",
         mesh(),
-        dimVelocity,
+        dimensions::velocity,
         levelSetAverage(mesh(), h, hp, uGas, uGasp, uLiq, uLiqp)
     );
 }

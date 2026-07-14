@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,7 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
             IOobject::NO_WRITE
         )
     ),
-    origin_(lookup<vector>("origin", dimLength)),
+    origin_(lookup<vector>("origin", dimensions::length)),
     direction_(lookup<vector>("direction", dimless)),
     waveModels_(),
     waveAngles_(),
@@ -191,7 +191,7 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
         (
             "UMean",
             db.time().userUnits(),
-            dimVelocity,
+            dimensions::velocity,
             *this
         )
     ),
@@ -234,7 +234,7 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                dimensionedVector(dimAcceleration, Zero)
+                dimensionedVector(dimensions::acceleration, Zero)
             );
 
         gPtr->store();
@@ -361,7 +361,7 @@ void Foam::waveSuperposition::write(Ostream& os) const
             << nl << decrIndent << indent << token::END_BLOCK << nl;
     }
     os  << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
-    writeEntry(os, db().time().userUnits(), dimVelocity, UMean_());
+    writeEntry(os, db().time().userUnits(), dimensions::velocity, UMean_());
     if (scale_.valid())
     {
         writeEntry(os, db().time().userUnits(), dimless, scale_());

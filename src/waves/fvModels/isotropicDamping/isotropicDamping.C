@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ Foam::fv::isotropicDamping::isotropicDamping
 :
     forcing(name, modelType, mesh, dict),
     UName_(dict.lookupOrDefault<word>("U", "U")),
-    value_("value", dimVelocity, vector::uniform(NaN))
+    value_("value", dimensions::velocity, vector::uniform(NaN))
 {
     readCoeffs(coeffs(dict));
     writeForceFields();

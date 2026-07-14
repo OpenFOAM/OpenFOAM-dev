@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,14 @@ void Foam::fv::forcing::readCoeffs(const dictionary& dict)
 
     if (foundAll)
     {
-        scale_ = Function1<scalar>::New("scale", dimLength, dimless, dict);
+        scale_ = Function1<scalar>::New
+        (
+            "scale",
+            dimensions::length,
+            dimless,
+            dict
+        );
+
         if (foundOgn)
         {
             origins_.setSize(1);
@@ -134,14 +141,14 @@ void Foam::fv::forcing::readCoeffs(const dictionary& dict)
 
 Foam::dimensionedScalar Foam::fv::forcing::regionLength() const
 {
-    dimensionedScalar vs("vs", dimVolume, 0);
-    dimensionedScalar vgrads("vs", dimArea, 0);
+    dimensionedScalar vs("vs", dimensions::volume, 0);
+    dimensionedScalar vgrads("vs", dimensions::area, 0);
 
     forAll(origins_, i)
     {
         const volScalarField x
         (
-            (mesh().C() - dimensionedVector(dimLength, origins_[i]))
+            (mesh().C() - dimensionedVector(dimensions::length, origins_[i]))
           & directions_[i]
         );
 
@@ -236,8 +243,8 @@ Foam::fv::forcing::forcing
 :
     fvModel(name, modelType, mesh, dict),
     writeForceFields_(false),
-    lambda_("lambda", dimless/dimTime, NaN),
-    lambdaBoundary_("lambdaBoundary", dimless/dimTime, 0.0),
+    lambda_("lambda", dimensions::rate, NaN),
+    lambdaBoundary_("lambdaBoundary", dimensions::rate, 0.0),
     scale_(nullptr),
     origins_(),
     directions_()
