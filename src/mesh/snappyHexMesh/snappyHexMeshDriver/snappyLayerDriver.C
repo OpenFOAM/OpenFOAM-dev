@@ -860,7 +860,7 @@ Foam::snappyLayerDriver::makeLayerDisplacementField
         (
             "pointDisplacement",
             pMesh,
-            dimensionedVector(dimLength, Zero),
+            dimensionedVector(dimensions::length, Zero),
             patchFieldTypes,
             actualPatchTypes
         )

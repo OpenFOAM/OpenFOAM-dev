@@ -1772,7 +1772,7 @@ Foam::tmp<Foam::pointVectorField> Foam::meshRefinement::makeDisplacementField
         (
             "pointDisplacement",
             pMesh,
-            dimensionedVector(dimLength, Zero),
+            dimensionedVector(dimensions::length, Zero),
             patchFieldTypes
         )
     );

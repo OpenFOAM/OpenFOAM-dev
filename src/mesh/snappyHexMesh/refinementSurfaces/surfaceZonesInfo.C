@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,8 +78,11 @@ Foam::surfaceZonesInfo::surfaceZonesInfo
             zoneInside_ = areaSelectionAlgoNames[method];
             if (zoneInside_ == INSIDEPOINT)
             {
-                zoneInsidePoint_ =
-                    surfacesDict.lookup<point>("insidePoint", dimLength);
+                zoneInsidePoint_ = surfacesDict.lookup<point>
+                (
+                    "insidePoint",
+                    dimensions::length
+                );
             }
         }
 
