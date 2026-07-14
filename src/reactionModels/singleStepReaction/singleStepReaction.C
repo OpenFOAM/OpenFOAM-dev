@@ -133,7 +133,7 @@ Foam::reactionModels::singleStepReaction::singleStepReaction
     reaction_(thermo_.species(), this->subDict("reaction")),
     stoicRatio_(dimensionedScalar("stoicRatio", dimless, 0)),
     s_(dimensionedScalar("s", dimless, 0)),
-    qFuel_(dimensionedScalar("qFuel", sqr(dimVelocity), 0)),
+    qFuel_(dimensionedScalar("qFuel", sqr(dimensions::velocity), 0)),
     specieStoichCoeffs_(thermo_.species().size(), 0.0),
     Yprod0_(thermo_.species().size(), 0.0),
     fres_(Yprod0_.size()),
@@ -150,7 +150,7 @@ Foam::reactionModels::singleStepReaction::singleStepReaction
             IOobject::NO_WRITE
         ),
         this->mesh(),
-        dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+        dimensionedScalar(dimensions::density/dimensions::time, 0)
     ),
     semiImplicit_(readBool(this->coeffs_.lookup("semiImplicit")))
 {

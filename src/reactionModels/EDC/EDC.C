@@ -205,7 +205,10 @@ Foam::reactionModels::EDC::R(const label speciei) const
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::reactionModels::EDC::R(volScalarField& Y) const
 {
-    tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
+    tmp<fvScalarMatrix> tSu
+    (
+        new fvScalarMatrix(Y, dimensions::mass/dimensions::time)
+    );
     fvScalarMatrix& Su = tSu.ref();
 
     const label speciei = this->thermo().species()[Y.member()];

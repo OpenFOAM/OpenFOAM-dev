@@ -190,7 +190,7 @@ void Foam::reactionModels::FSD::calculateSourceNorm()
 
     const volScalarField deltaF
     (
-        lesModel.delta()/dimensionedScalar(dimLength, 1.5e-3)
+        lesModel.delta()/dimensionedScalar(dimensions::length, 1.5e-3)
     );
 
     // Linear correlation between delta and flame thickness
@@ -316,8 +316,7 @@ void Foam::reactionModels::FSD::calculateSourceNorm()
 
 void Foam::reactionModels::FSD::correct()
 {
-    this->wFuel_ ==
-        dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
+    this->wFuel_ == dimensionedScalar(dimensions::density/dimensions::time, 0);
 
     calculateSourceNorm();
 }

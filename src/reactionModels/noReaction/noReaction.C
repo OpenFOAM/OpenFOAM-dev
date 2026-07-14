@@ -73,7 +73,7 @@ Foam::reactionModels::noReaction::R(const label speciei) const
         (
             typedName("R_" + this->thermo().Y()[speciei].name()),
             this->mesh(),
-            dimensionedScalar(dimDensity/dimTime, 0)
+            dimensionedScalar(dimensions::density/dimensions::time, 0)
         );
 }
 
@@ -81,7 +81,10 @@ Foam::reactionModels::noReaction::R(const label speciei) const
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::reactionModels::noReaction::R(volScalarField& Y) const
 {
-    return tmp<fvScalarMatrix>(new fvScalarMatrix(Y, dimMass/dimTime));
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix(Y, dimensions::mass/dimensions::time)
+    );
 }
 
 
@@ -92,7 +95,7 @@ Foam::reactionModels::noReaction::Qdot() const
     (
         this->thermo().phasePropertyName(typedName("Qdot")),
         this->mesh(),
-        dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
+        dimensionedScalar(dimensions::energyDensity/dimensions::time, 0)
     );
 }
 

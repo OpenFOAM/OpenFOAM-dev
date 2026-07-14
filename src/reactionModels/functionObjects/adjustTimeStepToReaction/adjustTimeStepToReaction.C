@@ -173,7 +173,7 @@ Foam::functionObjects::adjustTimeStepToReaction::maxDeltaT() const
         (
             "rhoDotByRho",
             reaction.mesh(),
-            dimensionedScalar(dimless/dimTime, 0)
+            dimensionedScalar(dimensions::rate, 0)
         )
     );
     forAll(thermo.Y(), i)

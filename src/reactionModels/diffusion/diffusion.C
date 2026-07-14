@@ -72,8 +72,7 @@ Foam::reactionModels::diffusion::~diffusion()
 
 void Foam::reactionModels::diffusion::correct()
 {
-    this->wFuel_ ==
-        dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
+    this->wFuel_ == dimensionedScalar(dimensions::density/dimensions::time, 0);
 
     this->fresCorrect();
 

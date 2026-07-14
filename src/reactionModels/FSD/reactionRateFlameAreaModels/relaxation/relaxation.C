@@ -100,7 +100,7 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
     dimensionedScalar kMin
     (
         "kMin",
-        sqr(dimVelocity),
+        sqr(dimensions::velocity),
         small
     );
 

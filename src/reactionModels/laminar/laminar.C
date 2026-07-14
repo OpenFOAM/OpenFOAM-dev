@@ -137,7 +137,10 @@ Foam::reactionModels::laminar::R(const label speciei) const
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::reactionModels::laminar::R(volScalarField& Y) const
 {
-    tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
+    tmp<fvScalarMatrix> tSu
+    (
+        new fvScalarMatrix(Y, dimensions::mass/dimensions::time)
+    );
     fvScalarMatrix& Su = tSu.ref();
 
     const label specieI = this->thermo().species()[Y.member()];
