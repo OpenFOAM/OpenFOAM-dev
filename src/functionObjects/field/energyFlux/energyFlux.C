@@ -130,7 +130,7 @@ Foam::functionObjects::energyFluxBase::calcPhihs
             );
     }
 
-    return surfaceScalarField::New("0", mesh(), dimPower);
+    return surfaceScalarField::New("0", mesh(), dimensions::power);
 }
 
 

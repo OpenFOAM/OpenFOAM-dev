@@ -43,8 +43,8 @@ License
     FatalErrorInFunction                                                       \
         << "Incompatible dimensions for " << phi.name() << ": "                \
         << phi.dimensions() << nl                                              \
-        << "Dimensions should be " << dimMass/dimTime << " or "                \
-        << dimVolume/dimTime << exit(FatalError)
+        << "Dimensions should be " << dimensions::mass/dimensions::time        \
+        << " or " << dimensions::volume/dimensions::time << exit(FatalError)
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -97,7 +97,7 @@ Foam::volScalarField& Foam::functionObjects::phaseScalarTransport::Phi()
                     IOobject::NO_WRITE
                 ),
                 mesh_,
-                dimensionedScalar(phi.dimensions()/dimLength, Zero),
+                dimensionedScalar(phi.dimensions()/dimensions::length, Zero),
                 PhiPatchFieldTypes
             )
         );
@@ -172,7 +172,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
         );
 
     // Solve for the potential and correct alphaPhi with the resulting flux
-    if (phi.dimensions() == dimVolume/dimTime)
+    if (phi.dimensions() == dimensions::volume/dimensions::time)
     {
         while (control.correctNonOrthogonal())
         {
@@ -191,7 +191,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
             }
         }
     }
-    else if (phi.dimensions() == dimMass/dimTime)
+    else if (phi.dimensions() == dimensions::mass/dimensions::time)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
@@ -242,7 +242,7 @@ Foam::functionObjects::phaseScalarTransport::D
         (
             Dname,
             mesh_,
-            dimensionedScalar(dimKinematicViscosity, D_)
+            dimensionedScalar(dimensions::kinematicViscosity, D_)
         );
     }
     else
@@ -409,7 +409,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
     const Foam::fvConstraints& fvConstraints = Foam::fvConstraints::New(mesh_);
 
     // Solve
-    if (alphaPhi.dimensions() == dimVolume/dimTime)
+    if (alphaPhi.dimensions() == dimensions::volume/dimensions::time)
     {
         for (int i=0; i<=nCorr; i++)
         {
@@ -450,7 +450,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
             fvConstraints.constrain(s_);
         }
     }
-    else if (alphaPhi.dimensions() == dimMass/dimTime)
+    else if (alphaPhi.dimensions() == dimensions::mass/dimensions::time)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);

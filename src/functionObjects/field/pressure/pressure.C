@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,13 +68,13 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::rhoScale
     const volScalarField& p
 ) const
 {
-    if (p.dimensions() == dimPressure)
+    if (p.dimensions() == dimensions::pressure)
     {
         return p;
     }
     else
     {
-        return dimensionedScalar("rhoInf", dimDensity, rhoInf_)*p;
+        return dimensionedScalar("rhoInf", dimensions::density, rhoInf_)*p;
     }
 }
 
@@ -85,13 +85,13 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::rhoScale
     const tmp<volScalarField>& tsf
 ) const
 {
-    if (p.dimensions() == dimPressure)
+    if (p.dimensions() == dimensions::pressure)
     {
         return lookupObject<volScalarField>(rhoName_)*tsf;
     }
     else
     {
-        return dimensionedScalar("rhoInf", dimDensity, rhoInf_)*tsf;
+        return dimensionedScalar("rhoInf", dimensions::density, rhoInf_)*tsf;
     }
 }
 
@@ -103,7 +103,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::pRef
 {
     if (calcTotal_)
     {
-        return tp + dimensionedScalar("pRef", dimPressure, pRef_);
+        return tp + dimensionedScalar("pRef", dimensions::pressure, pRef_);
     }
     else
     {
@@ -141,11 +141,11 @@ Foam::functionObjects::pressure::coeff
         tmp<volScalarField> tpCoeff(tp.ptr());
         volScalarField& pCoeff = tpCoeff.ref();
 
-        pCoeff -= dimensionedScalar("pInf", dimPressure, pInf_);
+        pCoeff -= dimensionedScalar("pInf", dimensions::pressure, pInf_);
 
-        const dimensionedScalar pSmall("pSmall", dimPressure, small);
-        const dimensionedVector U("U", dimVelocity, UInf_);
-        const dimensionedScalar rho("rho", dimDensity, rhoInf_);
+        const dimensionedScalar pSmall("pSmall", dimensions::pressure, small);
+        const dimensionedVector U("U", dimensions::velocity, UInf_);
+        const dimensionedScalar rho("rho", dimensions::density, rhoInf_);
 
         pCoeff /= 0.5*rho*magSqr(U) + pSmall;
 
@@ -204,11 +204,11 @@ Foam::functionObjects::pressure::pressure
 {
     read(dict);
 
-    dimensionSet pDims(dimPressure);
+    dimensionSet pDims(dimensions::pressure);
 
     if (calcCoeff_)
     {
-        pDims /= dimPressure;
+        pDims /= dimensions::pressure;
     }
 }
 

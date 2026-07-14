@@ -146,7 +146,7 @@ bool Foam::functionObjects::age::execute()
                 false
             ),
             mesh_,
-            dimensionedScalar(dimTime, 0),
+            dimensionedScalar(dimensions::time, 0),
             patchTypes()
         )
     );
@@ -178,7 +178,7 @@ bool Foam::functionObjects::age::execute()
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);
 
-    if (phi.dimensions() == dimMass/dimTime)
+    if (phi.dimensions() == dimensions::mass/dimensions::time)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);

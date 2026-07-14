@@ -105,10 +105,10 @@ Foam::dimensionedScalar Foam::functionObjects::comfort::Trad() const
 
 Foam::tmp<Foam::volScalarField> Foam::functionObjects::comfort::pSat() const
 {
-    static const dimensionedScalar kPaToPa(dimPressure, 1000);
+    static const dimensionedScalar kPaToPa(dimensions::pressure, 1000);
     static const dimensionedScalar A(dimless, 16.6563);
-    static const dimensionedScalar B(dimTemperature, 4030.183);
-    static const dimensionedScalar C(dimTemperature, -38.15);
+    static const dimensionedScalar B(dimensions::temperature, 4030.183);
+    static const dimensionedScalar C(dimensions::temperature, -38.15);
 
     tmp<volScalarField> tpSat(volScalarField::New("pSat", mesh_, pSat_));
 
@@ -134,11 +134,11 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::comfort::Tcloth
     const dimensionedScalar& Trad
 )
 {
-    const dimensionedScalar factor1(dimTemperature, 308.85);
+    const dimensionedScalar factor1(dimensions::temperature, 308.85);
 
     const dimensionedScalar factor2
     (
-        dimTemperature/metabolicRateSI.dimensions(),
+        dimensions::temperature/metabolicRateSI.dimensions(),
         0.028
     );
 
@@ -151,7 +151,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::comfort::Tcloth
     // Heat transfer coefficient based on forced convection [W/m^2/K]
     const volScalarField hcForced
     (
-        dimensionedScalar(hc.dimensions()/sqrt(dimVelocity), 12.1)
+        dimensionedScalar(hc.dimensions()/sqrt(dimensions::velocity), 12.1)
        *sqrt(magU())
     );
 
@@ -162,7 +162,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::comfort::Tcloth
         (
             "Tcl",
             T.mesh(),
-            dimTemperature
+            dimensions::temperature
         )
     );
 
@@ -184,7 +184,11 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::comfort::Tcloth
         // Heat transfer coefficient based on natural convection
         volScalarField hcNatural
         (
-            dimensionedScalar(hc.dimensions()/pow025(dimTemperature), 2.38)
+            dimensionedScalar
+            (
+                hc.dimensions()/pow025(dimensions::temperature),
+                2.38
+            )
            *pow025(mag(Tcl - T))
         );
 
@@ -235,12 +239,17 @@ Foam::functionObjects::comfort::comfort
 :
     fvMeshFunctionObject(name, runTime, dict),
     clothing_("clothing", dimless, 0),
-    metabolicRate_("metabolicRate", dimMass/pow3(dimTime), 0.8),
-    extWork_("extWork", dimMass/pow3(dimTime), 0),
+    metabolicRate_
+    (
+        "metabolicRate",
+        dimensions::mass/pow3(dimensions::time),
+        0.8
+    ),
+    extWork_("extWork", dimensions::mass/pow3(dimensions::time), 0),
     TradSet_(false),
-    Trad_("Trad", dimTemperature, 0),
+    Trad_("Trad", dimensions::temperature, 0),
     relHumidity_("relHumidity", dimless, 0.5),
-    pSat_("pSat", dimPressure, 0),
+    pSat_("pSat", dimensions::pressure, 0),
     Icl_("Icl", dimensionSet(-1, 0, 3, 1, 0, 0, 0), 0),
     fcl_("fcl", dimless, 0),
     tolerance_(1e-4),
@@ -346,18 +355,22 @@ bool Foam::functionObjects::comfort::execute()
     const dimensionedScalar factor1(dimensionSet(-1, 0, 3, 0, 0, 0, 0), 0.303);
     const dimensionedScalar factor2
     (
-        dimless/metabolicRateSI.dimensions(),
+        inv(metabolicRateSI.dimensions()),
         -0.036
     );
     const dimensionedScalar factor3(factor1.dimensions(), 0.028);
-    const dimensionedScalar factor4(dimLength/dimTime, 3.05e-3);
-    const dimensionedScalar factor5(dimPressure, 5733);
-    const dimensionedScalar factor6(dimTime/dimLength, 6.99);
+    const dimensionedScalar factor4
+    (
+        dimensions::length/dimensions::time,
+        3.05e-3
+    );
+    const dimensionedScalar factor5(dimensions::pressure, 5733);
+    const dimensionedScalar factor6(dimensions::time/dimensions::length, 6.99);
     const dimensionedScalar factor8(metabolicRateSI.dimensions(), 58.15);
-    const dimensionedScalar factor9(dimless/dimPressure, 1.7e-5);
-    const dimensionedScalar factor10(dimPressure, 5867);
-    const dimensionedScalar factor11(dimless/dimTemperature, 0.0014);
-    const dimensionedScalar factor12(dimTemperature, 307.15);
+    const dimensionedScalar factor9(inv(dimensions::pressure), 1.7e-5);
+    const dimensionedScalar factor10(dimensions::pressure, 5867);
+    const dimensionedScalar factor11(inv(dimensions::temperature), 0.0014);
+    const dimensionedScalar factor12(dimensions::temperature, 307.15);
     const dimensionedScalar factor13
     (
         dimensionSet(1, 0, -3, -4, 0, 0, 0),
@@ -425,10 +438,10 @@ bool Foam::functionObjects::comfort::execute()
 
     Info<< "Calculating the draught rating (DR)\n";
 
-    const dimensionedScalar Umin("Umin", dimVelocity, 0.05);
-    const dimensionedScalar Umax("Umax", dimVelocity, 0.5);
+    const dimensionedScalar Umin("Umin", dimensions::velocity, 0.05);
+    const dimensionedScalar Umax("Umax", dimensions::velocity, 0.5);
     const dimensionedScalar pre("preU", dimless, 0.37);
-    const dimensionedScalar C1("C1", dimVelocity, 3.14);
+    const dimensionedScalar C1("C1", dimensions::velocity, 3.14);
 
     // Limit the velocity field to the values given in EN ISO 7733
     volScalarField Umag(mag(lookupObject<volVectorField>("U")));

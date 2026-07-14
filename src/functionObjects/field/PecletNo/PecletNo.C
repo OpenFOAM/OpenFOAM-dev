@@ -57,14 +57,14 @@ bool Foam::functionObjects::PecletNo::calc()
             mesh_.lookupObject<surfaceScalarField>(fieldName_);
 
         tmp<volScalarField> nuOrMuEff;
-        if (phi.dimensions() == dimVolumetricFlux)
+        if (phi.dimensions() == dimensions::volumetricFlux)
         {
             const incompressibleMomentumTransportModel& imtm =
                 mesh_.lookupType<incompressibleMomentumTransportModel>();
 
             nuOrMuEff = imtm.nuEff();
         }
-        else if (phi.dimensions() == dimMassFlux)
+        else if (phi.dimensions() == dimensions::massFlux)
         {
             const compressibleMomentumTransportModel& cmtm =
                 mesh_.lookupType<compressibleMomentumTransportModel>();
@@ -76,7 +76,8 @@ bool Foam::functionObjects::PecletNo::calc()
             FatalErrorInFunction
                 << "dimensions of flux " << phi.name() << " are "
                 << phi.dimensions() << ", but they must be either "
-                << dimMassFlux << " (mass flux) or " << dimVolumetricFlux
+                << dimensions::massFlux << " (mass flux) or "
+                << dimensions::volumetricFlux
                 << " (volume flux) " << exit(FatalError);
         }
 

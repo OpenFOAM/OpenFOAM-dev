@@ -212,7 +212,7 @@ Foam::scalar Foam::functionObjects::forcesBase::rho
     const volScalarField& p
 ) const
 {
-    if (p.dimensions() == dimPressure)
+    if (p.dimensions() == dimensions::pressure)
     {
         return 1.0;
     }
@@ -743,7 +743,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forcesBase::mu() const
         const dimensionedScalar nu
         (
             "nu",
-            dimKinematicViscosity,
+            dimensions::kinematicViscosity,
             physicalProperties.lookup("nu")
         );
 
@@ -768,7 +768,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forcesBase::rho() const
         (
             "rho",
             mesh_,
-            dimensionedScalar(dimDensity, rhoRef_)
+            dimensionedScalar(dimensions::density, rhoRef_)
         );
     }
     else

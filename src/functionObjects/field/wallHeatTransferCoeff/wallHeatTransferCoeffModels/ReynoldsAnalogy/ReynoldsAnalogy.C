@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::wallHeatTransferCoeffModels::ReynoldsAnalogy::ReynoldsAnalogy
 :
     wallHeatTransferCoeffModel(name, mesh, dict),
     mesh_(mesh),
-    Uref_("Uref", dimVelocity, dict)
+    Uref_("Uref", dimensions::velocity, dict)
 {
     read(dict);
 }
@@ -97,7 +97,7 @@ Foam::wallHeatTransferCoeffModels::ReynoldsAnalogy::htcByRhoCp
         (
             type(),
             mesh_,
-            dimensionedScalar(dimLength/dimTime, 0)
+            dimensionedScalar(dimensions::length/dimensions::time, 0)
         )
     );
 

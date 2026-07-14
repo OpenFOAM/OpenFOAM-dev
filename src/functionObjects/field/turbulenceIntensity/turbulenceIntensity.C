@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ bool Foam::functionObjects::turbulenceIntensity::execute()
        /max
         (
             max(uPrime, mag(transport.U())),
-            dimensionedScalar(dimVelocity, small)
+            dimensionedScalar(dimensions::velocity, small)
         )
     );
 

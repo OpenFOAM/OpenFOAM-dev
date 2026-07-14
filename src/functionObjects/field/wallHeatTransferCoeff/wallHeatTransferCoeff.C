@@ -79,8 +79,8 @@ Foam::functionObjects::wallHeatTransferCoeff::wallHeatTransferCoeff
     logFiles(obr_, name),
     writeLocalObjects(obr_, log),
     coeffModel_(wallHeatTransferCoeffModel::New(dict.name(), mesh_, dict)),
-    rho_("rho", dimDensity, Zero),
-    Cp_("Cp", dimArea/sqr(dimTime)/dimTemperature, Zero),
+    rho_("rho", dimensions::density, Zero),
+    Cp_("Cp", dimensions::specificHeatCapacity, Zero),
     runTime_(runTime),
     patchSet_()
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::functionObjects::CourantNo::byRho
     const tmp<volScalarField::Internal>& Co
 ) const
 {
-    if (Co().dimensions() == dimDensity)
+    if (Co().dimensions() == dimensions::density)
     {
         return Co/obr_.lookupObject<volScalarField>(rhoName_);
     }

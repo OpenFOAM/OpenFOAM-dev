@@ -89,7 +89,7 @@ Foam::functionObjects::scalarTransport::D() const
         (
             Dname,
             mesh_,
-            dimensionedScalar(Dname, dimKinematicViscosity, D_)
+            dimensionedScalar(Dname, dimensions::kinematicViscosity, D_)
         );
     }
     else
@@ -135,7 +135,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
     deltaN_
     (
         "deltaN",
-        s_.dimensions()/dimLength,
+        s_.dimensions()/dimensions::length,
         1e-8/pow(average(mesh_.V()), 1.0/3.0).value()
     )
 {
@@ -232,7 +232,7 @@ bool Foam::functionObjects::scalarTransport::execute()
         Foam::fvConstraints::New(mesh_)
     );
 
-    if (phi.dimensions() == dimVolume/dimTime)
+    if (phi.dimensions() == dimensions::volume/dimensions::time)
     {
         if (MULES_)
         {
@@ -275,7 +275,7 @@ bool Foam::functionObjects::scalarTransport::execute()
             }
         }
     }
-    else if (phi.dimensions() == dimMass/dimTime)
+    else if (phi.dimensions() == dimensions::mass/dimensions::time)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
@@ -316,8 +316,9 @@ bool Foam::functionObjects::scalarTransport::execute()
     {
         FatalErrorInFunction
             << "Incompatible dimensions for phi: " << phi.dimensions() << nl
-            << "Dimensions should be " << dimMass/dimTime << " or "
-            << dimVolume/dimTime << exit(FatalError);
+            << "Dimensions should be " << dimensions::mass/dimensions::time
+            << " or "
+            << dimensions::volume/dimensions::time << exit(FatalError);
     }
 
     Info<< endl;

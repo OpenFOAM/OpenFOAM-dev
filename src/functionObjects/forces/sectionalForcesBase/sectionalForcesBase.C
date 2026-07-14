@@ -117,7 +117,7 @@ Foam::functionObjects::sectionalForcesBase::timesRho
     }
     else
     {
-        psi.ref() *= dimensionedScalar(dimDensity, rhoRef_);
+        psi.ref() *= dimensionedScalar(dimensions::density, rhoRef_);
     }
 
     return psi;
@@ -158,7 +158,7 @@ Foam::functionObjects::sectionalForcesBase::p() const
 {
     const volScalarField& p = obr_.lookupObject<volScalarField>(pName_);
 
-    if (p.dimensions() == dimPressure)
+    if (p.dimensions() == dimensions::pressure)
     {
         return p;
     }
@@ -171,7 +171,7 @@ Foam::functionObjects::sectionalForcesBase::p() const
                 << exit(FatalError);
         }
 
-        return dimensionedScalar(dimDensity, rhoRef_)*p;
+        return dimensionedScalar(dimensions::density, rhoRef_)*p;
     }
     else
     {

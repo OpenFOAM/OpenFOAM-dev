@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::wallHeatTransferCoeffModels::kappaEff::kappaEff
         dict.lookupBackwardsCompatible({"Pr", "Prl"})
     ),
     Prt_("Prt", dimless, dict),
-    Lchar_("Lchar", dimLength, Zero),
+    Lchar_("Lchar", dimensions::length, Zero),
     isCharLength_(false)
 {
     read(dict);
@@ -106,8 +106,8 @@ Foam::wallHeatTransferCoeffModels::kappaEff::htcByRhoCp
             type(),
             mesh_,
             isCharLength_
-          ? dimensionedScalar(dimLength/dimTime, 0)
-          : dimensionedScalar(dimArea/dimTime, 0)
+          ? dimensionedScalar(dimensions::length/dimensions::time, 0)
+          : dimensionedScalar(dimensions::area/dimensions::time, 0)
         )
     );
 

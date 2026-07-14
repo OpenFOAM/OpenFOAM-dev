@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,13 @@ bool Foam::functionObjects::movingForces::read(const dictionary& dict)
     forcesBase::read(dict);
 
     // Centre of rotation for moment calculations
-    CofR_ = Function1<vector>::New("CofR", time_.userUnits(), dimLength, dict);
+    CofR_ = Function1<vector>::New
+    (
+        "CofR",
+        time_.userUnits(),
+        dimensions::length,
+        dict
+    );
 
     return true;
 }
