@@ -57,10 +57,10 @@ Foam::laminarModels::generalisedNewtonianViscosityModels::powerLaw::powerLaw
 )
 :
     strainRateViscosityModel(viscosityProperties, viscosity, U),
-    k_("k", dimKinematicViscosity, 0),
+    k_("k", dimensions::kinematicViscosity, 0),
     n_("n", dimless, 0),
-    nuMin_("nuMin", dimKinematicViscosity, 0),
-    nuMax_("nuMax", dimKinematicViscosity, 0)
+    nuMin_("nuMin", dimensions::kinematicViscosity, 0),
+    nuMax_("nuMax", dimensions::kinematicViscosity, 0)
 {
     read(viscosityProperties);
     correct();
@@ -106,7 +106,7 @@ nu
             (
                 max
                 (
-                    dimensionedScalar(dimTime, 1.0)*strainRate,
+                    dimensionedScalar(dimensions::time, 1.0)*strainRate,
                     dimensionedScalar(dimless, small)
                 ),
                 n_.value() - scalar(1)

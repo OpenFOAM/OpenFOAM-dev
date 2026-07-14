@@ -326,7 +326,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::k() const
             this->mesh_
         ),
         this->mesh_,
-        dimLength,
+        dimensions::length,
         zeroGradientFvPatchScalarField::typeName
     );
     dTildaExtrapolated.internalFieldRef() =

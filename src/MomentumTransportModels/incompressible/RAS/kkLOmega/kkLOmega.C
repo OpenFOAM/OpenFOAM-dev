@@ -111,7 +111,7 @@ tmp<volScalarField> kkLOmega::fTaul
               + dimensionedScalar
                 (
                     "rootVSmall",
-                    sqr(dimLength/dimTime),
+                    sqr(dimensions::velocity),
                     rootVSmall
                 )
             )
@@ -276,7 +276,7 @@ kkLOmega::kkLOmega
     Prtheta_("Prtheta", typeDict(type), 0.85),
     Sigmak_("Sigmak", typeDict(type), 1),
     Sigmaw_("Sigmaw", typeDict(type), 1.17),
-    omegaMin_("omegaMin", dimless/dimTime, typeDict(type), small),
+    omegaMin_("omegaMin", dimensions::turbulentOmega, typeDict(type), small),
     kt_
     (
         IOobject
@@ -408,7 +408,7 @@ void kkLOmega::correct()
         pow
         (
             lambdaEff
-           /(lambdaT + dimensionedScalar(dimLength, rootVSmall)),
+           /(lambdaT + dimensionedScalar(dimensions::length, rootVSmall)),
             2.0/3.0
         )
     );

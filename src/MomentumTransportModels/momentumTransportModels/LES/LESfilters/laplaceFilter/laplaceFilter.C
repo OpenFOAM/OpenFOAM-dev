@@ -51,7 +51,7 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, scalar widthCoeff)
             mesh
         ),
         mesh,
-        dimensionedScalar(dimLength*dimLength, 0),
+        dimensionedScalar(dimensions::area, 0),
         calculatedFvPatchScalarField::typeName
     )
 {
@@ -75,7 +75,7 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, const dictionary& bd)
             mesh
         ),
         mesh,
-        dimensionedScalar(dimLength*dimLength, 0),
+        dimensionedScalar(dimensions::area, 0),
         calculatedFvPatchScalarField::typeName
     )
 {

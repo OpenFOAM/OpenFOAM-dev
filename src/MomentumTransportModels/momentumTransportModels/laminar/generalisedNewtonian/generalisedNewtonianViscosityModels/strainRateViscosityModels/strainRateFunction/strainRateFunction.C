@@ -63,8 +63,8 @@ strainRateFunction
         Function1<scalar>::New
         (
             "function",
-            dimless/dimTime,
-            dimKinematicViscosity,
+            dimensions::rate,
+            dimensions::kinematicViscosity,
             viscosityProperties.optionalTypeDict(typeName)
         )
     )
@@ -87,8 +87,8 @@ strainRateFunction::read
     strainRateFunction_ = Function1<scalar>::New
     (
         "function",
-        dimless/dimTime,
-        dimKinematicViscosity,
+        dimensions::rate,
+        dimensions::kinematicViscosity,
         viscosityProperties.optionalTypeDict(typeName)
     );
 
@@ -110,7 +110,7 @@ nu
         (
             IOobject::groupName(typedName("nu"), nu0.group()),
             nu0.mesh(),
-            dimensionedScalar(dimKinematicViscosity, 0)
+            dimensionedScalar(dimensions::kinematicViscosity, 0)
         )
     );
 

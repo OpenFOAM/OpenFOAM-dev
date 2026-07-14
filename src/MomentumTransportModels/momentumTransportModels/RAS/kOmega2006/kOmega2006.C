@@ -89,7 +89,7 @@ kOmega2006<BasicMomentumTransportModel>::CDkOmega() const
     return max
     (
         sigmaDo_*(fvc::grad(k_)().v() & fvc::grad(omega_)().v())/omega_(),
-        dimensionedScalar(dimless/sqr(dimTime), 0)
+        dimensionedScalar(dimensions::turbulentOmega/dimensions::time, 0)
     );
 }
 
@@ -111,8 +111,8 @@ tmp<fvScalarMatrix> kOmega2006<BasicMomentumTransportModel>::kSource() const
         new fvScalarMatrix
         (
             k_,
-            dimVolume*this->rho_.dimensions()*k_.dimensions()
-            /dimTime
+            dimensions::volume*this->rho_.dimensions()*k_.dimensions()
+            /dimensions::time
         )
     );
 }
@@ -126,7 +126,8 @@ tmp<fvScalarMatrix> kOmega2006<BasicMomentumTransportModel>::omegaSource() const
         new fvScalarMatrix
         (
             omega_,
-            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
+            dimensions::volume*this->rho_.dimensions()
+           *omega_.dimensions()/dimensions::time
         )
     );
 }

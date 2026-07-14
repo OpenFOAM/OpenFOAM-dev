@@ -193,7 +193,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::nut() const
     (
         this->groupName("nut"),
         this->mesh_,
-        dimensionedScalar(dimKinematicViscosity, 0)
+        dimensionedScalar(dimensions::kinematicViscosity, 0)
     );
 }
 

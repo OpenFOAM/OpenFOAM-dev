@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ Foam::phaseCompressibleMomentumTransportModel::pPrime() const
     (
         this->groupName("pPrime"),
         this->mesh_,
-        dimensionedScalar(dimPressure, 0)
+        dimensionedScalar(dimensions::pressure, 0)
     );
 }
 
@@ -103,7 +103,7 @@ Foam::phaseCompressibleMomentumTransportModel::pPrimef() const
     (
         this->groupName("pPrimef"),
         this->mesh_,
-        dimensionedScalar(dimPressure, 0)
+        dimensionedScalar(dimensions::pressure, 0)
     );
 }
 

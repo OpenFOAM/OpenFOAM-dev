@@ -53,19 +53,19 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     D_
     (
         cyclicPatch().owner()
-      ? dict.lookup<scalar>("D", dimless/dimArea)
+      ? dict.lookup<scalar>("D", inv(dimensions::area))
       : NaN
     ),
     I_
     (
         cyclicPatch().owner()
-      ? dict.lookup<scalar>("I", dimless/dimLength)
+      ? dict.lookup<scalar>("I", inv(dimensions::length))
       : NaN
     ),
     length_
     (
         cyclicPatch().owner()
-      ? dict.lookup<scalar>("length", dimLength)
+      ? dict.lookup<scalar>("length", dimensions::length)
       : NaN
     ),
     relaxation_
@@ -133,7 +133,7 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
 
         scalarField Un(phip/patch().magSf());
 
-        if (phi.dimensions() == dimMassFlux)
+        if (phi.dimensions() == dimensions::massFlux)
         {
             Un /= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
         }
@@ -150,7 +150,7 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
               + I_*0.5*magUn
              )*magUn*length_;
 
-        if (internalField().dimensions() == dimPressure)
+        if (internalField().dimensions() == dimensions::pressure)
         {
             jumpRef() *=
                 patch().lookupPatchField<volScalarField, scalar>(rhoName_);

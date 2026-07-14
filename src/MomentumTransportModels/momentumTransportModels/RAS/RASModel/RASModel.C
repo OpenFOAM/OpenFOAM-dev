@@ -52,7 +52,7 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
     ),
 
     turbulence_(RASDict().template lookupOrDefault<Switch>("turbulence", true)),
-    kMin_("kMin", sqr(dimVelocity), RASDict(), small),
+    kMin_("kMin", sqr(dimensions::velocity), RASDict(), small),
     nutMaxCoeff_("nutMaxCoeff", dimless, RASDict(), 1e5),
 
     viscosityModel_

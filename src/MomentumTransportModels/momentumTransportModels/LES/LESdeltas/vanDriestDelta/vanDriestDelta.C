@@ -60,7 +60,7 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
             mesh
         ),
         mesh,
-        dimensionedScalar(dimLength, great)
+        dimensionedScalar(dimensions::length, great)
     );
 
     const fvPatchList& patches = mesh.boundary();
@@ -81,7 +81,12 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
 
     volScalarField y
     (
-        volScalarField::New("y", mesh, dimensionedScalar(dimLength, great))
+        volScalarField::New
+        (
+            "y",
+            mesh,
+            dimensionedScalar(dimensions::length, great)
+        )
     );
 
     WallLocationYPlus<wallPoint>::trackData td;

@@ -43,7 +43,7 @@ dynamicKEqn<BasicMomentumTransportModel>::KK() const
     return max
     (
         0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_))),
-        dimensionedScalar(sqr(dimVelocity), small)
+        dimensionedScalar(sqr(dimensions::velocity), small)
     );
 }
 
@@ -133,8 +133,8 @@ tmp<fvScalarMatrix> dynamicKEqn<BasicMomentumTransportModel>::kSource() const
         new fvScalarMatrix
         (
             k_,
-            dimVolume*this->rho_.dimensions()*k_.dimensions()
-            /dimTime
+            dimensions::volume*this->rho_.dimensions()*k_.dimensions()
+            /dimensions::time
         )
     );
 }

@@ -163,9 +163,9 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
 
     nModes_(modeCoefficients_.size() ? modeCoefficients_.size() : 1),
 
-    nuM_(readModeCoefficients("nuM", dimKinematicViscosity)),
+    nuM_(readModeCoefficients("nuM", dimensions::kinematicViscosity)),
 
-    lambdas_(readModeCoefficients("lambda", dimTime)),
+    lambdas_(readModeCoefficients("lambda", dimensions::time)),
 
     nuMSum_(sumNuM(nuM_)),
 
@@ -257,8 +257,8 @@ bool Maxwell<BasicMomentumTransportModel>::read()
             this->typeDict().lookup("modes") >> modeCoefficients_;
         }
 
-        nuM_ = readModeCoefficients("nuM", dimKinematicViscosity);
-        lambdas_ = readModeCoefficients("lambda", dimTime);
+        nuM_ = readModeCoefficients("nuM", dimensions::kinematicViscosity);
+        lambdas_ = readModeCoefficients("lambda", dimensions::time);
         nuMSum_ = sumNuM(nuM_);
 
         return true;

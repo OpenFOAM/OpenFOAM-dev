@@ -62,12 +62,17 @@ lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::lambdaThixotropic
         viscosity
     ),
 
-    a_("a", dimless/dimTime, this->typeDict(type)),
+    a_("a", dimensions::rate, this->typeDict(type)),
     b_("b", dimless, this->typeDict(type)),
     d_("d", dimless, this->typeDict(type)),
-    c_("c", pow(dimTime, d_.value() - scalar(1)), this->typeDict(type)),
-    nu0_("nu0", dimKinematicViscosity, this->typeDict(type)),
-    nuInf_("nuInf", dimKinematicViscosity, this->typeDict(type)),
+    c_
+    (
+        "c",
+        pow(dimensions::time, d_.value() - scalar(1)),
+        this->typeDict(type)
+    ),
+    nu0_("nu0", dimensions::kinematicViscosity, this->typeDict(type)),
+    nuInf_("nuInf", dimensions::kinematicViscosity, this->typeDict(type)),
     K_(1 - sqrt(nuInf_/nu0_)),
     BinghamPlastic_(this->typeDict(type).found("sigmay")),
     sigmay_
@@ -178,7 +183,7 @@ bool lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::read()
         c_ = dimensionedScalar
         (
             "c",
-            pow(dimTime, d_.value() - scalar(1)),
+            pow(dimensions::time, d_.value() - scalar(1)),
             this->typeDict()
         );
 

@@ -59,8 +59,8 @@ HerschelBulkley
 :
     strainRateViscosityModel(viscosityProperties, viscosity, U),
     n_("n", dimless, 0),
-    k_("k", dimKinematicViscosity*pow(dimTime, n_ - 1), 0),
-    tau0_("tau0", dimKinematicViscosity/dimTime, 0)
+    k_("k", dimensions::kinematicViscosity*pow(dimensions::time, n_ - 1), 0),
+    tau0_("tau0", dimensions::kinematicViscosity/dimensions::time, 0)
 {
     read(viscosityProperties);
     correct();
@@ -81,7 +81,10 @@ HerschelBulkley::read
         viscosityProperties.optionalTypeDict(typeName);
 
     n_.read(coeffs);
-    k_.dimensions().reset(dimKinematicViscosity*pow(dimTime, n_ - 1));
+    k_.dimensions().reset
+    (
+        dimensions::kinematicViscosity*pow(dimensions::time, n_ - 1)
+    );
     k_.read(coeffs);
     tau0_.read(coeffs);
 
@@ -103,7 +106,7 @@ nu
         (
             nu0,
             (tau0_ + k_*pow(strainRate, n_))
-           /max(strainRate, dimensionedScalar(dimless/dimTime, rootVSmall))
+           /max(strainRate, dimensionedScalar(dimensions::rate, rootVSmall))
         )
     );
 }

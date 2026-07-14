@@ -52,7 +52,7 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
     ),
 
     turbulence_(LESDict().template lookupOrDefault<Switch>("turbulence", true)),
-    kMin_("kMin", sqr(dimVelocity), LESDict(), small),
+    kMin_("kMin", sqr(dimensions::velocity), LESDict(), small),
     nutMaxCoeff_("nutMaxCoeff", dimless, LESDict(), 1e5),
 
     viscosityModel_

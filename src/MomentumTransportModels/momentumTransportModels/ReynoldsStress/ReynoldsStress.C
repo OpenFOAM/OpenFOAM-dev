@@ -109,7 +109,8 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::RSource() const
         new fvSymmTensorMatrix
         (
             this->R_,
-            dimVolume*this->rho_.dimensions()*this->R_.dimensions()/dimTime
+            dimensions::volume*this->rho_.dimensions()
+           *this->R_.dimensions()/dimensions::time
         )
     );
 }

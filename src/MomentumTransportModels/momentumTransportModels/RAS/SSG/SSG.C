@@ -63,7 +63,8 @@ tmp<fvScalarMatrix> SSG<BasicMomentumTransportModel>::epsilonSource() const
         new fvScalarMatrix
         (
             epsilon_,
-            dimVolume*this->rho_.dimensions()*epsilon_.dimensions()/dimTime
+            dimensions::volume*this->rho_.dimensions()
+           *epsilon_.dimensions()/dimensions::time
         )
     );
 }

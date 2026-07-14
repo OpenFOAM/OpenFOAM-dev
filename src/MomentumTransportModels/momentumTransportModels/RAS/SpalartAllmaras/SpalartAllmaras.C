@@ -286,7 +286,7 @@ SpalartAllmaras<BasicMomentumTransportModel>::omega() const
     (
         "omega",
         this->mesh_,
-        dimensionedScalar(dimless/dimTime, 0)
+        dimensionedScalar(dimensions::rate, 0)
     );
 }
 

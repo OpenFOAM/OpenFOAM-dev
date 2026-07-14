@@ -63,8 +63,8 @@ tmp<fvScalarMatrix> RNGkEpsilon<BasicMomentumTransportModel>::kSource() const
         new fvScalarMatrix
         (
             k_,
-            dimVolume*this->rho_.dimensions()*k_.dimensions()
-            /dimTime
+            dimensions::volume*this->rho_.dimensions()*k_.dimensions()
+            /dimensions::time
         )
     );
 }
@@ -79,8 +79,8 @@ RNGkEpsilon<BasicMomentumTransportModel>::epsilonSource() const
         new fvScalarMatrix
         (
             epsilon_,
-            dimVolume*this->rho_.dimensions()*epsilon_.dimensions()
-            /dimTime
+            dimensions::volume*this->rho_.dimensions()*epsilon_.dimensions()
+            /dimensions::time
         )
     );
 }

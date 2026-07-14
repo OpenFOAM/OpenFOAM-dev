@@ -56,10 +56,10 @@ Foam::laminarModels::generalisedNewtonianViscosityModels::Casson::Casson
 )
 :
     strainRateViscosityModel(viscosityProperties, viscosity, U),
-    m_("m", dimKinematicViscosity, 0),
-    tau0_("tau0", dimKinematicViscosity/dimTime, 0),
-    nuMin_("nuMin", dimKinematicViscosity, 0),
-    nuMax_("nuMax", dimKinematicViscosity, 0)
+    m_("m", dimensions::kinematicViscosity, 0),
+    tau0_("tau0", dimensions::kinematicViscosity/dimensions::time, 0),
+    nuMin_("nuMin", dimensions::kinematicViscosity, 0),
+    nuMax_("nuMax", dimensions::kinematicViscosity, 0)
 {
     read(viscosityProperties);
     correct();
@@ -109,7 +109,7 @@ nu
                    /max
                     (
                         strainRate,
-                        dimensionedScalar(dimless/dimTime, vSmall)
+                        dimensionedScalar(dimensions::rate, vSmall)
                     )
                 ) + sqrt(m_)
             )

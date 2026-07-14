@@ -56,7 +56,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F1
     tmp<volScalarField> CDkOmegaPlus = max
     (
         CDkOmega,
-        dimensionedScalar(dimless/sqr(dimTime), 1.0e-10)
+        dimensionedScalar(dimensions::turbulentOmega/dimensions::time, 1.0e-10)
     );
 
     tmp<volScalarField> arg1 = min
@@ -174,7 +174,8 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kSource() const
         new fvScalarMatrix
         (
             k_,
-            dimVolume*this->rho_.dimensions()*k_.dimensions()/dimTime
+            dimensions::volume*this->rho_.dimensions()
+           *k_.dimensions()/dimensions::time
         )
     );
 }
@@ -190,7 +191,8 @@ omegaSource() const
         new fvScalarMatrix
         (
             omega_,
-            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
+            dimensions::volume*this->rho_.dimensions()
+           *omega_.dimensions()/dimensions::time
         )
     );
 }
@@ -210,7 +212,8 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::Qsas
         new fvScalarMatrix
         (
             omega_,
-            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
+            dimensions::volume*this->rho_.dimensions()
+           *omega_.dimensions()/dimensions::time
         )
     );
 }

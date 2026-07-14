@@ -202,7 +202,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh_,
-                dimensionedScalar(dimDensity, 0)
+                dimensionedScalar(dimensions::density, 0)
             )
         );
     }

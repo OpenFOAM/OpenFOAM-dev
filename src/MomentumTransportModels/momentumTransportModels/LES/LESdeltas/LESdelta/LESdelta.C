@@ -54,7 +54,7 @@ Foam::LESdelta::LESdelta
             IOobject::NO_WRITE
         ),
         turbulence.mesh(),
-        dimensionedScalar(name, dimLength, small),
+        dimensionedScalar(name, dimensions::length, small),
         calculatedFvPatchScalarField::typeName
     )
 {}

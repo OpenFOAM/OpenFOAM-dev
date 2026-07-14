@@ -39,7 +39,7 @@ turbulentEpsilonFvScalarFieldSource
 )
 :
     fvScalarFieldSource(iF, dict),
-    mixingLength_(dict.lookup<scalar>("mixingLength", dimLength)),
+    mixingLength_(dict.lookup<scalar>("mixingLength", dimensions::length)),
     kName_(dict.lookupOrDefault<word>("k", "k")),
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09))
 {}

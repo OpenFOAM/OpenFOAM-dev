@@ -204,7 +204,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
         typedName("dTilda"),
         max
         (
-            dimensionedScalar(dimLength, small),
+            dimensionedScalar(dimensions::length, small),
             fHyb*(1 + fRestore*Psi)*this->y()
           + (1 - fHyb)*this->CDES_*Psi*this->delta()
         )

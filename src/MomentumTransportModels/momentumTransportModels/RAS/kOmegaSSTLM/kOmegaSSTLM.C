@@ -367,7 +367,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
     sigmaThetat_("sigmaThetat", this->typeDict(type), 2),
     lambdaErr_(this->typeDict(type).lookupOrDefault("lambdaErr", 1e-6)),
     maxLambdaIter_(this->typeDict(type).lookupOrDefault("maxLambdaIter", 10)),
-    deltaU_("deltaU", dimVelocity, small),
+    deltaU_("deltaU", dimensions::velocity, small),
 
     ReThetat_
     (

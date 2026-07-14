@@ -217,7 +217,7 @@ nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 )
 :
     nutUWallFunctionFvPatchScalarField(p, iF, dict),
-    Ks_("Ks", dimLength, dict, p.size()),
+    Ks_("Ks", dimensions::length, dict, p.size()),
     Cs_("Cs", dimless, dict, p.size())
 {}
 
