@@ -94,6 +94,7 @@ const Foam::dimensionSet Foam::dimensions::acceleration
     "acceleration",
     velocity/time
 );
+const Foam::dimensionSet Foam::dimensions::force("force", mass*acceleration);
 
 const Foam::dimensionSet Foam::dimensions::density("density", mass/volume);
 const Foam::dimensionSet Foam::dimensions::momentumDensity
@@ -101,7 +102,11 @@ const Foam::dimensionSet Foam::dimensions::momentumDensity
     "momentumDensity",
     momentum/volume
 );
-const Foam::dimensionSet Foam::dimensions::force("force", mass*acceleration);
+const Foam::dimensionSet Foam::dimensions::forceDensity
+(
+    "forceDensity",
+    force/volume
+);
 
 const Foam::dimensionSet Foam::dimensions::energy("energy", force*length);
 const Foam::dimensionSet Foam::dimensions::energyDensity
@@ -278,6 +283,11 @@ const Foam::dimensionSet Foam::dimensions::electricPotential
 (
     "electricPotential",
     power/current
+);
+const Foam::dimensionSet Foam::dimensions::electricalConductivity
+(
+    "electricalConductivity",
+    sqr(dimensions::current)/dimensions::length/dimensions::power
 );
 
 const Foam::dimensionSet Foam::dimensions::magneticFluxDensity

@@ -66,10 +66,11 @@ extern const dimensionSet rate;
 extern const dimensionSet velocity;
 extern const dimensionSet momentum;
 extern const dimensionSet acceleration;
+extern const dimensionSet force;
 
 extern const dimensionSet density;
 extern const dimensionSet momentumDensity;
-extern const dimensionSet force;
+extern const dimensionSet forceDensity;
 
 extern const dimensionSet energy;
 extern const dimensionSet energyDensity;
@@ -119,6 +120,7 @@ extern const dimensionSet heatFluxDensity;
 extern const dimensionSet charge;
 extern const dimensionSet chargeDensity;
 extern const dimensionSet electricPotential;
+extern const dimensionSet electricalConductivity;
 
 extern const dimensionSet magneticFluxDensity;
 extern const dimensionSet magneticFluxPressure;
