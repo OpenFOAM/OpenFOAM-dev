@@ -43,7 +43,7 @@ License
     FatalErrorInFunction                                                       \
         << "Incompatible dimensions for " << phi.name() << ": "                \
         << phi.dimensions() << nl                                              \
-        << "Dimensions should be " << dimensions::mass/dimensions::time        \
+        << "Dimensions should be " << dimensions::massFlux                     \
         << " or " << dimensions::volume/dimensions::time << exit(FatalError)
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -172,7 +172,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
         );
 
     // Solve for the potential and correct alphaPhi with the resulting flux
-    if (phi.dimensions() == dimensions::volume/dimensions::time)
+    if (phi.dimensions() == dimensions::volumetricFlux)
     {
         while (control.correctNonOrthogonal())
         {
@@ -191,7 +191,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
             }
         }
     }
-    else if (phi.dimensions() == dimensions::mass/dimensions::time)
+    else if (phi.dimensions() == dimensions::massFlux)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);

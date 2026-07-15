@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [heatFlux];
+dimensions      [heatFluxDensity];
 
 internalField   uniform 0;
 

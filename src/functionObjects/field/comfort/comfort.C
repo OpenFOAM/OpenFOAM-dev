@@ -242,10 +242,10 @@ Foam::functionObjects::comfort::comfort
     metabolicRate_
     (
         "metabolicRate",
-        dimensions::mass/pow3(dimensions::time),
+        dimensions::heatFluxDensity,
         0.8
     ),
-    extWork_("extWork", dimensions::mass/pow3(dimensions::time), 0),
+    extWork_("extWork", dimensions::heatFluxDensity, 0),
     TradSet_(false),
     Trad_("Trad", dimensions::temperature, 0),
     relHumidity_("relHumidity", dimless, 0.5),

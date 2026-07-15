@@ -232,7 +232,7 @@ bool Foam::functionObjects::scalarTransport::execute()
         Foam::fvConstraints::New(mesh_)
     );
 
-    if (phi.dimensions() == dimensions::volume/dimensions::time)
+    if (phi.dimensions() == dimensions::volumetricFlux)
     {
         if (MULES_)
         {
@@ -275,7 +275,7 @@ bool Foam::functionObjects::scalarTransport::execute()
             }
         }
     }
-    else if (phi.dimensions() == dimensions::mass/dimensions::time)
+    else if (phi.dimensions() == dimensions::massFlux)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
@@ -318,7 +318,7 @@ bool Foam::functionObjects::scalarTransport::execute()
             << "Incompatible dimensions for phi: " << phi.dimensions() << nl
             << "Dimensions should be " << dimensions::mass/dimensions::time
             << " or "
-            << dimensions::volume/dimensions::time << exit(FatalError);
+            << dimensions::volumetricFlux << exit(FatalError);
     }
 
     Info<< endl;

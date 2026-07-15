@@ -109,7 +109,7 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
         dict,
         readSpecies(coeffs(modelType, dict), false)
     ),
-    C_("C", dimensions::mass/dimensions::area/dimensions::time, NaN),
+    C_("C", dimensions::massFluxDensity, NaN),
     alpha1_(mesh().lookupObject<volScalarField>(alphaNames().first()))
 {
     readCoeffs(coeffs(dict));

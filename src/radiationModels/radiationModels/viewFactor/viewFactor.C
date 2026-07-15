@@ -276,7 +276,7 @@ Foam::radiationModels::viewFactor::viewFactor(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensions::heatFlux
+        dimensions::heatFluxDensity
     ),
     Fmatrix_(),
     CLU_(),
@@ -335,7 +335,7 @@ Foam::radiationModels::viewFactor::viewFactor
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensions::heatFlux
+        dimensions::heatFluxDensity
     ),
     Fmatrix_(),
     CLU_(),

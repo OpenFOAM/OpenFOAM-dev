@@ -94,7 +94,7 @@ void Foam::PatchCollisionDensity<CloudType>::write()
             this->owner().mesh()
         ),
         this->owner().mesh(),
-        dimensions::mass/dimensions::area/dimensions::time,
+        dimensions::massFluxDensity,
         z,
         (massCollisionDensity_ - massCollisionDensity0_)
        /(this->owner().mesh().time().value() - time0_)

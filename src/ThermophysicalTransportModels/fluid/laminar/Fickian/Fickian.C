@@ -363,7 +363,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
                 Y[0].mesh(),
                 dimensionedScalar
                 (
-                    dimensions::mass/dimensions::area/dimensions::time,
+                    dimensions::massFluxDensity,
                     0
                 )
             )
@@ -495,7 +495,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
             he.mesh(),
             dimensionedScalar
             (
-                dimensions::mass/dimensions::area/dimensions::time,
+                dimensions::massFluxDensity,
                 0
             )
         )

@@ -65,8 +65,8 @@ wallBoilingPhaseChangeRateFvPatchScalarField::propertyDimensions_
     &dimensions::length,
     &dimensions::rate,
     &dimensions::invArea,
-    &dimensions::heatFlux,
-    &dimensions::heatFlux
+    &dimensions::heatFluxDensity,
+    &dimensions::heatFluxDensity
 };
 
 }
@@ -114,8 +114,8 @@ wallBoilingPhaseChangeRateFvPatchScalarField
         dict,
         p.size()
     ),
-    qQuenching_("qQuenching", dimensions::heatFlux, dict, p.size()),
-    qEvaporative_("qEvaporative", dimensions::heatFlux, dict, p.size()),
+    qQuenching_("qQuenching", dimensions::heatFluxDensity, dict, p.size()),
+    qEvaporative_("qEvaporative", dimensions::heatFluxDensity, dict, p.size()),
     alphatLiquid_
     (
         "alphatLiquid",

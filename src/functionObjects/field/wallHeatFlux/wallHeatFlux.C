@@ -70,7 +70,7 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
         (
             type(),
             mesh_,
-            dimensionedScalar(dimensions::mass/pow3(dimensions::time), 0)
+            dimensionedScalar(dimensions::heatFluxDensity, 0)
         )
     );
 

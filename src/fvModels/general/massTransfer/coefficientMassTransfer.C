@@ -57,7 +57,7 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
 )
 :
     massTransfer(name, modelType, mesh, dict),
-    C_("C", dimensions::mass/dimensions::area/dimensions::time, NaN)
+    C_("C", dimensions::massFluxDensity, NaN)
 {
     readCoeffs(coeffs(dict));
 }

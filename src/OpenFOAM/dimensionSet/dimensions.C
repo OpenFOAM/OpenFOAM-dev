@@ -240,12 +240,29 @@ const Foam::dimensionSet Foam::dimensions::volumetricFlux
     "volumetricFlux",
     area*velocity
 );
+const Foam::dimensionSet Foam::dimensions::volumetricFluxDensity
+(
+    "volumetricFluxDensity",
+    volumetricFlux/area
+);
+
 const Foam::dimensionSet Foam::dimensions::massFlux
 (
     "massFlux",
     density*volumetricFlux
 );
-const Foam::dimensionSet Foam::dimensions::heatFlux("heatFlux", power/area);
+const Foam::dimensionSet Foam::dimensions::massFluxDensity
+(
+    "massFluxDensity",
+    massFlux/area
+);
+
+const Foam::dimensionSet Foam::dimensions::heatFlux("heatFlux", power);
+const Foam::dimensionSet Foam::dimensions::heatFluxDensity
+(
+    "heatFluxDensity",
+    heatFlux/area
+);
 
 const Foam::dimensionSet Foam::dimensions::charge
 (

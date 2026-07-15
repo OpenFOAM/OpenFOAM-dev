@@ -178,7 +178,7 @@ bool Foam::functionObjects::age::execute()
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);
 
-    if (phi.dimensions() == dimensions::mass/dimensions::time)
+    if (phi.dimensions() == dimensions::massFlux)
     {
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);

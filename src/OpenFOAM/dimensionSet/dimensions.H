@@ -108,8 +108,13 @@ extern const dimensionSet turbulentOmega;
 extern const dimensionSet turbulentViscosity;
 
 extern const dimensionSet volumetricFlux;
+extern const dimensionSet volumetricFluxDensity;
+
 extern const dimensionSet massFlux;
+extern const dimensionSet massFluxDensity;
+
 extern const dimensionSet heatFlux;
+extern const dimensionSet heatFluxDensity;
 
 extern const dimensionSet charge;
 extern const dimensionSet chargeDensity;

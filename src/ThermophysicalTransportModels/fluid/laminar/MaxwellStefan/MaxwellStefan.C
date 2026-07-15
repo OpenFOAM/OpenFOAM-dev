@@ -621,7 +621,7 @@ MaxwellStefan<BasicThermophysicalTransportModel>::q() const
                 Y[0].mesh(),
                 dimensionedScalar
                 (
-                    dimensions::mass/dimensions::area/dimensions::time,
+                    dimensions::massFluxDensity,
                     0
                 )
             )
@@ -757,7 +757,7 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divq
             he.mesh(),
             dimensionedScalar
             (
-                dimensions::mass/dimensions::area/dimensions::time,
+                dimensions::massFluxDensity,
                 0
             )
         )
@@ -825,7 +825,7 @@ tmp<surfaceScalarField> MaxwellStefan<BasicThermophysicalTransportModel>::j
                 Yi.mesh(),
                 dimensionedScalar
                 (
-                    dimensions::mass/dimensions::area/dimensions::time,
+                    dimensions::massFluxDensity,
                     0
                 )
             )

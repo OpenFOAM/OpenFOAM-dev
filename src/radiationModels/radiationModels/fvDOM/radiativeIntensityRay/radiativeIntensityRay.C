@@ -192,7 +192,7 @@ Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
             ILambda_.set
             (
                 lambdaI,
-                new volScalarField(IHeader, mesh_, dimensions::heatFlux)
+                new volScalarField(IHeader, mesh_, dimensions::heatFluxDensity)
             );
         }
         else
@@ -213,7 +213,7 @@ Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
                             IOobject::NO_WRITE
                         ),
                         mesh_,
-                        dimensions::heatFlux
+                        dimensions::heatFluxDensity
                     )
                 );
             }

@@ -89,7 +89,7 @@ Foam::Lagrangian::constantFluxCarrierTransfer::Sp
     if
     (
         flux_.dimensions()
-     == dimensions::mass/dimensions::area/dimensions::time
+     == dimensions::massFluxDensity
     )
     {
         assertCloud
@@ -231,14 +231,14 @@ Foam::Lagrangian::constantFluxCarrierTransfer::constantFluxCarrierTransfer
       ? dimensionedScalar
         (
             "volumeFlux",
-            dimensions::volume/dimensions::area/dimensions::time,
+            dimensions::volumetricFluxDensity,
             modelDict
         )
       : modelDict.found("massFlux")
       ? dimensionedScalar
         (
             "massFlux",
-            dimensions::mass/dimensions::area/dimensions::time,
+            dimensions::massFluxDensity,
             modelDict
         )
       : dimensionedScalar()
@@ -303,7 +303,7 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::calculate
        /flux_;
     if
     (
-        flux_.dimensions() == dimensions::mass/dimensions::area/dimensions::time
+        flux_.dimensions() == dimensions::massFluxDensity
     )
     {
         assertCloud
