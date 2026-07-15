@@ -79,7 +79,7 @@ Foam::kineticTheoryModels::viscosityModels::none::nu
             Theta.group()
         ),
         alpha1.mesh(),
-        dimensionedScalar(dimensions::area/dimensions::time, 0)
+        dimensionedScalar(dimensions::kinematicViscosity, 0)
     );
 }
 

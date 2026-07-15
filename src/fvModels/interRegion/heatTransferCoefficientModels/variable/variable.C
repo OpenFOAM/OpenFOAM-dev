@@ -89,7 +89,7 @@ Foam::fv::heatTransferCoefficientModels::variable::variable
         mesh,
         dimensionedScalar
         (
-            dimensions::power/dimensions::temperature/dimensions::area,
+            dimensions::heatFluxDensity/dimensions::temperature,
             0
         ),
         zeroGradientFvPatchScalarField::typeName

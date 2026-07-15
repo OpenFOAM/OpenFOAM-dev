@@ -113,7 +113,7 @@ bool Foam::functionObjects::phaseForces::execute()
                         mesh_,
                         dimensionedVector
                         (
-                            dimensions::force/dimensions::volume,
+                            dimensions::forceDensity,
                             Zero
                         )
                     )
@@ -140,7 +140,7 @@ bool Foam::functionObjects::phaseForces::execute()
                         mesh_,
                         dimensionedVector
                         (
-                            dimensions::force/dimensions::volume,
+                            dimensions::forceDensity,
                             Zero
                         )
                     )
@@ -163,7 +163,7 @@ bool Foam::functionObjects::phaseForces::execute()
                         mesh_,
                         dimensionedVector
                         (
-                            dimensions::force/dimensions::volume,
+                            dimensions::forceDensity,
                             Zero
                         )
                     )
@@ -196,7 +196,7 @@ bool Foam::functionObjects::phaseForces::execute()
                         mesh_,
                         dimensionedVector
                         (
-                            dimensions::force/dimensions::volume,
+                            dimensions::forceDensity,
                             Zero
                         )
                     )
@@ -229,7 +229,7 @@ bool Foam::functionObjects::phaseForces::execute()
                         mesh_,
                         dimensionedVector
                         (
-                            dimensions::force/dimensions::volume,
+                            dimensions::forceDensity,
                             Zero
                         )
                     )

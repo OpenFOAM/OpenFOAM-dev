@@ -49,7 +49,7 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimensions::energy/dimensions::temperature/dimensions::mass
+            dimensions::specificEntropy
         )
     ),
     CvCoeffs_

@@ -59,7 +59,7 @@ void Foam::fv::heatTransferCoefficientModels::function2::readCoeffs
             "htcFunc",
             dimensions::velocity,
             dimensions::velocity,
-            dimensions::power/dimensions::area/dimensions::temperature,
+            dimensions::heatFluxDensity/dimensions::temperature,
             dict
         ).ptr()
     );
@@ -92,7 +92,7 @@ Foam::fv::heatTransferCoefficientModels::function2::function2
         model.mesh(),
         dimensionedScalar
         (
-            dimensions::power/dimensions::temperature/dimensions::area,
+            dimensions::heatFluxDensity/dimensions::temperature,
             0
         ),
         zeroGradientFvPatchScalarField::typeName

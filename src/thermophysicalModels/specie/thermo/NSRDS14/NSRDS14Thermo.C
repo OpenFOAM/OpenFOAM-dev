@@ -51,7 +51,7 @@ Foam::NSRDS14Thermo<EquationOfState>::NSRDS14Thermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimensions::energy/dimensions::temperature/dimensions::mass
+            dimensions::specificEntropy
         )
     ),
     Tc_(subDict.lookup<scalar>("Tc", dimensions::temperature)),

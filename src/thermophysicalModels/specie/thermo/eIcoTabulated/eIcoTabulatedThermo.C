@@ -50,7 +50,7 @@ Foam::eIcoTabulatedThermo<EquationOfState>::eIcoTabulatedThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimensions::energy/dimensions::temperature/dimensions::mass
+            dimensions::specificEntropy
         )
     ),
     Cv_

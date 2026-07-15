@@ -211,7 +211,7 @@ inline void Foam::liquidProperties::readIfPresent
         dimensions::force/dimensions::length,
         dict
     );
-    readIfPresent(l.D_, "D", dimensions::area/dimensions::time, dict);
+    readIfPresent(l.D_, "D", dimensions::kinematicDiffusivity, dict);
 }
 
 
@@ -285,7 +285,7 @@ inline void Foam::liquidProperties::write
     write(l.kappa_, dimensions::thermalConductivity, os);
     write(l.kappag_, dimensions::thermalConductivity, os);
     write(l.sigma_, dimensions::force/dimensions::length, os);
-    write(l.D_, dimensions::area/dimensions::time, os);
+    write(l.D_, dimensions::kinematicDiffusivity, os);
 }
 
 

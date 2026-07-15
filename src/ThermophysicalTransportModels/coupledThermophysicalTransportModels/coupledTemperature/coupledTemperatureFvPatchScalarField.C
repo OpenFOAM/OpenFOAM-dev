@@ -124,7 +124,7 @@ coupledTemperatureFvPatchScalarField
       ? scalarField
         (
             "qrPrevious",
-            dimensions::power/dimensions::area,
+            dimensions::heatFluxDensity,
             dict,
             p.size()
         )
@@ -139,7 +139,7 @@ coupledTemperatureFvPatchScalarField
             iF.name(),
             "h",
             p,
-            dimensions::power/dimensions::area/dimensions::temperature,
+            dimensions::heatFluxDensity/dimensions::temperature,
             dict
         )
       : nullptr

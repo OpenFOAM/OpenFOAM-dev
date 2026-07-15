@@ -65,7 +65,7 @@ void Foam::fv::heatTransferCoefficientModels::constant::readCoeffs
             dimensionedScalar
             (
                 "htc",
-                dimensions::power/dimensions::temperature/dimensions::area,
+                dimensions::heatFluxDensity/dimensions::temperature,
                 dict
             );
         htcPtr_.clear();
@@ -75,7 +75,7 @@ void Foam::fv::heatTransferCoefficientModels::constant::readCoeffs
         htc_ = dimensionedScalar
         (
             "htc",
-            dimensions::power/dimensions::temperature/dimensions::area,
+            dimensions::heatFluxDensity/dimensions::temperature,
             NaN
         );
         htcPtr_.set(new volScalarField(htcIO, mesh_));
@@ -103,7 +103,7 @@ Foam::fv::heatTransferCoefficientModels::constant::constant
     htc_
     (
         "htc",
-        dimensions::power/dimensions::temperature/dimensions::area,
+        dimensions::heatFluxDensity/dimensions::temperature,
         NaN
     ),
     htcPtr_(nullptr)

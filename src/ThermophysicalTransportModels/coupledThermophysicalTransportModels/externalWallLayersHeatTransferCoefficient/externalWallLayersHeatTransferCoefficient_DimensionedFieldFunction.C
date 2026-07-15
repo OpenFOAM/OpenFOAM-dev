@@ -67,7 +67,7 @@ externalWallLayersHeatTransferCoefficient
         dict.lookup<scalar>
         (
             "h",
-            dimensions::power/dimensions::area/dimensions::temperature
+            dimensions::heatFluxDensity/dimensions::temperature
         )
     )
 {}

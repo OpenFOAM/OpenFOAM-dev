@@ -76,7 +76,7 @@ void Foam::fv::heatSource::readCoeffs(const dictionary& dict)
             (
                 "q",
                 mesh().time().userUnits(),
-                dimensions::power/dimensions::volume,
+                dimensions::powerDensity,
                 dict
             ).ptr()
         );

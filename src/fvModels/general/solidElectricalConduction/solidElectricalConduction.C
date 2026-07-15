@@ -77,7 +77,7 @@ void Foam::fv::solidElectricalConduction::readCoeffs(const dictionary& dict)
                 sigmaKey,
                 haveSigma ? sigmaKey : sigmaScalarKey,
                 mesh(),
-                sqr(dimensions::current)/dimensions::length/dimensions::power,
+                dimensions::electricalConductivity,
                 dict
             )
         );
@@ -91,7 +91,7 @@ void Foam::fv::solidElectricalConduction::readCoeffs(const dictionary& dict)
                 sigmaKey,
                 sigmaTensorKey,
                 mesh(),
-                sqr(dimensions::current)/dimensions::length/dimensions::power,
+                dimensions::electricalConductivity,
                 dict
             )
         );

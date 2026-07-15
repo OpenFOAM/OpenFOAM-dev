@@ -92,7 +92,7 @@ thermalBaffle1DFvPatchScalarField
         qs_ = scalarField
         (
             "qs",
-            dimensions::power/dimensions::area,
+            dimensions::heatFluxDensity,
             dict,
             p.size()
         );
@@ -103,7 +103,7 @@ thermalBaffle1DFvPatchScalarField
         qrPrevious_ = scalarField
         (
             "qrPrevious",
-            dimensions::power/dimensions::area,
+            dimensions::heatFluxDensity,
             dict,
             p.size()
         );

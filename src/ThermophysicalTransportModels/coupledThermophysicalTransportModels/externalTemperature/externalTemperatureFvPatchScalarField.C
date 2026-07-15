@@ -117,7 +117,7 @@ externalTemperatureFvPatchScalarField
         (
             "q",
             time().userUnits(),
-            dimensions::power/dimensions::area,
+            dimensions::heatFluxDensity,
             dict
         )
       : autoPtr<Function1<scalar>>()
@@ -130,7 +130,7 @@ externalTemperatureFvPatchScalarField
             iF.name(),
             "h",
             p,
-            dimensions::power/dimensions::area/dimensions::temperature,
+            dimensions::heatFluxDensity/dimensions::temperature,
             dict
         )
       : nullptr
@@ -164,7 +164,7 @@ externalTemperatureFvPatchScalarField
       ? scalarField
         (
             "qrPrevious",
-            dimensions::power/dimensions::area,
+            dimensions::heatFluxDensity,
             dict,
             p.size()
         )
@@ -515,7 +515,7 @@ void Foam::externalTemperatureFvPatchScalarField::write
         (
             os,
             time().userUnits(),
-            dimensions::power/dimensions::area,
+            dimensions::heatFluxDensity,
             q_()
         );
     }

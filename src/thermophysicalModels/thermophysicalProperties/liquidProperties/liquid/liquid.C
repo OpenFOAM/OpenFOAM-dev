@@ -82,7 +82,7 @@ Foam::liquid::liquid(const dictionary& dict)
     kappa_(New("kappa", dimensions::thermalConductivity, dict)),
     kappag_(New("kappag", dimensions::thermalConductivity, dict)),
     sigma_(New("sigma", dimensions::force/dimensions::length, dict)),
-    D_(New("D", dimensions::area/dimensions::time, dict)),
+    D_(New("D", dimensions::kinematicDiffusivity, dict)),
     hf_(h_->value(Tstd))
 {}
 

@@ -52,7 +52,7 @@ Foam::NSRDSThermo<EquationOfState>::NSRDSThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimensions::energy/dimensions::temperature/dimensions::mass
+            dimensions::specificEntropy
         )
     ),
     CpCoeffs_

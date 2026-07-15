@@ -233,7 +233,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     qr_
     (
@@ -246,7 +246,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     qem_
     (
@@ -259,7 +259,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     qin_
     (
@@ -272,7 +272,7 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     a_
     (
@@ -327,7 +327,7 @@ Foam::radiationModels::fvDOM::fvDOM
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     qr_
     (
@@ -340,7 +340,7 @@ Foam::radiationModels::fvDOM::fvDOM
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     qem_
     (
@@ -353,7 +353,7 @@ Foam::radiationModels::fvDOM::fvDOM
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     qin_
     (
@@ -366,7 +366,7 @@ Foam::radiationModels::fvDOM::fvDOM
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar(dimensions::power/dimensions::area, 0)
+        dimensionedScalar(dimensions::heatFluxDensity, 0)
     ),
     a_
     (
@@ -557,10 +557,10 @@ void Foam::radiationModels::fvDOM::updateBlackBodyEmission()
 
 void Foam::radiationModels::fvDOM::updateG()
 {
-    G_ = dimensionedScalar("zero",dimensions::power/dimensions::area, 0);
-    qr_ = dimensionedScalar("zero",dimensions::power/dimensions::area, 0);
-    qem_ = dimensionedScalar(dimensions::power/dimensions::area, 0);
-    qin_ = dimensionedScalar(dimensions::power/dimensions::area, 0);
+    G_ = dimensionedScalar("zero",dimensions::heatFluxDensity, 0);
+    qr_ = dimensionedScalar("zero",dimensions::heatFluxDensity, 0);
+    qem_ = dimensionedScalar(dimensions::heatFluxDensity, 0);
+    qin_ = dimensionedScalar(dimensions::heatFluxDensity, 0);
 
     forAll(IRay_, rayI)
     {

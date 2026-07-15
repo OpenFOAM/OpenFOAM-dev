@@ -71,7 +71,7 @@ Foam::solvers::incompressibleDriftFlux::surfaceTensionForce() const
     (
         "surfaceTensionForce",
         mesh,
-        dimensionedScalar(dimensions::force/dimensions::volume, 0)
+        dimensionedScalar(dimensions::forceDensity, 0)
     );
 }
 

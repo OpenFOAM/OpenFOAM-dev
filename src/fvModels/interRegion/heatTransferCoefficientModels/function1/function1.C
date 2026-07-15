@@ -57,7 +57,7 @@ void Foam::fv::heatTransferCoefficientModels::function1::readCoeffs
         (
             "htcFunc",
             dimensions::velocity,
-            dimensions::power/dimensions::area/dimensions::temperature,
+            dimensions::heatFluxDensity/dimensions::temperature,
             dict
         ).ptr()
     );
@@ -108,7 +108,7 @@ Foam::fv::heatTransferCoefficientModels::function1::htc() const
         (
             typedName("htc"),
             mesh_,
-            dimensions::power/dimensions::temperature/dimensions::area,
+            dimensions::heatFluxDensity/dimensions::temperature,
             zeroGradientFvPatchScalarField::typeName
         );
 
