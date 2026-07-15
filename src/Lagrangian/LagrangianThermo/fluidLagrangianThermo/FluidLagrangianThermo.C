@@ -97,7 +97,7 @@ Foam::FluidLagrangianThermo<BaseThermo>::psi
             injection,
             T.mesh(),
             "psi",
-            dimensions::density/dimensions::pressure,
+            dimensions::compressibility,
             &BaseThermo::mixtureType::thermoMixture,
             &BaseThermo::mixtureType::thermoMixtureType::psi,
             this->p(injection, T.mesh())(),

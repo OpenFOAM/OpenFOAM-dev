@@ -40,7 +40,10 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
         dict.subDict("transport").lookup<FixedPolynomial<scalar, PolySize>>
         (
             "kappaCoeffs<" + Foam::name(PolySize) + '>',
-            Function1s::unitSets({dimTemperature, dimThermalConductivity})
+            Function1s::unitSets
+            (
+                {dimensions::temperature, dimensions::thermalConductivity}
+            )
         )
     )
 {}

@@ -84,7 +84,7 @@ Foam::chemistryModels::Standard<ThermoType>::Standard
                     IOobject::NO_WRITE
                 ),
                 thermo.mesh(),
-                dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+                dimensionedScalar(dimensions::density/dimensions::time, 0)
             )
         );
     }
@@ -455,7 +455,11 @@ Foam::chemistryModels::Standard<ThermoType>::reactionRR
         (
             "RR:" + reactions_[reactioni].name(),
             this->mesh(),
-            dimensionedScalar(dimMoles/dimVolume/dimTime, 0)
+            dimensionedScalar
+            (
+                dimensions::moles/dimensions::volume/dimensions::time,
+                0
+            )
         );
     volScalarField::Internal& RR = tRR.ref();
 
@@ -524,7 +528,7 @@ Foam::chemistryModels::Standard<ThermoType>::specieReactionRR
             (
                 "RR:" + reactions_[reactioni].name() + ":" + Yvf_[i].name(),
                 this->mesh(),
-                dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+                dimensionedScalar(dimensions::density/dimensions::time, 0)
             ).ptr()
         );
     }
@@ -914,7 +918,7 @@ Foam::chemistryModels::Standard<ThermoType>::tc() const
         (
             "tc",
             this->mesh(),
-            dimensionedScalar(dimTime, small),
+            dimensionedScalar(dimensions::time, small),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -1008,7 +1012,7 @@ Foam::chemistryModels::Standard<ThermoType>::Qdot() const
         (
             "Qdot",
             this->mesh_,
-            dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
+            dimensionedScalar(dimensions::powerDensity, 0)
         )
     );
 

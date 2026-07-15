@@ -41,7 +41,7 @@ Foam::NSRDS<Specie>::NSRDS
     Specie(name, dict),
     a_(subDict.lookup<scalar>("a", units::none)),
     b_(subDict.lookup<scalar>("b", units::none)),
-    c_(subDict.lookup<scalar>("c", dimTemperature)),
+    c_(subDict.lookup<scalar>("c", dimensions::temperature)),
     d_(subDict.lookup<scalar>("d", dimless))
 {
     if (subDict.found("type"))

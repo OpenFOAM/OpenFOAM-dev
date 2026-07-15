@@ -37,8 +37,8 @@ Foam::linear<Specie>::linear
 )
 :
     Specie(name, dict),
-    psi_(subDict.lookup<scalar>("psi", dimDensity/dimPressure)),
-    rho0_(subDict.lookup<scalar>("rho0", dimDensity))
+    psi_(subDict.lookup<scalar>("psi", dimensions::compressibility)),
+    rho0_(subDict.lookup<scalar>("rho0", dimensions::density))
 {}
 
 

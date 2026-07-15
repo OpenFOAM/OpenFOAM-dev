@@ -42,7 +42,7 @@ Foam::eTabulatedThermo<EquationOfState>::eTabulatedThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
-            dimEnergy/dimMass
+            dimensions::specificEnergy
         )
     ),
     sf_
@@ -50,25 +50,37 @@ Foam::eTabulatedThermo<EquationOfState>::eTabulatedThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimEnergy/dimTemperature/dimMass
+            dimensions::energy/dimensions::temperature/dimensions::mass
         )
     ),
     es_
     (
         "es",
-        {dimPressure, dimTemperature, dimEnergy/dimMass},
+        {
+            dimensions::pressure,
+            dimensions::temperature,
+            dimensions::specificEnergy
+        },
         subDict.subDictBackwardsCompatible({"es", "Es"})
     ),
     Cp_
     (
         "Cp",
-        {dimPressure, dimTemperature, dimSpecificHeatCapacity},
+        {
+            dimensions::pressure,
+            dimensions::temperature,
+            dimensions::specificHeatCapacity
+        },
         subDict.subDict("Cp")
     ),
     Cv_
     (
         "Cv",
-        {dimPressure, dimTemperature, dimSpecificHeatCapacity},
+        {
+            dimensions::pressure,
+            dimensions::temperature,
+            dimensions::specificHeatCapacity
+        },
         subDict.subDict("Cv")
     )
 {}
@@ -100,15 +112,27 @@ void Foam::eTabulatedThermo<EquationOfState>::write
     writeEntry(os, "sf", sf_);
     {
         const delimitDictionary delimitEs(os, "es");
-        es_.write(os, {dimTemperature, dimSpecificHeatCapacity});
+        es_.write
+        (
+            os,
+            {dimensions::temperature, dimensions::specificHeatCapacity}
+        );
     }
     {
         const delimitDictionary delimitCp(os, "Cp");
-        Cp_.write(os, {dimTemperature, dimSpecificHeatCapacity});
+        Cp_.write
+        (
+            os,
+            {dimensions::temperature, dimensions::specificHeatCapacity}
+        );
     }
     {
         const delimitDictionary delimitCv(os, "Cv");
-        Cv_.write(os, {dimTemperature, dimSpecificHeatCapacity});
+        Cv_.write
+        (
+            os,
+            {dimensions::temperature, dimensions::specificHeatCapacity}
+        );
     }
 }
 

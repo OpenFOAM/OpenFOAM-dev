@@ -45,7 +45,7 @@ uniformFixedEnergyTemperatureFvScalarFieldSource
         (
             "uniformHe",
             time().userUnits(),
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             dict
         )
     )
@@ -146,7 +146,7 @@ void Foam::uniformFixedEnergyTemperatureFvScalarFieldSource::write
     (
         os,
         time().userUnits(),
-        dimEnergy/dimMass,
+        dimensions::specificEnergy,
         uniformHe_()
     );
 }

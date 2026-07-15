@@ -37,8 +37,12 @@ Foam::sutherlandTransport<Thermo>::sutherlandTransport
 )
 :
     Thermo(thermo),
-    As_(subDict.lookup<scalar>("As", dimDynamicViscosity/sqrt(dimTemperature))),
-    Ts_(subDict.lookup<scalar>("Ts", dimTemperature))
+    As_(subDict.lookup<scalar>
+    (
+        "As",
+        dimensions::dynamicViscosity/sqrt(dimensions::temperature))
+    ),
+    Ts_(subDict.lookup<scalar>("Ts", dimensions::temperature))
 {}
 
 

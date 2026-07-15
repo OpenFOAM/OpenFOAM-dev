@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,12 +49,12 @@ inline Foam::ArrheniusReactionRate::ArrheniusReactionRate
 )
 :
     beta_(dict.lookup<scalar>("beta", dimless)),
-    A_(dict.lookup<scalar>("A", dims/pow(dimTemperature, beta_))),
+    A_(dict.lookup<scalar>("A", dims/pow(dimensions::temperature, beta_))),
     Ta_
     (
         dict.found("Ta") || !dict.found("Ea")
-      ? dict.lookup<scalar>("Ta", dimTemperature)
-      : dict.lookup<scalar>("Ea", dimEnergy/dimMoles)
+      ? dict.lookup<scalar>("Ta", dimensions::temperature)
+      : dict.lookup<scalar>("Ea", dimensions::energy/dimensions::moles)
        /constant::physicoChemical::RR.value()
     )
 {}

@@ -38,13 +38,13 @@ Foam::hConstThermo<EquationOfState>::hConstThermo
 )
 :
     EquationOfState(name, dict),
-    Cp_(subDict.lookup<scalar>("Cp", dimSpecificHeatCapacity)),
+    Cp_(subDict.lookup<scalar>("Cp", dimensions::specificHeatCapacity)),
     hf_
     (
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
-            dimEnergy/dimMass
+            dimensions::specificEnergy
         )
     ),
     Tref_
@@ -52,7 +52,7 @@ Foam::hConstThermo<EquationOfState>::hConstThermo
         subDict.lookupOrDefault<scalar>
         (
             "Tref",
-            dimTemperature,
+            dimensions::temperature,
             constant::thermodynamic::Tstd
         )
     ),
@@ -61,7 +61,7 @@ Foam::hConstThermo<EquationOfState>::hConstThermo
         subDict.lookupOrDefaultBackwardsCompatible<scalar>
         (
             {"hsRef", "Hsref"},
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             0
         )
     )

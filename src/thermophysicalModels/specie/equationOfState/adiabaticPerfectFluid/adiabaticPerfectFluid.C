@@ -37,10 +37,10 @@ Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
 )
 :
     Specie(name, dict),
-    p0_(subDict.lookup<scalar>("p0", dimPressure)),
-    rho0_(subDict.lookup<scalar>("rho0", dimDensity)),
+    p0_(subDict.lookup<scalar>("p0", dimensions::pressure)),
+    rho0_(subDict.lookup<scalar>("rho0", dimensions::density)),
     gamma_(subDict.lookup<scalar>("gamma", dimless)),
-    B_(subDict.lookup<scalar>("B", dimPressure))
+    B_(subDict.lookup<scalar>("B", dimensions::pressure))
 {}
 
 

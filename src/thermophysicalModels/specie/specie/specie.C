@@ -45,7 +45,10 @@ Foam::specie::specie
 :
     name_(name),
     Y_(subDict.lookupOrDefault("massFraction", dimless, scalar(1))),
-    molWeight_(subDict.lookup<scalar>("molWeight", dimMass/dimMoles))
+    molWeight_
+    (
+        subDict.lookup<scalar>("molWeight", dimensions::mass/dimensions::moles)
+    )
 {}
 
 

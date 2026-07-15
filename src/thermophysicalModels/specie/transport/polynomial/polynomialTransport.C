@@ -41,7 +41,10 @@ Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
         subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
             "muCoeffs<" + Foam::name(PolySize) + '>',
-            Function1s::unitSets({dimTemperature, dimDynamicViscosity})
+            Function1s::unitSets
+            (
+                {dimensions::temperature, dimensions::dynamicViscosity}
+            )
         )
     ),
     kappaCoeffs_
@@ -49,7 +52,10 @@ Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
         subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
             "kappaCoeffs<" + Foam::name(PolySize) + '>',
-            Function1s::unitSets({dimTemperature, dimThermalConductivity})
+            Function1s::unitSets
+            (
+                {dimensions::temperature, dimensions::thermalConductivity}
+            )
         )
     )
 {}

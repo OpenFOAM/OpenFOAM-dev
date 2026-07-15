@@ -43,7 +43,7 @@ Foam::NSRDS14Thermo<EquationOfState>::NSRDS14Thermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
-            dimEnergy/dimMass
+            dimensions::specificEnergy
         )
     ),
     sf_
@@ -51,14 +51,14 @@ Foam::NSRDS14Thermo<EquationOfState>::NSRDS14Thermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimEnergy/dimTemperature/dimMass
+            dimensions::energy/dimensions::temperature/dimensions::mass
         )
     ),
-    Tc_(subDict.lookup<scalar>("Tc", dimTemperature)),
-    a_(subDict.lookup<scalar>("a", sqrt(dimSpecificHeatCapacity))),
-    b_(subDict.lookup<scalar>("b", dimSpecificHeatCapacity)),
-    c_(subDict.lookup<scalar>("c", sqrt(dimSpecificHeatCapacity))),
-    d_(subDict.lookup<scalar>("d", sqrt(dimSpecificHeatCapacity))),
+    Tc_(subDict.lookup<scalar>("Tc", dimensions::temperature)),
+    a_(subDict.lookup<scalar>("a", sqrt(dimensions::specificHeatCapacity))),
+    b_(subDict.lookup<scalar>("b", dimensions::specificHeatCapacity)),
+    c_(subDict.lookup<scalar>("c", sqrt(dimensions::specificHeatCapacity))),
+    d_(subDict.lookup<scalar>("d", sqrt(dimensions::specificHeatCapacity))),
     p_({a_*a_, b_, -2*a_*c_, -a_*d_, -c_*c_/3, -0.5*c_*d_, -0.2*d_*d_}),
     hsRef_(p_.integral(max(1 - constant::thermodynamic::Tstd/Tc_, small)))
 {

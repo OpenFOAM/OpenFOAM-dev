@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::constSolidThermo::constSolidThermo
 )
 :
     PhysicalPropertiesThermo<solidThermo::composite>(mesh, phaseName),
-    Cv_(readProperty<scalar>("Cv", dimEnergy/dimMass/dimTemperature)),
+    Cv_(readProperty<scalar>("Cv", dimensions::specificHeatCapacity)),
     e_
     (
         IOobject

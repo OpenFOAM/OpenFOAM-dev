@@ -37,15 +37,15 @@ Foam::ePowerThermo<EquationOfState>::ePowerThermo
 )
 :
     EquationOfState(name, dict),
-    c0_(subDict.lookup<scalar>("c0", dimSpecificHeatCapacity)),
+    c0_(subDict.lookup<scalar>("c0", dimensions::specificHeatCapacity)),
     n0_(subDict.lookup<scalar>("n0", dimless)),
-    Tref_(subDict.lookup<scalar>("Tref", dimTemperature)),
+    Tref_(subDict.lookup<scalar>("Tref", dimensions::temperature)),
     hf_
     (
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
-            dimEnergy/dimMass
+            dimensions::specificEnergy
         )
     )
 {}

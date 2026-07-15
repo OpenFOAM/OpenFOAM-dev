@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -263,7 +263,10 @@ Foam::dimensionSet Foam::Reaction<ThermoType>::kfDims() const
     {
         order += lhs()[i].exponent;
     }
-    return pow(dimMoles/dimVolume, 1 - order)/dimTime;
+
+    return
+        pow(dimensions::moles/dimensions::volume, 1 - order)
+       /dimensions::time;
 }
 
 
@@ -275,7 +278,10 @@ Foam::dimensionSet Foam::Reaction<ThermoType>::krDims() const
     {
         order += rhs()[i].exponent;
     }
-    return pow(dimMoles/dimVolume, 1 - order)/dimTime;
+
+    return
+        pow(dimensions::moles/dimensions::volume, 1 - order)
+       /dimensions::time;
 }
 
 

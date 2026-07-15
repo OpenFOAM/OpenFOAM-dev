@@ -37,8 +37,8 @@ Foam::perfectFluid<Specie>::perfectFluid
 )
 :
     Specie(name, dict),
-    R_(subDict.lookup<scalar>("R", dimSpecificHeatCapacity)),
-    rho0_(subDict.lookup<scalar>("rho0", dimDensity))
+    R_(subDict.lookup<scalar>("R", dimensions::specificHeatCapacity)),
+    rho0_(subDict.lookup<scalar>("rho0", dimensions::density))
 {}
 
 

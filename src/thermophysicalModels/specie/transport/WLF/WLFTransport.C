@@ -37,10 +37,10 @@ Foam::WLFTransport<Thermo>::WLFTransport
 )
 :
     Thermo(name, dict),
-    mu0_(subDict.lookup<scalar>("mu0", dimDynamicViscosity)),
-    Tr_(subDict.lookup<scalar>("Tr", dimTemperature)),
+    mu0_(subDict.lookup<scalar>("mu0", dimensions::dynamicViscosity)),
+    Tr_(subDict.lookup<scalar>("Tr", dimensions::temperature)),
     C1_(subDict.lookup<scalar>("C1", dimless)),
-    C2_(subDict.lookup<scalar>("C2", dimTemperature)),
+    C2_(subDict.lookup<scalar>("C2", dimensions::temperature)),
     rPr_(1.0/subDict.lookup<scalar>("Pr", dimless))
 {}
 

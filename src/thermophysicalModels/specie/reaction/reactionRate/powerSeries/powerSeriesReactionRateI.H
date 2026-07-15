@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ inline Foam::powerSeriesReactionRate::powerSeriesReactionRate
 )
 :
     beta_(dict.lookup<scalar>("beta", dimless)),
-    A_(dict.lookup<scalar>("A", dims/pow(dimTemperature, beta_))),
+    A_(dict.lookup<scalar>("A", dims/pow(dimensions::temperature, beta_))),
     coeffs_(dict.lookup("coeffs"))
 {}
 

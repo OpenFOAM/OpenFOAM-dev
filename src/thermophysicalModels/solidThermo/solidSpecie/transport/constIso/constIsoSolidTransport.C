@@ -41,7 +41,7 @@ Foam::constIsoSolidTransport<Thermo>::constIsoSolidTransport
         dict.subDict("transport").lookup<scalar>
         (
             "kappa",
-            dimThermalConductivity
+            dimensions::thermalConductivity
         )
     )
 {}

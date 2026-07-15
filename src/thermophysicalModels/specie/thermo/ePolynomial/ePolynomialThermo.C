@@ -41,7 +41,7 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
-            dimEnergy/dimMass
+            dimensions::specificEnergy
         )
     ),
     sf_
@@ -49,7 +49,7 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimEnergy/dimTemperature/dimMass
+            dimensions::energy/dimensions::temperature/dimensions::mass
         )
     ),
     CvCoeffs_
@@ -57,7 +57,10 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
         subDict.lookup<FixedLaurentPolynomial<scalar, 0, PolySize>>
         (
             "CvCoeffs<" + Foam::name(PolySize) + '>',
-            Function1s::unitSets({dimTemperature, dimSpecificHeatCapacity})
+            Function1s::unitSets
+            (
+                {dimensions::temperature, dimensions::specificHeatCapacity}
+            )
         )
     ),
     esRef_(CvCoeffs_.integral(constant::thermodynamic::Tstd)),

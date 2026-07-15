@@ -40,7 +40,7 @@ Foam::constTransport<Thermo>::constTransport
 {
     const dictionary& transportDict = dict.subDict("transport");
 
-    mu_ = transportDict.lookup<scalar>("mu", dimDynamicViscosity);
+    mu_ = transportDict.lookup<scalar>("mu", dimensions::dynamicViscosity);
 
     const bool foundPr = transportDict.found("Pr");
     const bool foundKappa = transportDict.found("kappa");
@@ -60,7 +60,7 @@ Foam::constTransport<Thermo>::constTransport
     kappa_ =
         constPr_
       ? NaN
-      : transportDict.lookup<scalar>("kappa", dimThermalConductivity);
+      : transportDict.lookup<scalar>("kappa", dimensions::thermalConductivity);
 }
 
 

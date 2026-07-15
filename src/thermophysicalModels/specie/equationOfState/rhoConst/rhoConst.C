@@ -32,7 +32,14 @@ template<class Specie>
 Foam::rhoConst<Specie>::rhoConst(const word& name, const dictionary& dict)
 :
     Specie(name, dict),
-    rho_(dict.subDict("equationOfState").lookup<scalar>("rho", dimDensity))
+    rho_
+    (
+        dict.subDict("equationOfState").lookup<scalar>
+        (
+            "rho",
+            dimensions::density
+        )
+    )
 {}
 
 

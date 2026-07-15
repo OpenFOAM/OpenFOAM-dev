@@ -43,7 +43,7 @@ Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
         >
         (
             "rhoCoeffs<" + Foam::name(PolySize) + '>',
-            Function1s::unitSets({dimTemperature, dimDensity})
+            Function1s::unitSets({dimensions::temperature, dimensions::density})
         )
     )
 {}

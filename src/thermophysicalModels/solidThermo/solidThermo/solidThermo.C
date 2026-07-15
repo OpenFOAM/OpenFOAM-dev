@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,12 @@ Foam::solidThermo::implementation::implementation
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar(phasePropertyName("p", phaseName), dimPressure, NaN)
+        dimensionedScalar
+        (
+            phasePropertyName("p", phaseName),
+            dimensions::pressure,
+            NaN
+        )
     )
 {}
 

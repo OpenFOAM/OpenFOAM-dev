@@ -45,7 +45,7 @@ uniformInletOutletEnergyTemperatureFvScalarFieldSource
         (
             "uniformInletHe",
             time().userUnits(),
-            dimEnergy/dimMass,
+            dimensions::specificEnergy,
             dict
         )
     )
@@ -140,7 +140,7 @@ void Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::write
     (
         os,
         time().userUnits(),
-        dimEnergy/dimMass,
+        dimensions::specificEnergy,
         uniformInletHe_()
     );
 }

@@ -37,9 +37,9 @@ Foam::Boussinesq<Specie>::Boussinesq
 )
 :
     Specie(name, dict),
-    rho0_(subDict.lookup<scalar>("rho0", dimDensity)),
-    T0_(subDict.lookup<scalar>("T0", dimTemperature)),
-    beta_(subDict.lookup<scalar>("beta", inv(dimTemperature)))
+    rho0_(subDict.lookup<scalar>("rho0", dimensions::density)),
+    T0_(subDict.lookup<scalar>("T0", dimensions::temperature)),
+    beta_(subDict.lookup<scalar>("beta", inv(dimensions::temperature)))
 {}
 
 

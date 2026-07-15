@@ -45,7 +45,12 @@ Foam::NSRDSTransport<Thermo>::NSRDSTransport
     muC_(muDict.lookup<scalar>("c", units::none)),
     muD_(muDict.lookup<scalar>("d", units::none)),
     muE_(muDict.lookup<scalar>("e", units::none)),
-    kappaCoeffs_("abcde", {dimTemperature, dimThermalConductivity}, kappaDict)
+    kappaCoeffs_
+    (
+        "abcde",
+        {dimensions::temperature, dimensions::thermalConductivity},
+        kappaDict
+    )
 {
     if (muDict.found("type"))
     {
@@ -116,7 +121,12 @@ void Foam::NSRDSTransport<Thermo>::write(Ostream& os) const
         )
     );
     const delimitDictionary delimitKappa(os, "kappa");
-    kappaCoeffs_.write("abcde", {dimTemperature, dimThermalConductivity}, os);
+    kappaCoeffs_.write
+    (
+        "abcde",
+        {dimensions::temperature, dimensions::thermalConductivity},
+        os
+    );
 }
 
 

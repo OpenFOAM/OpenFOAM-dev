@@ -87,7 +87,7 @@ Foam::fluidLagrangianThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("NaN", dimensions::density/dimensions::pressure, NaN),
+        dimensionedScalar("NaN", dimensions::compressibility, NaN),
         wordList
         (
             mesh.boundary().size(),

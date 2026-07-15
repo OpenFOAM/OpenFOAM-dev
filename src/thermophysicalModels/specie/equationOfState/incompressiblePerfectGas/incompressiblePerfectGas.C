@@ -36,7 +36,14 @@ Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 )
 :
     Specie(name, dict),
-    pRef_(dict.subDict("equationOfState").lookup<scalar>("pRef", dimPressure))
+    pRef_
+    (
+        dict.subDict("equationOfState").lookup<scalar>
+        (
+            "pRef",
+            dimensions::pressure
+        )
+    )
 {}
 
 

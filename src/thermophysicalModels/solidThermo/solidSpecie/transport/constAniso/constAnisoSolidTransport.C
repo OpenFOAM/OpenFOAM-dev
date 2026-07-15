@@ -41,7 +41,7 @@ Foam::constAnisoSolidTransport<Thermo>::constAnisoSolidTransport
         dict.subDict("transport").lookup<vector>
         (
             "kappa",
-            dimThermalConductivity
+            dimensions::thermalConductivity
         )
     )
 {}

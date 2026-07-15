@@ -40,13 +40,13 @@ Foam::icoTabulatedTransport<Thermo>::icoTabulatedTransport
     mu_
     (
         "mu",
-        {dimTemperature, dimDynamicViscosity},
+        {dimensions::temperature, dimensions::dynamicViscosity},
         subDict.subDict("mu")
     ),
     kappa_
     (
         "kappa",
-        {dimTemperature, dimThermalConductivity},
+        {dimensions::temperature, dimensions::thermalConductivity},
         subDict.subDict("kappa")
     )
 {}
@@ -73,11 +73,15 @@ void Foam::icoTabulatedTransport<Thermo>::write(Ostream& os) const
     const delimitDictionary delimit(os, "transport");
     {
         const delimitDictionary delimitMu(os, "mu");
-        mu_.write(os, {dimTemperature, dimDynamicViscosity});
+        mu_.write(os, {dimensions::temperature, dimensions::dynamicViscosity});
     }
     {
         const delimitDictionary delimitKappa(os, "kappa");
-        kappa_.write(os, {dimTemperature, dimThermalConductivity});
+        kappa_.write
+        (
+            os,
+            {dimensions::temperature, dimensions::thermalConductivity}
+        );
     }
 }
 

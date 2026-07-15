@@ -65,9 +65,9 @@ Foam::janafThermo<EquationOfState>::janafThermo
 )
 :
     EquationOfState(name, dict),
-    Tlow_(subDict.lookup<scalar>("Tlow", dimTemperature)),
-    Thigh_(subDict.lookup<scalar>("Thigh", dimTemperature)),
-    Tcommon_(subDict.lookup<scalar>("Tcommon", dimTemperature)),
+    Tlow_(subDict.lookup<scalar>("Tlow", dimensions::temperature)),
+    Thigh_(subDict.lookup<scalar>("Thigh", dimensions::temperature)),
+    Tcommon_(subDict.lookup<scalar>("Tcommon", dimensions::temperature)),
     highCpCoeffs_(subDict.lookup<coeffArray>("highCpCoeffs", units::none)),
     lowCpCoeffs_(subDict.lookup<coeffArray>("lowCpCoeffs", units::none))
 {

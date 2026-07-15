@@ -42,7 +42,7 @@ Foam::hIcoTabulatedThermo<EquationOfState>::hIcoTabulatedThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
-            dimEnergy/dimMass
+            dimensions::specificEnergy
         )
     ),
     sf_
@@ -50,13 +50,13 @@ Foam::hIcoTabulatedThermo<EquationOfState>::hIcoTabulatedThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimEnergy/dimTemperature/dimMass
+            dimensions::energy/dimensions::temperature/dimensions::mass
         )
     ),
     Cp_
     (
         "Cp",
-        {dimTemperature, dimSpecificHeatCapacity},
+        {dimensions::temperature, dimensions::specificHeatCapacity},
         subDict.subDict("Cp")
     )
 {}
@@ -87,7 +87,7 @@ void Foam::hIcoTabulatedThermo<EquationOfState>::write
     writeEntry(os, "hf", hf_);
     writeEntry(os, "sf", sf_);
     const delimitDictionary delimitCp(os, "Cp");
-    Cp_.write(os, {dimTemperature, dimSpecificHeatCapacity});
+    Cp_.write(os, {dimensions::temperature, dimensions::specificHeatCapacity});
 }
 
 

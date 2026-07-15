@@ -90,7 +90,7 @@ bool Foam::functionObjects::massFractions::execute()
     const PtrList<volScalarField>& Y = thermo.Y();
 
     // One-mole constant for conversions
-    static const dimensionedScalar oneMole(dimMoles, 1);
+    static const dimensionedScalar oneMole(dimensions::moles, 1);
 
     // Construct lists of specie molar mass, fields of specie mass, and a field
     // of total mass
@@ -100,7 +100,7 @@ bool Foam::functionObjects::massFractions::execute()
     (
         IOobject("mTotal", time_.name(), mesh_),
         mesh_,
-        dimensionedScalar(dimMass, 0)
+        dimensionedScalar(dimensions::mass, 0)
     );
     bool fromMoleFractions = false, fromMoles = false;
     forAll(Y, i)

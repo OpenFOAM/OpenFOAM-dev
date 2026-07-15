@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,13 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::liquid::New
 {
     if (dict.isDict(name))
     {
-        return Function1<scalar>::New(name, dimTemperature, dims, dict);
+        return Function1<scalar>::New
+        (
+            name,
+            dimensions::temperature,
+            dims,
+            dict
+        );
     }
     else
     {
@@ -64,19 +70,19 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::liquid::New
 Foam::liquid::liquid(const dictionary& dict)
 :
     liquidProperties(dict),
-    rho_(New("rho", dimDensity, dict)),
-    pv_(New("pv", dimPressure, dict)),
-    hl_(New("hl", dimEnergy/dimMass, dict)),
-    Cp_(New("Cp", dimSpecificHeatCapacity, dict)),
-    h_(New("h", dimEnergy/dimMass, dict)),
-    Cpg_(New("Cpg", dimSpecificHeatCapacity, dict)),
-    B_(New("B", dimVolume/dimMass, dict)),
-    mu_(New("mu", dimDynamicViscosity, dict)),
-    mug_(New("mug", dimDynamicViscosity, dict)),
-    kappa_(New("kappa", dimThermalConductivity, dict)),
-    kappag_(New("kappag", dimThermalConductivity, dict)),
-    sigma_(New("sigma", dimForce/dimLength, dict)),
-    D_(New("D", dimArea/dimTime, dict)),
+    rho_(New("rho", dimensions::density, dict)),
+    pv_(New("pv", dimensions::pressure, dict)),
+    hl_(New("hl", dimensions::specificEnergy, dict)),
+    Cp_(New("Cp", dimensions::specificHeatCapacity, dict)),
+    h_(New("h", dimensions::specificEnergy, dict)),
+    Cpg_(New("Cpg", dimensions::specificHeatCapacity, dict)),
+    B_(New("B", dimensions::volume/dimensions::mass, dict)),
+    mu_(New("mu", dimensions::dynamicViscosity, dict)),
+    mug_(New("mug", dimensions::dynamicViscosity, dict)),
+    kappa_(New("kappa", dimensions::thermalConductivity, dict)),
+    kappag_(New("kappag", dimensions::thermalConductivity, dict)),
+    sigma_(New("sigma", dimensions::force/dimensions::length, dict)),
+    D_(New("D", dimensions::area/dimensions::time, dict)),
     hf_(h_->value(Tstd))
 {}
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ Foam::FluidMulticomponentThermo<BaseThermo>::mui
     return this->volScalarFieldPropertyi
     (
         "mu",
-        dimMass/dimLength/dimTime,
+        dimensions::dynamicViscosity,
         &BaseThermo::mixtureType::thermoType::mu,
         speciei,
         p,

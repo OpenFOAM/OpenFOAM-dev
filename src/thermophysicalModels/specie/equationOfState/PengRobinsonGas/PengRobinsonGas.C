@@ -39,10 +39,10 @@ Foam::PengRobinsonGas<Specie>::PengRobinsonGas
 )
 :
     Specie(name, dict),
-    Tc_(subDict.lookup<scalar>("Tc", dimTemperature)),
-    Vc_(subDict.lookup<scalar>("Vc", dimVolume/dimMoles)),
+    Tc_(subDict.lookup<scalar>("Tc", dimensions::temperature)),
+    Vc_(subDict.lookup<scalar>("Vc", dimensions::volume/dimensions::moles)),
     Zc_(1.0),
-    Pc_(subDict.lookup<scalar>("Pc", dimPressure)),
+    Pc_(subDict.lookup<scalar>("Pc", dimensions::pressure)),
     omega_(subDict.lookup<scalar>("omega", dimless))
 {
     Zc_ = Pc_*Vc_/(constant::thermodynamic::RR*Tc_);

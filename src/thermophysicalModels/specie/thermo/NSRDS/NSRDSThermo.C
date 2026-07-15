@@ -44,7 +44,7 @@ Foam::NSRDSThermo<EquationOfState>::NSRDSThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"hf", "Hf"},
-            dimEnergy/dimMass
+            dimensions::specificEnergy
         )
     ),
     sf_
@@ -52,10 +52,15 @@ Foam::NSRDSThermo<EquationOfState>::NSRDSThermo
         subDict.lookupBackwardsCompatible<scalar>
         (
             {"sf", "Sf"},
-            dimEnergy/dimTemperature/dimMass
+            dimensions::energy/dimensions::temperature/dimensions::mass
         )
     ),
-    CpCoeffs_("abcde", {dimTemperature, dimSpecificHeatCapacity}, subDict),
+    CpCoeffs_
+    (
+        "abcde",
+        {dimensions::temperature, dimensions::specificHeatCapacity},
+        subDict
+    ),
     hsRef_(CpCoeffs_.integral(constant::thermodynamic::Tstd)),
     sRef_(CpCoeffs_.byX().integral(constant::thermodynamic::Tstd))
 {
@@ -99,7 +104,12 @@ void Foam::NSRDSThermo<EquationOfState>::write
     const delimitDictionary delimit(os, "thermodynamics");
     writeEntry(os, "hf", hf_);
     writeEntry(os, "sf", sf_);
-    CpCoeffs_.write("abcde", {dimTemperature, dimSpecificHeatCapacity}, os);
+    CpCoeffs_.write
+    (
+        "abcde",
+        {dimensions::temperature, dimensions::specificHeatCapacity},
+        os
+    );
 }
 
 

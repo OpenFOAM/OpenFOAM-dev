@@ -39,7 +39,7 @@ Foam::rhoTabulated<Specie>::rhoTabulated
     rho_
     (
         "rho",
-        {dimPressure, dimTemperature, dimDensity},
+        {dimensions::pressure, dimensions::temperature, dimensions::density},
         dict.subDict("equationOfState").subDict("rho")
     )
 {}
@@ -53,7 +53,11 @@ void Foam::rhoTabulated<Specie>::write(Ostream& os) const
     Specie::write(os);
 
     const delimitDictionary dlmt(os, "equationOfState"), dlmtRho(os, "rho");
-    rho_.write(os, {dimPressure, dimTemperature, dimDensity});
+    rho_.write
+    (
+        os,
+        {dimensions::pressure, dimensions::temperature, dimensions::density}
+    );
 }
 
 

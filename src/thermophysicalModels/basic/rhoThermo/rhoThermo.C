@@ -45,7 +45,7 @@ Foam::rhoThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimDensity,
+        dimensions::density,
         fvPatchField<scalar>::calculatedType()
     )
 {}

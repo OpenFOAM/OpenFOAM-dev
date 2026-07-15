@@ -145,7 +145,7 @@ inline void Foam::liquidProperties::readIfPresent
 {
     if (dict.found(name))
     {
-        f = Func(name, {dimTemperature, dims}, dict.subDict(name));
+        f = Func(name, {dimensions::temperature, dims}, dict.subDict(name));
     }
 }
 
@@ -162,7 +162,12 @@ inline void Foam::liquidProperties::readIfPresent
 {
     if (dict.found(name))
     {
-        f = Func(name, {dimTemperature, dimPressure, dims}, dict.subDict(name));
+        f = Func
+        (
+            name,
+            {dimensions::temperature, dimensions::pressure, dims},
+            dict.subDict(name)
+        );
     }
 }
 
@@ -188,19 +193,25 @@ inline void Foam::liquidProperties::readIfPresent
 )
 {
     l.liquidProperties::readIfPresent(dict);
-    readIfPresent(l.rho_, "rho", dimDensity, dict);
-    readIfPresent(l.pv_, "pv", dimPressure, dict);
-    readIfPresent(l.hl_, "hl", dimEnergy/dimMass, dict);
-    readIfPresent(l.Cp_, "Cp", dimSpecificHeatCapacity, dict);
-    readIfPresent(l.h_, "h", dimEnergy/dimMass, dict);
-    readIfPresent(l.Cpg_, "Cpg", dimSpecificHeatCapacity, dict);
-    readIfPresent(l.B_, "B", dimVolume/dimMass, dict);
-    readIfPresent(l.mu_, "mu", dimDynamicViscosity, dict);
-    readIfPresent(l.mug_, "mug", dimDynamicViscosity, dict);
-    readIfPresent(l.kappa_, "kappa", dimThermalConductivity, dict);
-    readIfPresent(l.kappag_, "kappag", dimThermalConductivity, dict);
-    readIfPresent(l.sigma_, "sigma", dimForce/dimLength, dict);
-    readIfPresent(l.D_, "D", dimArea/dimTime, dict);
+    readIfPresent(l.rho_, "rho", dimensions::density, dict);
+    readIfPresent(l.pv_, "pv", dimensions::pressure, dict);
+    readIfPresent(l.hl_, "hl", dimensions::specificEnergy, dict);
+    readIfPresent(l.Cp_, "Cp", dimensions::specificHeatCapacity, dict);
+    readIfPresent(l.h_, "h", dimensions::specificEnergy, dict);
+    readIfPresent(l.Cpg_, "Cpg", dimensions::specificHeatCapacity, dict);
+    readIfPresent(l.B_, "B", dimensions::volume/dimensions::mass, dict);
+    readIfPresent(l.mu_, "mu", dimensions::dynamicViscosity, dict);
+    readIfPresent(l.mug_, "mug", dimensions::dynamicViscosity, dict);
+    readIfPresent(l.kappa_, "kappa", dimensions::thermalConductivity, dict);
+    readIfPresent(l.kappag_, "kappag", dimensions::thermalConductivity, dict);
+    readIfPresent
+    (
+        l.sigma_,
+        "sigma",
+        dimensions::force/dimensions::length,
+        dict
+    );
+    readIfPresent(l.D_, "D", dimensions::area/dimensions::time, dict);
 }
 
 
@@ -213,7 +224,7 @@ inline void Foam::liquidProperties::write
     Ostream& os
 ) const
 {
-    writeEntry(os, dimTemperature, dims, f);
+    writeEntry(os, dimensions::temperature, dims, f);
 }
 
 
@@ -226,7 +237,7 @@ inline void Foam::liquidProperties::write
     Ostream& os
 ) const
 {
-    writeEntry(os, dimPressure, dimTemperature, dims, f);
+    writeEntry(os, dimensions::pressure, dimensions::temperature, dims, f);
 }
 
 
@@ -262,19 +273,19 @@ inline void Foam::liquidProperties::write
 ) const
 {
     l.liquidProperties::write(os);
-    write(l.rho_, dimDensity, os);
-    write(l.pv_, dimPressure, os);
-    write(l.hl_, dimEnergy/dimMass, os);
-    write(l.Cp_, dimSpecificHeatCapacity, os);
-    write(l.h_, dimEnergy/dimMass, os);
-    write(l.Cpg_, dimSpecificHeatCapacity, os);
-    write(l.B_, dimVolume/dimMass, os);
-    write(l.mu_, dimDynamicViscosity, os);
-    write(l.mug_, dimDynamicViscosity, os);
-    write(l.kappa_, dimThermalConductivity, os);
-    write(l.kappag_, dimThermalConductivity, os);
-    write(l.sigma_, dimForce/dimLength, os);
-    write(l.D_, dimArea/dimTime, os);
+    write(l.rho_, dimensions::density, os);
+    write(l.pv_, dimensions::pressure, os);
+    write(l.hl_, dimensions::specificEnergy, os);
+    write(l.Cp_, dimensions::specificHeatCapacity, os);
+    write(l.h_, dimensions::specificEnergy, os);
+    write(l.Cpg_, dimensions::specificHeatCapacity, os);
+    write(l.B_, dimensions::volume/dimensions::mass, os);
+    write(l.mu_, dimensions::dynamicViscosity, os);
+    write(l.mug_, dimensions::dynamicViscosity, os);
+    write(l.kappa_, dimensions::thermalConductivity, os);
+    write(l.kappag_, dimensions::thermalConductivity, os);
+    write(l.sigma_, dimensions::force/dimensions::length, os);
+    write(l.D_, dimensions::area/dimensions::time, os);
 }
 
 

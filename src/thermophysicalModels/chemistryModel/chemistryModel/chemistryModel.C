@@ -68,7 +68,7 @@ Foam::chemistryModel::chemistryModel
             IOobject::NO_WRITE
         ),
         mesh(),
-        dimensionedScalar(dimTime, deltaTChemIni_)
+        dimensionedScalar(dimensions::time, deltaTChemIni_)
     )
 {}
 

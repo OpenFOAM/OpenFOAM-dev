@@ -37,9 +37,9 @@ Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
 )
 :
     Thermo(name, dict),
-    kappa0_(subDict.lookup<scalar>("kappa0", dimThermalConductivity)),
+    kappa0_(subDict.lookup<scalar>("kappa0", dimensions::thermalConductivity)),
     n0_(subDict.lookup<scalar>("n0", dimless)),
-    Tref_(subDict.lookup<scalar>("Tref", dimTemperature))
+    Tref_(subDict.lookup<scalar>("Tref", dimensions::temperature))
 {}
 
 

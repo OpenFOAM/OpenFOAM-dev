@@ -39,7 +39,7 @@ Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport
     kappa_
     (
         "kappa",
-        {dimTemperature, dimThermalConductivity},
+        {dimensions::temperature, dimensions::thermalConductivity},
         dict.subDict("transport").subDict("kappa")
     )
 {}
@@ -56,7 +56,11 @@ void Foam::tabulatedSolidTransport<Thermo>::tabulatedSolidTransport::write
     Thermo::write(os);
 
     const delimitDictionary delimit(os, "transport"), delimitKappa(os, "kappa");
-    kappa_.write(os, {dimTemperature, dimThermalConductivity});
+    kappa_.write
+    (
+        os,
+        {dimensions::temperature, dimensions::thermalConductivity}
+    );
 }
 
 
