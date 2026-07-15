@@ -284,7 +284,20 @@ int main(int argc, char *argv[])
             Info<< "Dimension [" << name << "]" << nl;
             if (!isFundamental(dimension))
             {
-                Info<< "+ Dimensions = " << dimension.info() << nl;
+                Info<< "+ Dimensions = " << dimension.info();
+                forAllConstIter
+                (
+                    HashTable<dimensionSet>,
+                    dimensions::table,
+                    iter
+                )
+                {
+                    if (iter.key() != name && iter() == dimension)
+                    {
+                        Info<< " [" << iter.key() << "]";
+                    }
+                }
+                Info<< nl;
             }
             Info << "+ Exponents = " << dimension << nl;
             const string standardName =
@@ -306,8 +319,7 @@ int main(int argc, char *argv[])
                     );
                 }
             }
-            Info<< "+ Standard Unit"
-                << (standardNames.size() > 1 ? "s" : "") << " =";
+            Info<< "+ Standard Units =";
             forAll(standardNames, i) Info<< " [" << standardNames[i] << "]";
             Info<< nl;
             if (otherNames.size())
