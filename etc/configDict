@@ -140,6 +140,8 @@ units
     J       1                   [N m];
     W       1                   [J s^-1];
     V       1                   [W/A];
+    Wb      1                   [V s];
+    T       1                   [Wb/m^2];
 
     // Scaled units
     um      1e-6                [m];
