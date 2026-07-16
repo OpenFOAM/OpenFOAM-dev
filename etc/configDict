@@ -139,9 +139,14 @@ units
     Pa      1                   [N m^-2];
     J       1                   [N m];
     W       1                   [J s^-1];
-    V       1                   [W/A];
+    C       1                   [A s];
+    V       1                   [J/C];
+    Ohm     1                   [V/A];
+    S       1                   [Ohm^-1];
+    F       1                   [C/V];
     Wb      1                   [V s];
     T       1                   [Wb/m^2];
+    H       1                   [Wb/A];
 
     // Scaled units
     um      1e-6                [m];
