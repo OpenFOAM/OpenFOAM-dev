@@ -290,10 +290,15 @@ const Foam::dimensionSet Foam::dimensions::electricalConductivity
     sqr(dimensions::current)/dimensions::length/dimensions::power
 );
 
+const Foam::dimensionSet Foam::dimensions::magneticFlux
+(
+    "magneticFlux",
+    force*length/current
+);
 const Foam::dimensionSet Foam::dimensions::magneticFluxDensity
 (
     "magneticFluxDensity",
-    force/(length*current)
+    magneticFlux/area
 );
 const Foam::dimensionSet Foam::dimensions::magneticFluxPressure
 (

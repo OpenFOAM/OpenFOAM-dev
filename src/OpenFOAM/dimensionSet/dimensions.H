@@ -122,6 +122,7 @@ extern const dimensionSet chargeDensity;
 extern const dimensionSet electricPotential;
 extern const dimensionSet electricalConductivity;
 
+extern const dimensionSet magneticFlux;
 extern const dimensionSet magneticFluxDensity;
 extern const dimensionSet magneticFluxPressure;
 
