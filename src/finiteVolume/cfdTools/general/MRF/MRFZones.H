@@ -51,9 +51,9 @@ SourceFiles
 #ifndef MRFZones_H
 #define MRFZones_H
 
-#include "MRFZoneList.H"
 #include "DemandDrivenMeshObject.H"
 #include "IOdictionary.H"
+#include "MRFZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,7 +73,7 @@ class MRFZones
         MRFZones,
         IOdictionary
     >,
-    public MRFZoneList
+    public PtrList<MRFZone>
 {
     // Private Member Functions
 
@@ -84,6 +84,7 @@ class MRFZones
 protected:
 
     friend class DemandDrivenMeshObject;
+
 
     // Protected Constructors
 
@@ -112,20 +113,100 @@ public:
         >::New;
 
 
-        //- Destructor
-        virtual ~MRFZones()
-        {}
+    //- Destructor
+    virtual ~MRFZones()
+    {}
 
 
     // Member Functions
 
-        //- Use MRFZoneList::size for looping
-        using MRFZoneList::size;
+        //- Use the size of the zonesist
+        using PtrList<MRFZone>::size;
+
+        //- Reset the source list
+        void reset(const dictionary& dict);
+
+        //- Return the Coriolis acceleration
+        tmp<volVectorField> DDt
+        (
+            const volVectorField& U
+        ) const;
+
+        //- Return the Coriolis acceleration
+        tmp<volVectorField> DDt
+        (
+            const volScalarField& rho,
+            const volVectorField& U
+        ) const;
+
+        //- Return the centrifugal acceleration
+        tmp<volVectorField> centrifugalAcceleration() const;
+
+        //- Make the given absolute velocity relative within the MRF region
+        void makeRelative(volVectorField& U) const;
+
+        //- Make the given absolute flux relative within the MRF region
+        void makeRelative(surfaceScalarField& phi) const;
+
+        //- Return the given absolute flux relative within the MRF region
+        tmp<surfaceScalarField> relative
+        (
+            const tmp<surfaceScalarField>& phi
+        ) const;
+
+        //- Return the given absolute boundary flux relative within
+        //  the MRF region
+        tmp<FieldField<surfaceMesh::PatchField, scalar>> relative
+        (
+            const tmp<FieldField<surfaceMesh::PatchField, scalar>>&
+        ) const;
+
+        //- Return the given absolute patch flux relative within
+        //  the MRF region
+        tmp<Field<scalar>> relative
+        (
+            const tmp<Field<scalar>>& tphi,
+            const label patchi
+        ) const;
+
+        //- Make the given absolute mass-flux relative within the MRF region
+        void makeRelative
+        (
+            const surfaceScalarField& rho,
+            surfaceScalarField& phi
+        ) const;
+
+        //- Make the given relative velocity absolute within the MRF region
+        void makeAbsolute(volVectorField& U) const;
+
+        //- Make the given relative flux absolute within the MRF region
+        void makeAbsolute(surfaceScalarField& phi) const;
+
+        //- Return the given relative flux absolute within the MRF region
+        tmp<surfaceScalarField> absolute
+        (
+            const tmp<surfaceScalarField>& phi
+        ) const;
+
+        //- Make the given relative mass-flux absolute within the MRF region
+        void makeAbsolute
+        (
+            const surfaceScalarField& rho,
+            surfaceScalarField& phi
+        ) const;
+
+        //- Return the given relative flux absolute within the MRF region
+        tmp<surfaceScalarField> absolute
+        (
+            const tmp<surfaceScalarField>& phi,
+            const volScalarField& rho
+        ) const;
+
+        //- ...
+        void makeAbsolute(Field<vector>& Up, const label patchi) const;
+
 
         // Mesh changes
-
-            //- Prepare for mesh update
-            virtual void preUpdateMesh();
 
             //- Update for mesh motion
             virtual bool movePoints();
@@ -147,6 +228,9 @@ public:
 
 
     // Member Operators
+
+        //- Use access to the zones list
+        using PtrList<MRFZone>::operator[];
 
         //- Disallow default bitwise assignment
         void operator=(const MRFZones&) = delete;

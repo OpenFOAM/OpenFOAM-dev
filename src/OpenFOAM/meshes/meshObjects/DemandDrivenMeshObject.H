@@ -64,7 +64,7 @@ Description
             fvModels,
             IOdictionary
         >,
-        public MRFZoneList
+        public PtrList<MRFZone>
     {
     .
     .

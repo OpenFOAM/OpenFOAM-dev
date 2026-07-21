@@ -599,7 +599,6 @@ $(porosity)/solidification/solidification.C
 
 MRF = $(general)/MRF
 $(MRF)/MRFZone.C
-$(MRF)/MRFZoneList.C
 $(MRF)/MRFZones.C
 $(MRF)/derivedFvPatchFields/MRFPatchField/MRFPatchField.C
 $(MRF)/derivedFvPatchFields/MRFnoSlip/MRFnoSlipFvPatchVectorField.C

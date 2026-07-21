@@ -46,7 +46,7 @@ const Foam::MRFZone& Foam::MRFPatchField::MRFzone
 ) const
 {
     // Get reference to the MRF model
-    const MRFZoneList& mrf =
+    const MRFZones& mrf =
         obr.lookupObject<MRFZones>("MRFProperties");
 
     if (MRFZoneName_ != word::null)
