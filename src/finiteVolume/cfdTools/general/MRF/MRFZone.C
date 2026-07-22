@@ -372,8 +372,6 @@ bool Foam::MRFZone::read(const dictionary& dict)
 
 void Foam::MRFZone::topoChange(const polyTopoChangeMap& map)
 {
-    if (map.reverseCellMap().empty()) return;
-
     zone_.topoChange(map);
     setMRFFaces();
 }
