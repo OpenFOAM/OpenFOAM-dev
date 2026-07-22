@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::decompositionConstraints::singleProcessorFaceSetsConstraint
+    Foam::decompositionConstraints::singleProcessorFaceZonesConstraint
 
 Description
-    Constraint to keep all cells connected to face or point of faceSet on
+    Constraint to keep all cells connected to face or point of a face zone on
     a single processor.
 
 SourceFiles
-    singleProcessorFaceSetsConstraint.C
+    singleProcessorFaceZonesConstraint.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef singleProcessorFaceSetsConstraint_H
-#define singleProcessorFaceSetsConstraint_H
+#ifndef singleProcessorFaceZonesConstraint_H
+#define singleProcessorFaceZonesConstraint_H
 
 #include "decompositionConstraint.H"
 #include "Tuple2.H"
@@ -48,42 +48,43 @@ namespace decompositionConstraints
 {
 
 /*---------------------------------------------------------------------------*\
-              Class singleProcessorFaceSetsConstraint Declaration
+              Class singleProcessorFaceZonesConstraint Declaration
 \*---------------------------------------------------------------------------*/
 
-class singleProcessorFaceSetsConstraint
+class singleProcessorFaceZonesConstraint
 :
     public decompositionConstraint
 {
     // Private Data
 
-        //- List of faceSet+processor
-        List<Tuple2<word, label>> setNameAndProcs_;
+        //- List of zones and processor labels
+        List<Tuple2<word, label>> zoneNameAndProcs_;
+
 
 public:
 
     //- Runtime type information
-    TypeName("singleProcessorFaceSets");
+    TypeName("singleProcessorFaceZones");
 
 
     // Constructors
 
         //- Construct with generic dictionary with optional entry for type
-        singleProcessorFaceSetsConstraint
+        singleProcessorFaceZonesConstraint
         (
             const dictionary& constraintsDict,
             const word& type
         );
 
         //- Construct from components
-        singleProcessorFaceSetsConstraint
+        singleProcessorFaceZonesConstraint
         (
-            const List<Tuple2<word, label>>& setNameAndProcs
+            const List<Tuple2<word, label>>& zoneNameAndProcs
         );
 
 
     //- Destructor
-    virtual ~singleProcessorFaceSetsConstraint()
+    virtual ~singleProcessorFaceZonesConstraint()
     {}
 
 

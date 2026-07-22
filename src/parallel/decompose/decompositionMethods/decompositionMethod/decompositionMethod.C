@@ -34,11 +34,6 @@ License
 #include "minData.H"
 #include "FaceCellWave.H"
 
-#include "preserveBafflesConstraint.H"
-#include "preservePatchesConstraint.H"
-#include "preserveFaceZonesConstraint.H"
-#include "singleProcessorFaceSetsConstraint.H"
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -1113,7 +1108,7 @@ Foam::labelList Foam::decompositionMethod::decompose
             {
                 // If no processor specified use the one from the
                 // 0th element
-                proci = finalDecomp[mesh.faceOwner()[set[0]]];
+                proci = set.size() ? finalDecomp[mesh.faceOwner()[set[0]]] : -1;
             }
 
             forAll(set, fI)

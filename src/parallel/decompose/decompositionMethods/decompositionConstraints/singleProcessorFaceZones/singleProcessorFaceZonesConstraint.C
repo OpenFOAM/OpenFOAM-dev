@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "singleProcessorFaceSetsConstraint.H"
+#include "singleProcessorFaceZonesConstraint.H"
 #include "addToRunTimeSelectionTable.H"
 #include "syncTools.H"
 #include "faceSet.H"
@@ -34,12 +34,12 @@ namespace Foam
 {
 namespace decompositionConstraints
 {
-    defineTypeName(singleProcessorFaceSetsConstraint);
+    defineTypeName(singleProcessorFaceZonesConstraint);
 
     addToRunTimeSelectionTable
     (
         decompositionConstraint,
-        singleProcessorFaceSetsConstraint,
+        singleProcessorFaceZonesConstraint,
         dictionary
     );
 }
@@ -48,50 +48,50 @@ namespace decompositionConstraints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::
-singleProcessorFaceSetsConstraint
+Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::
+singleProcessorFaceZonesConstraint
 (
     const dictionary& constraintsDict,
     const word& modelType
 )
 :
     decompositionConstraint(constraintsDict, typeName),
-    setNameAndProcs_(constraintsDict.lookup("singleProcessorFaceSets"))
+    zoneNameAndProcs_(constraintsDict.lookup("singleProcessorFaceZones"))
 {
     if (decompositionConstraint::debug)
     {
         Info<< type()
             << " : adding constraints to keep" << endl;
 
-        forAll(setNameAndProcs_, setI)
+        forAll(zoneNameAndProcs_, zonei)
         {
-            Info<< "    all cells connected to faceSet "
-                << setNameAndProcs_[setI].first()
-                << " on processor " << setNameAndProcs_[setI].second() << endl;
+            Info<< "    all cells connected to faceZone "
+                << zoneNameAndProcs_[zonei].first() << " on processor "
+                << zoneNameAndProcs_[zonei].second() << endl;
         }
     }
 }
 
 
-Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::
-singleProcessorFaceSetsConstraint
+Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::
+singleProcessorFaceZonesConstraint
 (
-    const List<Tuple2<word, label>>& setNameAndProcs
+    const List<Tuple2<word, label>>& zoneNameAndProcs
 )
 :
     decompositionConstraint(dictionary(), typeName),
-    setNameAndProcs_(setNameAndProcs)
+    zoneNameAndProcs_(zoneNameAndProcs)
 {
     if (decompositionConstraint::debug)
     {
         Info<< type()
             << " : adding constraints to keep" << endl;
 
-        forAll(setNameAndProcs_, setI)
+        forAll(zoneNameAndProcs_, zonei)
         {
-            Info<< "    all cells connected to faceSet "
-                << setNameAndProcs_[setI].first()
-                << " on processor " << setNameAndProcs_[setI].second() << endl;
+            Info<< "    all cells connected to faceZone "
+                << zoneNameAndProcs_[zonei].first() << " on processor "
+                << zoneNameAndProcs_[zonei].second() << endl;
         }
     }
 }
@@ -99,7 +99,7 @@ singleProcessorFaceSetsConstraint
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::add
+void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::add
 (
     const polyMesh& mesh,
     boolList& blockedFace,
@@ -112,76 +112,64 @@ void Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::add
 
     // Mark faces already in set
     labelList faceToSet(mesh.nFaces(), -1);
-    forAll(specifiedProcessorFaces, setI)
+    forAll(specifiedProcessorFaces, zonei)
     {
-        const labelList& faceLabels = specifiedProcessorFaces[setI];
+        const labelList& faceLabels = specifiedProcessorFaces[zonei];
         forAll(faceLabels, i)
         {
-            faceToSet[faceLabels[i]] = setI;
+            faceToSet[faceLabels[i]] = zonei;
         }
     }
 
-
-    forAll(setNameAndProcs_, setI)
+    forAll(zoneNameAndProcs_, zonei)
     {
-        // Info<< "Keeping all cells connected to faceSet "
-        //    << setNameAndProcs_[setI].first()
-        //    << " on processor " << setNameAndProcs_[setI].second() << endl;
-
-        const label destProcI = setNameAndProcs_[setI].second();
-
-        // Read faceSet
-        const faceSet fz(mesh, setNameAndProcs_[setI].first());
+        const faceZone& fz =
+            mesh.faceZones()[zoneNameAndProcs_[zonei].first()];
 
         // Check that it does not overlap with existing specifiedProcessorFaces
         labelList nMatch(specifiedProcessorFaces.size(), 0);
-        forAllConstIter(faceSet, fz, iter)
+        forAll(fz, fzFacei)
         {
-            label setI = faceToSet[iter.key()];
-            if (setI != -1)
+            const label zonei = faceToSet[fz[fzFacei]];
+            if (zonei != -1)
             {
-                nMatch[setI]++;
+                nMatch[zonei]++;
             }
         }
-
 
         // Only store if all faces are not yet in specifiedProcessorFaces
         // (on all processors)
         bool store = true;
-
-        forAll(nMatch, setI)
+        forAll(nMatch, zonei)
         {
-            if (nMatch[setI] == fz.size())
+            if (nMatch[zonei] == fz.size())
             {
                 // full match
                 store = false;
                 break;
             }
-            else if (nMatch[setI] > 0)
+            else if (nMatch[zonei] > 0)
             {
                 // partial match
                 store = false;
                 break;
             }
         }
-
         reduce(store, andOp<bool>());
-
 
         if (store)
         {
-            specifiedProcessorFaces.append(new labelList(fz.sortedToc()));
-            specifiedProcessor.append(destProcI);
+            specifiedProcessorFaces.append(fz.labelList::clone());
+            specifiedProcessor.append(zoneNameAndProcs_[zonei].second());
         }
     }
-
 
     // Unblock all point connected faces
     // 1. Mark all points on specifiedProcessorFaces
     boolList procFacePoint(mesh.nPoints(), false);
-    forAll(specifiedProcessorFaces, setI)
+    forAll(specifiedProcessorFaces, zonei)
     {
-        const labelList& set = specifiedProcessorFaces[setI];
+        const labelList& set = specifiedProcessorFaces[zonei];
         forAll(set, fI)
         {
             const face& f = mesh.faces()[set[fI]];
@@ -194,9 +182,7 @@ void Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::add
     syncTools::syncPointList(mesh, procFacePoint, orEqOp<bool>(), false);
 
     // 2. Unblock all faces on procFacePoint
-
     label nUnblocked = 0;
-
     forAll(procFacePoint, pointi)
     {
         if (procFacePoint[pointi])
@@ -223,7 +209,7 @@ void Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::add
 }
 
 
-void Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
+void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::apply
 (
     const polyMesh& mesh,
     const boolList& blockedFace,
@@ -248,12 +234,12 @@ void Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
     // unbalanced.
     label nChanged = 0;
 
-    forAll(specifiedProcessorFaces, setI)
+    forAll(specifiedProcessorFaces, zonei)
     {
-        const labelList& set = specifiedProcessorFaces[setI];
+        const labelList& set = specifiedProcessorFaces[zonei];
 
         // Get the processor to use for the set
-        label procI = specifiedProcessor[setI];
+        label procI = specifiedProcessor[zonei];
         if (procI == -1)
         {
             // If no processor specified use the one from the

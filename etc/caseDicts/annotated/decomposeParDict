@@ -44,17 +44,17 @@ constraints
        patches (".*");
    }
 
-   singleProcessorFaceSets
+   singleProcessorFaceZones
    {
-       //- Keep all of faceSet on a single processor. This puts all cells
+       //- Keep all of faceZone on a single processor. This puts all cells
        //  connected with a point, edge or face on the same processor
        //  (just having face connected cells might not guarantee a balanced
        //  decomposition). If processor index is set to -1, the decomposition
        //  method chooses the processor to which the face set is decomposed.
        //  This is likely to create a better balance than if the processor
        //  index is explicitly specified.
-       type    singleProcessorFaceSets;
-       singleProcessorFaceSets ((f1 -1));
+       type    singleProcessorFaceZones;
+       singleProcessorFaceZones ((f1 -1));
    }
 
    refinementHistory

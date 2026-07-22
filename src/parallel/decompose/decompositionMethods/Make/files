@@ -14,7 +14,7 @@ $(decompositionConstraints)/decompositionConstraint/decompositionConstraint.C
 $(decompositionConstraints)/preserveBaffles/preserveBafflesConstraint.C
 $(decompositionConstraints)/preserveFaceZones/preserveFaceZonesConstraint.C
 $(decompositionConstraints)/preservePatches/preservePatchesConstraint.C
-$(decompositionConstraints)/singleProcessorFaceSets/singleProcessorFaceSetsConstraint.C
+$(decompositionConstraints)/singleProcessorFaceZones/singleProcessorFaceZonesConstraint.C
 $(decompositionConstraints)/refinementHistory/refinementHistoryConstraint.C
 
 
