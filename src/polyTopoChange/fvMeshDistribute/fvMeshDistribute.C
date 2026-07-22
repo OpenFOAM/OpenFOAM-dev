@@ -3065,12 +3065,12 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
     // don't need to do any re-patching like with the processor patches.
     addNccProcPatches();
 
-    // Correct coupled patch fields
-    correctCoupledPatchFields<volScalarField>();
-    correctCoupledPatchFields<volVectorField>();
-    correctCoupledPatchFields<volSphericalTensorField>();
-    correctCoupledPatchFields<volSymmTensorField>();
-    correctCoupledPatchFields<volTensorField>();
+    // Correct processor patch fields
+    correctProcessorPatchFields<volScalarField>();
+    correctProcessorPatchFields<volVectorField>();
+    correctProcessorPatchFields<volSphericalTensorField>();
+    correctProcessorPatchFields<volSymmTensorField>();
+    correctProcessorPatchFields<volTensorField>();
 
     mesh_.setInstance(mesh_.time().name());
 

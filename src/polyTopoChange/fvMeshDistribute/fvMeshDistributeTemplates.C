@@ -221,7 +221,7 @@ void Foam::fvMeshDistribute::mapExposedFaces
 
 
 template<class GeoField>
-void Foam::fvMeshDistribute::correctCoupledPatchFields()
+void Foam::fvMeshDistribute::correctProcessorPatchFields()
 {
     UPtrList<GeoField> fields
     (
@@ -247,7 +247,7 @@ void Foam::fvMeshDistribute::correctCoupledPatchFields()
 
             forAll(bfield, patchi)
             {
-                if (bfield[patchi].coupled())
+                if (isA<processorPolyPatch>(bfield[patchi].patch().poly()))
                 {
                     bfield[patchi].initEvaluate(Pstream::defaultCommsType);
                 }
@@ -265,7 +265,7 @@ void Foam::fvMeshDistribute::correctCoupledPatchFields()
 
             forAll(bfield, patchi)
             {
-                if (bfield[patchi].coupled())
+                if (isA<processorPolyPatch>(bfield[patchi].patch().poly()))
                 {
                     bfield[patchi].evaluate(Pstream::defaultCommsType);
                 }
@@ -278,7 +278,13 @@ void Foam::fvMeshDistribute::correctCoupledPatchFields()
 
             forAll(patchSchedule, patchEvali)
             {
-                if (bfield[patchEvali].coupled())
+                if
+                (
+                    isA<processorPolyPatch>
+                    (
+                        bfield[patchSchedule[patchEvali].patch].patch().poly()
+                    )
+                )
                 {
                     if (patchSchedule[patchEvali].init)
                     {
