@@ -43,7 +43,7 @@ Foam::thermalConductivityLagrangianScalarFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const basicLagrangianThermo& thermo =
+    return
         db().lookupObject<basicLagrangianThermo>
         (
             IOobject::groupName
@@ -51,14 +51,7 @@ Foam::thermalConductivityLagrangianScalarFieldSource::value
                 physicalProperties::typeName,
                 internalGroup()
             )
-        );
-
-    return
-        thermo.kappa
-        (
-            thermo.T().sources()[injection.name()].value(injection, subMesh),
-            injection
-        );
+        ).kappa(injection, subMesh);
 }
 
 

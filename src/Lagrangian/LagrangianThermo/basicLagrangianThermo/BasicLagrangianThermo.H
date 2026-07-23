@@ -169,8 +169,8 @@ public:
             //- Density for an injection [kg/m^3]
             virtual tmp<LagrangianSubScalarField> rho
             (
-                const LagrangianSubScalarField& T,
-                const LagrangianInjection&
+                const LagrangianInjection&,
+                const LagrangianSubMesh&
             ) const;
 
             //- Internal energy [J/kg]
@@ -182,8 +182,8 @@ public:
             //- Internal energy for an injection [J/kg]
             virtual tmp<LagrangianSubScalarField> e
             (
-                const LagrangianSubScalarField& T,
-                const LagrangianInjection&
+                const LagrangianInjection&,
+                const LagrangianSubMesh&
             ) const;
 
             using BasicThermoType::Cv;
@@ -191,8 +191,8 @@ public:
             //- Heat capacity at constant volume for an injection [J/kg/K]
             virtual tmp<LagrangianSubScalarField> Cv
             (
-                const LagrangianSubScalarField& T,
-                const LagrangianInjection&
+                const LagrangianInjection&,
+                const LagrangianSubMesh&
             ) const;
 
             //- Heat capacity at constant pressure for a sub-mesh [J/kg/K]
@@ -215,8 +215,8 @@ public:
             //- Thermal conductivity for an injection [W/m/K]
             virtual tmp<LagrangianSubScalarField> kappa
             (
-                const LagrangianSubScalarField& T,
-                const LagrangianInjection&
+                const LagrangianInjection&,
+                const LagrangianSubMesh&
             ) const;
 
 

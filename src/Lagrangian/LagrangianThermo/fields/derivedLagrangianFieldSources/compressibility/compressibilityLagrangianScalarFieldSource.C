@@ -43,7 +43,7 @@ Foam::compressibilityLagrangianScalarFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const fluidLagrangianThermo& thermo =
+    return
         db().lookupObject<fluidLagrangianThermo>
         (
             IOobject::groupName
@@ -51,14 +51,7 @@ Foam::compressibilityLagrangianScalarFieldSource::value
                 physicalProperties::typeName,
                 internalGroup()
             )
-        );
-
-    return
-        thermo.psi
-        (
-            thermo.T().sources()[injection.name()].value(injection, subMesh),
-            injection
-        );
+        ).psi(injection, subMesh);
 }
 
 

@@ -87,21 +87,21 @@ template<class BaseThermo>
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::FluidLagrangianThermo<BaseThermo>::psi
 (
-    const LagrangianSubScalarField& T,
-    const LagrangianInjection& injection
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& subMesh
 ) const
 {
     return
         this->LagrangianInjectionProperty
         (
             injection,
-            T.mesh(),
+            subMesh,
             "psi",
             dimensions::compressibility,
             &BaseThermo::mixtureType::thermoMixture,
             &BaseThermo::mixtureType::thermoMixtureType::psi,
-            this->p(injection, T.mesh())(),
-            T
+            this->p(injection, subMesh)(),
+            this->T_.sources()[injection.name()].value(injection, subMesh)()
         );
 }
 
@@ -110,11 +110,11 @@ template<class BaseThermo>
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::FluidLagrangianThermo<BaseThermo>::mu
 (
-    const LagrangianSubScalarField& T,
-    const LagrangianInjection& injection
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& subMesh
 ) const
 {
-    typedef decltype(this->Yslicer(injection, T.mesh())) YslicerType;
+    typedef decltype(this->Yslicer(injection, subMesh)) YslicerType;
 
     typedef
         decltype(this->injectionElementComposition(YslicerType(), -1))
@@ -128,13 +128,13 @@ Foam::FluidLagrangianThermo<BaseThermo>::mu
         this->LagrangianInjectionProperty
         (
             injection,
-            T.mesh(),
+            subMesh,
             "mu",
             dimensions::dynamicViscosity,
             mixture,
             &BaseThermo::mixtureType::transportMixtureType::mu,
-            this->p(injection, T.mesh())(),
-            T
+            this->p(injection, subMesh)(),
+            this->T_.sources()[injection.name()].value(injection, subMesh)()
         );
 }
 

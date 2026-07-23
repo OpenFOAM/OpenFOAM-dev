@@ -77,8 +77,8 @@ public:
             //- Compressibility for an injection [m^2/s^2]
             virtual tmp<LagrangianSubScalarField> psi
             (
-                const LagrangianSubScalarField& T,
-                const LagrangianInjection&
+                const LagrangianInjection&,
+                const LagrangianSubMesh&
             ) const;
 
 
@@ -90,8 +90,8 @@ public:
             //- Dynamic viscosity for an injection [W/m/K]
             virtual tmp<LagrangianSubScalarField> mu
             (
-                const LagrangianSubScalarField& T,
-                const LagrangianInjection&
+                const LagrangianInjection&,
+                const LagrangianSubMesh&
             ) const;
 };
 

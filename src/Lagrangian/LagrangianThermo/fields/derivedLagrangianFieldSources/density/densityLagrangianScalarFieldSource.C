@@ -42,7 +42,7 @@ Foam::densityLagrangianScalarFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const basicLagrangianThermo& thermo =
+    return
         db().lookupObject<basicLagrangianThermo>
         (
             IOobject::groupName
@@ -50,14 +50,7 @@ Foam::densityLagrangianScalarFieldSource::value
                 physicalProperties::typeName,
                 internalGroup()
             )
-        );
-
-    return
-        thermo.rho
-        (
-            thermo.T().sources()[injection.name()].value(injection, subMesh),
-            injection
-        );
+        ).rho(injection, subMesh);
 }
 
 

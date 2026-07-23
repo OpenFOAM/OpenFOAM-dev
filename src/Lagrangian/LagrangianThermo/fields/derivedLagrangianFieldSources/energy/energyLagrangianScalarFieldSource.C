@@ -42,7 +42,7 @@ Foam::energyLagrangianScalarFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const basicLagrangianThermo& thermo =
+    return
         db().lookupObject<basicLagrangianThermo>
         (
             IOobject::groupName
@@ -50,14 +50,7 @@ Foam::energyLagrangianScalarFieldSource::value
                 physicalProperties::typeName,
                 internalGroup()
             )
-        );
-
-    return
-        thermo.e
-        (
-            thermo.T().sources()[injection.name()].value(injection, subMesh),
-            injection
-        );
+        ).e(injection, subMesh);
 }
 
 

@@ -43,7 +43,7 @@ Foam::dynamicViscosityLagrangianScalarFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const fluidLagrangianThermo& thermo =
+    return
         db().lookupObject<fluidLagrangianThermo>
         (
             IOobject::groupName
@@ -51,14 +51,7 @@ Foam::dynamicViscosityLagrangianScalarFieldSource::value
                 physicalProperties::typeName,
                 internalGroup()
             )
-        );
-
-    return
-        thermo.mu
-        (
-            thermo.T().sources()[injection.name()].value(injection, subMesh),
-            injection
-        );
+        ).mu(injection, subMesh);
 }
 
 

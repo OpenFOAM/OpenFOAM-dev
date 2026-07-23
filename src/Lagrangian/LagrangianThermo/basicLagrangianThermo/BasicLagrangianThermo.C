@@ -253,21 +253,21 @@ template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::rho
 (
-    const LagrangianSubScalarField& T,
-    const LagrangianInjection& injection
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& subMesh
 ) const
 {
     return
         LagrangianInjectionProperty
         (
             injection,
-            T.mesh(),
+            subMesh,
             "rho",
             dimensions::density,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::rho,
-            this->p(injection, T.mesh())(),
-            T
+            this->p(injection, subMesh)(),
+            this->T_.sources()[injection.name()].value(injection, subMesh)()
         );
 }
 
@@ -292,21 +292,21 @@ template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::e
 (
-    const LagrangianSubScalarField& T,
-    const LagrangianInjection& injection
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& subMesh
 ) const
 {
     return
         LagrangianInjectionProperty
         (
             injection,
-            T.mesh(),
+            subMesh,
             "e",
             dimensions::specificEnergy,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::es,
-            this->p(injection, T.mesh())(),
-            T
+            this->p(injection, subMesh)(),
+            this->T_.sources()[injection.name()].value(injection, subMesh)()
         );
 }
 
@@ -315,21 +315,21 @@ template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::Cv
 (
-    const LagrangianSubScalarField& T,
-    const LagrangianInjection& injection
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& subMesh
 ) const
 {
     return
         LagrangianInjectionProperty
         (
             injection,
-            T.mesh(),
+            subMesh,
             "Cv",
             dimensions::specificHeatCapacity,
             &MixtureType::thermoMixture,
             &MixtureType::thermoMixtureType::Cv,
-            this->p(injection, T.mesh())(),
-            T
+            this->p(injection, subMesh)(),
+            this->T_.sources()[injection.name()].value(injection, subMesh)()
         );
 }
 
@@ -380,11 +380,11 @@ template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::kappa
 (
-    const LagrangianSubScalarField& T,
-    const LagrangianInjection& injection
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& subMesh
 ) const
 {
-    typedef decltype(this->Yslicer(injection, T.mesh())) YslicerType;
+    typedef decltype(this->Yslicer(injection, subMesh)) YslicerType;
 
     typedef
         decltype(this->injectionElementComposition(YslicerType(), -1))
@@ -398,13 +398,13 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::kappa
         LagrangianInjectionProperty
         (
             injection,
-            T.mesh(),
+            subMesh,
             "kappa",
             dimensions::thermalConductivity,
             mixture,
             &MixtureType::transportMixtureType::kappa,
-            this->p(injection, T.mesh())(),
-            T
+            this->p(injection, subMesh)(),
+            this->T_.sources()[injection.name()].value(injection, subMesh)()
         );
 }
 
