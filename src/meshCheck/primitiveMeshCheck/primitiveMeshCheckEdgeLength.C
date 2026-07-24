@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,11 +64,11 @@ bool Foam::meshCheck::checkEdgeLength
         }
     }
 
-    reduce(minLenSqr, minOp<scalar>());
-    reduce(maxLenSqr, maxOp<scalar>());
+    reduce(minLenSqr, minOp());
+    reduce(maxLenSqr, maxOp());
 
     label nSmall = smallEdgeSet.size();
-    reduce(nSmall, sumOp<label>());
+    reduce(nSmall, sumOp());
 
     if (setPtr)
     {

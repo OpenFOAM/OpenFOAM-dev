@@ -76,7 +76,7 @@ void Foam::radiationModels::viewFactor::initialise()
     }
 
     totalNCoarseFaces_ = nLocalCoarseFaces_;
-    reduce(totalNCoarseFaces_, sumOp<label>());
+    reduce(totalNCoarseFaces_, sumOp());
 
     if (debug && Pstream::master())
     {
@@ -514,9 +514,9 @@ void Foam::radiationModels::viewFactor::calculate()
         qrExt[compactGlobalIds[i]] = compactCoarseHo[i];
     }
 
-    Pstream::listCombineGather(T4, maxEqOp<scalar>());
-    Pstream::listCombineGather(E, maxEqOp<scalar>());
-    Pstream::listCombineGather(qrExt, maxEqOp<scalar>());
+    Pstream::listCombineGather(T4, maxEqOp());
+    Pstream::listCombineGather(E, maxEqOp());
+    Pstream::listCombineGather(qrExt, maxEqOp());
 
     Pstream::listCombineScatter(T4);
     Pstream::listCombineScatter(E);
@@ -619,7 +619,7 @@ void Foam::radiationModels::viewFactor::calculate()
 
     // Scatter q and fill qr
     Pstream::listCombineScatter(q);
-    Pstream::listCombineGather(q, maxEqOp<scalar>());
+    Pstream::listCombineGather(q, maxEqOp());
 
     label globCoarseId = 0;
     forAll(selectedPatches_, i)

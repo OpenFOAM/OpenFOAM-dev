@@ -120,22 +120,22 @@ void printEdgeStats(const polyMesh& mesh)
     }
 
     label nEdges = mesh.nEdges();
-    reduce(nEdges, sumOp<label>());
-    reduce(nX, sumOp<label>());
-    reduce(nY, sumOp<label>());
-    reduce(nZ, sumOp<label>());
+    reduce(nEdges, sumOp());
+    reduce(nX, sumOp());
+    reduce(nY, sumOp());
+    reduce(nZ, sumOp());
 
-    reduce(minX, minOp<scalar>());
-    reduce(maxX, maxOp<scalar>());
+    reduce(minX, minOp());
+    reduce(maxX, maxOp());
 
-    reduce(minY, minOp<scalar>());
-    reduce(maxY, maxOp<scalar>());
+    reduce(minY, minOp());
+    reduce(maxY, maxOp());
 
-    reduce(minZ, minOp<scalar>());
-    reduce(maxZ, maxOp<scalar>());
+    reduce(minZ, minOp());
+    reduce(maxZ, maxOp());
 
-    reduce(minOther, minOp<scalar>());
-    reduce(maxOther, maxOp<scalar>());
+    reduce(minOther, minOp());
+    reduce(maxOther, maxOp());
 
     Info<< "Mesh edge statistics:" << nl;
     if (minX > great || maxX > -great)
@@ -349,7 +349,7 @@ int main(int argc, char *argv[])
             const cellSet cells(mesh, setName);
 
             Info<< "Refining "
-                << returnReduce(cells.size(), sumOp<label>())
+                << returnReduce(cells.size(), sumOp())
                 << " cells in set "
                 << cells.instance()/cells.local()/cells.name()
                 << endl;
@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
                 refCells = zg->generate().cZone();
 
                 Info<< "Refining "
-                    << returnReduce(refCells.size(), sumOp<label>())
+                    << returnReduce(refCells.size(), sumOp())
                     << " cells in zone " << zg->zoneName()
                     << " of type " << zg->type() << endl;
             }
@@ -393,7 +393,7 @@ int main(int argc, char *argv[])
                 refCells = mesh.cellZones()[cellZoneName];
 
                 Info<< "Refining "
-                    << returnReduce(refCells.size(), sumOp<label>())
+                    << returnReduce(refCells.size(), sumOp())
                     << " cells in zone " << cellZoneName << endl;
             }
 
@@ -431,7 +431,7 @@ int main(int argc, char *argv[])
                 const labelList refCells(zg->generate().cZone());
 
                 Info<< "Refining "
-                    << returnReduce(refCells.size(), sumOp<label>())
+                    << returnReduce(refCells.size(), sumOp())
                     << " cells in zone " << zg->zoneName()
                     << " of type " << zg->type() << endl;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,12 +68,12 @@ Description
             ListListOps::subSizes(gatheredData, myContainerPoints())
         );
 
-        // Renumber using user-defined operator offsetOp<face>()
+        // Renumber using user-defined operator offsetOp()
         faceList combinedFaces
         (
             ListListOps::combineOffset<faceList>
             (
-                gatheredData, sizes, myContainerFaces(), offsetOp<face>()
+                gatheredData, sizes, myContainerFaces(), offsetOp()
             )
         );
     \endcode
@@ -94,11 +94,9 @@ namespace Foam
 {
 
 // Dummy access operator for ListListOps::combine()
-template<class T>
-class accessOp
+struct accessOp
 {
-public:
-
+    template<class T>
     const T& operator()(const T& x) const
     {
         return x;
@@ -107,11 +105,9 @@ public:
 
 
 // Offset operator for ListListOps::combineOffset()
-template<class T>
-class offsetOp
+struct offsetOp
 {
-public:
-
+    template<class T>
     T operator()(const T& x, const label offset) const
     {
         return x + offset;
@@ -127,11 +123,11 @@ namespace ListListOps
 
     //- Combines sublists into one big list
     template<class AccessType, class T, class AccessOp>
-    AccessType combine(const List<T>&, AccessOp aop = accessOp<T>());
+    AccessType combine(const List<T>&, AccessOp aop = accessOp());
 
     //- Gets sizes of sublists
     template<class T, class AccessOp>
-    labelList subSizes(const List<T>&, AccessOp aop = accessOp<T>());
+    labelList subSizes(const List<T>&, AccessOp aop = accessOp());
 
     //- Like combine but also offsets sublists based on passed sizes
     template<class AccessType, class T, class AccessOp, class OffsetOp>
@@ -140,7 +136,7 @@ namespace ListListOps
         const List<T>&,
         const labelList& sizes,
         AccessOp aop,
-        OffsetOp oop = offsetOp<T>()
+        OffsetOp oop = offsetOp()
     );
 };
 

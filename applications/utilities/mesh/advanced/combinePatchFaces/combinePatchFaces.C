@@ -75,7 +75,7 @@ label mergePatchFaces
     // Get all sets of faces that can be merged
     labelListList allFaceSets(faceCombiner.getMergeSets(minCos, concaveSin));
 
-    label nFaceSets = returnReduce(allFaceSets.size(), sumOp<label>());
+    label nFaceSets = returnReduce(allFaceSets.size(), sumOp());
 
     Info<< "Merging " << nFaceSets << " sets of faces." << endl;
 
@@ -135,7 +135,7 @@ label mergePatchFaces
                 errorSets.insert(setI);
             }
         }
-        label nErrorSets = returnReduce(errorSets.size(), sumOp<label>());
+        label nErrorSets = returnReduce(errorSets.size(), sumOp());
 
         Info<< "Detected " << nErrorSets
             << " error faces on boundaries that have been merged."

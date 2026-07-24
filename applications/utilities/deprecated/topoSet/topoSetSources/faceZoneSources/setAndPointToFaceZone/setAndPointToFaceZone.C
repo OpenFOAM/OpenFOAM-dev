@@ -124,7 +124,7 @@ void Foam::setAndPointToFaceZone::applyToSet
         // Find the cell containing the given point and give that an even
         // higher index
         const label celli = searchEngine.findCell(point_);
-        if (returnReduce(celli, maxOp<label>()) == -1)
+        if (returnReduce(celli, maxOp()) == -1)
         {
             FatalErrorInFunction
                 << "Point " << point_ << " was not found in the mesh"

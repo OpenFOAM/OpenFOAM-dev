@@ -155,7 +155,7 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
         if (printPointZone)
         {
             const pointZone& pz = mesh_.pointZones()[name];
-            const label nPz = returnReduce(pz.size(), sumOp<label>());
+            const label nPz = returnReduce(pz.size(), sumOp());
 
             // Print the number of points
             Info<< ' ' << nPz << " points";
@@ -168,7 +168,7 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
                 {
                     pointZoneAverage += points[pz[i]];
                 }
-                reduce(pointZoneAverage, sumOp<point>());
+                reduce(pointZoneAverage, sumOp());
                 pointZoneAverage /= pointZoneSize;
 
                 // Store the indices of the points in this zone
@@ -185,7 +185,7 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
         if (printFaceZone)
         {
             const faceZone& fz = mesh_.faceZones()[name];
-            const label nFz = returnReduce(fz.size(), sumOp<label>());
+            const label nFz = returnReduce(fz.size(), sumOp());
 
             // Print the number of faces
             if (printPointZone && printCellZone) Info<< ",";
@@ -201,8 +201,8 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
                     faceZoneCentroid +=
                         magFaceAreas[fz[fzFacei]]*faceCentres[fz[fzFacei]];
                 }
-                reduce(faceZoneMagArea, sumOp<scalar>());
-                reduce(faceZoneCentroid, sumOp<point>());
+                reduce(faceZoneMagArea, sumOp());
+                reduce(faceZoneCentroid, sumOp());
                 faceZoneCentroid /= faceZoneMagArea;
 
                 // Store the indices of the points in this zone
@@ -223,7 +223,7 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
         if (printCellZone)
         {
             const cellZone& cz = mesh_.cellZones()[name];
-            const label nCz = returnReduce(cz.size(), sumOp<label>());
+            const label nCz = returnReduce(cz.size(), sumOp());
 
             // Print the number of cells
             if (printPointZone || printFaceZone) Info<< " and";
@@ -238,8 +238,8 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
                     cellZoneCentroid +=
                         cellVolumes[cz[czCelli]]*cellCentres[cz[czCelli]];
                 }
-                reduce(cellZoneVolume, sumOp<scalar>());
-                reduce(cellZoneCentroid, sumOp<point>());
+                reduce(cellZoneVolume, sumOp());
+                reduce(cellZoneCentroid, sumOp());
                 cellZoneCentroid /= cellZoneVolume;
 
                 // Store the indices of the points in this zone
@@ -284,7 +284,7 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
         }
 
         // Don't print bounds if there aren't any points
-        if (returnReduce(zonePointPoints.size(), sumOp<label>()) == 0) continue;
+        if (returnReduce(zonePointPoints.size(), sumOp()) == 0) continue;
 
         // Print bounding geometry
         const boundBox bb(points, zonePointPoints, true);

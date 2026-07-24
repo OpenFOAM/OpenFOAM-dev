@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -741,7 +741,7 @@ Foam::label Foam::findLower
     const label start
 )
 {
-    return findLower(l, t, start, lessOp<typename ListType::value_type>());
+    return findLower(l, t, start, lessOp());
 }
 
 
@@ -888,7 +888,7 @@ void Foam::ListEqOp<BinaryEqOp>::operator()
 
 
 template<class T>
-void Foam::ListAppendEqOp<T>::operator()(List<T>& x, const List<T>& y) const
+void Foam::ListAppendEqOp::operator()(List<T>& x, const List<T>& y) const
 {
     if (y.size())
     {

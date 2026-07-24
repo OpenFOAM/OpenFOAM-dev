@@ -83,7 +83,7 @@ void Foam::regionToFace::markZone
         changedInfo,
         allEdgeInfo,
         allFaceInfo,
-        returnReduce(patch.nEdges(), sumOp<label>())
+        returnReduce(patch.nEdges(), sumOp())
     );
 
     forAll(allFaceInfo, facei)

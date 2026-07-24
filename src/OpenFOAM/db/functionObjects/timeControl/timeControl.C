@@ -328,7 +328,7 @@ bool Foam::timeControl::execute()
         {
             const label executionIndex = label
             (
-                returnReduce(label(time_.elapsedClockTime()), maxOp<label>())
+                returnReduce(label(time_.elapsedClockTime()), maxOp())
                /interval_
             );
             if (executionIndex > executionIndex_)
@@ -343,7 +343,7 @@ bool Foam::timeControl::execute()
         {
             const label executionIndex = label
             (
-                returnReduce(time_.elapsedCpuTime(), maxOp<double>())
+                returnReduce(time_.elapsedCpuTime(), maxOp())
                /interval_
             );
             if (executionIndex > executionIndex_)

@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
         );
         Info<< "Read faceSet " << indirectPatchFaces.name()
             << " with "
-            << returnReduce(indirectPatchFaces.size(), sumOp<label>())
+            << returnReduce(indirectPatchFaces.size(), sumOp())
             << " faces" << endl;
 
 

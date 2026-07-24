@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -319,26 +319,20 @@ public:
 
 //- Hash specialisation to offset faces in ListListOps::combineOffset
 template<>
-class offsetOp<face>
+inline face offsetOp::operator()<face>
+(
+    const face& x,
+    const label offset
+) const
 {
+    face result(x.size());
 
-public:
-
-    inline face operator()
-    (
-        const face& x,
-        const label offset
-    ) const
+    forAll(x, xI)
     {
-        face result(x.size());
-
-        forAll(x, xI)
-        {
-            result[xI] = x[xI] + offset;
-        }
-        return result;
+        result[xI] = x[xI] + offset;
     }
-};
+    return result;
+}
 
 
 // Global functions

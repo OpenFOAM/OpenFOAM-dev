@@ -43,7 +43,7 @@ Foam::tmp<Foam::Field<Type>> Foam::cutPlot::applyWeights
             weights[weighti].value*faceValues[weights[weighti].elementi];
     }
 
-    Pstream::listCombineGather(tLayerValues.ref(), plusEqOp<Type>());
+    Pstream::listCombineGather(tLayerValues.ref(), plusEqOp());
     Pstream::listCombineScatter(tLayerValues.ref());
 
     return tLayerValues;

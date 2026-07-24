@@ -558,7 +558,7 @@ void Foam::MULES::limiter
         // Optional convergence test
         if (controls.tol != 0)
         {
-            reduce(maxDeltaLambdaPhiCorrRes, maxOp<scalar>());
+            reduce(maxDeltaLambdaPhiCorrRes, maxOp());
 
             if (debug)
             {

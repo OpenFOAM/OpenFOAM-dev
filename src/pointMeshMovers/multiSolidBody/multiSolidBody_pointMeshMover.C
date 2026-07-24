@@ -67,7 +67,7 @@ void Foam::pointMeshMovers::multiSolidBody::updateZonePointIndices()
             }
         }
 
-        syncTools::syncPointList(poly(), pointInZone, orEqOp<bool>(), false);
+        syncTools::syncPointList(poly(), pointInZone, orEqOp(), false);
 
         DynamicList<label> zonePoints(poly().nPoints());
         forAll(pointInZone, celli)

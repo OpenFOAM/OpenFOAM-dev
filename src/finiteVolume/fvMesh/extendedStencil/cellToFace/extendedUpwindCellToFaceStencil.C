@@ -317,7 +317,7 @@ void Foam::extendedUpwindCellToFaceStencil::transportStencils
     (
         mesh_,
         neiBndStencil,
-        eqOp<labelList>(),
+        eqOp(),
         dummyTransform()
     );
 

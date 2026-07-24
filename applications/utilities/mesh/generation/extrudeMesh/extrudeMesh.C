@@ -513,7 +513,7 @@ int main(int argc, char *argv[])
         // Add any patches
 
         label nAdded = nPatches - mesh.poly().boundary().size();
-        reduce(nAdded, sumOp<label>());
+        reduce(nAdded, sumOp());
 
         Info<< "Adding overall " << nAdded << " processor patches." << endl;
 
@@ -884,7 +884,7 @@ int main(int argc, char *argv[])
 
         // Put all modifications into meshMod
         bool anyChange = collapser.setRefinement(allPointInfo, meshMod);
-        reduce(anyChange, orOp<bool>());
+        reduce(anyChange, orOp());
 
         if (anyChange)
         {
@@ -1041,7 +1041,7 @@ int main(int argc, char *argv[])
     }
 
     // Need writing cellSet
-    label nAdded = returnReduce(addedCellsSet.size(), sumOp<label>());
+    label nAdded = returnReduce(addedCellsSet.size(), sumOp());
     if (nAdded > 0)
     {
         cellSet addedCells(mesh, "addedCells", addedCellsSet);

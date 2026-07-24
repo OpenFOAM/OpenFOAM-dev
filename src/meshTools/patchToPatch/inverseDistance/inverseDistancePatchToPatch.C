@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -290,9 +290,9 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
                 result[ll[i].size()] ++;
             }
 
-            result.resize(returnReduce(result.size(), maxOp<label>()), 0);
+            result.resize(returnReduce(result.size(), maxOp()), 0);
 
-            Pstream::listCombineGather(result, plusEqOp<label>());
+            Pstream::listCombineGather(result, plusEqOp());
             Pstream::listCombineScatter(result);
 
             return result;

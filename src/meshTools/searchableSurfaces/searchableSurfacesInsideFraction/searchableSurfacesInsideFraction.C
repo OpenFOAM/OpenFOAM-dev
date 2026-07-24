@@ -60,7 +60,7 @@ Foam::tmp<Foam::scalarField> Foam::searchableSurfaces::insideFraction
     (
         mesh,
         pointLengthScale,
-        maxEqOp<scalar>(),
+        maxEqOp(),
         -vGreat
     );
 

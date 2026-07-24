@@ -191,7 +191,7 @@ void Foam::snappyLayerDriver::checkMeshManifold() const
         nonManifoldPoints
     );
 
-    label nNonManif = returnReduce(nonManifoldPoints.size(), sumOp<label>());
+    label nNonManif = returnReduce(nonManifoldPoints.size(), sumOp());
 
     if (nNonManif > 0)
     {
@@ -327,7 +327,7 @@ void Foam::snappyLayerDriver::handleNonManifolds
         (
             mesh,
             isCoupledEdge,
-            orEqOp<unsigned int>(),
+            orEqOp(),
             0
         );
 
@@ -355,7 +355,7 @@ void Foam::snappyLayerDriver::handleNonManifolds
 
 
 
-    label nNonManif = returnReduce(nonManifoldPoints.size(), sumOp<label>());
+    label nNonManif = returnReduce(nonManifoldPoints.size(), sumOp());
 
     Info<< "Outside of local patch is multiply connected across edges or"
         << " points at " << nNonManif << " points." << endl;
@@ -494,7 +494,7 @@ void Foam::snappyLayerDriver::handleFeatureAngle
         }
 
         Info<< "Set displacement to zero for points on "
-            << returnReduce(nFeats, sumOp<label>())
+            << returnReduce(nFeats, sumOp())
             << " feature edges" << endl;
     }
 }
@@ -570,7 +570,7 @@ void Foam::snappyLayerDriver::handleWarpedFaces
     }
 
     Info<< "Set displacement to zero on "
-        << returnReduce(nWarpedFaces, sumOp<label>())
+        << returnReduce(nWarpedFaces, sumOp())
         << " warped faces since layer would be > " << faceRatio
         << " of the size of the bounding box." << endl;
 }
@@ -618,7 +618,7 @@ void Foam::snappyLayerDriver::handleWarpedFaces
 //    label nMultiPatchCells = returnReduce
 //    (
 //        multiPatchCells.size(),
-//        sumOp<label>()
+//        sumOp()
 //    );
 //
 //    Info<< "Detected " << nMultiPatchCells
@@ -671,7 +671,7 @@ void Foam::snappyLayerDriver::handleWarpedFaces
 //            }
 //        }
 //
-//        reduce(nChanged, sumOp<label>());
+//        reduce(nChanged, sumOp());
 //    }
 //
 //    Info<< "Prevented extrusion on " << nChanged
@@ -723,7 +723,7 @@ void Foam::snappyLayerDriver::setNumLayers
         mesh,
         pp.meshPoints(),
         maxLayers,
-        maxEqOp<label>(),
+        maxEqOp(),
         labelMin            // null value
     );
     syncTools::syncPointList
@@ -731,7 +731,7 @@ void Foam::snappyLayerDriver::setNumLayers
         mesh,
         pp.meshPoints(),
         minLayers,
-        minEqOp<label>(),
+        minEqOp(),
         labelMax            // null value
     );
 
@@ -791,9 +791,9 @@ void Foam::snappyLayerDriver::setNumLayers
 
         nAddedCells += nCells;
     }
-    reduce(nAddedCells, sumOp<label>());
+    reduce(nAddedCells, sumOp());
 
-    // reduce(nConflicts, sumOp<label>());
+    // reduce(nConflicts, sumOp());
     //
     // Info<< "Set displacement to zero for " << nConflicts
     //    << " points due to points being on multiple regions"
@@ -933,7 +933,7 @@ void Foam::snappyLayerDriver::growNoExtrusion
             meshRefiner_.mesh(),
             pp.meshPoints(),
             status,
-            minEqOp<label>(),
+            minEqOp(),
             labelMax            // null value
         );
         forAll(status, i)
@@ -952,7 +952,7 @@ void Foam::snappyLayerDriver::growNoExtrusion
         }
     }
 
-    reduce(nGrown, sumOp<label>());
+    reduce(nGrown, sumOp());
 
     Info<< "Set displacement to zero for an additional " << nGrown
         << " points." << endl;
@@ -996,7 +996,7 @@ void Foam::snappyLayerDriver::determineSidePatches
     );
 
     label nOldPatches = mesh.poly().boundary().size();
-    label nAdded = returnReduce(nPatches-nOldPatches, sumOp<label>());
+    label nAdded = returnReduce(nPatches-nOldPatches, sumOp());
     Info<< nl << "Adding in total " << nAdded/2 << " inter-processor patches to"
         << " handle extrusion of non-manifold processor boundaries."
         << endl;
@@ -1115,7 +1115,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         mesh,
         pp.meshPoints(),
         firstLayerThickness,
-        minEqOp<scalar>(),
+        minEqOp(),
         great               // null value
     );
     syncTools::syncPointList
@@ -1123,7 +1123,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         mesh,
         pp.meshPoints(),
         finalLayerThickness,
-        minEqOp<scalar>(),
+        minEqOp(),
         great               // null value
     );
     syncTools::syncPointList
@@ -1131,7 +1131,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         mesh,
         pp.meshPoints(),
         totalThickness,
-        minEqOp<scalar>(),
+        minEqOp(),
         great               // null value
     );
     syncTools::syncPointList
@@ -1139,7 +1139,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         mesh,
         pp.meshPoints(),
         expRatio,
-        minEqOp<scalar>(),
+        minEqOp(),
         great               // null value
     );
     syncTools::syncPointList
@@ -1147,7 +1147,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
         mesh,
         pp.meshPoints(),
         minThickness,
-        minEqOp<scalar>(),
+        minEqOp(),
         great               // null value
     );
 
@@ -1198,7 +1198,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
             mesh,
             pp.meshPoints(),
             maxPointLevel,
-            maxEqOp<label>(),
+            maxEqOp(),
             labelMin            // null value
         );
 
@@ -1299,7 +1299,7 @@ void Foam::snappyLayerDriver::calculateLayerThickness
                 }
             }
 
-            label totNPoints = returnReduce(nMasterPoints, sumOp<label>());
+            label totNPoints = returnReduce(nMasterPoints, sumOp());
 
             // For empty patches, totNPoints is 0.
             scalar avgThickness = 0;
@@ -1308,17 +1308,17 @@ void Foam::snappyLayerDriver::calculateLayerThickness
             if (totNPoints > 0)
             {
                 avgThickness =
-                    returnReduce(sumThickness, sumOp<scalar>())
+                    returnReduce(sumThickness, sumOp())
                   / totNPoints;
                 avgNearWallThickness =
-                    returnReduce(sumNearWallThickness, sumOp<scalar>())
+                    returnReduce(sumNearWallThickness, sumOp())
                   / totNPoints;
             }
 
             Info<< setf(ios_base::left) << setw(maxPatchNameLen)
                 << patches[patchi].name() << setprecision(3)
                 << " " << setw(8)
-                << returnReduce(patches[patchi].size(), sumOp<scalar>())
+                << returnReduce(patches[patchi].size(), sumOp())
                 << " " << setw(6) << layerParams.numLayers()[patchi]
                 << " " << setw(8) << avgNearWallThickness
                 << "  " << setw(8) << avgThickness
@@ -1352,7 +1352,7 @@ void Foam::snappyLayerDriver::syncPatchDisplacement
             mesh,
             meshPoints,
             patchDisp,
-            minMagSqrEqOp<vector>(),
+            minMagSqrEqOp(),
             point::rootMax      // null value
         );
 
@@ -1384,7 +1384,7 @@ void Foam::snappyLayerDriver::syncPatchDisplacement
             mesh,
             meshPoints,
             syncPatchNLayers,
-            minEqOp<label>(),
+            minEqOp(),
             labelMax            // null value
         );
 
@@ -1415,7 +1415,7 @@ void Foam::snappyLayerDriver::syncPatchDisplacement
             mesh,
             meshPoints,
             syncPatchNLayers,
-            maxEqOp<label>(),
+            maxEqOp(),
             labelMin            // null value
         );
 
@@ -1441,7 +1441,7 @@ void Foam::snappyLayerDriver::syncPatchDisplacement
             }
         }
 
-        if (!returnReduce(nChanged, sumOp<label>()))
+        if (!returnReduce(nChanged, sumOp()))
         {
             break;
         }
@@ -1570,10 +1570,10 @@ void Foam::snappyLayerDriver::getPatchDisplacement
         }
     }
 
-    Info<< "Detected " << returnReduce(nNoVisNormal, sumOp<label>())
+    Info<< "Detected " << returnReduce(nNoVisNormal, sumOp())
         << " points with point normal pointing through faces." << nl
         << "Reset displacement at "
-        << returnReduce(nExtrudeRemove, sumOp<label>())
+        << returnReduce(nExtrudeRemove, sumOp())
         << " points to average of surrounding points." << endl;
 
     // Make sure displacement is equal on both sides of coupled patches.
@@ -1833,7 +1833,7 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
             }
         }
 
-        reduce(nPinched, sumOp<label>());
+        reduce(nPinched, sumOp());
 
         Info<< "truncateDisplacement : Unextruded " << nPinched
             << " faces due to non-consecutive vertices being extruded." << endl;
@@ -1934,7 +1934,7 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
             }
         }
 
-        reduce(nButterFly, sumOp<label>());
+        reduce(nButterFly, sumOp());
 
         Info<< "truncateDisplacement : Unextruded " << nButterFly
             << " faces due to stringed edges with inconsistent extrusion."
@@ -1987,7 +1987,7 @@ Foam::label Foam::snappyLayerDriver::truncateDisplacement
         //    }
         //}
         //
-        // reduce(nDiffering, sumOp<label>());
+        // reduce(nDiffering, sumOp());
         //
         // Info<< "truncateDisplacement : Unextruded " << nDiffering
         //    << " faces due to having differing number of layers." << endl;
@@ -2141,7 +2141,7 @@ void Foam::snappyLayerDriver::setupLayerInfoTruncation
                     mesh,
                     pp.meshPoints(),
                     foundNeighbour,
-                    orEqOp<bool>(),
+                    orEqOp(),
                     false               // null value
                 );
 
@@ -2200,7 +2200,7 @@ void Foam::snappyLayerDriver::setupLayerInfoTruncation
             mesh,
             pp.meshPoints(),
             nPatchPointLayers,
-            maxEqOp<label>(),
+            maxEqOp(),
             label(0)        // null value
         );
     }
@@ -2260,7 +2260,7 @@ Foam::label Foam::snappyLayerDriver::checkAndUnmark
         baffles,
         wrongFaces
     );
-    Info<< "Detected " << returnReduce(wrongFaces.size(), sumOp<label>())
+    Info<< "Detected " << returnReduce(wrongFaces.size(), sumOp())
         << " illegal faces"
         << " (concave, zero area or negative cell pyramid volume)"
         << endl;
@@ -2321,7 +2321,7 @@ Foam::label Foam::snappyLayerDriver::checkAndUnmark
     }
 
 
-    label nChangedTotal = returnReduce(nChanged, sumOp<label>());
+    label nChangedTotal = returnReduce(nChanged, sumOp());
 
     if (additionalReporting)
     {
@@ -2355,7 +2355,7 @@ Foam::label Foam::snappyLayerDriver::checkAndUnmark
             }
         }
 
-        label nReportTotal = returnReduce(nReportLocal, sumOp<label>());
+        label nReportTotal = returnReduce(nReportLocal, sumOp());
 
         if (nReportTotal < nChangedTotal)
         {
@@ -2394,7 +2394,7 @@ Foam::label Foam::snappyLayerDriver::countExtrusion
         }
     }
 
-    return returnReduce(nExtruded, sumOp<label>());
+    return returnReduce(nExtruded, sumOp());
 }
 
 
@@ -2520,10 +2520,10 @@ void Foam::snappyLayerDriver::printLayerData
         }
 
 
-        reduce(sumSize, sumOp<label>());
-        reduce(sumNLayers, sumOp<label>());
-        reduce(sumRealThickness, sumOp<scalar>());
-        reduce(sumFraction, sumOp<scalar>());
+        reduce(sumSize, sumOp());
+        reduce(sumNLayers, sumOp());
+        reduce(sumRealThickness, sumOp());
+        reduce(sumFraction, sumOp());
 
 
         scalar avgLayers = 0;
@@ -2580,7 +2580,7 @@ bool Foam::snappyLayerDriver::writeLayerData
             }
             addedCellSet.instance() = meshRefiner_.name();
             Info<< "Writing "
-                << returnReduce(addedCellSet.size(), sumOp<label>())
+                << returnReduce(addedCellSet.size(), sumOp())
                 << " added cells to cellSet "
                 << addedCellSet.name() << endl;
             bool ok = addedCellSet.write();
@@ -2606,7 +2606,7 @@ bool Foam::snappyLayerDriver::writeLayerData
             }
             layerFacesSet.instance() = meshRefiner_.name();
             Info<< "Writing "
-                << returnReduce(layerFacesSet.size(), sumOp<label>())
+                << returnReduce(layerFacesSet.size(), sumOp())
                 << " faces inside added layer to faceSet "
                 << layerFacesSet.name() << endl;
             bool ok = layerFacesSet.write();
@@ -3415,7 +3415,7 @@ void Foam::snappyLayerDriver::addLayers
                 }
                 addedCellSet.instance() = meshRefiner_.name();
                 Info<< "Writing "
-                    << returnReduce(addedCellSet.size(), sumOp<label>())
+                    << returnReduce(addedCellSet.size(), sumOp())
                     << " added cells to cellSet " << addedCellSet.name()
                     << endl;
                 addedCellSet.write();
@@ -3435,7 +3435,7 @@ void Foam::snappyLayerDriver::addLayers
                 }
                 layerFacesSet.instance() = meshRefiner_.name();
                 Info<< "Writing "
-                    << returnReduce(layerFacesSet.size(), sumOp<label>())
+                    << returnReduce(layerFacesSet.size(), sumOp())
                     << " faces inside added layer to faceSet "
                     << layerFacesSet.name() << endl;
                 layerFacesSet.write();
@@ -3457,8 +3457,8 @@ void Foam::snappyLayerDriver::addLayers
             );
 
             label nTotExtruded = countExtrusion(pp, extrudeStatus);
-            label nTotFaces = returnReduce(pp().size(), sumOp<label>());
-            label nTotAddedCells = returnReduce(nAddedCells, sumOp<label>());
+            label nTotFaces = returnReduce(pp().size(), sumOp());
+            label nTotAddedCells = returnReduce(nAddedCells, sumOp());
 
             Info<< "Extruding " << nTotExtruded
                 << " out of " << nTotFaces
@@ -3525,7 +3525,7 @@ void Foam::snappyLayerDriver::addLayers
     }
 
 
-    label nBaffles = returnReduce(baffles.size(), sumOp<label>());
+    label nBaffles = returnReduce(baffles.size(), sumOp());
     if (nBaffles > 0)
     {
         // Merge any baffles
@@ -3640,7 +3640,7 @@ void Foam::snappyLayerDriver::doLayers
     }
     patchIDs.shrink();
 
-    if (returnReduce(nFacesWithLayers, sumOp<label>()) == 0)
+    if (returnReduce(nFacesWithLayers, sumOp()) == 0)
     {
         Info<< nl << "No layers to generate ..." << endl;
     }
@@ -3656,7 +3656,7 @@ void Foam::snappyLayerDriver::doLayers
         const label nInitErrors = returnReduce
         (
             wrongFaces.size(),
-            sumOp<label>()
+            sumOp()
         );
 
         Info<< "Detected " << nInitErrors << " illegal faces"

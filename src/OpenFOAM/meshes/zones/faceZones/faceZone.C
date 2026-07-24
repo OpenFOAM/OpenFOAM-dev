@@ -593,7 +593,7 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
         }
     }
 
-    return returnReduce(hasError, orOp<bool>());
+    return returnReduce(hasError, orOp());
 }
 
 

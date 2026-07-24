@@ -54,8 +54,8 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::calculateBore()
         }
     }
 
-    reduce(pistonMax, maxOp<point>());
-    reduce(pistonMin, minOp<point>());
+    reduce(pistonMax, maxOp());
+    reduce(pistonMin, minOp());
 
     // Assuming the piston moves in the positive axis direction
     // remove the axis_ component to find the lateral extent of the piston
@@ -85,8 +85,8 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::correctClearance()
         }
     }
 
-    reduce(linerMax, maxOp<scalar>());
-    reduce(linerMin, minOp<scalar>());
+    reduce(linerMax, maxOp());
+    reduce(linerMin, minOp());
 
     clearance_ = linerMax - linerMin;
 }

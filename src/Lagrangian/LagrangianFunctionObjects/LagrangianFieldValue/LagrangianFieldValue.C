@@ -430,7 +430,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
             (
                 weight*field,
                 vGreat,
-                lessOp<scalar>()
+                lessOp()
             );
             break;
         case operationType::max:
@@ -438,7 +438,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
             (
                 weight*field,
                 -vGreat,
-                greaterOp<scalar>()
+                greaterOp()
             );
             break;
         case operationType::minMag:
@@ -446,7 +446,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
             (
                 mag(weight*field),
                 vGreat,
-                lessOp<scalar>()
+                lessOp()
             );
             break;
         case operationType::maxMag:
@@ -454,7 +454,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
             (
                 mag(weight*field),
                 -vGreat,
-                greaterOp<scalar>()
+                greaterOp()
             );
             break;
     }
@@ -551,7 +551,7 @@ bool Foam::functionObjects::LagrangianFieldValue::write()
     logFiles::write();
 
     // Filter out operations that don't make sense if there are no elements
-    if (returnReduce(mesh().size(), sumOp<label>()) == 0)
+    if (returnReduce(mesh().size(), sumOp()) == 0)
     {
         switch (operation_)
         {

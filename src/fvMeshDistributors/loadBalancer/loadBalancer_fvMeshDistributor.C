@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,11 +129,11 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
             const scalar sumMaxProcCpuLoad(sum(maxProcCpuLoads));
 
             // Maximum number of cells per processor
-            const label maxNcells = returnReduce(mesh.nCells(), maxOp<label>());
+            const label maxNcells = returnReduce(mesh.nCells(), maxOp());
 
             // Maximum processor CPU time spent doing basic CFD
             const scalar maxBaseCpuTime =
-                returnReduce(timeStepCpuTime, maxOp<scalar>())
+                returnReduce(timeStepCpuTime, maxOp())
               - sumMaxProcCpuLoad;
 
             const scalar cellBaseCpuTime = maxBaseCpuTime/maxNcells;
@@ -149,7 +149,7 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
 
             // Average processor CPU time
             const scalar averageProcessorCpuTime =
-                returnReduce(procCpuTime, sumOp<scalar>())/Pstream::nProcs();
+                returnReduce(procCpuTime, sumOp())/Pstream::nProcs();
 
             const scalar imbalance =
                 (maxProcCpuTime - averageProcessorCpuTime)

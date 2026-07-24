@@ -390,8 +390,8 @@ inline Foam::scalar Foam::ThermoCloud<CloudType>::Tmax() const
         n++;
     }
 
-    reduce(T, maxOp<scalar>());
-    reduce(n, sumOp<label>());
+    reduce(T, maxOp());
+    reduce(n, sumOp());
 
     if (n > 0)
     {
@@ -416,8 +416,8 @@ inline Foam::scalar Foam::ThermoCloud<CloudType>::Tmin() const
         n++;
     }
 
-    reduce(T, minOp<scalar>());
-    reduce(n, sumOp<label>());
+    reduce(T, minOp());
+    reduce(n, sumOp());
 
     if (n > 0)
     {

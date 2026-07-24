@@ -713,8 +713,8 @@ Foam::label Foam::patchToPatches::intersection::finalise
             coverage[facei] = magACouple/magA;
         }
 
-        reduce(area, sumOp<scalar>());
-        reduce(coupleArea, sumOp<scalar>());
+        reduce(area, sumOp());
+        reduce(coupleArea, sumOp());
     };
     scalar srcArea = 0, srcCoupleArea = 0;
     scalar tgtArea = 0, tgtCoupleArea = 0;
@@ -795,8 +795,8 @@ Foam::label Foam::patchToPatches::intersection::finalise
             srcDepth[srcFacei] = mag(projectionV)/pow3(sqrt(magA));
         }
 
-        reduce(tgtArea, sumOp<scalar>());
-        reduce(tgtCoupleArea, sumOp<scalar>());
+        reduce(tgtArea, sumOp());
+        reduce(tgtCoupleArea, sumOp());
 
         Info<< indent << "Source min/average/max coverage = "
             << gMin(srcCoverage_) << '/' << srcCoupleArea/srcArea << '/'

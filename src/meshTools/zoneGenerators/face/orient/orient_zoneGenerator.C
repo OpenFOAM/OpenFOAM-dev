@@ -130,7 +130,7 @@ Foam::boolList Foam::zoneGenerators::orient::pointOrientation
         if (debug)
         {
             Info<< "Protected from visiting "
-                << returnReduce(nProtected, sumOp<label>())
+                << returnReduce(nProtected, sumOp())
                 << " slaves of coupled faces" << nl << endl;
         }
     }
@@ -157,7 +157,7 @@ Foam::boolList Foam::zoneGenerators::orient::pointOrientation
             mesh_,
             patch.meshEdges(mesh_.edges(), mesh_.pointEdges()),
             nMasterFaces,
-            plusEqOp<label>(),
+            plusEqOp(),
             label(0)
         );
 
@@ -176,7 +176,7 @@ Foam::boolList Foam::zoneGenerators::orient::pointOrientation
         if (debug)
         {
             Info<< "Protected from visiting "
-                << returnReduce(nProtected, sumOp<label>())
+                << returnReduce(nProtected, sumOp())
                 << " non-manifold edges" << nl << endl;
         }
     }
@@ -208,7 +208,7 @@ Foam::boolList Foam::zoneGenerators::orient::pointOrientation
             }
         }
 
-        reduce(unsetFacei, minOp<label>());
+        reduce(unsetFacei, minOp());
 
         if (unsetFacei == labelMax)
         {
@@ -285,7 +285,7 @@ Foam::boolList Foam::zoneGenerators::orient::pointOrientation
         }
 
 
-        if (returnReduce(changedEdges.size(), sumOp<label>()) == 0)
+        if (returnReduce(changedEdges.size(), sumOp()) == 0)
         {
             break;
         }
@@ -305,7 +305,7 @@ Foam::boolList Foam::zoneGenerators::orient::pointOrientation
             changedInfo,
             allEdgeInfo,
             allFaceInfo,
-            returnReduce(patch.nEdges(), sumOp<label>())
+            returnReduce(patch.nEdges(), sumOp())
         );
     }
 

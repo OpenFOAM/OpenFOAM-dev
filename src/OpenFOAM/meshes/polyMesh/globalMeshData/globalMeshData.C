@@ -1120,7 +1120,7 @@ void Foam::globalMeshData::calcGlobalEdgeOrientation() const
         globalPointSlaves(),
         globalPointTransformedSlaves(),
         pointsMap,
-        minEqOp<label>()
+        minEqOp()
     );
 
     // 2. Now we define the master edge to be the one in which the master
@@ -2328,7 +2328,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
         pointSlaves,
         labelListList(0),   // no transforms
         pointSlavesMap,
-        maxEqOp<label>()
+        maxEqOp()
     );
 
 
@@ -2597,7 +2597,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
         pointSlaves,
         labelListList(0),   // no transforms
         pointSlavesMap,
-        maxEqOp<label>()
+        maxEqOp()
     );
 
 
@@ -2667,7 +2667,7 @@ void Foam::globalMeshData::topoChange()
     nTotalFaces_ = returnReduce
     (
         mesh_.nFaces(),
-        sumOp<label>(),
+        sumOp(),
         Pstream::msgType(),
         comm
     );
@@ -2680,7 +2680,7 @@ void Foam::globalMeshData::topoChange()
     nTotalCells_ = returnReduce
     (
         mesh_.nCells(),
-        sumOp<label>(),
+        sumOp(),
         Pstream::msgType(),
         comm
     );
@@ -2693,7 +2693,7 @@ void Foam::globalMeshData::topoChange()
     nTotalPoints_ = returnReduce
     (
         mesh_.nPoints(),
-        sumOp<label>(),
+        sumOp(),
         Pstream::msgType(),
         comm
     );

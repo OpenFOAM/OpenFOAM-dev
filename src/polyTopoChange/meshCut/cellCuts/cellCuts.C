@@ -134,9 +134,9 @@ void Foam::cellCuts::syncProc()
         return;
     }
 
-    syncTools::syncPointList(mesh(), pointIsCut_, orEqOp<bool>(), false);
-    syncTools::syncEdgeList(mesh(), edgeIsCut_, orEqOp<bool>(), false);
-    syncTools::syncEdgeList(mesh(), edgeWeight_, maxEqOp<scalar>(), -great);
+    syncTools::syncPointList(mesh(), pointIsCut_, orEqOp(), false);
+    syncTools::syncEdgeList(mesh(), edgeIsCut_, orEqOp(), false);
+    syncTools::syncEdgeList(mesh(), edgeWeight_, maxEqOp(), -great);
 
     {
         const label nBnd = mesh().nFaces()-mesh().nInternalFaces();
@@ -208,7 +208,7 @@ void Foam::cellCuts::syncProc()
         (
             mesh(),
             relCuts,
-            eqOp<edge>(),
+            eqOp(),
             dummyTransform()
         );
 

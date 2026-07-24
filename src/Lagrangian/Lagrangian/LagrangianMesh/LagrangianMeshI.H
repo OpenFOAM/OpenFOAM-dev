@@ -158,7 +158,7 @@ inline Foam::label Foam::LagrangianMesh::size() const
 
 inline Foam::label Foam::LagrangianMesh::globalSize() const
 {
-    return returnReduce(size(), sumOp<label>());
+    return returnReduce(size(), sumOp());
 }
 
 

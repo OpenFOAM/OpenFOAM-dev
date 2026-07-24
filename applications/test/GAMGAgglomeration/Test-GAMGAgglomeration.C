@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,11 +114,11 @@ int main(int argc, char *argv[])
         label coarseSize = max(addr)+1;
 
         Info<< "Level : " << level << endl
-            << returnReduce(addr.size(), sumOp<label>()) << endl
+            << returnReduce(addr.size(), sumOp()) << endl
             << "    current size      : "
-            << returnReduce(addr.size(), sumOp<label>()) << endl
+            << returnReduce(addr.size(), sumOp()) << endl
             << "    agglomerated size : "
-            << returnReduce(coarseSize, sumOp<label>()) << endl;
+            << returnReduce(coarseSize, sumOp()) << endl;
 
         labelList newAddr;
         label newCoarseSize = 0;

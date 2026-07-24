@@ -54,7 +54,7 @@ void Foam::patchToFace::combine(topoSet& set, const bool add) const
         const polyPatch& pp = mesh_.boundary()[patchi];
 
         Info<< "    Found matching patch " << pp.name()
-            << " with " << returnReduce(pp.size(), sumOp<label>())
+            << " with " << returnReduce(pp.size(), sumOp())
             << " faces." << endl;
 
         for

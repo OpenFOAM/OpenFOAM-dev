@@ -863,7 +863,7 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::faceToCell()
     // Sum changedCells over all procs
     label totNChanged = changedCells_.size();
 
-    reduce(totNChanged, sumOp<label>());
+    reduce(totNChanged, sumOp());
 
     return totNChanged;
 }
@@ -940,7 +940,7 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::cellToFace()
     // Sum nChangedFaces over all procs
     label totNChanged = changedFaces_.size();
 
-    reduce(totNChanged, sumOp<label>());
+    reduce(totNChanged, sumOp());
 
     return totNChanged;
 }

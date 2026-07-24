@@ -82,11 +82,11 @@ void Foam::fv::limitPressure::readCoeffs(const dictionary& dict)
             }
         }
 
-        reduce(pLimits, andOp<bool>());
+        reduce(pLimits, andOp());
         if (pLimits)
         {
-            reduce(pMax, maxOp<scalar>());
-            reduce(pMin, minOp<scalar>());
+            reduce(pMax, maxOp());
+            reduce(pMin, minOp());
         }
 
         if (dict.found("min"))

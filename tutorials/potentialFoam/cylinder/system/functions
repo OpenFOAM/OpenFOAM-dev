@@ -41,7 +41,7 @@ error
         {
             ULeft = fvp[0].x();
         }
-        reduce(ULeft, maxOp<scalar>());
+        reduce(ULeft, maxOp());
 
         dimensionedScalar uInfX
         (
@@ -59,7 +59,7 @@ error
         {
             magCylinder = mag(cylFvp[0]);
         }
-        reduce(magCylinder, maxOp<scalar>());
+        reduce(magCylinder, maxOp());
 
         dimensionedScalar radius
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ preserveBafflesConstraint
     if (decompositionConstraint::debug)
     {
         Info<< type() << " : setting constraints to preserve baffles"
-            //<< returnReduce(bafflePairs.size(), sumOp<label>())
+            //<< returnReduce(bafflePairs.size(), sumOp())
             << endl;
     }
 }
@@ -74,7 +74,7 @@ preserveBafflesConstraint()
     if (decompositionConstraint::debug)
     {
         Info<< type() << " : setting constraints to preserve baffles"
-            //<< returnReduce(bafflePairs.size(), sumOp<label>())
+            //<< returnReduce(bafflePairs.size(), sumOp())
             << endl;
     }
 }
@@ -99,7 +99,7 @@ void Foam::decompositionConstraints::preserveBafflesConstraint::add
     if (decompositionConstraint::debug & 2)
     {
         Info<< type() << " : setting constraints to preserve "
-            << returnReduce(bafflePairs.size(), sumOp<label>())
+            << returnReduce(bafflePairs.size(), sumOp())
             << " baffles" << endl;
     }
 
@@ -176,7 +176,7 @@ void Foam::decompositionConstraints::preserveBafflesConstraint::add
         blockedFace[explicitConnections[i].first()] = false;
         blockedFace[explicitConnections[i].second()] = false;
     }
-    syncTools::syncFaceList(mesh, blockedFace, andEqOp<bool>());
+    syncTools::syncFaceList(mesh, blockedFace, andEqOp());
 }
 
 
@@ -233,7 +233,7 @@ void Foam::decompositionConstraints::preserveBafflesConstraint::apply
 
     if (decompositionConstraint::debug & 2)
     {
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
         Info<< type() << " : changed decomposition on " << nChanged
             << " cells" << endl;
     }

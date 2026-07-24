@@ -166,7 +166,7 @@ template<class CloudType>
 void Foam::PhaseChangeModel<CloudType>::info(Ostream& os)
 {
     const scalar mass0 = this->template getBaseProperty<scalar>("mass");
-    const scalar massTotal = mass0 + returnReduce(dMass_, sumOp<scalar>());
+    const scalar massTotal = mass0 + returnReduce(dMass_, sumOp());
 
     Info<< "    Mass transfer phase change      = " << massTotal << nl;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -483,11 +483,11 @@ void Foam::refinementHistory::add
 
     if (refinementHistory::debug)
     {
-        reduce(nUnblocked, sumOp<label>());
+        reduce(nUnblocked, sumOp());
         Info<< type() << " : unblocked " << nUnblocked << " faces" << endl;
     }
 
-    syncTools::syncFaceList(mesh, blockedFace, andEqOp<bool>());
+    syncTools::syncFaceList(mesh, blockedFace, andEqOp());
 }
 
 
@@ -543,7 +543,7 @@ void Foam::refinementHistory::apply
 
     if (refinementHistory::debug)
     {
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
         Info<< type() << " : changed decomposition on " << nChanged
             << " cells" << endl;
     }
@@ -580,7 +580,7 @@ Foam::refinementHistory::refinementHistory(const IOobject& io)
     // When running in redistributPar + READ_IF_PRESENT it can happen
     // that some processors do have refinementHistory and some don't so
     // test for active has to be outside of above condition.
-    active_ = (returnReduce(visibleCells_.size(), sumOp<label>()) > 0);
+    active_ = (returnReduce(visibleCells_.size(), sumOp()) > 0);
 
     if (debug)
     {
@@ -684,7 +684,7 @@ Foam::refinementHistory::refinementHistory
         }
     }
 
-    active_ = (returnReduce(visibleCells_.size(), sumOp<label>()) > 0);
+    active_ = (returnReduce(visibleCells_.size(), sumOp()) > 0);
 
 
     // Check indices.
@@ -906,7 +906,7 @@ Foam::refinementHistory::refinementHistory(const IOobject& io, Istream& is)
     freeSplitCells_(0),
     visibleCells_(is)
 {
-    active_ = (returnReduce(visibleCells_.size(), sumOp<label>()) > 0);
+    active_ = (returnReduce(visibleCells_.size(), sumOp()) > 0);
 
     // Check indices.
     checkIndices();
@@ -1736,7 +1736,7 @@ bool Foam::refinementHistory::read()
     bool ok = readData(readStream(typeName));
     close();
 
-    active_ = (returnReduce(visibleCells_.size(), sumOp<label>()) > 0);
+    active_ = (returnReduce(visibleCells_.size(), sumOp()) > 0);
 
     return ok;
 }

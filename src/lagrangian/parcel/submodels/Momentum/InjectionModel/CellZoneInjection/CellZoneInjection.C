@@ -230,9 +230,9 @@ void Foam::CellZoneInjection<CloudType>::topoChange()
 
     const labelList& cellZoneCells = mesh.cellZones()[zoneI];
     const label nCells = cellZoneCells.size();
-    const scalar nCellsTotal = returnReduce(nCells, sumOp<label>());
+    const scalar nCellsTotal = returnReduce(nCells, sumOp());
     const scalar VCells = sum(scalarField(mesh.V(), cellZoneCells));
-    const scalar VCellsTotal = returnReduce(VCells, sumOp<scalar>());
+    const scalar VCellsTotal = returnReduce(VCells, sumOp());
     Info<< "    cell zone size      = " << nCellsTotal << endl;
     Info<< "    cell zone volume    = " << VCellsTotal << endl;
 

@@ -109,10 +109,10 @@ Foam::boolList Foam::regionToCell::findRegions
             keepRegionI = cellRegion[celli];
             keepProci = Pstream::myProcNo();
         }
-        reduce(keepRegionI, maxOp<label>());
+        reduce(keepRegionI, maxOp());
         keepRegion[keepRegionI] = true;
 
-        reduce(keepProci, maxOp<label>());
+        reduce(keepProci, maxOp());
 
         if (keepProci == -1)
         {
@@ -202,7 +202,7 @@ void Foam::regionToCell::shrinkRegions
         }
     }
 
-    syncTools::syncPointList(mesh_, boundaryPoint, orEqOp<bool>(), false);
+    syncTools::syncPointList(mesh_, boundaryPoint, orEqOp(), false);
 
 
     // Select all cells using these points
@@ -225,7 +225,7 @@ void Foam::regionToCell::shrinkRegions
             }
         }
     }
-    Info<< "    Eroded " << returnReduce(nChanged, sumOp<label>())
+    Info<< "    Eroded " << returnReduce(nChanged, sumOp())
         << " cells." << endl;
 }
 
@@ -293,7 +293,7 @@ void Foam::regionToCell::erode
                 }
             }
         }
-        syncTools::syncPointList(mesh_, boundaryPoint, orEqOp<bool>(), false);
+        syncTools::syncPointList(mesh_, boundaryPoint, orEqOp(), false);
 
         // Select all cells using these points
 

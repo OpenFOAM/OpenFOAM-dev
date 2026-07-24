@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
             initialEdgesInfo,
             allEdgeInfo,
             allFaceInfo,
-            returnReduce(patch.nEdges(), sumOp<label>())
+            returnReduce(patch.nEdges(), sumOp())
         );
 
 

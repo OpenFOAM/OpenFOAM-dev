@@ -90,7 +90,7 @@ Foam::zoneSet Foam::zoneGenerators::pistonBowlPoints::generate() const
             maxZ = max(maxZ, max(piston.axis & pbm[patchi].localPoints()));
         }
     }
-    reduce(maxZ, maxOp<scalar>());
+    reduce(maxZ, maxOp());
 
 
     // Search for points starting at the piston surface and stopping at maxZ

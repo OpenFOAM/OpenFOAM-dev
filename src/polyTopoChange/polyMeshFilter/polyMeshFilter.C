@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,7 +233,7 @@ Foam::label Foam::polyMeshFilter::filterFacesLoop(const label nOriginalBadFaces)
 
             Info<< nl << "    Number of bad faces     : " << nBadFaces << nl
                 << "    Number of marked points : "
-                << returnReduce(isErrorPoint.count(), sumOp<unsigned int>())
+                << returnReduce(isErrorPoint.count(), sumOp())
                 << endl;
 
             updatePointErrorCount
@@ -276,7 +276,7 @@ Foam::label Foam::polyMeshFilter::filterFacesLoop(const label nOriginalBadFaces)
                 }
             }
 
-            reduce(newBadFaces, orOp<bool>());
+            reduce(newBadFaces, orOp());
         }
         else
         {
@@ -318,10 +318,10 @@ Foam::label Foam::polyMeshFilter::filterFaces
             nCollapsed += nCollapsedPtEdge[collapseTypeI];
         }
 
-        reduce(nCollapsed, sumOp<label>());
+        reduce(nCollapsed, sumOp());
 
-        label nToPoint = returnReduce(nCollapsedPtEdge.first(), sumOp<label>());
-        label nToEdge = returnReduce(nCollapsedPtEdge.second(), sumOp<label>());
+        label nToPoint = returnReduce(nCollapsedPtEdge.first(), sumOp());
+        label nToEdge = returnReduce(nCollapsedPtEdge.second(), sumOp());
 
         Info<< indent
             << "Collapsing " << nCollapsed << " faces "
@@ -350,7 +350,7 @@ Foam::label Foam::polyMeshFilter::filterFaces
 
     label nLocalCollapse = collapseEdge.count();
 
-    reduce(nLocalCollapse, sumOp<label>());
+    reduce(nLocalCollapse, sumOp());
     Info<< nl << indent << "Collapsing " << nLocalCollapse
         << " edges after synchronisation and PointEdgeWave" << endl;
 
@@ -422,7 +422,7 @@ Foam::label Foam::polyMeshFilter::filterEdges
         collapsePointToLocation
     );
 
-    reduce(nSmallCollapsed, sumOp<label>());
+    reduce(nSmallCollapsed, sumOp());
     Info<< indent << "Collapsing " << nSmallCollapsed
         << " small edges" << endl;
 
@@ -435,7 +435,7 @@ Foam::label Foam::polyMeshFilter::filterEdges
         collapsePointToLocation
     );
 
-    reduce(nMerged, sumOp<label>());
+    reduce(nMerged, sumOp());
     Info<< indent << "Collapsing " << nMerged << " in line edges"
         << endl;
 
@@ -460,7 +460,7 @@ Foam::label Foam::polyMeshFilter::filterEdges
 
     label nLocalCollapse = collapseEdge.count();
 
-    reduce(nLocalCollapse, sumOp<label>());
+    reduce(nLocalCollapse, sumOp());
     Info<< nl << indent << "Collapsing " << nLocalCollapse
         << " edges after synchronisation and PointEdgeWave" << endl;
 
@@ -557,7 +557,7 @@ void Foam::polyMeshFilter::checkMeshEdgesAndRelaxEdges
         }
     }
 
-    syncTools::syncEdgeList(mesh_, minEdgeLen_, minEqOp<scalar>(), scalar(0));
+    syncTools::syncEdgeList(mesh_, minEdgeLen_, minEqOp(), scalar(0));
 
     for (label smoothIter = 0; smoothIter < maxSmoothIters(); ++smoothIter)
     {
@@ -592,7 +592,7 @@ void Foam::polyMeshFilter::checkMeshEdgesAndRelaxEdges
         (
             mesh_,
             minEdgeLen_,
-            minEqOp<scalar>(),
+            minEqOp(),
             scalar(0)
         );
     }
@@ -631,7 +631,7 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
         }
     }
 
-    syncTools::syncFaceList(mesh_, faceFilterFactor_, minEqOp<scalar>());
+    syncTools::syncFaceList(mesh_, faceFilterFactor_, minEqOp());
 
     for (label smoothIter = 0; smoothIter < maxSmoothIters(); ++smoothIter)
     {
@@ -689,7 +689,7 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
         }
 
         // Face filter factor needs to be synchronised!
-        syncTools::syncFaceList(mesh_, faceFilterFactor_, minEqOp<scalar>());
+        syncTools::syncFaceList(mesh_, faceFilterFactor_, minEqOp());
     }
 }
 
@@ -715,7 +715,7 @@ void Foam::polyMeshFilter::updatePointPriorities
     (
         newMesh,
         newPointPriority,
-        maxEqOp<label>(),
+        maxEqOp(),
         labelMin
     );
 
@@ -756,11 +756,11 @@ void Foam::polyMeshFilter::printScalarFieldStats
         }
     }
 
-    reduce(sum, sumOp<scalar>());
-    reduce(min, minOp<scalar>());
-    reduce(max, maxOp<scalar>());
-    reduce(validElements, sumOp<label>());
-    const label totFieldSize = returnReduce(fld.size(), sumOp<label>());
+    reduce(sum, sumOp());
+    reduce(min, minOp());
+    reduce(max, maxOp());
+    reduce(validElements, sumOp());
+    const label totFieldSize = returnReduce(fld.size(), sumOp());
 
     Info<< incrIndent << indent << desc
         << ": min = " << min
@@ -802,7 +802,7 @@ void Foam::polyMeshFilter::mapOldMeshEdgeFieldToNewMesh
     (
         newMesh,
         newMeshMinEdgeLen,
-        maxEqOp<scalar>(),
+        maxEqOp(),
         scalar(0)
     );
 }
@@ -830,7 +830,7 @@ void Foam::polyMeshFilter::mapOldMeshFaceFieldToNewMesh
     (
         newMesh,
         newMeshFaceFilterFactor,
-        maxEqOp<scalar>()
+        maxEqOp()
     );
 }
 
@@ -1073,7 +1073,7 @@ Foam::label Foam::polyMeshFilter::filterEdges
 
             Info<< nl << "    Number of bad faces     : " << nBadFaces << nl
                 << "    Number of marked points : "
-                << returnReduce(isErrorPoint.count(), sumOp<unsigned int>())
+                << returnReduce(isErrorPoint.count(), sumOp())
                 << endl;
 
             updatePointErrorCount

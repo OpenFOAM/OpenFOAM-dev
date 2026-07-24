@@ -206,7 +206,7 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
         (
             mesh,
             refinedBoundaryFace,
-            orEqOp<bool>()
+            orEqOp()
         );
 
 
@@ -248,7 +248,7 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
         (
             mesh,
             changedFace,
-            orEqOp<bool>()
+            orEqOp()
         );
 
 
@@ -274,7 +274,7 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
     {
         Pout<< "getChangedFaces : Detected "
             << " local:" << changedFaces.size()
-            << " global:" << returnReduce(nMasterChanged, sumOp<label>())
+            << " global:" << returnReduce(nMasterChanged, sumOp())
             << " changed faces out of " << mesh.globalData().nTotalFaces()
             << endl;
 
@@ -619,7 +619,7 @@ void Foam::meshRefinement::markFeatureCellLevel
             Pout<< "Remaining particles " << cloud.size() << endl;
         }
 
-        if (returnReduce(cloud.size(), sumOp<label>()) == 0)
+        if (returnReduce(cloud.size(), sumOp()) == 0)
         {
             break;
         }
@@ -688,14 +688,14 @@ Foam::label Foam::meshRefinement::markFeatureRefinement
 
     if
     (
-        returnReduce(nRefine, sumOp<label>())
-      > returnReduce(nAllowRefine, sumOp<label>())
+        returnReduce(nRefine, sumOp())
+      > returnReduce(nAllowRefine, sumOp())
     )
     {
         Info<< "Reached refinement limit." << endl;
     }
 
-    return returnReduce(nRefine-oldNRefine,  sumOp<label>());
+    return returnReduce(nRefine-oldNRefine,  sumOp());
 }
 
 
@@ -772,14 +772,14 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
 
     if
     (
-        returnReduce(nRefine, sumOp<label>())
-      > returnReduce(nAllowRefine, sumOp<label>())
+        returnReduce(nRefine, sumOp())
+      > returnReduce(nAllowRefine, sumOp())
     )
     {
         Info<< "Reached refinement limit." << endl;
     }
 
-    return returnReduce(nRefine-oldNRefine, sumOp<label>());
+    return returnReduce(nRefine-oldNRefine, sumOp());
 }
 
 
@@ -855,14 +855,14 @@ Foam::label Foam::meshRefinement::markInternalRefinement
 
     if
     (
-        returnReduce(nRefine, sumOp<label>())
-      > returnReduce(nAllowRefine, sumOp<label>())
+        returnReduce(nRefine, sumOp())
+      > returnReduce(nAllowRefine, sumOp())
     )
     {
         Info<< "Reached refinement limit." << endl;
     }
 
-    return returnReduce(nRefine-oldNRefine, sumOp<label>());
+    return returnReduce(nRefine-oldNRefine, sumOp());
 }
 
 
@@ -1047,14 +1047,14 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
 
     if
     (
-        returnReduce(nRefine, sumOp<label>())
-      > returnReduce(nAllowRefine, sumOp<label>())
+        returnReduce(nRefine, sumOp())
+      > returnReduce(nAllowRefine, sumOp())
     )
     {
         Info<< "Reached refinement limit." << endl;
     }
 
-    return returnReduce(nRefine-oldNRefine, sumOp<label>());
+    return returnReduce(nRefine-oldNRefine, sumOp());
 }
 
 
@@ -1253,8 +1253,8 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
                 nNormals += normals.size();
             }
         }
-        reduce(nSet, sumOp<label>());
-        reduce(nNormals, sumOp<label>());
+        reduce(nSet, sumOp());
+        reduce(nNormals, sumOp());
         Info<< "markSurfaceCurvatureRefinement :"
             << " cells:" << mesh_.globalData().nTotalCells()
             << " of which with normals:" << nSet
@@ -1493,14 +1493,14 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
 
     if
     (
-        returnReduce(nRefine, sumOp<label>())
-      > returnReduce(nAllowRefine, sumOp<label>())
+        returnReduce(nRefine, sumOp())
+      > returnReduce(nAllowRefine, sumOp())
     )
     {
         Info<< "Reached refinement limit." << endl;
     }
 
-    return returnReduce(nRefine-oldNRefine, sumOp<label>());
+    return returnReduce(nRefine-oldNRefine, sumOp());
 }
 
 
@@ -2009,14 +2009,14 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 
     if
     (
-        returnReduce(nRefine, sumOp<label>())
-      > returnReduce(nAllowRefine, sumOp<label>())
+        returnReduce(nRefine, sumOp())
+      > returnReduce(nAllowRefine, sumOp())
     )
     {
         Info<< "Reached refinement limit." << endl;
     }
 
-    return returnReduce(nRefine-oldNRefine, sumOp<label>());
+    return returnReduce(nRefine-oldNRefine, sumOp());
 }
 
 
@@ -2307,7 +2307,7 @@ Foam::meshRefinement::refineAndBalance
         const scalar unbalance = returnReduce
         (
             mag(1.0-mesh_.nCells()/nIdealCells),
-            maxOp<scalar>()
+            maxOp()
         );
 
         if (unbalance <= maxLoadUnbalance)
@@ -2407,11 +2407,11 @@ Foam::meshRefinement::balanceAndRefine
         const scalar nNewCells =
             scalar(mesh_.nCells() + 7*cellsToRefine.size());
         const scalar nIdealNewCells =
-            returnReduce(nNewCells, sumOp<scalar>())/Pstream::nProcs();
+            returnReduce(nNewCells, sumOp())/Pstream::nProcs();
         const scalar unbalance = returnReduce
         (
             mag(1.0-nNewCells/nIdealNewCells),
-            maxOp<scalar>()
+            maxOp()
         );
 
         if (unbalance <= maxLoadUnbalance)

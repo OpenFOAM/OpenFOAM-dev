@@ -260,7 +260,7 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
         nProcCells[decomp[i]]++;
     }
 
-    reduce(nProcCells, ListOp<sumOp<label>>());
+    reduce(nProcCells, ListOp<sumOp>());
 
     // If there are no cells allocated to this processor keep the first one
     // to ensure that all processors have at least one cell

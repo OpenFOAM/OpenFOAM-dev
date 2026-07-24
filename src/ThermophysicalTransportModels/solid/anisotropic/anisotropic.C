@@ -157,7 +157,7 @@ anisotropic<SolidThermophysicalTransportModel>::anisotropic
         if
         (
             !bMesh[patchi].coupled()
-          && returnReduce(bMesh[patchi].size(), sumOp<label>())
+          && returnReduce(bMesh[patchi].size(), sumOp())
         )
         {
             const vectorField n(bMesh[patchi].nf());

@@ -424,7 +424,7 @@ void Foam::FreeStream<CloudType>::inflow()
         }
     }
 
-    reduce(nLocateBoundaryHits, sumOp<label>());
+    reduce(nLocateBoundaryHits, sumOp());
     if (nLocateBoundaryHits != 0)
     {
         WarningInFunction
@@ -433,7 +433,7 @@ void Foam::FreeStream<CloudType>::inflow()
             << " particles" << endl;
     }
 
-    reduce(particlesInserted, sumOp<label>());
+    reduce(particlesInserted, sumOp());
 
     Info<< "    Particles inserted              = "
         << particlesInserted << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -333,7 +333,7 @@ Foam::fileOperation::lookupProcessorsPath(const fileName& fName) const
             }
         }
 
-        if (returnReduce(procDirs.size(), sumOp<label>()))
+        if (returnReduce(procDirs.size(), sumOp()))
         {
             procsDirs_.insert(procPath, procDirs);
 

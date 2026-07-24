@@ -323,8 +323,8 @@ inline Foam::scalar Foam::MomentumCloud<CloudType>::Dij
         sj += p.nParticle()*pow(p.d(), j);
     }
 
-    reduce(si, sumOp<scalar>());
-    reduce(sj, sumOp<scalar>());
+    reduce(si, sumOp());
+    reduce(sj, sumOp());
     sj = max(sj, vSmall);
 
     return si/sj;
@@ -341,7 +341,7 @@ inline Foam::scalar Foam::MomentumCloud<CloudType>::Dmin() const
         d = min(d, iter().d());
     }
 
-    return returnReduce(d, minOp<scalar>());
+    return returnReduce(d, minOp());
 }
 
 
@@ -355,7 +355,7 @@ inline Foam::scalar Foam::MomentumCloud<CloudType>::Dmax() const
         d = max(d, iter().d());
     }
 
-    return returnReduce(d, maxOp<scalar>());
+    return returnReduce(d, maxOp());
 }
 
 

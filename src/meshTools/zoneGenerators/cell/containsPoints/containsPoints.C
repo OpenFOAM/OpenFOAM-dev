@@ -81,7 +81,7 @@ Foam::zoneSet Foam::zoneGenerators::containsPoints::generate() const
             cellIndices[czi++] = celli;
         }
 
-        const label globalCelli = returnReduce(celli, maxOp<label>());
+        const label globalCelli = returnReduce(celli, maxOp());
         if (globalCelli < 0)
         {
             WarningInFunction

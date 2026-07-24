@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ void Foam::cellsToCellsStabilisation::update
             break;
         }
     }
-    reduce(stabilisation_, orOp<bool>());
+    reduce(stabilisation_, orOp());
 
     // Quick return if nothing is to be done
     if (!stabilisation_) return;

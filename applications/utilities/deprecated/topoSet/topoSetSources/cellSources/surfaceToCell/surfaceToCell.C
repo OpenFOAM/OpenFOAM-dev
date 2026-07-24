@@ -166,7 +166,7 @@ void Foam::surfaceToCell::combine(topoSet& set, const bool add) const
             // Find cell point is in. Linear search.
             label celli = meshSearch::findCellNoTree(mesh_, outsidePoint);
 
-            if (returnReduce(celli, maxOp<label>()) == -1)
+            if (returnReduce(celli, maxOp()) == -1)
             {
                 FatalErrorInFunction
                     << "outsidePoint " << outsidePoint

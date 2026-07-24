@@ -249,7 +249,7 @@ bool Foam::mappedPatchBaseBase::moving
         returnReduce
         (
             localPatchMoving(patch) || localPatchMoving(nbrPatch),
-            orOp<bool>()
+            orOp()
         );
 }
 

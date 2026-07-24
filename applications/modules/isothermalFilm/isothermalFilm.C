@@ -81,7 +81,7 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
             << exit(FatalError);
     }
 
-    if (returnReduce(nWallFaces, sumOp<label>()) == 0)
+    if (returnReduce(nWallFaces, sumOp()) == 0)
     {
         FatalErrorInFunction
             << "There are no filmWall faces in the mesh"

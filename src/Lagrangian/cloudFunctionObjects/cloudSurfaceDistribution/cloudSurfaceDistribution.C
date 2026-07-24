@@ -395,11 +395,11 @@ bool Foam::functionObjects::cloudSurfaceDistribution::addField
         }
 
         // Synchronise
-        reduce(rangeHasChanged, orOp<bool>());
+        reduce(rangeHasChanged, orOp());
         if (rangeHasChanged)
         {
-            reduce(range.first(), minOp<scalar>());
-            reduce(range.second(), maxOp<scalar>());
+            reduce(range.first(), minOp());
+            reduce(range.second(), maxOp());
         }
 
         // If the range was expanded then re-sample the old sums onto the new
@@ -656,7 +656,7 @@ bool Foam::functionObjects::cloudSurfaceDistribution::write()
     forAll(sums_, fieldi)
     {
         // Quit if this PDF has nothing in it yet
-        if (returnReduce(nSamples_[fieldi], sumOp<label>()) == 0) continue;
+        if (returnReduce(nSamples_[fieldi], sumOp()) == 0) continue;
 
         // Get the component names for this field
         const char* const* componentNames = this->componentNames(fieldi);
@@ -693,7 +693,7 @@ bool Foam::functionObjects::cloudSurfaceDistribution::write()
             // correcting the ends (which have half the sample space of the
             // interior points)
             scalarField PDF(sum);
-            Pstream::listCombineGather(PDF, plusEqOp<scalar>());
+            Pstream::listCombineGather(PDF, plusEqOp());
             Pstream::listCombineScatter(PDF);
             PDF /= Foam::sum(PDF)*(range.second() - range.first())/nBins_;
             PDF.first() *= 2;

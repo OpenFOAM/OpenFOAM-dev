@@ -43,7 +43,7 @@ swirlInletVelocityFvPatchVectorField
         (
             "origin",
             dimensions::length,
-            returnReduce(patch().size(), sumOp<label>())
+            returnReduce(patch().size(), sumOp())
           ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
           : Zero
         )
@@ -54,7 +54,7 @@ swirlInletVelocityFvPatchVectorField
         (
             "axis",
             dimless,
-            returnReduce(patch().size(), sumOp<label>())
+            returnReduce(patch().size(), sumOp())
           ? -gSum(patch().Sf())/gSum(patch().magSf())
           : Zero
         )

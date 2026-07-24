@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -466,7 +466,7 @@ void Foam::moleculeCloud::removeHighEnergyOverlaps()
 
     if (Pstream::parRun())
     {
-        reduce(molsRemoved, sumOp<label>());
+        reduce(molsRemoved, sumOp());
     }
 
     Info<< tab << molsRemoved << " molecules removed" << endl;
@@ -969,7 +969,7 @@ void Foam::moleculeCloud::initialiseMolecules
         }
     }
 
-    reduce(nLocateBoundaryHits, sumOp<label>());
+    reduce(nLocateBoundaryHits, sumOp());
     if (nLocateBoundaryHits != 0)
     {
         WarningInFunction

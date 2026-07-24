@@ -254,7 +254,7 @@ void Foam::localPointRegion::calcPointRegions
     (
         mesh,
         candidatePoint,
-        orEqOp<bool>(),
+        orEqOp(),
         false               // nullValue
     );
 
@@ -401,7 +401,7 @@ void Foam::localPointRegion::calcPointRegions
 
         // Pout<< "nChanged:" << nChanged << endl;
 
-        if (returnReduce(nChanged, sumOp<label>()) == 0)
+        if (returnReduce(nChanged, sumOp()) == 0)
         {
             break;
         }

@@ -277,14 +277,14 @@ void surfaceSlipDisplacementPointPatchVectorField::calcProjection
         }
     }
 
-    reduce(nNotProjected, sumOp<label>());
+    reduce(nNotProjected, sumOp());
 
     if (nNotProjected > 0)
     {
         Info<< "surfaceSlipDisplacement :"
             << " on patch " << patch().name()
             << " did not project " << nNotProjected
-            << " out of " << returnReduce(localPoints.size(), sumOp<label>())
+            << " out of " << returnReduce(localPoints.size(), sumOp())
             << " points." << endl;
     }
 }

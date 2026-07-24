@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
                 );
                 Info<< "Read set " << currentSet().type() << " "
                     << setName << " with size "
-                    << returnReduce(currentSet().size(), sumOp<label>())
+                    << returnReduce(currentSet().size(), sumOp())
                     << endl;
             }
 
@@ -367,7 +367,7 @@ int main(int argc, char *argv[])
                 Info<< "    " << currentSet().type() << " "
                     << currentSet().name()
                     << " now size "
-                    << returnReduce(currentSet().size(), sumOp<label>())
+                    << returnReduce(currentSet().size(), sumOp())
                     << endl;
             }
         }

@@ -271,7 +271,7 @@ Foam::labelList Foam::polyMeshTetDecomposition::findFaceBasePts
     (
         mesh,
         boundaryFaceTetBasePtIs,
-        maxEqOp<label>()
+        maxEqOp()
     );
 
     for
@@ -475,7 +475,7 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
         }
     }
 
-    reduce(nErrorTets, sumOp<label>());
+    reduce(nErrorTets, sumOp());
 
     if (nErrorTets > 0)
     {

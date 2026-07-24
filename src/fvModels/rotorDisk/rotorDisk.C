@@ -257,7 +257,7 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
 
     if (correct)
     {
-        reduce(n, sumOp<vector>());
+        reduce(n, sumOp());
         axis = n/mag(n);
     }
 
@@ -314,8 +314,8 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
                 sumV += V[celli];
                 origin += V[celli]*C[celli];
             }
-            reduce(origin, sumOp<vector>());
-            reduce(sumV, sumOp<scalar>());
+            reduce(origin, sumOp());
+            reduce(sumV, sumOp());
             origin /= sumV;
 
             // Determine first radial vector
@@ -331,7 +331,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
                     magR = mag(test);
                 }
             }
-            reduce(dx1, maxMagSqrOp<vector>());
+            reduce(dx1, maxMagSqrOp());
             magR = mag(dx1);
 
             // Determine second radial vector and cross to determine axis
@@ -348,7 +348,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
                     }
                 }
             }
-            reduce(axis, maxMagSqrOp<vector>());
+            reduce(axis, maxMagSqrOp());
             axis /= mag(axis);
 
             // Correct the axis direction using a point above the rotor

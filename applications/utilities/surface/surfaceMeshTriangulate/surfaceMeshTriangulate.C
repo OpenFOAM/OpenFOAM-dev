@@ -203,8 +203,8 @@ int main(int argc, char *argv[])
         }
 
 
-        Pstream::mapCombineGather(patchSize, plusEqOp<label>());
-        Pstream::mapCombineGather(zoneSize, plusEqOp<label>());
+        Pstream::mapCombineGather(patchSize, plusEqOp());
+        Pstream::mapCombineGather(zoneSize, plusEqOp());
 
 
         // Allocate compact numbering for all patches/faceZones
@@ -319,21 +319,21 @@ int main(int argc, char *argv[])
         pointField allPoints = ListListOps::combine<pointField>
         (
             gatheredPoints,
-            accessOp<pointField>()
+            accessOp()
         );
         gatheredPoints.clear();
 
         faceList allFaces = ListListOps::combine<faceList>
         (
             gatheredFaces,
-            accessOp<faceList>()
+            accessOp()
         );
         gatheredFaces.clear();
 
         labelList allZones = ListListOps::combine<labelList>
         (
             gatheredZones,
-            accessOp<labelList>()
+            accessOp()
         );
         gatheredZones.clear();
 

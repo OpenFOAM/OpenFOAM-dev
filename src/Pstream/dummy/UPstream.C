@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,15 +55,15 @@ void Foam::UPstream::abort()
 }
 
 
-void Foam::reduce(scalar&, const sumOp<scalar>&, const int, const label)
+void Foam::reduce(scalar&, const sumOp&, const int, const label)
 {}
 
 
-void Foam::reduce(scalar&, const minOp<scalar>&, const int, const label)
+void Foam::reduce(scalar&, const minOp&, const int, const label)
 {}
 
 
-void Foam::reduce(vector2D&, const sumOp<vector2D>&, const int, const label)
+void Foam::reduce(vector2D&, const sumOp&, const int, const label)
 {}
 
 
@@ -77,7 +77,7 @@ void Foam::sumReduce
 {}
 
 
-void Foam::reduce(scalar&, const sumOp<scalar>&, const int, const label, label&)
+void Foam::reduce(scalar&, const sumOp&, const int, const label, label&)
 {}
 
 

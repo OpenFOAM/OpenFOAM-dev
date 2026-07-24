@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ bool Foam::functionObjects::stopAtEmptyClouds::condition() const
         {
             noClouds = false;
 
-            if (returnReduce(cloudIter()->nParcels(), sumOp<label>()) != 0)
+            if (returnReduce(cloudIter()->nParcels(), sumOp()) != 0)
             {
                 return false;
             }

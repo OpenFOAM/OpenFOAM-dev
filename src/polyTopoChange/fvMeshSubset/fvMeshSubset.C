@@ -269,7 +269,7 @@ void Foam::fvMeshSubset::doCoupledPatches
 
     if (syncPar)
     {
-        reduce(nUncoupled, sumOp<label>());
+        reduce(nUncoupled, sumOp());
     }
 
     if (debug && nUncoupled > 0)
@@ -1374,7 +1374,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
         // Get patch sizes (up to nextPatchID).
         // Note that up to nextPatchID the globalPatchMap is an identity so
         // no need to index through that.
-        Pstream::listCombineGather(globalPatchSizes, plusEqOp<label>());
+        Pstream::listCombineGather(globalPatchSizes, plusEqOp());
         Pstream::listCombineScatter(globalPatchSizes);
 
         // Now all processors have all the patchnames.
@@ -1434,7 +1434,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
 
         if (syncPar)
         {
-            reduce(oldInternalSize, sumOp<label>());
+            reduce(oldInternalSize, sumOp());
         }
 
         // Newly created patch so is at end. Check if any faces in it.

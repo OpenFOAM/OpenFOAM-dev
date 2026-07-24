@@ -106,7 +106,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    non-orthogonality > "
             << setw(3) << radToDeg(maxNonOrtho)
@@ -133,7 +133,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with face pyramid volume < "
             << setw(5) << minVol << "                 : "
@@ -158,7 +158,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with face-decomposition tet quality < "
             << setw(5) << minTetQuality << "      : "
@@ -181,7 +181,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with concavity > "
             << setw(3) << radToDeg(maxConcave)
@@ -209,7 +209,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with skewness > "
             << setw(3) << maxIntSkew
@@ -235,7 +235,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with interpolation weights (0..1)  < "
             << setw(5) << minWeight
@@ -259,7 +259,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with volume ratio of neighbour cells < "
             << setw(5) << minVolRatio
@@ -285,7 +285,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with face twist < "
             << setw(5) << minTwist
@@ -310,7 +310,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces with flatness < "
             << setw(5) << minFaceFlatness
@@ -333,7 +333,7 @@ bool Foam::meshCheck::checkMesh
         );
 
         const label nNewWrongFaces =
-            returnReduce(wrongFaces.size(), sumOp<label>());
+            returnReduce(wrongFaces.size(), sumOp());
 
         Info<< "    faces on cells with determinant < "
             << setw(5) << minDet << "                : "

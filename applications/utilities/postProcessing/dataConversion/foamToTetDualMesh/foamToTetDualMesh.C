@@ -228,9 +228,9 @@ int main(int argc, char *argv[])
         }
     }
 
-    reduce(nCells, sumOp<label>());
-    reduce(nPatchFaces, sumOp<label>());
-    reduce(nUnmapped, sumOp<label>());
+    reduce(nCells, sumOp());
+    reduce(nPatchFaces, sumOp());
+    reduce(nUnmapped, sumOp());
     Info<< "tetDualMesh points : " << tetDualMesh.nPoints()
         << " of which mapped to" << nl
         << "    cells       : " << nCells << nl

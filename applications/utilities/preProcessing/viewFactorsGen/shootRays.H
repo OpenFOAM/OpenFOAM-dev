@@ -76,7 +76,7 @@ for (label proci = 0; proci < Pstream::nProcs(); proci++)
             }
         }
 
-    } while (returnReduce(i < myFc.size(), orOp<bool>()));
+    } while (returnReduce(i < myFc.size(), orOp()));
 
     List<pointIndexHit> hitInfo(startIndex.size());
     surfacesMesh.findLine(start, end, hitInfo);
@@ -167,7 +167,7 @@ for (label proci = 0; proci < Pstream::nProcs(); proci++)
         firstLoop = false;
         iter ++;
 
-    } while (returnReduce(hitInfo.size(), orOp<bool>()) > 0 && iter < 10);
+    } while (returnReduce(hitInfo.size(), orOp()) > 0 && iter < 10);
 
     startIndex.clear();
     end.clear();

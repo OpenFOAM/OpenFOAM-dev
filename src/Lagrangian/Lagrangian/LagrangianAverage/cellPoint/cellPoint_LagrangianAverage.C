@@ -108,7 +108,7 @@ Foam::LagrangianAverages::cellPoint<Type>::pointVolumeWeightedSum
     (
         pMesh,
         result,
-        plusEqOp<scalar>(),
+        plusEqOp(),
         scalar(0)
     );
 
@@ -369,7 +369,7 @@ void Foam::LagrangianAverages::cellPoint<Type>::addToPoints
         mesh.poly(),
         d.pointAvgPoint_,
         d.pointAvgCount_,
-        plusEqOp<label>(),
+        plusEqOp(),
         label(0)
     );
     if (notNull(weightOrNull))
@@ -379,7 +379,7 @@ void Foam::LagrangianAverages::cellPoint<Type>::addToPoints
             mesh.poly(),
             d.pointAvgPoint_,
             d.pointAvgWeightSumPtr_(),
-            plusEqOp<scalar>(),
+            plusEqOp(),
             scalar(0)
         );
     }
@@ -388,7 +388,7 @@ void Foam::LagrangianAverages::cellPoint<Type>::addToPoints
         mesh.poly(),
         d.pointAvgPoint_,
         d.pointAvgSum_,
-        plusEqOp<Type>(),
+        plusEqOp(),
         pTraits<Type>::zero
     );
 }

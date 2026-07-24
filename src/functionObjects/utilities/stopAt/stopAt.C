@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ bool Foam::functionObjects::stopAt::execute()
     if (!stopped_)
     {
         bool stopCondition = condition();
-        reduce(stopCondition, orOp<bool>());
+        reduce(stopCondition, orOp());
 
         if (stopCondition)
         {

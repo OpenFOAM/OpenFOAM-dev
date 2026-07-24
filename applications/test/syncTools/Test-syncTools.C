@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,15 +60,15 @@ void testPackedList(const polyMesh& mesh, randomGenerator& rndGen)
         PackedList<3> maxBits(bits);
         labelList maxEdgeValues(edgeValues);
 
-        syncTools::syncEdgeList(mesh, bits, minEqOp<unsigned int>(), 0);
-        syncTools::syncEdgeList(mesh, edgeValues, minEqOp<label>(), 0);
+        syncTools::syncEdgeList(mesh, bits, minEqOp(), 0);
+        syncTools::syncEdgeList(mesh, edgeValues, minEqOp(), 0);
 
-        syncTools::syncEdgeList(mesh, maxBits, maxEqOp<unsigned int>(), 0);
+        syncTools::syncEdgeList(mesh, maxBits, maxEqOp(), 0);
         syncTools::syncEdgeList
         (
             mesh,
             maxEdgeValues,
-            maxEqOp<label>(),
+            maxEqOp(),
             0
         );
 
@@ -107,15 +107,15 @@ void testPackedList(const polyMesh& mesh, randomGenerator& rndGen)
         PackedList<3> maxBits(bits);
         labelList maxPointValues(pointValues);
 
-        syncTools::syncPointList(mesh, bits, minEqOp<unsigned int>(), 0);
-        syncTools::syncPointList(mesh, pointValues, minEqOp<label>(), 0);
+        syncTools::syncPointList(mesh, bits, minEqOp(), 0);
+        syncTools::syncPointList(mesh, pointValues, minEqOp(), 0);
 
-        syncTools::syncPointList(mesh, maxBits, maxEqOp<unsigned int>(), 0);
+        syncTools::syncPointList(mesh, maxBits, maxEqOp(), 0);
         syncTools::syncPointList
         (
             mesh,
             maxPointValues,
-            maxEqOp<label>(),
+            maxEqOp(),
             0
         );
 
@@ -155,11 +155,11 @@ void testPackedList(const polyMesh& mesh, randomGenerator& rndGen)
         PackedList<3> maxBits(bits);
         labelList maxFaceValues(faceValues);
 
-        syncTools::syncFaceList(mesh, bits, minEqOp<unsigned int>());
-        syncTools::syncFaceList(mesh, faceValues, minEqOp<label>());
+        syncTools::syncFaceList(mesh, bits, minEqOp());
+        syncTools::syncFaceList(mesh, faceValues, minEqOp());
 
-        syncTools::syncFaceList(mesh, maxBits, maxEqOp<unsigned int>());
-        syncTools::syncFaceList(mesh, maxFaceValues, maxEqOp<label>());
+        syncTools::syncFaceList(mesh, maxBits, maxEqOp());
+        syncTools::syncFaceList(mesh, maxFaceValues, maxEqOp());
 
         forAll(bits, facei)
         {
@@ -227,14 +227,14 @@ void testSparseData(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             sparseData,
-            minMagSqrEqOp<point>()
+            minMagSqrEqOp()
             // true                    // apply separation
         );
         syncTools::syncPointList
         (
             mesh,
             fullData,
-            minMagSqrEqOp<point>(),
+            minMagSqrEqOp(),
             point(great, great, great)
             // true                    // apply separation
         );
@@ -313,13 +313,13 @@ void testSparseData(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             sparseData,
-            minMagSqrEqOp<point>()
+            minMagSqrEqOp()
         );
         syncTools::syncEdgeList
         (
             mesh,
             fullData,
-            minMagSqrEqOp<point>(),
+            minMagSqrEqOp(),
             point(great, great, great)
         );
 
@@ -384,7 +384,7 @@ void testPointSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             syncedPoints,
-            minMagSqrEqOp<point>(),
+            minMagSqrEqOp(),
             point(great, great, great)
         );
 
@@ -420,7 +420,7 @@ void testPointSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             nMasters,
-            plusEqOp<label>(),
+            plusEqOp(),
             0
         );
 
@@ -458,7 +458,7 @@ void testEdgeSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             syncedMids,
-            minMagSqrEqOp<point>(),
+            minMagSqrEqOp(),
             point(great, great, great)
         );
 
@@ -496,7 +496,7 @@ void testEdgeSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             nMasters,
-            plusEqOp<label>(),
+            plusEqOp(),
             0
         );
 
@@ -530,7 +530,7 @@ void testFaceSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             syncedFc,
-            maxMagSqrEqOp<point>()
+            maxMagSqrEqOp()
         );
 
         forAll(syncedFc, facei)
@@ -565,7 +565,7 @@ void testFaceSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             nMasters,
-            plusEqOp<label>()
+            plusEqOp()
         );
 
         forAll(nMasters, facei)

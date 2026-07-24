@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,7 @@ void Foam::UPstream::abort()
 void Foam::reduce
 (
     scalar& Value,
-    const sumOp<scalar>& bop,
+    const sumOp& bop,
     const int tag,
     const label communicator
 )
@@ -223,7 +223,7 @@ void Foam::reduce
 void Foam::reduce
 (
     scalar& Value,
-    const minOp<scalar>& bop,
+    const minOp& bop,
     const int tag,
     const label communicator
 )
@@ -242,7 +242,7 @@ void Foam::reduce
 void Foam::reduce
 (
     vector2D& Value,
-    const sumOp<vector2D>& bop,
+    const sumOp& bop,
     const int tag,
     const label communicator
 )
@@ -274,7 +274,7 @@ void Foam::sumReduce
         error::printStack(Pout);
     }
     vector2D twoScalars(Value, scalar(Count));
-    reduce(twoScalars, sumOp<vector2D>(), tag, communicator);
+    reduce(twoScalars, sumOp(), tag, communicator);
 
     Value = twoScalars.x();
     Count = twoScalars.y();
@@ -284,7 +284,7 @@ void Foam::sumReduce
 void Foam::reduce
 (
     scalar& Value,
-    const sumOp<scalar>& bop,
+    const sumOp& bop,
     const int tag,
     const label communicator,
     label& requestID

@@ -36,7 +36,7 @@ namespace Foam
 template<class Type>
 Type sum(const Type& x, const bool global)
 {
-    return global ? returnReduce(x, sumOp<Type>()) : x;
+    return global ? returnReduce(x, sumOp()) : x;
 }
 
 template<class Type>

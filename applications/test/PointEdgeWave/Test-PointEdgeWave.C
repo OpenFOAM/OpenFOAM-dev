@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
         nPoints += pbm[patchIDs[i]].nPoints();
     }
 
-    Info<< "Seeding " << returnReduce(nPoints, sumOp<label>())
+    Info<< "Seeding " << returnReduce(nPoints, sumOp())
         << " patch points" << nl << endl;
 
 

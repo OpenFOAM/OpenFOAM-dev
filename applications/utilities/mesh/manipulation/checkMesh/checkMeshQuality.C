@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Foam::label Foam::checkMeshQuality
         faceSet faces(mesh, "meshQualityFaces", mesh.nFaces()/100+1);
         meshCheck::checkMesh(false, mesh, dict, faces);
 
-        label nFaces = returnReduce(faces.size(), sumOp<label>());
+        label nFaces = returnReduce(faces.size(), sumOp());
 
         if (nFaces > 0)
         {

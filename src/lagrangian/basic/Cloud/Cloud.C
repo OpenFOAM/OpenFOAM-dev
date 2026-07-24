@@ -43,9 +43,9 @@ License
 namespace Foam
 {
 
-template<class Type>
 struct IDLListAppendEqOp
 {
+    template<class Type>
     void operator()(IDLList<Type>& x, const IDLList<Type>& y) const
     {
         if (y.size())
@@ -251,7 +251,7 @@ void Foam::lagrangian::Cloud<ParticleType>::deleteLostParticles()
         }
     }
 
-    reduce(lostCount, sumOp<label>());
+    reduce(lostCount, sumOp());
     if (lostCount != 0)
     {
         WarningInFunction
@@ -410,7 +410,7 @@ void Foam::lagrangian::Cloud<ParticleType>::move
                 break;
             }
         }
-        reduce(transferred, orOp<bool>());
+        reduce(transferred, orOp());
         if (!transferred)
         {
             break;
@@ -446,7 +446,7 @@ void Foam::lagrangian::Cloud<ParticleType>::move
     }
 
     // Warn about any approximate locates
-    Pstream::listCombineGather(td.patchNLocateBoundaryHits, plusEqOp<label>());
+    Pstream::listCombineGather(td.patchNLocateBoundaryHits, plusEqOp());
     if (Pstream::master())
     {
         forAll(td.patchNLocateBoundaryHits, patchi)
@@ -504,7 +504,7 @@ void Foam::lagrangian::Cloud<ParticleType>::topoChange
         }
     }
 
-    reduce(lostCount, sumOp<label>());
+    reduce(lostCount, sumOp());
     if (lostCount != 0)
     {
         WarningInFunction
@@ -634,7 +634,7 @@ void Foam::lagrangian::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
         }
     }
 
-    reduce(lostCount, sumOp<label>());
+    reduce(lostCount, sumOp());
     if (lostCount != 0)
     {
         WarningInFunction
@@ -705,7 +705,7 @@ void Foam::lagrangian::Cloud<ParticleType>::distribute
         map.cellMap().constructMap(),
         false,
         cellParticlePositions,
-        ListAppendEqOp<point>(),
+        ListAppendEqOp(),
         flipOp(),
         List<point>()
     );
@@ -726,7 +726,7 @@ void Foam::lagrangian::Cloud<ParticleType>::distribute
         map.cellMap().constructMap(),
         false,
         cellParticles,
-        IDLListAppendEqOp<ParticleType>(),
+        IDLListAppendEqOp(),
         flipOp(),
         IDLList<ParticleType>()
     );
@@ -753,7 +753,7 @@ void Foam::lagrangian::Cloud<ParticleType>::distribute
         }
     }
 
-    reduce(lostCount, sumOp<label>());
+    reduce(lostCount, sumOp());
     if (lostCount != 0)
     {
         WarningInFunction

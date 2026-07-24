@@ -530,7 +530,7 @@ Foam::boundSphere Foam::boundSphere::implementation::global
         // processes can result in a different (but still valid) solution. So,
         // if we are not being strict then just return the sphere and the
         // boundary points from the master process.
-        if (returnReduce(complete, andOp<bool>()))
+        if (returnReduce(complete, andOp()))
         {
             if (strict)
             {

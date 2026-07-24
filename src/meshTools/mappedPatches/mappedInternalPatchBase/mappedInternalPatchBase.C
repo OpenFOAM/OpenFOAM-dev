@@ -166,7 +166,7 @@ void Foam::mappedInternalPatchBase::calcMapping() const
         {
             WarningInFunction
                 << "Did not find a containing cell for " << nNotFound
-                << " out of " << returnReduce(patch_.size(), sumOp<label>())
+                << " out of " << returnReduce(patch_.size(), sumOp())
                 << " total faces. Using nearest cell for these faces instead."
                 << endl << "On patch " << patch_.name() << " on region "
                 << nbrRegionName() << " with offset mode "

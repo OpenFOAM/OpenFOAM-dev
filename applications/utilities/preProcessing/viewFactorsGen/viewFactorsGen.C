@@ -388,7 +388,7 @@ int main(int argc, char *argv[])
     // total number of coarse faces
     label totalNCoarseFaces = nCoarseFaces;
 
-    reduce(totalNCoarseFaces, sumOp<label>());
+    reduce(totalNCoarseFaces, sumOp());
 
     if (Pstream::master())
     {
@@ -696,7 +696,7 @@ int main(int argc, char *argv[])
     );
 
     label totalPatches = coarsePatches.size();
-    reduce(totalPatches, maxOp<label>());
+    reduce(totalPatches, maxOp());
 
     // Matrix sum in j(Fij) for each i (if enclosure sum = 1)
     scalarSquareMatrix sumViewFactorPatch
@@ -821,9 +821,9 @@ int main(int argc, char *argv[])
     // Write view factors matrix in listlist form
     F.write();
 
-    reduce(sumViewFactorPatch, sumOp<scalarSquareMatrix>());
+    reduce(sumViewFactorPatch, sumOp());
 
-    Pstream::listCombineGather(patchArea, plusEqOp<scalar>());
+    Pstream::listCombineGather(patchArea, plusEqOp());
     Pstream::listCombineScatter(patchArea);
 
 

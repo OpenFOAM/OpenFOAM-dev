@@ -596,8 +596,8 @@ bool Foam::functionObjects::forcesBase::read(const dictionary& dict)
                 binMin_ = min(min(d), binMin_);
                 binMax = max(max(d), binMax);
             }
-            reduce(binMin_, minOp<scalar>());
-            reduce(binMax, maxOp<scalar>());
+            reduce(binMin_, minOp());
+            reduce(binMax, maxOp());
 
             // slightly boost binMax so that region of interest is fully
             // within bounds
@@ -901,8 +901,8 @@ void Foam::functionObjects::forcesBase::calcForcesMoments(const vector& CofR)
         }
     }
 
-    Pstream::listCombineGather(force_, plusEqOp<vectorField>());
-    Pstream::listCombineGather(moment_, plusEqOp<vectorField>());
+    Pstream::listCombineGather(force_, plusEqOp());
+    Pstream::listCombineGather(moment_, plusEqOp());
     Pstream::listCombineScatter(force_);
     Pstream::listCombineScatter(moment_);
 }

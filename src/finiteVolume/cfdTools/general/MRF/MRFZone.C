@@ -83,7 +83,7 @@ void Foam::MRFZone::setMRFFaces()
     }
 
     // Synchronise the faceInMRF across processor patches
-    syncTools::syncFaceList(mesh_, faceInMRF, orEqOp<bool>());
+    syncTools::syncFaceList(mesh_, faceInMRF, orEqOp());
 
     // Construct a list of all internal FV faces in the MRF zone
     internalFaces_ =

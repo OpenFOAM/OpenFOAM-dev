@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,8 +135,8 @@ void sumReduce
     const label comm = UPstream::worldComm
 )
 {
-    reduce(Value, sumOp<T>(), tag, comm);
-    reduce(Count, sumOp<label>(), tag, comm);
+    reduce(Value, sumOp(), tag, comm);
+    reduce(Count, sumOp(), tag, comm);
 }
 
 
@@ -159,7 +159,7 @@ void reduce
 void reduce
 (
     scalar& Value,
-    const sumOp<scalar>& bop,
+    const sumOp& bop,
     const int tag = Pstream::msgType(),
     const label comm = UPstream::worldComm
 );
@@ -167,7 +167,7 @@ void reduce
 void reduce
 (
     scalar& Value,
-    const minOp<scalar>& bop,
+    const minOp& bop,
     const int tag = Pstream::msgType(),
     const label comm = UPstream::worldComm
 );
@@ -175,7 +175,7 @@ void reduce
 void reduce
 (
     vector2D& Value,
-    const sumOp<vector2D>& bop,
+    const sumOp& bop,
     const int tag = Pstream::msgType(),
     const label comm = UPstream::worldComm
 );
@@ -191,7 +191,7 @@ void sumReduce
 void reduce
 (
     scalar& Value,
-    const sumOp<scalar>& bop,
+    const sumOp& bop,
     const int tag,
     const label comm,
     label& request

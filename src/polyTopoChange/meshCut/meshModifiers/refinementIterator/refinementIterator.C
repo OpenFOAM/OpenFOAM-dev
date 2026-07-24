@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
         cellCuts cuts(mesh_, cellWalker_, currentRefCells);
 
         label nCuts = cuts.nLoops();
-        reduce(nCuts, sumOp<label>());
+        reduce(nCuts, sumOp());
 
         if (nCuts == 0)
         {
@@ -255,12 +255,12 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
 
         // Stop only if all finished or all can't refine any further.
         stop = (nRefCells == 0) || (nRefCells == oldRefCells);
-        reduce(stop, andOp<bool>());
+        reduce(stop, andOp());
     }
     while (!stop);
 
 
-    if (returnReduce((nRefCells == oldRefCells), andOp<bool>()))
+    if (returnReduce((nRefCells == oldRefCells), andOp()))
     {
         WarningInFunction
             << "stopped refining."

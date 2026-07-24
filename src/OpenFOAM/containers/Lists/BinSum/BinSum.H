@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ template
 <
     class IndexType,
     class List,
-    class CombineOp = plusEqOp<typename List::value_type>
+    class CombineOp = plusEqOp
 >
 class BinSum
 :
@@ -93,7 +93,7 @@ public:
             const IndexType delta,
             const UList<IndexType>& indexVals,
             const List& vals,
-            const CombineOp& cop = plusEqOp<typename List::value_type>()
+            const CombineOp& cop = plusEqOp()
         );
 
 
@@ -121,14 +121,14 @@ public:
             (
                 const IndexType& indexVal,
                 const typename List::const_reference val,
-                const CombineOp& cop = plusEqOp<typename List::value_type>()
+                const CombineOp& cop = plusEqOp()
             );
 
             void add
             (
                 const UList<IndexType>& indexVals,
                 const List& vals,
-                const CombineOp& cop = plusEqOp<typename List::value_type>()
+                const CombineOp& cop = plusEqOp()
             );
 };
 

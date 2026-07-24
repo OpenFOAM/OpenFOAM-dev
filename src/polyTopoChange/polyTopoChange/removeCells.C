@@ -118,7 +118,7 @@ Foam::labelList Foam::removeCells::getExposedFaces
         (
             mesh_,
             nCellsUsingFace,
-            plusEqOp<label>()
+            plusEqOp()
         );
     }
 

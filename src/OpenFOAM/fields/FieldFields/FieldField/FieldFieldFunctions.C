@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -549,7 +549,7 @@ template<template<class> class Field, class Type>                              \
 returnType gFunc(const FieldField<Field, Type>& f)                             \
 {                                                                              \
     returnType res = func(f);                                                  \
-    reduce(res, rFunc##Op<Type>());                                            \
+    reduce(res, rFunc##Op());                                            \
     return res;                                                                \
 }                                                                              \
 TMP_UNARY_FUNCTION(returnType, gFunc)
@@ -572,7 +572,7 @@ Type gAverage(const FieldField<Field, Type>& f)
         n += f[i].size();
     }
 
-    reduce(n, sumOp<label>());
+    reduce(n, sumOp());
 
     if (n > 0)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,7 @@ void Foam::ParSortableList<Type>::sort()
 
     label n = this->size();
 
-    reduce(n, sumOp<label>());
+    reduce(n, sumOp());
 
 
     // 1. Sort list locally
@@ -185,7 +185,7 @@ void Foam::ParSortableList<Type>::sort()
             ListListOps::combine<labelList>
             (
                 sortedGatherList,
-                accessOp<labelList>()
+                accessOp()
             );
 
         SortableList<Type> sortedPivots(allPivots);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -390,7 +390,7 @@ bool Foam::searchableSurfaceList::checkClosed(const bool report) const
         Info<< endl;
     }
 
-    return returnReduce(hasError, orOp<bool>());
+    return returnReduce(hasError, orOp());
 }
 
 
@@ -439,7 +439,7 @@ bool Foam::searchableSurfaceList::checkNormalOrientation
         Info<< endl;
     }
 
-    return returnReduce(hasError, orOp<bool>());
+    return returnReduce(hasError, orOp());
 }
 
 
@@ -487,7 +487,7 @@ bool Foam::searchableSurfaceList::checkSizes
         Info<< endl;
     }
 
-    return returnReduce(hasError, orOp<bool>());
+    return returnReduce(hasError, orOp());
 }
 
 
@@ -613,7 +613,7 @@ bool Foam::searchableSurfaceList::checkIntersection
         Info<< endl;
     }
 
-    return returnReduce(hasError, orOp<bool>());
+    return returnReduce(hasError, orOp());
 }
 
 
@@ -676,7 +676,7 @@ bool Foam::searchableSurfaceList::checkQuality
         Info<< endl;
     }
 
-    return returnReduce(hasError, orOp<bool>());
+    return returnReduce(hasError, orOp());
 
 }
 

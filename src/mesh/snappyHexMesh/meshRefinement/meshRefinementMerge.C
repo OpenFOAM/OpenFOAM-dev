@@ -76,7 +76,7 @@ License
 //        )
 //    );
 //
-//    label nFaceSets = returnReduce(mergeSets.size(), sumOp<label>());
+//    label nFaceSets = returnReduce(mergeSets.size(), sumOp());
 //
 //    Info<< "mergePatchFaces : Merging " << nFaceSets
 //        << " sets of faces." << endl;
@@ -272,7 +272,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
     }
     allFaceSets.setSize(compactI);
 
-    label nFaceSets = returnReduce(allFaceSets.size(), sumOp<label>());
+    label nFaceSets = returnReduce(allFaceSets.size(), sumOp());
 
     Info<< "Merging " << nFaceSets << " sets of faces." << nl << endl;
 
@@ -381,7 +381,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             //        <<  returnReduce
             //            (
             //                errorFaces.size() - nOldSize,
-            //                sumOp<label>()
+            //                sumOp()
             //            )
             //        << " faces with illegal face-face connectivity"
             //        << endl;
@@ -432,7 +432,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             const label nRestore = returnReduce
             (
                 mastersToRestore.size(),
-                sumOp<label>()
+                sumOp()
             );
 
             Info<< "Masters that need to be restored:"
@@ -655,7 +655,7 @@ Foam::labelList Foam::meshRefinement::collectFaces
     (
         mesh_,
         selected,
-        orEqOp<bool>()      // combine operator
+        orEqOp()      // combine operator
     );
 
     labelList selectedFaces(findIndices(selected, true));
@@ -698,7 +698,7 @@ Foam::labelList Foam::meshRefinement::growFaceCellFace
     (
         mesh_,
         selected,
-        orEqOp<bool>()      // combine operator
+        orEqOp()      // combine operator
     );
     return findIndices(selected, true);
 }
@@ -775,7 +775,7 @@ Foam::label Foam::meshRefinement::mergeEdgesUndo
             //     || hasErrors;
             //
             //    Info<< "Detected additional "
-            //        << returnReduce(errorFaces.size()-nOldSize,sumOp<label>())
+            //        << returnReduce(errorFaces.size()-nOldSize,sumOp())
             //        << " faces with illegal face-face connectivity"
             //        << endl;
             //}
@@ -805,7 +805,7 @@ Foam::label Foam::meshRefinement::mergeEdgesUndo
             const label n = returnReduce
             (
                 masterErrorFaces.size(),
-                sumOp<label>()
+                sumOp()
             );
 
             Info<< "Detected " << n
@@ -818,7 +818,7 @@ Foam::label Foam::meshRefinement::mergeEdgesUndo
                 if (hasErrors)
                 {
                     Info<< "Detected "
-                        << returnReduce(errorFaces.size(), sumOp<label>())
+                        << returnReduce(errorFaces.size(), sumOp())
                         << " error faces in mesh."
                         << " Restoring neighbours of faces in error." << nl
                         << endl;

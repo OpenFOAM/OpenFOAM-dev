@@ -428,19 +428,19 @@ void Foam::LocalInteraction<CloudType>::info(Ostream& os)
 
     // Accumulate current data
     labelList npe(SubList<label>(nEscape_, nPatches));
-    Pstream::listCombineGather(npe, plusEqOp<label>());
+    Pstream::listCombineGather(npe, plusEqOp());
     SubField<label>(npe) += npe0;
 
     scalarList mpe(SubList<scalar>(massEscape_, nPatches));
-    Pstream::listCombineGather(mpe, plusEqOp<scalar>());
+    Pstream::listCombineGather(mpe, plusEqOp());
     SubField<scalar>(mpe) += mpe0;
 
     labelList nps(SubList<label>(nStick_, nPatches));
-    Pstream::listCombineGather(nps, plusEqOp<label>());
+    Pstream::listCombineGather(nps, plusEqOp());
     SubField<label>(nps) += nps0;
 
     scalarList mps(SubList<scalar>(massStick_, nPatches));
-    Pstream::listCombineGather(mps, plusEqOp<scalar>());
+    Pstream::listCombineGather(mps, plusEqOp());
     SubField<scalar>(mps) += mps0;
 
     for (label patchi = 0; patchi < nPatches; ++ patchi)

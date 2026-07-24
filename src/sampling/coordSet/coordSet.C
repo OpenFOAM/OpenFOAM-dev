@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -443,7 +443,7 @@ Foam::Tuple2<Foam::coordSet, Foam::labelList> Foam::coordSet::gather() const
             ListListOps::combine<List<point>>
             (
                 gatheredPositions,
-                accessOp<List<point>>()
+                accessOp()
             );
     };
 
@@ -454,7 +454,7 @@ Foam::Tuple2<Foam::coordSet, Foam::labelList> Foam::coordSet::gather() const
             ListListOps::combine<scalarList>
             (
                 gatheredDistances,
-                accessOp<scalarList>()
+                accessOp()
             );
     }
 
@@ -463,7 +463,7 @@ Foam::Tuple2<Foam::coordSet, Foam::labelList> Foam::coordSet::gather() const
         ListListOps::combine<labelList>
         (
             gatheredSegments,
-            accessOp<labelList>()
+            accessOp()
         )
     );
 

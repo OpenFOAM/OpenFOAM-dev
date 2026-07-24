@@ -409,8 +409,8 @@ void Foam::pairPatchAgglomeration::agglomerate()
                 agglomOK = true;
             }
 
-            reduce(nCoarseFaces, sumOp<label>());
-            reduce(agglomOK, orOp<bool>());
+            reduce(nCoarseFaces, sumOp());
+            reduce(agglomOK, orOp());
 
         } while (!agglomOK);
 

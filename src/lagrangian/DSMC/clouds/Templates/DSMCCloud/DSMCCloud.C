@@ -193,7 +193,7 @@ void Foam::DSMCCloud<ParcelType>::initialise
         }
     }
 
-    reduce(nLocateBoundaryHits, sumOp<label>());
+    reduce(nLocateBoundaryHits, sumOp());
     if (nLocateBoundaryHits != 0)
     {
         WarningInFunction
@@ -373,9 +373,9 @@ void Foam::DSMCCloud<ParcelType>::collisions()
         }
     }
 
-    reduce(collisions, sumOp<label>());
+    reduce(collisions, sumOp());
 
-    reduce(collisionCandidates, sumOp<label>());
+    reduce(collisionCandidates, sumOp());
 
     sigmaTcRMax_.correctBoundaryConditions();
 
@@ -1008,18 +1008,18 @@ template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::info() const
 {
     label nDSMCParticles = this->size();
-    reduce(nDSMCParticles, sumOp<label>());
+    reduce(nDSMCParticles, sumOp());
 
     scalar nMol = nDSMCParticles*nParticle_;
 
     vector linearMomentum = linearMomentumOfSystem();
-    reduce(linearMomentum, sumOp<vector>());
+    reduce(linearMomentum, sumOp());
 
     scalar linearKineticEnergy = linearKineticEnergyOfSystem();
-    reduce(linearKineticEnergy, sumOp<scalar>());
+    reduce(linearKineticEnergy, sumOp());
 
     scalar internalEnergy = internalEnergyOfSystem();
-    reduce(internalEnergy, sumOp<scalar>());
+    reduce(internalEnergy, sumOp());
 
     Info<< "Cloud name: " << this->name() << nl
         << "    Number of dsmc particles        = "
@@ -1031,7 +1031,7 @@ void Foam::DSMCCloud<ParcelType>::info() const
         Info<< "    Number of molecules             = "
             << nMol << nl
             << "    Mass in system                  = "
-            << returnReduce(massInSystem(), sumOp<scalar>()) << nl
+            << returnReduce(massInSystem(), sumOp()) << nl
             << "    Average linear momentum         = "
             << linearMomentum/nMol << nl
             << "   |Average linear momentum|        = "

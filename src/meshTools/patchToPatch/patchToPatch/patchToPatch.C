@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -753,7 +753,7 @@ Foam::label Foam::patchToPatch::finalise
         nCouples += tgtLocalSrcFaces_[tgtFacei].size();
     }
 
-    reduce(nCouples, sumOp<label>());
+    reduce(nCouples, sumOp());
 
     return nCouples;
 }
@@ -872,8 +872,8 @@ void Foam::patchToPatch::update
 
     // Determine numbers of faces on both sides, report, and quit if either
     // side is empty
-    const label srcTotalSize = returnReduce(srcPatch.size(), sumOp<label>());
-    const label tgtTotalSize = returnReduce(tgtPatch.size(), sumOp<label>());
+    const label srcTotalSize = returnReduce(srcPatch.size(), sumOp());
+    const label tgtTotalSize = returnReduce(tgtPatch.size(), sumOp());
     if (srcTotalSize == 0 || tgtTotalSize == 0)
     {
         return;

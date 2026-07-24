@@ -1393,7 +1393,7 @@ void Foam::polyTopoChange::reorderCoupledFaces
 
     if (syncParallel)
     {
-        reduce(anyChanged, orOp<bool>());
+        reduce(anyChanged, orOp());
     }
 
     if (anyChanged)

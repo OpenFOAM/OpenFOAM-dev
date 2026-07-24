@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,7 +168,7 @@ void Foam::decompositionMethods::hierarchical::calculateSortedWeightedSizes
     scalar globalCurrentLength = returnReduce
     (
         sortedWeightedSizes[current.size()],
-        sumOp<scalar>()
+        sumOp()
     );
     // Normalise weights by global sum of weights and multiply through
     // by global size.
@@ -204,7 +204,7 @@ void Foam::decompositionMethods::hierarchical::findBinary
 
     while (true)
     {
-        label size = returnReduce(mid-minIndex, sumOp<label>());
+        label size = returnReduce(mid-minIndex, sumOp());
 
         if (debug)
         {
@@ -237,7 +237,7 @@ void Foam::decompositionMethods::hierarchical::findBinary
         // Safeguard if same as previous.
         bool hasNotChanged = (mag(midValue-midValuePrev) < small);
 
-        if (returnReduce(hasNotChanged, andOp<bool>()))
+        if (returnReduce(hasNotChanged, andOp()))
         {
             WarningInFunction
                 << "unable to find desired decomposition split, making do!"
@@ -282,7 +282,7 @@ void Foam::decompositionMethods::hierarchical::findBinary
         scalar weightedSize = returnReduce
         (
             sortedWeightedSizes[mid] - sortedWeightedSizes[minIndex],
-            sumOp<scalar>()
+            sumOp()
         );
 
         if (debug)
@@ -317,7 +317,7 @@ void Foam::decompositionMethods::hierarchical::findBinary
         // Safeguard if same as previous.
         bool hasNotChanged = (mag(midValue-midValuePrev) < small);
 
-        if (returnReduce(hasNotChanged, andOp<bool>()))
+        if (returnReduce(hasNotChanged, andOp()))
         {
             WarningInFunction
                 << "unable to find desired decomposition split, making do!"
@@ -361,7 +361,7 @@ void Foam::decompositionMethods::hierarchical::sortComponent
     }
     sortedCoord.sort();
 
-    label globalCurrentSize = returnReduce(current.size(), sumOp<label>());
+    label globalCurrentSize = returnReduce(current.size(), sumOp());
 
     scalar minCoord = returnReduce
     (
@@ -370,7 +370,7 @@ void Foam::decompositionMethods::hierarchical::sortComponent
           ? sortedCoord[0]
           : great
         ),
-        minOp<scalar>()
+        minOp()
     );
 
     scalar maxCoord = returnReduce
@@ -380,7 +380,7 @@ void Foam::decompositionMethods::hierarchical::sortComponent
           ? sortedCoord.last()
           : -great
         ),
-        maxOp<scalar>()
+        maxOp()
     );
 
     if (debug)
@@ -536,7 +536,7 @@ void Foam::decompositionMethods::hierarchical::sortComponent
     }
     sortedCoord.sort();
 
-    label globalCurrentSize = returnReduce(current.size(), sumOp<label>());
+    label globalCurrentSize = returnReduce(current.size(), sumOp());
 
     // Now evaluate local cumulative weights, based on the sorting.
     // Make one bigger than the nodes.
@@ -557,7 +557,7 @@ void Foam::decompositionMethods::hierarchical::sortComponent
           ? sortedCoord[0]
           : great
         ),
-        minOp<scalar>()
+        minOp()
     );
 
     scalar maxCoord = returnReduce
@@ -567,7 +567,7 @@ void Foam::decompositionMethods::hierarchical::sortComponent
           ? sortedCoord.last()
           : -great
         ),
-        maxOp<scalar>()
+        maxOp()
     );
 
     if (debug)
@@ -709,7 +709,7 @@ Foam::labelList Foam::decompositionMethods::hierarchical::decompose
     // distribution to the cell exact would cause too many iterations so allow
     // some slack.
     label allSize = points.size();
-    reduce(allSize, sumOp<label>());
+    reduce(allSize, sumOp());
 
     const label sizeTol = max(1, label(1e-3*allSize/nProcessors_));
 
@@ -749,7 +749,7 @@ Foam::labelList Foam::decompositionMethods::hierarchical::decompose
     // distribution to the cell exact would cause too many iterations so allow
     // some slack.
     label allSize = points.size();
-    reduce(allSize, sumOp<label>());
+    reduce(allSize, sumOp());
 
     const label sizeTol = max(1, label(1e-3*allSize/nProcessors_));
 

@@ -129,7 +129,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
     }
 
     // Ensure consistency across couplings
-    syncTools::syncFaceList(mesh_, faceIsOnPlane, orEqOp<bool>());
+    syncTools::syncFaceList(mesh_, faceIsOnPlane, orEqOp());
 
     // Convert marked faces to a list of indices
     labelList faceIndices(findIndices(faceIsOnPlane, true));
@@ -205,7 +205,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
             (
                 mesh_,
                 meshEdgeRegions,
-                globalMeshData::ListPlusEqOp<labelList>(),
+                globalMeshData::ListPlusEqOp(),
                 labelList()
             );
 
@@ -231,7 +231,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
                     }
                 }
             }
-            Pstream::listCombineGather(regionRegions, plusEqOp<labelHashSet>());
+            Pstream::listCombineGather(regionRegions, plusEqOp());
             Pstream::listCombineScatter(regionRegions);
 
             // Collapse the region connections into a map between each region
@@ -273,7 +273,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
             {
                 regionNFaces[newSetFaceRegions[fi]] ++;
             }
-            Pstream::listCombineGather(regionNFaces, plusEqOp<label>());
+            Pstream::listCombineGather(regionNFaces, plusEqOp());
             Pstream::listCombineScatter(regionNFaces);
             Info<< "    Found " << nRegions << " contiguous regions with "
                 << regionNFaces << " faces" << endl;
@@ -296,8 +296,8 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
                 regionMagAreas[regioni] += mag(a);
                 regionCentres[regioni] += mag(a)*c;
             }
-            Pstream::listCombineGather(regionMagAreas, plusEqOp<scalar>());
-            Pstream::listCombineGather(regionCentres, plusEqOp<point>());
+            Pstream::listCombineGather(regionMagAreas, plusEqOp());
+            Pstream::listCombineGather(regionCentres, plusEqOp());
             Pstream::listCombineScatter(regionMagAreas);
             Pstream::listCombineScatter(regionCentres);
             regionCentres /= regionMagAreas;
@@ -306,7 +306,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
             selectedRegioni = returnReduce
             (
                 findMin(mag(regionCentres - point_)()),
-                minOp<label>()
+                minOp()
             );
 
             // Report the selection

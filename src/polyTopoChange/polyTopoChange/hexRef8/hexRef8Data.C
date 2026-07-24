@@ -45,7 +45,7 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         bool haveFile = returnReduce
         (
             rio.headerOk(),
-            orOp<bool>()
+            orOp()
         );
         if (haveFile)
         {
@@ -63,7 +63,7 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         bool haveFile = returnReduce
         (
             rio.headerOk(),
-            orOp<bool>()
+            orOp()
         );
         if (haveFile)
         {
@@ -81,7 +81,7 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         bool haveFile = returnReduce
         (
             rio.headerOk(),
-            orOp<bool>()
+            orOp()
         );
         if (haveFile)
         {
@@ -102,7 +102,7 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         bool haveFile = returnReduce
         (
             rio.headerOk(),
-            orOp<bool>()
+            orOp()
         );
         if (haveFile)
         {
@@ -275,7 +275,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
 {
     const polyMesh& mesh = dynamic_cast<const polyMesh&>(io.db());
 
-    bool hasCellLevel = returnReduce(cellLevelPtr_.valid(), orOp<bool>());
+    bool hasCellLevel = returnReduce(cellLevelPtr_.valid(), orOp());
     if (hasCellLevel && !cellLevelPtr_.valid())
     {
         IOobject rio(io);
@@ -284,7 +284,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
         cellLevelPtr_.reset(new labelIOList(rio, labelList(mesh.nCells(), 0)));
     }
 
-    bool hasPointLevel = returnReduce(pointLevelPtr_.valid(), orOp<bool>());
+    bool hasPointLevel = returnReduce(pointLevelPtr_.valid(), orOp());
     if (hasPointLevel && !pointLevelPtr_.valid())
     {
         IOobject rio(io);
@@ -296,7 +296,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
         );
     }
 
-    bool hasLevel0Edge = returnReduce(level0EdgePtr_.valid(), orOp<bool>());
+    bool hasLevel0Edge = returnReduce(level0EdgePtr_.valid(), orOp());
     if (hasLevel0Edge)
     {
         // Get master length
@@ -318,7 +318,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
         }
     }
 
-    bool hasHistory = returnReduce(refHistoryPtr_.valid(), orOp<bool>());
+    bool hasHistory = returnReduce(refHistoryPtr_.valid(), orOp());
     if (hasHistory && !refHistoryPtr_.valid())
     {
         IOobject rio(io);

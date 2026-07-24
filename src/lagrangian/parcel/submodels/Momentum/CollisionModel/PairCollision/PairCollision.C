@@ -597,7 +597,7 @@ Foam::label Foam::PairCollision<CloudType>::nSubCycles() const
     {
         label nPairSubCycles = returnReduce
         (
-            pairModel_->nSubCycles(), maxOp<label>()
+            pairModel_->nSubCycles(), maxOp()
         );
 
         nSubCycles = max(nSubCycles, nPairSubCycles);
@@ -607,7 +607,7 @@ Foam::label Foam::PairCollision<CloudType>::nSubCycles() const
     {
         label nWallSubCycles = returnReduce
         (
-            wallModel_->nSubCycles(), maxOp<label>()
+            wallModel_->nSubCycles(), maxOp()
         );
 
         nSubCycles = max(nSubCycles, nWallSubCycles);

@@ -251,7 +251,7 @@ bool Foam::meshCheck::checkWedges
         }
     }
 
-    label nErrorEdges = returnReduce(nEdgesInError, sumOp<label>());
+    label nErrorEdges = returnReduce(nEdgesInError, sumOp());
 
     if (nErrorEdges > 0)
     {
@@ -398,7 +398,7 @@ bool Foam::meshCheck::checkCoupledPoints
     (
         mesh,
         nbrPoints,
-        eqOp<pointField>(),
+        eqOp(),
         transformPositionList()
     );
 
@@ -468,9 +468,9 @@ bool Foam::meshCheck::checkCoupledPoints
         }
     }
 
-    reduce(nErrorFaces, sumOp<label>());
-    reduce(avgMismatch, maxOp<scalar>());
-    reduce(nCoupledPoints, sumOp<label>());
+    reduce(nErrorFaces, sumOp());
+    reduce(avgMismatch, maxOp());
+    reduce(nCoupledPoints, sumOp());
 
     if (nCoupledPoints > 0)
     {
@@ -545,7 +545,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 const pointField& pts = pp.points();
                 const labelList& mp = pp.meshPoints();
 
-                if (returnReduce(mp.size(), sumOp<label>()) > 0)
+                if (returnReduce(mp.size(), sumOp()) > 0)
                 {
                     boundBox bb(point::max, point::min);
                     forAll(mp, i)
@@ -553,8 +553,8 @@ Foam::label Foam::meshCheck::checkGeometry
                         bb.min() = min(bb.min(), pts[mp[i]]);
                         bb.max() = max(bb.max(), pts[mp[i]]);
                     }
-                    reduce(bb.min(), minOp<vector>());
-                    reduce(bb.max(), maxOp<vector>());
+                    reduce(bb.min(), minOp());
+                    reduce(bb.max(), maxOp());
                     Info<< ' ' << bb;
                 }
             }
@@ -601,7 +601,7 @@ Foam::label Foam::meshCheck::checkGeometry
             label nNonAligned = returnReduce
             (
                 nonAlignedPoints.size(),
-                sumOp<label>()
+                sumOp()
             );
 
             if (nNonAligned > 0)
@@ -640,7 +640,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             noFailedChecks++;
 
-            label nNonClosed = returnReduce(cells.size(), sumOp<label>());
+            label nNonClosed = returnReduce(cells.size(), sumOp());
 
             if (nNonClosed > 0)
             {
@@ -659,7 +659,7 @@ Foam::label Foam::meshCheck::checkGeometry
             }
         }
 
-        label nHighAspect = returnReduce(aspectCells.size(), sumOp<label>());
+        label nHighAspect = returnReduce(aspectCells.size(), sumOp());
 
         if (nHighAspect > 0)
         {
@@ -685,7 +685,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
+            label nFaces = returnReduce(faces.size(), sumOp());
 
             if (nFaces > 0)
             {
@@ -711,7 +711,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             noFailedChecks++;
 
-            label nCells = returnReduce(cells.size(), sumOp<label>());
+            label nCells = returnReduce(cells.size(), sumOp());
 
             if (nCells > 0)
             {
@@ -747,7 +747,7 @@ Foam::label Foam::meshCheck::checkGeometry
             noFailedChecks++;
         }
 
-        label nFaces = returnReduce(faces.size(), sumOp<label>());
+        label nFaces = returnReduce(faces.size(), sumOp());
 
         if (nFaces > 0)
         {
@@ -772,7 +772,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
+            label nFaces = returnReduce(faces.size(), sumOp());
 
             if (nFaces > 0)
             {
@@ -808,7 +808,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
+            label nFaces = returnReduce(faces.size(), sumOp());
 
             if (nFaces > 0)
             {
@@ -834,7 +834,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
+            label nFaces = returnReduce(faces.size(), sumOp());
 
             if (nFaces > 0)
             {
@@ -872,7 +872,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
+            label nFaces = returnReduce(faces.size(), sumOp());
 
             if (nFaces > 0)
             {
@@ -901,7 +901,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             // noFailedChecks++;
 
-            label nPoints = returnReduce(points.size(), sumOp<label>());
+            label nPoints = returnReduce(points.size(), sumOp());
 
             if (nPoints > 0)
             {
@@ -917,13 +917,13 @@ Foam::label Foam::meshCheck::checkGeometry
             }
         }
 
-        label nEdgeClose = returnReduce(points.size(), sumOp<label>());
+        label nEdgeClose = returnReduce(points.size(), sumOp());
 
         if (meshCheck::checkPointNearness(mesh, false, minDistSqr, &points))
         {
             // noFailedChecks++;
 
-            label nPoints = returnReduce(points.size(), sumOp<label>());
+            label nPoints = returnReduce(points.size(), sumOp());
 
             if (nPoints > nEdgeClose)
             {
@@ -949,7 +949,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             // noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
+            label nFaces = returnReduce(faces.size(), sumOp());
 
             if (nFaces > 0)
             {
@@ -977,7 +977,7 @@ Foam::label Foam::meshCheck::checkGeometry
         {
             // noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
+            label nFaces = returnReduce(faces.size(), sumOp());
 
             if (nFaces > 0)
             {
@@ -1006,7 +1006,7 @@ Foam::label Foam::meshCheck::checkGeometry
 
             if (setWriter.valid())
             {
-                label nCells = returnReduce(cells.size(), sumOp<label>());
+                label nCells = returnReduce(cells.size(), sumOp());
 
                 Info<< "  <<Writing " << nCells
                     << " under-determined cells to set " << cells.name()
@@ -1031,7 +1031,7 @@ Foam::label Foam::meshCheck::checkGeometry
 
             if (setWriter.valid())
             {
-                label nCells = returnReduce(cells.size(), sumOp<label>());
+                label nCells = returnReduce(cells.size(), sumOp());
 
                 Info<< "  <<Writing " << nCells
                     << " concave cells to set " << cells.name() << endl;
@@ -1055,7 +1055,7 @@ Foam::label Foam::meshCheck::checkGeometry
 
             if (setWriter.valid())
             {
-                label nFaces = returnReduce(faces.size(), sumOp<label>());
+                label nFaces = returnReduce(faces.size(), sumOp());
 
                 Info<< "  <<Writing " << nFaces
                     << " faces with low interpolation weights to set "
@@ -1080,7 +1080,7 @@ Foam::label Foam::meshCheck::checkGeometry
 
             if (setWriter.valid())
             {
-                label nFaces = returnReduce(faces.size(), sumOp<label>());
+                label nFaces = returnReduce(faces.size(), sumOp());
 
                 Info<< "  <<Writing " << nFaces
                     << " faces with low volume ratio cells to set "

@@ -248,9 +248,9 @@ Foam::vectorField Foam::directions::propagateDirection
         }
     }
 
-    reduce(nGeom, sumOp<label>());
-    reduce(nTopo, sumOp<label>());
-    reduce(nUnset, sumOp<label>());
+    reduce(nGeom, sumOp());
+    reduce(nTopo, sumOp());
+    reduce(nUnset, sumOp());
 
     Info<< "Calculated local coords for " << defaultDir
         << endl

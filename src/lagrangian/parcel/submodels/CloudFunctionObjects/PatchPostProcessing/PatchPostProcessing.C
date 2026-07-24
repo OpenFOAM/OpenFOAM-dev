@@ -87,14 +87,14 @@ void Foam::PatchPostProcessing<CloudType>::write()
             globalData = ListListOps::combine<List<string>>
             (
                 procData,
-                accessOp<List<string>>()
+                accessOp()
             );
 
             List<scalar> globalTimes;
             globalTimes = ListListOps::combine<List<scalar>>
             (
                 procTimes,
-                accessOp<List<scalar>>()
+                accessOp()
             );
 
             labelList indices;

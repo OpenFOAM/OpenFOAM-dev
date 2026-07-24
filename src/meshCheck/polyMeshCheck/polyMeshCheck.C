@@ -351,11 +351,11 @@ bool Foam::meshCheck::checkFaceOrthogonality
         }
     }
 
-    reduce(minDDotS, minOp<scalar>());
-    reduce(sumDDotS, sumOp<scalar>());
-    reduce(nSummed, sumOp<label>());
-    reduce(severeNonOrth, sumOp<label>());
-    reduce(errorNonOrth, sumOp<label>());
+    reduce(minDDotS, minOp());
+    reduce(sumDDotS, sumOp());
+    reduce(nSummed, sumOp());
+    reduce(severeNonOrth, sumOp());
+    reduce(errorNonOrth, sumOp());
 
     if (report)
     {
@@ -456,8 +456,8 @@ bool Foam::meshCheck::checkFaceSkewness
         }
     }
 
-    reduce(maxSkew, maxOp<scalar>());
-    reduce(nWarnSkew, sumOp<label>());
+    reduce(maxSkew, maxOp());
+    reduce(nWarnSkew, sumOp());
 
     if (nWarnSkew > 0)
     {
@@ -588,7 +588,7 @@ bool Foam::meshCheck::checkEdgeAlignment
         }
     }
 
-    label nErrorEdges = returnReduce(edgesInError.size(), sumOp<label>());
+    label nErrorEdges = returnReduce(edgesInError.size(), sumOp());
 
     if (nErrorEdges > 0)
     {
@@ -666,10 +666,10 @@ bool Foam::meshCheck::checkCellDeterminant
         }
     }
 
-    reduce(nErrorCells, sumOp<label>());
-    reduce(minDet, minOp<scalar>());
-    reduce(sumDet, sumOp<scalar>());
-    label nSummed = returnReduce(cellDeterminant.size(), sumOp<label>());
+    reduce(nErrorCells, sumOp());
+    reduce(minDet, minOp());
+    reduce(sumDet, sumOp());
+    label nSummed = returnReduce(cellDeterminant.size(), sumOp());
 
     if (report)
     {
@@ -763,10 +763,10 @@ bool Foam::meshCheck::checkFaceWeight
         }
     }
 
-    reduce(nErrorFaces, sumOp<label>());
-    reduce(minDet, minOp<scalar>());
-    reduce(sumDet, sumOp<scalar>());
-    reduce(nSummed, sumOp<label>());
+    reduce(nErrorFaces, sumOp());
+    reduce(minDet, minOp());
+    reduce(sumDet, sumOp());
+    reduce(nSummed, sumOp());
 
     if (report)
     {
@@ -852,10 +852,10 @@ bool Foam::meshCheck::checkVolRatio
         }
     }
 
-    reduce(nErrorFaces, sumOp<label>());
-    reduce(minDet, minOp<scalar>());
-    reduce(sumDet, sumOp<scalar>());
-    reduce(nSummed, sumOp<label>());
+    reduce(nErrorFaces, sumOp());
+    reduce(minDet, minOp());
+    reduce(sumDet, sumOp());
+    reduce(nSummed, sumOp());
 
     if (report)
     {

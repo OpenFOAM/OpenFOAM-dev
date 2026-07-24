@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,13 +137,13 @@ int main(int argc, char *argv[])
     scalar data1 = 1.0;
     label request1 = -1;
     {
-        Foam::reduce(data1, sumOp<scalar>(), Pstream::msgType(), request1);
+        Foam::reduce(data1, sumOp(), Pstream::msgType(), request1);
     }
 
     scalar data2 = 0.1;
     label request2 = -1;
     {
-        Foam::reduce(data2, sumOp<scalar>(), Pstream::msgType(), request2);
+        Foam::reduce(data2, sumOp(), Pstream::msgType(), request2);
     }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -380,7 +380,7 @@ int main(int argc, char *argv[])
 
         label celli = meshSearch::findCellNoTree(mesh, outsidePoint);
 
-        if (returnReduce(celli, maxOp<label>()) == -1)
+        if (returnReduce(celli, maxOp()) == -1)
         {
             FatalErrorInFunction
                 << "outsidePoint " << outsidePoint

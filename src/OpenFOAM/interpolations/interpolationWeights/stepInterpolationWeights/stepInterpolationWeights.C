@@ -88,7 +88,7 @@ bool stepInterpolationWeights::valueWeights
     else
     {
         // The index is no longer in the correct slot, so search for a new one
-        index_ = findLower(samples_, t, 0, lessEqOp<scalar>());
+        index_ = findLower(samples_, t, 0, lessEqOp());
         changed = true;
     }
 
@@ -157,8 +157,8 @@ bool stepInterpolationWeights::integrationWeights
 
     //- Search for lower indices
     //  Note: currently there is no caching of this search like in valueWeights
-    const label i1 = findLower(samples_, t1, 0, lessEqOp<scalar>());
-    const label i2 = findLower(samples_, t2, 0, lessEqOp<scalar>());
+    const label i1 = findLower(samples_, t1, 0, lessEqOp());
+    const label i2 = findLower(samples_, t2, 0, lessEqOp());
     const label iClip1 = min(max(i1, 0), samples_.size() - 2);
     const label iClip2 = min(max(i2, 0), samples_.size() - 2);
     const label n = max(i2 - i1 + (i1 == iClip1) + (i2 == iClip2), 1);

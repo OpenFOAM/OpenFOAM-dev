@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ Foam::label Foam::patchToPatches::matching::finalise
                 mapPtr->subMap(),
                 false,
                 count,
-                plusEqOp<label>(),
+                plusEqOp(),
                 flipOp(),
                 label(0)
             );

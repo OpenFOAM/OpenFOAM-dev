@@ -142,7 +142,7 @@ bool Foam::functionObjects::histogram::write()
         }
     }
 
-    Pstream::listCombineGather(volFrac, plusEqOp<scalar>());
+    Pstream::listCombineGather(volFrac, plusEqOp());
 
     if (Pstream::master())
     {

@@ -170,8 +170,8 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
             }
         }
 
-        reduce(force_, sumOp<vector>());
-        reduce(moment_, sumOp<vector>());
+        reduce(force_, sumOp());
+        reduce(moment_, sumOp());
 
         if
         (

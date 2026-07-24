@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,7 +157,7 @@ void Foam::sampledSets::points::calcSamples
 
             // Determine the global number of samples completed
             const label samplei0 = samplei;
-            samplei = returnReduce(samplingPositions.size(), sumOp<label>());
+            samplei = returnReduce(samplingPositions.size(), sumOp());
 
             // Move to the next unsampled point
             pointi += samplei - samplei0;

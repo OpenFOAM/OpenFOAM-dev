@@ -155,7 +155,7 @@ void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::add
                 break;
             }
         }
-        reduce(store, andOp<bool>());
+        reduce(store, andOp());
 
         if (store)
         {
@@ -179,7 +179,7 @@ void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::add
             }
         }
     }
-    syncTools::syncPointList(mesh, procFacePoint, orEqOp<bool>(), false);
+    syncTools::syncPointList(mesh, procFacePoint, orEqOp(), false);
 
     // 2. Unblock all faces on procFacePoint
     label nUnblocked = 0;
@@ -201,11 +201,11 @@ void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::add
 
     if (decompositionConstraint::debug & 2)
     {
-        reduce(nUnblocked, sumOp<label>());
+        reduce(nUnblocked, sumOp());
         Info<< type() << " : unblocked " << nUnblocked << " faces" << endl;
     }
 
-    syncTools::syncFaceList(mesh, blockedFace, andEqOp<bool>());
+    syncTools::syncFaceList(mesh, blockedFace, andEqOp());
 }
 
 
@@ -248,7 +248,7 @@ void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::apply
             {
                 procI = decomposition[mesh.faceOwner()[set[0]]];
             }
-            reduce(procI, maxOp<label>());
+            reduce(procI, maxOp());
         }
 
         // Get all points on the sets
@@ -261,7 +261,7 @@ void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::apply
                 procFacePoint[f[fp]] = true;
             }
         }
-        syncTools::syncPointList(mesh, procFacePoint, orEqOp<bool>(), false);
+        syncTools::syncPointList(mesh, procFacePoint, orEqOp(), false);
 
         // 2. Unblock all faces on procFacePoint
         forAll(procFacePoint, pointi)
@@ -295,7 +295,7 @@ void Foam::decompositionConstraints::singleProcessorFaceZonesConstraint::apply
 
     if (decompositionConstraint::debug & 2)
     {
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
         Info<< type() << " : changed decomposition on " << nChanged
             << " cells" << endl;
     }

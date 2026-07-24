@@ -144,7 +144,7 @@ Foam::functionObjects::sampledSurfaces::sampleType
                             ListListOps::combine<Field<Type>>
                             (
                                 gatheredTypeValues[fieldi],
-                                accessOp<Field<Type>>()
+                                accessOp()
                             )
                         )
                     );

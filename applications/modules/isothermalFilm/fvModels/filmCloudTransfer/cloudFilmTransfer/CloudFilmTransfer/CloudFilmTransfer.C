@@ -721,7 +721,7 @@ void Foam::CloudFilmTransfer<CloudType>::info(Ostream& os)
 
     label nSplash0 = this->template getModelProperty<label>("nParcelsSplashed");
     label nSplashTotal =
-        nSplash0 + returnReduce(nParcelsSplashed_, sumOp<label>());
+        nSplash0 + returnReduce(nParcelsSplashed_, sumOp());
 
     os  << "    New film splash parcels         = " << nSplashTotal << endl;
 

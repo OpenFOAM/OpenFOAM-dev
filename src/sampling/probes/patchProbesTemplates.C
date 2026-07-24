@@ -155,7 +155,7 @@ Foam::patchProbes::sample(const VolField<Type>& vField) const
         }
     }
 
-    Pstream::listCombineGather(values, isNotEqOp<Type>());
+    Pstream::listCombineGather(values, isNotEqOp());
     Pstream::listCombineScatter(values);
 
     return tValues;
@@ -189,7 +189,7 @@ Foam::patchProbes::sample(const SurfaceField<Type>& sField) const
         }
     }
 
-    Pstream::listCombineGather(values, isNotEqOp<Type>());
+    Pstream::listCombineGather(values, isNotEqOp());
     Pstream::listCombineScatter(values);
 
     return tValues;

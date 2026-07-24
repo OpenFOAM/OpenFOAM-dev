@@ -247,7 +247,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
 
         // Synchronise so only a single processor finds this position
         label proci = celli >= 0 ? Pstream::myProcNo() : -1;
-        reduce(proci, maxOp<label>());
+        reduce(proci, maxOp());
         if (proci != Pstream::myProcNo())
         {
             celli = -1;
@@ -400,7 +400,7 @@ void Foam::InjectionModel<CloudType>::setNumberOfParticles
         }
     }
 
-    reduce(sumMassBySize, sumOp<scalar>());
+    reduce(sumMassBySize, sumOp());
 
     // Set the numbers of particles on each parcel
     forAll(parcelPtrs, parceli)
@@ -427,7 +427,7 @@ void Foam::InjectionModel<CloudType>::setNumberOfParticles
             }
         }
 
-        reduce(massN, sumOp<scalar>());
+        reduce(massN, sumOp());
 
         if (mag(massN - mass) > rootSmall*(massN + mass)/2)
         {
@@ -436,8 +436,8 @@ void Foam::InjectionModel<CloudType>::setNumberOfParticles
                 << exit(FatalError);
         }
 
-        reduce(minSizeN, minOp<scalar>());
-        reduce(maxSizeN, maxOp<scalar>());
+        reduce(minSizeN, minOp());
+        reduce(maxSizeN, maxOp());
 
         if (maxSizeN - minSizeN > rootSmall*(maxSizeN + minSizeN)/2)
         {
@@ -465,7 +465,7 @@ void Foam::InjectionModel<CloudType>::postInject
     typename parcelType::trackingData& td
 )
 {
-    const label allNParcelsAdded = returnReduce(nParcelsAdded, sumOp<label>());
+    const label allNParcelsAdded = returnReduce(nParcelsAdded, sumOp());
 
     if (allNParcelsAdded > 0)
     {
@@ -479,7 +479,7 @@ void Foam::InjectionModel<CloudType>::postInject
     nParcelsInjected_ += allNParcelsAdded;
 
     // Increment total mass injected
-    massInjected_ += returnReduce(massAdded, sumOp<scalar>());
+    massInjected_ += returnReduce(massAdded, sumOp());
 }
 
 

@@ -63,8 +63,8 @@ Foam::label Foam::meshCheck::checkTopology
                 nEmpty += mesh.boundary()[patchi].size();
             }
         }
-        reduce(nEmpty, sumOp<label>());
-        label nTotCells = returnReduce(mesh.cells().size(), sumOp<label>());
+        reduce(nEmpty, sumOp());
+        label nTotCells = returnReduce(mesh.cells().size(), sumOp());
 
         // These are actually warnings, not errors.
         if (nTotCells && (nEmpty % nTotCells))
@@ -117,7 +117,7 @@ Foam::label Foam::meshCheck::checkTopology
                 }
             }
         }
-        label nCells = returnReduce(cells.size(), sumOp<label>());
+        label nCells = returnReduce(cells.size(), sumOp());
 
         if (nCells > 0)
         {
@@ -153,7 +153,7 @@ Foam::label Foam::meshCheck::checkTopology
 
             if (setWriter.valid())
             {
-                label nPoints = returnReduce(points.size(), sumOp<label>());
+                label nPoints = returnReduce(points.size(), sumOp());
 
                 Info<< "  <<Writing " << nPoints
                     << " unused points to set " << points.name() << endl;
@@ -174,7 +174,7 @@ Foam::label Foam::meshCheck::checkTopology
             noFailedChecks++;
         }
 
-        label nFaces = returnReduce(faces.size(), sumOp<label>());
+        label nFaces = returnReduce(faces.size(), sumOp());
 
         if (nFaces > 0)
         {
@@ -201,7 +201,7 @@ Foam::label Foam::meshCheck::checkTopology
 
             if (setWriter.valid())
             {
-                label nFaces = returnReduce(faces.size(), sumOp<label>());
+                label nFaces = returnReduce(faces.size(), sumOp());
 
                 Info<< "  <<Writing " << nFaces
                     << " faces with out-of-range or duplicate vertices to set "
@@ -226,7 +226,7 @@ Foam::label Foam::meshCheck::checkTopology
 
             if (setWriter.valid())
             {
-                label nCells = returnReduce(cells.size(), sumOp<label>());
+                label nCells = returnReduce(cells.size(), sumOp());
 
                 Info<< "  <<Writing " << nCells
                     << " cells with over used edges to set " << cells.name()
@@ -250,7 +250,7 @@ Foam::label Foam::meshCheck::checkTopology
             noFailedChecks++;
         }
 
-        label nFaces = returnReduce(faces.size(), sumOp<label>());
+        label nFaces = returnReduce(faces.size(), sumOp());
         if (nFaces > 0)
         {
             if (setWriter.valid())
@@ -307,7 +307,7 @@ Foam::label Foam::meshCheck::checkTopology
             }
         }
 
-        label nOneCells = returnReduce(oneCells.size(), sumOp<label>());
+        label nOneCells = returnReduce(oneCells.size(), sumOp());
 
         if (nOneCells > 0)
         {
@@ -327,7 +327,7 @@ Foam::label Foam::meshCheck::checkTopology
             }
         }
 
-        label nTwoCells = returnReduce(twoCells.size(), sumOp<label>());
+        label nTwoCells = returnReduce(twoCells.size(), sumOp());
 
         if (nTwoCells > 0)
         {
@@ -439,7 +439,7 @@ Foam::label Foam::meshCheck::checkTopology
                 Pstream::listCombineGather
                 (
                     regionDisconnected,
-                    andEqOp<bool>()
+                    andEqOp()
                 );
                 Pstream::listCombineScatter(regionDisconnected);
 
@@ -478,7 +478,7 @@ Foam::label Foam::meshCheck::checkTopology
                     }
 
                     Info<< " with "
-                        << returnReduce(cellRegions[i].size(), sumOp<scalar>())
+                        << returnReduce(cellRegions[i].size(), sumOp())
                         << " cells to cellSet " << cellRegions[i].name()
                         << endl;
 
@@ -486,7 +486,7 @@ Foam::label Foam::meshCheck::checkTopology
                     cellRegions[i].write();
                 }
 
-                label nPoints = returnReduce(points.size(), sumOp<label>());
+                label nPoints = returnReduce(points.size(), sumOp());
                 if (nPoints)
                 {
                     Info<< "  <<Writing " << nPoints
@@ -547,8 +547,8 @@ Foam::label Foam::meshCheck::checkTopology
             {
                 Info<< "    "
                     << setw(20) << pp.name()
-                    << setw(9) << returnReduce(pp.size(), sumOp<label>())
-                    << setw(9) << returnReduce(pp.nPoints(), sumOp<label>());
+                    << setw(9) << returnReduce(pp.size(), sumOp())
+                    << setw(9) << returnReduce(pp.nPoints(), sumOp());
 
                 if (!Pstream::parRun())
                 {
@@ -595,7 +595,7 @@ Foam::label Foam::meshCheck::checkTopology
 
         if (points.size() && setWriter.valid())
         {
-            Info<< "  <<Writing " << returnReduce(points.size(), sumOp<label>())
+            Info<< "  <<Writing " << returnReduce(points.size(), sumOp())
                 << " conflicting points to set "
                 << points.name() << endl;
 

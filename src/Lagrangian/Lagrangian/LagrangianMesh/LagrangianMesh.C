@@ -135,8 +135,8 @@ void Foam::LagrangianMesh::printGroups(const bool header) const
             hasProcPatches = true;
         }
     }
-    reduce(hasProcPatches, orOp<bool>());
-    Pstream::listCombineGather(patchIsReferred, orEqOp<bool>());
+    reduce(hasProcPatches, orOp());
+    Pstream::listCombineGather(patchIsReferred, orEqOp());
     Pstream::listCombineScatter(patchIsReferred);
 
     // Get the indices of patches that are referred to by processor-cyclics
@@ -220,7 +220,7 @@ void Foam::LagrangianMesh::printGroups(const bool header) const
               - offsets[onPatchZeroi + patchi];
         }
     }
-    Pstream::listCombineGather(columnNumbers, plusEqOp<label>());
+    Pstream::listCombineGather(columnNumbers, plusEqOp());
     Pstream::listCombineScatter(columnNumbers);
 
     // Print the numbers
@@ -1287,7 +1287,7 @@ Foam::labelList Foam::LagrangianMesh::subMeshGlobalSizes() const
         size() - boundary()[nGlobalGroups - 2 - onPatchZeroi].mesh().start();
 
     // Sum over all processes
-    Pstream::listCombineGather(sizes, plusEqOp<label>());
+    Pstream::listCombineGather(sizes, plusEqOp());
     Pstream::listCombineScatter(sizes);
 
     // Construct the result. This includes processor patch groups, on which a

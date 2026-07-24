@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,8 +198,8 @@ void Foam::decompositionMethods::multiLevel::decompose
                 nOutsideConnections
             );
 
-            label nPoints = returnReduce(domainPoints.size(), plusOp<label>());
-            Pstream::listCombineGather(nOutsideConnections, plusEqOp<label>());
+            label nPoints = returnReduce(domainPoints.size(), plusOp());
+            Pstream::listCombineGather(nOutsideConnections, plusEqOp());
             Pstream::listCombineScatter(nOutsideConnections);
             label nPatches = 0;
             label nFaces = 0;

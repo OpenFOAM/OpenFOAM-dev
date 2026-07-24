@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -538,7 +538,7 @@ faceToEdge()
         Pout<< "Changed edges             : " << changedEdges_.size() << endl;
     }
 
-    return returnReduce(changedEdges_.size(), sumOp<label>());
+    return returnReduce(changedEdges_.size(), sumOp());
 }
 
 
@@ -599,7 +599,7 @@ edgeToFace()
         Pout<< "Changed faces             : " << changedFaces_.size() << endl;
     }
 
-    return returnReduce(changedFaces_.size(), sumOp<label>());
+    return returnReduce(changedFaces_.size(), sumOp());
 }
 
 

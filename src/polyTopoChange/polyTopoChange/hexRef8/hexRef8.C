@@ -48,9 +48,8 @@ namespace Foam
 
     //- Reduction class. If x and y are not equal assign value.
     template<label value>
-    class ifEqEqOp
+    struct ifEqEqOp
     {
-        public:
         void operator()(label& x, const label y) const
         {
             x = (x == y) ? x : value;
@@ -319,7 +318,7 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
 
     // Get the minimum per level over all processors. Note minimum so if
     // cells are not cubic we use the smallest edge side.
-    Pstream::listCombineGather(typEdgeLenSqr, minEqOp<scalar>());
+    Pstream::listCombineGather(typEdgeLenSqr, minEqOp());
     Pstream::listCombineScatter(typEdgeLenSqr);
 
     if (debug)
@@ -354,7 +353,7 @@ Foam::scalar Foam::hexRef8::getLevel0EdgeLength() const
         }
     }
 
-    Pstream::listCombineGather(maxEdgeLenSqr, maxEqOp<scalar>());
+    Pstream::listCombineGather(maxEdgeLenSqr, maxEqOp());
     Pstream::listCombineScatter(maxEdgeLenSqr);
 
     if (debug)
@@ -2149,7 +2148,7 @@ Foam::labelList Foam::hexRef8::consistentRefinement
     {
         label nChanged = faceConsistentRefinement(maxSet, refineCell);
 
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
 
         if (debug)
         {
@@ -2461,7 +2460,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
         (
             mesh_,
             maxPointCount,
-            maxEqOp<label>(),
+            maxEqOp(),
             labelMin            // null value
         );
 
@@ -2526,7 +2525,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
         }
 
         label nChanged = changedFacesInfo.size();
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
 
         if (nChanged == 0)
         {
@@ -2992,7 +2991,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
     {
         label nChanged = faceConsistentRefinement(true, refineCell);
 
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
 
         if (debug)
         {
@@ -3232,7 +3231,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
     (
         mesh_,
         edgeMidPoint,
-        maxEqOp<label>(),
+        maxEqOp(),
         labelMin
     );
 
@@ -3259,7 +3258,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
         (
             mesh_,
             edgeMids,
-            maxEqOp<vector>(),
+            maxEqOp(),
             point(-great, -great, -great)
         );
 
@@ -3416,7 +3415,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
     (
         mesh_,
         faceMidPoint,
-        maxEqOp<label>()
+        maxEqOp()
     );
 
 
@@ -3446,7 +3445,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
         (
             mesh_,
             bFaceMids,
-            maxEqOp<vector>()
+            maxEqOp()
         );
 
         forAll(faceMidPoint, facei)
@@ -4670,7 +4669,7 @@ void Foam::hexRef8::checkRefinementLevels
         (
             mesh_,
             syncPointLevel,
-            minEqOp<label>(),
+            minEqOp(),
             labelMax
         );
 
@@ -4715,7 +4714,7 @@ void Foam::hexRef8::checkRefinementLevels
         (
             mesh_,
             maxPointLevel,
-            maxEqOp<label>(),
+            maxEqOp(),
             labelMin            // null value
         );
 
@@ -4786,7 +4785,7 @@ void Foam::hexRef8::checkRefinementLevels
     //    (
     //        mesh_,
     //        isHangingPoint,
-    //        andEqOp<bool>(),        // only if all decide it is hanging point
+    //        andEqOp(),        // only if all decide it is hanging point
     //        true,                   // null
     //        false                   // no separation
     //    );
@@ -4808,7 +4807,7 @@ void Foam::hexRef8::checkRefinementLevels
     //        }
     //    }
     //
-    //    if (returnReduce(nHanging, sumOp<label>()) > 0)
+    //    if (returnReduce(nHanging, sumOp()) > 0)
     //    {
     //        FatalErrorInFunction
     //            << "Detected a point used by two edges only (hanging point)"
@@ -5189,7 +5188,7 @@ Foam::labelList Foam::hexRef8::consistentUnrefinement
             }
         }
 
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
 
         if (debug)
         {

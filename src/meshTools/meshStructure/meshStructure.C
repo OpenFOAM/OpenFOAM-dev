@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ void Foam::meshStructure::correct
         if (debug)
         {
             Info<< typeName << " : seeding "
-                << returnReduce(pp.size(), sumOp<label>()) << " patch faces"
+                << returnReduce(pp.size(), sumOp()) << " patch faces"
                 << nl << endl;
         }
 
@@ -216,7 +216,7 @@ void Foam::meshStructure::correct
         if (debug)
         {
             Info<< typeName << " : seeding "
-                << returnReduce(pp.nPoints(), sumOp<label>()) << " patch points"
+                << returnReduce(pp.nPoints(), sumOp()) << " patch points"
                 << nl << endl;
         }
 
@@ -367,7 +367,7 @@ void Foam::meshStructure::correct
             }
         }
 
-        reduce(structured_, andOp<bool>());
+        reduce(structured_, andOp());
     }
 }
 

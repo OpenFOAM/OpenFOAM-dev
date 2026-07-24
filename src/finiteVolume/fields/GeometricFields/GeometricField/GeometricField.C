@@ -1575,7 +1575,7 @@ bool Foam::GeometricField<Type, GeoMesh, PrimitiveField>::needReference() const
         }
     }
 
-    reduce(needRef, andOp<bool>());
+    reduce(needRef, andOp());
 
     return needRef;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ inline Foam::scalar Foam::SprayCloud<CloudType>::penetration
     }
 
     // calculate total mass across all processors
-    reduce(mSum, sumOp<scalar>());
+    reduce(mSum, sumOp());
     Pstream::gatherList(procMass);
     Pstream::gatherList(procDist);
 

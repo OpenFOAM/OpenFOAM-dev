@@ -211,7 +211,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
     scalarList procSumVolume(Pstream::nProcs(), -vGreat);
     procSumVolume[Pstream::myProcNo()] =
         setCells.size() ? setCellSumVolume.last() : scalar(0);
-    Pstream::listCombineGather(procSumVolume, maxEqOp<scalar>());
+    Pstream::listCombineGather(procSumVolume, maxEqOp());
     Pstream::listCombineScatter(procSumVolume);
     for (label proci = 1; proci < Pstream::nProcs(); proci ++)
     {

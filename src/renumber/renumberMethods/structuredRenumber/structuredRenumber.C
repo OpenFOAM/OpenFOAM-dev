@@ -180,7 +180,7 @@ Foam::labelList Foam::structuredRenumber::renumber
         }
     }
 
-    label nTotalSeeds = returnReduce(patchCells.size(), sumOp<label>());
+    label nTotalSeeds = returnReduce(patchCells.size(), sumOp());
 
     label nTotalCells = mesh.globalData().nTotalCells();
     const label nLayers = nTotalCells/nTotalSeeds;

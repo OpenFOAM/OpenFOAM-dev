@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ template<class CloudType>
 void Foam::SurfaceReactionModel<CloudType>::info(Ostream& os)
 {
     const scalar mass0 = this->template getBaseProperty<scalar>("mass");
-    const scalar massTotal = mass0 + returnReduce(dMass_, sumOp<scalar>());
+    const scalar massTotal = mass0 + returnReduce(dMass_, sumOp());
 
     Info<< "    Mass transfer surface reaction  = " << massTotal << nl;
 

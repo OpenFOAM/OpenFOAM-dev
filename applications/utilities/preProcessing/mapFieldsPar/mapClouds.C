@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ List<Type> gatherAndFlatten(const List<Type>& l)
             ListListOps::combine<List<Type>>
             (
                 procLs,
-                accessOp<List<Type>>()
+                accessOp()
             )
         ).sortedToc();
 }
@@ -200,7 +200,7 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
         passiveParticleCloud srcCloud(srcMesh, cloudDirs[cloudi], false);
 
         Info<< "    read "
-            << returnReduce(srcCloud.size(), sumOp<label>())
+            << returnReduce(srcCloud.size(), sumOp())
             << " parcels from source mesh." << endl;
 
         // Unpack into position and cell lists and construct a send map
@@ -262,7 +262,7 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
         }
 
         Info<< "    mapped "
-            << returnReduce(tgtCloud.size(), sumOp<label>())
+            << returnReduce(tgtCloud.size(), sumOp())
             << " parcels to the target mesh." << endl;
 
         // Write the positions

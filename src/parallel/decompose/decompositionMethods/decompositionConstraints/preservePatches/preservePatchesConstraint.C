@@ -119,11 +119,11 @@ void Foam::decompositionConstraints::preservePatchesConstraint::add
 
     if (decompositionConstraint::debug & 2)
     {
-        reduce(nUnblocked, sumOp<label>());
+        reduce(nUnblocked, sumOp());
         Info<< type() << " : unblocked " << nUnblocked << " faces" << endl;
     }
 
-    syncTools::syncFaceList(mesh, blockedFace, andEqOp<bool>());
+    syncTools::syncFaceList(mesh, blockedFace, andEqOp());
 }
 
 
@@ -160,7 +160,7 @@ void Foam::decompositionConstraints::preservePatchesConstraint::apply
         }
     }
 
-    syncTools::syncBoundaryFaceList(mesh, destProc, minEqOp<label>());
+    syncTools::syncBoundaryFaceList(mesh, destProc, minEqOp());
 
 
     // Override if differing
@@ -190,7 +190,7 @@ void Foam::decompositionConstraints::preservePatchesConstraint::apply
 
     if (decompositionConstraint::debug & 2)
     {
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
         Info<< type() << " : changed decomposition on " << nChanged
             << " cells" << endl;
     }

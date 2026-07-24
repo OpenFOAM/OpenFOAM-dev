@@ -81,8 +81,8 @@ T Foam::meshRefinement::gAverage
         }
     }
 
-    reduce(sum, sumOp<T>());
-    reduce(n, sumOp<label>());
+    reduce(sum, sumOp());
+    reduce(n, sumOp());
 
     if (n > 0)
     {
@@ -269,7 +269,7 @@ void Foam::meshRefinement::weightedSum
         mesh,
         meshPoints,
         sum,
-        plusEqOp<Type>(),
+        plusEqOp(),
         Type(Zero)     // null value
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ void Foam::distributionMapBase::distribute
             map,
             constructHasFlip,
             subField,
-            eqOp<T>(),
+            eqOp(),
             negOp,
             field
         );
@@ -207,7 +207,7 @@ void Foam::distributionMapBase::distribute
             map,
             constructHasFlip,
             subField,
-            eqOp<T>(),
+            eqOp(),
             negOp,
             field
         );
@@ -229,7 +229,7 @@ void Foam::distributionMapBase::distribute
                     map,
                     constructHasFlip,
                     subField,
-                    eqOp<T>(),
+                    eqOp(),
                     negOp,
                     field
                 );
@@ -265,7 +265,7 @@ void Foam::distributionMapBase::distribute
                 constructMap[Pstream::myProcNo()],
                 constructHasFlip,
                 subField,
-                eqOp<T>(),
+                eqOp(),
                 negOp,
                 newField
             );
@@ -326,7 +326,7 @@ void Foam::distributionMapBase::distribute
                         map,
                         constructHasFlip,
                         subField,
-                        eqOp<T>(),
+                        eqOp(),
                         negOp,
                         newField
                     );
@@ -354,7 +354,7 @@ void Foam::distributionMapBase::distribute
                         map,
                         constructHasFlip,
                         subField,
-                        eqOp<T>(),
+                        eqOp(),
                         negOp,
                         newField
                     );
@@ -447,7 +447,7 @@ void Foam::distributionMapBase::distribute
                         map,
                         constructHasFlip,
                         mySubField,
-                        eqOp<T>(),
+                        eqOp(),
                         negOp,
                         field
                     );
@@ -474,7 +474,7 @@ void Foam::distributionMapBase::distribute
                         map,
                         constructHasFlip,
                         recvField,
-                        eqOp<T>(),
+                        eqOp(),
                         negOp,
                         field
                     );
@@ -575,7 +575,7 @@ void Foam::distributionMapBase::distribute
                     map,
                     constructHasFlip,
                     subField,
-                    eqOp<T>(),
+                    eqOp(),
                     negOp,
                     field
                 );
@@ -604,7 +604,7 @@ void Foam::distributionMapBase::distribute
                         map,
                         constructHasFlip,
                         subField,
-                        eqOp<T>(),
+                        eqOp(),
                         negOp,
                         field
                     );
@@ -1189,7 +1189,7 @@ const
                 map,
                 constructHasFlip_,
                 recvField,
-                eqOp<T>(),
+                eqOp(),
                 flipOp(),
                 field
             );
@@ -1372,7 +1372,7 @@ void Foam::distributionMapBase::reverseDistribute
             subMap_,
             subHasFlip_,
             fld,
-            eqOp<T>(),
+            eqOp(),
             flipOp(),
             nullValue,
             tag
@@ -1390,7 +1390,7 @@ void Foam::distributionMapBase::reverseDistribute
             subMap_,
             subHasFlip_,
             fld,
-            eqOp<T>(),
+            eqOp(),
             flipOp(),
             nullValue,
             tag
@@ -1408,7 +1408,7 @@ void Foam::distributionMapBase::reverseDistribute
             subMap_,
             subHasFlip_,
             fld,
-            eqOp<T>(),
+            eqOp(),
             flipOp(),
             nullValue,
             tag

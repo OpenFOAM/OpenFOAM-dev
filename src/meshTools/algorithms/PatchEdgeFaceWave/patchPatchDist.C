@@ -93,7 +93,7 @@ void Foam::patchPatchDist::correct()
     (
         patch_.mesh(),
         nbrEdges,
-        maxEqOp<label>()
+        maxEqOp()
     );
 
 
@@ -145,7 +145,7 @@ void Foam::patchPatchDist::correct()
         initialEdgesInfo,
         allEdgeInfo,
         allFaceInfo,
-        returnReduce(patch_.nEdges(), sumOp<label>())
+        returnReduce(patch_.nEdges(), sumOp())
     );
 
 

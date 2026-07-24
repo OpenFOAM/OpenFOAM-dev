@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,12 +87,12 @@ void writeStencilStats(const labelListList& stencil)
             maxSize = max(maxSize, sCells.size());
         }
     }
-    reduce(sumSize, sumOp<label>());
-    reduce(nSum, sumOp<label>());
+    reduce(sumSize, sumOp());
+    reduce(nSum, sumOp());
     sumSize /= nSum;
 
-    reduce(minSize, minOp<label>());
-    reduce(maxSize, maxOp<label>());
+    reduce(minSize, minOp());
+    reduce(maxSize, maxOp());
 
     Info<< "Stencil size :" << nl
         << "    average : " << sumSize << nl

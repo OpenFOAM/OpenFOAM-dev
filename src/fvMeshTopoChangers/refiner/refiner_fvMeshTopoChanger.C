@@ -191,7 +191,7 @@ void Foam::fvMeshTopoChangers::refiner::calcProtectedCells
         }
     }
 
-    syncTools::syncFaceList(mesh(), faceProtected, orEqOp<bool>());
+    syncTools::syncFaceList(mesh(), faceProtected, orEqOp());
 
     // Any cell which has a protected face is also protected
     for (label facei = 0; facei < nFaces; facei ++)
@@ -281,7 +281,7 @@ void Foam::fvMeshTopoChangers::refiner::calcAdditionallyProtectedCells
             }
         }
 
-        syncTools::syncFaceList(mesh(), seedFace, orEqOp<bool>());
+        syncTools::syncFaceList(mesh(), seedFace, orEqOp());
 
 
         // Extend additionallyProtectedCells
@@ -326,7 +326,7 @@ void Foam::fvMeshTopoChangers::refiner::calcAdditionallyProtectedCells
             }
         }
 
-        if (!returnReduce(hasExtended, orOp<bool>()))
+        if (!returnReduce(hasExtended, orOp()))
         {
             break;
         }
@@ -398,7 +398,7 @@ Foam::fvMeshTopoChangers::refiner::refine
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh());
 
     Info<< "Refined from "
-        << returnReduce(map().nOldCells(), sumOp<label>())
+        << returnReduce(map().nOldCells(), sumOp())
         << " to " << mesh().globalData().nTotalCells() << " cells." << endl;
 
     if (debug)
@@ -532,7 +532,7 @@ Foam::fvMeshTopoChangers::refiner::unrefine
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh());
 
     Info<< "Unrefined from "
-        << returnReduce(map().nOldCells(), sumOp<label>())
+        << returnReduce(map().nOldCells(), sumOp())
         << " to " << mesh().globalData().nTotalCells() << " cells."
         << endl;
 
@@ -862,7 +862,7 @@ const Foam::cellZone& Foam::fvMeshTopoChangers::refiner::findCellZone
     const label cellZoneID = mesh().cellZones().findIndex(cellZoneName);
 
     bool cellZoneFound = (cellZoneID != -1);
-    reduce(cellZoneFound, orOp<bool>());
+    reduce(cellZoneFound, orOp());
 
     if (!cellZoneFound)
     {
@@ -1075,7 +1075,7 @@ Foam::labelList Foam::fvMeshTopoChangers::refiner::selectRefineCells
 
     // Count current selection
     const label nLocalCandidates = count(candidateCells, 1);
-    const label nCandidates = returnReduce(nLocalCandidates, sumOp<label>());
+    const label nCandidates = returnReduce(nLocalCandidates, sumOp());
 
     // Collect all cells
     DynamicList<label> candidates(nLocalCandidates);
@@ -1118,7 +1118,7 @@ Foam::labelList Foam::fvMeshTopoChangers::refiner::selectRefineCells
                 }
             }
 
-            if (returnReduce(candidates.size(), sumOp<label>()) > nTotToRefine)
+            if (returnReduce(candidates.size(), sumOp()) > nTotToRefine)
             {
                 break;
             }
@@ -1135,7 +1135,7 @@ Foam::labelList Foam::fvMeshTopoChangers::refiner::selectRefineCells
         )
     );
 
-    Info<< "Selected " << returnReduce(consistentSet.size(), sumOp<label>())
+    Info<< "Selected " << returnReduce(consistentSet.size(), sumOp())
         << " cells for refinement out of " << mesh().globalData().nTotalCells()
         << "." << endl;
 
@@ -1190,9 +1190,9 @@ Foam::labelList Foam::fvMeshTopoChangers::refiner::selectUnrefinePoints
         )
     );
 
-    Info<< "Selected " << returnReduce(consistentSet.size(), sumOp<label>())
+    Info<< "Selected " << returnReduce(consistentSet.size(), sumOp())
         << " split points out of a possible "
-        << returnReduce(splitPoints.size(), sumOp<label>())
+        << returnReduce(splitPoints.size(), sumOp())
         << "." << endl;
 
     return consistentSet;
@@ -1220,7 +1220,7 @@ void Foam::fvMeshTopoChangers::refiner::extendMarkedCells
         }
     }
 
-    syncTools::syncFaceList(mesh(), markedFace, orEqOp<bool>());
+    syncTools::syncFaceList(mesh(), markedFace, orEqOp());
 
     // Update cells using any markedFace
     for (label facei = 0; facei < mesh().nInternalFaces(); facei++)
@@ -1268,7 +1268,7 @@ Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh, const dictionary& dict)
     // Report
     labelList protectedCellsSet = protectedCells_.used();
     const label nProtectedCells =
-        returnReduce(protectedCellsSet.size(), sumOp<label>());
+        returnReduce(protectedCellsSet.size(), sumOp());
     if (nProtectedCells)
     {
         Info<< "Detected " << nProtectedCells << " cells that are protected "
@@ -1388,7 +1388,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
 
             const label nCellsToRefine = returnReduce
             (
-                cellsToRefine.size(), sumOp<label>()
+                cellsToRefine.size(), sumOp()
             );
 
             if (nCellsToRefine > 0)
@@ -1439,7 +1439,7 @@ bool Foam::fvMeshTopoChangers::refiner::update()
             const label nSplitPoints = returnReduce
             (
                 pointsToUnrefine.size(),
-                sumOp<label>()
+                sumOp()
             );
 
             if (nSplitPoints > 0)

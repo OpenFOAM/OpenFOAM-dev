@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -428,7 +428,7 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
             nProcCells[decomp[i]]++;
         }
 
-        reduce(nProcCells, ListOp<sumOp<label>>());
+        reduce(nProcCells, ListOp<sumOp>());
 
         // If there are no cells allocated to this processor keep the first one
         // to ensure that all processors have at least one cell

@@ -167,7 +167,7 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::volumetricFlowRate() const
         flowRateIn = max(scalar(0), -sum(phip/rhop));
     }
 
-    reduce(flowRateIn, sumOp<scalar>());
+    reduce(flowRateIn, sumOp());
 
     return flowRateIn;
 }
@@ -196,7 +196,7 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::massFlowRate() const
         flowRateIn = max(scalar(0), -sum(phip));
     }
 
-    reduce(flowRateIn, sumOp<scalar>());
+    reduce(flowRateIn, sumOp());
 
     return flowRateIn;
 }

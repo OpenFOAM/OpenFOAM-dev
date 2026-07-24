@@ -74,8 +74,8 @@ void Foam::boundBox::calculate(const UList<point>& points, const bool doReduce)
     // Reduce parallel information
     if (doReduce)
     {
-        reduce(min_, minOp<point>());
-        reduce(max_, maxOp<point>());
+        reduce(min_, minOp());
+        reduce(max_, maxOp());
     }
 }
 
@@ -135,8 +135,8 @@ Foam::boundBox::boundBox
     // Reduce parallel information
     if (doReduce)
     {
-        reduce(min_, minOp<point>());
-        reduce(max_, maxOp<point>());
+        reduce(min_, minOp());
+        reduce(max_, maxOp());
     }
 }
 

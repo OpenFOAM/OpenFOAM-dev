@@ -326,11 +326,11 @@ bool Foam::meshCheck::checkFaceOrthogonality
         nDDotS++;
     }
 
-    reduce(minDDotS, minOp<scalar>());
-    reduce(sumDDotS, sumOp<scalar>());
-    reduce(nDDotS, sumOp<label>());
-    reduce(severeNonOrth, sumOp<label>());
-    reduce(errorNonOrth, sumOp<label>());
+    reduce(minDDotS, minOp());
+    reduce(sumDDotS, sumOp());
+    reduce(nDDotS, sumOp());
+    reduce(severeNonOrth, sumOp());
+    reduce(errorNonOrth, sumOp());
 
     // Only report if there are some internal faces
     if (nDDotS > 0)
@@ -532,7 +532,7 @@ bool Foam::meshCheck::checkFacePyramids
         }
     }
 
-    reduce(nErrorPyrs, sumOp<label>());
+    reduce(nErrorPyrs, sumOp());
 
     if (nErrorPyrs > 0)
     {
@@ -761,7 +761,7 @@ bool Foam::meshCheck::checkFaceTets
         }
     }
 
-    reduce(nErrorTets, sumOp<label>());
+    reduce(nErrorTets, sumOp());
 
     if (nErrorTets > 0)
     {
@@ -970,8 +970,8 @@ bool Foam::meshCheck::checkFaceSkewness
     }
 
 
-    reduce(maxSkew, maxOp<scalar>());
-    reduce(nWarnSkew, sumOp<label>());
+    reduce(maxSkew, maxOp());
+    reduce(nWarnSkew, sumOp());
 
     if (nWarnSkew > 0)
     {
@@ -1127,8 +1127,8 @@ bool Foam::meshCheck::checkFaceWeights
         minWeight = min(minWeight, weight);
     }
 
-    reduce(minWeight, minOp<scalar>());
-    reduce(nWarnWeight, sumOp<label>());
+    reduce(minWeight, minOp());
+    reduce(nWarnWeight, sumOp());
 
     if (minWeight < warnWeight)
     {
@@ -1267,8 +1267,8 @@ bool Foam::meshCheck::checkVolRatio
         }
     }
 
-    reduce(minRatio, minOp<scalar>());
-    reduce(nWarnRatio, sumOp<label>());
+    reduce(minRatio, minOp());
+    reduce(nWarnRatio, sumOp());
 
     if (minRatio < warnRatio)
     {
@@ -1385,8 +1385,8 @@ bool Foam::meshCheck::checkFaceAngles
         }
     }
 
-    reduce(nConcave, sumOp<label>());
-    reduce(maxEdgeSin, maxOp<scalar>());
+    reduce(nConcave, sumOp());
+    reduce(maxEdgeSin, maxOp());
 
     if (report)
     {
@@ -1526,7 +1526,7 @@ bool Foam::meshCheck::checkFaceTwist
         }
     }
 
-    reduce(nWarped, sumOp<label>());
+    reduce(nWarped, sumOp());
 
     if (report)
     {
@@ -1676,7 +1676,7 @@ bool Foam::meshCheck::checkTriangleTwist
     }
 
 
-    reduce(nWarped, sumOp<label>());
+    reduce(nWarped, sumOp());
 
     if (report)
     {
@@ -1773,7 +1773,7 @@ bool Foam::meshCheck::checkFaceFlatness
         }
     }
 
-    reduce(nWarped, sumOp<label>());
+    reduce(nWarped, sumOp());
 
     if (report)
     {
@@ -1840,7 +1840,7 @@ bool Foam::meshCheck::checkFaceArea
     }
 
 
-    reduce(nZeroArea, sumOp<label>());
+    reduce(nZeroArea, sumOp());
 
     if (report)
     {
@@ -1932,10 +1932,10 @@ bool Foam::meshCheck::checkCellDeterminant
         }
     }
 
-    reduce(minDet, minOp<scalar>());
-    reduce(sumDet, sumOp<scalar>());
-    reduce(nSumDet, sumOp<label>());
-    reduce(nWarnDet, sumOp<label>());
+    reduce(minDet, minOp());
+    reduce(sumDet, sumOp());
+    reduce(nSumDet, sumOp());
+    reduce(nWarnDet, sumOp());
 
     if (report)
     {

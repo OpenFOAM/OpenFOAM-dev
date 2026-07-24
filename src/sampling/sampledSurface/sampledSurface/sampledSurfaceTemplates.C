@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ Type Foam::sampledSurface::integrate(const Field<Type>& field) const
         value = sum(field*magSf());
     }
 
-    reduce(value, sumOp<Type>());
+    reduce(value, sumOp());
     return value;
 }
 
@@ -82,7 +82,7 @@ Type Foam::sampledSurface::average(const Field<Type>& field) const
         value = sum(field*magSf());
     }
 
-    reduce(value, sumOp<Type>());
+    reduce(value, sumOp());
 
     // avoid divide-by-zero
     if (area())

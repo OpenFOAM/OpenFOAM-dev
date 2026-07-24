@@ -54,19 +54,19 @@ void Foam::meshCheck::printMeshStats
 {
     Info<< "Mesh stats" << nl
         << "    points:           "
-        << returnReduce(mesh.points().size(), sumOp<label>()) << nl;
+        << returnReduce(mesh.points().size(), sumOp()) << nl;
 
     label nInternalPoints = returnReduce
     (
         mesh.nInternalPoints(),
-        sumOp<label>()
+        sumOp()
     );
 
     if (nInternalPoints != -Pstream::nProcs())
     {
         Info<< "    internal points:  " << nInternalPoints << nl;
 
-        if (returnReduce(mesh.nInternalPoints(), minOp<label>()) == -1)
+        if (returnReduce(mesh.nInternalPoints(), minOp()) == -1)
         {
             WarningInFunction
                 << "Some processors have their points sorted into internal"
@@ -77,21 +77,21 @@ void Foam::meshCheck::printMeshStats
 
     if (allTopology && nInternalPoints != -Pstream::nProcs())
     {
-        label nEdges = returnReduce(mesh.nEdges(), sumOp<label>());
+        label nEdges = returnReduce(mesh.nEdges(), sumOp());
         label nInternalEdges = returnReduce
         (
             mesh.nInternalEdges(),
-            sumOp<label>()
+            sumOp()
         );
         label nInternal1Edges = returnReduce
         (
             mesh.nInternal1Edges(),
-            sumOp<label>()
+            sumOp()
         );
         label nInternal0Edges = returnReduce
         (
             mesh.nInternal0Edges(),
-            sumOp<label>()
+            sumOp()
         );
 
         Info<< "    edges:            " << nEdges << nl
@@ -102,9 +102,9 @@ void Foam::meshCheck::printMeshStats
             << nInternalEdges-nInternal1Edges << nl;
     }
 
-    label nFaces = returnReduce(mesh.faces().size(), sumOp<label>());
-    label nIntFaces = returnReduce(mesh.faceNeighbour().size(), sumOp<label>());
-    label nCells = returnReduce(mesh.cells().size(), sumOp<label>());
+    label nFaces = returnReduce(mesh.faces().size(), sumOp());
+    label nIntFaces = returnReduce(mesh.faceNeighbour().size(), sumOp());
+    label nCells = returnReduce(mesh.cells().size(), sumOp());
 
     Info<< "    faces:            " << nFaces << nl
         << "    internal faces:   " << nIntFaces << nl
@@ -169,13 +169,13 @@ void Foam::meshCheck::printMeshStats
         }
     }
 
-    reduce(nHex,sumOp<label>());
-    reduce(nPrism,sumOp<label>());
-    reduce(nWedge,sumOp<label>());
-    reduce(nPyr,sumOp<label>());
-    reduce(nTetWedge,sumOp<label>());
-    reduce(nTet,sumOp<label>());
-    reduce(nUnknown,sumOp<label>());
+    reduce(nHex,sumOp());
+    reduce(nPrism,sumOp());
+    reduce(nWedge,sumOp());
+    reduce(nPyr,sumOp());
+    reduce(nTetWedge,sumOp());
+    reduce(nTet,sumOp());
+    reduce(nUnknown,sumOp());
 
     Info<< "Overall number of cells of each type:" << nl
         << "    hexahedra:     " << nHex << nl
@@ -189,7 +189,7 @@ void Foam::meshCheck::printMeshStats
 
     if (nUnknown > 0)
     {
-        Pstream::mapCombineGather(polyhedralFaces, plusEqOp<label>());
+        Pstream::mapCombineGather(polyhedralFaces, plusEqOp());
 
         Info<< "    Breakdown of polyhedra by number of faces:" << nl
             << "        faces" << "   number of cells" << endl;
@@ -400,7 +400,7 @@ void Foam::meshCheck::mergeAndWrite
 
         globalIndex globalNumbering(mesh.nPoints());
 
-        mergedPts.setSize(returnReduce(set.size(), sumOp<label>()));
+        mergedPts.setSize(returnReduce(set.size(), sumOp()));
         mergedIDs.setSize(mergedPts.size());
 
         labelList setPointIDs(set.sortedToc());

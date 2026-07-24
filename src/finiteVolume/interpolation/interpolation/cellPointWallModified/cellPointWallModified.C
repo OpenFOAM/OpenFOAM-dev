@@ -128,7 +128,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
         (
             mesh,
             pointNormals,
-            plusEqOp<vector>(),
+            plusEqOp(),
             vector::zero
         );
 
@@ -136,7 +136,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
         (
             mesh,
             pointCount,
-            plusEqOp<scalar>(),
+            plusEqOp(),
             scalar(0)
         );
 
@@ -193,7 +193,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
 
     if (debug)
     {
-        reduce(maxVHatDotN, maxOp<scalar>());
+        reduce(maxVHatDotN, maxOp());
         Info<< typeName << ": Maximum in-to-wall dot product before = "
             << maxVHatDotN << endl;
     }
@@ -202,7 +202,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
     (
         mesh,
         theta0,
-        maxEqOp<scalar>(),
+        maxEqOp(),
         scalar(0)
     );
 
@@ -210,7 +210,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
     (
         mesh,
         theta1,
-        minEqOp<scalar>(),
+        minEqOp(),
         scalar(0)
     );
 
@@ -297,7 +297,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
             }
         }
 
-        reduce(maxVHatDotN, maxOp<scalar>());
+        reduce(maxVHatDotN, maxOp());
         Info<< typeName << ": Maximum in-to-wall dot product after = "
             << maxVHatDotN << endl;
     }

@@ -70,7 +70,7 @@ Foam::label Foam::snappySnapDriver::getCollocatedPoints
     );
     bool hasMerged = (nUnique < points.size());
 
-    if (!returnReduce(hasMerged, orOp<bool>()))
+    if (!returnReduce(hasMerged, orOp()))
     {
         return 0;
     }
@@ -109,7 +109,7 @@ Foam::label Foam::snappySnapDriver::getCollocatedPoints
             firstOldPoint[newPointi] = -2;
         }
     }
-    return returnReduce(nCollocated, sumOp<label>());
+    return returnReduce(nCollocated, sumOp());
 }
 
 
@@ -208,7 +208,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
         mesh,
         pp.meshPoints(),
         avgBoundary,
-        plusEqOp<point>(),  // combine op
+        plusEqOp(),  // combine op
         vector::zero        // null value
     );
     syncTools::syncPointList
@@ -216,7 +216,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
         mesh,
         pp.meshPoints(),
         nBoundary,
-        plusEqOp<label>(),  // combine op
+        plusEqOp(),  // combine op
         label(0)            // null value
     );
 
@@ -284,14 +284,14 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
         (
             mesh,
             globalSum,
-            plusEqOp<vector>(), // combine op
+            plusEqOp(), // combine op
             vector::zero        // null value
         );
         syncTools::syncPointList
         (
             mesh,
             globalNum,
-            plusEqOp<label>(),  // combine op
+            plusEqOp(),  // combine op
             label(0)            // null value
         );
 
@@ -555,7 +555,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::snappySnapDriver::mergeZoneBaffles
     autoPtr<polyTopoChangeMap> map;
 
     // No need to sync; all processors will have all same zonedSurfaces.
-    label nBaffles = returnReduce(baffles.size(), sumOp<label>());
+    label nBaffles = returnReduce(baffles.size(), sumOp());
     if (zonedSurfaces.size() && nBaffles > 0)
     {
         // Merge any baffles
@@ -605,7 +605,7 @@ Foam::scalarField Foam::snappySnapDriver::calcSnapDistance
         mesh,
         pp.meshPoints(),
         maxEdgeLen,
-        maxEqOp<scalar>(),  // combine op
+        maxEqOp(),  // combine op
         -great              // null value
     );
 
@@ -792,7 +792,7 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
         mesh,
         pp.meshPoints(),
         avgBoundary,
-        plusEqOp<point>(),  // combine op
+        plusEqOp(),  // combine op
         vector::zero        // null value
     );
     syncTools::syncPointList
@@ -800,7 +800,7 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
         mesh,
         pp.meshPoints(),
         nBoundary,
-        plusEqOp<label>(),  // combine op
+        plusEqOp(),  // combine op
         label(0)            // null value
     );
 
@@ -1406,8 +1406,8 @@ void Foam::snappySnapDriver::detectNearSurfaces
     }
 
     Info<< "Overriding nearest with intersection of close gaps at "
-        << returnReduce(nOverride, sumOp<label>())
-        << " out of " << returnReduce(pp.nPoints(), sumOp<label>())
+        << returnReduce(nOverride, sumOp())
+        << " out of " << returnReduce(pp.nPoints(), sumOp())
         << " points." << endl;
 }
 
@@ -1431,7 +1431,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
     // Displacement per patch point
     vectorField patchDisp(localPoints.size(), Zero);
 
-    if (returnReduce(localPoints.size(), sumOp<label>()) > 0)
+    if (returnReduce(localPoints.size(), sumOp()) > 0)
     {
         // Current surface snapped to
         labelList snapSurf(localPoints.size(), -1);
@@ -1656,7 +1656,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
         mesh,
         pp.meshPoints(),
         patchDisp,
-        minMagSqrEqOp<point>(),         // combine op
+        minMagSqrEqOp(),         // combine op
         vector(great, great, great)     // null value (note: cannot use vGreat)
     );
 
@@ -1956,7 +1956,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::snappySnapDriver::repatchToSurface
         }
     }
 
-    Info<< "Repatched " << returnReduce(nChanged, sumOp<label>())
+    Info<< "Repatched " << returnReduce(nChanged, sumOp())
         << " faces in = " << mesh.time().cpuTimeIncrement() << " s\n" << nl
         << endl;
 
@@ -2199,9 +2199,9 @@ void Foam::snappySnapDriver::doSnap
 
                     Info<< "Surface : " << surfaces.names()[surfi] << nl
                         << "    faces to become baffle : "
-                        << returnReduce(nFilterFaces, sumOp<label>()) << nl
+                        << returnReduce(nFilterFaces, sumOp()) << nl
                         << "    points to duplicate    : "
-                        << returnReduce(nDuplicatePoints, sumOp<label>())
+                        << returnReduce(nDuplicatePoints, sumOp())
                         << endl;
                 }
             }
@@ -2212,16 +2212,16 @@ void Foam::snappySnapDriver::doSnap
         (
             mesh,
             duplicatePoint,
-            orEqOp<unsigned int>(),     // combine op
+            orEqOp(),     // combine op
             0u                          // null value
         );
         // Mark as duplicate (avoids combining patch faces) if one or both
-        syncTools::syncFaceList(mesh, duplicateFace, maxEqOp<label>());
+        syncTools::syncFaceList(mesh, duplicateFace, maxEqOp());
         // Mark as resulting from baffle/boundary face zone only if both agree
-        syncTools::syncFaceList(mesh, filterFace, minEqOp<label>());
+        syncTools::syncFaceList(mesh, filterFace, minEqOp());
 
         // Duplicate points
-        if (returnReduce(nDuplicatePoints, sumOp<label>()) > 0)
+        if (returnReduce(nDuplicatePoints, sumOp()) > 0)
         {
             // Collect all points (recount since syncPointList might have
             // increased set)
@@ -2375,7 +2375,7 @@ void Foam::snappySnapDriver::doSnap
         const label nInitErrors = returnReduce
         (
             wrongFaces.size(),
-            sumOp<label>()
+            sumOp()
         );
 
         Info<< "Detected " << nInitErrors << " illegal faces"
@@ -2492,7 +2492,7 @@ void Foam::snappySnapDriver::doSnap
             //    }
             //
             //    Info<< "Splitting "
-            //        << returnReduce(splitFaces.size(), sumOp<label>())
+            //        << returnReduce(splitFaces.size(), sumOp())
             //        << " faces along diagonal attractions" << endl;
             //
             //    autoPtr<polyTopoChangeMap> mapPtr = meshRefiner_.splitFaces
@@ -2571,7 +2571,7 @@ void Foam::snappySnapDriver::doSnap
             //    );
             //
             //    Info<< "Splitting "
-            //        << returnReduce(splitFaces.size(), sumOp<label>())
+            //        << returnReduce(splitFaces.size(), sumOp())
             //        << " faces along diagonal to avoid warpage" << endl;
             //
             //    autoPtr<polyTopoChangeMap> mapPtr = meshRefiner_.splitFaces

@@ -121,7 +121,7 @@ void Foam::patchInjectionBase::topoChange(const polyMesh& mesh)
 
     // Cumulatively sum the total areas across the processors
     sumProcArea_[Pstream::myProcNo()] = patchArea;
-    Pstream::listCombineGather(sumProcArea_, maxEqOp<scalar>());
+    Pstream::listCombineGather(sumProcArea_, maxEqOp());
     Pstream::listCombineScatter(sumProcArea_);
     for (label proci = 1; proci < Pstream::nProcs(); proci ++)
     {

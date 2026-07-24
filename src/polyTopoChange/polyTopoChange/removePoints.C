@@ -41,12 +41,10 @@ defineTypeNameAndDebug(removePoints, 0);
 
 // Combine-reduce operator to combine data on faces. Takes care
 // of reverse orientation on coupled face.
-template<class T, template<class> class CombineOp>
-class faceEqOp
+template<class CombineOp>
+struct faceEqOp
 {
-
-public:
-
+    template<class T>
     void operator()(List<T>& x, const List<T>& y) const
     {
         if (y.size() > 0)
@@ -60,7 +58,7 @@ public:
                 label j = 0;
                 forAll(x, i)
                 {
-                    CombineOp<T>()(x[i], y[j]);
+                    CombineOp()(x[i], y[j]);
                     j = y.rcIndex(j);
                 }
             }
@@ -255,7 +253,7 @@ Foam::label Foam::removePoints::countPointUsage
     (
         mesh_,
         pointCanBeDeleted,
-        andEqOp<bool>(),
+        andEqOp(),
         true                // null value
     );
 
@@ -268,7 +266,7 @@ Foam::label Foam::removePoints::countPointUsage
         }
     }
 
-    return returnReduce(nDeleted, sumOp<label>());
+    return returnReduce(nDeleted, sumOp());
 }
 
 
@@ -661,7 +659,7 @@ void Foam::removePoints::getUnrefimentSet
         (
             mesh_,
             faceVertexRestore,
-            faceEqOp<bool, orEqOp>(),   // special operator to handle faces
+            faceEqOp<orEqOp>(),   // special operator to handle faces
             Foam::dummyTransform()      // no transformation
         );
 

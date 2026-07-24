@@ -375,7 +375,7 @@ void Foam::cellToFaceStencil::calcFaceStencil
     (
         mesh_,
         neiGlobalCellCells,
-        eqOp<labelList>(),
+        eqOp(),
         dummyTransform()
     );
 

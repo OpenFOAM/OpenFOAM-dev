@@ -195,7 +195,7 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
         return;
     }
 
-    if (!returnReduce(size(), sumOp<label>()))
+    if (!returnReduce(size(), sumOp()))
     {
         return;
     }
@@ -386,7 +386,7 @@ Foam::label Foam::wedgePolyPatch::oppositePatchIndex() const
                 ];
         }
 
-        reduce(oppositePatchIndex_, maxOp<label>());
+        reduce(oppositePatchIndex_, maxOp());
     }
 
     return oppositePatchIndex_;

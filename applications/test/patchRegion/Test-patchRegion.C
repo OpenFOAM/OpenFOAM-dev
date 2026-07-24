@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
         changedInfo,
         allEdgeInfo,
         allFaceInfo,
-        returnReduce(patch.nEdges(), sumOp<label>())
+        returnReduce(patch.nEdges(), sumOp())
     );
 
 

@@ -267,7 +267,7 @@ bool Foam::functionObjects::streamlines::write()
         }
 
         // Report the number of successful seeds
-        const label nSeeds = returnReduce(particles.size(), sumOp<label>());
+        const label nSeeds = returnReduce(particles.size(), sumOp());
         Info<< indent << "    Seeded " << nSeeds << " particles" << endl;
 
         // Create tracking data

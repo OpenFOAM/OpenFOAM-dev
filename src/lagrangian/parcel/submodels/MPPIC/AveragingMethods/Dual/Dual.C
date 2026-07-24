@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::AveragingMethods::Dual<Type>::Dual
     mesh.globalData().syncPointData
     (
         volumeDual_,
-        plusEqOp<scalar>(),
+        plusEqOp(),
         distributionMap::transform()
     );
 }
@@ -110,7 +110,7 @@ void Foam::AveragingMethods::Dual<Type>::syncDualData()
     this->mesh_.globalData().syncPointData
     (
         dataDual_,
-        plusEqOp<Type>(),
+        plusEqOp(),
         distributionMap::transform()
     );
 }

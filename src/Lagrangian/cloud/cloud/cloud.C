@@ -272,7 +272,7 @@ bool Foam::cloud::storeStates()
         if (!patchMesh.empty()) needStates = true;
     }
 
-    reduce(needStates, orOp<bool>());
+    reduce(needStates, orOp());
 
     // Create the state labels field as appropriate
     if (needStates && !statePtr_.valid())
@@ -737,7 +737,7 @@ void Foam::cloud::solve(const bool initial, const bool final)
         returnReduce
         (
             mesh_.sub(LagrangianGroup::complete).size() != mesh_.size(),
-            orOp<bool>()
+            orOp()
         )
     )
     {

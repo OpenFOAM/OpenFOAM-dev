@@ -82,7 +82,7 @@ void Foam::CFCFaceToCellStencil::calcFaceBoundaryData
     (
         mesh(),
         neiGlobal,
-        eqOp<labelList>(),
+        eqOp(),
         dummyTransform()
     );
 }

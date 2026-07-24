@@ -143,7 +143,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
         const label celli = cells[i];
         magUbarAve += (normalised(Ubar_) & U[celli])*cv[celli];
     }
-    reduce(magUbarAve, sumOp<scalar>());
+    reduce(magUbarAve, sumOp());
     magUbarAve /= zone_.V();
 
     return magUbarAve;
@@ -223,7 +223,7 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
         const label celli = cells[i];
         rAUave += rAU[celli]*cv[celli];
     }
-    reduce(rAUave, sumOp<scalar>());
+    reduce(rAUave, sumOp());
     rAUave /= zone_.V();
 
     const scalar magUbarAve = this->magUbarAve(U);

@@ -81,7 +81,7 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
     // Patches to keep
     DynamicList<polyPatch*> allPatches(patches.size());
 
-    label nOldPatches = returnReduce(patches.size(), sumOp<label>());
+    label nOldPatches = returnReduce(patches.size(), sumOp());
 
     // Copy old patches.
     forAll(patches, patchi)
@@ -99,7 +99,7 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
             (
                 addedPatchNames.found(pp.name())
              || pp.constraint()
-             || returnReduce(pp.size(), sumOp<label>()) > 0
+             || returnReduce(pp.size(), sumOp()) > 0
             )
             {
                 allPatches.append
@@ -150,7 +150,7 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
         }
     }
 
-    label nAllPatches = returnReduce(allPatches.size(), sumOp<label>());
+    label nAllPatches = returnReduce(allPatches.size(), sumOp());
     if (nAllPatches != nOldPatches)
     {
         Info<< "Removing patches." << endl;
@@ -401,7 +401,7 @@ void syncPoints
 
     //- Note: hasTransformation is only used for warning messages so
     //  reduction not strictly necessary.
-    // reduce(hasTransformation, orOp<bool>());
+    // reduce(hasTransformation, orOp());
 
     // Synchronise multiple shared points.
     const globalMeshData& pd = mesh.globalData();
@@ -681,7 +681,7 @@ int main(int argc, char *argv[])
                 patchFaces = zg->generate().fZone();
 
                 Info<< "Set "
-                    << returnReduce(patchFaces.size(), sumOp<label>())
+                    << returnReduce(patchFaces.size(), sumOp())
                     << " faces from zoneGenerator " << zg->name()
                     << " of type " << zg->type() << endl;
             }
@@ -692,7 +692,7 @@ int main(int argc, char *argv[])
                 patchFaces = mesh.faceZones()[zoneName];
 
                 Info<< "Read "
-                    << returnReduce(patchFaces.size(), sumOp<label>())
+                    << returnReduce(patchFaces.size(), sumOp())
                     << " faces from faceZone " << zoneName << endl;
             }
 
@@ -726,7 +726,7 @@ int main(int argc, char *argv[])
 
             faceSet faces(mesh, setName);
 
-            Info<< "Read " << returnReduce(faces.size(), sumOp<label>())
+            Info<< "Read " << returnReduce(faces.size(), sumOp())
                 << " faces from faceSet " << faces.name() << endl;
 
             // Sort (since faceSet contains faces in arbitrary order)

@@ -56,7 +56,7 @@ void Foam::motionSmootherAlgo::testSyncPositions
     (
         mesh_,
         syncedFld,
-        minEqOp<point>(),           // combine op
+        minEqOp(),           // combine op
         point(great,great,great)    // null
     );
 
@@ -910,7 +910,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
         wrongFaces
     );
 
-    if (returnReduce(wrongFaces.size(), sumOp<label>()) <= nAllowableErrors)
+    if (returnReduce(wrongFaces.size(), sumOp()) <= nAllowableErrors)
     {
         return true;
     }
@@ -1024,7 +1024,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
         (
             mesh_,
             scale_,
-            maxEqOp<scalar>(),
+            maxEqOp(),
             -great              // null value
         );
 

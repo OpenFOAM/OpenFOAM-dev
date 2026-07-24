@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::tmp<Foam::Field<T>> Foam::functionObjects::layerAverage::sum
         }
     }
 
-    Pstream::listCombineGather(layerField, plusEqOp<T>());
+    Pstream::listCombineGather(layerField, plusEqOp());
     Pstream::listCombineScatter(layerField);
 
     return tlayerField;

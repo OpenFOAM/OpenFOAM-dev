@@ -34,9 +34,9 @@ License
 
 namespace Foam
 {
-    template<class Type>
     struct maxFirstOp
     {
+        template<class Type>
         const Type& operator()(const Type& a, const Type& b) const
         {
             return a.first() > b.first() ? a : b;
@@ -202,12 +202,12 @@ void Foam::nonConformalCyclicLagrangianPatch::partition() const
 
     // Check for positional errors and report if any are found
     const label nPositionalErrors =
-        returnReduce(nPositionalErrors_, sumOp<label>());
+        returnReduce(nPositionalErrors_, sumOp());
 
     if (nPositionalErrors != 0)
     {
         const label nTransfers =
-            returnReduce(this->mesh().size(), sumOp<label>());
+            returnReduce(this->mesh().size(), sumOp());
 
         const Tuple2<scalar, vector> maxPositionalErrorInfo =
             returnReduce
@@ -217,7 +217,7 @@ void Foam::nonConformalCyclicLagrangianPatch::partition() const
                     maxPositionalErrorSqr_,
                     maxPositionalErrorReceivePosition_
                 ),
-                maxFirstOp<Tuple2<scalar, vector>>()
+                maxFirstOp()
             );
 
         maxPositionalErrorSqr_ = maxPositionalErrorInfo.first();

@@ -233,7 +233,7 @@ void Foam::searchableSurfaces::withGaps::findLine
     labelList compactMap;
     label nMiss = countMisses(info, compactMap);
 
-    if (returnReduce(nMiss, sumOp<label>()) > 0)
+    if (returnReduce(nMiss, sumOp()) > 0)
     {
         // Pout<< "** retesting with offset0 " << nMiss << " misses out of "
         //    << start.size() << endl;
@@ -288,7 +288,7 @@ void Foam::searchableSurfaces::withGaps::findLine
         labelList plusMissMap;
         nMiss = countMisses(plusInfo, minInfo, plusMissMap);
 
-        if (returnReduce(nMiss, sumOp<label>()) > 0)
+        if (returnReduce(nMiss, sumOp()) > 0)
         {
             // Pout<< "** retesting with offset1 " << nMiss << " misses out of "
             //    << start.size() << endl;

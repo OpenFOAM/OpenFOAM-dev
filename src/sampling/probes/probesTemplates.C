@@ -34,11 +34,9 @@ License
 namespace Foam
 {
 
-template<class T>
-class isNotEqOp
+struct isNotEqOp
 {
-public:
-
+    template<class T>
     void operator()(T& x, const T& y) const
     {
         const T unsetVal(-vGreat*pTraits<T>::one);
@@ -205,7 +203,7 @@ Foam::probes::sample(const VolField<Type>& vField) const
         }
     }
 
-    Pstream::listCombineGather(values, isNotEqOp<Type>());
+    Pstream::listCombineGather(values, isNotEqOp());
     Pstream::listCombineScatter(values);
 
     return tValues;
@@ -233,7 +231,7 @@ Foam::probes::sample(const SurfaceField<Type>& sField) const
         }
     }
 
-    Pstream::listCombineGather(values, isNotEqOp<Type>());
+    Pstream::listCombineGather(values, isNotEqOp());
     Pstream::listCombineScatter(values);
 
     return tValues;

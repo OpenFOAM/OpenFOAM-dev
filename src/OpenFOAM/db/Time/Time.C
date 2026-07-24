@@ -200,7 +200,7 @@ void Foam::Time::setControls()
     if (Pstream::parRun())
     {
         scalar sumStartTime = startTime_;
-        reduce(sumStartTime, sumOp<scalar>());
+        reduce(sumStartTime, sumOp());
         if
         (
             mag(Pstream::nProcs()*startTime_ - sumStartTime)
@@ -1192,7 +1192,7 @@ Foam::Time& Foam::Time::operator++()
             {
                 flag += 2;
             }
-            reduce(flag, maxOp<label>());
+            reduce(flag, maxOp());
 
             if (flag & 1)
             {
@@ -1233,7 +1233,7 @@ Foam::Time& Foam::Time::operator++()
             {
                 label writeIndex = label
                 (
-                    returnReduce(elapsedCpuTime(), maxOp<double>())
+                    returnReduce(elapsedCpuTime(), maxOp())
                   / writeInterval_
                 );
                 if (writeIndex > writeTimeIndex_)
@@ -1248,7 +1248,7 @@ Foam::Time& Foam::Time::operator++()
             {
                 label writeIndex = label
                 (
-                    returnReduce(label(elapsedClockTime()), maxOp<label>())
+                    returnReduce(label(elapsedClockTime()), maxOp())
                   / writeInterval_
                 );
                 if (writeIndex > writeTimeIndex_)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,13 @@ void Foam::PatchTools::gatherAndMerge
             pointSizes = ListListOps::subSizes
             (
                 gatheredPoints,
-                accessOp<Field<PointType>>()
+                accessOp()
             );
 
             mergedPoints = ListListOps::combine<Field<PointType>>
             (
                 gatheredPoints,
-                accessOp<Field<PointType>>()
+                accessOp()
             );
         }
     }
@@ -83,8 +83,8 @@ void Foam::PatchTools::gatherAndMerge
                 (
                     gatheredFaces,
                     pointSizes,
-                    accessOp<List<FaceType>>(),
-                    offsetOp<FaceType>()
+                    accessOp(),
+                    offsetOp()
                 )
             );
         }

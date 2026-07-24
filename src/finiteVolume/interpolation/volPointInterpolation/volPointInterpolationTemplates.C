@@ -128,7 +128,7 @@ void Foam::volPointInterpolation::interpolateUnconstrained
     }
 
     // Synchronise
-    syncTools::syncPointList(mesh(), pf, plusEqOp<Type>(), pTraits<Type>::zero);
+    syncTools::syncPointList(mesh(), pf, plusEqOp(), pTraits<Type>::zero);
 }
 
 

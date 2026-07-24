@@ -121,7 +121,7 @@ Foam::label Foam::snappyRefineDriver::featureEdgeRefine
 
 
             label nCellsToRefine = cellsToRefine.size();
-            reduce(nCellsToRefine, sumOp<label>());
+            reduce(nCellsToRefine, sumOp());
 
             Info<< "Selected for feature refinement : " << nCellsToRefine
                 << " cells (out of " << mesh.globalData().nTotalCells()
@@ -146,7 +146,7 @@ Foam::label Foam::snappyRefineDriver::featureEdgeRefine
                 returnReduce
                 (
                     (mesh.nCells() >= refineParams.maxLocalCells()),
-                    orOp<bool>()
+                    orOp()
                 )
             )
             {
@@ -233,7 +233,7 @@ Foam::label Foam::snappyRefineDriver::surfaceOnlyRefine
 
 
         label nCellsToRefine = cellsToRefine.size();
-        reduce(nCellsToRefine, sumOp<label>());
+        reduce(nCellsToRefine, sumOp());
 
         Info<< "Selected for refinement : " << nCellsToRefine
             << " cells (out of " << mesh.globalData().nTotalCells()
@@ -267,7 +267,7 @@ Foam::label Foam::snappyRefineDriver::surfaceOnlyRefine
             returnReduce
             (
                 (mesh.nCells() >= refineParams.maxLocalCells()),
-                orOp<bool>()
+                orOp()
             )
         )
         {
@@ -461,7 +461,7 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
 
 
         label nCellsToRefine = cellsToRefine.size();
-        reduce(nCellsToRefine, sumOp<label>());
+        reduce(nCellsToRefine, sumOp());
 
         Info<< "Selected for refinement : " << nCellsToRefine
             << " cells (out of " << mesh.globalData().nTotalCells()
@@ -495,7 +495,7 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
             returnReduce
             (
                 (mesh.nCells() >= refineParams.maxLocalCells()),
-                orOp<bool>()
+                orOp()
             )
         )
         {
@@ -605,7 +605,7 @@ Foam::label Foam::snappyRefineDriver::danglingCellRefine
 
 
         label nCellsToRefine = cellsToRefine.size();
-        reduce(nCellsToRefine, sumOp<label>());
+        reduce(nCellsToRefine, sumOp());
 
         Info<< "Selected for refinement : " << nCellsToRefine
             << " cells (out of " << mesh.globalData().nTotalCells()
@@ -639,7 +639,7 @@ Foam::label Foam::snappyRefineDriver::danglingCellRefine
             returnReduce
             (
                 (mesh.nCells() >= refineParams.maxLocalCells()),
-                orOp<bool>()
+                orOp()
             )
         )
         {
@@ -790,7 +790,7 @@ Foam::label Foam::snappyRefineDriver::shellRefine
         );
 
         // Info<< "Collected boundary faces : "
-        //    << returnReduce(bFaces.size(), sumOp<label>()) << endl;
+        //    << returnReduce(bFaces.size(), sumOp()) << endl;
 
         labelList cellsToRefine;
 
@@ -820,7 +820,7 @@ Foam::label Foam::snappyRefineDriver::shellRefine
 
 
         label nCellsToRefine = cellsToRefine.size();
-        reduce(nCellsToRefine, sumOp<label>());
+        reduce(nCellsToRefine, sumOp());
 
         Info<< "Selected for internal refinement : " << nCellsToRefine
             << " cells (out of " << mesh.globalData().nTotalCells()
@@ -853,7 +853,7 @@ Foam::label Foam::snappyRefineDriver::shellRefine
             returnReduce
             (
                 (mesh.nCells() >= refineParams.maxLocalCells()),
-                orOp<bool>()
+                orOp()
             )
         )
         {
@@ -1038,7 +1038,7 @@ void Foam::snappyRefineDriver::splitAndMergeBaffles
     // Merge all baffles that are still remaining after duplicating points.
     List<labelPair> couples(localPointRegion::findDuplicateFacePairs(mesh));
 
-    label nCouples = returnReduce(couples.size(), sumOp<label>());
+    label nCouples = returnReduce(couples.size(), sumOp());
 
     Info<< "Detected unsplittable baffles : " << nCouples << endl;
 

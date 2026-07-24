@@ -197,7 +197,7 @@ void Foam::meshRefinement::updateIntersections(const labelList& changedFaces)
                 nMasterFaces++;
             }
         }
-        reduce(nMasterFaces, sumOp<label>());
+        reduce(nMasterFaces, sumOp());
 
         label nChangedFaces = 0;
         forAll(changedFaces, i)
@@ -207,7 +207,7 @@ void Foam::meshRefinement::updateIntersections(const labelList& changedFaces)
                 nChangedFaces++;
             }
         }
-        reduce(nChangedFaces, sumOp<label>());
+        reduce(nChangedFaces, sumOp());
 
         Info<< "Edge intersection testing:" << nl
             << "    Number of edges             : " << nMasterFaces << nl
@@ -271,10 +271,10 @@ void Foam::meshRefinement::updateIntersections(const labelList& changedFaces)
 
     // Make sure both sides have same information. This should be
     // case in general since same vectors but just to make sure.
-    syncTools::syncFaceList(mesh_, surfaceIndex_, maxEqOp<label>());
+    syncTools::syncFaceList(mesh_, surfaceIndex_, maxEqOp());
 
     const label nHits = countHits();
-    const label nTotHits = returnReduce(nHits, sumOp<label>());
+    const label nTotHits = returnReduce(nHits, sumOp());
 
     Info<< "    Number of intersected edges : " << nTotHits << endl;
 
@@ -304,7 +304,7 @@ void Foam::meshRefinement::testSyncPointList
     (
         mesh,
         minFld,
-        minEqOp<scalar>(),
+        minEqOp(),
         great
     );
     scalarField maxFld(fld);
@@ -312,7 +312,7 @@ void Foam::meshRefinement::testSyncPointList
     (
         mesh,
         maxFld,
-        maxEqOp<scalar>(),
+        maxEqOp(),
         -great
     );
     forAll(minFld, pointi)
@@ -351,7 +351,7 @@ void Foam::meshRefinement::testSyncPointList
     (
         mesh,
         minFld,
-        minMagSqrEqOp<point>(),
+        minMagSqrEqOp(),
         point(great, great, great)
     );
     pointField maxFld(fld);
@@ -359,7 +359,7 @@ void Foam::meshRefinement::testSyncPointList
     (
         mesh,
         maxFld,
-        maxMagSqrEqOp<point>(),
+        maxMagSqrEqOp(),
         vector::zero
     );
     forAll(minFld, pointi)
@@ -409,7 +409,7 @@ void Foam::meshRefinement::checkData()
         (
             mesh_,
             neiBoundaryFc,
-            eqOp<point>()
+            eqOp()
         );
 
         // Compare
@@ -803,7 +803,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
 //    }
 //
 //    // Do reduction
-//    Pstream::mapCombineGather(regionToMaster, minEqOp<label>());
+//    Pstream::mapCombineGather(regionToMaster, minEqOp());
 //    Pstream::mapCombineScatter(regionToMaster);
 //}
 //
@@ -939,7 +939,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
 //                shiftIndexer.toGlobal(fndRegion())
 //            );
 //        }
-//        Pstream::mapCombineGather(coupledRegionToShifted, minEqOp<label>());
+//        Pstream::mapCombineGather(coupledRegionToShifted, minEqOp());
 //        Pstream::mapCombineScatter(coupledRegionToShifted);
 //    }
 //
@@ -1286,7 +1286,7 @@ Foam::label Foam::meshRefinement::countHits() const
 //            regionToDist.insert(iter.key(), labelMax);
 //        }
 //    }
-//    Pstream::mapCombineGather(regionToDist, minEqOp<label>());
+//    Pstream::mapCombineGather(regionToDist, minEqOp());
 //    Pstream::mapCombineScatter(regionToDist);
 //
 //
@@ -1411,10 +1411,10 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
                 (
                     mesh_,
                     blockedFace,
-                    andEqOp<bool>()     // combine operator
+                    andEqOp()     // combine operator
                 );
             }
-            reduce(nUnblocked, sumOp<label>());
+            reduce(nUnblocked, sumOp());
 
             if (keepZoneFaces)
             {
@@ -1440,7 +1440,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
                         }
                     }
                 }
-                reduce(nSeparated, sumOp<label>());
+                reduce(nSeparated, sumOp());
                 Info<< "Found " << nSeparated
                     << " separated coupled faces to keep together." << endl;
 
@@ -1487,7 +1487,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
                 }
                 couples.setSize(nCpl);
             }
-            label nCouples = returnReduce(couples.size(), sumOp<label>());
+            label nCouples = returnReduce(couples.size(), sumOp());
 
             if (keepBaffles)
             {
@@ -1509,7 +1509,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
             //    );
             //
             //    labelList nProcCells(distributor.countCells(distribution));
-            //    Pstream::listCombineGather(nProcCells, plusEqOp<label>());
+            //    Pstream::listCombineGather(nProcCells, plusEqOp());
             //    Pstream::listCombineScatter(nProcCells);
             //
             //    Info<< "Calculated decomposition:" << endl;
@@ -1565,7 +1565,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
             labelList nProcCells(distributor.countCells(distribution));
             Pout<< "Wanted distribution:" << nProcCells << endl;
 
-            Pstream::listCombineGather(nProcCells, plusEqOp<label>());
+            Pstream::listCombineGather(nProcCells, plusEqOp());
             Pstream::listCombineScatter(nProcCells);
 
             Pout<< "Wanted resulting decomposition:" << endl;
@@ -2044,7 +2044,7 @@ Foam::label Foam::meshRefinement::findRegion
     {
         regioni = cellRegion[celli];
     }
-    reduce(regioni, maxOp<label>());
+    reduce(regioni, maxOp());
 
     if (regioni == -1)
     {
@@ -2054,7 +2054,7 @@ Foam::label Foam::meshRefinement::findRegion
         {
             regioni = cellRegion[celli];
         }
-        reduce(regioni, maxOp<label>());
+        reduce(regioni, maxOp());
     }
 
     return regioni;
@@ -2179,13 +2179,13 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMeshRegions
     const label nCellsToRemove = returnReduce
     (
         cellsToRemove.size(),
-        sumOp<label>()
+        sumOp()
     );
 
     if (nCellsToRemove)
     {
         label nCellsToKeep = mesh_.nCells() - cellsToRemove.size();
-        reduce(nCellsToKeep, sumOp<label>());
+        reduce(nCellsToKeep, sumOp());
 
         Info<< "Keeping all cells in regions containing any point in "
             << selectionPoints.inside() << endl
@@ -2202,7 +2202,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMeshRegions
         labelList exposedPatch;
 
         const label nExposedFaces =
-            returnReduce(exposedFaces.size(), sumOp<label>());
+            returnReduce(exposedFaces.size(), sumOp());
 
         if (nExposedFaces)
         {
@@ -2427,7 +2427,7 @@ Foam::PackedBoolList Foam::meshRefinement::getMasterPoints
         mesh,
         meshPoints,
         myPoints,
-        minEqOp<label>(),
+        minEqOp(),
         labelMax
     );
 
@@ -2464,7 +2464,7 @@ Foam::PackedBoolList Foam::meshRefinement::getMasterEdges
         mesh,
         meshEdges,
         myEdges,
-        minEqOp<label>(),
+        minEqOp(),
         labelMax
     );
 
@@ -2519,8 +2519,8 @@ const
 
         Info<< msg.c_str()
             << " : cells:" << pData.nTotalCells()
-            << "  faces:" << returnReduce(nMasterFaces, sumOp<label>())
-            << "  points:" << returnReduce(nMasterPoints, sumOp<label>())
+            << "  faces:" << returnReduce(nMasterFaces, sumOp())
+            << "  points:" << returnReduce(nMasterPoints, sumOp())
             << endl;
     }
 
@@ -2536,7 +2536,7 @@ const
             nCells[cellLevel[celli]]++;
         }
 
-        Pstream::listCombineGather(nCells, plusEqOp<label>());
+        Pstream::listCombineGather(nCells, plusEqOp());
         Pstream::listCombineScatter(nCells);
 
         Info<< "Cells per refinement level:" << endl;

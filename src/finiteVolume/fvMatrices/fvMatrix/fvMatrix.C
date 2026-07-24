@@ -675,25 +675,25 @@ void Foam::fvMatrix<Type>::relax(const scalar alpha)
             }
         }
 
-        reduce(nNon, sumOp<label>(), UPstream::msgType(), psi_.mesh().comm());
+        reduce(nNon, sumOp(), UPstream::msgType(), psi_.mesh().comm());
         reduce
         (
             maxNon,
-            maxOp<scalar>(),
+            maxOp(),
             UPstream::msgType(),
             psi_.mesh().comm()
         );
         reduce
         (
             sumNon,
-            sumOp<scalar>(),
+            sumOp(),
             UPstream::msgType(),
             psi_.mesh().comm()
         );
         sumNon /= returnReduce
         (
             D.size(),
-            sumOp<label>(),
+            sumOp(),
             UPstream::msgType(),
             psi_.mesh().comm()
         );

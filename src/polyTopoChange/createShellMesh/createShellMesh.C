@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,19 +38,15 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(createShellMesh, 0);
+    defineTypeNameAndDebug(createShellMesh, 0);
 
-template<>
-class minEqOp<labelPair>
-{
-public:
-    void operator()(labelPair& x, const labelPair& y) const
+    template<>
+    void minEqOp::operator()<labelPair>(labelPair& x, const labelPair& y) const
     {
         x[0] = min(x[0], y[0]);
         x[1] = min(x[1], y[1]);
     }
 };
-}
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -114,7 +110,7 @@ void Foam::createShellMesh::syncEdges
           : labelListList(globalData.globalEdgeSlaves().size())
         ),
         map,
-        minEqOp<labelPair>()
+        minEqOp()
     );
 
     // Back from cpp-edge to patch-edge data
@@ -304,7 +300,7 @@ void Foam::createShellMesh::calcPointRegions
         }
 
 
-        label nChangedFaces = returnReduce(changedFaces.size(), sumOp<label>());
+        label nChangedFaces = returnReduce(changedFaces.size(), sumOp());
         if (nChangedFaces == 0)
         {
             break;
@@ -367,7 +363,7 @@ void Foam::createShellMesh::calcPointRegions
         );
 
 
-        label nChangedEdges = returnReduce(changedEdges.size(), sumOp<label>());
+        label nChangedEdges = returnReduce(changedEdges.size(), sumOp());
         if (nChangedEdges == 0)
         {
             break;

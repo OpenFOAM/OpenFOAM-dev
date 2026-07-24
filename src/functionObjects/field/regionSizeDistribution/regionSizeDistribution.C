@@ -188,7 +188,7 @@ Foam::functionObjects::regionSizeDistribution::findPatchRegions
 
 
     // Make sure all the processors have the same set of regions
-    Pstream::mapCombineGather(patchRegions, minEqOp<label>());
+    Pstream::mapCombineGather(patchRegions, minEqOp());
     Pstream::mapCombineScatter(patchRegions);
 
     return patchRegions;

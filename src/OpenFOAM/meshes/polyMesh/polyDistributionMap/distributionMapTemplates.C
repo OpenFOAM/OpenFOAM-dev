@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -261,7 +261,7 @@ void Foam::distributionMap::reverseDistribute
     // Fill slots with reverse-transformed data Note that it also copies
     // back into the non-remote part of fld even though these values are not
     // used.
-    applyInverseTransforms(git, fld, top);   //, eqOp<T>());
+    applyInverseTransforms(git, fld, top);   //, eqOp());
 
     // And send back (the remote slots) Disable dummy transformations.
     reverseDistribute(constructSize, nullValue, fld, false, tag);

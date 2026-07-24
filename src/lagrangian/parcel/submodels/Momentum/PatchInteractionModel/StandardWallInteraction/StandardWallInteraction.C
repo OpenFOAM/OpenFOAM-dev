@@ -180,16 +180,16 @@ template<class CloudType>
 void Foam::StandardWallInteraction<CloudType>::info(Ostream& os)
 {
     label npe0 = this->template getBaseProperty<scalar>("nEscape");
-    label npe = npe0 + returnReduce(nEscape_, sumOp<label>());
+    label npe = npe0 + returnReduce(nEscape_, sumOp());
 
     scalar mpe0 = this->template getBaseProperty<scalar>("massEscape");
-    scalar mpe = mpe0 + returnReduce(massEscape_, sumOp<scalar>());
+    scalar mpe = mpe0 + returnReduce(massEscape_, sumOp());
 
     label nps0 = this->template getBaseProperty<scalar>("nStick");
-    label nps = nps0 + returnReduce(nStick_, sumOp<label>());
+    label nps = nps0 + returnReduce(nStick_, sumOp());
 
     scalar mps0 = this->template getBaseProperty<scalar>("massStick");
-    scalar mps = mps0 + returnReduce(massStick_, sumOp<scalar>());
+    scalar mps = mps0 + returnReduce(massStick_, sumOp());
 
     os  << "    Parcel fate (number, mass)" << nl
         << "      - escape                      = " << npe << ", " << mpe << nl

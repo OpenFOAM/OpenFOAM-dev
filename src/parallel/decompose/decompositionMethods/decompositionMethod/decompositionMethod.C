@@ -55,7 +55,7 @@ Foam::label Foam::decompositionMethod::nWeights
     const label localnWeights =
         points.size() ? pointWeights.size()/points.size() : 0;
 
-    const label nWeights = returnReduce(localnWeights, maxOp<label>());
+    const label nWeights = returnReduce(localnWeights, maxOp());
 
     if (localnWeights && localnWeights != nWeights)
     {
@@ -381,7 +381,7 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
 
         if (distributed)
         {
-            reduce(sumWeights, ListOp<sumOp<scalar>>());
+            reduce(sumWeights, ListOp<sumOp>());
         }
 
         scalarList scale(nWeights, 0.0);
@@ -410,7 +410,7 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
 
         if (distributed)
         {
-            reduce(sumIntWeights, ListOp<sumOp<label>>());
+            reduce(sumIntWeights, ListOp<sumOp>());
         }
 
         // Check that the sum of each weight is non-zero
@@ -855,7 +855,7 @@ Foam::labelList Foam::decompositionMethod::decompose
 {
     // Any weights specified?
     const bool hasWeights =
-        returnReduce(cellWeights.size(), sumOp<label>()) > 0;
+        returnReduce(cellWeights.size(), sumOp()) > 0;
 
     // Any processor sets?
     label nProcSets = 0;
@@ -863,13 +863,13 @@ Foam::labelList Foam::decompositionMethod::decompose
     {
         nProcSets += specifiedProcessorFaces[setI].size();
     }
-    reduce(nProcSets, sumOp<label>());
+    reduce(nProcSets, sumOp());
 
     // Any non-mesh connections?
     label nConnections = returnReduce
     (
         explicitConnections.size(),
-        sumOp<label>()
+        sumOp()
     );
 
     // Any faces not blocked?
@@ -881,7 +881,7 @@ Foam::labelList Foam::decompositionMethod::decompose
             nUnblocked++;
         }
     }
-    reduce(nUnblocked, sumOp<label>());
+    reduce(nUnblocked, sumOp());
 
 
     // Either do decomposition on cell centres or on agglomeration

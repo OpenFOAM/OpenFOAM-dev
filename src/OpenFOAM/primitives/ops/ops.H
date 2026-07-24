@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,15 +21,12 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InClass
-    Foam::Pstream
+Global
+    Foam::*Op
 
 Description
-    Combination-Reduction operation for a parallel run.
-
-    The information from all nodes is collected on the master node,
-    combined using the given combination function and the result is
-    broadcast to all nodes
+    Operation classes containing functions and operators used by
+    templated reduction and distribution functions.
 
 \*---------------------------------------------------------------------------*/
 
@@ -44,24 +41,10 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define EqOp(opName, op)                                                       \
-                                                                               \
-    template<class T1, class T2>                                               \
-    class opName##Op2                                                          \
+    struct opName##Op                                                          \
     {                                                                          \
-    public:                                                                    \
-                                                                               \
+        template<class T1, class T2>                                           \
         void operator()(T1& x, const T2& y) const                              \
-        {                                                                      \
-            op;                                                                \
-        }                                                                      \
-    };                                                                         \
-                                                                               \
-    template<class T>                                                          \
-    class opName##Op                                                           \
-    {                                                                          \
-    public:                                                                    \
-                                                                               \
-        void operator()(T& x, const T& y) const                                \
         {                                                                      \
             op;                                                                \
         }                                                                      \
@@ -91,42 +74,11 @@ EqOp(nopEq, (void)x)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#if __GNUC__
-#define WARNRETURN __attribute__((warn_unused_result))
-#else
-#define WARNRETURN
-#endif
-
 #define Op(opName, op)                                                         \
-                                                                               \
-    template<class T, class T1, class T2>                                      \
-    class opName##Op3                                                          \
+    struct opName##Op                                                          \
     {                                                                          \
-    public:                                                                    \
-                                                                               \
-        T operator()(const T1& x, const T2& y) const WARNRETURN                \
-        {                                                                      \
-            return op;                                                         \
-        }                                                                      \
-    };                                                                         \
-                                                                               \
-    template<class T1, class T2>                                               \
-    class opName##Op2                                                          \
-    {                                                                          \
-    public:                                                                    \
-                                                                               \
-        T1 operator()(const T1& x, const T2& y) const WARNRETURN               \
-        {                                                                      \
-            return op;                                                         \
-        }                                                                      \
-    };                                                                         \
-                                                                               \
-    template<class T>                                                          \
-    class opName##Op                                                           \
-    {                                                                          \
-    public:                                                                    \
-                                                                               \
-        T operator()(const T& x, const T& y) const WARNRETURN                  \
+        template<class T1, class T2>                                           \
+        auto operator()(const T1& x, const T2& y) const                        \
         {                                                                      \
             return op;                                                         \
         }                                                                      \
@@ -154,14 +106,15 @@ Op(lessEq, x <= y)
 Op(greater, x > y)
 Op(greaterEq, x >= y)
 
+#undef Op
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #define UOp(opName, op)                                                        \
-                                                                               \
-    template<class T>                                                          \
-    class opName##Op                                                           \
+    struct opName##Op                                                          \
     {                                                                          \
-    public:                                                                    \
-                                                                               \
-        T operator()(const T& x) const WARNRETURN                              \
+        template<class T>                                                      \
+        T operator()(const T& x) const                                         \
         {                                                                      \
             return op;                                                         \
         }                                                                      \
@@ -170,8 +123,7 @@ Op(greaterEq, x >= y)
 UOp(nop, x)
 UOp(not, !x)
 
-#undef Op
-#undef WARNRETURN
+#undef UOp
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

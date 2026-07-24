@@ -90,7 +90,7 @@ Foam::vector Foam::targetCoeffTrim::calcCoeffs
         }
     }
 
-    reduce(cf, sumOp<vector>());
+    reduce(cf, sumOp());
 
     return cf;
 }

@@ -76,7 +76,7 @@ bool any(const boolList& l)
             break;
         }
     }
-    return returnReduce(result, andOp<bool>());
+    return returnReduce(result, andOp());
 }
 
 }
@@ -613,8 +613,8 @@ void Foam::fvMeshStitcher::matchIndices
     }
 
     // Report if changes have been made
-    reduce(nCouplesRemoved, sumOp<label>());
-    reduce(nCouplesAdded, sumOp<label>());
+    reduce(nCouplesRemoved, sumOp());
+    reduce(nCouplesAdded, sumOp());
     if ((nCouplesRemoved || nCouplesAdded) && owner)
     {
         Info<< indent << nCouplesRemoved << '/' << nCouplesAdded
@@ -1060,7 +1060,7 @@ Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
         mesh_,
         ownerOrigBoundaryPointMeshPoint,
         ownerOrigBoundaryPointIndices,
-        minEqOp<label>(),
+        minEqOp(),
         labelMax
     );
 
@@ -1087,7 +1087,7 @@ Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
         mesh_,
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeNParts,
-        plusEqOp<label>(),
+        plusEqOp(),
         label(0)
     );
     syncTools::syncEdgeList
@@ -1095,7 +1095,7 @@ Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
         mesh_,
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeParts,
-        plusEqOp<part>(),
+        plusEqOp(),
         part(),
         []
         (
@@ -1209,7 +1209,7 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
         mesh_,
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeNOrigFaces,
-        plusEqOp<label>(),
+        plusEqOp(),
         label(0)
     );
 
@@ -1920,10 +1920,10 @@ bool Foam::fvMeshStitcher::connectThis
                         max(maxMfe[nccPatchi], max(mfe[patchi]));
                 }
             }
-            reduce(minMfe, ListOp<minOp<scalar>>());
-            reduce(sumMfe, ListOp<sumOp<scalar>>());
-            reduce(nSumMfe, ListOp<sumOp<scalar>>());
-            reduce(maxMfe, ListOp<maxOp<scalar>>());
+            reduce(minMfe, ListOp<minOp>());
+            reduce(sumMfe, ListOp<sumOp>());
+            reduce(nSumMfe, ListOp<sumOp>());
+            reduce(maxMfe, ListOp<maxOp>());
 
             // Report
             forAll(minMfe, patchi)
@@ -2197,9 +2197,9 @@ bool Foam::fvMeshStitcher::geometric() const
         }
     }
 
-    reduce(result, orOp<bool>());
+    reduce(result, orOp());
 
-    return returnReduce(result, orOp<bool>());
+    return returnReduce(result, orOp());
 }
 
 

@@ -764,16 +764,16 @@ template<class CloudType>
 void Foam::MomentumCloud<CloudType>::info()
 {
     vector linearMomentum = linearMomentumOfSystem();
-    reduce(linearMomentum, sumOp<vector>());
+    reduce(linearMomentum, sumOp());
 
     scalar linearKineticEnergy = linearKineticEnergyOfSystem();
-    reduce(linearKineticEnergy, sumOp<scalar>());
+    reduce(linearKineticEnergy, sumOp());
 
     Info<< "Cloud: " << this->name() << nl
         << "    Current number of parcels       = "
-        << returnReduce(this->size(), sumOp<label>()) << nl
+        << returnReduce(this->size(), sumOp()) << nl
         << "    Current mass in system          = "
-        << returnReduce(massInSystem(), sumOp<scalar>()) << nl
+        << returnReduce(massInSystem(), sumOp()) << nl
         << "    Linear momentum                 = "
         << linearMomentum << nl
         << "   |Linear momentum|                = "

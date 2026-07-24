@@ -198,8 +198,8 @@ void Foam::meshRefinement::getBafflePatches
     //   might not be owner on the other processor but the neighbour is
     //   not used when creating baffles from proc faces.
     // - tolerances issues occasionally crop up.
-    syncTools::syncFaceList(mesh_, ownPatch, maxEqOp<label>());
-    syncTools::syncFaceList(mesh_, nbrPatch, maxEqOp<label>());
+    syncTools::syncFaceList(mesh_, ownPatch, maxEqOp());
+    syncTools::syncFaceList(mesh_, nbrPatch, maxEqOp());
 }
 
 
@@ -291,9 +291,9 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
     if (debug)
     {
         labelList syncedOwnPatch(ownPatch);
-        syncTools::syncFaceList(mesh_, syncedOwnPatch, maxEqOp<label>());
+        syncTools::syncFaceList(mesh_, syncedOwnPatch, maxEqOp());
         labelList syncedNeiPatch(nbrPatch);
-        syncTools::syncFaceList(mesh_, syncedNeiPatch, maxEqOp<label>());
+        syncTools::syncFaceList(mesh_, syncedNeiPatch, maxEqOp());
 
         forAll(syncedOwnPatch, facei)
         {
@@ -460,7 +460,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createZoneBaffles
         );
 
         const label nZoneFaces =
-            returnReduce(faceToPatch.size(), sumOp<label>());
+            returnReduce(faceToPatch.size(), sumOp());
 
         if (nZoneFaces > 0)
         {
@@ -629,7 +629,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
     (
         mesh_,
         nBafflesPerEdge,
-        plusEqOp<label>(),  // in-place add
+        plusEqOp(),  // in-place add
         label(0)            // initial value
     );
 
@@ -669,12 +669,12 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
 
 
     const label nFiltered =
-        returnReduce(filteredCouples.size(), sumOp<label>());
+        returnReduce(filteredCouples.size(), sumOp());
 
     Info<< "freeStandingBaffles : detected "
         << nFiltered
         << " free-standing baffles out of "
-        << returnReduce(couples.size(), sumOp<label>())
+        << returnReduce(couples.size(), sumOp())
         << nl << endl;
 
 
@@ -769,7 +769,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
         filteredCouples.setSize(filterI);
 
         Info<< "freeStandingBaffles : detected "
-            << returnReduce(filterI, sumOp<label>())
+            << returnReduce(filterI, sumOp())
             << " planar (within " << radToDeg(planarAngle)
             << " degrees) free-standing baffles out of "
             << nFiltered
@@ -1083,7 +1083,7 @@ void Foam::meshRefinement::findCellZoneGeometric
     }
 
     // Sync
-    syncTools::syncFaceList(mesh_, namedSurfaceIndex, maxEqOp<label>());
+    syncTools::syncFaceList(mesh_, namedSurfaceIndex, maxEqOp());
 }
 
 
@@ -1336,7 +1336,7 @@ void Foam::meshRefinement::findCellZoneTopo
         // - cellZones are identical ,,
         // This done at top of loop to account for geometric matching
         // not being synchronised.
-        Pstream::listCombineGather(regionToCellZone, maxEqOp<label>());
+        Pstream::listCombineGather(regionToCellZone, maxEqOp());
         Pstream::listCombineScatter(regionToCellZone);
 
 
@@ -1417,7 +1417,7 @@ void Foam::meshRefinement::findCellZoneTopo
             }
         }
 
-        if (!returnReduce(changed, orOp<bool>()))
+        if (!returnReduce(changed, orOp()))
         {
             break;
         }
@@ -1727,7 +1727,7 @@ void Foam::meshRefinement::calcPatchNumMasterFaces
         mesh_,
         patch.meshEdges(mesh_.edges(), mesh_.pointEdges()),
         nMasterFacesPerEdge,
-        plusEqOp<label>(),
+        plusEqOp(),
         label(0)
     );
 }
@@ -1788,7 +1788,7 @@ Foam::label Foam::meshRefinement::markPatchZones
             }
         }
 
-        reduce(globalSeed, minOp<label>());
+        reduce(globalSeed, minOp());
 
         if (globalSeed == labelMax)
         {
@@ -1838,7 +1838,7 @@ Foam::label Foam::meshRefinement::markPatchZones
         }
 
 
-        if (returnReduce(changedEdges.size(), sumOp<label>()) == 0)
+        if (returnReduce(changedEdges.size(), sumOp()) == 0)
         {
             break;
         }
@@ -1857,7 +1857,7 @@ Foam::label Foam::meshRefinement::markPatchZones
             changedInfo,
             allEdgeInfo,
             allFaceInfo,
-            returnReduce(patch.nEdges(), sumOp<label>())
+            returnReduce(patch.nEdges(), sumOp())
         );
 
         currentZoneI++;
@@ -1931,7 +1931,7 @@ void Foam::meshRefinement::consistentOrientation
         }
 
         Info<< "Protected from visiting "
-            << returnReduce(nProtected, sumOp<label>())
+            << returnReduce(nProtected, sumOp())
             << " non-manifold edges" << nl << endl;
     }
 
@@ -1963,7 +1963,7 @@ void Foam::meshRefinement::consistentOrientation
             }
         }
 
-        reduce(globalSeed, minOp<label>());
+        reduce(globalSeed, minOp());
 
         if (globalSeed == labelMax)
         {
@@ -2019,7 +2019,7 @@ void Foam::meshRefinement::consistentOrientation
         }
 
 
-        if (returnReduce(changedEdges.size(), sumOp<label>()) == 0)
+        if (returnReduce(changedEdges.size(), sumOp()) == 0)
         {
             break;
         }
@@ -2039,7 +2039,7 @@ void Foam::meshRefinement::consistentOrientation
             changedInfo,
             allEdgeInfo,
             allFaceInfo,
-            returnReduce(patch.nEdges(), sumOp<label>())
+            returnReduce(patch.nEdges(), sumOp())
         );
     }
 
@@ -2150,7 +2150,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
     // two cell centres.
 
     Info<< "Introducing baffles for "
-        << returnReduce(countHits(), sumOp<label>())
+        << returnReduce(countHits(), sumOp())
         << " faces that are intersected by the surface." << nl << endl;
 
     // Swap neighbouring cell centres and cell level
@@ -2280,7 +2280,7 @@ void Foam::meshRefinement::baffleAndSplitMesh
         );
 
         label nCouples = couples.size();
-        reduce(nCouples, sumOp<label>());
+        reduce(nCouples, sumOp());
 
         Info<< "Detected free-standing baffles : " << nCouples << endl;
 
@@ -2355,7 +2355,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMesh
             blockedFace[facei] = true;
         }
     }
-    syncTools::syncFaceList(mesh_, blockedFace, orEqOp<bool>());
+    syncTools::syncFaceList(mesh_, blockedFace, orEqOp());
 
     // Set region per cell based on walking
     regionSplit cellRegion(mesh_, blockedFace);
@@ -2447,7 +2447,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMesh
         (
             mesh_,
             pointBaffle,
-            maxEqOp<label>(),
+            maxEqOp(),
             label(-1)           // null value
         );
 
@@ -2473,7 +2473,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMesh
                 }
             }
         }
-        syncTools::syncFaceList(mesh_, ownPatch, maxEqOp<label>());
+        syncTools::syncFaceList(mesh_, ownPatch, maxEqOp());
 
 
         // 3. From faces to cells (cellRegion) and back to faces (ownPatch)
@@ -2522,7 +2522,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMesh
 
         ownPatch.transfer(newOwnPatch);
 
-        syncTools::syncFaceList(mesh_, ownPatch, maxEqOp<label>());
+        syncTools::syncFaceList(mesh_, ownPatch, maxEqOp());
     }
 
 
@@ -2542,7 +2542,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitMesh
     cellsToRemove.shrink();
 
     label nCellsInMesh = mesh_.nCells() - cellsToRemove.size();
-    reduce(nCellsInMesh, sumOp<label>());
+    reduce(nCellsInMesh, sumOp());
 
     Info<< indent
         << "Selecting all cells in regions containing any of the points in "
@@ -2599,7 +2599,7 @@ Foam::meshRefinement::dupNonManifoldPoints
     const label nNonManifPoints = returnReduce
     (
         regionSide.meshPointMap().size(),
-        sumOp<label>()
+        sumOp()
     );
 
     Info<< "dupNonManifoldPoints : Found : " << nNonManifPoints
@@ -2824,7 +2824,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
         (
             mesh_,
             namedSurfaceIndex,
-            maxEqOp<label>()
+            maxEqOp()
         );
 
         // Print a bit
@@ -3028,7 +3028,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
             mesh_.points()
         );
 
-        label nFreeStanding = returnReduce(patch.size(), sumOp<label>());
+        label nFreeStanding = returnReduce(patch.size(), sumOp());
         if (nFreeStanding > 0)
         {
             Info<< "Detected " << nFreeStanding << " free-standing zone faces"
@@ -3096,7 +3096,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
                     nPosOrientation.find(faceToConnectedZone[facei])() += n;
                 }
             }
-            Pstream::mapCombineGather(nPosOrientation, plusEqOp<label>());
+            Pstream::mapCombineGather(nPosOrientation, plusEqOp());
             Pstream::mapCombineScatter(nPosOrientation);
 
 
@@ -3226,7 +3226,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
         {
             const cellZone& cz = mesh_.cellZones()[zonei];
             Info<< "    " << cz.name()
-                << "\tsize:" << returnReduce(cz.size(), sumOp<label>())
+                << "\tsize:" << returnReduce(cz.size(), sumOp())
                 << endl;
         }
         Info<< endl;
@@ -3238,7 +3238,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
         {
             const faceZone& fz = mesh_.faceZones()[zonei];
             Info<< "    " << fz.name()
-                << "\tsize:" << returnReduce(fz.size(), sumOp<label>())
+                << "\tsize:" << returnReduce(fz.size(), sumOp())
                 << endl;
         }
         Info<< endl;

@@ -168,19 +168,19 @@ void Foam::ensightMesh::correct()
         polys.setSize(nPolys);
 
         meshCellSets_.nTets = nTets;
-        reduce(meshCellSets_.nTets, sumOp<label>());
+        reduce(meshCellSets_.nTets, sumOp());
 
         meshCellSets_.nPyrs = nPyrs;
-        reduce(meshCellSets_.nPyrs, sumOp<label>());
+        reduce(meshCellSets_.nPyrs, sumOp());
 
         meshCellSets_.nPrisms = nPrisms;
-        reduce(meshCellSets_.nPrisms, sumOp<label>());
+        reduce(meshCellSets_.nPrisms, sumOp());
 
         meshCellSets_.nHexesWedges = nWedges+nHexes;
-        reduce(meshCellSets_.nHexesWedges, sumOp<label>());
+        reduce(meshCellSets_.nHexesWedges, sumOp());
 
         meshCellSets_.nPolys = nPolys;
-        reduce(meshCellSets_.nPolys, sumOp<label>());
+        reduce(meshCellSets_.nPolys, sumOp());
 
 
         // Determine parallel shared points
@@ -251,9 +251,9 @@ void Foam::ensightMesh::correct()
             }
         }
 
-        reduce(nfp.nTris, sumOp<label>());
-        reduce(nfp.nQuads, sumOp<label>());
-        reduce(nfp.nPolys, sumOp<label>());
+        reduce(nfp.nTris, sumOp());
+        reduce(nfp.nQuads, sumOp());
+        reduce(nfp.nPolys, sumOp());
 
         nPatchPrims_.insert(patchName, nfp);
     }
@@ -378,9 +378,9 @@ void Foam::ensightMesh::correct()
                 }
             }
 
-            reduce(nfp.nTris, sumOp<label>());
-            reduce(nfp.nQuads, sumOp<label>());
-            reduce(nfp.nPolys, sumOp<label>());
+            reduce(nfp.nTris, sumOp());
+            reduce(nfp.nQuads, sumOp());
+            reduce(nfp.nPolys, sumOp());
 
             nFaceZonePrims_.insert(zoneName, nfp);
         }
@@ -445,7 +445,7 @@ bool Foam::ensightMesh::faceToBeIncluded(const label facei) const
 void Foam::ensightMesh::barrier()
 {
     label appI = 0;
-    reduce(appI,maxOp<label>());
+    reduce(appI,maxOp());
 }
 
 

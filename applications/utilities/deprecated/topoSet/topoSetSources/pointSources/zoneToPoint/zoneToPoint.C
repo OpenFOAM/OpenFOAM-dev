@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ void Foam::zoneToPoint::combine(topoSet& set, const bool add) const
             const labelList& pointLabels = mesh_.pointZones()[i];
 
             Info<< "    Found matching zone " << zone.name()
-                << " with " << returnReduce(pointLabels.size(), sumOp<label>())
+                << " with " << returnReduce(pointLabels.size(), sumOp())
                 << " points." << endl;
 
             hasMatched = true;

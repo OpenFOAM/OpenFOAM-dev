@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -578,7 +578,7 @@ Foam::polyMesh::polyMesh
     label nDefaultFaces = nFaces - defaultPatchStart;
     if (syncPar)
     {
-        reduce(nDefaultFaces, sumOp<label>());
+        reduce(nDefaultFaces, sumOp());
     }
 
     if (nDefaultFaces > 0)
@@ -843,7 +843,7 @@ Foam::polyMesh::polyMesh
     label nDefaultFaces = nFaces - defaultPatchStart;
     if (syncPar)
     {
-        reduce(nDefaultFaces, sumOp<label>());
+        reduce(nDefaultFaces, sumOp());
     }
 
     if (nDefaultFaces > 0)

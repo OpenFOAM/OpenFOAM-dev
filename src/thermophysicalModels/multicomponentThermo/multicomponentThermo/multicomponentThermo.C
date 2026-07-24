@@ -238,7 +238,7 @@ void Foam::multicomponentThermo::implementation::syncSpeciesActive() const
         boolList& speciesActive =
             const_cast<boolList&>(this->speciesActive());
 
-        Pstream::listCombineGather(speciesActive, orEqOp<bool>());
+        Pstream::listCombineGather(speciesActive, orEqOp());
         Pstream::listCombineScatter(speciesActive);
 
         PtrList<volScalarField>& Y =

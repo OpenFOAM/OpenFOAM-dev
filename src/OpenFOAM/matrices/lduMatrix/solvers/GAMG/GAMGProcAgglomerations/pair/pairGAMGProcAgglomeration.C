@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,7 +209,7 @@ bool Foam::pairGAMGProcAgglomeration::doProcessorAgglomeration
 {
     // Check the need for further agglomeration on all processors
     bool doAgg = mesh.lduAddr().size() < minCellsPerProcessor_;
-    mesh.reduce(doAgg, orOp<bool>());
+    mesh.reduce(doAgg, orOp());
     return doAgg;
 }
 

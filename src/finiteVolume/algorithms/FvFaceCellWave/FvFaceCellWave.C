@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -731,7 +731,7 @@ Foam::label Foam::FvFaceCellWave<Type, TrackingData>::faceToCell()
         Pout<< " Changed cells            : " << changedCells_.size() << endl;
     }
 
-    return returnReduce(changedCells_.size(), sumOp<label>());
+    return returnReduce(changedCells_.size(), sumOp());
 }
 
 
@@ -818,7 +818,7 @@ Foam::label Foam::FvFaceCellWave<Type, TrackingData>::cellToFace()
             << changedPatchAndFaces_.size() << endl;
     }
 
-    return returnReduce(changedPatchAndFaces_.size(), sumOp<label>());
+    return returnReduce(changedPatchAndFaces_.size(), sumOp());
 }
 
 

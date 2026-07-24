@@ -482,7 +482,7 @@ void Foam::meshCutter::setRefinement
     addedPoints_.clear();
     addedPoints_.resize(cuts.nLoops());
 
-    if (returnReduce(cuts.nLoops(), sumOp<label>()) == 0)
+    if (returnReduce(cuts.nLoops(), sumOp()) == 0)
     {
         return;
     }
@@ -505,7 +505,7 @@ void Foam::meshCutter::setRefinement
                 }
             }
         }
-        syncTools::syncEdgeList(mesh(), edgeOnCutCell, orEqOp<bool>(), false);
+        syncTools::syncEdgeList(mesh(), edgeOnCutCell, orEqOp(), false);
 
         forAll(cuts.edgeIsCut(), edgeI)
         {

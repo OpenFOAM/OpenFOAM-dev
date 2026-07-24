@@ -962,7 +962,7 @@ void Foam::globalPoints::calculateSharedPoints
         );
 
         changed = changedPoints.size() > 0;
-        reduce(changed, orOp<bool>());
+        reduce(changed, orOp());
 
     } while (changed);
 

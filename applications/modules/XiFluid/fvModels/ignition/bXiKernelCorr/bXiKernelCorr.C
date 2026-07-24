@@ -116,7 +116,7 @@ void Foam::fv::bXiKernelCorr::addSup
     const labelList& cells = zone_.zone();
 
     const scalarField bc(b, cells);
-    const scalar bMin = returnReduce(min(bc), minOp<scalar>());
+    const scalar bMin = returnReduce(min(bc), minOp());
 
     // Check if min(b) is < 1, i.e. ignition has occurred
     // and min(b) > small, i.e. burnout has not occurred requiring correction

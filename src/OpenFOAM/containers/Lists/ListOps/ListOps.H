@@ -308,9 +308,9 @@ struct ListEqOp
 };
 
 //- List operator to append one list onto another
-template<class T>
 struct ListAppendEqOp
 {
+    template<class T>
     void operator()(List<T>& x, const List<T>& y) const;
 };
 

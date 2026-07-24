@@ -168,7 +168,7 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
             }
         }
 
-        reduce(nLocateBoundaryHits, sumOp<label>());
+        reduce(nLocateBoundaryHits, sumOp());
         if (nLocateBoundaryHits != 0)
         {
             WarningInFunction
@@ -192,10 +192,10 @@ void Foam::SurfaceFilmModel<CloudType>::info(Ostream& os)
         this->template getModelProperty<label>("nParcelsInjected");
 
     label nTransTotal =
-        nTrans0 + returnReduce(nParcelsTransferred_, sumOp<label>());
+        nTrans0 + returnReduce(nParcelsTransferred_, sumOp());
 
     label nInjectTotal =
-        nInject0 + returnReduce(nParcelsInjected_, sumOp<label>());
+        nInject0 + returnReduce(nParcelsInjected_, sumOp());
 
     os  << "    Parcels absorbed into film      = " << nTransTotal << nl
         << "    New film detached parcels       = " << nInjectTotal << endl;

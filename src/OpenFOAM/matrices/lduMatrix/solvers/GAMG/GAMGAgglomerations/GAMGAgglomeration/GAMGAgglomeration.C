@@ -158,23 +158,23 @@ void Foam::GAMGAgglomeration::compactLevels(const label nCreatedLevels)
                 profile = fineMesh.lduAddr().band().second();
             }
 
-            label totNprocs = returnReduce(nProcs, sumOp<label>());
+            label totNprocs = returnReduce(nProcs, sumOp());
 
-            label maxNCells = returnReduce(nCells, maxOp<label>());
-            label totNCells = returnReduce(nCells, sumOp<label>());
+            label maxNCells = returnReduce(nCells, maxOp());
+            label totNCells = returnReduce(nCells, sumOp());
 
             scalar maxFaceCellRatio =
-                returnReduce(faceCellRatio, maxOp<scalar>());
+                returnReduce(faceCellRatio, maxOp());
             scalar totFaceCellRatio =
-                returnReduce(faceCellRatio, sumOp<scalar>());
+                returnReduce(faceCellRatio, sumOp());
 
-            label maxNInt = returnReduce(nInterfaces, maxOp<label>());
-            label totNInt = returnReduce(nInterfaces, sumOp<label>());
+            label maxNInt = returnReduce(nInterfaces, maxOp());
+            label totNInt = returnReduce(nInterfaces, sumOp());
 
-            scalar maxRatio = returnReduce(ratio, maxOp<scalar>());
-            scalar totRatio = returnReduce(ratio, sumOp<scalar>());
+            scalar maxRatio = returnReduce(ratio, maxOp());
+            scalar totRatio = returnReduce(ratio, sumOp());
 
-            scalar totProfile = returnReduce(profile, sumOp<scalar>());
+            scalar totProfile = returnReduce(profile, sumOp());
 
             int oldPrecision = Info().precision(4);
 
@@ -208,7 +208,7 @@ bool Foam::GAMGAgglomeration::continueAgglomerating
     const label nCoarseCells
 ) const
 {
-    const label nTotalCoarseCells = returnReduce(nCoarseCells, sumOp<label>());
+    const label nTotalCoarseCells = returnReduce(nCoarseCells, sumOp());
 
     if
     (
@@ -224,7 +224,7 @@ bool Foam::GAMGAgglomeration::continueAgglomerating
     }
     else
     {
-        const label nTotalFineCells = returnReduce(nFineCells, sumOp<label>());
+        const label nTotalFineCells = returnReduce(nFineCells, sumOp());
         return nTotalCoarseCells < nTotalFineCells;
     }
 }
@@ -635,7 +635,7 @@ bool Foam::GAMGAgglomeration::checkRestriction
             }
         }
 
-        reduce(nChanged, sumOp<label>());
+        reduce(nChanged, sumOp());
 
         if (nChanged == 0)
         {

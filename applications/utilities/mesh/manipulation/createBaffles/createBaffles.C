@@ -80,7 +80,7 @@ void filterPatches(fvMesh& mesh, const HashSet<word>& bafflePatches)
             (
                 bafflePatches.found(pp.name())
              || pp.constraint()
-             || returnReduce(pp.size(), sumOp<label>())
+             || returnReduce(pp.size(), sumOp())
             )
             {
                 oldToNew[patchi] = newPatchi++;
@@ -317,7 +317,7 @@ label createFaces
         }
     }
 
-    return returnReduce(nModified, sumOp<label>());
+    return returnReduce(nModified, sumOp());
 }
 
 
@@ -454,7 +454,7 @@ int main(int argc, char *argv[])
         }
 
         Info<< "Created zone '" << name << "' with "
-            << returnReduce(n, sumOp<label>()) << " faces" << endl;
+            << returnReduce(n, sumOp()) << " faces" << endl;
 
         mesh.faceZones().set
         (

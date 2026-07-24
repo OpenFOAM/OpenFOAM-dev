@@ -72,7 +72,7 @@ void Foam::pointMeshMovers::solidBody::updateZonePointIndices()
         }
     }
 
-    syncTools::syncPointList(poly(), pointInZone, orEqOp<bool>(), false);
+    syncTools::syncPointList(poly(), pointInZone, orEqOp(), false);
 
     zonePoints_.resize(count(pointInZone, true));
 

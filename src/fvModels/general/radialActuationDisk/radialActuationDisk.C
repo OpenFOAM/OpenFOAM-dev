@@ -95,8 +95,8 @@ addRadialActuationDiskAxialInertialResistance
         upU =  U[upstreamCellId_];
         upRho = rho[upstreamCellId_];
     }
-    reduce(upU, minOp<vector>());
-    reduce(upRho, minOp<scalar>());
+    reduce(upU, minOp());
+    reduce(upRho, minOp());
 
     scalar T = 2.0*upRho*diskArea_*mag(upU)*a*(1.0 - a);
     forAll(cells, i)

@@ -121,7 +121,7 @@ Foam::zoneSet Foam::zoneGenerators::cylinderHeadPoints::generate() const
         minZ = -great;
     }
 
-    reduce(minZ, maxOp<scalar>());
+    reduce(minZ, maxOp());
 
     // Create the cylinderHead point set
     labelList pointIndices(points.size());

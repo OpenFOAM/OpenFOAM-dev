@@ -91,7 +91,7 @@ void Foam::lagrangian::Cloud<ParticleType>::writeCloudUniformProperties() const
     labelList np(Pstream::nProcs(), 0);
     np[Pstream::myProcNo()] = ParticleType::particleCount;
 
-    Pstream::listCombineGather(np, maxEqOp<label>());
+    Pstream::listCombineGather(np, maxEqOp());
     Pstream::listCombineScatter(np);
 
     forAll(np, i)

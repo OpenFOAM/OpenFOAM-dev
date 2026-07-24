@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ void Foam::SizeDistribution<CloudType>::write()
 {
     // Check that there are some parcels
     const label nParcels =
-        returnReduce(this->owner().nParcels(), sumOp<label>());
+        returnReduce(this->owner().nParcels(), sumOp());
     if (nParcels == 0)
     {
         Info<< type() << ": Not writing the distribution as the cloud "
@@ -77,10 +77,10 @@ void Foam::SizeDistribution<CloudType>::write()
         parcelPDF[i + 1] += g;
     }
 
-    Pstream::listCombineGather(particlePDF, plusEqOp<scalar>());
+    Pstream::listCombineGather(particlePDF, plusEqOp());
     Pstream::listCombineScatter(particlePDF);
 
-    Pstream::listCombineGather(parcelPDF, plusEqOp<scalar>());
+    Pstream::listCombineGather(parcelPDF, plusEqOp());
     Pstream::listCombineScatter(parcelPDF);
 
     particlePDF.first() *= 2;

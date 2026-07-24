@@ -255,14 +255,14 @@ Foam::label Foam::patchToPatches::nearest::finalise
                 result += !ll[i].empty();
             }
 
-            return returnReduce(result, sumOp<label>());
+            return returnReduce(result, sumOp());
         };
 
         Info<< indent
             << "Coupled " << countNonEmpty(srcLocalTgtFaces_)
-            << "/" << returnReduce(srcLocalTgtFaces_.size(), sumOp<label>())
+            << "/" << returnReduce(srcLocalTgtFaces_.size(), sumOp())
             << " source faces and " << countNonEmpty(tgtLocalSrcFaces_)
-            << "/" << returnReduce(tgtLocalSrcFaces_.size(), sumOp<label>())
+            << "/" << returnReduce(tgtLocalSrcFaces_.size(), sumOp())
             << " target faces" << endl;
     }
 

@@ -158,8 +158,8 @@ codeWrite
             const label faceSign = fZone.flipMap()[i] ? -1 : 1;
             flowRate += faceSign*alphaPhi[facei];
         }
-        reduce(area, sumOp<scalar>());
-        reduce(flowRate, sumOp<scalar>());
+        reduce(area, sumOp());
+        reduce(flowRate, sumOp());
 
         scalar height = area/widths()[i];
         scalar Fr = max(mag(flowRate/area/sqrt(magG*height)), 0.0);

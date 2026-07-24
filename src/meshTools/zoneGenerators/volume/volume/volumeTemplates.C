@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ inline Foam::labelList Foam::zoneGenerators::volume::selectOp
             zoneGen,
             zoneGenerators,
             pts,
-            nopOp<bool>()
+            nopOp()
         );
     }
     else
@@ -113,7 +113,7 @@ inline Foam::labelList Foam::zoneGenerators::volume::selectOp
             zoneGen,
             zoneGenerators,
             pts,
-            notOp<bool>()
+            notOp()
         );
     }
 }
@@ -201,7 +201,7 @@ inline Foam::labelList Foam::zoneGenerators::volume::selectOp
             zoneGenerators,
             pts,
             flipMap,
-            nopOp<bool>()
+            nopOp()
         );
     }
     else
@@ -212,7 +212,7 @@ inline Foam::labelList Foam::zoneGenerators::volume::selectOp
             zoneGenerators,
             pts,
             flipMap,
-            notOp<bool>()
+            notOp()
         );
     }
 }

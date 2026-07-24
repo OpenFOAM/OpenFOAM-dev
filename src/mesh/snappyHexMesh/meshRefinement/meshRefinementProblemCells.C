@@ -199,7 +199,7 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
     }
     candidateFaces.shrink();
 
-    Info<< "Testing " << returnReduce(candidateFaces.size(), sumOp<label>())
+    Info<< "Testing " << returnReduce(candidateFaces.size(), sumOp())
         << " faces on edge-connected cells of differing level."
         << endl;
 
@@ -562,10 +562,10 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
             }
         }
         Info<< "markFacesOnProblemCells : Marked "
-            << returnReduce(nBaffleFaces, sumOp<label>())
+            << returnReduce(nBaffleFaces, sumOp())
             << " additional internal faces to be converted into baffles"
             << " due to "
-            << returnReduce(problemCells.size(), sumOp<label>())
+            << returnReduce(problemCells.size(), sumOp())
             << " cells edge-connected to lower level cells." << endl;
 
         if (debug&meshRefinement::MESH)
@@ -583,7 +583,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
     (
         mesh_,
         isBoundaryPoint,
-        orEqOp<bool>(),
+        orEqOp(),
         false               // null value
     );
 
@@ -591,7 +591,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
     (
         mesh_,
         isBoundaryEdge,
-        orEqOp<bool>(),
+        orEqOp(),
         false               // null value
     );
 
@@ -599,7 +599,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
     (
         mesh_,
         isBoundaryFace,
-        orEqOp<bool>()
+        orEqOp()
     );
 
 
@@ -879,7 +879,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
     (
         mesh_,
         isBoundaryPoint,
-        orEqOp<bool>(),
+        orEqOp(),
         false               // null value
     );
 
@@ -887,7 +887,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
     (
         mesh_,
         isBoundaryEdge,
-        orEqOp<bool>(),
+        orEqOp(),
         false               // null value
     );
 
@@ -895,7 +895,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
     (
         mesh_,
         isBoundaryFace,
-        orEqOp<bool>()
+        orEqOp()
     );
 
 
@@ -1022,19 +1022,19 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
         (
             mesh_,
             facePatch,
-            maxEqOp<label>()
+            maxEqOp()
         );
     }
 
     Info<< "markFacesOnProblemCells : marked "
-        << returnReduce(nBaffleFaces, sumOp<label>())
+        << returnReduce(nBaffleFaces, sumOp())
         << " additional internal faces to be converted into baffles."
         << endl;
 
     if (checkCollapse)
     {
         Info<< "markFacesOnProblemCells : prevented "
-            << returnReduce(nPrevented, sumOp<label>())
+            << returnReduce(nPrevented, sumOp())
             << " internal faces from getting converted into baffles."
             << endl;
     }
@@ -1098,7 +1098,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
         const label nInitErrors = returnReduce
         (
             wrongFaces.size(),
-            sumOp<label>()
+            sumOp()
         );
 
         Info<< "Detected " << nInitErrors << " illegal faces"
@@ -1145,7 +1145,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
         (
             mesh_,
             newPoints,
-            minMagSqrEqOp<point>(),     // combine op
+            minMagSqrEqOp(),     // combine op
             vector(great, great, great) // null value (note: cannot use vGreat)
         );
 
@@ -1191,7 +1191,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             //    label nNewWrongFaces = returnReduce
             //    (
             //        wrongFaces.size(),
-            //        sumOp<label>()
+            //        sumOp()
             //    );
             //
             //    Info<< "    faces with pyramid volume < "
@@ -1218,7 +1218,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
                 label nNewWrongFaces = returnReduce
                 (
                     wrongFaces.size(),
-                    sumOp<label>()
+                    sumOp()
                 );
 
                 Info<< "    faces with area < "
@@ -1245,7 +1245,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
                 label nNewWrongFaces = returnReduce
                 (
                     wrongFaces.size(),
-                    sumOp<label>()
+                    sumOp()
                 );
 
                 Info<< "    faces on cells with determinant < "
@@ -1280,7 +1280,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
 
 
     Info<< "markFacesOnProblemCellsGeometric : marked "
-        << returnReduce(nBaffleFaces, sumOp<label>())
+        << returnReduce(nBaffleFaces, sumOp())
         << " additional internal and coupled faces"
         << " to be converted into baffles." << endl;
 
@@ -1288,7 +1288,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
     (
         mesh_,
         facePatch,
-        maxEqOp<label>()
+        maxEqOp()
     );
 
     return facePatch;

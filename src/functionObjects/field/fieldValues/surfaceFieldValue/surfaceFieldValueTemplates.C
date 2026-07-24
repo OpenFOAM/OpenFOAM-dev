@@ -49,7 +49,7 @@ inline void Foam::functionObjects::fieldValues::surfaceFieldValue::combineField
         field = ListListOps::combine<Field<Type>>
         (
             allValues,
-            accessOp<Field<Type>>()
+            accessOp()
         );
     }
 }

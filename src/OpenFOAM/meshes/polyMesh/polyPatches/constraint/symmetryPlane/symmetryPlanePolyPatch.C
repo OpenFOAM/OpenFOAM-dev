@@ -49,7 +49,7 @@ void Foam::symmetryPlanePolyPatch::calcGeometry(PstreamBuffers&)
         return;
     }
 
-    if (!returnReduce(size(), sumOp<label>()))
+    if (!returnReduce(size(), sumOp()))
     {
         return;
     }

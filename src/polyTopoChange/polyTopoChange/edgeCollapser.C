@@ -91,7 +91,7 @@ Foam::label Foam::edgeCollapser::checkMeshQuality
         meshQualityDict
     );
 
-    label nBadFaces = returnReduce(badFaces.size(), sumOp<label>());
+    label nBadFaces = returnReduce(badFaces.size(), sumOp());
 
     forAllConstIter(labelHashSet, badFaces, iter)
     {
@@ -107,7 +107,7 @@ Foam::label Foam::edgeCollapser::checkMeshQuality
     (
         mesh,
         isErrorPoint,
-        orEqOp<unsigned int>(),
+        orEqOp(),
         0
     );
 
@@ -1394,10 +1394,10 @@ bool Foam::edgeCollapser::setRefinement
 
     label nPoints = allPointInfo.size();
 
-    reduce(nPoints, sumOp<label>());
-    reduce(nUnvisited, sumOp<label>());
-    reduce(nUncollapsed, sumOp<label>());
-    reduce(nCollapsed, sumOp<label>());
+    reduce(nPoints, sumOp());
+    reduce(nUnvisited, sumOp());
+    reduce(nUncollapsed, sumOp());
+    reduce(nCollapsed, sumOp());
 
     Info<< incrIndent;
     Info<< indent << "Number of points : " << nPoints << nl
@@ -1465,7 +1465,7 @@ bool Foam::edgeCollapser::setRefinement
             }
         }
 
-        reduce(nCellCollapsed, sumOp<label>());
+        reduce(nCellCollapsed, sumOp());
         Info<< indent << "Collapsing " << nCellCollapsed << " cells" << endl;
 
         if (nCellCollapsed == 0)
@@ -1629,7 +1629,7 @@ void Foam::edgeCollapser::consistentCollapse
         (
             mesh_,
             collapseEdge,
-            minEqOp<unsigned int>(),
+            minEqOp(),
             0
         );
 
@@ -1674,7 +1674,7 @@ void Foam::edgeCollapser::consistentCollapse
         (
             mesh_,
             markedPoints,
-            orEqOp<unsigned int>(),
+            orEqOp(),
             0
         );
 
@@ -1762,10 +1762,10 @@ void Foam::edgeCollapser::consistentCollapse
 
         nUncollapsed += breakStringsAtEdges(collapseEdge, allPointInfo);
 
-        reduce(nUncollapsed, sumOp<label>());
+        reduce(nUncollapsed, sumOp());
 
         Info<< "            Uncollapsed edges = " << nUncollapsed << " / "
-            << returnReduce(mesh_.nEdges(), sumOp<label>()) << endl;
+            << returnReduce(mesh_.nEdges(), sumOp()) << endl;
 
         if (nUncollapsed == 0)
         {

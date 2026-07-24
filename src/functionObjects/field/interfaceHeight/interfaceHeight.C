@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::functionObjects::interfaceHeight::writePositions()
             set.size()
           ? - gHat & (locations_[li] - set.coords().pointCoord(0))
           : - vGreat;
-        reduce(hLB, maxOp<scalar>());
+        reduce(hLB, maxOp());
 
         // Calculate the integrals of length and length*alpha along the sampling
         // line. The latter is equal to the equivalent length with alpha equal
@@ -110,8 +110,8 @@ void Foam::functionObjects::interfaceHeight::writePositions()
             sumLengthAlpha += l*(a0 + a1)/2;
         }
 
-        reduce(sumLength, sumOp<scalar>());
-        reduce(sumLengthAlpha, sumOp<scalar>());
+        reduce(sumLength, sumOp());
+        reduce(sumLengthAlpha, sumOp());
 
         // Write out
         if (Pstream::master())

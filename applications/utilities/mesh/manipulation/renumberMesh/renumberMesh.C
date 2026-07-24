@@ -587,14 +587,14 @@ int main(int argc, char *argv[])
         sumSqrIntersect
     );
 
-    reduce(band, maxOp<label>());
-    reduce(profile, sumOp<scalar>());
+    reduce(band, maxOp());
+    reduce(profile, sumOp());
     scalar rmsFrontwidth = Foam::sqrt
     (
         returnReduce
         (
             sumSqrIntersect,
-            sumOp<scalar>()
+            sumOp()
         )/mesh.globalData().nTotalCells()
     );
 
@@ -1018,14 +1018,14 @@ int main(int argc, char *argv[])
             profile,
             sumSqrIntersect
         );
-        reduce(band, maxOp<label>());
-        reduce(profile, sumOp<scalar>());
+        reduce(band, maxOp());
+        reduce(profile, sumOp());
         scalar rmsFrontwidth = Foam::sqrt
         (
             returnReduce
             (
                 sumSqrIntersect,
-                sumOp<scalar>()
+                sumOp()
             )/mesh.globalData().nTotalCells()
         );
 
@@ -1052,33 +1052,33 @@ int main(int argc, char *argv[])
         label nTotPoints = returnReduce
         (
             mesh.nPoints(),
-            sumOp<label>()
+            sumOp()
         );
         label nTotIntPoints = returnReduce
         (
             mesh.nInternalPoints(),
-            sumOp<label>()
+            sumOp()
         );
 
         label nTotEdges = returnReduce
         (
             mesh.nEdges(),
-            sumOp<label>()
+            sumOp()
         );
         label nTotIntEdges = returnReduce
         (
             mesh.nInternalEdges(),
-            sumOp<label>()
+            sumOp()
         );
         label nTotInt0Edges = returnReduce
         (
             mesh.nInternal0Edges(),
-            sumOp<label>()
+            sumOp()
         );
         label nTotInt1Edges = returnReduce
         (
             mesh.nInternal1Edges(),
-            sumOp<label>()
+            sumOp()
         );
 
         Info<< "Points:" << nl

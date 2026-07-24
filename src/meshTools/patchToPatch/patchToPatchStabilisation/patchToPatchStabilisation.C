@@ -72,7 +72,7 @@ void Foam::patchToPatchStabilisation::update
             break;
         }
     }
-    reduce(stabilisation_, orOp<bool>());
+    reduce(stabilisation_, orOp());
 
     // Quick return if nothing is to be done
     if (!stabilisation_) return;
@@ -135,7 +135,7 @@ void Foam::patchToPatchStabilisation::update
         initialEdgeInfos,
         edgeInfos,
         faceInfos,
-        returnReduce(patch.nEdges(), sumOp<label>())
+        returnReduce(patch.nEdges(), sumOp())
     );
 
     // Check that the wave connected to all un-mapped faces

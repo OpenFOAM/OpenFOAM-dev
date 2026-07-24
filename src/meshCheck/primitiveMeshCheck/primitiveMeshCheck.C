@@ -576,8 +576,8 @@ bool Foam::meshCheck::checkClosedBoundary
         sumMagClosedBoundary += mag(areas[facei]);
     }
 
-    reduce(sumClosed, sumOp<vector>());
-    reduce(sumMagClosedBoundary, sumOp<scalar>());
+    reduce(sumClosed, sumOp());
+    reduce(sumMagClosedBoundary, sumOp());
 
     vector openness = sumClosed/(sumMagClosedBoundary + vSmall);
 
@@ -698,11 +698,11 @@ bool Foam::meshCheck::checkClosedCells
         }
     }
 
-    reduce(nOpen, sumOp<label>());
-    reduce(maxOpennessCell, maxOp<scalar>());
+    reduce(nOpen, sumOp());
+    reduce(maxOpennessCell, maxOp());
 
-    reduce(nAspect, sumOp<label>());
-    reduce(maxAspectRatio, maxOp<scalar>());
+    reduce(nAspect, sumOp());
+    reduce(maxAspectRatio, maxOp());
 
 
     if (nOpen > 0)
@@ -773,8 +773,8 @@ bool Foam::meshCheck::checkFaceAreas
         maxArea = max(maxArea, magFaceAreas[facei]);
     }
 
-    reduce(minArea, minOp<scalar>());
-    reduce(maxArea, maxOp<scalar>());
+    reduce(minArea, minOp());
+    reduce(maxArea, maxOp());
 
     if (minArea < vSmall)
     {
@@ -834,9 +834,9 @@ bool Foam::meshCheck::checkCellVolumes
         maxVolume = max(maxVolume, vols[celli]);
     }
 
-    reduce(minVolume, minOp<scalar>());
-    reduce(maxVolume, maxOp<scalar>());
-    reduce(nNegVolCells, sumOp<label>());
+    reduce(minVolume, minOp());
+    reduce(maxVolume, maxOp());
+    reduce(nNegVolCells, sumOp());
 
     if (minVolume < vSmall)
     {
@@ -921,7 +921,7 @@ bool Foam::meshCheck::checkFacePyramids
         }
     }
 
-    reduce(nErrorPyrs, sumOp<label>());
+    reduce(nErrorPyrs, sumOp());
 
     if (nErrorPyrs > 0)
     {
@@ -997,8 +997,8 @@ bool Foam::meshCheck::checkFaceAngles
         }
     }
 
-    reduce(nConcave, sumOp<label>());
-    reduce(maxEdgeSin, maxOp<scalar>());
+    reduce(nConcave, sumOp());
+    reduce(maxEdgeSin, maxOp());
 
     if (nConcave > 0)
     {
@@ -1088,11 +1088,11 @@ bool Foam::meshCheck::checkFaceFlatness
     }
 
 
-    reduce(nWarped, sumOp<label>());
-    reduce(minFlatness, minOp<scalar>());
+    reduce(nWarped, sumOp());
+    reduce(minFlatness, minOp());
 
-    reduce(nSummed, sumOp<label>());
-    reduce(sumFlatness, sumOp<scalar>());
+    reduce(nSummed, sumOp());
+    reduce(sumFlatness, sumOp());
 
     if (report)
     {
@@ -1218,7 +1218,7 @@ bool Foam::meshCheck::checkConcaveCells
         }
     }
 
-    reduce(nConcaveCells, sumOp<label>());
+    reduce(nConcaveCells, sumOp());
 
     if (nConcaveCells > 0)
     {
@@ -1377,8 +1377,8 @@ bool Foam::meshCheck::checkUpperTriangular
         }
     }
 
-    reduce(error, orOp<bool>());
-    reduce(nMultipleCells, sumOp<label>());
+    reduce(error, orOp());
+    reduce(nMultipleCells, sumOp());
 
     if ((report) && nMultipleCells > 0)
     {
@@ -1481,7 +1481,7 @@ bool Foam::meshCheck::checkCellsZipUp
         }
     }
 
-    reduce(nOpenCells, sumOp<label>());
+    reduce(nOpenCells, sumOp());
 
     if (nOpenCells > 0)
     {
@@ -1556,7 +1556,7 @@ bool Foam::meshCheck::checkFaceVertices
         }
     }
 
-    reduce(nErrorFaces, sumOp<label>());
+    reduce(nErrorFaces, sumOp());
 
     if (nErrorFaces > 0)
     {
@@ -1626,8 +1626,8 @@ bool Foam::meshCheck::checkPoints
         }
     }
 
-    reduce(nFaceErrors, sumOp<label>());
-    reduce(nCellErrors, sumOp<label>());
+    reduce(nFaceErrors, sumOp());
+    reduce(nCellErrors, sumOp());
 
     if (nFaceErrors > 0 || nCellErrors > 0)
     {
@@ -1937,9 +1937,9 @@ bool Foam::meshCheck::checkFaceFaces
         }
     }
 
-    reduce(nBaffleFaces, sumOp<label>());
-    reduce(nErrorDuplicate, sumOp<label>());
-    reduce(nErrorOrder, sumOp<label>());
+    reduce(nBaffleFaces, sumOp());
+    reduce(nErrorDuplicate, sumOp());
+    reduce(nErrorOrder, sumOp());
 
     if (nBaffleFaces)
     {

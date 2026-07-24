@@ -256,7 +256,7 @@ Foam::labelHashSet Foam::fvMeshStitchers::moving::ownerCoupledCellSet()
         mesh(),
         ncb.ownerOrigBoundaryEdgeMeshEdge(),
         ownerOrigBoundaryEdgeNSet,
-        plusEqOp<label>(),
+        plusEqOp(),
         label(0)
     );
 
@@ -366,7 +366,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
         {
             subMeshRegionRefProcs[subMeshRegions[subCelli]] = proci;
         }
-        reduce(subMeshRegionRefProcs, ListOp<minOp<label>>());
+        reduce(subMeshRegionRefProcs, ListOp<minOp>());
 
         forAll(subMeshRegions, subCelli)
         {
@@ -422,8 +422,8 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
                 magSfBf[nccPatchi][nccPatchFacei];
         }
     }
-    reduce(regionPhiError, ListOp<sumOp<scalar>>());
-    reduce(regionMagSf, ListOp<sumOp<scalar>>());
+    reduce(regionPhiError, ListOp<sumOp>());
+    reduce(regionMagSf, ListOp<sumOp>());
 
     // Synchronise the mesh fluxes, but offset so that the total flux for each
     // region is the same as for the non-synchronised mesh fluxes

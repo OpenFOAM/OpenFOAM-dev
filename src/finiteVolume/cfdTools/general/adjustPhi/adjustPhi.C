@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,9 +88,9 @@ bool Foam::adjustPhi
         // Calculate the total flux in the domain, used for normalisation
         scalar totalFlux = vSmall + sum(mag(phi)).value();
 
-        reduce(massIn, sumOp<scalar>());
-        reduce(fixedMassOut, sumOp<scalar>());
-        reduce(adjustableMassOut, sumOp<scalar>());
+        reduce(massIn, sumOp());
+        reduce(fixedMassOut, sumOp());
+        reduce(adjustableMassOut, sumOp());
 
         scalar massCorr = 1.0;
         scalar magAdjustableMassOut = mag(adjustableMassOut);

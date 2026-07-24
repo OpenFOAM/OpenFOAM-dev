@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -493,7 +493,7 @@ Foam::multiDirRefinement::multiDirRefinement
 
     label nRemainingCells = cellLabels_.size();
 
-    reduce(nRemainingCells, sumOp<label>());
+    reduce(nRemainingCells, sumOp());
 
     if (nRemainingCells > 0)
     {
@@ -536,7 +536,7 @@ Foam::multiDirRefinement::multiDirRefinement
 
     label nRemainingCells = cellLabels_.size();
 
-    reduce(nRemainingCells, sumOp<label>());
+    reduce(nRemainingCells, sumOp());
 
     if (nRemainingCells > 0)
     {

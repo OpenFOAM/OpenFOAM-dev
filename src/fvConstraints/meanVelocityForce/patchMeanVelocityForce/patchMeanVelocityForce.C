@@ -120,8 +120,8 @@ Foam::scalar Foam::fv::patchMeanVelocityForce::magUbarAve
         }
     }
 
-    mesh().reduce(sumA, sumOp<scalar>());
-    mesh().reduce(sumAmagU, sumOp<scalar>());
+    mesh().reduce(sumA, sumOp());
+    mesh().reduce(sumAmagU, sumOp());
 
     return sumAmagU/sumA;
 }

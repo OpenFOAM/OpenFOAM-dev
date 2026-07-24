@@ -243,7 +243,7 @@ void deleteEmptyPatches(fvMesh& mesh)
             else
             {
                 // Common patch.
-                if (returnReduce(patches[patchi].size(), sumOp<label>()) == 0)
+                if (returnReduce(patches[patchi].size(), sumOp()) == 0)
                 {
                     Pout<< "Deleting patch " << patchi
                         << " name:" << patches[patchi].name()
@@ -793,7 +793,7 @@ labelList countExtrudePatches
         }
     }
 
-    Pstream::listCombineGather(zoneSideNFaces, plusEqOp<label>());
+    Pstream::listCombineGather(zoneSideNFaces, plusEqOp());
     Pstream::listCombineScatter(zoneSideNFaces);
 
     return zoneSideNFaces;
@@ -925,7 +925,7 @@ labelList addExtrudeEdgeSidePatches
         mesh,
         extrudeEdgeMeshEdges,
         minProcID,
-        minEqOp<label>(),
+        minEqOp(),
         labelMax        // null value
     );
     syncTools::syncEdgeList
@@ -933,7 +933,7 @@ labelList addExtrudeEdgeSidePatches
         mesh,
         extrudeEdgeMeshEdges,
         maxProcID,
-        maxEqOp<label>(),
+        maxEqOp(),
         labelMin        // null value
     );
 
@@ -1396,9 +1396,9 @@ int main(int argc, char *argv[])
 
 
     Info<< "extrudePatch :"
-        << " faces:" << returnReduce(extrudePatch.size(), sumOp<label>())
-        << " points:" << returnReduce(extrudePatch.nPoints(), sumOp<label>())
-        << " edges:" << returnReduce(extrudePatch.nEdges(), sumOp<label>())
+        << " faces:" << returnReduce(extrudePatch.size(), sumOp())
+        << " points:" << returnReduce(extrudePatch.nPoints(), sumOp())
+        << " edges:" << returnReduce(extrudePatch.nEdges(), sumOp())
         << nl << endl;
 
 
@@ -1756,7 +1756,7 @@ int main(int argc, char *argv[])
         }
 
         // Reduce
-        Pstream::mapCombineGather(globalSum, plusEqOp<point>());
+        Pstream::mapCombineGather(globalSum, plusEqOp());
         Pstream::mapCombineScatter(globalSum);
 
         forAll(localToGlobalRegion, localRegionI)

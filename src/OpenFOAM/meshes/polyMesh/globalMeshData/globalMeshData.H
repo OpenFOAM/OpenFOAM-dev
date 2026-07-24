@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -313,12 +313,9 @@ public:
     // Public class
 
         // To combineReduce a List. Just appends all lists.
-        template<class T>
-        class ListPlusEqOp
+        struct ListPlusEqOp
         {
-
-        public:
-
+            template<class T>
             void operator()(T& x, const T& y) const
             {
                 label n = x.size();

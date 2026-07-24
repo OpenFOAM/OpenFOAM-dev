@@ -114,7 +114,7 @@ void Foam::FacePostProcessing<CloudType>::write()
         zoneMassTotal[zoneI] =
             ListListOps::combine<scalarList>
             (
-                allProcMass, accessOp<scalarList>()
+                allProcMass, accessOp()
             );
         const scalar sumMassTotal = sum(zoneMassTotal[zoneI]);
 
@@ -124,7 +124,7 @@ void Foam::FacePostProcessing<CloudType>::write()
         zoneMassFlowRate[zoneI] =
             ListListOps::combine<scalarList>
             (
-                allProcMassFlowRate, accessOp<scalarList>()
+                allProcMassFlowRate, accessOp()
             );
         const scalar sumMassFlowRate = sum(zoneMassFlowRate[zoneI]);
 
@@ -181,7 +181,7 @@ void Foam::FacePostProcessing<CloudType>::write()
                 (
                     ListListOps::combine<pointField>
                     (
-                        allProcPoints, accessOp<pointField>()
+                        allProcPoints, accessOp()
                     )
                 );
 
@@ -189,7 +189,7 @@ void Foam::FacePostProcessing<CloudType>::write()
                 (
                     ListListOps::combine<faceList>
                     (
-                        allProcFaces, accessOp<faceList>()
+                        allProcFaces, accessOp()
                     )
                 );
 
@@ -279,7 +279,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
             massTotal_[i].setSize(fz.size(), 0.0);
             massFlowRate_[i].setSize(fz.size(), 0.0);
 
-            label nFaces = returnReduce(fz.size(), sumOp<label>());
+            label nFaces = returnReduce(fz.size(), sumOp());
             Info<< "        " << zoneName << " faces: " << nFaces << nl;
 
             scalar totArea = 0.0;
@@ -307,7 +307,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
                     }
                 }
             }
-            totArea = returnReduce(totArea, sumOp<scalar>());
+            totArea = returnReduce(totArea, sumOp());
 
             makeLogFile(zoneName, i, nFaces, totArea);
         }

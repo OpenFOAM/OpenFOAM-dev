@@ -113,8 +113,8 @@ void Foam::probes::findElements(const fvMesh& mesh)
         label facei = faceList_[probei];
 
         // Check at least one processor with cell.
-        reduce(celli, maxOp<label>());
-        reduce(facei, maxOp<label>());
+        reduce(celli, maxOp());
+        reduce(facei, maxOp());
 
         if (celli == -1)
         {

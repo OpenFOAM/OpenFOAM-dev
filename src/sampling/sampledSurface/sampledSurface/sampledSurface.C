@@ -230,7 +230,7 @@ Foam::scalar Foam::sampledSurface::area() const
     if (area_ < 0)
     {
         area_ = sum(magSf());
-        reduce(area_, sumOp<scalar>());
+        reduce(area_, sumOp());
     }
 
     return area_;

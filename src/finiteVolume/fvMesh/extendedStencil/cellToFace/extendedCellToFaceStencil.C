@@ -62,11 +62,11 @@ void Foam::extendedCellToFaceStencil::writeStencilStats
             maxSize = max(maxSize, sCells.size());
         }
     }
-    reduce(sumSize, sumOp<label>());
-    reduce(nSum, sumOp<label>());
+    reduce(sumSize, sumOp());
+    reduce(nSum, sumOp());
 
-    reduce(minSize, minOp<label>());
-    reduce(maxSize, maxOp<label>());
+    reduce(minSize, minOp());
+    reduce(maxSize, maxOp());
 
     os  << "Stencil size :" << nl
         << "    average : " << scalar(sumSize)/nSum << nl
@@ -89,8 +89,8 @@ void Foam::extendedCellToFaceStencil::writeStencilStats
         }
     }
 
-    os  << "Local data size : " << returnReduce(nLocal, sumOp<label>()) << nl
-        << "Sent data size  : " << returnReduce(nSent, sumOp<label>()) << nl
+    os  << "Local data size : " << returnReduce(nLocal, sumOp()) << nl
+        << "Sent data size  : " << returnReduce(nSent, sumOp()) << nl
         << endl;
 }
 

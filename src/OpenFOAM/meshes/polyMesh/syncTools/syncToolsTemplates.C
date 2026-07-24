@@ -1570,7 +1570,7 @@ void Foam::syncTools::swapFaceList
     PackedList<nBits>& faceValues
 )
 {
-    syncFaceList(mesh, faceValues, eqOp<unsigned int>());
+    syncFaceList(mesh, faceValues, eqOp());
 }
 
 

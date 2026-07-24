@@ -421,7 +421,7 @@ void Foam::pointConstraints::constrainDisplacement
     (
         pf.mesh()(),
         pf.primitiveFieldRef(),
-        maxMagSqrEqOp<vector>()
+        maxMagSqrEqOp()
     );
 
     // Apply multiple constraints on edge/corner points

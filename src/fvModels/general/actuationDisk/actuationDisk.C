@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ void Foam::fv::actuationDisk::readCoeffs(const dictionary& dict)
 
     upstreamPoint_ = dict.lookup<point>("upstreamPoint");
     upstreamCellId_ = meshSearch::New(mesh()).findCell(upstreamPoint_);
-    if (returnReduce(upstreamCellId_, maxOp<label>()) == -1)
+    if (returnReduce(upstreamCellId_, maxOp()) == -1)
     {
         FatalIOErrorInFunction(coeffs(dict))
            << "upstream location " << upstreamPoint_  << " not found in mesh"
@@ -118,7 +118,7 @@ void Foam::fv::actuationDisk::addActuationDiskAxialInertialResistance
     {
         dHatUo = dHat & U[upstreamCellId_];
     }
-    reduce(dHatUo, minOp<scalar>());
+    reduce(dHatUo, minOp());
 
     const vector T = 2*diskArea_*sqr(dHatUo)*a*(1 - a)*dHat;
 

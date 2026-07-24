@@ -43,7 +43,7 @@ namespace Foam
     )                                                                          \
     {                                                                          \
         ReturnType res = Func(f);                                              \
-        reduce(res, rFunc##Op<Type>(), Pstream::msgType(), comm);              \
+        reduce(res, rFunc##Op(), Pstream::msgType(), comm);              \
         return res;                                                            \
     }
 
@@ -127,7 +127,7 @@ Type maxMagSqr(const UList<Type>& f)
             Type,
             Max,
             =,
-            maxMagSqrOp<Type>(),
+            maxMagSqrOp(),
             Type,
             f,
             Type,
@@ -156,7 +156,7 @@ Type minMagSqr(const UList<Type>& f)
             Type,
             Min,
             =,
-            minMagSqrOp<Type>(),
+            minMagSqrOp(),
             Type,
             f,
             Type,
@@ -198,7 +198,7 @@ scalar gSumProd
 )
 {
     scalar SumProd = sumProd(f1, f2);
-    reduce(SumProd, sumOp<scalar>(), Pstream::msgType(), comm);
+    reduce(SumProd, sumOp(), Pstream::msgType(), comm);
     return SumProd;
 }
 
@@ -236,7 +236,7 @@ Type gSumCmptProd
 )
 {
     Type SumProd = sumCmptProd(f1, f2);
-    reduce(SumProd, sumOp<Type>(), Pstream::msgType(), comm);
+    reduce(SumProd, sumOp(), Pstream::msgType(), comm);
     return SumProd;
 }
 

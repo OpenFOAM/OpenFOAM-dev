@@ -133,7 +133,7 @@ Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
     (
         mesh(),
         pointBoundaryFactor,
-        maxEqOp<scalar>(),
+        maxEqOp(),
         scalar(0)
     );
 
@@ -289,7 +289,7 @@ Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
     (
         mesh(),
         sumWeights,
-        plusEqOp<scalar>(),
+        plusEqOp(),
         scalar(0)
     );
 

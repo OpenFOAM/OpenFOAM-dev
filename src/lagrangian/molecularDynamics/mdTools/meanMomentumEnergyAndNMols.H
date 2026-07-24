@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,25 +110,25 @@ label singleStepDOFs = 0;
 
 if (Pstream::parRun())
 {
-    reduce(singleStepTotalLinearMomentum, sumOp<vector>());
+    reduce(singleStepTotalLinearMomentum, sumOp());
 
-    reduce(singleStepTotalAngularMomentum, sumOp<vector>());
+    reduce(singleStepTotalAngularMomentum, sumOp());
 
-    reduce(singleStepMaxVelocityMag, maxOp<scalar>());
+    reduce(singleStepMaxVelocityMag, maxOp());
 
-    reduce(singleStepTotalMass, sumOp<scalar>());
+    reduce(singleStepTotalMass, sumOp());
 
-    reduce(singleStepTotalLinearKE, sumOp<scalar>());
+    reduce(singleStepTotalLinearKE, sumOp());
 
-    reduce(singleStepTotalAngularKE, sumOp<scalar>());
+    reduce(singleStepTotalAngularKE, sumOp());
 
-    reduce(singleStepTotalPE, sumOp<scalar>());
+    reduce(singleStepTotalPE, sumOp());
 
-    reduce(singleStepTotalrDotf, sumOp<scalar>());
+    reduce(singleStepTotalrDotf, sumOp());
 
-    reduce(singleStepNMols, sumOp<label>());
+    reduce(singleStepNMols, sumOp());
 
-    reduce(singleStepDOFs, sumOp<label>());
+    reduce(singleStepDOFs, sumOp());
 }
 
 if (singleStepNMols)

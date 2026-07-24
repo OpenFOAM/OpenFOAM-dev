@@ -140,10 +140,10 @@ void Foam::fv::rotorDisk::calculate
 
     if (output)
     {
-        reduce(AOAmin, minOp<scalar>());
-        reduce(AOAmax, maxOp<scalar>());
-        reduce(dragEff, sumOp<scalar>());
-        reduce(liftEff, sumOp<scalar>());
+        reduce(AOAmin, minOp());
+        reduce(AOAmax, maxOp());
+        reduce(dragEff, sumOp());
+        reduce(liftEff, sumOp());
 
         Info<< indent
             << type() << " output:" << nl

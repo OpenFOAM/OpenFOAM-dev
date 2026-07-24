@@ -985,7 +985,7 @@ void Foam::removeFaces::setRefinement
         (
             mesh_,
             nFacesPerEdge,
-            maxEqOp<label>(),
+            maxEqOp(),
             labelMin                // guaranteed to be overridden by maxEqOp
         );
 
@@ -1204,7 +1204,7 @@ void Foam::removeFaces::setRefinement
         (
             mesh_,
             nEdgesPerPoint,
-            maxEqOp<label>(),
+            maxEqOp(),
             labelMin
         );
 

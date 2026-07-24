@@ -175,7 +175,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
     facePatchId_.transfer(facePatchIds);
     faceSign_.transfer(faceSigns);
 
-    nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
+    nFaces_ = returnReduce(faceId_.size(), sumOp());
 }
 
 
@@ -216,7 +216,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces()
         }
     }
 
-    nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
+    nFaces_ = returnReduce(faceId_.size(), sumOp());
 }
 
 
@@ -225,7 +225,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::setSampledSurfaceFaces()
 {
     surfacePtr_().update();
 
-    nFaces_ = returnReduce(surfacePtr_().faces().size(), sumOp<label>());
+    nFaces_ = returnReduce(surfacePtr_().faces().size(), sumOp());
 }
 
 

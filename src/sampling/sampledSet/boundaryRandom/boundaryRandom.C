@@ -99,7 +99,7 @@ bool Foam::sampledSets::boundaryRandom::calcSamples
     {
         scalarField procsArea(Pstream::nProcs(), 0);
         procsArea[Pstream::myProcNo()] = trisFraction.last();
-        Pstream::listCombineGather(procsArea, maxEqOp<scalar>());
+        Pstream::listCombineGather(procsArea, maxEqOp());
         Pstream::listCombineScatter(procsArea);
         for(label proci = 0; proci < Pstream::nProcs(); ++ proci)
         {

@@ -73,7 +73,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::setMaster
 
     // number of patches can be different in parallel...
     label nPatch = bf.size();
-    reduce(nPatch, maxOp<label>());
+    reduce(nPatch, maxOp());
 
     offsets_.setSize(nPatch);
     forAll(offsets_, i)
@@ -171,7 +171,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeGeometry
     {
         pointField pts
         (
-            ListListOps::combine<pointField>(allPoints, accessOp<pointField>())
+            ListListOps::combine<pointField>(allPoints, accessOp())
         );
 
         // write points
@@ -179,7 +179,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeGeometry
 
         faceList fcs
         (
-            ListListOps::combine<faceList>(allFaces, accessOp<faceList>())
+            ListListOps::combine<faceList>(allFaces, accessOp())
         );
 
         // write faces
@@ -312,7 +312,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::wait() const
         }
 
         // prevent other procs from racing ahead
-        reduce(found, sumOp<label>());
+        reduce(found, sumOp());
     }
 }
 

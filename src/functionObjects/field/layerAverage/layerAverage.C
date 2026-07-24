@@ -99,7 +99,7 @@ void Foam::functionObjects::layerAverage::calcLayers()
             cellLayer_[celli] = layeri;
         }
     }
-    reduce(nLayers_, maxOp<label>());
+    reduce(nLayers_, maxOp());
 
     // Report
     if (nLayers_ != 0)

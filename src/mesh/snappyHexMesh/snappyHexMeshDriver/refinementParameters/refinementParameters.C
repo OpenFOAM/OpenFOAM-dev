@@ -147,7 +147,7 @@ Foam::labelList Foam::refinementParameters::findCells
             globalCelli = globalCells.toGlobal(localCelli);
         }
 
-        reduce(globalCelli, maxOp<label>());
+        reduce(globalCelli, maxOp());
 
         if (globalCelli == -1)
         {

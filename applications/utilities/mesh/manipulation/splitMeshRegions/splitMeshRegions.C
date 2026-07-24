@@ -774,7 +774,7 @@ void createAndWriteRegion
 
         if (!isA<processorPolyPatch>(pp))
         {
-            if (returnReduce(pp.size(), sumOp<label>()) > 0)
+            if (returnReduce(pp.size(), sumOp()) > 0)
             {
                 oldToNew[patchi] = newI;
                 if (!addedPatches.found(patchi))
@@ -990,7 +990,7 @@ void matchRegions
             cellZoneNCells[zoneI] = returnReduce
             (
                 mesh.cellZones()[zoneI].size(),
-                sumOp<label>()
+                sumOp()
             );
         }
     }
@@ -1021,7 +1021,7 @@ void matchRegions
                 nCellsInZone[cellRegion[celli]]++;
             }
         }
-        Pstream::listCombineGather(nCellsInZone, plusEqOp<label>());
+        Pstream::listCombineGather(nCellsInZone, plusEqOp());
         Pstream::listCombineScatter(nCellsInZone);
 
         // Pick the region with largest overlap of the zone
@@ -1043,7 +1043,7 @@ void matchRegions
                     break;
                 }
             }
-            reduce(regioni, minOp<label>());
+            reduce(regioni, minOp());
         }
 
         // If successful, name the identified region and map it to the zone
@@ -1370,7 +1370,7 @@ int main(int argc, char *argv[])
             faceSet blockedFaceSet(mesh, disconnectedFaceSetName);
 
             Info<< "Read "
-                << returnReduce(blockedFaceSet.size(), sumOp<label>())
+                << returnReduce(blockedFaceSet.size(), sumOp())
                 << " blocked faces from set \'" << disconnectedFaceSetName
                 << "\'" << nl << endl;
 
@@ -1465,7 +1465,7 @@ int main(int argc, char *argv[])
                 haveDefaultRegion = true;
             }
         }
-        reduce(haveDefaultRegion, orOp<bool>());
+        reduce(haveDefaultRegion, orOp());
 
         if (haveDefaultRegion)
         {
@@ -1492,7 +1492,7 @@ int main(int argc, char *argv[])
 
         forAll(regionNCells, regioni)
         {
-            reduce(regionNCells[regioni], sumOp<label>());
+            reduce(regionNCells[regioni], sumOp());
         }
     }
 

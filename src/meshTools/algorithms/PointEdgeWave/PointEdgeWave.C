@@ -510,7 +510,7 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::handleCollocatedPoints()
     // Sum nChangedPoints over all procs
     label totNChanged = nChangedPoints_;
 
-    reduce(totNChanged, sumOp<label>());
+    reduce(totNChanged, sumOp());
 
     return totNChanged;
 }
@@ -573,7 +573,7 @@ Foam::PointEdgeWave<Type, TrackingData>::PointEdgeWave
     if (debug)
     {
         Info<< typeName << ": Seed points               : "
-            << returnReduce(nChangedPoints_, sumOp<label>()) << endl;
+            << returnReduce(nChangedPoints_, sumOp()) << endl;
     }
 
     // Iterate until nothing changes
@@ -742,7 +742,7 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::edgeToPoint()
     // Sum nChangedPoints over all procs
     label totNChanged = nChangedPoints_;
 
-    reduce(totNChanged, sumOp<label>());
+    reduce(totNChanged, sumOp());
 
     return totNChanged;
 }
@@ -809,7 +809,7 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::pointToEdge()
     // Sum nChangedPoints over all procs
     label totNChanged = nChangedEdges_;
 
-    reduce(totNChanged, sumOp<label>());
+    reduce(totNChanged, sumOp());
 
     return totNChanged;
 }
@@ -865,11 +865,11 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::iterate
                 Info<< typeName << ": Total changed points      : "
                     << nPoints << nl
                     << typeName << ": Total evaluations         : "
-                    << returnReduce(nEvals_, sumOp<label>()) << nl
+                    << returnReduce(nEvals_, sumOp()) << nl
                     << typeName << ": Remaining unvisited points: "
-                    << returnReduce(nUnvisitedPoints_, sumOp<label>()) << nl
+                    << returnReduce(nUnvisitedPoints_, sumOp()) << nl
                     << typeName << ": Remaining unvisited edges : "
-                    << returnReduce(nUnvisitedEdges_, sumOp<label>()) << nl
+                    << returnReduce(nUnvisitedEdges_, sumOp()) << nl
                     << endl;
             }
 

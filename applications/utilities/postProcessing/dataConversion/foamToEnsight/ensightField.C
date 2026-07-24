@@ -98,7 +98,7 @@ void writeField
     ensightStream& ensightFile
 )
 {
-    if (returnReduce(vf.size(), sumOp<label>()) > 0)
+    if (returnReduce(vf.size(), sumOp()) > 0)
     {
         if (Pstream::master())
         {
@@ -626,7 +626,7 @@ void ensightPointField
             const fvPatch& p = mesh.boundary()[patchi];
             if
             (
-                returnReduce(p.size(), sumOp<label>())
+                returnReduce(p.size(), sumOp())
               > 0
             )
             {
@@ -672,7 +672,7 @@ void ensightPointField
 
             const faceZone& fz = mesh.faceZones()[zoneID];
 
-            if (returnReduce(fz.patch().nPoints(), sumOp<label>()) > 0)
+            if (returnReduce(fz.patch().nPoints(), sumOp()) > 0)
             {
                 // Renumber the faceZone points/faces into unique points
                 labelList pointToGlobal;

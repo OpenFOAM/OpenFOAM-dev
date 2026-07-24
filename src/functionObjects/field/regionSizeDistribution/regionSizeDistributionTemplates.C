@@ -53,7 +53,7 @@ Foam::Map<Type> Foam::functionObjects::regionSizeDistribution::regionSum
             fnd() += fld[celli];
         }
     }
-    Pstream::mapCombineGather(regionToSum, plusEqOp<Type>());
+    Pstream::mapCombineGather(regionToSum, plusEqOp());
     Pstream::mapCombineScatter(regionToSum);
 
     return regionToSum;

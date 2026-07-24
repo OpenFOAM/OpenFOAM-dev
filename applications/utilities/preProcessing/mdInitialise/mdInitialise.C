@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
     if (Pstream::parRun())
     {
-        reduce(totalMolecules, sumOp<label>());
+        reduce(totalMolecules, sumOp());
     }
 
     Info<< nl << "Total number of molecules added: " << totalMolecules

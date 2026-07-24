@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ void Foam::faceSet::sync(const polyMesh& mesh)
     {
         set[iter.key()] = true;
     }
-    syncTools::syncFaceList(mesh, set, orEqOp<bool>());
+    syncTools::syncFaceList(mesh, set, orEqOp());
 
     label nAdded = 0;
 
@@ -136,7 +136,7 @@ void Foam::faceSet::sync(const polyMesh& mesh)
         }
     }
 
-    reduce(nAdded, sumOp<label>());
+    reduce(nAdded, sumOp());
     if (debug && nAdded > 0)
     {
         Info<< "Added an additional " << nAdded
