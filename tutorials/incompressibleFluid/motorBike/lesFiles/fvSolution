@@ -51,8 +51,11 @@ PIMPLE
 
 relaxationFactors
 {
-    "U.*"               1;
-    "nuTilda.*"         1;
+    equations
+    {
+        "U.*"               1;
+        "nuTilda.*"         1;
+    }
 }
 
 
