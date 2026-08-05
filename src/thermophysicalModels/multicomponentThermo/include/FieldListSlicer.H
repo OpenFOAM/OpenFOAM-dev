@@ -22,135 +22,173 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::DimensionedFieldListSlicer
+    Foam::FieldListSlicer
 
 Description
-    Class to provide list slices to different parts of a dimensioned field
+    Class to provide list slices to different parts of a field
 
 See also
     Foam::FieldListSlice
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef DimensionedFieldListSlicer_H
-#define DimensionedFieldListSlicer_H
+#ifndef FieldListSlicer_H
+#define FieldListSlicer_H
 
-#include "DimensionedField.H"
-#include "FieldListSlicer.H"
+#include "Field.H"
+#include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                  Class DimensionedFieldListSlicer Declaration
+                       Class FieldListSlicer Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class DimensionedFieldListSlicer
-:
-    public FieldListSlicer<Type>
+class FieldListSlicer
 {
+    // Private Data
+
+        //- Slices into the field data
+        List<UList<Type>> fields_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Set the field pointers
+        template<class Function>
+        static inline void set
+        (
+            const Function& function,
+            const label nFields,
+            List<UList<Type>>& fields
+        )
+        {
+            List<UList<Type>> tfields(nFields);
+            fields.transfer(tfields);
+
+            for (label fieldi = 0; fieldi < nFields; ++ fieldi)
+            {
+                fields[fieldi].shallowCopy(function(fieldi));
+            }
+        }
+
+        //- Set the field pointers
+        template<class Function>
+        inline void set
+        (
+            const Function& function,
+            const label nFields
+        )
+        {
+            set(function, nFields, fields_);
+        }
+
+
 public:
 
     // Constructors
 
         //- Construct null. Set later.
-        inline DimensionedFieldListSlicer()
+        inline FieldListSlicer()
         {}
 
-        //- Construct from a list of dimensioned fields
-        template<class DimField>
-        inline DimensionedFieldListSlicer(const UPtrList<DimField>& dimFields)
+        //- Construct from a list of fields
+        template<class Field>
+        inline FieldListSlicer(const UPtrList<Field>& fields)
         {
-            set(dimFields);
+            set(fields);
         }
 
-        //- Construct from a sub-range of a list of dimensioned fields
-        template<class DimField>
-        inline DimensionedFieldListSlicer
+        //- Construct from a sub-range of a list of fields
+        template<class Field>
+        inline FieldListSlicer
         (
-            const UPtrList<DimField>& dimFields,
+            const UPtrList<Field>& fields,
             const label size,
             const label start
         )
         {
-            set(dimFields, size, start);
+            set(fields, size, start);
         }
 
 
     // Member Functions
 
         //- Set the field pointers
-        template<class DimField>
-        inline void set(const UPtrList<DimField>& dimFields)
+        template<class Field>
+        inline void set(const UPtrList<Field>& fields)
         {
-            FieldListSlicer<Type>::set
+            set
             (
-                [&](const label geoFieldi) -> decltype(auto)
+                [&](const label fieldi) -> decltype(auto)
                 {
-                    return dimFields[geoFieldi].primitiveField();
+                    return fields[fieldi];
                 },
-                dimFields.size()
+                fields.size()
             );
         }
 
         //- Set the field pointers to a specified sub-range
-        template<class DimField>
+        template<class Field>
         inline void set
         (
-            const UPtrList<DimField>& dimFields,
+            const UPtrList<Field>& fields,
             const label size,
             const label start
         )
         {
-            FieldListSlicer<Type>::set
+            set
             (
-                [&](const label geoFieldi)
+                [&](const label fieldi)
                 {
-                    return
-                        SubList<Type>
-                        (
-                            dimFields[geoFieldi].primitiveField(),
-                            size,
-                            start
-                        );
+                    return SubList<Type>(fields[fieldi], size, start);
                 },
-                dimFields.size()
+                fields.size()
             );
+        }
+
+        //- Return a slice for an internal element
+        inline FieldListSlice<Type> slice(const label elementi) const
+        {
+            return FieldListSlice<Type>(fields_, elementi);
         }
 };
 
 
 /*---------------------------------------------------------------------------*\
-                Class DimensionedFieldListAndSlicer Declaration
+                      Class FieldListAndSlicer Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, class GeoMesh, template<class> class PrimitiveField=Field>
-class DimensionedFieldListAndSlicer
+template<class Type>
+class FieldListAndSlicer
 :
-    public PtrList<DimensionedField<Type, GeoMesh, PrimitiveField>>,
-    private DimensionedFieldListSlicer<Type>
+    public PtrList<Field<Type>>,
+    private FieldListSlicer<Type>
 {
 public:
 
     // Constructors
 
         //- Null Constructor
-        DimensionedFieldListAndSlicer()
+        FieldListAndSlicer()
         {}
 
         //- Construct with size specified
-        explicit DimensionedFieldListAndSlicer(const label size)
+        explicit FieldListAndSlicer(const label size)
         :
-            PtrList<DimensionedField<Type, GeoMesh, PrimitiveField>>(size)
+            PtrList<Field<Type>>(size)
         {}
 
         //- Construct from arguments
         template<class ... Args>
-        DimensionedFieldListAndSlicer(Args ... args)
+        FieldListAndSlicer(Args ... args)
         :
-            PtrList<DimensionedField<Type, GeoMesh, PrimitiveField>>(args ...)
+            PtrList<Field<Type>>(args ...)
         {
             set();
         }
@@ -159,16 +197,16 @@ public:
     // Member Functions
 
         //- Inherit the pointer list's set method
-        using PtrList<DimensionedField<Type, GeoMesh, PrimitiveField>>::set;
+        using PtrList<Field<Type>>::set;
 
         //- Set the field pointers in the slicer
         inline void set()
         {
-            DimensionedFieldListSlicer<Type>::set(*this);
+            FieldListSlicer<Type>::set(*this);
         }
 
         //- Return a slice for an internal element
-        using DimensionedFieldListSlicer<Type>::slice;
+        using FieldListSlicer<Type>::slice;
 };
 
 

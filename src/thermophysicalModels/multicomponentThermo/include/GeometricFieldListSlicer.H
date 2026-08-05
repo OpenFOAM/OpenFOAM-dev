@@ -35,8 +35,8 @@ See also
 #ifndef GeometricFieldListSlicer_H
 #define GeometricFieldListSlicer_H
 
+#include "DimensionedFieldListSlicer.H"
 #include "GeometricField.H"
-#include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,14 +48,13 @@ namespace Foam
 
 template<class Type>
 class GeometricFieldListSlicer
+:
+    public DimensionedFieldListSlicer<Type>
 {
     // Private Data
 
-        //- Pointers to the primitive fields
-        UPtrList<const Field<Type>> primitiveFields_;
-
-        //- Pointers to the patch fields. Indexed by patch, then by field.
-        List<UPtrList<const Field<Type>>> patchFields_;
+        //- Slices into the patch field data. Indexed by patch, then by field.
+        List<List<UList<Type>>> patchFields_;
 
 
 public:
@@ -67,12 +66,11 @@ public:
         {}
 
         //- Construct from a mesh and a list of fields
-        template<class GeoMesh, template<class> class PrimitiveField>
+        template<class GeoMesh, class GeoField>
         inline GeometricFieldListSlicer
         (
             const GeoMesh& mesh,
-            const UPtrList<GeometricField<Type, GeoMesh, PrimitiveField>>&
-                geoFields
+            const UPtrList<GeoField>& geoFields
         )
         {
             set(mesh, geoFields);
@@ -82,41 +80,30 @@ public:
     // Member Functions
 
         //- Set the field pointers
-        template<class GeoMesh, template<class> class PrimitiveField>
+        template<class GeoMesh, class GeoField>
         inline void set
         (
             const GeoMesh& mesh,
-            const UPtrList<GeometricField<Type, GeoMesh, PrimitiveField>>&
-                geoFields
+            const UPtrList<GeoField>& geoFields
         )
         {
-            primitiveFields_.resize(geoFields.size());
+            DimensionedFieldListSlicer<Type>::set(geoFields);
 
-            patchFields_.resize(mesh.boundary().size(), primitiveFields_);
+            List<List<UList<Type>>> tpatchFields(mesh.boundary().size());
+            patchFields_.transfer(tpatchFields);
 
-            forAll(geoFields, fieldi)
+            forAll(mesh.boundary(), patchi)
             {
-                primitiveFields_.set
+                FieldListSlicer<Type>::set
                 (
-                    fieldi,
-                    &geoFields[fieldi].primitiveField()
+                    [&](const label geoFieldi) -> decltype(auto)
+                    {
+                        return geoFields[geoFieldi].boundaryField()[patchi];
+                    },
+                    geoFields.size(),
+                    patchFields_[patchi]
                 );
-
-                forAll(geoFields[fieldi].boundaryField(), patchi)
-                {
-                    patchFields_[patchi].set
-                    (
-                        fieldi,
-                        &geoFields[fieldi].boundaryField()[patchi]
-                    );
-                }
             }
-        }
-
-        //- Return a slice for an internal element
-        inline FieldListSlice<Type> slice(const label elementi) const
-        {
-            return FieldListSlice<Type>(primitiveFields_, elementi);
         }
 
         //- Return a slice for a patch element

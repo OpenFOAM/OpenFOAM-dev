@@ -122,7 +122,7 @@ Foam::psiuMulticomponentThermo::implementation::sourceCellComposition
 }
 
 
-inline Foam::PtrList<Foam::scalarField>
+inline Foam::FieldListAndSlicer<Foam::scalar>
 Foam::psiuMulticomponentThermo::implementation::Yslicer
 (
     const fvSource& model,
@@ -151,11 +151,11 @@ Foam::psiuMulticomponentThermo::implementation::Yslicer
 inline Foam::scalarFieldListSlice
 Foam::psiuMulticomponentThermo::implementation::sourceCellComposition
 (
-    const PtrList<scalarField>& Yslicer,
+    const FieldListAndSlicer<scalar>& Yslicer,
     const label i
 ) const
 {
-    return scalarFieldListSlice(Yslicer, i);
+    return Yslicer.slice(i);
 }
 
 

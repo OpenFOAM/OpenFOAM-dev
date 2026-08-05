@@ -33,8 +33,7 @@ Description
 #ifndef FieldListSlice_H
 #define FieldListSlice_H
 
-#include "Field.H"
-#include "UPtrList.H"
+#include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +50,7 @@ class FieldListSlice
     // Private Data
 
         //- Reference to the fields
-        const UPtrList<const Field<Type>>& fields_;
+        const List<UList<Type>>& fields_;
 
         //- Element index
         const label elementi_;
@@ -64,26 +63,12 @@ public:
         //- Construct from a list of fields and an element index
         inline FieldListSlice
         (
-            const UPtrList<const Field<Type>>& fields,
+            const List<UList<Type>>& fields,
             const label elementi
         )
         :
             fields_(fields),
             elementi_(elementi)
-        {}
-
-        //- Construct from a list of fields and an element index
-        inline FieldListSlice
-        (
-            const UPtrList<Field<Type>>& fields,
-            const label elementi
-        )
-        :
-            FieldListSlice
-            (
-                reinterpret_cast<const UPtrList<const Field<Type>>&>(fields),
-                elementi
-            )
         {}
 
 
