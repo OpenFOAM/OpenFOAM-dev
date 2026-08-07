@@ -86,23 +86,23 @@ updateCoeffs()
 
     PressureFvPatchScalarField::updateCoeffs();
 
-    const scalarField& rhop = this->patch().template
+    const scalarField& rhop = patch().template
         lookupPatchField<volScalarField, scalar>
         (
             rhoName_
         );
 
     const uniformDimensionedVectorField& g =
-        this->db().template lookupObject<uniformDimensionedVectorField>("g");
+        db().template lookupObject<uniformDimensionedVectorField>("g");
 
     const uniformDimensionedScalarField& hRef =
-        this->db().template lookupObject<uniformDimensionedScalarField>("hRef");
+        db().template lookupObject<uniformDimensionedScalarField>("hRef");
 
     const dimensionedScalar ghRef(- mag(g)*hRef);
 
     this->operator==
     (
-        *this - rhop*((g.value() & this->patch().Cf()) - ghRef.value())
+        field() - rhop*((g.value() & patch().Cf()) - ghRef.value())
     );
 }
 

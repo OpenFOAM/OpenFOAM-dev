@@ -282,7 +282,7 @@ Foam::pointMeshMovers::rigidBodyDisplacement::newPoints()
                .patchInternalField(meshSolver_.points0())
             );
 
-            meshSolver_.pointDisplacement().boundaryFieldRef()[patchi] ==
+            meshSolver_.pointDisplacement().boundaryFieldRef()[patchi] == eval
             (
                 Foam::transformPoints
                 (

@@ -56,8 +56,8 @@ Foam::symmetryFvPatchField<Type>::symmetryFvPatchField
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -74,13 +74,13 @@ Foam::symmetryFvPatchField<Type>::symmetryFvPatchField
 :
     basicSymmetryFvPatchField<Type>(ptf, p, iF, mapper)
 {
-    if (!isType<symmetryFvPatch>(this->patch()))
+    if (!isType<symmetryFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 }

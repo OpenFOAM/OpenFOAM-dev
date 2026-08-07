@@ -168,6 +168,9 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+
+
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field

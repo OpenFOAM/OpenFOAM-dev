@@ -114,7 +114,7 @@ Foam::coneDirectionLagrangianVectorFieldSource::direction
             "phi",
             subMesh,
             dimless,
-            constant::mathematical::twoPi*rndGen_.scalar01(subMesh.size())
+            eval(constant::mathematical::twoPi*rndGen_.scalar01(subMesh.size()))
         );
     const LagrangianSubVectorField tDir
     (

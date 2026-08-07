@@ -148,6 +148,11 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::time;
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::internalField;
+
+
         // Attributes
 
             //- Return true: this patch field is altered by assignment

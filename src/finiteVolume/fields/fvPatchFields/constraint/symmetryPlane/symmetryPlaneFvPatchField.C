@@ -59,8 +59,8 @@ Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -78,13 +78,13 @@ Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
     basicSymmetryFvPatchField<Type>(ptf, p, iF, mapper),
     symmetryPlanePatch_(refCast<const symmetryPlaneFvPatch>(p))
 {
-    if (!isType<symmetryPlaneFvPatch>(this->patch()))
+    if (!isType<symmetryPlaneFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -110,11 +110,11 @@ Foam::symmetryPlaneFvPatchField<Type>::snGrad() const
 {
     vector nHat(symmetryPlanePatch_.n());
 
-    const Field<Type> iF(this->patchInternalField());
+    const Field<Type> iF(patchInternalField());
 
     return
         (transform(I - 2.0*sqr(nHat), iF) - iF)
-       *(this->patch().deltaCoeffs()/2.0);
+       *(patch().deltaCoeffs()/2.0);
 }
 
 
@@ -128,7 +128,7 @@ void Foam::symmetryPlaneFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
     vector nHat(symmetryPlanePatch_.n());
 
-    const Field<Type> iF(this->patchInternalField());
+    const Field<Type> iF(patchInternalField());
 
     Field<Type>::operator=
     (

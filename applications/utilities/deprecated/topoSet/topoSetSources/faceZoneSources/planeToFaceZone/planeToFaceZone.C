@@ -275,7 +275,7 @@ void Foam::planeToFaceZone::combine(faceZoneSet& fzSet, const bool add) const
             selectedRegioni =
                 returnReduce
                 (
-                    findMin(mag(regionCentres - point_)()),
+                    findMin(eval(mag(regionCentres - point_))()),
                     minOp()
                 );
 

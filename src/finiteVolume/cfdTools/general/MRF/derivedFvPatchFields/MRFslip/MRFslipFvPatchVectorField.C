@@ -95,7 +95,7 @@ void Foam::MRFslipFvPatchVectorField::updateCoeffs()
     makeRelative(*this);
 
     // Transform the patch velocity which removes the normal component
-    vectorField::operator=((*this + transform(I - 2*sqr(nHat), *this))/2);
+    vectorField::operator=((field() + transform(I - 2*sqr(nHat), field()))/2);
 
     // Transform the patch velocity absolute to the rotating frame
     makeAbsolute(*this);

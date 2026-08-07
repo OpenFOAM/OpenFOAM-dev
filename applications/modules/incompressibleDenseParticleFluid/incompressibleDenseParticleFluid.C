@@ -329,10 +329,12 @@ void Foam::solvers::incompressibleDenseParticleFluid::prePredictor()
 
         const fvVectorMatrix cloudSU(clouds.SU(Uc));
 
-        Fd().primitiveFieldRef() = -cloudSU.source()/mesh.V()/rhoc;
+        Fd().primitiveFieldRef() =
+            -cloudSU.source()/mesh.V().primitiveField()/rhoc.primitiveField();
         Fd().correctBoundaryConditions();
 
-        Dc().primitiveFieldRef() = -cloudSU.diag()/mesh.V()/rhoc;
+        Dc().primitiveFieldRef() =
+            -cloudSU.diag()/mesh.V().primitiveField()/rhoc.primitiveField();
         Dc().correctBoundaryConditions();
 
         Dcf = fvc::interpolate(Dc()).ptr();

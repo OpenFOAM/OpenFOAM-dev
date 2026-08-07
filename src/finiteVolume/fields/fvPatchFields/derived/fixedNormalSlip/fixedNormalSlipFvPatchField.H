@@ -136,6 +136,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::patchInternalField;
+
+
         // Access
 
             //- Return false: this patch field is not altered by assignment
@@ -191,8 +195,13 @@ public:
     // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
-
+        virtual void operator=(const Field<Type>&) {}
         virtual void operator=(const fvPatchField<Type>&) {}
+
+        //- Virtual assign to an expression
+        virtual void operator=(const expression::Assignment<Field<Type>>& a)
+        {}
+
         virtual void operator+=(const fvPatchField<Type>&) {}
         virtual void operator-=(const fvPatchField<Type>&) {}
         virtual void operator*=(const fvPatchField<scalar>&) {}

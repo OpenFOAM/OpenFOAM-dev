@@ -161,6 +161,13 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::db;
+        using fvPatchField<Type>::time;
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::patchInternalField;
+        using fvPatchField<Type>::internalField;
+
+
         // Access
 
             //- Return the field at infinity

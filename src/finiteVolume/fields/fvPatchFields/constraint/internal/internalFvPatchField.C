@@ -57,12 +57,12 @@ Foam::internalFvPatchField<Type>::internalFvPatchField
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 
-    fvPatchField<Type>::operator=(this->patchInternalField());
+    fvPatchField<Type>::operator=(patchInternalField());
 }
 
 
@@ -82,8 +82,8 @@ Foam::internalFvPatchField<Type>::internalFvPatchField
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 }
@@ -110,7 +110,7 @@ void Foam::internalFvPatchField<Type>::evaluate(const Pstream::commsTypes)
         this->updateCoeffs();
     }
 
-    fvPatchField<Type>::operator==(this->patchInternalField());
+    fvPatchField<Type>::operator==(patchInternalField());
     fvPatchField<Type>::evaluate();
 }
 
@@ -122,13 +122,13 @@ Foam::internalFvPatchField<Type>::valueInternalCoeffs
     const tmp<scalarField>&
 ) const
 {
-    if (this->patch().size())
+    if (patch().size())
     {
         FatalErrorInFunction
             << "attempt to create matrix coefficients for field "
-            << this->internalField().name()
+            << internalField().name()
             << " on non-empty '" << typeName << "' patch "
-            << this->patch().name()
+            << patch().name()
             << exit(FatalError);
     }
 
@@ -143,13 +143,13 @@ Foam::internalFvPatchField<Type>::valueBoundaryCoeffs
     const tmp<scalarField>&
 ) const
 {
-    if (this->patch().size())
+    if (patch().size())
     {
         FatalErrorInFunction
             << "attempt to create matrix coefficients for field "
-            << this->internalField().name()
+            << internalField().name()
             << " on non-empty '" << typeName << "' patch "
-            << this->patch().name()
+            << patch().name()
             << exit(FatalError);
     }
 
@@ -161,13 +161,13 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::internalFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    if (this->patch().size())
+    if (patch().size())
     {
         FatalErrorInFunction
             << "attempt to create matrix coefficients for field "
-            << this->internalField().name()
+            << internalField().name()
             << " on non-empty '" << typeName << "' patch "
-            << this->patch().name()
+            << patch().name()
             << exit(FatalError);
     }
 
@@ -179,13 +179,13 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::internalFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
-    if (this->patch().size())
+    if (patch().size())
     {
         FatalErrorInFunction
             << "attempt to create matrix coefficients for field "
-            << this->internalField().name()
+            << internalField().name()
             << " on non-empty '" << typeName << "' patch "
-            << this->patch().name()
+            << patch().name()
             << exit(FatalError);
     }
 

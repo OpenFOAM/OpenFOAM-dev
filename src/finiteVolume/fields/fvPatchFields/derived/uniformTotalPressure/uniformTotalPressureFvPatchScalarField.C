@@ -89,7 +89,7 @@ uniformTotalPressureFvPatchScalarField
 {
     // Set the patch pressure to the current total pressure
     // This is not ideal but avoids problems with the creation of patch faces
-    fvPatchScalarField::operator==(p0_->value(this->time().value()));
+    fvPatchScalarField::operator==(p0_->value(time().value()));
 }
 
 
@@ -122,7 +122,7 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
         return;
     }
 
-    scalar p0 = p0_->value(this->time().value());
+    scalar p0 = p0_->value(time().value());
 
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
@@ -180,9 +180,9 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
             << " for compressible/variable density flow" << nl
             << "    or " << dimensions::kinematicPressure
             << " for incompressible flow," << nl
-            << "    on patch " << this->patch().name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << "    on patch " << patch().name()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 

@@ -127,7 +127,7 @@ Foam::fvPatchField<Type>::fvPatchField
     const DimensionedField<Type, fvMesh>& iF
 )
 :
-    Field<Type>(ptf),
+    Field<Type>(static_cast<const Field<Type>&>(ptf)),
     libs_(ptf.libs_),
     patch_(ptf.patch_),
     internalField_(iF),
@@ -263,11 +263,48 @@ void Foam::fvPatchField<Type>::operator=
 template<class Type>
 void Foam::fvPatchField<Type>::operator=
 (
+    const Field<Type>& ul
+)
+{
+    Field<Type>::operator=(ul);
+}
+
+
+template<class Type>
+void Foam::fvPatchField<Type>::operator=
+(
     const fvPatchField<Type>& ptf
 )
 {
     check(ptf);
-    Field<Type>::operator=(ptf);
+    Field<Type>::operator=(static_cast<const Field<Type>&>(ptf));
+}
+
+
+template<class Type>
+void Foam::fvPatchField<Type>::operator=
+(
+    const expression::Assignment<Field<Type>>& a
+)
+{
+    a.assign(static_cast<Field<Type>&>(*this));
+}
+
+
+template<class Type>
+template<class Expression, class>
+void Foam::fvPatchField<Type>::operator=(const Expression& e)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access(e, expression::Base())
+            )
+        )
+    );
 }
 
 
@@ -422,7 +459,7 @@ void Foam::fvPatchField<Type>::operator==
     const fvPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(ptf);
+    Field<Type>::operator=(static_cast<const Field<Type>&>(ptf));
 }
 
 
@@ -443,6 +480,33 @@ void Foam::fvPatchField<Type>::operator==
 )
 {
     Field<Type>::operator=(t);
+}
+
+
+template<class Type>
+void Foam::fvPatchField<Type>::operator==
+(
+    const expression::Assignment<Field<Type>>& a
+)
+{
+    a.assign(static_cast<Field<Type>&>(*this));
+}
+
+
+template<class Type>
+template<class Expression, class>
+void Foam::fvPatchField<Type>::operator==(const Expression& e)
+{
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access(e, expression::Base())
+            )
+        )
+    );
 }
 
 

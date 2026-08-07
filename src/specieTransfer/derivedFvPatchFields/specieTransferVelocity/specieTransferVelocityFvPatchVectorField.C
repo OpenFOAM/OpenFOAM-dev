@@ -74,7 +74,7 @@ specieTransferVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::tmp<Foam::scalarField>
+Foam::tmp<Foam::scalarField>
 Foam::specieTransferVelocityFvPatchVectorField::phip() const
 {
     typedef specieTransferMassFractionFvPatchScalarField YBCType;
@@ -116,7 +116,7 @@ void Foam::specieTransferVelocityFvPatchVectorField::updateCoeffs()
     // Set the normal component of the velocity to match the computed flux
     const vectorField nf(patch().nf());
     const tensorField Tau(tensor::I - sqr(nf));
-    this->operator==((Tau & *this) + nf*phip()/(rhop*patch().magSf()));
+    this->operator==((Tau & field()) + nf*phip()/(rhop*patch().magSf()));
 
     fixedValueInletOutletFvPatchVectorField::updateCoeffs();
 }

@@ -36,7 +36,7 @@ Foam::mappedValueFvPatchField<Type>::mapper() const
     return
         mapperPtr_.valid()
       ? mapperPtr_()
-      : mappedPatchBase::getMap(this->patch().poly());
+      : mappedPatchBase::getMap(patch().poly());
 }
 
 
@@ -49,8 +49,8 @@ Foam::mappedValueFvPatchField<Type>::nbrPatchField() const
 
     const VolField<Type>& nbrField =
         this->mapper().sameRegion()
-     && this->fieldName_ == this->internalField().name()
-      ? refCast<const VolField<Type>>(this->internalField())
+     && this->fieldName_ == internalField().name()
+      ? refCast<const VolField<Type>>(internalField())
       : nbrMesh.template lookupObject<VolField<Type>>(this->fieldName_);
 
     const label nbrPatchi = this->mapper().nbrPolyPatch().index();
@@ -78,8 +78,8 @@ Foam::mappedValueFvPatchField<Type>::mappedValues
     if (setAverage_)
     {
         const Type nbrAverageValue =
-            gSum(this->patch().magSf()*tResult())
-           /gSum(this->patch().magSf());
+            gSum(patch().magSf()*tResult())
+           /gSum(patch().magSf());
 
         if (mag(nbrAverageValue)/mag(average_) > 0.5)
         {
@@ -150,8 +150,8 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
     if (!mapperPtr_.valid() && !isA<mappedPatchBase>(p.poly()))
     {
         OStringStream str;
-        str << "Field " << this->internalField().name() << " of type "
-            << type() << " on patch " << this->patch().name()
+        str << "Field " << internalField().name() << " of type "
+            << type() << " on patch " << patch().name()
             << " of type " << p.poly().type() << " does not "
             << "have mapping specified (i.e., neighbourPatch, and/or "
             << "neighbourRegion entries) nor is the patch of "
@@ -167,7 +167,7 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
         iF,
         dict,
         this->mapper().sameUntransformedPatch()
-     && this->fieldName_ == this->internalField().name()
+     && this->fieldName_ == internalField().name()
       ? mappedPatchBase::from::differentPatch
       : mappedPatchBase::from::any
     );
@@ -272,7 +272,7 @@ void Foam::mappedValueFvPatchField<Type>::write(Ostream& os) const
     (
         os,
         "field",
-        this->internalField().name(),
+        internalField().name(),
         fieldName_
     );
 

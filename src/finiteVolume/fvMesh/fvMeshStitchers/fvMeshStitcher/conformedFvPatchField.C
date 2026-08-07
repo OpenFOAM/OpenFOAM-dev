@@ -241,7 +241,7 @@ void Foam::conformedFvPatchField<Type>::conform
         const fvPatch& origFvp = fvbm[origPatchi];
 
         const labelList ncOrigPatchFace =
-            SubField<label>(ncFvp.polyFaces()) - origFvp.start();
+            eval(SubField<label>(ncFvp.polyFaces()) - origFvp.start());
 
         const scalarField origNcMagSf
         (
@@ -275,7 +275,7 @@ void Foam::conformedFvPatchField<Type>::conform
         const fvPatch& origFvp = fvbm[origPatchi];
 
         const labelList ncOrigPatchFace =
-            SubField<label>(ncFvp.polyFaces()) - origFvp.start();
+            eval(SubField<label>(ncFvp.polyFaces()) - origFvp.start());
 
         conformedFvPatchField<Type>& cpF =
             refCast<conformedFvPatchField<Type>>(bF[origPatchi]);
@@ -286,16 +286,22 @@ void Foam::conformedFvPatchField<Type>::conform
             reverseInterpolativeFieldMapper
             (
                 ncOrigPatchFace,
+                eval
+                (
                 ncFvp.patch().magSf()
                /max
                 (
                     fvMeshStitcherTools::fieldMap
                     (
-                        cpF.ncCoverages_[ncOrigNcField[ncPatchi]]
-                       *origFvp.magSf(),
+                        eval
+                        (
+                            cpF.ncCoverages_[ncOrigNcField[ncPatchi]]
+                           *origFvp.magSf()
+                        ),
                         ncOrigPatchFace
                     ),
                     rootVSmall
+                )
                 )
             )
         );
@@ -336,7 +342,7 @@ void Foam::conformedFvPatchField<Type>::unconform
             refCast<conformedFvPatchField<Type>>(bF[origPatchi]);
 
         labelList ncOrigPatchFace =
-            SubField<label>(ncFvp.polyFaces()) - origFvp.start();
+            eval(SubField<label>(ncFvp.polyFaces()) - origFvp.start());
 
         forAll(ncOrigPatchFace, ncPatchFacei)
         {

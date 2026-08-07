@@ -130,6 +130,12 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::time;
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::patchInternalField;
+        using fvPatchField<Type>::internalField;
+
+
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
 

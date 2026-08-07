@@ -89,7 +89,10 @@ void Foam::reboundVelocityLagrangianPatchVectorField::evaluate
     const scalarField UReln((U - Up) & np);
     const vectorField URelt((U - Up) - np*UReln);
 
-    LagrangianPatchVectorField::operator=(Up - e_*UReln*np + (1 - mu_)*URelt);
+    LagrangianPatchVectorField::operator=
+    (
+        eval(Up - e_*UReln*np + (1 - mu_)*URelt)
+    );
 }
 
 

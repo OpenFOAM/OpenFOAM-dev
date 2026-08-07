@@ -61,7 +61,7 @@ surfaceNormalFixedValueFvPatchVectorField
     // unset values in reconstructPar.
     fvPatchVectorField::operator=
     (
-        mapper(ptf.refValue_*ptf.patch().nf())
+        mapper(eval(ptf.refValue_*ptf.patch().nf()))
     );
 }
 

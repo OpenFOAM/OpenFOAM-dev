@@ -226,7 +226,7 @@ syncEdges()
             propagationTol_,
             td_
         ),
-        transformOp<PrimitivePatchType, Type, TrackingData>
+        waveTransformOp<PrimitivePatchType, Type, TrackingData>
         (
             mesh_,
             patch_,

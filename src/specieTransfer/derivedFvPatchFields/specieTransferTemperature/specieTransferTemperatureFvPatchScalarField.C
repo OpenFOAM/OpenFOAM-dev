@@ -88,7 +88,7 @@ specieTransferTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::tmp<Foam::scalarField>
+Foam::tmp<Foam::scalarField>
 Foam::specieTransferTemperatureFvPatchScalarField::phiHep() const
 {
     typedef specieTransferMassFractionFvPatchScalarField YBCType;

@@ -49,7 +49,7 @@ Foam::fvm::Su
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.source() -= mesh.V()*su.primitiveField();
+    fvm.source() -= mesh.V().primitiveField()*su.primitiveField();
 
     return tfvm;
 }
@@ -115,7 +115,7 @@ Foam::fvm::Sp
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.diag() += mesh.V()*sp.primitiveField();
+    fvm.diag() += mesh.V().primitiveField()*sp.primitiveField();
 
     return tfvm;
 }
@@ -169,7 +169,7 @@ Foam::fvm::Sp
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.diag() += mesh.V()*sp.value();
+    fvm.diag() += mesh.V().primitiveField()*sp.value();
 
     return tfvm;
 }
@@ -207,10 +207,12 @@ Foam::fvm::SuSp
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.diag() += mesh.V()*max(susp.primitiveField(), scalar(0));
+    fvm.diag() +=
+        mesh.V().primitiveField()*max(susp.primitiveField(), scalar(0));
 
-    fvm.source() -= mesh.V()*min(susp.primitiveField(), scalar(0))
-        *vf.primitiveField();
+    fvm.source() -=
+        mesh.V().primitiveField()*min(susp.primitiveField(), scalar(0))
+       *vf.primitiveField();
 
     return tfvm;
 }

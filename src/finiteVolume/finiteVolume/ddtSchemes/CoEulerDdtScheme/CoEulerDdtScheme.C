@@ -171,7 +171,10 @@ CoEulerDdtScheme<Type>::fvcDdt
 
         tdtdt.ref().primitiveFieldRef() =
             rDeltaT.primitiveField()*dt.value()
-           *(1.0 - mesh().Vsc0()/mesh().Vsc());
+           *(
+                1.0
+              - mesh().Vsc0()().primitiveField()/mesh().Vsc()().primitiveField()
+            );
 
         return tdtdt;
     }
@@ -414,15 +417,19 @@ CoEulerDdtScheme<Type>::fvmDdt
 
     const scalarField rDeltaT(CorDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*mesh().Vsc();
+    fvm.diag() = rDeltaT*mesh().Vsc()().primitiveField();
 
     if (mesh().moving())
     {
-        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc0();
+        fvm.source() =
+            rDeltaT*vf.oldTime().primitiveField()
+           *mesh().Vsc0()().primitiveField();
     }
     else
     {
-        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc();
+        fvm.source() =
+            rDeltaT*vf.oldTime().primitiveField()
+           *mesh().Vsc()().primitiveField();
     }
 
     return tfvm;
@@ -449,17 +456,19 @@ CoEulerDdtScheme<Type>::fvmDdt
 
     const scalarField rDeltaT(CorDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*rho.value()*mesh().Vsc();
+    fvm.diag() = rDeltaT*rho.value()*mesh().Vsc()().primitiveField();
 
     if (mesh().moving())
     {
-        fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().primitiveField()*mesh().Vsc0();
+        fvm.source() =
+            rDeltaT*rho.value()*vf.oldTime().primitiveField()
+           *mesh().Vsc0()().primitiveField();
     }
     else
     {
-        fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().primitiveField()*mesh().Vsc();
+        fvm.source() =
+            rDeltaT*rho.value()*vf.oldTime().primitiveField()
+           *mesh().Vsc()().primitiveField();
     }
 
     return tfvm;
@@ -486,19 +495,19 @@ CoEulerDdtScheme<Type>::fvmDdt
 
     const scalarField rDeltaT(CorDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().Vsc();
+    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().Vsc()().primitiveField();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc0();
+            *vf.oldTime().primitiveField()*mesh().Vsc0()().primitiveField();
     }
     else
     {
         fvm.source() = rDeltaT
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc();
+            *vf.oldTime().primitiveField()*mesh().Vsc()().primitiveField();
     }
 
     return tfvm;
@@ -531,21 +540,22 @@ CoEulerDdtScheme<Type>::fvmDdt
     const scalarField rDeltaT(CorDeltaT()().primitiveField());
 
     fvm.diag() =
-        rDeltaT*alpha.primitiveField()*rho.primitiveField()*mesh().Vsc();
+        rDeltaT*alpha.primitiveField()*rho.primitiveField()
+       *mesh().Vsc()().primitiveField();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
             *alpha.oldTime().primitiveField()
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc0();
+            *vf.oldTime().primitiveField()*mesh().Vsc0()().primitiveField();
     }
     else
     {
         fvm.source() = rDeltaT
             *alpha.oldTime().primitiveField()
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc();
+            *vf.oldTime().primitiveField()*mesh().Vsc()().primitiveField();
     }
 
     return tfvm;

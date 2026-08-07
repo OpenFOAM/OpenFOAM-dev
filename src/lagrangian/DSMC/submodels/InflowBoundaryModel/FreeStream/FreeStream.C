@@ -186,7 +186,7 @@ void Foam::FreeStream<CloudType>::inflow()
 
             scalar mass = cloud.constProps(typeId).mass();
 
-            if (min(boundaryT[patchi]) < small)
+            if (min(boundaryT[patchi].field()) < small)
             {
                 FatalErrorInFunction
                     << "Zero boundary temperature detected, check boundaryT "

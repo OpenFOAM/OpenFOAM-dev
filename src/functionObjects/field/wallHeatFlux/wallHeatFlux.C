@@ -257,7 +257,7 @@ bool Foam::functionObjects::wallHeatFlux::write()
         const scalar minqp = gMin(qp);
         const scalar maxqp = gMax(qp);
         const scalar Q = gSum(magSf[patchi]*qp);
-        const scalar q = Q/gSum(magSf[patchi]);
+        const scalar q = Q/gSum(magSf[patchi].field());
 
         if (Pstream::master())
         {

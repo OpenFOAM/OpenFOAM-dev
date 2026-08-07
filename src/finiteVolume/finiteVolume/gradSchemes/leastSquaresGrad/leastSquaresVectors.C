@@ -33,7 +33,6 @@ namespace Foam
     defineTypeNameAndDebug(leastSquaresVectors, 0);
 }
 
-
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
 Foam::leastSquaresVectors::leastSquaresVectors(const fvMesh& mesh)
@@ -157,7 +156,7 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
 
 
     // Invert the dd tensor
-    const symmTensorField invDd(inv(dd));
+    const symmTensorField invDd(inv(dd, mesh.solutionD()));
 
 
     // Revisit all faces and calculate the pVectors_ and nVectors_ vectors

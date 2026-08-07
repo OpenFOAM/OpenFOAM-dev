@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1248,15 +1248,18 @@ void Foam::domainDecomposition::unconformComplete()
             polyFacesBf[completeNcPatchi].resize(size, -1);
             polyFacesBf[completeNcPatchi].labelField::rmap
             (
-                mag
+                eval
                 (
-                    labelField
+                    mag
                     (
-                        procFaceAddressing_[proci],
-                        procMesh.polyFacesBf()[procNcPatchi]
-                    )
-                ) - 1,
-                mag(faceAddressingBf[procNcPatchi]) - 1
+                        labelField
+                        (
+                            procFaceAddressing_[proci],
+                            procMesh.polyFacesBf()[procNcPatchi]
+                        )
+                    ) - 1
+                ),
+                eval(mag(faceAddressingBf[procNcPatchi]) - 1)
             );
 
             // Set dummy data for the face geometry. This should not be
@@ -1327,7 +1330,7 @@ void Foam::domainDecomposition::unconformProcs()
                     labelField
                     (
                         completeMesh().polyFacesBf()[completeNcPatchi],
-                        mag(faceAddressingBf[procNcPatchi]) - 1
+                        eval(mag(faceAddressingBf[procNcPatchi]) - 1)
                     )
                 );
 

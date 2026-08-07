@@ -145,7 +145,7 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
 
         if (this->overridesConstraint())
         {
-            writeEntry(os, "patchType", this->patch().type());
+            writeEntry(os, "patchType", patch().type());
         }
 
         writeEntry(os, "value", *this);
@@ -157,8 +157,8 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
         (
             fvPatchField<Type>::New
             (
-                this->patch(),
-                this->internalField(),
+                patch(),
+                internalField(),
                 dict
             ).ptr()
         );

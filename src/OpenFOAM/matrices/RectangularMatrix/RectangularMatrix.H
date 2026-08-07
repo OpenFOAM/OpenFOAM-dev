@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,6 +86,16 @@ public:
         //- Assignment of all elements to zero
         void operator=(const zero);
 };
+
+
+namespace expression
+{
+    template<class Type>
+    struct Expressionable<RectangularMatrix<Type>>
+    :
+        public std::integral_constant<char, -1>
+    {};
+}
 
 
 // Global functions and operators

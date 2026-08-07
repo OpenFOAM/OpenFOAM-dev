@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -265,7 +265,8 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
             if (gSum(Ni) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*field))/zone_.V();
+                    gSum(filterField(mesh_.V().primitiveField()*field))
+                   /zone_.V();
             }
             else
             {
@@ -282,7 +283,8 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
             if (gSum(Vi) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*field))/zone_.V();
+                    gSum(filterField(mesh_.V().primitiveField()*field))
+                   /zone_.V();
             }
             else
             {
@@ -299,7 +301,8 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
             if (gSum(Ai) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*field))/zone_.V();
+                    gSum(filterField(mesh_.V().primitiveField()*field))
+                   /zone_.V();
             }
             else
             {
@@ -312,7 +315,8 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
         case weightType::cellVolume:
         {
             weightedAverage =
-                gSum(filterField(mesh_.V()*field))/zone_.V();
+                gSum(filterField(mesh_.V().primitiveField()*field))
+               /zone_.V();
 
             break;
         }

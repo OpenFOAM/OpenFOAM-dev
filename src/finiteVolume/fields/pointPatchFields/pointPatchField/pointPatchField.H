@@ -446,9 +446,17 @@ public:
     // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
-
+        virtual void operator=(const Field<Type>&) {}
         virtual void operator=(const pointPatchField<Type>&) {}
         virtual void operator=(pointPatchField<Type>&&) {}
+
+        //- Assign to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        pointPatchField<Type>& operator=(const Expression& e)
+        {
+            return *this;
+        }
+
         virtual void operator+=(const pointPatchField<Type>&) {}
         virtual void operator-=(const pointPatchField<Type>&) {}
         virtual void operator*=(const pointPatchField<scalar>&) {}
@@ -473,6 +481,13 @@ public:
         virtual void operator==(const pointPatchField<Type>&) {}
         virtual void operator==(const Field<Type>&) {}
         virtual void operator==(const Type&) {}
+
+        //- Assign to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        pointPatchField<Type>& operator==(const Expression& e)
+        {
+            return *this;
+        }
 
 
     // Ostream operator
@@ -505,6 +520,7 @@ const pointPatchField<Type>& operator+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "pointPatchFieldFunctions.H"
+#include "pointPatchFieldExpression.H"
 
 #ifdef NoRepository
     #include "pointPatchField.C"

@@ -99,96 +99,27 @@ void sqr
 );
 
 template<class Type>
-tmp<Field<typename outerProduct<Type, Type>::type>>
-sqr(const Field<Type>& f);
-
-template<class Type>
-tmp<Field<typename outerProduct<Type, Type>::type>>
-sqr(const SubField<Type>& f);
-
-template<class Type>
-tmp<Field<typename outerProduct<Type, Type>::type>>
-sqr(const tmp<Field<Type>>& tf);
-
-
-template<class Type>
 void magSqr(Field<scalar>& res, const UList<Type>& f);
-
-template<class Type>
-tmp<Field<scalar>> magSqr(const Field<Type>& f);
-
-template<class Type>
-tmp<Field<scalar>> magSqr(const SubField<Type>& f);
-
-template<class Type>
-tmp<Field<scalar>> magSqr(const tmp<Field<Type>>& tf);
 
 
 template<class Type>
 void mag(Field<scalar>& res, const UList<Type>& f);
 
-template<class Type>
-tmp<Field<scalar>> mag(const Field<Type>& f);
-
-template<class Type>
-tmp<Field<scalar>> mag(const SubField<Type>& f);
-
-template<class Type>
-tmp<Field<scalar>> mag(const tmp<Field<Type>>& tf);
-
 
 template<class Type>
 void cmptMax(Field<typename Field<Type>::cmptType>& res, const UList<Type>& f);
-
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>> cmptMax(const Field<Type>& f);
-
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>> cmptMax(const SubField<Type>& f);
-
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>>
-cmptMax(const tmp<Field<Type>>& tf);
 
 
 template<class Type>
 void cmptMin(Field<typename Field<Type>::cmptType>& res, const UList<Type>& f);
 
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>> cmptMin(const Field<Type>& f);
-
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>> cmptMin(const SubField<Type>& f);
-
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>>
-cmptMin(const tmp<Field<Type>>& tf);
-
 
 template<class Type>
 void cmptAv(Field<typename Field<Type>::cmptType>& res, const UList<Type>& f);
 
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>> cmptAv(const Field<Type>& f);
-
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>> cmptAv(const SubField<Type>& f);
-
-template<class Type>
-tmp<Field<typename Field<Type>::cmptType>> cmptAv(const tmp<Field<Type>>& tf);
-
 
 template<class Type>
 void cmptMag(Field<Type>& res, const UList<Type>& f);
-
-template<class Type>
-tmp<Field<Type>> cmptMag(const Field<Type>& f);
-
-template<class Type>
-tmp<Field<Type>> cmptMag(const SubField<Type>& f);
-
-template<class Type>
-tmp<Field<Type>> cmptMag(const tmp<Field<Type>>& tf);
 
 
 BINARY_FUNCTION(Type, Type, Type, max)
@@ -228,42 +159,6 @@ void OpFunc                                                                    \
     const UList<Type2>& f2                                                     \
 );                                                                             \
                                                                                \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const Field<Type1>& f1, const Field<Type2>& f2);                   \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const Field<Type1>& f1, const SubField<Type2>& f2);                \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const SubField<Type1>& f1, const Field<Type2>& f2);                \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const SubField<Type1>& f1, const SubField<Type2>& f2);             \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const Field<Type1>& f1, const tmp<Field<Type2>>& tf2);             \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const SubField<Type1>& f1, const tmp<Field<Type2>>& tf2);          \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const tmp<Field<Type1>>& tf1, const Field<Type2>& f2);             \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const tmp<Field<Type1>>& tf1, const SubField<Type2>& f2);          \
-                                                                               \
-template<class Type1, class Type2>                                             \
-tmp<Field<typename product<Type1, Type2>::type>>                               \
-operator Op(const tmp<Field<Type1>>& tf1, const tmp<Field<Type2>>& tf2);       \
-                                                                               \
 template<class Type, class Form, class Cmpt, direction nCmpt>                  \
 void OpFunc                                                                    \
 (                                                                              \
@@ -272,37 +167,13 @@ void OpFunc                                                                    \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
 );                                                                             \
                                                                                \
-template<class Type, class Form, class Cmpt, direction nCmpt>                  \
-tmp<Field<typename product<Type, Form>::type>>                                 \
-operator Op(const Field<Type>& f1, const VectorSpace<Form,Cmpt,nCmpt>& vs);    \
-                                                                               \
-template<class Type, class Form, class Cmpt, direction nCmpt>                  \
-tmp<Field<typename product<Type, Form>::type>>                                 \
-operator Op(const SubField<Type>& f1, const VectorSpace<Form,Cmpt,nCmpt>& vs); \
-                                                                               \
-template<class Type, class Form, class Cmpt, direction nCmpt>                  \
-tmp<Field<typename product<Type, Form>::type>>                                 \
-operator Op(const tmp<Field<Type>>&tf1,const VectorSpace<Form,Cmpt,nCmpt>&vs); \
-                                                                               \
 template<class Form, class Cmpt, direction nCmpt, class Type>                  \
 void OpFunc                                                                    \
 (                                                                              \
     Field<typename product<Form, Type>::type>& res,                            \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
     const UList<Type>& f1                                                      \
-);                                                                             \
-                                                                               \
-template<class Form, class Cmpt, direction nCmpt, class Type>                  \
-tmp<Field<typename product<Form, Type>::type>>                                 \
-operator Op(const VectorSpace<Form,Cmpt,nCmpt>& vs, const Field<Type>& f1);    \
-                                                                               \
-template<class Form, class Cmpt, direction nCmpt, class Type>                  \
-tmp<Field<typename product<Form, Type>::type>>                                 \
-operator Op(const VectorSpace<Form,Cmpt,nCmpt>& vs, const SubField<Type>& f1); \
-                                                                               \
-template<class Form, class Cmpt, direction nCmpt, class Type>                  \
-tmp<Field<typename product<Form, Type>::type>>                                 \
-operator Op(const VectorSpace<Form,Cmpt,nCmpt>&vs,const tmp<Field<Type>>&tf1);
+);
 
 PRODUCT_OPERATOR(typeOfSum, +, add)
 PRODUCT_OPERATOR(typeOfSum, -, subtract)

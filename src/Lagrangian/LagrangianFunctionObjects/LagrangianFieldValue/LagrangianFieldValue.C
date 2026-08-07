@@ -428,7 +428,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
         case operationType::min:
             writeValueAndLocationValues
             (
-                weight*field,
+                eval(weight*field),
                 vGreat,
                 lessOp()
             );
@@ -436,7 +436,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
         case operationType::max:
             writeValueAndLocationValues
             (
-                weight*field,
+                eval(weight*field),
                 -vGreat,
                 greaterOp()
             );
@@ -444,7 +444,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
         case operationType::minMag:
             writeValueAndLocationValues
             (
-                mag(weight*field),
+                eval(mag(weight*field)),
                 vGreat,
                 lessOp()
             );
@@ -452,7 +452,7 @@ bool Foam::functionObjects::LagrangianFieldValue::writeFieldValue
         case operationType::maxMag:
             writeValueAndLocationValues
             (
-                mag(weight*field),
+                eval(mag(weight*field)),
                 -vGreat,
                 greaterOp()
             );

@@ -77,8 +77,8 @@ void Foam::fv::limitPressure::readCoeffs(const dictionary& dict)
             {
                 pLimits = true;
 
-                pMin = min(pMin, min(pbf[patchi]));
-                pMax = max(pMax, max(pbf[patchi]));
+                pMin = min(pMin, min(pbf[patchi].field()));
+                pMax = max(pMax, max(pbf[patchi].field()));
             }
         }
 

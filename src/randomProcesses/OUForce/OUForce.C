@@ -88,6 +88,8 @@ void Foam::fv::OUForce::addSup
     fvMatrix<vector>& eqn
 ) const
 {
+    const vectorField& K(K_);
+
     eqn += volVectorField::Internal
     (
         IOobject
@@ -102,8 +104,12 @@ void Foam::fv::OUForce::addSup
         (
             fft::reverseTransform
             (
-                (K_/(mag(K_) + 1.0e-6))
-              ^ forceGen_.newField(mesh().time().deltaTValue()), K_.nn()
+                eval
+                (
+                    (K/(mag(K) + 1.0e-6))
+                  ^ forceGen_.newField(mesh().time().deltaTValue())
+                ),
+                K_.nn()
             )
         )
     );

@@ -19,6 +19,13 @@ EXE_INC = -g \
     -fno-show-column -fno-diagnostics-show-caret \
 #};
 
+// For Clang
+// codeOptions
+// #{
+// EXE_INC = -g \
+//     -fno-show-column -fno-caret-diagnostics \
+// #};
+
 codeLibs
 #{
 LIB_LIBS = \

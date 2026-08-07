@@ -44,13 +44,13 @@ Foam::uniformJumpFvPatchField<Type>::uniformJumpFvPatchField
             Function1<Type>::New
             (
                 "jumpTable",
-                this->time().userUnits(),
+                time().userUnits(),
                 iF.dimensions(),
                 dict
             );
 
         this->jumpRef() =
-            Field<Type>(p.size(), jumpTable_->value(this->time().value()));
+            Field<Type>(p.size(), jumpTable_->value(time().value()));
     }
 
     this->evaluateNoUpdateCoeffs();
@@ -95,7 +95,7 @@ void Foam::uniformJumpFvPatchField<Type>::updateCoeffs()
 
     if (this->cyclicPatch().owner())
     {
-        this->jumpRef() = jumpTable_->value(this->time().value());
+        this->jumpRef() = jumpTable_->value(time().value());
     }
 
     fixedJumpFvPatchField<Type>::updateCoeffs();
@@ -112,8 +112,8 @@ void Foam::uniformJumpFvPatchField<Type>::write(Ostream& os) const
         writeEntry
         (
             os,
-            this->time().userUnits(),
-            this->internalField().dimensions(),
+            time().userUnits(),
+            internalField().dimensions(),
             jumpTable_()
         );
     }

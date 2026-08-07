@@ -175,7 +175,7 @@ void Foam::medialAxisMeshMover::smoothPatchNormals
             scalar resid = meshRefinement::gAverage
             (
                 isPatchMasterPoint,
-                mag(normals-average)()
+                eval(mag(normals - average))()
             );
             Info<< "    Iteration " << iter << "   residual " << resid << endl;
         }
@@ -261,7 +261,7 @@ void Foam::medialAxisMeshMover::smoothNormals
             scalar resid = meshRefinement::gAverage
             (
                 isMeshMasterPoint,
-                mag(normals-average)()
+                eval(mag(normals.primitiveField() - average))()
             );
             Info<< "    Iteration " << iter << "   residual " << resid << endl;
         }
@@ -989,7 +989,7 @@ void Foam::medialAxisMeshMover::minSmoothField
             scalar resid = meshRefinement::gAverage
             (
                 isPatchMasterPoint,
-                mag(field-average)()
+                eval(mag(field-average))()
             );
             Info<< "    Iteration " << iter << "   residual " << resid << endl;
         }
@@ -1505,7 +1505,7 @@ void Foam::medialAxisMeshMover::smoothLambdaMuDisplacement
             scalar resid = meshRefinement::gAverage
             (
                 isMeshMasterPoint,
-                mag(displacement-average)()
+                eval(mag(displacement - average))()
             );
             Info<< "    Iteration " << iter << "   residual " << resid << endl;
         }

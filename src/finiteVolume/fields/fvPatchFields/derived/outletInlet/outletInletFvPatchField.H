@@ -152,6 +152,9 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+
+
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
 

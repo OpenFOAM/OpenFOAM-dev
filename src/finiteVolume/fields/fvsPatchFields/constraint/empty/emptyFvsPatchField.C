@@ -54,7 +54,7 @@ Foam::emptyFvsPatchField<Type>::emptyFvsPatchField
         FatalIOErrorInFunction
         (
             dict
-        )   << "patch " << this->patch().index() << " not empty type. "
+        )   << "patch " << patch().index() << " not empty type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }
@@ -72,13 +72,13 @@ Foam::emptyFvsPatchField<Type>::emptyFvsPatchField
 :
     fvsPatchField<Type>(p, iF, Field<Type>(0))
 {
-    if (!isType<emptyFvPatch>(this->patch()))
+    if (!isType<emptyFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "Field type does not correspond to patch type for patch "
-            << this->patch().index() << "." << endl
+            << patch().index() << "." << endl
             << "Field type: " << typeName << endl
-            << "Patch type: " << this->patch().type()
+            << "Patch type: " << patch().type()
             << exit(FatalError);
     }
 }

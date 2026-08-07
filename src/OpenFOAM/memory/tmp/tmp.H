@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ See also
 
 #include "refCount.H"
 #include "word.H"
+#include "expressionExpressionable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -113,6 +114,10 @@ public:
 
         //- Construct copy transferring content of temporary if required
         inline tmp(const tmp<T>&, bool allowTransfer);
+
+        //- Construct from an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        inline tmp(const Expression& e);
 
 
     //- Destructor. Deletes temporary object when the reference count is 0.

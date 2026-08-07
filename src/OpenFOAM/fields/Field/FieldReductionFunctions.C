@@ -45,6 +45,19 @@ namespace Foam
         ReturnType res = Func(f);                                              \
         reduce(res, rFunc##Op(), Pstream::msgType(), comm);              \
         return res;                                                            \
+    }                                                                          \
+                                                                               \
+    template<class Type>                                                       \
+    ReturnType gFunc                                                           \
+    (                                                                          \
+        const tmp<Field<Type>>& tf,                                            \
+        const label comm                                                       \
+    )                                                                          \
+    {                                                                          \
+        ReturnType res = Func(tf());                                           \
+        tf.clear();                                                            \
+        reduce(res, rFunc##Op(), Pstream::msgType(), comm);              \
+        return res;                                                            \
     }
 
 #define TMP_REDUCTION_FUNCTION(ReturnType, Func)                               \

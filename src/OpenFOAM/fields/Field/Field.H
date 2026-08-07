@@ -45,6 +45,7 @@ SourceFiles
 #include "VectorSpace.H"
 #include "scalarList.H"
 #include "labelList.H"
+#include "expressionExpressionable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -198,6 +199,10 @@ public:
             const label size
         );
 
+        //- Construct from an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        Field(const Expression& e);
+
         //- Clone
         tmp<Field<Type>> clone() const;
 
@@ -301,6 +306,19 @@ public:
         //- Return the field transpose (only defined for second rank tensors)
         tmp<Field<Type>> T() const;
 
+        //- Append an element at the end of the Field
+        void append(const Type& t);
+
+        //- Append a Field at the end of the Field
+        void append(const Field<Type>& f);
+
+        //- Append a Field at the end of the Field
+        void append(const tmp<Field<Type>>& tf);
+
+        //- Append a Field evaluated from an expression at the end of this Field
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void append(const Expression& e);
+
 
     // Member Operators
 
@@ -314,6 +332,10 @@ public:
 
         template<class Form, class Cmpt, direction nCmpt>
         void operator=(const VectorSpace<Form,Cmpt,nCmpt>&);
+
+        //- Assign to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator=(const Expression& e);
 
         void operator+=(const UList<Type>&);
         void operator+=(const tmp<Field<Type>>&);
@@ -352,6 +374,7 @@ public:
 
 #include "FieldFunctions.H"
 #include "FieldReductionFunctions.H"
+#include "FieldExpression.H"
 #include "scalarField.H"
 
 #ifdef NoRepository

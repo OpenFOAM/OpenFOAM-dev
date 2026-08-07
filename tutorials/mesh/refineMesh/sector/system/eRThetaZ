@@ -28,19 +28,19 @@ codeWrite
     vectorIOField
     (
         IOobject("eR", mesh().time().name(), mesh()),
-        xy/mag(xy)
+        eval(xy/mag(xy))
     ).write();
 
     vectorIOField
     (
         IOobject("eTheta", mesh().time().name(), mesh()),
-        (zStar ^ xy)/mag(zStar ^ xy)
+        eval((zStar ^ xy)/mag(zStar ^ xy))
     ).write();
 
     vectorIOField
     (
         IOobject("eZ", mesh().time().name(), mesh()),
-        zStar/mag(zStar)
+        eval(zStar/mag(zStar))
     ).write();
 #};
 

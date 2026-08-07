@@ -149,6 +149,9 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+
+
         // Attributes
 
             //- Return true: this patch field is altered by assignment

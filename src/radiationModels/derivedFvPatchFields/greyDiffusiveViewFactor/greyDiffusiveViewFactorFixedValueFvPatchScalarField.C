@@ -135,16 +135,16 @@ void Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::updateCoeffs()
 
     if (debug)
     {
-        scalar Q = gSum((*this)*patch().magSf());
+        scalar Q = gSum((field())*patch().magSf());
 
         Info<< patch().mesh().name() << ':'
             << patch().name() << ':'
             << this->internalField().name() << " <- "
             << " heat transfer rate:" << Q
             << " wall radiative heat flux "
-            << " min:" << gMin(*this)
-            << " max:" << gMax(*this)
-            << " avg:" << gAverage(*this)
+            << " min:" << gMin(field())
+            << " max:" << gMax(field())
+            << " avg:" << gAverage(field())
             << endl;
     }
 

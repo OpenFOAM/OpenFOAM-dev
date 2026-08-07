@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,11 @@ public:
         transformDirection fftDirection
     );
 
+    static tmp<complexField> forwardTransform
+    (
+        const complexField& field,
+        const labelList& nn
+    );
 
     static tmp<complexField> forwardTransform
     (
@@ -75,6 +80,11 @@ public:
         const labelList& nn
     );
 
+    static tmp<complexField> reverseTransform
+    (
+        const complexField& field,
+        const labelList& nn
+    );
 
     static tmp<complexField> reverseTransform
     (
@@ -82,6 +92,11 @@ public:
         const labelList& nn
     );
 
+    static tmp<complexVectorField> forwardTransform
+    (
+        const complexVectorField& field,
+        const labelList& nn
+    );
 
     static tmp<complexVectorField> forwardTransform
     (
@@ -89,6 +104,11 @@ public:
         const labelList& nn
     );
 
+    static tmp<complexVectorField> reverseTransform
+    (
+        const complexVectorField& field,
+        const labelList& nn
+    );
 
     static tmp<complexVectorField> reverseTransform
     (

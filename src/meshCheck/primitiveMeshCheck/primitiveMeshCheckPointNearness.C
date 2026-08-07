@@ -39,7 +39,7 @@ bool Foam::meshCheck::checkPointNearness
     const pointField& points = mesh.points();
 
     // Sort points
-    SortableList<scalar> sortedMag(magSqr(points));
+    SortableList<scalar> sortedMag(eval(magSqr(points)));
 
     label nClose = 0;
 

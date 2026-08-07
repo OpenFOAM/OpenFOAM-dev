@@ -308,7 +308,7 @@ const Foam::scalarField& Foam::distributions::unintegrable::PDF() const
 
     const Pair<scalar> Phi01 = this->Phi01();
 
-    PDFPtr_.set((phi(this->q(), x())/(Phi01[1] - Phi01[0])).ptr());
+    PDFPtr_.set(eval(phi(this->q(), x())/(Phi01[1] - Phi01[0])).ptr());
 
     return PDFPtr_();
 }

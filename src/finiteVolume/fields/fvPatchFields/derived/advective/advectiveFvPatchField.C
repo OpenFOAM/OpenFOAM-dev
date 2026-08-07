@@ -57,7 +57,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     }
     else
     {
-        fvPatchField<Type>::operator=(this->patchInternalField());
+        fvPatchField<Type>::operator=(patchInternalField());
     }
 
     this->refValue() = *this;
@@ -70,9 +70,9 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
         {
             FatalIOErrorInFunction(dict)
                 << "unphysical lInf specified (lInf < 0)" << nl
-                << "    on patch " << this->patch().name()
-                << " of field " << this->internalField().name()
-                << " in file " << this->internalField().objectPath()
+                << "    on patch " << patch().name()
+                << " of field " << internalField().name()
+                << " in file " << internalField().objectPath()
                 << exit(FatalIOError);
         }
 
@@ -120,11 +120,11 @@ Foam::tmp<Foam::scalarField>
 Foam::advectiveFvPatchField<Type>::advectionSpeed() const
 {
     const surfaceScalarField& phi =
-        this->db().objectRegistry::template lookupObject<surfaceScalarField>
+        db().objectRegistry::template lookupObject<surfaceScalarField>
         (phiName_);
 
     const fvsPatchField<scalar>& phip =
-        this->patch().template lookupPatchField<surfaceScalarField, scalar>
+        patch().template lookupPatchField<surfaceScalarField, scalar>
         (
             phiName_
         );
@@ -132,16 +132,16 @@ Foam::advectiveFvPatchField<Type>::advectionSpeed() const
     if (phi.dimensions() == dimensions::massFlux)
     {
         const fvPatchScalarField& rhop =
-            this->patch().template lookupPatchField<volScalarField, scalar>
+            patch().template lookupPatchField<volScalarField, scalar>
             (
                 rhoName_
             );
 
-        return phip/(rhop*this->patch().magSf());
+        return phip/(rhop*patch().magSf());
     }
     else
     {
-        return phip/this->patch().magSf();
+        return phip/patch().magSf();
     }
 }
 
@@ -154,19 +154,19 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = this->internalField().mesh();
+    const fvMesh& mesh = internalField().mesh();
 
     word ddtScheme
     (
-        mesh.schemes().ddt(this->internalField().name())
+        mesh.schemes().ddt(internalField().name())
     );
-    scalar deltaT = this->time().deltaTValue();
+    scalar deltaT = time().deltaTValue();
 
     const VolField<Type>& field =
-        this->db().objectRegistry::template
+        db().objectRegistry::template
         lookupObject<VolField<Type>>
         (
-            this->internalField().name()
+            internalField().name()
         );
 
     // Calculate the advection speed of the field wave
@@ -174,9 +174,9 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
     const scalarField w(Foam::max(advectionSpeed(), scalar(0)));
 
     // Calculate the field wave coefficient alpha (See notes)
-    const scalarField alpha(w*deltaT*this->patch().deltaCoeffs());
+    const scalarField alpha(w*deltaT*patch().deltaCoeffs());
 
-    label patchi = this->patch().index();
+    label patchi = patch().index();
 
     // Non-reflecting outflow boundary
     // If lInf_ defined setup relaxation to the value fieldInf_.
@@ -220,7 +220,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
             // Calculate the field wave coefficient alpha (See notes)
             const scalarField alpha
             (
-                w*this->patch().deltaCoeffs()/rDeltaT.boundaryField()[patchi]
+                w*patch().deltaCoeffs()/rDeltaT.boundaryField()[patchi]
             );
 
             // Calculate the field relaxation coefficient k (See notes)
@@ -237,9 +237,9 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         {
             FatalErrorInFunction
                 << ddtScheme << nl
-                << "    on patch " << this->patch().name()
-                << " of field " << this->internalField().name()
-                << " in file " << this->internalField().objectPath()
+                << "    on patch " << patch().name()
+                << " of field " << internalField().name()
+                << " in file " << internalField().objectPath()
                 << exit(FatalError);
         }
     }
@@ -276,7 +276,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
             // Calculate the field wave coefficient alpha (See notes)
             const scalarField alpha
             (
-                w*this->patch().deltaCoeffs()/rDeltaT.boundaryField()[patchi]
+                w*patch().deltaCoeffs()/rDeltaT.boundaryField()[patchi]
             );
 
             this->refValue() = field.oldTime().boundaryField()[patchi];
@@ -287,9 +287,9 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         {
             FatalErrorInFunction
                 << ddtScheme
-                << "\n    on patch " << this->patch().name()
-                << " of field " << this->internalField().name()
-                << " in file " << this->internalField().objectPath()
+                << "\n    on patch " << patch().name()
+                << " of field " << internalField().name()
+                << " in file " << internalField().objectPath()
                 << exit(FatalError);
         }
     }

@@ -105,7 +105,7 @@ void Foam::functionalFixedValueFvPatchField<Type>::map
     }
     else
     {
-        this->setSize(this->patch().size());
+        this->setSize(patch().size());
     }
 
     dimensionedValue_.map(!mapper.direct());
@@ -118,7 +118,7 @@ void Foam::functionalFixedValueFvPatchField<Type>::reset
     const fvPatchField<Type>& ptf
 )
 {
-    this->setSize(this->patch().size());
+    this->setSize(patch().size());
     dimensionedValue_.reset();
 }
 

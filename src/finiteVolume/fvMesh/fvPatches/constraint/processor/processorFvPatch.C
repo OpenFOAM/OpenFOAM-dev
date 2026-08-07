@@ -90,8 +90,11 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
                 coupledFvPatch::delta()
               - transform().transform
                 (
-                    processorPoly_.neighbFaceCentres()
-                  - processorPoly_.neighbFaceCellCentres()
+                    eval
+                    (
+                        processorPoly_.neighbFaceCentres()
+                      - processorPoly_.neighbFaceCellCentres()
+                    )
                 );
         }
     }

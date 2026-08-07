@@ -92,15 +92,15 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 
     // If the value is not supplied set to the internal field
     if (!dict.found("value"))
     {
-        fvPatchField<Type>::operator=(this->patchInternalField());
+        fvPatchField<Type>::operator=(patchInternalField());
     }
 }
 
@@ -123,13 +123,13 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
     scalarSendBuf_(0),
     scalarReceiveBuf_(0)
 {
-    if (!isA<processorFvPatch>(this->patch()))
+    if (!isA<processorFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
     if (debug && !ptf.ready())
@@ -201,7 +201,7 @@ void Foam::processorFvPatchField<Type>::initEvaluate
 {
     if (Pstream::parRun())
     {
-        this->patchInternalField(sendBuf_);
+        patchInternalField(sendBuf_);
 
         if
         (
@@ -285,7 +285,7 @@ Foam::processorFvPatchField<Type>::snGrad
     const scalarField& deltaCoeffs
 ) const
 {
-    return deltaCoeffs*(*this - this->patchInternalField());
+    return deltaCoeffs*(field() - patchInternalField());
 }
 
 
@@ -299,7 +299,7 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
     const Pstream::commsTypes commsType
 ) const
 {
-    this->patch().patchInternalField(psiInternal, scalarSendBuf_);
+    patch().patchInternalField(psiInternal, scalarSendBuf_);
 
     if
     (
@@ -364,7 +364,7 @@ void Foam::processorFvPatchField<Type>::updateInterfaceMatrix
         return;
     }
 
-    const labelUList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = patch().faceCells();
 
     if
     (
@@ -426,7 +426,7 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
     const Pstream::commsTypes commsType
 ) const
 {
-    this->patch().patchInternalField(psiInternal, sendBuf_);
+    patch().patchInternalField(psiInternal, sendBuf_);
 
     if
     (
@@ -490,7 +490,7 @@ void Foam::processorFvPatchField<Type>::updateInterfaceMatrix
         return;
     }
 
-    const labelUList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = patch().faceCells();
 
     if
     (

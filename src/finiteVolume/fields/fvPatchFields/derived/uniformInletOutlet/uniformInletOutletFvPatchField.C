@@ -43,13 +43,13 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
         Function1<Type>::New
         (
             "uniformInletValue",
-            this->time().userUnits(),
+            time().userUnits(),
             iF.dimensions(),
             dict
         )
     )
 {
-    this->refValue() = uniformInletValue_->value(this->time().value());
+    this->refValue() = uniformInletValue_->value(time().value());
 
     if (dict.found("value"))
     {
@@ -82,7 +82,7 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     uniformInletValue_(ptf.uniformInletValue_, false)
 {
     // Evaluate refValue since not mapped
-    this->refValue() = uniformInletValue_->value(this->time().value());
+    this->refValue() = uniformInletValue_->value(time().value());
 
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
@@ -117,10 +117,10 @@ void Foam::uniformInletOutletFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    this->refValue() = uniformInletValue_->value(this->time().value());
+    this->refValue() = uniformInletValue_->value(time().value());
 
     const Field<scalar>& phip =
-        this->patch().template lookupPatchField<surfaceScalarField, scalar>
+        patch().template lookupPatchField<surfaceScalarField, scalar>
         (
             phiName_
         );
@@ -142,8 +142,8 @@ void Foam::uniformInletOutletFvPatchField<Type>::write(Ostream& os) const
     writeEntry
     (
         os,
-        this->time().userUnits(),
-        this->internalField().dimensions(),
+        time().userUnits(),
+        internalField().dimensions(),
         uniformInletValue_()
     );
     writeEntry(os, "value", *this);
@@ -162,7 +162,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::map
     mixedFvPatchField<Type>::map(ptf, mapper);
 
     // Override
-    this->refValue() = uniformInletValue_->value(this->time().value());
+    this->refValue() = uniformInletValue_->value(time().value());
 }
 
 
@@ -175,7 +175,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::reset
     mixedFvPatchField<Type>::reset(ptf);
 
     // Override
-    this->refValue() = uniformInletValue_->value(this->time().value());
+    this->refValue() = uniformInletValue_->value(time().value());
 }
 
 

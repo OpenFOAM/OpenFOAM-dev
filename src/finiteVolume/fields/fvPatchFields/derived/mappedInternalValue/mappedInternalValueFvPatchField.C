@@ -38,15 +38,15 @@ Foam::mappedInternalValueFvPatchField<Type>::mapper() const
         return mapperPtr_();
     }
 
-    if (isA<mappedInternalPatchBase>(this->patch().poly()))
+    if (isA<mappedInternalPatchBase>(patch().poly()))
     {
-        return refCast<const mappedInternalPatchBase>(this->patch().poly());
+        return refCast<const mappedInternalPatchBase>(patch().poly());
     }
 
     FatalErrorInFunction
-        << "Field " << this->internalField().name() << " on patch "
-        << this->patch().name() << " in file "
-        << this->internalField().objectPath()
+        << "Field " << internalField().name() << " on patch "
+        << patch().name() << " in file "
+        << internalField().objectPath()
         << " has neither a mapper specified nor is the patch of "
         << mappedInternalPatchBase::typeName << " type"
         << exit(FatalError);
@@ -184,8 +184,8 @@ void Foam::mappedInternalValueFvPatchField<Type>::updateCoeffs()
 
     const VolField<Type>& nbrField =
         this->mapper().sameRegion()
-     && this->fieldName_ == this->internalField().name()
-      ? refCast<const VolField<Type>>(this->internalField())
+     && this->fieldName_ == internalField().name()
+      ? refCast<const VolField<Type>>(internalField())
       : nbrMesh.template lookupObject<VolField<Type>>(this->fieldName_);
 
     // Construct mapped values
@@ -243,8 +243,8 @@ void Foam::mappedInternalValueFvPatchField<Type>::updateCoeffs()
     if (setAverage_)
     {
         const Type sampleAverageValue =
-            gSum(this->patch().magSf()*sampleValues)
-           /gSum(this->patch().magSf());
+            gSum(patch().magSf()*sampleValues)
+           /gSum(patch().magSf());
 
         if (mag(sampleAverageValue)/mag(average_) > 0.5)
         {
@@ -275,7 +275,7 @@ void Foam::mappedInternalValueFvPatchField<Type>::write(Ostream& os) const
     (
         os,
         "field",
-        this->internalField().name(),
+        internalField().name(),
         fieldName_
     );
 

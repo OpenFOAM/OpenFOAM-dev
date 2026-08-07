@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,26 +46,31 @@ Foam::turbGen::turbGen(const Kmesh& k, const scalar EA, const scalar K0)
 
 Foam::vectorField Foam::turbGen::U()
 {
-    vectorField s(K_.size());
-    scalarField rndPhases(K_.size());
+    const vectorField& K(K_);
 
-    forAll(K_, i)
+    vectorField s(K.size());
+    scalarField rndPhases(K.size());
+
+    forAll(K, i)
     {
         s[i] = rndGen_.sample01<vector>();
         rndPhases[i] = rndGen_.scalar01();
     }
 
-    s = K_ ^ s;
+    s = K ^ s;
     s = s/(mag(s) + 1.0e-20);
 
-    s = Ek(Ea_, k0_, mag(K_))*s;
+    s = Ek(Ea_, k0_, mag(K))*s;
 
     complexVectorField up
     (
         fft::reverseTransform
         (
-            ComplexField(cos(constant::mathematical::twoPi*rndPhases)*s,
-            sin(constant::mathematical::twoPi*rndPhases)*s),
+            ComplexField
+            (
+                eval(cos(constant::mathematical::twoPi*rndPhases)*s),
+                eval(sin(constant::mathematical::twoPi*rndPhases)*s)
+            ),
             K_.nn()
         )
     );

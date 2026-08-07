@@ -61,8 +61,8 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 
@@ -100,13 +100,13 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
     processorFvPatchField<Type>(ptf, p, iF, mapper),
     procPatch_(refCast<const processorCyclicFvPatch>(p))
 {
-    if (!isA<processorCyclicFvPatch>(this->patch()))
+    if (!isA<processorCyclicFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 }

@@ -124,7 +124,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     (
         mapper.fromNeighbour
         (
-            ttm.DEff(Yi, nbrPatch.index())*nbrPatch.deltaCoeffs()
+            eval(ttm.DEff(Yi, nbrPatch.index())*nbrPatch.deltaCoeffs())
         )
     );
 

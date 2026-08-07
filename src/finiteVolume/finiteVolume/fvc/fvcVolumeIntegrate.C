@@ -46,7 +46,7 @@ volumeIntegrate
     const VolField<Type>& vf
 )
 {
-    return vf.mesh().V()*vf.primitiveField();
+    return vf.mesh().V().primitiveField()*vf.primitiveField();
 }
 
 
@@ -57,7 +57,10 @@ volumeIntegrate
     const tmp<VolField<Type>>& tvf
 )
 {
-    tmp<Field<Type>> tvivf = tvf().mesh().V()*tvf().primitiveField();
+    tmp<Field<Type>> tvivf
+    (
+        tvf().mesh().V().primitiveField()*tvf().primitiveField()
+    );
     tvf.clear();
     return tvivf;
 }
@@ -66,7 +69,7 @@ volumeIntegrate
 template<class Type>
 tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, fvMesh>& df)
 {
-    return df.mesh().V()*df.primitiveField();
+    return df.mesh().V().primitiveField()*df.primitiveField();
 }
 
 
@@ -74,7 +77,10 @@ template<class Type>
 tmp<Field<Type>>
 volumeIntegrate(const tmp<DimensionedField<Type, fvMesh>>& tdf)
 {
-    tmp<Field<Type>> tdidf = tdf().mesh().V()*tdf().primitiveField();
+    tmp<Field<Type>> tdidf
+    (
+        tdf().mesh().V().primitiveField()*tdf().primitiveField()
+    );
     tdf.clear();
     return tdidf;
 }

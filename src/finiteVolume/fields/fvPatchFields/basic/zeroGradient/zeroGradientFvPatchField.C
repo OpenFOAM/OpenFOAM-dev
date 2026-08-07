@@ -49,7 +49,7 @@ Foam::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 :
     fvPatchField<Type>(p, iF, dict, false)
 {
-    fvPatchField<Type>::operator=(this->patchInternalField());
+    fvPatchField<Type>::operator=(patchInternalField());
 }
 
 
@@ -64,7 +64,7 @@ Foam::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 :
     fvPatchField<Type>(ptf, p, iF, mapper, false)
 {
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+    mapper(*this, ptf, [&](){ return patchInternalField(); });
 }
 
 
@@ -88,7 +88,7 @@ void Foam::zeroGradientFvPatchField<Type>::map
     const fieldMapper& mapper
 )
 {
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+    mapper(*this, ptf, [&](){ return patchInternalField(); });
 }
 
 
@@ -100,7 +100,7 @@ void Foam::zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
         this->updateCoeffs();
     }
 
-    fvPatchField<Type>::operator==(this->patchInternalField());
+    fvPatchField<Type>::operator==(patchInternalField());
     fvPatchField<Type>::evaluate();
 }
 

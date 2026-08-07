@@ -118,13 +118,13 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::partialSlipFvPatchField<Type>::snGrad() const
 {
-    tmp<vectorField> nHat = this->patch().nf();
-    const Field<Type> pif(this->patchInternalField());
+    tmp<vectorField> nHat = patch().nf();
+    const Field<Type> pif(patchInternalField());
 
     return
     (
         (1.0 - valueFraction_)*transform(I - sqr(nHat), pif) - pif
-    )*this->patch().deltaCoeffs();
+    )*patch().deltaCoeffs();
 }
 
 
@@ -139,12 +139,12 @@ void Foam::partialSlipFvPatchField<Type>::evaluate
         this->updateCoeffs();
     }
 
-    tmp<vectorField> nHat = this->patch().nf();
+    tmp<vectorField> nHat = patch().nf();
 
     Field<Type>::operator=
     (
         (1.0 - valueFraction_)
-       *transform(I - sqr(nHat), this->patchInternalField())
+       *transform(I - sqr(nHat), patchInternalField())
     );
 
     transformFvPatchField<Type>::evaluate();
@@ -155,7 +155,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::partialSlipFvPatchField<Type>::snGradTransformDiag() const
 {
-    const vectorField nHat(this->patch().nf());
+    const vectorField nHat(patch().nf());
     vectorField diag(nHat.size());
 
     diag.replace(vector::X, mag(nHat.component(vector::X)));

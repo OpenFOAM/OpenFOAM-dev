@@ -107,7 +107,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::fixedValueFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    return -pTraits<Type>::one*this->patch().deltaCoeffs();
+    return -pTraits<Type>::one*patch().deltaCoeffs();
 }
 
 
@@ -115,7 +115,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::fixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
-    return this->patch().deltaCoeffs()*(*this);
+    return patch().deltaCoeffs()*field();
 }
 
 

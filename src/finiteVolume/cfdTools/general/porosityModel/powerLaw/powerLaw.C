@@ -85,7 +85,7 @@ void Foam::porosityModels::powerLaw::calcForce
 
     apply(Udiag, V, rho, U);
 
-    force = Udiag*U;
+    force = Udiag*U.primitiveField();
 }
 
 

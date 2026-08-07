@@ -144,7 +144,7 @@ public:
         // Evaluation functions
 
             //- Return the flux
-            const tmp<scalarField> phip() const;
+            tmp<scalarField> phip() const;
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

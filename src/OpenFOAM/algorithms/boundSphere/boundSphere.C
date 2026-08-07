@@ -632,4 +632,3 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const boundSphere& s)
 
 
 // ************************************************************************* //
-

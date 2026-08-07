@@ -60,8 +60,8 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
         )   << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 
@@ -82,13 +82,13 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
     cyclicLduInterfaceField(),
     cyclicPatch_(refCast<const cyclicFvPatch>(p))
 {
-    if (!isA<cyclicFvPatch>(this->patch()))
+    if (!isA<cyclicFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -116,7 +116,7 @@ Foam::cyclicFvPatchField<Type>::patchNeighbourField
     const Pstream::commsTypes
 ) const
 {
-    const Field<Type>& iField = this->primitiveField();
+    const Field<Type>& iField = primitiveField();
     const labelUList& nbrFaceCells =
         cyclicPatch().nbrPatch().faceCells();
 
@@ -137,10 +137,7 @@ const Foam::cyclicFvPatchField<Type>&
 Foam::cyclicFvPatchField<Type>::nbrPatchField() const
 {
     const VolField<Type>& fld =
-    static_cast<const VolField<Type>&>
-    (
-        this->primitiveField()
-    );
+        static_cast<const VolField<Type>&>(primitiveField());
 
     return refCast<const cyclicFvPatchField<Type>>
     (

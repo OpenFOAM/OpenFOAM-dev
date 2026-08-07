@@ -101,7 +101,11 @@ void Foam::wallCellWallFunctionFvPatchScalarField::initMaster()
             UIndirectList<bool>
             (
                 bFaceIsWall,
-                vf.mesh().polyFacesBf()[patchi] - vf.mesh().nInternalFaces()
+                eval
+                (
+                    vf.mesh().polyFacesBf()[patchi]
+                  - vf.mesh().nInternalFaces()
+                )
             ) = true;
         }
     }
@@ -143,7 +147,7 @@ void Foam::wallCellWallFunctionFvPatchScalarField::initMaster()
     );
     wallCellFractionPtr_.reset
     (
-        max((tWallCellFraction - tol_)/(1 - tol_), scalar(0)).ptr()
+        eval(max((tWallCellFraction - tol_)/(1 - tol_), scalar(0))).ptr()
     );
 }
 

@@ -112,7 +112,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     scalar volFlowRate = 0;
     if (phip.internalField().dimensions() == dimensions::volumetricFlux)
     {
-        volFlowRate = sign*gSum(phip);
+        volFlowRate = sign*gSum(phip.field());
     }
     else if
     (

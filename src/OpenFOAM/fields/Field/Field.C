@@ -28,6 +28,7 @@ License
 #include "units.H"
 #include "dictionary.H"
 #include "contiguous.H"
+#include "expressionAssert.H"
 
 // * * * * * * * * * * * * * * * Static Members  * * * * * * * * * * * * * * //
 
@@ -257,6 +258,25 @@ Foam::Field<Type>::Field
         // Modify the values by the unit conversion
         units.makeStandard(*this);
     }
+}
+
+
+template<class Type>
+template<class Expression, class>
+Foam::Field<Type>::Field(const Expression& e)
+:
+    List<Type>(expression::getAll<expression::Size>(e))
+{
+    #ifdef FULLDEBUG
+    expression::assertSameAllContainerProperty<expression::Size>(e);
+    #endif
+
+    std::copy
+    (
+        expression::beginNew<Type, false>(e),
+        expression::endNew<Type, false>(e),
+        this->begin()
+    );
 }
 
 
@@ -551,6 +571,50 @@ Foam::tmp<Foam::Field<Type>> Foam::Field<Type>::T() const
 }
 
 
+template<class Type>
+void Foam::Field<Type>::append(const Type& t)
+{
+    List<Type>::append(t);
+}
+
+template<class Type>
+void Foam::Field<Type>::append(const Field<Type>& f)
+{
+    List<Type>::append(f);
+}
+
+template<class Type>
+void Foam::Field<Type>::append(const tmp<Field<Type>>& tf)
+{
+    List<Type>::append(tf);
+    tf.clear();
+}
+
+template<class Type>
+template<class Expression, class>
+void Foam::Field<Type>::append(const Expression& e)
+{
+    // Error if any field in the expression is a different size
+    #ifdef FULLDEBUG
+    expression::assertSameAllContainerProperty<expression::Size>(e);
+    #endif
+
+    // If expression contains this
+    {
+        append(eval(e));
+    }
+    // else
+    // {
+    //     const label s = this->size();
+
+    //     // Resize the field to that of the first field in the expression
+    //     List<Type>::resize(s + expression::getAll<expression::Size>(e));
+
+    //     std::copy(expression::begin(e), expression::end(e), this->begin()+s);
+    // }
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
@@ -628,6 +692,22 @@ template<class Form, class Cmpt, Foam::direction nCmpt>
 void Foam::Field<Type>::operator=(const VectorSpace<Form,Cmpt,nCmpt>& vs)
 {
     TFOR_ALL_F_OP_S(Type, *this, =, VSType, vs)
+}
+
+
+template<class Type>
+template<class Expression, class>
+void Foam::Field<Type>::operator=(const Expression& e)
+{
+    // Error if any field in the expression is a different size
+    #ifdef FULLDEBUG
+    expression::assertSameAllContainerProperty<expression::Size>(e);
+    #endif
+
+    // Resize the field to that of the first field in the expression
+    List<Type>::resize(expression::getAll<expression::Size>(e));
+
+    std::copy(expression::begin(e), expression::end(e), this->begin());
 }
 
 

@@ -155,6 +155,9 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+
+
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField

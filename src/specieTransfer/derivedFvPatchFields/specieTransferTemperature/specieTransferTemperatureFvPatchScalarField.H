@@ -149,7 +149,7 @@ public:
         // Evaluation functions
 
             //- Return the flux of energy
-            const tmp<scalarField> phiHep() const;
+            tmp<scalarField> phiHep() const;
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

@@ -715,7 +715,8 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::weightedAverage
         (
             this->name() + ".weightedAverage(weights)",
             this->dimensions(),
-            gSum(weightField*primitiveField())/gSum(weightField)
+            gSum(weightField.primitiveField()*primitiveField())
+           /gSum(weightField.primitiveField())
         )
     );
 }

@@ -35,11 +35,9 @@ SourceFiles
 #ifndef tensorField_H
 #define tensorField_H
 
-#include "scalarField.H"
-#include "vectorField.H"
-#include "sphericalTensorField.H"
-#include "symmTensorField.H"
+#include "Field.H"
 #include "tensor.H"
+#include "tensorExpressions.H"
 
 #define TEMPLATE
 #include "FieldFunctionsM.H"
@@ -63,12 +61,37 @@ UNARY_FUNCTION(tensor, tensor, dev2)
 UNARY_FUNCTION(scalar, tensor, det)
 UNARY_FUNCTION(tensor, tensor, cof)
 UNARY_FUNCTION(tensor, tensor, inv)
+
+void inv
+(
+    Field<tensor>& tf,
+    const UList<tensor>& tf1,
+    const Vector<label>& solutionD
+);
+
+tmp<tensorField> inv
+(
+    const Field<tensor>& tf,
+    const Vector<label>& solutionD
+);
+
+tmp<tensorField> inv
+(
+    const SubField<tensor>& tf,
+    const Vector<label>& solutionD
+);
+
+tmp<tensorField> inv
+(
+    const tmp<tensorField>& tf,
+    const Vector<label>& solutionD
+);
+
 UNARY_FUNCTION(vector, tensor, eigenValues)
 UNARY_FUNCTION(tensor, tensor, eigenVectors)
 
 UNARY_FUNCTION(vector, symmTensor, eigenValues)
 UNARY_FUNCTION(tensor, symmTensor, eigenVectors)
-
 
 // * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
 

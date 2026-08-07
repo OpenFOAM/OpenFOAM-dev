@@ -532,8 +532,11 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
 
     // Sum all regions
-    const scalarField alphaVol(alpha.primitiveField()*mesh_.V());
-    Map<scalar> allRegionVolume(regionSum(regions, mesh_.V()));
+    const scalarField alphaVol
+    (
+        alpha.primitiveField()*mesh_.V().primitiveField()
+    );
+    Map<scalar> allRegionVolume(regionSum(regions, mesh_.V().primitiveField()));
     Map<scalar> allRegionAlphaVolume(regionSum(regions, alphaVol));
     Map<label> allRegionNumCells
     (
@@ -769,7 +772,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
                     generateFields                                          \
                     (                                                       \
                         fields_[fieldi],                                    \
-                        (alphaVol*field)(),                                 \
+                        eval(alphaVol*field.primitiveField())(),            \
                         regions,                                            \
                         sortedRegions,                                      \
                         1.0/sortedVols,                                     \

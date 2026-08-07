@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,14 +49,14 @@ void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs
     const scalarField lambda
     (
         thermo.planeStress()
-      ? nu*E/((1 + nu)*(1 - nu))
-      : nu*E/((1 + nu)*(1 - 2*nu))
+      ? eval(nu*E/((1 + nu)*(1 - nu)))
+      : eval(nu*E/((1 + nu)*(1 - 2*nu)))
     );
     const scalarField threeK
     (
         thermo.planeStress()
-      ? E/(1 - nu)
-      : E/(1 - 2*nu)
+      ? eval(E/(1 - nu))
+      : eval(E/(1 - 2*nu))
     );
 
     const scalarField twoMuLambda(2*mu + lambda);

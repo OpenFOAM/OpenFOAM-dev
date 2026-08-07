@@ -188,7 +188,7 @@ void Foam::porosityModels::fixedCoeff::calcForce
 
     apply(Udiag, Usource, V, U, rhoRef_);
 
-    force = Udiag*U - Usource;
+    force = Udiag*U.primitiveField() - Usource;
 }
 
 

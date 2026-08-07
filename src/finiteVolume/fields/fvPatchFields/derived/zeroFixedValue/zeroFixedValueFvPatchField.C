@@ -91,7 +91,7 @@ void Foam::zeroFixedValueFvPatchField<Type>::map
     const fieldMapper& mapper
 )
 {
-    this->resize(this->patch().size(), Zero);
+    this->resize(patch().size(), Zero);
 }
 
 

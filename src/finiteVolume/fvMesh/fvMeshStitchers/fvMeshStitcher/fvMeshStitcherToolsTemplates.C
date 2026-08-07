@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,9 @@ Foam::fvMeshStitcherTools::conformedNcBoundaryField
         ncFieldb[origPatchi] +=
             fvMeshStitcherTools::fieldRMapSum
             (
-                isFluxField ? fieldb[ncPatchi] : ncNcMagSf*fieldb[ncPatchi],
+                isFluxField
+              ? fieldb[ncPatchi]
+              : eval(ncNcMagSf*fieldb[ncPatchi]),
                 origFvp.size(),
                 ncFvp.polyFaces(),
                 origFvp.start()
@@ -332,7 +334,7 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
             (
                 fvMeshStitcherTools::fieldMap
                 (
-                    magSfb[origPatchi] + origNcMagSfb[origPatchi],
+                    eval(magSfb[origPatchi] + origNcMagSfb[origPatchi]),
                     ncFvp.polyFaces(),
                     origFvp.start()
                 )

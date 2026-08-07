@@ -43,7 +43,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::setWallDist()
 
         const patchPatchDist pwd(patch().poly(), otherPatchIDs);
 
-        y_ = pwd/gMax(pwd);
+        y_ = scalarField(pwd)/gMax(pwd);
     }
 
     area_ = gSum(patch().magSf());
@@ -79,7 +79,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
       *flowRate_->value(time().value())
       /gSum(alpha*rho*profile*patch().magSf());
 
-    operator==(- avgU*profile*patch().nf());
+    operator==(-avgU*profile*patch().nf());
 }
 
 

@@ -37,6 +37,7 @@ SourceFiles
 
 #include "Field.H"
 #include "scalar.H"
+#include "scalarExpressions.H"
 
 #define TEMPLATE
 #include "FieldFunctionsM.H"
@@ -69,12 +70,6 @@ void scalarField::replace(const direction, const scalar& s);
 
 
 void stabilise(scalarField& Res, const UList<scalar>& sf, const scalar s);
-
-tmp<scalarField> stabilise(const Field<scalar>&, const scalar s);
-
-tmp<scalarField> stabilise(const SubField<scalar>&, const scalar s);
-
-tmp<scalarField> stabilise(const tmp<scalarField>&, const scalar s);
 
 
 tmp<scalarField> linearSequence
@@ -154,9 +149,7 @@ UNARY_FUNCTION(scalar, scalar, y0)
 UNARY_FUNCTION(scalar, scalar, y1)
 
 #define BesselFunc(func)                                            \
-void func(scalarField& Res, const int n, const UList<scalar>& sf);  \
-tmp<scalarField> func(const int n, const UList<scalar>&);           \
-tmp<scalarField> func(const int n, const tmp<scalarField>&);
+void func(scalarField& Res, const int n, const UList<scalar>& sf);
 
 BesselFunc(jn)
 BesselFunc(yn)

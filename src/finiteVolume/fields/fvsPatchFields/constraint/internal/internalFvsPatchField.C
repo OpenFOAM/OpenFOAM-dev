@@ -59,7 +59,7 @@ Foam::internalFvsPatchField<Type>::internalFvsPatchField
         FatalIOErrorInFunction
         (
             dict
-        )   << "patch " << this->patch().index() << " not internal type. "
+        )   << "patch " << patch().index() << " not internal type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }
@@ -77,13 +77,13 @@ Foam::internalFvsPatchField<Type>::internalFvsPatchField
 :
     fvsPatchField<Type>(ptf, p, iF, mapper)
 {
-    if (!isType<internalFvPatch>(this->patch()))
+    if (!isType<internalFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "Field type does not correspond to patch type for patch "
-            << this->patch().index() << "." << endl
+            << patch().index() << "." << endl
             << "Field type: " << typeName << endl
-            << "Patch type: " << this->patch().type()
+            << "Patch type: " << patch().type()
             << exit(FatalError);
     }
 }

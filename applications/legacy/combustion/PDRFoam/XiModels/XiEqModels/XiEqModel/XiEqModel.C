@@ -106,7 +106,8 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
         )
     );
     volScalarField& N = tN.ref();
-    N.primitiveFieldRef() = Nv.primitiveField()*pow(mesh.V(), 2.0/3.0);
+    N.primitiveFieldRef() =
+        Nv.primitiveField()*pow(mesh.V().primitiveField(), 2.0/3.0);
 
     volSymmTensorField ns
     (
@@ -126,7 +127,8 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
             Zero
         )
     );
-    ns.primitiveFieldRef() = nsv.primitiveField()*pow(mesh.V(), 2.0/3.0);
+    ns.primitiveFieldRef() =
+        nsv.primitiveField()*pow(mesh.V().primitiveField(), 2.0/3.0);
 
     const volVectorField Uhat
     (
@@ -137,12 +139,24 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
 
     const scalarField cellWidth(pow(mesh.V(), 1.0/3.0));
 
-    const scalarField upLocal(uPrimeCoef*sqrt((U & CT & U)*cellWidth));
+    const scalarField upLocal
+    (
+        uPrimeCoef
+       *sqrt
+        (
+            (U.primitiveField() & CT.primitiveField() & U.primitiveField())
+           *cellWidth
+        )
+    );
 
-    const scalarField deltaUp(upLocal*(max(scalar(1), pow(nr, 0.5)) - 1.0));
+    const scalarField deltaUp
+    (
+        upLocal*(max(scalar(1), pow(nr.primitiveField(), 0.5)) - 1.0)
+    );
 
     // Re use tN
-    N.primitiveFieldRef() = upLocal*(max(scalar(1), pow(nr, 0.5)) - 1.0);
+    N.primitiveFieldRef() =
+        upLocal*(max(scalar(1), pow(nr.primitiveField(), 0.5)) - 1.0);
 
     return tN;
 }

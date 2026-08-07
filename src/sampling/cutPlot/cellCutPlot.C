@@ -1001,7 +1001,8 @@ Foam::tmp<Foam::scalarField> Foam::cellCutPlot::calcCutXs
     for (label iteri = 0; iteri < nIter + debug; ++ iteri)
     {
         // Determine the count of faces that contribute to each interval
-        const List<weight> weights =
+        const List<weight> weights
+        (
             calcWeights
             (
                 mesh,
@@ -1013,10 +1014,17 @@ Foam::tmp<Foam::scalarField> Foam::cellCutPlot::calcCutXs
                 cutXs,
                 interpolate,
                 false
-            );
+            )
+        );
+
         const scalarField intervalCounts
         (
-            cutPlot::applyWeights(nIntervals, weights, (1/mesh.cellVolumes())())
+            cutPlot::applyWeights
+            (
+                nIntervals,
+                weights,
+                eval(1/mesh.cellVolumes())()
+            )
         );
 
         if (debug)

@@ -140,7 +140,7 @@ void Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::updateCoeffs()
         else
         {
             const scalarField& active = model.active(patch().index());
-            operator==((1 - active)*(*this) + active*alphat);
+            operator==((1 - active)*(field()) + active*alphat);
         }
     }
 

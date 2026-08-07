@@ -48,6 +48,8 @@ SourceFiles
 #include "DimensionedField.H"
 #include "fvPatchFieldMapperFwd.H"
 
+#include "expressionAssignment.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -361,6 +363,12 @@ public:
                 return patch_;
             }
 
+            //- Return reference to the base patch field
+            const Field<Type>& field() const
+            {
+                return *this;
+            }
+
             //- Return dimensioned internal field reference
             const DimensionedField<Type, surfaceMesh>&
             internalField() const
@@ -419,8 +427,19 @@ public:
     // Member Operators
 
         virtual void operator=(const UList<Type>&);
-
+        virtual void operator=(const Field<Type>&);
         virtual void operator=(const fvsPatchField<Type>&);
+
+        //- Virtual assign to an expression
+        virtual void operator=
+        (
+            const expression::Assignment<Field<Type>>& a
+        );
+
+        //- Templated assign to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator=(const Expression& e);
+
         virtual void operator+=(const fvsPatchField<Type>&);
         virtual void operator-=(const fvsPatchField<Type>&);
         virtual void operator*=(const fvsPatchField<scalar>&);
@@ -445,6 +464,16 @@ public:
         virtual void operator==(const Field<Type>&);
         virtual void operator==(const Type&);
 
+        //- Virtual force-assign to an expression
+        virtual void operator==
+        (
+            const expression::Assignment<Field<Type>>& a
+        );
+
+        //- Templated force-assign
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator==(const Expression& e);
+
 
     // Ostream operator
 
@@ -457,6 +486,8 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "fvsPatchFieldExpression.H"
 
 #ifdef NoRepository
     #include "fvsPatchField.C"

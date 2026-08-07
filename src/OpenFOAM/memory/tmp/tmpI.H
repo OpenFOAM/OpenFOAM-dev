@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,6 +154,15 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
         }
     }
 }
+
+
+template<class T>
+template<class Expression, class>
+inline Foam::tmp<T>::tmp(const Expression& e)
+:
+    type_(REUSABLE_TMP),
+    ptr_(new T(e))
+{}
 
 
 template<class T>

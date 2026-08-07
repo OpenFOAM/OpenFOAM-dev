@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,17 +185,37 @@ void fft::transform
 
 tmp<complexField> fft::forwardTransform
 (
+    const complexField& field,
+    const labelList& nn
+)
+{
+    tmp<complexField> tfftField(new complexField(field));
+    transform(tfftField.ref(), nn, FORWARD_TRANSFORM);
+    return tfftField;
+}
+
+
+tmp<complexField> fft::forwardTransform
+(
     const tmp<complexField>& tfield,
     const labelList& nn
 )
 {
-    tmp<complexField> tfftField(new complexField(tfield));
-
-    transform(tfftField.ref(), nn, FORWARD_TRANSFORM);
-
+    tmp<complexField> tfftField(forwardTransform(tfield(), nn));
     tfield.clear();
-
     return tfftField;
+}
+
+
+tmp<complexField> fft::reverseTransform
+(
+    const complexField& field,
+    const labelList& nn
+)
+{
+    tmp<complexField> tifftField(new complexField(field));
+    transform(tifftField.ref(), nn, REVERSE_TRANSFORM);
+    return tifftField;
 }
 
 
@@ -205,13 +225,36 @@ tmp<complexField> fft::reverseTransform
     const labelList& nn
 )
 {
-    tmp<complexField> tifftField(new complexField(tfield));
-
-    transform(tifftField.ref(), nn, REVERSE_TRANSFORM);
-
+    tmp<complexField> tifftField(reverseTransform(tfield(), nn));
     tfield.clear();
-
     return tifftField;
+}
+
+
+tmp<complexVectorField> fft::forwardTransform
+(
+    const complexVectorField& field,
+    const labelList& nn
+)
+{
+    tmp<complexVectorField> tfftVectorField
+    (
+        new complexVectorField
+        (
+            field.size()
+        )
+    );
+
+    for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
+    {
+        tfftVectorField.ref().replace
+        (
+            cmpt,
+            forwardTransform(field.component(cmpt), nn)
+        );
+    }
+
+    return tfftVectorField;
 }
 
 
@@ -221,26 +264,33 @@ tmp<complexVectorField> fft::forwardTransform
     const labelList& nn
 )
 {
-    tmp<complexVectorField> tfftVectorField
+    tmp<complexVectorField> tfftVectorField(forwardTransform(tfield(), nn));
+    tfield.clear();
+    return tfftVectorField;
+}
+
+
+tmp<complexVectorField> fft::reverseTransform
+(
+    const complexVectorField& field,
+    const labelList& nn
+)
+{
+    tmp<complexVectorField> tifftVectorField
     (
-        new complexVectorField
-        (
-            tfield().size()
-        )
+        new complexVectorField(field.size())
     );
 
     for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
     {
-        tfftVectorField.ref().replace
+        tifftVectorField.ref().replace
         (
             cmpt,
-            forwardTransform(tfield().component(cmpt), nn)
+            reverseTransform(field.component(cmpt), nn)
         );
     }
 
-    tfield.clear();
-
-    return tfftVectorField;
+    return tifftVectorField;
 }
 
 
@@ -250,25 +300,8 @@ tmp<complexVectorField> fft::reverseTransform
     const labelList& nn
 )
 {
-    tmp<complexVectorField> tifftVectorField
-    (
-        new complexVectorField
-        (
-            tfield().size()
-        )
-    );
-
-    for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
-    {
-        tifftVectorField.ref().replace
-        (
-            cmpt,
-            reverseTransform(tfield().component(cmpt), nn)
-        );
-    }
-
+    tmp<complexVectorField> tifftVectorField(reverseTransform(tfield(), nn));
     tfield.clear();
-
     return tifftVectorField;
 }
 

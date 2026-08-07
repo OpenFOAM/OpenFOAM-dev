@@ -181,7 +181,7 @@ bool Foam::functionObjects::sectionalForceProbes::read(const dictionary& dict)
     }
 
     pointOrders_.setSize(points_.size());
-    sortedOrder((points_ & normal_)(), pointOrders_);
+    sortedOrder(eval(points_ & normal_)(), pointOrders_);
 
     resetName(typeName);
 

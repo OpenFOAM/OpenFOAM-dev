@@ -126,6 +126,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::patchInternalField;
+
+
         // Evaluation functions
 
             //- Manipulate a matrix

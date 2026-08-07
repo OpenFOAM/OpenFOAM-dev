@@ -40,7 +40,7 @@ License
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class GeoMesh, template<class> class PrimitiveField>
 tmp<DimensionedField<scalar, GeoMesh, Field>> stabilise

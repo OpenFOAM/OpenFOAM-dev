@@ -267,6 +267,14 @@ public:
             //- Move assignment to List
             inline void operator=(List<T>&&);
 
+            //- Assign to an expression
+            template
+            <
+                class Expression,
+                class = EnableIfExpressionable<Expression>
+            >
+            void operator=(const Expression& e);
+
 
         // IOstream Operators
 
@@ -293,6 +301,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "DynamicFieldI.H"
+#include "DynamicFieldExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

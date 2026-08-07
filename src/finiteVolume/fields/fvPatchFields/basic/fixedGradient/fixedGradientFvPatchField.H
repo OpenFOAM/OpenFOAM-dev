@@ -147,6 +147,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::patchInternalField;
+
+
         // Return defining fields
 
             //- Return gradient at boundary

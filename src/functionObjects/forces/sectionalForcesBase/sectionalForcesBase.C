@@ -361,8 +361,11 @@ void Foam::functionObjects::sectionalForcesBase::addFluid
         (
             timesAlpha
             (
-                pp.faceNormals()*(p.boundaryField()[ppi] - pRef_)
-              + devTau.boundaryField()[ppi],
+                eval
+                (
+                    pp.faceNormals()*(p.boundaryField()[ppi].field() - pRef_)
+                  + devTau.boundaryField()[ppi]
+                ),
                 ppi
             )
         );
@@ -370,7 +373,7 @@ void Foam::functionObjects::sectionalForcesBase::addFluid
         SubList<vector>(patchFaceForces, pp.size(), patchFacei) =
             f;
         SubList<vector>(patchFaceMoments, pp.size(), patchFacei) =
-            (pp.faceCentres() - origin()) ^ f;
+            eval((pp.faceCentres() - origin()) ^ f);
 
         patchFacei += pp.size();
     }

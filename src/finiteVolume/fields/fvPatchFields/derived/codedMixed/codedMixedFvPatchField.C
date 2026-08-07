@@ -156,8 +156,8 @@ Foam::codedMixedFvPatchField<Type>::redirectPatchField() const
             (
                 fvPatchField<Type>::New
                 (
-                    this->patch(),
-                    this->internalField(),
+                    patch(),
+                    internalField(),
                     dict
                 ).ptr()
             )

@@ -188,8 +188,8 @@ void Foam::fvMeshStitchers::moving::createNonConformalCorrectMeshPhiGeometry
         SfSf.boundaryFieldRef()[errorPatchi] =
             repeat
             (
-                (rootVSmall*origPp.faceNormals())(),
-                (-rootVSmall*origPp.faceNormals())()
+                eval(rootVSmall*origPp.faceNormals())(),
+                eval(-rootVSmall*origPp.faceNormals())()
             );
         CfSf.boundaryFieldRef()[errorPatchi] =
             repeat(origPp.faceCentres());

@@ -171,6 +171,13 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::db;
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::field;
+        using fvPatchField<Type>::patchInternalField;
+        using fvPatchField<Type>::internalField;
+
+
         // Access
 
             //- Return true if running parallel

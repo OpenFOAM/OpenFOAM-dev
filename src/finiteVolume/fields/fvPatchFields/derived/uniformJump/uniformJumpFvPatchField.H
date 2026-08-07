@@ -155,6 +155,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::time;
+        using fvPatchField<Type>::internalField;
+
+
         //- Update the coefficients
         virtual void updateCoeffs();
 

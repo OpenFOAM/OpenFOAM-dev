@@ -160,6 +160,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::internalField;
+
+
         // Access
 
             //- Return transformation between the coupled patches

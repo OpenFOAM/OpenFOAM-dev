@@ -623,7 +623,7 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         List<point>& pFc = pointFaceCentres[pointi];
         labelList& pFid = pointFacePatchID[pointi];
 
-        sortedOrder(mag(SubField<point>(pFc))(), visitOrder);
+        sortedOrder(eval(mag(SubField<point>(pFc)))(), visitOrder);
 
         pNormals = List<point>(pNormals, visitOrder);
         pDisp = List<point>(pDisp, visitOrder);

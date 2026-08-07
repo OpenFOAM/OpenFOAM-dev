@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sphericalTensorField.H"
+#include "symmTensorField.H"
 #include "transformField.H"
 
 #define TEMPLATE

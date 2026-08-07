@@ -126,8 +126,11 @@ Foam::faceList Foam::extrudedMesh::extrudedFaces
                 eFaces[facei++] =
                     face
                     (
-                        SubField<label>(surfaceFaces[i])
-                      + nextLayerOffset
+                        eval
+                        (
+                            SubField<label>(surfaceFaces[i])
+                          + nextLayerOffset
+                        )
                     );
             }
         }
@@ -177,8 +180,11 @@ Foam::faceList Foam::extrudedMesh::extrudedFaces
         eFaces[facei++] =
             face
             (
-                SubField<label>(surfaceFaces[i])
-              + nLayers*surfacePoints.size()
+                eval
+                (
+                    SubField<label>(surfaceFaces[i])
+                  + nLayers*surfacePoints.size()
+                )
             );
     }
 

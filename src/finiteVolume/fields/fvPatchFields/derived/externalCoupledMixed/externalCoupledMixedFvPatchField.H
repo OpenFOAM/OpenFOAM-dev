@@ -282,6 +282,12 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::time;
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::patchInternalField;
+        using fvPatchField<Type>::internalField;
+
+
         //- Return the log flag
         bool log() const
         {

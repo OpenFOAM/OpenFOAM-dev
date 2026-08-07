@@ -147,12 +147,16 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffsMaster()
     wallCellEpsilonPtr_.reset(patchFieldsToWallCellField(epsilonPfs).ptr());
 
     // Set the fractional proportion of the value in the wall cells
-    UIndirectList<scalar>(G, wallCells()) =
+    UIndirectList<scalar>(G, wallCells()) = eval
+    (
         (1 - wallCellFraction())*scalarField(G, wallCells())
-      + wallCellFraction()*wallCellGPtr_();
-    UIndirectList<scalar>(epsilon, wallCells()) =
+      + wallCellFraction()*wallCellGPtr_()
+    );
+    UIndirectList<scalar>(epsilon, wallCells()) = eval
+    (
         (1 - wallCellFraction())*scalarField(epsilon, wallCells())
-      + wallCellFraction()*wallCellEpsilonPtr_();
+      + wallCellFraction()*wallCellEpsilonPtr_()
+    );
 }
 
 

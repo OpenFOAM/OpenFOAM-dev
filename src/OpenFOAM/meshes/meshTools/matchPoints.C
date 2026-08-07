@@ -54,8 +54,8 @@ bool Foam::matchPoints
         }
     }
 
-    SortableList<scalar> pts0MagSqr(magSqr(pts0 - compareOrigin));
-    SortableList<scalar> pts1MagSqr(magSqr(pts1 - compareOrigin));
+    SortableList<scalar> pts0MagSqr(eval(magSqr(pts0 - compareOrigin)));
+    SortableList<scalar> pts1MagSqr(eval(magSqr(pts1 - compareOrigin)));
 
     forAll(pts0MagSqr, i)
     {
@@ -165,8 +165,8 @@ bool Foam::matchPoints
         }
     }
 
-    SortableList<scalar> pts0MagSqr(magSqr(pts0 - compareOrigin));
-    SortableList<scalar> pts1MagSqr(magSqr(pts1 - compareOrigin));
+    SortableList<scalar> pts0MagSqr(eval(magSqr(pts0 - compareOrigin)));
+    SortableList<scalar> pts1MagSqr(eval(magSqr(pts1 - compareOrigin)));
 
     forAll(pts0MagSqr, i)
     {

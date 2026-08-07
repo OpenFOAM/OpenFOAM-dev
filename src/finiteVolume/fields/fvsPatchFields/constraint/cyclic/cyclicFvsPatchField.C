@@ -56,7 +56,7 @@ Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
         FatalIOErrorInFunction
         (
             dict
-        )   << "patch " << this->patch().index() << " not cyclic type. "
+        )   << "patch " << patch().index() << " not cyclic type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }
@@ -75,13 +75,13 @@ Foam::cyclicFvsPatchField<Type>::cyclicFvsPatchField
     coupledFvsPatchField<Type>(ptf, p, iF, mapper),
     cyclicPatch_(refCast<const cyclicFvPatch>(p))
 {
-    if (!isA<cyclicFvPatch>(this->patch()))
+    if (!isA<cyclicFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "Field type does not correspond to patch type for patch "
-            << this->patch().index() << "." << endl
+            << patch().index() << "." << endl
             << "Field type: " << typeName << endl
-            << "Patch type: " << this->patch().type()
+            << "Patch type: " << patch().type()
             << exit(FatalError);
     }
 }
@@ -109,9 +109,9 @@ Foam::cyclicFvsPatchField<Type>::patchNeighbourField
 ) const
 {
     const SurfaceField<Type>& gf =
-        refCast<const SurfaceField<Type>>(this->internalField());
+        refCast<const SurfaceField<Type>>(internalField());
 
-    const cyclicFvPatch& cp = refCast<const cyclicFvPatch>(this->patch());
+    const cyclicFvPatch& cp = refCast<const cyclicFvPatch>(patch());
 
     tmp<Field<Type>> tresult
     (

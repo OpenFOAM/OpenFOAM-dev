@@ -190,7 +190,7 @@ bool Foam::functionObjects::rigidBodySectionalForceGraph::write()
             (
                 true,
                 axisName(),
-                distances + localOrigin()[axisi()],
+                eval(distances + localOrigin()[axisi()]),
                 coordSet::axisTypeNames_[coordSet::axisType::DISTANCE]
             ),
             fieldNames

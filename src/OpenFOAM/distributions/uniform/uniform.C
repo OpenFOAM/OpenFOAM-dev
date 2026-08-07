@@ -45,11 +45,11 @@ auto Foam::distributions::uniform::Phi(const Type& x, const label q)
 {
     if (q == -1)
     {
-        return log(x);
+        return Type(log(x));
     }
     else
     {
-        return integerPow(x, 1 + q)/(1 + q);
+        return Type(integerPow(x, 1 + q)/(1 + q));
     }
 }
 

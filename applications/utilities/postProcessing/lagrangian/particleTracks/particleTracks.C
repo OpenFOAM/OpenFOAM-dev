@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     Pstream::listCombineGather(maxIds, maxEqOp());
     Pstream::listCombineScatter(maxIds);
 
-    labelList numIds = maxIds + 1;
+    const labelField numIds = maxIds + 1;
 
     Info<< nl << "Particle statistics:" << endl;
     forAll(maxIds, proci)

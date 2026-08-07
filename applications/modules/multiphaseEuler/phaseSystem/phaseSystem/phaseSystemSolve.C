@@ -570,7 +570,10 @@ void Foam::phaseSystem::solve
                         alphaPhiPreds[movingPhasei],
                         alphaPhiCorrs[movingPhasei],
                         Sps[phase.index()],
-                        min(alphaVoid.primitiveField(), phase.alphaMax())(),
+                        eval
+                        (
+                            min(alphaVoid.primitiveField(), phase.alphaMax())
+                        )(),
                         zeroField()
                     );
                 }
@@ -619,7 +622,10 @@ void Foam::phaseSystem::solve
                           : alphaPhis[movingPhasei],
                         Sps[phase.index()],
                         Sus[phase.index()],
-                        min(alphaVoid.primitiveField(), phase.alphaMax())(),
+                        eval
+                        (
+                            min(alphaVoid.primitiveField(), phase.alphaMax())
+                        )(),
                         zeroField(),
                         false
                     );
@@ -709,7 +715,10 @@ void Foam::phaseSystem::solve
                           : alphaPhiBDs[movingPhasei],
                         alphaPhis[movingPhasei],
                         Sps[phase.index()],
-                        min(alphaVoid.primitiveField(), phase.alphaMax())(),
+                        eval
+                        (
+                            min(alphaVoid.primitiveField(), phase.alphaMax())
+                        )(),
                         zeroField()
                     );
                 }

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "DynamicField.H"
+#include "expressionAssert.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -70,6 +71,39 @@ Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::clone() const
     (
         new DynamicField<T, SizeInc, SizeMult, SizeDiv>(*this)
     );
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+template<class Expression, class>
+void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::operator=
+(
+    const Expression& e
+)
+{
+    #ifdef FULLDEBUG
+    expression::assertSameAllContainerProperty<expression::Size>(e);
+    #endif
+
+    // Get size of the first field in the expression
+    const label size = expression::getAll<expression::Size>(e);
+
+    if (capacity_ >= size)
+    {
+        // Can copy w/o reallocating, match initial size to avoid reallocation
+        Field<T>::size(size);
+        Field<T>::operator=(e);
+    }
+    else
+    {
+        // Make everything available for the copy operation
+        Field<T>::size(capacity_);
+
+        Field<T>::operator=(e);
+        capacity_ = Field<T>::size();
+    }
 }
 
 

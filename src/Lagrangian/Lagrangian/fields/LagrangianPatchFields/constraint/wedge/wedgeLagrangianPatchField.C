@@ -88,10 +88,13 @@ void Foam::wedgeLagrangianPatchField<Type>::evaluate
 {
     LagrangianPatchField<Type>::operator=
     (
-        transform
+        eval
         (
-            wedgePatch_.wedgePoly().cellT(),
-            this->primitiveSubField().operator const Field<Type>&()
+            transform
+            (
+                wedgePatch_.wedgePoly().cellT(),
+                this->primitiveSubField().operator const Field<Type>&()
+            )
         )
     );
 }

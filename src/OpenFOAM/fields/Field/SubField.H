@@ -124,6 +124,10 @@ public:
         template<class Form, direction Ncmpts>
         void operator=(const VectorSpace<Form, Type, Ncmpts>&);
 
+        //- Assign to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator=(const Expression& e);
+
         void operator+=(const UList<Type>&);
         void operator+=(const tmp<Field<Type>>&);
 
@@ -155,6 +159,8 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "SubFieldExpression.H"
 
 #ifdef NoRepository
     #include "SubField.C"

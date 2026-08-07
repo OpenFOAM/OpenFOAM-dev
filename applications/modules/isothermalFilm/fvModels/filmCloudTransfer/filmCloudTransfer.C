@@ -121,7 +121,7 @@ inline Foam::fv::filmCloudTransfer::CloudToFilmTransferRate
         UIndirectList<Type>(tSu.ref(), film_.surfacePatch().faceCells()) =
             film_.surfacePatchMap().fromNeighbour
             (
-                prop/cloudMesh.boundary()[cloudPatchi].magSf()
+                eval(prop/cloudMesh.boundary()[cloudPatchi].magSf())
             );
 
         tSu.ref().primitiveFieldRef() /= film_.VbyA;

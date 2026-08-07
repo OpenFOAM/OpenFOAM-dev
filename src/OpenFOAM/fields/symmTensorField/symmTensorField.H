@@ -66,6 +66,31 @@ UNARY_FUNCTION(scalar, symmTensor, det)
 UNARY_FUNCTION(symmTensor, symmTensor, cof)
 UNARY_FUNCTION(symmTensor, symmTensor, inv)
 
+void inv
+(
+    Field<symmTensor>& tf,
+    const UList<symmTensor>& tf1,
+    const Vector<label>& solutionD
+);
+
+tmp<symmTensorField> inv
+(
+    const Field<symmTensor>& tf,
+    const Vector<label>& solutionD
+);
+
+tmp<symmTensorField> inv
+(
+    const SubField<symmTensor>& tf,
+    const Vector<label>& solutionD
+);
+
+tmp<symmTensorField> inv
+(
+    const tmp<symmTensorField>& tf,
+    const Vector<label>& solutionD
+);
+
 
 // * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
 

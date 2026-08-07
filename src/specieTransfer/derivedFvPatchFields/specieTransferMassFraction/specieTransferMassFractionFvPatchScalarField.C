@@ -214,7 +214,7 @@ void Foam::specieTransferMassFractionFvPatchScalarField::updateCoeffs()
     // result in the desired specie flux
     valueFraction() = phip/(phip - patch().deltaCoeffs()*ADEffp);
     refValue() = *this;
-    refGrad() = phip*(*this - phiYp/uPhip)/ADEffp;
+    refGrad() = phip*(field() - phiYp/uPhip)/ADEffp;
 
     mixedFvPatchScalarField::updateCoeffs();
 }

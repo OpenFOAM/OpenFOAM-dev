@@ -130,18 +130,18 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::directionMixedFvPatchField<Type>::snGrad() const
 {
-    const Field<Type> pif(this->patchInternalField());
+    const Field<Type> pif(patchInternalField());
 
     tmp<Field<Type>> normalValue = transform(valueFraction_, refValue_);
 
-    tmp<Field<Type>> gradValue = pif + refGrad_/this->patch().deltaCoeffs();
+    tmp<Field<Type>> gradValue = pif + refGrad_/patch().deltaCoeffs();
 
     tmp<Field<Type>> transformGradValue =
         transform(I - valueFraction_, gradValue);
 
     return
         (normalValue + transformGradValue - pif)*
-        this->patch().deltaCoeffs();
+        patch().deltaCoeffs();
 }
 
 
@@ -156,7 +156,7 @@ void Foam::directionMixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
     tmp<Field<Type>> normalValue = transform(valueFraction_, refValue_);
 
     tmp<Field<Type>> gradValue =
-        this->patchInternalField() + refGrad_/this->patch().deltaCoeffs();
+        patchInternalField() + refGrad_/patch().deltaCoeffs();
 
     tmp<Field<Type>> transformGradValue =
         transform(I - valueFraction_, gradValue);

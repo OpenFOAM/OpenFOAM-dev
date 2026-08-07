@@ -131,6 +131,11 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::patchInternalField;
+        using fvPatchField<Type>::internalField;
+
+
         //- Return gradient at boundary
         virtual tmp<Field<Type>> snGrad() const;
 

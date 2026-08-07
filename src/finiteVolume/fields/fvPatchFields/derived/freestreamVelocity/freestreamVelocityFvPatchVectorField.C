@@ -135,7 +135,7 @@ void Foam::freestreamVelocityFvPatchVectorField::updateCoeffs()
 
     dimensionedFreestreamValue_.update();
 
-    const Field<vector> Up(0.5*(patchInternalField() + *this));
+    const Field<vector> Up(0.5*(patchInternalField() + field()));
     const Field<scalar> magUp(mag(Up));
 
     const Field<vector> nf(patch().nf());

@@ -51,9 +51,9 @@ turbulentKineticEnergyFvPatchScalarField
             << "Turbulence intensity should be specified as a fraction 0-1 "
                "of the mean velocity\n"
                "    value given is " << intensity_ << nl
-            << "    on patch " << this->patch().name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << "    on patch " << patch().name()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 

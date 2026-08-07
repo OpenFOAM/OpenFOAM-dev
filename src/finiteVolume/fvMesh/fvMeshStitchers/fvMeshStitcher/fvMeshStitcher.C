@@ -341,7 +341,6 @@ void Foam::fvMeshStitcher::getOrigNbrBfs
         {
             const nonConformalCoupledFvPatch& nccFvp =
                 refCast<const nonConformalCoupledFvPatch>(fvp);
-
             origFaces.boundaryFieldRef()[patchi] =
                 polyFacesBf[patchi] - nccFvp.origPatch().start();
         }
@@ -385,7 +384,7 @@ void Foam::fvMeshStitcher::getOrigNbrBfs
             nonConformalMappedFvPatchBase::map
             (
                 nbrPolyFacesPf,
-                nbrPolyFacesPf - nbrPatch.origPatch().start(),
+                eval(nbrPolyFacesPf - nbrPatch.origPatch().start()),
                 polyFacesBf[patchi]
             );
         origSf.boundaryFieldRef()[patchi] =
@@ -1573,13 +1572,13 @@ void Foam::fvMeshStitcher::intersect
             vectorField
             (
                 small*origPp.faceAreas(),
-                polyFacesBf[patchi] - origPp.start()
+                eval(polyFacesBf[patchi] - origPp.start())
             );
         CfBf[patchi] ==
             vectorField
             (
                 origPp.faceCentres(),
-                polyFacesBf[patchi] - origPp.start()
+                eval(polyFacesBf[patchi] - origPp.start())
             );
     }
 
@@ -1913,11 +1912,11 @@ bool Foam::fvMeshStitcher::connectThis
                 if (nccPatchi != -1)
                 {
                     minMfe[nccPatchi] =
-                        min(minMfe[nccPatchi], min(mfe[patchi]));
-                    sumMfe[nccPatchi] += sum(mfe[patchi]);
+                        min(minMfe[nccPatchi], min(mfe[patchi].field()));
+                    sumMfe[nccPatchi] += sum(mfe[patchi].field());
                     nSumMfe[nccPatchi] += mfe[patchi].size();
                     maxMfe[nccPatchi] =
-                        max(maxMfe[nccPatchi], max(mfe[patchi]));
+                        max(maxMfe[nccPatchi], max(mfe[patchi].field()));
                 }
             }
             reduce(minMfe, ListOp<minOp>());
@@ -2188,7 +2187,7 @@ bool Foam::fvMeshStitcher::geometric() const
         const scalarField origMagSfp
         (
             origPp.magFaceAreas(),
-            mesh_.polyFacesBf()[patchi] - origPp.start()
+            eval(mesh_.polyFacesBf()[patchi] - origPp.start())
         );
 
         if (max(magSfp/origMagSfp) > rootSmall)

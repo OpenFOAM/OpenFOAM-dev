@@ -151,7 +151,7 @@ void Foam::fixedGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
     Field<Type>::operator=
     (
-        this->patchInternalField() + gradient_/this->patch().deltaCoeffs()
+        patchInternalField() + gradient_/patch().deltaCoeffs()
     );
 
     fvPatchField<Type>::evaluate();
@@ -176,7 +176,7 @@ Foam::fixedGradientFvPatchField<Type>::valueBoundaryCoeffs
     const tmp<scalarField>&
 ) const
 {
-    return gradient()/this->patch().deltaCoeffs();
+    return gradient()/patch().deltaCoeffs();
 }
 
 

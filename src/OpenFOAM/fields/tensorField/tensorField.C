@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tensorField.H"
+#include "symmTensorField.H"
 #include "transformField.H"
 
 #define TEMPLATE
@@ -45,54 +46,52 @@ UNARY_FUNCTION(tensor, tensor, dev)
 UNARY_FUNCTION(tensor, tensor, dev2)
 UNARY_FUNCTION(scalar, tensor, det)
 UNARY_FUNCTION(tensor, tensor, cof)
+UNARY_FUNCTION(tensor, tensor, inv)
 
-void inv(Field<tensor>& tf, const UList<tensor>& tf1)
+void inv
+(
+    Field<tensor>& tf,
+    const UList<tensor>& tf1,
+    const Vector<label>& solutionD
+)
 {
     if (tf.empty())
     {
         return;
     }
 
-    scalar scale = magSqr(tf1[0]);
-    Vector<bool> removeCmpts
-    (
-        magSqr(tf1[0].xx())/scale < small,
-        magSqr(tf1[0].yy())/scale < small,
-        magSqr(tf1[0].zz())/scale < small
-    );
-
-    if (removeCmpts.x() || removeCmpts.y() || removeCmpts.z())
+    if (solutionD.x() == -1 || solutionD.y() == -1 || solutionD.z() == -1)
     {
         tensorField tf1Plus(tf1);
 
-        if (removeCmpts.x())
+        if (solutionD.x() == -1)
         {
             tf1Plus += tensor(1,0,0,0,0,0,0,0,0);
         }
 
-        if (removeCmpts.y())
+        if (solutionD.y() == -1)
         {
             tf1Plus += tensor(0,0,0,0,1,0,0,0,0);
         }
 
-        if (removeCmpts.z())
+        if (solutionD.z() == -1)
         {
             tf1Plus += tensor(0,0,0,0,0,0,0,0,1);
         }
 
         TFOR_ALL_F_OP_FUNC_F(tensor, tf, =, inv, tensor, tf1Plus)
 
-        if (removeCmpts.x())
+        if (solutionD.x() == -1)
         {
             tf -= tensor(1,0,0,0,0,0,0,0,0);
         }
 
-        if (removeCmpts.y())
+        if (solutionD.y() == -1)
         {
             tf -= tensor(0,0,0,0,1,0,0,0,0);
         }
 
-        if (removeCmpts.z())
+        if (solutionD.z() == -1)
         {
             tf -= tensor(0,0,0,0,0,0,0,0,1);
         }
@@ -103,21 +102,33 @@ void inv(Field<tensor>& tf, const UList<tensor>& tf1)
     }
 }
 
-tmp<tensorField> inv(const Field<tensor>& tf)
+tmp<tensorField> inv
+(
+    const Field<tensor>& tf,
+    const Vector<label>& solutionD
+)
 {
     tmp<tensorField> result(new tensorField(tf.size()));
     inv(result.ref(), tf);
     return result;
 }
 
-tmp<tensorField> inv(const SubField<tensor>& tf)
+tmp<tensorField> inv
+(
+    const SubField<tensor>& tf,
+    const Vector<label>& solutionD
+)
 {
     tmp<tensorField> result(new tensorField(tf.size()));
     inv(result.ref(), tf);
     return result;
 }
 
-tmp<tensorField> inv(const tmp<tensorField>& tf)
+tmp<tensorField> inv
+(
+    const tmp<tensorField>& tf,
+    const Vector<label>& solutionD
+)
 {
     tmp<tensorField> tRes = New(tf);
     inv(tRes.ref(), tf());

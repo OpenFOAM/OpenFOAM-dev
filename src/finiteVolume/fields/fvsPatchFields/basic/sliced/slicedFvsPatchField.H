@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,8 +121,13 @@ public:
     // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
-
+        virtual void operator=(const Field<Type>&) {}
         virtual void operator=(const fvsPatchField<Type>&) {}
+
+        //- Virtual assign to an expression
+        virtual void operator=(const expression::Assignment<Field<Type>>& a)
+        {}
+
         virtual void operator+=(const fvsPatchField<Type>&) {}
         virtual void operator-=(const fvsPatchField<Type>&) {}
         virtual void operator*=(const fvsPatchField<scalar>&) {}

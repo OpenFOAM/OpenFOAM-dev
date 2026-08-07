@@ -137,6 +137,11 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::db;
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::internalField;
+
+
         // Access
 
             //- Name of the outlet patch to be mapped

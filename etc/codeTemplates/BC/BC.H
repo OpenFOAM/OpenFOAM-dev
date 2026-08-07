@@ -182,6 +182,15 @@ public:
 
     // Member Functions
 
+        using fvPatchField<TYPE>::db;
+        using fvPatchField<TYPE>::time;
+        using fvPatchField<TYPE>::patch;
+        using fvPatchField<TYPE>::field;
+        using fvPatchField<TYPE>::patchInternalField;
+        using fvPatchField<TYPE>::internalField;
+        using fvPatchField<TYPE>::primitiveField;
+
+
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField

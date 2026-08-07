@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void processorFvPatchField<scalar>::initInterfaceMatrixUpdate
     const Pstream::commsTypes commsType
 ) const
 {
-    this->patch().patchInternalField(psiInternal, scalarSendBuf_);
+    patch().patchInternalField(psiInternal, scalarSendBuf_);
 
     if
     (
@@ -107,7 +107,7 @@ void processorFvPatchField<scalar>::updateInterfaceMatrix
         return;
     }
 
-    const labelUList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = patch().faceCells();
 
     if
     (

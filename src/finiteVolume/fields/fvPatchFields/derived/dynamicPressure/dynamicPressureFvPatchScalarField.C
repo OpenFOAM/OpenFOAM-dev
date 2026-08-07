@@ -98,9 +98,9 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
             << " for compressible/variable density flow" << nl
             << "    or " << dimensions::kinematicPressure
             << " for incompressible flow," << nl
-            << "    on patch " << this->patch().name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << "    on patch " << patch().name()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 

@@ -83,22 +83,22 @@ Foam::waveTransmissiveFvPatchField<Type>::advectionSpeed() const
 {
     // Lookup the velocity and compressibility of the patch
     const fvPatchField<scalar>& psip =
-        this->patch().template
+        patch().template
             lookupPatchField<volScalarField, scalar>(psiName_);
 
     const surfaceScalarField& phi =
-        this->db().template lookupObject<surfaceScalarField>(this->phiName_);
+        db().template lookupObject<surfaceScalarField>(this->phiName_);
 
     scalarField phip
     (
-        this->patch().template
+        patch().template
             lookupPatchField<surfaceScalarField, scalar>(this->phiName_)
     );
 
     if (phi.dimensions() == dimensions::massFlux)
     {
         const fvPatchScalarField& rhop =
-            this->patch().template
+            patch().template
                 lookupPatchField<volScalarField, scalar>(this->rhoName_);
 
         phip /= rhop;
@@ -107,7 +107,7 @@ Foam::waveTransmissiveFvPatchField<Type>::advectionSpeed() const
     // Calculate the speed of the field wave w
     // by summing the component of the velocity normal to the boundary
     // and the speed of sound (sqrt(gamma_/psi)).
-    return phip/this->patch().magSf() + sqrt(gamma_/psip);
+    return phip/patch().magSf() + sqrt(gamma_/psip);
 }
 
 

@@ -140,7 +140,7 @@ void Foam::fanPressureJumpFvPatchScalarField::updateCoeffs()
 
             if (phip.internalField().dimensions() == dimensions::volumetricFlux)
             {
-                volFlowRate = gSum(phip);
+                volFlowRate = gSum(phip.field());
             }
             else if
             (

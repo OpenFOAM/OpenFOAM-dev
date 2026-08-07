@@ -53,7 +53,7 @@ codeWrite
 #{
     scalar alphaTreshold = $alphaTreshold;
 
-    const volScalarField& alpha =
+    const scalarField& alpha =
         mesh().lookupObject<volScalarField>("alpha.gas");
 
     const scalarField& V = mesh().V();

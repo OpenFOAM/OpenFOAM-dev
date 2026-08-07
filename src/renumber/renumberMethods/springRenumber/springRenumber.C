@@ -135,7 +135,7 @@ Foam::labelList Foam::springRenumber::renumber
         Info<< "Iter:" << iter
             << "  maxCo:" << maxCo
             << "  deltaT:" << deltaT
-            << "  average force:" << average(mag(sumForce)) << endl;
+            << "  average force:" << average(eval(mag(sumForce))) << endl;
 
         // Determine displacement.
         scalarField displacement(deltaT*sumForce);

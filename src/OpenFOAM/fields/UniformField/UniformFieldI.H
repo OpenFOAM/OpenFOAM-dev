@@ -112,6 +112,14 @@ inline auto max(const OtherType& o, const UniformField<Type>& u)
 }
 
 
+template<class Type>
+inline Ostream& operator<<(Ostream& os, const UniformField<Type>& u)
+{
+    os << u.value_;
+    return os;
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

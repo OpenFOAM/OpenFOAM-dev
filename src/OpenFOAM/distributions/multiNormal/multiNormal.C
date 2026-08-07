@@ -48,7 +48,7 @@ Foam::scalarList Foam::distributions::multiNormal::readCumulativeStrengths
 {
     const scalarField s(dict.lookup<scalarList>("strength"));
 
-    const scalarList sHat(s/sum(s));
+    const scalarField sHat(s/sum(s));
 
     scalarList cumSHat(s.size() + 1, scalar(0));
     forAll(sHat, i)

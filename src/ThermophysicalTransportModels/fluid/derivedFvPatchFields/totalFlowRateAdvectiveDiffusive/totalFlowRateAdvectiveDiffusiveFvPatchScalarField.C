@@ -152,7 +152,7 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
 
     if (debug)
     {
-        scalar phi = gSum(-phip*(*this));
+        scalar phi = gSum(-phip*(field()));
 
         Info<< patch().mesh().name() << ':'
             << patch().name() << ':'

@@ -89,7 +89,7 @@ void Foam::totalPressureFvPatchScalarField::updateCoeffs()
         dynamicPressureFvPatchScalarField::updateCoeffs
         (
             p0_,
-            0.5*neg(phip)*magSqr(Upiov.tangentialVelocity())
+            0.5*neg(phip)*magSqr(Upiov.tangentialVelocity().primitiveField())
           - 0.5*neg(phip)*magSqr(Up)
         );
 

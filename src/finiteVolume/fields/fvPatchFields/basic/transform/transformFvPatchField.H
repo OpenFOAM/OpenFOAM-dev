@@ -104,6 +104,11 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::field;
+        using fvPatchField<Type>::patchInternalField;
+
+
         // Attributes
 
             //- Return true if the value of the patch field

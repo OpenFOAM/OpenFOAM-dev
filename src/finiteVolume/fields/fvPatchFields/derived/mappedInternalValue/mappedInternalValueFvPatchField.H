@@ -168,6 +168,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::internalField;
+
+
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField

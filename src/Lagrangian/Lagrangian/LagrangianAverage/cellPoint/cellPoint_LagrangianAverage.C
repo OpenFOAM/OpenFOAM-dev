@@ -140,7 +140,7 @@ Foam::LagrangianAverages::cellPoint<Type>::pointWeightSum
         pointVolumeWeightedSum
         (
             pMesh,
-            (weightSum/cellVolumeWeightedSum(pMesh, oneField()))()
+            eval(weightSum/cellVolumeWeightedSum(pMesh, oneField()))()
         )/4;
 }
 

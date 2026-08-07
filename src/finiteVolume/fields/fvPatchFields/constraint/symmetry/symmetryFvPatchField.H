@@ -120,6 +120,12 @@ public:
         }
 
 
+    // Member Functions
+
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::internalField;
+
+
     // Member Operators
 
         //- Inherit assignment

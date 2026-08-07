@@ -277,8 +277,8 @@ void Foam::fv::wallCondensation::correctMDot() const
         }
 
         // Only allow condensation
-        mDot.condensing_ = pos(mDot);
-        mDot = max(mDot, scalar(0));
+        mDot.condensing_ = pos(mDot.field());
+        mDot = max(mDot.field(), scalar(0));
 
         const scalarField gradT
         (
@@ -286,7 +286,7 @@ void Foam::fv::wallCondensation::correctMDot() const
            *min(props.TwVapour - props.TcVapour, -rootSmall*props.TcVapour)
         );
 
-        const scalarField q(mDot*props.L/props.AbyV);
+        const scalarField q(mDot.field()*props.L/props.AbyV);
 
         const scalarField alphatCondensingVapour
         (

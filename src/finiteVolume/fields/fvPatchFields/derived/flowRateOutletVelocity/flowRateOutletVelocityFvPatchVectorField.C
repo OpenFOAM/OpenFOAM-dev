@@ -38,7 +38,7 @@ void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
     const vectorField n(patch().nf());
 
     // Extrapolate patch velocity
-    vectorField Up(this->patchInternalField());
+    vectorField Up(patchInternalField());
 
     // Patch normal extrapolated velocity
     scalarField nUp(n & Up);
@@ -50,7 +50,7 @@ void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
     nUp = max(nUp, scalar(0));
 
     const scalar flowRate = flowRate_->value(time().value());
-    const scalar estimatedFlowRate = gSum(rho*(this->patch().magSf()*nUp));
+    const scalar estimatedFlowRate = gSum(rho*(patch().magSf()*nUp));
 
     if (estimatedFlowRate/flowRate > 0.5)
     {

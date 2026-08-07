@@ -98,7 +98,9 @@ void Foam::solvers::isothermalFilm::momentumPredictor()
 
     // Get the momentum source and remove any normal components
     fvVectorMatrix alphaRhoUsource(fvModels().source(alpha, rho, U));
-    alphaRhoUsource.source() -= nHat*(nHat & alphaRhoUsource.source());
+    alphaRhoUsource.source() -=
+        nHat.primitiveField()
+       *(nHat.primitiveField() & alphaRhoUsource.source());
 
     tUEqn =
     (

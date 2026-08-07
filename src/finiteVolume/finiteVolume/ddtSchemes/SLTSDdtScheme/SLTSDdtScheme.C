@@ -114,7 +114,7 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
     {
         rDeltaT.primitiveFieldRef() = max
         (
-            rDeltaT.primitiveField()/mesh().V(),
+            rDeltaT.primitiveField()/mesh().V().primitiveField(),
             scalar(1)/deltaT.value()
         );
     }
@@ -128,7 +128,8 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
 
         rDeltaT.primitiveFieldRef() = max
         (
-            rDeltaT.primitiveField()/(rho.primitiveField()*mesh().V()),
+            rDeltaT.primitiveField()/(rho.primitiveField()
+           *mesh().V().primitiveField()),
             scalar(1)/deltaT.value()
         );
     }
@@ -174,7 +175,8 @@ SLTSDdtScheme<Type>::fvcDdt
         );
 
         tdtdt.ref().primitiveFieldRef() =
-            rDeltaT.primitiveField()*dt.value()*(1.0 - mesh().V0()/mesh().V());
+            rDeltaT.primitiveField()*dt.value()
+           *(1.0 - mesh().V0().primitiveField()/mesh().V().primitiveField());
 
         return tdtdt;
     }
@@ -403,15 +405,17 @@ SLTSDdtScheme<Type>::fvmDdt
 
     const scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*mesh().V();
+    fvm.diag() = rDeltaT*mesh().V().primitiveField();
 
     if (mesh().moving())
     {
-        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().V0();
+        fvm.source() =
+            rDeltaT*vf.oldTime().primitiveField()*mesh().V0().primitiveField();
     }
     else
     {
-        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().V();
+        fvm.source() =
+            rDeltaT*vf.oldTime().primitiveField()*mesh().V().primitiveField();
     }
 
     return tfvm;
@@ -438,17 +442,19 @@ SLTSDdtScheme<Type>::fvmDdt
 
     const scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*rho.value()*mesh().V();
+    fvm.diag() = rDeltaT*rho.value()*mesh().V().primitiveField();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().primitiveField()*mesh().V0();
+            *rho.value()*vf.oldTime().primitiveField()
+            *mesh().V0().primitiveField();
     }
     else
     {
         fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().primitiveField()*mesh().V();
+            *rho.value()*vf.oldTime().primitiveField()
+            *mesh().V().primitiveField();
     }
 
     return tfvm;
@@ -475,19 +481,19 @@ SLTSDdtScheme<Type>::fvmDdt
 
     const scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().V();
+    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().V().primitiveField();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().V0();
+            *vf.oldTime().primitiveField()*mesh().V0().primitiveField();
     }
     else
     {
         fvm.source() = rDeltaT
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().V();
+            *vf.oldTime().primitiveField()*mesh().V().primitiveField();
     }
 
     return tfvm;
@@ -520,21 +526,22 @@ SLTSDdtScheme<Type>::fvmDdt
     const scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
     fvm.diag() =
-        rDeltaT*alpha.primitiveField()*rho.primitiveField()*mesh().Vsc();
+        rDeltaT*alpha.primitiveField()*rho.primitiveField()
+       *mesh().Vsc()().primitiveField();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
             *alpha.oldTime().primitiveField()
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc0();
+            *vf.oldTime().primitiveField()*mesh().Vsc0()().primitiveField();
     }
     else
     {
         fvm.source() = rDeltaT
             *alpha.oldTime().primitiveField()
             *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc();
+            *vf.oldTime().primitiveField()*mesh().Vsc()().primitiveField();
     }
 
     return tfvm;

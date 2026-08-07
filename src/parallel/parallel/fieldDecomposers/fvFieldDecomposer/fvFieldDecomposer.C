@@ -59,7 +59,7 @@ Foam::fvFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
     const labelUList& addressing
 )
 :
-    labelList(mag(SubField<label>(addressing)) - 1),
+    labelList(eval(mag(SubField<label>(addressing)) - 1)),
     forwardFieldMapper(static_cast<const labelList&>(*this))
 {}
 

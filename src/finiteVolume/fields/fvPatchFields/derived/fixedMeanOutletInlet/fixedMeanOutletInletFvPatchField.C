@@ -43,7 +43,7 @@ Foam::fixedMeanOutletInletFvPatchField<Type>::fixedMeanOutletInletFvPatchField
         Function1<Type>::New
         (
             "meanValue",
-            this->time().userUnits(),
+            time().userUnits(),
             iF.dimensions(),
             dict
         )
@@ -98,13 +98,13 @@ void Foam::fixedMeanOutletInletFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    Type meanValue = meanValue_->value(this->time().value());
+    Type meanValue = meanValue_->value(time().value());
 
-    Field<Type> newValues(this->patchInternalField());
+    Field<Type> newValues(patchInternalField());
 
     Type meanValuePsi =
-        gSum(this->patch().magSf()*newValues)
-       /gSum(this->patch().magSf());
+        gSum(patch().magSf()*newValues)
+       /gSum(patch().magSf());
 
     if (mag(meanValue) > small && mag(meanValuePsi)/mag(meanValue) > 0.5)
     {
@@ -128,8 +128,8 @@ void Foam::fixedMeanOutletInletFvPatchField<Type>::write(Ostream& os) const
     writeEntry
     (
         os,
-        this->time().userUnits(),
-        this->internalField().dimensions(),
+        time().userUnits(),
+        internalField().dimensions(),
         meanValue_()
     );
     writeEntry(os, "value", *this);

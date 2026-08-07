@@ -109,7 +109,7 @@ void Foam::reactionModels::laminar::correct()
             const scalarField& rDeltaT =
                 fv::localEulerDdt::localRDeltaT(this->mesh());
 
-            chemistryPtr_->solve(min(1/rDeltaT, maxIntegrationTime_)());
+            chemistryPtr_->solve(eval(min(1/rDeltaT, maxIntegrationTime_))());
         }
         else
         {

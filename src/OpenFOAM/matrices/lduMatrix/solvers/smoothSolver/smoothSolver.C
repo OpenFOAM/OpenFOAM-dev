@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,9 +122,9 @@ Foam::solverPerformance Foam::smoothSolver::solve
             normFactor = this->normFactor(psi, source, Apsi, temp);
 
             // Calculate residual magnitude
-            solverPerf.initialResidual() = gSumMag
+            solverPerf.initialResidual() = gSum
             (
-                (source - Apsi)(),
+                mag(source - Apsi),
                 matrix().mesh().comm()
             )/normFactor;
             solverPerf.finalResidual() = solverPerf.initialResidual();

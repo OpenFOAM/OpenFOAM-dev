@@ -305,7 +305,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
             // Find the region centroid closest to the reference point
             selectedRegioni = returnReduce
             (
-                findMin(mag(regionCentres - point_)()),
+                findMin(eval(mag(regionCentres - point_))()),
                 minOp()
             );
 

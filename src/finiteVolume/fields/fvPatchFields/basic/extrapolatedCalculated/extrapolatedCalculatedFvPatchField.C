@@ -67,7 +67,7 @@ extrapolatedCalculatedFvPatchField
 :
     calculatedFvPatchField<Type>(ptf, p, iF, mapper, false)
 {
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+    mapper(*this, ptf, [&](){ return patchInternalField(); });
 }
 
 
@@ -92,7 +92,7 @@ void Foam::extrapolatedCalculatedFvPatchField<Type>::map
     const fieldMapper& mapper
 )
 {
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+    mapper(*this, ptf, [&](){ return patchInternalField(); });
 }
 
 
@@ -107,7 +107,7 @@ void Foam::extrapolatedCalculatedFvPatchField<Type>::evaluate
         this->updateCoeffs();
     }
 
-    calculatedFvPatchField<Type>::operator==(this->patchInternalField());
+    calculatedFvPatchField<Type>::operator==(patchInternalField());
     calculatedFvPatchField<Type>::evaluate();
 }
 

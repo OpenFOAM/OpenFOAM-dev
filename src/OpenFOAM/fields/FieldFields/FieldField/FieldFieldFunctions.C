@@ -412,13 +412,13 @@ Type max(const FieldField<Field, Type>& f)
 
     if (i < f.size())
     {
-        Type Max(max(f[i]));
+        Type Max(max(f[i].field()));
 
         for (label j=i+1; j<f.size(); j++)
         {
             if (f[j].size())
             {
-                Max = max(max(f[j]), Max);
+                Max = max(max(f[j].field()), Max);
             }
         }
 
@@ -443,13 +443,13 @@ Type min(const FieldField<Field, Type>& f)
         label i = 0;
         while (!f[i].size()) i++;
 
-        Type Min(min(f[i]));
+        Type Min(min(f[i].field()));
 
         for (label j=i+1; j<f.size(); j++)
         {
             if (f[j].size())
             {
-                Min = min(min(f[j]), Min);
+                Min = min(min(f[j].field()), Min);
             }
         }
 
@@ -549,7 +549,7 @@ template<template<class> class Field, class Type>                              \
 returnType gFunc(const FieldField<Field, Type>& f)                             \
 {                                                                              \
     returnType res = func(f);                                                  \
-    reduce(res, rFunc##Op());                                            \
+    reduce(res, rFunc##Op());                                                  \
     return res;                                                                \
 }                                                                              \
 TMP_UNARY_FUNCTION(returnType, gFunc)

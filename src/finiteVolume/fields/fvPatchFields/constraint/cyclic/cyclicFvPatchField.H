@@ -132,6 +132,11 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::internalField;
+        using fvPatchField<Type>::primitiveField;
+
+
         // Access
 
             //- Return local reference cast into the cyclic patch

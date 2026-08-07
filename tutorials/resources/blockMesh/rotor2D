@@ -109,8 +109,8 @@ blocks
                 const label nCellsRadial
             )
             {
-                labelList vs({v0%viN, v1%viN, v2%viN, v3%viN});
-                vs.append(labelField(vs) + viN);
+                labelField vs({v0%viN, v1%viN, v2%viN, v3%viN});
+                vs.append(vs + viN);
                 os  << "hex " << vs << " all "
                     << Vector<label>(nCellsRadial, $<label>nCellsBladeBlade, 1)
                     << " simpleGrading " << Vector<label>(1, 1, 1) << nl;

@@ -125,9 +125,9 @@ void Foam::contactAngleFvPatchScalarField::evaluate
        *(
            max(min
            (
-               *this + gradient()/patch().deltaCoeffs(),
+               field() + gradient()/patch().deltaCoeffs(),
                scalar(1)), scalar(0)
-           ) - *this
+           ) - field()
        );
     }
     else if (limit_ == lcZeroGradient)
@@ -139,7 +139,7 @@ void Foam::contactAngleFvPatchScalarField::evaluate
 
     if (limit_ == lcAlpha)
     {
-        scalarField::operator=(max(min(*this, scalar(1)), scalar(0)));
+        scalarField::operator=(max(min(field(), scalar(1)), scalar(0)));
     }
 }
 

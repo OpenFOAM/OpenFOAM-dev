@@ -88,11 +88,11 @@ void Foam::outletMappedUniformInletFvPatchField<Type>::updateCoeffs()
     (
         dynamic_cast<const VolField<Type>&>
         (
-            this->internalField()
+            internalField()
         )
     );
 
-    const fvPatch& p = this->patch();
+    const fvPatch& p = patch();
     label outletPatchID =
         p.poly().boundaryMesh().findIndex(outletPatchName_);
 
@@ -109,7 +109,7 @@ void Foam::outletMappedUniformInletFvPatchField<Type>::updateCoeffs()
         f.boundaryField()[outletPatchID];
 
     const surfaceScalarField& phi =
-        this->db().objectRegistry::template lookupObject<surfaceScalarField>
+        db().objectRegistry::template lookupObject<surfaceScalarField>
         (phiName_);
 
     const scalarField& outletPatchPhi = phi.boundaryField()[outletPatchID];

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SubField.H"
+#include "expressionAssert.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -147,6 +148,22 @@ template<class Type>
 inline void Foam::SubField<Type>::operator=(const zero)
 {
     SubList<Type>::operator=(Zero);
+}
+
+
+template<class Type>
+template<class Expression, class>
+void Foam::SubField<Type>::operator=(const Expression& e)
+{
+    #ifdef FULLDEBUG
+    expression::assertSameAllContainerProperty<expression::Size>
+    (
+        *this,
+        e
+    );
+    #endif
+
+    std::copy(expression::begin(e), expression::end(e), this->begin());
 }
 
 

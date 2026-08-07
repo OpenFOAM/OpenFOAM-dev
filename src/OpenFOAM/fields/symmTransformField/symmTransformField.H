@@ -50,30 +50,7 @@ template<class Type>
 void transform(Field<Type>&, const symmTensorField&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type>> transform(const symmTensorField&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const symmTensorField&, const tmp<Field<Type>>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tmp<symmTensorField>&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform
-(
-    const tmp<symmTensorField>&,
-    const tmp<Field<Type>>&
-);
-
-
-template<class Type>
-void transform(Field<Type>&, const tensor&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tensor&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tensor&, const tmp<Field<Type>>&);
+void transform(Field<Type>&, const symmTensor&, const Field<Type>&);
 
 
 template<>

@@ -427,7 +427,7 @@ inline Form normalised
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline VectorSpace<Form, Cmpt, Ncmpts> cmptMultiply
+inline Form cmptMultiply
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs1,
     const VectorSpace<Form, Cmpt, Ncmpts>& vs2
@@ -440,7 +440,7 @@ inline VectorSpace<Form, Cmpt, Ncmpts> cmptMultiply
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline VectorSpace<Form, Cmpt, Ncmpts> cmptPow
+inline Form cmptPow
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs1,
     const VectorSpace<Form, Cmpt, Ncmpts>& vs2
@@ -453,7 +453,7 @@ inline VectorSpace<Form, Cmpt, Ncmpts> cmptPow
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline VectorSpace<Form, Cmpt, Ncmpts> cmptDivide
+inline Form cmptDivide
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs1,
     const VectorSpace<Form, Cmpt, Ncmpts>& vs2
@@ -466,7 +466,7 @@ inline VectorSpace<Form, Cmpt, Ncmpts> cmptDivide
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline VectorSpace<Form, Cmpt, Ncmpts> stabilise
+inline Form stabilise
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs,
     const Cmpt& small
@@ -659,7 +659,7 @@ inline Form operator+
 )
 {
     Form v;
-    VectorSpaceOps<Ncmpts,0>::op(v, vs1, vs2, plusOp());
+    VectorSpaceOps<Ncmpts,0>::op(v, vs1, vs2, addOp());
     return v;
 }
 
@@ -671,7 +671,7 @@ inline Form operator-
 )
 {
     Form v;
-    VectorSpaceOps<Ncmpts,0>::op(v, vs1, vs2, minusOp());
+    VectorSpaceOps<Ncmpts,0>::op(v, vs1, vs2, subtractOp());
     return v;
 }
 

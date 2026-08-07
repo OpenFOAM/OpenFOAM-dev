@@ -82,7 +82,7 @@ Foam::fixedValueInletOutletFvPatchField<Type>::valueInternalCoeffs
     // Behave as a fixed value patch where there is inflow, and fixed gradient
     // patch where there is outflow
     const scalarField& phi =
-        this->patch().template
+        patch().template
         lookupPatchField<surfaceScalarField, scalar>(phiName_);
     return (1 - pos0(phi))*Zero + pos0(phi)*pTraits<Type>::one;
 }
@@ -98,10 +98,10 @@ Foam::fixedValueInletOutletFvPatchField<Type>::valueBoundaryCoeffs
     // Behave as a fixed value patch where there is inflow, and fixed gradient
     // patch where there is outflow
     const scalarField& phi =
-        this->patch().template
+        patch().template
         lookupPatchField<surfaceScalarField, scalar>(phiName_);
-    const Field<Type> pif(this->patchInternalField());
-    return (1 - pos0(phi))**this + pos0(phi)*(*this - pif);
+    const Field<Type> pif(patchInternalField());
+    return (1 - pos0(phi))*field() + pos0(phi)*(field() - pif);
 }
 
 

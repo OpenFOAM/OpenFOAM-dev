@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,7 +310,7 @@ template
     class Type,
     class TrackingData = int
 >
-class transformOp
+class waveTransformOp
 {
     //- Additional data to be passed into container
     const polyMesh& mesh_;
@@ -319,7 +319,7 @@ class transformOp
     TrackingData& td_;
 
 public:
-    transformOp
+    waveTransformOp
     (
         const polyMesh& mesh,
         const PrimitivePatchType& patch,

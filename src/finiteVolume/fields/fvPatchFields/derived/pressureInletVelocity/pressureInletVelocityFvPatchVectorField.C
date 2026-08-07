@@ -105,9 +105,9 @@ void Foam::pressureInletVelocityFvPatchVectorField::updateCoeffs()
     {
         FatalErrorInFunction
             << "dimensions of phi are not correct"
-            << "\n    on patch " << this->patch().name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << "\n    on patch " << patch().name()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 

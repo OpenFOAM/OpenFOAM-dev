@@ -65,7 +65,7 @@ movingWallSlipVelocityFvPatchVectorField
 
     const vectorField n(p.nf());
 
-    refValue() = sqr(n) & *this;
+    refValue() = sqr(n) & field();
     refGrad() = Zero;
     valueFraction() = sqr(n);
 }

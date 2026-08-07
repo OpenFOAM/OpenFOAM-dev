@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ Foam::SmoothSolver<Type, DType, LUType>::solve(Field<Type>& psi) const
             // Calculate residual magnitude
             solverPerf.initialResidual() = cmptDivide
             (
-                gSumCmptMag(this->matrix_.source() - Apsi),
+                gSum(cmptMag(this->matrix_.source() - Apsi)),
                 normFactor
             );
             solverPerf.finalResidual() = solverPerf.initialResidual();
@@ -141,7 +141,7 @@ Foam::SmoothSolver<Type, DType, LUType>::solve(Field<Type>& psi) const
                 // Calculate the residual to check convergence
                 solverPerf.finalResidual() = cmptDivide
                 (
-                    gSumCmptMag(this->matrix_.residual(psi)),
+                    gSum(cmptMag(this->matrix_.residual(psi))),
                     normFactor
                 );
             } while

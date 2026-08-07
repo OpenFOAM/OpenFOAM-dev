@@ -208,7 +208,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals() const
 
         ownerOrigBoundaryPointNormalsPtr_.set
         (
-            (pointNormals/(mag(pointNormals) + vSmall)).ptr()
+            eval(pointNormals/(mag(pointNormals) + vSmall)).ptr()
         );
     }
 
@@ -245,7 +245,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals0() const
 
         ownerOrigBoundaryPointNormals0Ptr_.set
         (
-            (pointNormals/(mag(pointNormals) + vSmall)).ptr()
+            eval(pointNormals/(mag(pointNormals) + vSmall)).ptr()
         );
     }
 

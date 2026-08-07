@@ -196,8 +196,7 @@ void Foam::mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
       +
         (1.0 - valueFraction_)*
         (
-            this->patchInternalField()
-          + refGrad_/this->patch().deltaCoeffs()
+            patchInternalField() + refGrad_/patch().deltaCoeffs()
         )
     );
 
@@ -211,8 +210,7 @@ Foam::mixedFvPatchField<Type>::snGrad() const
 {
     return
         valueFraction_
-       *(refValue_ - this->patchInternalField())
-       *this->patch().deltaCoeffs()
+       *(refValue_ - patchInternalField())*patch().deltaCoeffs()
       + (1.0 - valueFraction_)*refGrad_;
 }
 
@@ -237,7 +235,7 @@ Foam::mixedFvPatchField<Type>::valueBoundaryCoeffs
 {
     return
          valueFraction_*refValue_
-       + (1.0 - valueFraction_)*refGrad_/this->patch().deltaCoeffs();
+       + (1.0 - valueFraction_)*refGrad_/patch().deltaCoeffs();
 }
 
 
@@ -245,7 +243,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::mixedFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    return -Type(pTraits<Type>::one)*valueFraction_*this->patch().deltaCoeffs();
+    return -Type(pTraits<Type>::one)*valueFraction_*patch().deltaCoeffs();
 }
 
 
@@ -254,7 +252,7 @@ Foam::tmp<Foam::Field<Type>>
 Foam::mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
-        valueFraction_*this->patch().deltaCoeffs()*refValue_
+        valueFraction_*patch().deltaCoeffs()*refValue_
       + (1.0 - valueFraction_)*refGrad_;
 }
 

@@ -38,14 +38,14 @@ void Foam::jumpCyclicFvPatchField<Type>::updateInterfaceMatrixCmpts
     const Cmpts ... cmpts
 ) const
 {
-    const labelUList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = patch().faceCells();
     const labelUList& nbrFaceCells =
         this->cyclicPatch().neighbFvPatch().faceCells();
 
     Field<Type> nbrPf(psi, nbrFaceCells);
 
     // Only apply the jump to the original field
-    if (&psi == &this->primitiveField())
+    if (&psi == &primitiveField())
     {
         nbrPf += jump();
     }
@@ -120,7 +120,7 @@ Foam::jumpCyclicFvPatchField<Type>::patchNeighbourField
 ) const
 {
     const VolField<Type>& vf =
-        static_cast<const VolField<Type>&>(this->internalField());
+        static_cast<const VolField<Type>&>(internalField());
 
     const labelUList& nbrFaceCells =
         this->cyclicPatch().neighbFvPatch().faceCells();

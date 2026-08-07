@@ -40,6 +40,15 @@ Description
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+template<class Type>
+class UniformField;
+
+template<class Type>
+Ostream& operator<<(Ostream& os, const UniformField<Type>& u);
+
+
 /*---------------------------------------------------------------------------*\
                         Class UniformField Declaration
 \*---------------------------------------------------------------------------*/
@@ -73,6 +82,11 @@ public:
         inline Type operator[](const label) const;
 
         inline UniformField primitiveField() const;
+
+
+    // IOstream Operators
+
+        friend Ostream& operator<< <Type>(Ostream&, const UniformField<Type>&);
 };
 
 

@@ -39,6 +39,13 @@ namespace Foam
     (                                                                          \
         const UList<Type>& f,                                                  \
         const label comm = UPstream::worldComm                                 \
+    );                                                                         \
+                                                                               \
+    template<class Type>                                                       \
+    ReturnType gFunc                                                           \
+    (                                                                          \
+        const tmp<Field<Type>>& tf,                                            \
+        const label comm                                                       \
     );
 
 #define TMP_REDUCTION_FUNCTION(ReturnType, Func)                               \

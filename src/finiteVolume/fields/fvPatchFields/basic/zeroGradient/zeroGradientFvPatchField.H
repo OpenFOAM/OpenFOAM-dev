@@ -123,6 +123,9 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patchInternalField;
+
+
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField

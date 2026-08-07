@@ -139,6 +139,11 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::field;
+        using fvPatchField<Type>::patchInternalField;
+
+
         // Evaluation functions
 
             //- Return the matrix diagonal coefficients corresponding to the

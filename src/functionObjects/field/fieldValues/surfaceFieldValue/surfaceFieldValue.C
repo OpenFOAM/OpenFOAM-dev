@@ -783,7 +783,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
     (
         selectionType_ == selectionTypes::sampledSurface
       ? surfacePtr_().Sf()
-      : (signs*filterField(mesh_.Sf()))()
+      : eval(signs*filterField(mesh_.Sf()))()
     );
 
     // Create storage for the values

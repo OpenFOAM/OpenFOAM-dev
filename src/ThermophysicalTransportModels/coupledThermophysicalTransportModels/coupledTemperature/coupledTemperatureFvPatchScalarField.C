@@ -447,8 +447,11 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 
             const scalarField hFactor
             (
-                coupledTemperatureNbr.h_()
-               /(coupledTemperatureNbr.h_() + sumKappaByDeltaNbr())
+                coupledTemperatureNbr.h_().primitiveField()
+               /(
+                   coupledTemperatureNbr.h_().primitiveField()
+                 + sumKappaByDeltaNbr()
+                )
             );
             sumKappaTByDeltaNbr.ref() *= hFactor;
             sumKappaByDeltaNbr.ref() *= hFactor;
@@ -469,7 +472,11 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
         {
             h_->update();
 
-            const scalarField hFactor(h_()/(h_() + sumKappaByDeltaNbrMapped()));
+            const scalarField hFactor
+            (
+                h_().primitiveField()
+               /(h_().primitiveField() + sumKappaByDeltaNbrMapped())
+            );
             sumKappaTByDeltaNbrMapped.ref() *= hFactor;
             sumKappaByDeltaNbrMapped.ref() *= hFactor;
         }

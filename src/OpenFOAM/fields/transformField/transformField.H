@@ -49,34 +49,16 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+BinaryFunction(transform);
+
 template<class Type>
 List<Type> transform(const tensor&, const UList<Type>&);
-
 
 template<class Type>
 void transform(Field<Type>&, const tensorField&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type>> transform(const tensorField&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tensorField&, const tmp<Field<Type>>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tmp<tensorField>&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tmp<tensorField>&, const tmp<Field<Type>>&);
-
-
-template<class Type>
 void transform(Field<Type>&, const tensor&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tensor&, const Field<Type>&);
-
-template<class Type>
-tmp<Field<Type>> transform(const tensor&, const tmp<Field<Type>>&);
 
 
 template<class Type1, class Type2>

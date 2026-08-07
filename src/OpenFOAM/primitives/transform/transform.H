@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -321,6 +321,30 @@ inline scalar pseudoAngle
         return (1.0 - cos)*constant::mathematical::piByTwo;
     }
 }
+
+
+/*---------------------------------------------------------------------------*\
+                        Class transformOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct transformOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& t, const word& v)
+    {
+        return "transform(" + t + ',' + v + ')';
+    }
+
+    template<class Type>
+    static Type value(const tensor& t, const Type& v)
+    {
+        return transform(t, v);
+    }
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

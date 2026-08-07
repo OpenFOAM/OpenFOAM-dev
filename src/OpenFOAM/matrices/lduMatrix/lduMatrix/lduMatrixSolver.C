@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,7 +187,7 @@ Foam::scalar Foam::lduMatrix::solver::normFactor
     return
         gSum
         (
-            (mag(Apsi - tmpField) + mag(source - tmpField))(),
+            (mag(Apsi - tmpField) + mag(source - tmpField)),
             matrix_.lduMesh_.comm()
         )
       + solverPerformance::small_;

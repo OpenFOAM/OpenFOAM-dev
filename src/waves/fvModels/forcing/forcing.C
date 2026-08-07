@@ -207,8 +207,11 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff() const
             if (!bm[patchi].coupled())
             {
                 UIndirectList<scalar>(tforceCoeff.ref(), bm[patchi].faceCells())
-              = lambdaBoundary_.value()
-               *Field<scalar>(scale, bm[patchi].faceCells());
+              = eval
+                (
+                    lambdaBoundary_.value()
+                   *Field<scalar>(scale, bm[patchi].faceCells())
+                );
             }
         }
     }

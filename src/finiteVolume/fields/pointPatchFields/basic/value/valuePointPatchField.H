@@ -162,6 +162,7 @@ public:
         virtual void operator=(pointPatchField<Type>&&);
         virtual void operator=(const pointPatchField<Type>&);
         virtual void operator=(const UList<Type>&);
+        virtual void operator=(const Field<Type>&);
         virtual void operator=(const Type&);
 
 

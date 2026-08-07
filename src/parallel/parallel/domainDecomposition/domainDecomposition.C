@@ -1034,7 +1034,13 @@ Foam::domainDecomposition::procFaceAddressingBf() const
                        .referPatchIndex();
 
                     procFaceAddressingBf_[proci][procPatchi] =
-                        mag(fvp.patchSlice(procFaceAddressing_[proci]))
+                        mag
+                        (
+                            SubField<label>
+                            (
+                                fvp.patchSlice(procFaceAddressing_[proci])
+                            )
+                        )
                       - completeMesh().poly().boundary()[completePatchi]
                        .start();
                 }
@@ -1046,7 +1052,13 @@ Foam::domainDecomposition::procFaceAddressingBf() const
                 else
                 {
                     procFaceAddressingBf_[proci][procPatchi] =
-                        mag(fvp.patchSlice(procFaceAddressing_[proci]))
+                        mag
+                        (
+                            SubField<label>
+                            (
+                                fvp.patchSlice(procFaceAddressing_[proci])
+                            )
+                        )
                       - completeMesh().poly().boundary()[procPatchi].start();
                 }
             }

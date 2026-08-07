@@ -72,7 +72,8 @@ reconstruct
     }
 
     treconField.ref().internalFieldRef() =
-        inv(surfaceSum(SfHat*mesh.Sf()))&surfaceSum(SfHat*ssf);
+        inv(surfaceSum(SfHat*mesh.Sf()), mesh.solutionD())
+      & surfaceSum(SfHat*ssf);
 
     treconField.ref().correctBoundaryConditions();
 

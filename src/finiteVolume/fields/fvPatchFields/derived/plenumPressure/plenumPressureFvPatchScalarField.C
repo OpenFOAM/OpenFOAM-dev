@@ -189,7 +189,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
         }
         else
         {
-            massFlowRate = - gSum(phi);
+            massFlowRate = -gSum(phi.field());
         }
     }
     else

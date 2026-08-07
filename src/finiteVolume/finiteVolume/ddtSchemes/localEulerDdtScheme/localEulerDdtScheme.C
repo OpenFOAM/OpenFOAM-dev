@@ -215,8 +215,9 @@ localEulerDdtScheme<Type>::fvmDdt
 
     const scalarField& rDeltaT = localRDeltaT();
 
-    fvm.diag() = rDeltaT*mesh().Vsc();
-    fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc();
+    fvm.diag() = rDeltaT*mesh().Vsc()().primitiveField();
+    fvm.source() =
+        rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc()().primitiveField();
 
     return tfvm;
 }
@@ -242,10 +243,11 @@ localEulerDdtScheme<Type>::fvmDdt
 
     const scalarField& rDeltaT = localRDeltaT();
 
-    fvm.diag() = rDeltaT*rho.value()*mesh().Vsc();
+    fvm.diag() = rDeltaT*rho.value()*mesh().Vsc()().primitiveField();
 
     fvm.source() =
-        rDeltaT*rho.value()*vf.oldTime().primitiveField()*mesh().Vsc();
+        rDeltaT*rho.value()*vf.oldTime().primitiveField()
+       *mesh().Vsc()().primitiveField();
 
     return tfvm;
 }
@@ -271,11 +273,11 @@ localEulerDdtScheme<Type>::fvmDdt
 
     const scalarField& rDeltaT = localRDeltaT();
 
-    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().Vsc();
+    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().Vsc()().primitiveField();
 
     fvm.source() = rDeltaT
        *rho.oldTime().primitiveField()
-       *vf.oldTime().primitiveField()*mesh().Vsc();
+       *vf.oldTime().primitiveField()*mesh().Vsc()().primitiveField();
 
     return tfvm;
 }
@@ -307,12 +309,13 @@ localEulerDdtScheme<Type>::fvmDdt
     const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() =
-        rDeltaT*alpha.primitiveField()*rho.primitiveField()*mesh().Vsc();
+        rDeltaT*alpha.primitiveField()*rho.primitiveField()
+       *mesh().Vsc()().primitiveField();
 
     fvm.source() = rDeltaT
        *alpha.oldTime().primitiveField()
        *rho.oldTime().primitiveField()
-       *vf.oldTime().primitiveField()*mesh().Vsc();
+       *vf.oldTime().primitiveField()*mesh().Vsc()().primitiveField();
 
     return tfvm;
 }

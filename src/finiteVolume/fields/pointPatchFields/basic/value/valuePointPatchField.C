@@ -212,6 +212,16 @@ void Foam::valuePointPatchField<Type>::operator=
 template<class Type>
 void Foam::valuePointPatchField<Type>::operator=
 (
+    const Field<Type>& ul
+)
+{
+    Field<Type>::operator=(ul);
+}
+
+
+template<class Type>
+void Foam::valuePointPatchField<Type>::operator=
+(
     const UList<Type>& ul
 )
 {

@@ -33,10 +33,617 @@ Description
 #ifndef ops_H
 #define ops_H
 
+#include "expressionName.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+/*---------------------------------------------------------------------------*\
+                          Class nopOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct nopOp
+{
+    static const char precedence = expression::Operation<void>::precedence;
+
+    static word name(const word& x)
+    {
+        return x;
+    }
+
+    template<class X>
+    static X value(const X& x)
+    {
+        return x;
+    }
+
+    template<class X>
+    auto operator()(const X& x) const
+    {
+        return x;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                          Class promoteOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct promoteOp
+{
+    static const char precedence = 2;
+
+    static word name(const word& x)
+    {
+        return x;
+    }
+
+    template<class X>
+    static X value(const X& x)
+    {
+        return x;
+    }
+
+    template<class X>
+    auto operator()(const X& x) const
+    {
+        return x;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                          Class negateOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct negateOp
+{
+    static const char precedence = 2;
+
+    static word name(const word& x)
+    {
+        return '-' + x;
+    }
+
+    template<class X>
+    static auto value(const X& x)
+    {
+        return -x;
+    }
+
+    template<class X>
+    auto operator()(const X& x) const
+    {
+        return -x;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                          Class notOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct notOp
+{
+    static const char precedence = 2;
+
+    static word name(const word& x)
+    {
+        return '!' + x;
+    }
+
+    template<class X>
+    static auto value(const X& x)
+    {
+        return !x;
+    }
+
+    template<class X>
+    auto operator()(const X& x) const
+    {
+        return !x;
+    }
+};
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Unary functions
+
+#define UnaryFunctionOp(Func)                                                  \
+    struct Func##Op                                                            \
+    {                                                                          \
+        static const char precedence =                                         \
+            expression::Operation<void>::precedence;                           \
+                                                                               \
+        static word name(const word& x)                                        \
+        {                                                                      \
+            return #Func"(" + x + ')';                                         \
+        }                                                                      \
+                                                                               \
+        template<class Type>                                                   \
+        static auto value(const Type x)                                        \
+        {                                                                      \
+            return Func(x);                                                    \
+        }                                                                      \
+                                                                               \
+        template<class Type>                                                   \
+        auto operator()(const Type x) const                                    \
+        {                                                                      \
+            return Func(x);                                                    \
+        }                                                                      \
+    };
+
+UnaryFunctionOp(sqr)
+UnaryFunctionOp(mag)
+UnaryFunctionOp(magSqr)
+UnaryFunctionOp(cmptMax)
+UnaryFunctionOp(cmptMin)
+UnaryFunctionOp(cmptAv)
+UnaryFunctionOp(cmptMag)
+
+/*---------------------------------------------------------------------------*\
+                            Class addOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct addOp
+{
+    static const char precedence = 0;
+
+    static const bool associative = true;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + '+' + b;
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return a + b;
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return a + b;
+    }
+
+    static word name(const word& x)
+    {
+        return "sum(" + x + ')';
+    }
+
+    template<class X>
+    static const X& identity()
+    {
+        return pTraits<X>::zero;
+    }
+};
+
+// Alias for addOp for readability of summation reduction operations
+using sumOp = addOp;
+
+/*---------------------------------------------------------------------------*\
+                          Class subtractOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct subtractOp
+{
+    static const char precedence = 0;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + '-' + b;
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return a - b;
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return a - b;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                          Class multiplyOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct multiplyOp
+{
+    static const char precedence = 1;
+
+    static const bool associative = true;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + '*' + b;
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return a*b;
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return a*b;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                            Class divideOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct divideOp
+{
+    static const char precedence = 1;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + '|' + b;
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return a/b;
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return a/b;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                            Class innerOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct innerOp
+{
+    static const char precedence = 1;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + '&' + b;
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return a & b;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                            Class crossOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct crossOp
+{
+    static const char precedence = 1;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + '^' + b;
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return a ^ b;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                            Class stabiliseOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct stabiliseOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "stabilise(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const scalar b)
+    {
+        return stabilise(a, b);
+    }
+
+    scalar operator()(const scalar a, const scalar b) const
+    {
+        return stabilise(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                           Class powOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct powOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "pow(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const scalar b)
+    {
+        return pow(a, b);
+    }
+
+    static scalar value(const scalar a, const label b)
+    {
+        return integerPow(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                        Class integerPowOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct integerPowOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "integerPow(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const label b)
+    {
+        return integerPow(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                        Class integerRootOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct integerRootOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "integerRoot(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const label b)
+    {
+        return integerRoot(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                           Class maxOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct maxOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "max(" + a + ',' + b + ')';
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return max(a, b);
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return max(a, b);
+    }
+
+    static word name(const word& x)
+    {
+        return "max(" + x + ')';
+    }
+
+    template<class X>
+    static const X& identity()
+    {
+        return pTraits<X>::min;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                             Class minOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct minOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "min(" + a + ',' + b + ')';
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return min(a, b);
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return min(a, b);
+    }
+
+    static word name(const word& x)
+    {
+        return "min(" + x + ')';
+    }
+
+    template<class X>
+    static const X& identity()
+    {
+        return pTraits<X>::max;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                             Class minModOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct minModOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "minMod(" + a + ',' + b + ')';
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return minMod(a, b);
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return minMod(a, b);
+    }
+
+    static word name(const word& x)
+    {
+        return "minMod(" + x + ')';
+    }
+
+    template<class X>
+    static const X& identity()
+    {
+        return pTraits<X>::max;
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                          Class cmptMultiplyOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct cmptMultiplyOp
+{
+    static const char precedence = 1;
+
+    static const bool associative = true;
+
+    static word name(const word& a, const word& b)
+    {
+        return "cmptMultiply(" + a + ',' + b + ')';
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return cmptMultiply(a, b);
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return cmptMultiply(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                         Class cmptDivideOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct cmptDivideOp
+{
+    static const char precedence = 1;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "cmptDivide(" + a + ',' + b + ')';
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return cmptDivide(a, b);
+    }
+
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
+    {
+        return cmptDivide(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                           Class cmptPowOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct cmptPowOp
+{
+    static const char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "cmptPow(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const scalar b)
+    {
+        return cmptPow(a, b);
+    }
+};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,20 +691,8 @@ EqOp(nopEq, (void)x)
         }                                                                      \
     };
 
-Op(sum, x + y)
-Op(plus, x + y)
-Op(minus, x - y)
-Op(multiply, x * y)
-Op(divide, x / y)
-Op(cmptMultiply, cmptMultiply(x, y))
-Op(cmptPow, cmptPow(x, y))
-Op(cmptDivide, cmptDivide(x, y))
-Op(stabilise, stabilise(x, y))
-Op(max, max(x, y))
-Op(min, min(x, y))
 Op(minMagSqr, (magSqr(x) <= magSqr(y) ? x : y))
 Op(maxMagSqr, (magSqr(x) >= magSqr(y) ? x : y))
-Op(minMod, minMod(x, y))
 Op(and, x && y)
 Op(or, x || y)
 Op(equal, x == y)
@@ -107,23 +702,6 @@ Op(greater, x > y)
 Op(greaterEq, x >= y)
 
 #undef Op
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define UOp(opName, op)                                                        \
-    struct opName##Op                                                          \
-    {                                                                          \
-        template<class T>                                                      \
-        T operator()(const T& x) const                                         \
-        {                                                                      \
-            return op;                                                         \
-        }                                                                      \
-    };
-
-UOp(nop, x)
-UOp(not, !x)
-
-#undef UOp
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

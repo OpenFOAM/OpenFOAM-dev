@@ -125,11 +125,14 @@ void Foam::fv::heatTransferCoefficientModels::function2::correct()
     (
         model_.interpolate
         (
-            mag
+            eval
             (
-                model_.nbrMesh()
-               .lookupObject<volVectorField>(UNbrName_)
-               .primitiveField()
+                mag
+                (
+                    model_.nbrMesh()
+                   .lookupObject<volVectorField>(UNbrName_)
+                   .primitiveField()
+                )
             )()
         )
     );

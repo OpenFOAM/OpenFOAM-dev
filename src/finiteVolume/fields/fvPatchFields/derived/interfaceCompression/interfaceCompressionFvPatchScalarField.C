@@ -76,7 +76,7 @@ void Foam::interfaceCompressionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    operator==(pos0(this->patchInternalField() - 0.5));
+    operator==(pos0(patchInternalField() - 0.5));
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }

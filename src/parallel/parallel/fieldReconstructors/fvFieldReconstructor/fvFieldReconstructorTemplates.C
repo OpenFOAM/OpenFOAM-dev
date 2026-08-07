@@ -229,7 +229,7 @@ Foam::fvFieldReconstructor::reconstructVolField
                     procField.boundaryField()[procPatchi],
                     reverseFieldMapper
                     (
-                        faceProcAddressingBf_[proci][procPatchi] - 1
+                        eval(faceProcAddressingBf_[proci][procPatchi] - 1)
                     )
                 );
             }
@@ -271,7 +271,7 @@ Foam::fvFieldReconstructor::reconstructVolField
                     procField.boundaryField()[procPatchi],
                     reverseFieldMapper
                     (
-                        faceProcAddressingBf_[proci][procPatchi] - 1
+                        eval(faceProcAddressingBf_[proci][procPatchi] - 1)
                     )
                 );
             }
@@ -389,7 +389,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                     procField.boundaryField()[procPatchi],
                     reverseFieldMapper
                     (
-                        faceProcAddressingBf_[proci][procPatchi] - 1
+                        eval(faceProcAddressingBf_[proci][procPatchi] - 1)
                     )
                 );
             }
@@ -414,7 +414,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                     procField.boundaryField()[procPatchi],
                     reverseFieldMapper
                     (
-                        faceProcAddressingBf_[proci][procPatchi] - 1
+                        eval(faceProcAddressingBf_[proci][procPatchi] - 1)
                     )
                 );
             }

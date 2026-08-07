@@ -97,11 +97,11 @@ Foam::transformFvPatchField<Type>::valueBoundaryCoeffs
 ) const
 {
     return
-        *this
+        field()
       - cmptMultiply
         (
-            valueInternalCoeffs(this->patch().weights()),
-            this->patchInternalField()
+            valueInternalCoeffs(patch().weights()),
+            patchInternalField()
         );
 }
 
@@ -110,7 +110,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::transformFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    return -this->patch().deltaCoeffs()*snGradTransformDiag();
+    return -patch().deltaCoeffs()*snGradTransformDiag();
 }
 
 
@@ -120,7 +120,7 @@ Foam::transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
         snGrad()
-      - cmptMultiply(gradientInternalCoeffs(), this->patchInternalField());
+      - cmptMultiply(gradientInternalCoeffs(), patchInternalField());
 }
 
 

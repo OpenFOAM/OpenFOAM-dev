@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ void Foam::MULES::explicitSolve
 
     if (fv::localEulerDdt::enabled(mesh))
     {
-        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+        const scalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
         explicitSolve(rDeltaT, rho, psi, psiPhi, Sp, Su);
     }
     else
@@ -168,7 +168,7 @@ void Foam::MULES::explicitSolve
 
     if (fv::localEulerDdt::enabled(mesh))
     {
-        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+        const scalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
         limit
         (
             controls,
@@ -306,14 +306,22 @@ void Foam::MULES::limit
     scalarField SuCorr
     (
         mesh.moving()
-      ? (mesh.Vsc0()().primitiveField()*rDeltaT*rho.oldTime().primitiveField())
-       *psi.oldTime().primitiveField()
-      + V*Su.primitiveField()
-      : V
-       *(
-            (rho.oldTime().primitiveField()*rDeltaT)
-           *psi.oldTime().primitiveField()
-          + Su.primitiveField()
+      ? eval
+        (
+            (
+                mesh.Vsc0()().primitiveField()
+               *rDeltaT*rho.oldTime().primitiveField()
+            )*psi.oldTime().primitiveField()
+          + V*Su.primitiveField()
+        )
+      : eval
+        (
+            V
+           *(
+               (rho.oldTime().primitiveField()*rDeltaT)
+              *psi.oldTime().primitiveField()
+             + Su.primitiveField()
+            )
         )
     );
 
@@ -403,7 +411,7 @@ void Foam::MULES::limit
 
     if (fv::localEulerDdt::enabled(mesh))
     {
-        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+        const scalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
         limit
         (
             controls,
@@ -467,7 +475,7 @@ void Foam::MULES::limit
 
     if (fv::localEulerDdt::enabled(mesh))
     {
-        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+        const scalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
         limit
         (
             controls,

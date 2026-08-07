@@ -128,6 +128,16 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::db;
+        using fvPatchField<Type>::time;
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::field;
+        using fvPatchField<Type>::patchInternalField;
+        using fvPatchField<Type>::patchNeighbourField;
+        using fvPatchField<Type>::internalField;
+        using fvPatchField<Type>::primitiveField;
+
+
         // Attributes
 
             //- Return true if this patch field fixes a value.
@@ -177,8 +187,13 @@ public:
     // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
-
+        virtual void operator=(const Field<Type>&) {}
         virtual void operator=(const fvPatchField<Type>&) {}
+
+        //- Virtual assign to an expression
+        virtual void operator=(const expression::Assignment<Field<Type>>& a)
+        {}
+
         virtual void operator+=(const fvPatchField<Type>&) {}
         virtual void operator-=(const fvPatchField<Type>&) {}
         virtual void operator*=(const fvPatchField<scalar>&) {}

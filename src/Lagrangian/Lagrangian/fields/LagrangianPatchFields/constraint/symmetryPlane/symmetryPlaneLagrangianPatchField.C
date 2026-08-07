@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,10 +84,13 @@ void Foam::symmetryPlaneLagrangianPatchField<Type>::evaluate
 {
     LagrangianPatchField<Type>::operator=
     (
+        eval
+        (
         transform
         (
             I - 2*sqr(this->patch().mesh().template nf<vectorField>(fraction)),
             this->primitiveSubField().operator const Field<Type>&()
+        )
         )
     );
 }

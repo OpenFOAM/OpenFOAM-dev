@@ -126,8 +126,8 @@ void Foam::functionObjects::cutLayerAverage::calcWeights()
     {
         const SubField<scalar> distance0s(cutXs, nLayers_);
         const SubField<scalar> distance1s(cutXs, nLayers_, 1);
-        layerDistances_.reset(((distance0s + distance1s)/2).ptr());
-        layerThicknesses_.reset((distance1s - distance0s).ptr());
+        layerDistances_.reset(eval((distance0s + distance1s)/2).ptr());
+        layerThicknesses_.reset(eval(distance1s - distance0s).ptr());
     }
 
     // Calculate the layer positions

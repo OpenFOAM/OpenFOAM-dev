@@ -208,7 +208,8 @@ bool Foam::functionObjects::wallHeatTransferCoeff::write()
 
         const scalar minHtcp = gMin(hfp);
         const scalar maxHtcp = gMax(hfp);
-        const scalar averageHtcp = gSum(magSf[patchi]*hfp)/gSum(magSf[patchi]);
+        const scalar averageHtcp =
+            gSum(magSf[patchi]*hfp)/gSum(magSf[patchi].field());
 
         if (Pstream::master())
         {

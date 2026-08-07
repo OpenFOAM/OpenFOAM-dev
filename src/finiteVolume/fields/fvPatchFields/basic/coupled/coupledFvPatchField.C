@@ -113,9 +113,7 @@ Foam::tmp<Foam::Field<Type>> Foam::coupledFvPatchField<Type>::snGrad
     const scalarField& deltaCoeffs
 ) const
 {
-    return
-        deltaCoeffs
-       *(this->patchNeighbourField() - this->patchInternalField());
+    return deltaCoeffs*(patchNeighbourField() - patchInternalField());
 }
 
 
@@ -134,8 +132,8 @@ void Foam::coupledFvPatchField<Type>::evaluateNoUpdateCoeffs()
 {
     Field<Type>::operator=
     (
-        this->patch().weights()*this->patchInternalField()
-      + (1.0 - this->patch().weights())*this->patchNeighbourField()
+        patch().weights()*patchInternalField()
+      + (1.0 - patch().weights())*patchNeighbourField()
     );
 }
 
@@ -192,7 +190,7 @@ Foam::tmp<Foam::Field<Type>>
 Foam::coupledFvPatchField<Type>::gradientInternalCoeffs() const
 {
     NotImplemented;
-    return -Type(pTraits<Type>::one)*this->patch().deltaCoeffs();
+    return -Type(pTraits<Type>::one)*patch().deltaCoeffs();
 }
 
 

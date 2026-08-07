@@ -47,54 +47,52 @@ UNARY_FUNCTION(symmTensor, symmTensor, dev)
 UNARY_FUNCTION(symmTensor, symmTensor, dev2)
 UNARY_FUNCTION(scalar, symmTensor, det)
 UNARY_FUNCTION(symmTensor, symmTensor, cof)
+UNARY_FUNCTION(symmTensor, symmTensor, inv)
 
-void inv(Field<symmTensor>& tf, const UList<symmTensor>& tf1)
+void inv
+(
+    Field<symmTensor>& tf,
+    const UList<symmTensor>& tf1,
+    const Vector<label>& solutionD
+)
 {
     if (tf.empty())
     {
         return;
     }
 
-    scalar scale = magSqr(tf1[0]);
-    Vector<bool> removeCmpts
-    (
-        magSqr(tf1[0].xx())/scale < small,
-        magSqr(tf1[0].yy())/scale < small,
-        magSqr(tf1[0].zz())/scale < small
-    );
-
-    if (removeCmpts.x() || removeCmpts.y() || removeCmpts.z())
+    if (solutionD.x() == -1 || solutionD.y() == -1 || solutionD.z() == -1)
     {
         symmTensorField tf1Plus(tf1);
 
-        if (removeCmpts.x())
+        if (solutionD.x() == -1)
         {
             tf1Plus += symmTensor(1,0,0,0,0,0);
         }
 
-        if (removeCmpts.y())
+        if (solutionD.y() == -1)
         {
             tf1Plus += symmTensor(0,0,0,1,0,0);
         }
 
-        if (removeCmpts.z())
+        if (solutionD.z() == -1)
         {
             tf1Plus += symmTensor(0,0,0,0,0,1);
         }
 
         TFOR_ALL_F_OP_FUNC_F(symmTensor, tf, =, inv, symmTensor, tf1Plus)
 
-        if (removeCmpts.x())
+        if (solutionD.x() == -1)
         {
             tf -= symmTensor(1,0,0,0,0,0);
         }
 
-        if (removeCmpts.y())
+        if (solutionD.y() == -1)
         {
             tf -= symmTensor(0,0,0,1,0,0);
         }
 
-        if (removeCmpts.z())
+        if (solutionD.z() == -1)
         {
             tf -= symmTensor(0,0,0,0,0,1);
         }
@@ -105,24 +103,36 @@ void inv(Field<symmTensor>& tf, const UList<symmTensor>& tf1)
     }
 }
 
-tmp<symmTensorField> inv(const Field<symmTensor>& tf)
+tmp<symmTensorField> inv
+(
+    const Field<symmTensor>& tf,
+    const Vector<label>& solutionD
+)
 {
     tmp<symmTensorField> result(new symmTensorField(tf.size()));
-    inv(result.ref(), tf);
+    inv(result.ref(), tf, solutionD);
     return result;
 }
 
-tmp<symmTensorField> inv(const SubField<symmTensor>& tf)
+tmp<symmTensorField> inv
+(
+    const SubField<symmTensor>& tf,
+    const Vector<label>& solutionD
+)
 {
     tmp<symmTensorField> result(new symmTensorField(tf.size()));
-    inv(result.ref(), tf);
+    inv(result.ref(), tf, solutionD);
     return result;
 }
 
-tmp<symmTensorField> inv(const tmp<symmTensorField>& tf)
+tmp<symmTensorField> inv
+(
+    const tmp<symmTensorField>& tf,
+    const Vector<label>& solutionD
+)
 {
     tmp<symmTensorField> tRes = New(tf);
-    inv(tRes.ref(), tf());
+    inv(tRes.ref(), tf(), solutionD);
     tf.clear();
     return tRes;
 }

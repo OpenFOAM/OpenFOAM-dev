@@ -126,6 +126,11 @@ public:
 
     // Member Functions
 
+        using fvPatchField<scalar>::db;
+        using fvPatchField<scalar>::patch;
+        using fvPatchField<scalar>::field;
+
+
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field

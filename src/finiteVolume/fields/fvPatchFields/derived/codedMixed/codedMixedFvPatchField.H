@@ -169,6 +169,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::patch;
+        using fvPatchField<Type>::internalField;
+
+
         //- Get reference to the underlying patchField
         const mixedFvPatchField<Type>& redirectPatchField() const;
 

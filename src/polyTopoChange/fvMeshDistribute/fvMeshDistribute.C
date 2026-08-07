@@ -2053,15 +2053,18 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
         repatchFaceMap = repatchMap().faceMap();
 
         // Reorder all boundary face data (sourceProc, sourceFace etc.)
-        labelList bFaceMap
+        const labelList bFaceMap
         (
-            SubList<label>
+            eval
             (
-                repatchMap().reverseFaceMap(),
-                mesh_.nFaces() - mesh_.nInternalFaces(),
-                mesh_.nInternalFaces()
+                SubField<label>
+                (
+                    repatchMap().reverseFaceMap(),
+                    mesh_.nFaces() - mesh_.nInternalFaces(),
+                    mesh_.nInternalFaces()
+                )
+              - mesh_.nInternalFaces()
             )
-          - mesh_.nInternalFaces()
         );
 
         inplaceReorder(bFaceMap, sourceFace);

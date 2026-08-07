@@ -193,8 +193,8 @@ Foam::List<Foam::remote> Foam::patchToPatch::distributePatch
         {
             localProcFaces[localFacei] = {proci, fis[i]};
             localFaces[localFacei] =
-                face(SubField<label>(fs[i]) + localPointi);
-            localFacei ++;
+                face(eval(SubField<label>(fs[i]) + localPointi));
+            localFacei++;
         }
 
         const pointField& ps = procLocalPoints[proci];

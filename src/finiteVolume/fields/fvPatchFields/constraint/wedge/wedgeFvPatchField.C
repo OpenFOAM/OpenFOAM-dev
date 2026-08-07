@@ -61,8 +61,8 @@ Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
         )   << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 
@@ -81,13 +81,13 @@ Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper)
 {
-    if (!isType<wedgeFvPatch>(this->patch()))
+    if (!isType<wedgeFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -109,12 +109,12 @@ Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
 template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::wedgeFvPatchField<Type>::snGrad() const
 {
-    const Field<Type> pif(this->patchInternalField());
+    const Field<Type> pif(patchInternalField());
 
     return
     (
-        transform(refCast<const wedgeFvPatch>(this->patch()).cellT(), pif) - pif
-    )*(0.5*this->patch().deltaCoeffs());
+        transform(refCast<const wedgeFvPatch>(patch()).cellT(), pif) - pif
+    )*(0.5*patch().deltaCoeffs());
 }
 
 
@@ -130,8 +130,8 @@ void Foam::wedgeFvPatchField<Type>::evaluate(const Pstream::commsTypes)
     (
         transform
         (
-            refCast<const wedgeFvPatch>(this->patch()).faceT(),
-            this->patchInternalField()
+            refCast<const wedgeFvPatch>(patch()).faceT(),
+            patchInternalField()
         )
     );
 }
@@ -143,7 +143,7 @@ Foam::wedgeFvPatchField<Type>::snGradTransformDiag() const
 {
     const vector diagV
     (
-        0.5*diag(I - refCast<const wedgeFvPatch>(this->patch()).cellT())
+        0.5*diag(I - refCast<const wedgeFvPatch>(patch()).cellT())
     );
 
     return tmp<Field<Type>>

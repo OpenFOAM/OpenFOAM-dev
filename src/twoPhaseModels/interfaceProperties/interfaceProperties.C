@@ -92,7 +92,7 @@ void Foam::interfaceProperties::correctContactAngle
 
             a1cap.gradient() = (nf & nHatp)*mag(gradAlphaf[patchi]);
             a1cap.evaluate();
-            a2bf[patchi] = 1 - a1cap;
+            a2bf[patchi] = 1 - a1cap.field();
         }
     }
 }

@@ -60,6 +60,43 @@ UNARY_FUNCTION(tensor, tensor, eigenVectors, sign)
 UNARY_FUNCTION(vector, symmTensor, eigenValues, transform)
 UNARY_FUNCTION(symmTensor, symmTensor, eigenVectors, sign)
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<tensor, GeoMesh, Field>> inv
+(
+    const DimensionedField<tensor, GeoMesh, PrimitiveField>& dtf,
+    const Vector<label>& solutionD
+)
+{
+    tmp<DimensionedField<tensor, GeoMesh, Field>> tRes
+    (
+        DimensionedField<tensor, GeoMesh, Field>::New
+        (
+            "inv(" + dtf.name() + ',' + name(solutionD) + ')',
+            dtf.mesh(),
+            inv(dtf.dimensions())
+        )
+    );
+
+    inv(tRes.ref().primitiveFieldRef(), dtf.primitiveField(), solutionD);
+
+    return tRes;
+}
+
+
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<tensor, GeoMesh, Field>> inv
+(
+    const tmp<DimensionedField<tensor, GeoMesh, PrimitiveField>>& tdtf,
+    const Vector<label>& solutionD
+)
+{
+    tmp<DimensionedField<tensor, GeoMesh, Field>> tRes(inv(tdtf(), solutionD));
+    tdtf.clear();
+    return tRes;
+}
+
 
 // * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
 

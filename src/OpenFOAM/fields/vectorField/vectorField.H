@@ -37,6 +37,7 @@ SourceFiles
 
 #include "scalarField.H"
 #include "vector.H"
+#include "vectorExpressions.H"
 
 #define TEMPLATE
 #include "FieldFunctionsM.H"

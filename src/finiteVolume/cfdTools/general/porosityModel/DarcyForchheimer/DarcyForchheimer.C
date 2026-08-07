@@ -177,7 +177,7 @@ void Foam::porosityModels::DarcyForchheimer::calcForce
 
     apply(Udiag, Usource, V, rho, mu, U);
 
-    force = Udiag*U - Usource;
+    force = Udiag*U.primitiveField() - Usource;
 }
 
 

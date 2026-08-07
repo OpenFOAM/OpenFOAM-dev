@@ -7,7 +7,7 @@
         (
             "Vk",
             dimensions::volume,
-            gSum(c*mesh.V().primitiveField())
+            gSum(c.primitiveField()*mesh.V().primitiveField())
         );
         dimensionedScalar Ak("Ak", dimensions::area, 0.0);
 
@@ -83,9 +83,10 @@
             (
                 fvc::div(nf, b, "div(phiSt,b)") - b*fvc::div(nf) + dMgb
             );
-            dimensionedScalar AkEst = gSum(mgb*mesh.V().primitiveField());
+            const scalar AkEst =
+                gSum(mgb.primitiveField()*mesh.V().primitiveField());
 
-            StCorr.value() = max(min((Ak/AkEst).value(), 10.0), 1.0);
+            StCorr.value() = max(min((Ak.value()/AkEst), 10.0), 1.0);
 
             Info<< "StCorr = " << StCorr.value() << endl;
         }

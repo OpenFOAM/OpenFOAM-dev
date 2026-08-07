@@ -59,7 +59,7 @@ Foam::nonConformalErrorFvsPatchField<Type>::nonConformalErrorFvsPatchField
         FatalIOErrorInFunction
         (
             dict
-        )   << "patch " << this->patch().index() << " not "
+        )   << "patch " << patch().index() << " not "
             << nonConformalErrorFvPatch::typeName << " type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
@@ -78,13 +78,13 @@ Foam::nonConformalErrorFvsPatchField<Type>::nonConformalErrorFvsPatchField
 :
     fvsPatchField<Type>(ptf, p, iF, mapper)
 {
-    if (!isType<nonConformalErrorFvPatch>(this->patch()))
+    if (!isType<nonConformalErrorFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "Field type does not correspond to patch type for patch "
-            << this->patch().index() << "." << endl
+            << patch().index() << "." << endl
             << "Field type: " << typeName << endl
-            << "Patch type: " << this->patch().type()
+            << "Patch type: " << patch().type()
             << exit(FatalError);
     }
 }

@@ -156,6 +156,10 @@ public:
 
     // Member Functions
 
+        using fvPatchField<Type>::db;
+        using fvPatchField<Type>::patch;
+
+
         // Access
 
             //- Return the heat capacity ratio

@@ -73,7 +73,7 @@ void Foam::fixedInternalValueFvPatchField<Type>::manipulateMatrix
 )
 {
     // Apply the patch internal field as a constraint in the matrix
-    matrix.setValues(this->patch().faceCells(), this->patchInternalField()());
+    matrix.setValues(patch().faceCells(), patchInternalField()());
 }
 
 

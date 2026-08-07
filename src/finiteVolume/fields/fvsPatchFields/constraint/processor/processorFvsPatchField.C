@@ -68,7 +68,7 @@ Foam::processorFvsPatchField<Type>::processorFvsPatchField
         FatalIOErrorInFunction
         (
             dict
-        )   << "patch " << this->patch().index() << " not processor type. "
+        )   << "patch " << patch().index() << " not processor type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }
@@ -87,13 +87,13 @@ Foam::processorFvsPatchField<Type>::processorFvsPatchField
     coupledFvsPatchField<Type>(ptf, p, iF, mapper),
     procPatch_(refCast<const processorFvPatch>(p))
 {
-    if (!isA<processorFvPatch>(this->patch()))
+    if (!isA<processorFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "Field type does not correspond to patch type for patch "
-            << this->patch().index() << "." << endl
+            << patch().index() << "." << endl
             << "Field type: " << typeName << endl
-            << "Patch type: " << this->patch().type()
+            << "Patch type: " << patch().type()
             << exit(FatalError);
     }
 }

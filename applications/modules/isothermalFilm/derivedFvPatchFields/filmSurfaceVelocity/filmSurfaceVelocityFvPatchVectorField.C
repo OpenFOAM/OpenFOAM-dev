@@ -148,7 +148,7 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
 
         // Calculate the drag coefficient from the drag constant
         // and the magnitude of the velocity difference
-        const scalarField Ds(Cs_*rhopNbr*mag(refValue() - *this));
+        const scalarField Ds(Cs_*rhopNbr*mag(refValue() - field()));
 
         // Calculate the value-fraction from the balance between the
         // external fluid drag and internal film stress
@@ -161,9 +161,12 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
         (
             mapper.fromNeighbour
             (
-                transportModelNbr.rho().boundaryField()[patchNbr.index()]
-               *transportModelNbr.nuEff(patchNbr.index())
-               *patchNbr.deltaCoeffs()
+                eval
+                (
+                    transportModelNbr.rho().boundaryField()[patchNbr.index()]
+                   *transportModelNbr.nuEff(patchNbr.index())
+                   *patchNbr.deltaCoeffs()
+                )
             )
         );
 

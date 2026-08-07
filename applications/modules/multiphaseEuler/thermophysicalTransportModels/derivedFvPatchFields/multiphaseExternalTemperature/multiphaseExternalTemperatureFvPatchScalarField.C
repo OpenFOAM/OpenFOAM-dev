@@ -79,7 +79,7 @@ void Foam::multiphaseExternalTemperatureFvPatchScalarField::getKappa
         sumKappaTcByDelta = sumKappaTc*patch().deltaCoeffs();
     }
 
-    T = (sumKappaT + alphaKappaEff*(*this))/(sumKappa + alphaKappaEff);
+    T = (sumKappaT + alphaKappaEff*(field()))/(sumKappa + alphaKappaEff);
 }
 
 
