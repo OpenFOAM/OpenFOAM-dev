@@ -33,7 +33,7 @@ void Foam::GAMGSolver::scale
     scalarField& field,
     scalarField& Acf,
     const lduMatrix& A,
-    const FieldField<Field, scalar>& interfaceLevelBouCoeffs,
+    const Field<Field<scalar>>& interfaceLevelBouCoeffs,
     const lduInterfaceFieldPtrsList& interfaceLevel,
     const scalarField& source,
     const direction cmpt

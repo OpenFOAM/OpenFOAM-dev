@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,13 +91,13 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
     // Note: there is a change of sign in the coupled
     // interface update to add the contribution to the r.h.s.
 
-    FieldField<Field, LUType> mBouCoeffs(matrix_.interfacesUpper().size());
+    Field<Field<LUType>> mBouCoeffs(matrix_.interfacesUpper().size());
 
     forAll(mBouCoeffs, patchi)
     {
         if (matrix_.interfaces().set(patchi))
         {
-            mBouCoeffs.set(patchi, -matrix_.interfacesUpper()[patchi]);
+            mBouCoeffs[patchi] = -matrix_.interfacesUpper()[patchi];
         }
     }
 

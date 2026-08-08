@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,9 +41,8 @@ namespace Foam
                        Class dummyTransform Declaration
 \*---------------------------------------------------------------------------*/
 
-class dummyTransform
+struct dummyTransform
 {
-public:
     template<class T>
     void operator()
     (
@@ -51,10 +50,12 @@ public:
         const bool forward,
         List<T>& fld
     ) const
-    {};
+    {}
+
     template<class T>
     void operator()(const coupledPolyPatch& cpp, Field<T>& fld) const
     {}
+
     template<class T, template<class> class Container>
     void operator()(const coupledPolyPatch& cpp, Container<T>& map) const
     {}
@@ -75,33 +76,6 @@ public:
     {}
 };
 
-template<class T>
-class pTraits<UList<T>>
-:
-    public UList<T>
-{
-public:
-    typedef label cmptType;
-
-    pTraits(Istream& is)
-    :
-        UList<T>(is)
-    {}
-};
-
-template<class T>
-class pTraits<Field<T>>
-:
-    public Field<T>
-{
-public:
-    typedef label cmptType;
-
-    pTraits(Istream& is)
-    :
-        Field<T>(is)
-    {}
-};
 
 template<>
 class pTraits<face>
@@ -116,6 +90,7 @@ public:
         face(is)
     {}
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

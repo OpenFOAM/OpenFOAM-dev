@@ -131,11 +131,11 @@ class fvMatrix
 
         //- Boundary scalar field containing pseudo-matrix coeffs
         //  for internal cells
-        FieldField<Field, Type> internalCoeffs_;
+        Field<Field<Type>> internalCoeffs_;
 
         //- Boundary scalar field containing pseudo-matrix coeffs
         //  for boundary cells
-        FieldField<Field, Type> boundaryCoeffs_;
+        Field<Field<Type>> boundaryCoeffs_;
 
 
         //- Face flux field for non-orthogonal correction
@@ -317,14 +317,14 @@ public:
 
             //- fvBoundary scalar field containing pseudo-matrix coeffs
             //  for internal cells
-            FieldField<Field, Type>& internalCoeffs()
+            Field<Field<Type>>& internalCoeffs()
             {
                 return internalCoeffs_;
             }
 
             //- fvBoundary scalar field containing pseudo-matrix coeffs
             //  for boundary cells
-            FieldField<Field, Type>& boundaryCoeffs()
+            Field<Field<Type>>& boundaryCoeffs()
             {
                 return boundaryCoeffs_;
             }

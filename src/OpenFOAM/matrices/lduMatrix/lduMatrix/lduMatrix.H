@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,8 +99,8 @@ public:
 
             word fieldName_;
             const lduMatrix& matrix_;
-            const FieldField<Field, scalar>& interfaceBouCoeffs_;
-            const FieldField<Field, scalar>& interfaceIntCoeffs_;
+            const Field<Field<scalar>>& interfaceBouCoeffs_;
+            const Field<Field<scalar>>& interfaceIntCoeffs_;
             lduInterfaceFieldPtrsList interfaces_;
 
             //- Dictionary of controls
@@ -144,8 +144,8 @@ public:
                 (
                     const word& fieldName,
                     const lduMatrix& matrix,
-                    const FieldField<Field, scalar>& interfaceBouCoeffs,
-                    const FieldField<Field, scalar>& interfaceIntCoeffs,
+                    const Field<Field<scalar>>& interfaceBouCoeffs,
+                    const Field<Field<scalar>>& interfaceIntCoeffs,
                     const lduInterfaceFieldPtrsList& interfaces,
                     const dictionary& solverControls
                 ),
@@ -167,8 +167,8 @@ public:
                 (
                     const word& fieldName,
                     const lduMatrix& matrix,
-                    const FieldField<Field, scalar>& interfaceBouCoeffs,
-                    const FieldField<Field, scalar>& interfaceIntCoeffs,
+                    const Field<Field<scalar>>& interfaceBouCoeffs,
+                    const Field<Field<scalar>>& interfaceIntCoeffs,
                     const lduInterfaceFieldPtrsList& interfaces,
                     const dictionary& solverControls
                 ),
@@ -189,8 +189,8 @@ public:
             (
                 const word& fieldName,
                 const lduMatrix& matrix,
-                const FieldField<Field, scalar>& interfaceBouCoeffs,
-                const FieldField<Field, scalar>& interfaceIntCoeffs,
+                const Field<Field<scalar>>& interfaceBouCoeffs,
+                const Field<Field<scalar>>& interfaceIntCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces,
                 const dictionary& solverControls
             );
@@ -202,8 +202,8 @@ public:
             (
                 const word& fieldName,
                 const lduMatrix& matrix,
-                const FieldField<Field, scalar>& interfaceBouCoeffs,
-                const FieldField<Field, scalar>& interfaceIntCoeffs,
+                const Field<Field<scalar>>& interfaceBouCoeffs,
+                const Field<Field<scalar>>& interfaceIntCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces,
                 const dictionary& solverControls
             );
@@ -229,12 +229,12 @@ public:
                     return matrix_;
                 }
 
-                 const FieldField<Field, scalar>& interfaceBouCoeffs() const
+                 const Field<Field<scalar>>& interfaceBouCoeffs() const
                  {
                      return interfaceBouCoeffs_;
                  }
 
-                 const FieldField<Field, scalar>& interfaceIntCoeffs() const
+                 const Field<Field<scalar>>& interfaceIntCoeffs() const
                  {
                      return interfaceIntCoeffs_;
                  }
@@ -276,8 +276,8 @@ public:
 
             word fieldName_;
             const lduMatrix& matrix_;
-            const FieldField<Field, scalar>& interfaceBouCoeffs_;
-            const FieldField<Field, scalar>& interfaceIntCoeffs_;
+            const Field<Field<scalar>>& interfaceBouCoeffs_;
+            const Field<Field<scalar>>& interfaceIntCoeffs_;
             const lduInterfaceFieldPtrsList& interfaces_;
 
 
@@ -300,8 +300,8 @@ public:
                 (
                     const word& fieldName,
                     const lduMatrix& matrix,
-                    const FieldField<Field, scalar>& interfaceBouCoeffs,
-                    const FieldField<Field, scalar>& interfaceIntCoeffs,
+                    const Field<Field<scalar>>& interfaceBouCoeffs,
+                    const Field<Field<scalar>>& interfaceIntCoeffs,
                     const lduInterfaceFieldPtrsList& interfaces
                 ),
                 (
@@ -321,8 +321,8 @@ public:
                 (
                     const word& fieldName,
                     const lduMatrix& matrix,
-                    const FieldField<Field, scalar>& interfaceBouCoeffs,
-                    const FieldField<Field, scalar>& interfaceIntCoeffs,
+                    const Field<Field<scalar>>& interfaceBouCoeffs,
+                    const Field<Field<scalar>>& interfaceIntCoeffs,
                     const lduInterfaceFieldPtrsList& interfaces
                 ),
                 (
@@ -341,8 +341,8 @@ public:
             (
                 const word& fieldName,
                 const lduMatrix& matrix,
-                const FieldField<Field, scalar>& interfaceBouCoeffs,
-                const FieldField<Field, scalar>& interfaceIntCoeffs,
+                const Field<Field<scalar>>& interfaceBouCoeffs,
+                const Field<Field<scalar>>& interfaceIntCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces
             );
 
@@ -354,8 +354,8 @@ public:
             (
                 const word& fieldName,
                 const lduMatrix& matrix,
-                const FieldField<Field, scalar>& interfaceBouCoeffs,
-                const FieldField<Field, scalar>& interfaceIntCoeffs,
+                const Field<Field<scalar>>& interfaceBouCoeffs,
+                const Field<Field<scalar>>& interfaceIntCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces,
                 const dictionary& solverControls
             );
@@ -380,12 +380,12 @@ public:
                     return matrix_;
                 }
 
-                 const FieldField<Field, scalar>& interfaceBouCoeffs() const
+                 const Field<Field<scalar>>& interfaceBouCoeffs() const
                  {
                      return interfaceBouCoeffs_;
                  }
 
-                 const FieldField<Field, scalar>& interfaceIntCoeffs() const
+                 const Field<Field<scalar>>& interfaceIntCoeffs() const
                  {
                      return interfaceIntCoeffs_;
                  }
@@ -648,7 +648,7 @@ public:
             (
                 scalarField&,
                 const tmp<scalarField>&,
-                const FieldField<Field, scalar>&,
+                const Field<Field<scalar>>&,
                 const lduInterfaceFieldPtrsList&,
                 const direction cmpt
             ) const;
@@ -658,7 +658,7 @@ public:
             (
                 scalarField&,
                 const tmp<scalarField>&,
-                const FieldField<Field, scalar>&,
+                const Field<Field<scalar>>&,
                 const lduInterfaceFieldPtrsList&,
                 const direction cmpt
             ) const;
@@ -668,7 +668,7 @@ public:
             void sumA
             (
                 scalarField&,
-                const FieldField<Field, scalar>&,
+                const Field<Field<scalar>>&,
                 const lduInterfaceFieldPtrsList&
             ) const;
 
@@ -678,7 +678,7 @@ public:
                 scalarField& rA,
                 const scalarField& psi,
                 const scalarField& source,
-                const FieldField<Field, scalar>& interfaceBouCoeffs,
+                const Field<Field<scalar>>& interfaceBouCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces,
                 const direction cmpt
             ) const;
@@ -687,7 +687,7 @@ public:
             (
                 const scalarField& psi,
                 const scalarField& source,
-                const FieldField<Field, scalar>& interfaceBouCoeffs,
+                const Field<Field<scalar>>& interfaceBouCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces,
                 const direction cmpt
             ) const;
@@ -697,7 +697,7 @@ public:
             //  for matrix operations
             void initMatrixInterfaces
             (
-                const FieldField<Field, scalar>& interfaceCoeffs,
+                const Field<Field<scalar>>& interfaceCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces,
                 const scalarField& psiif,
                 scalarField& result,
@@ -707,7 +707,7 @@ public:
             //- Update interfaced interfaces for matrix operations
             void updateMatrixInterfaces
             (
-                const FieldField<Field, scalar>& interfaceCoeffs,
+                const Field<Field<scalar>>& interfaceCoeffs,
                 const lduInterfaceFieldPtrsList& interfaces,
                 const scalarField& psiif,
                 scalarField& result,

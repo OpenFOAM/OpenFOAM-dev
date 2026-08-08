@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,12 +149,12 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 
         scalarField sourceCmpt(source.component(cmpt));
 
-        FieldField<Field, scalar> bouCoeffsCmpt
+        Field<Field<scalar>> bouCoeffsCmpt
         (
             boundaryCoeffs_.component(cmpt)
         );
 
-        FieldField<Field, scalar> intCoeffsCmpt
+        Field<Field<scalar>> intCoeffsCmpt
         (
             internalCoeffs_.component(cmpt)
         );
@@ -231,8 +231,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
             << endl;
     }
 
-    VolField<Type>& psi =
-       const_cast<VolField<Type>&>(psi_);
+    VolField<Type>& psi = const_cast<VolField<Type>&>(psi_);
 
     LduMatrix<Type, scalar, scalar> coupledMatrix(psi.mesh());
     coupledMatrix.diag() = diag();
@@ -258,10 +257,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
         )
     );
 
-    SolverPerformance<Type> solverPerf
-    (
-        coupledMatrixSolver->solve(psi)
-    );
+    SolverPerformance<Type> solverPerf(coupledMatrixSolver->solve(psi));
 
     if (SolverPerformance<Type>::debug)
     {
@@ -360,7 +356,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fvMatrix<Type>::residual() const
         scalarField boundaryDiagCmpt(psi_.size(), 0.0);
         addBoundaryDiag(boundaryDiagCmpt, cmpt);
 
-        FieldField<Field, scalar> bouCoeffsCmpt
+        Field<Field<scalar>> bouCoeffsCmpt
         (
             boundaryCoeffs_.component(cmpt)
         );

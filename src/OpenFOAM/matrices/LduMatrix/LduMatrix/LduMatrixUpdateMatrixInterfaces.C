@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 template<class Type, class DType, class LUType>
 void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
 (
-    const FieldField<Field, LUType>& interfaceCoeffs,
+    const Field<Field<LUType>>& interfaceCoeffs,
     const Field<Type>& psiif,
     Field<Type>& result
 ) const
@@ -96,7 +96,7 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
 template<class Type, class DType, class LUType>
 void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
 (
-    const FieldField<Field, LUType>& interfaceCoeffs,
+    const Field<Field<LUType>>& interfaceCoeffs,
     const Field<Type>& psiif,
     Field<Type>& result
 ) const

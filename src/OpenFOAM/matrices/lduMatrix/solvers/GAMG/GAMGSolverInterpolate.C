@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ void Foam::GAMGSolver::interpolate
     scalarField& psi,
     scalarField& Apsi,
     const lduMatrix& m,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const direction cmpt
 ) const
@@ -87,7 +87,7 @@ void Foam::GAMGSolver::interpolate
     scalarField& psi,
     scalarField& Apsi,
     const lduMatrix& m,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const labelList& restrictAddressing,
     const scalarField& psiC,

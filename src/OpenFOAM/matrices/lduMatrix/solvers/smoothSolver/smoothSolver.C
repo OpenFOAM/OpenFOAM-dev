@@ -45,8 +45,8 @@ Foam::smoothSolver::smoothSolver
 (
     const word& fieldName,
     const lduMatrix& matrix,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
-    const FieldField<Field, scalar>& interfaceIntCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceIntCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const dictionary& solverControls
 )

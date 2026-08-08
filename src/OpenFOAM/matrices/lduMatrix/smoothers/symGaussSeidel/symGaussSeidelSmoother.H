@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,8 +64,8 @@ public:
         (
             const word& fieldName,
             const lduMatrix& matrix,
-            const FieldField<Field, scalar>& interfaceBouCoeffs,
-            const FieldField<Field, scalar>& interfaceIntCoeffs,
+            const Field<Field<scalar>>& interfaceBouCoeffs,
+            const Field<Field<scalar>>& interfaceIntCoeffs,
             const lduInterfaceFieldPtrsList& interfaces
         );
 
@@ -79,7 +79,7 @@ public:
             scalarField& psi,
             const lduMatrix& matrix,
             const scalarField& source,
-            const FieldField<Field, scalar>& interfaceBouCoeffs,
+            const Field<Field<scalar>>& interfaceBouCoeffs,
             const lduInterfaceFieldPtrsList& interfaces,
             const direction cmpt,
             const label nSweeps

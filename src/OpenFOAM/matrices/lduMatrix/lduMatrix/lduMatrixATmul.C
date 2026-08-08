@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::lduMatrix::Amul
 (
     scalarField& Apsi,
     const tmp<scalarField>& tpsi,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const direction cmpt
 ) const
@@ -96,7 +96,7 @@ void Foam::lduMatrix::Tmul
 (
     scalarField& Tpsi,
     const tmp<scalarField>& tpsi,
-    const FieldField<Field, scalar>& interfaceIntCoeffs,
+    const Field<Field<scalar>>& interfaceIntCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const direction cmpt
 ) const
@@ -154,7 +154,7 @@ void Foam::lduMatrix::Tmul
 void Foam::lduMatrix::sumA
 (
     scalarField& sumA,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
     const lduInterfaceFieldPtrsList& interfaces
 ) const
 {
@@ -205,7 +205,7 @@ void Foam::lduMatrix::residual
     scalarField& rA,
     const scalarField& psi,
     const scalarField& source,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const direction cmpt
 ) const
@@ -233,13 +233,13 @@ void Foam::lduMatrix::residual
     // To compensate for this, it is necessary to turn the
     // sign of the contribution.
 
-    FieldField<Field, scalar> mBouCoeffs(interfaceBouCoeffs.size());
+    Field<Field<scalar>> mBouCoeffs(interfaceBouCoeffs.size());
 
     forAll(mBouCoeffs, patchi)
     {
         if (interfaces.set(patchi))
         {
-            mBouCoeffs.set(patchi, -interfaceBouCoeffs[patchi]);
+            mBouCoeffs[patchi] = -interfaceBouCoeffs[patchi];
         }
     }
 
@@ -284,7 +284,7 @@ Foam::tmp<Foam::scalarField> Foam::lduMatrix::residual
 (
     const scalarField& psi,
     const scalarField& source,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const direction cmpt
 ) const

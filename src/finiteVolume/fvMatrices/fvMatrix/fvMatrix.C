@@ -304,24 +304,16 @@ Foam::fvMatrix<Type>::fvMatrix
     // Initialise coupling coefficients
     forAll(psi.mesh().boundary(), patchi)
     {
-        internalCoeffs_.set
+        internalCoeffs_[patchi].setSize
         (
-            patchi,
-            new Field<Type>
-            (
-                psi.mesh().boundary()[patchi].size(),
-                Zero
-            )
+            psi.mesh().boundary()[patchi].size(),
+            Zero
         );
 
-        boundaryCoeffs_.set
+        boundaryCoeffs_[patchi].setSize
         (
-            patchi,
-            new Field<Type>
-            (
-                psi.mesh().boundary()[patchi].size(),
-                Zero
-            )
+            psi.mesh().boundary()[patchi].size(),
+            Zero
         );
     }
 
@@ -993,7 +985,7 @@ flux() const
         );
     }
 
-    FieldField<Field, Type> InternalContrib = internalCoeffs_;
+    Field<Field<Type>> InternalContrib = internalCoeffs_;
 
     forAll(InternalContrib, patchi)
     {
@@ -1005,7 +997,7 @@ flux() const
             );
     }
 
-    FieldField<Field, Type> NeighbourContrib = boundaryCoeffs_;
+    Field<Field<Type>> NeighbourContrib = boundaryCoeffs_;
 
     forAll(NeighbourContrib, patchi)
     {

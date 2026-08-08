@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,13 +237,13 @@ void Foam::LduMatrix<Type, DType, LUType>::residual
     // Note: there is a change of sign in the coupled
     // interface update to add the contribution to the r.h.s.
 
-    FieldField<Field, LUType> mBouCoeffs(interfacesUpper_.size());
+    Field<Field<LUType>> mBouCoeffs(interfacesUpper_.size());
 
     forAll(mBouCoeffs, patchi)
     {
         if (interfaces_.set(patchi))
         {
-            mBouCoeffs.set(patchi, -interfacesUpper_[patchi]);
+            mBouCoeffs[patchi] = -interfacesUpper_[patchi];
         }
     }
 

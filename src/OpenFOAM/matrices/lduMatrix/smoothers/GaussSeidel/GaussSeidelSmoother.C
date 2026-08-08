@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,8 +45,8 @@ Foam::GaussSeidelSmoother::GaussSeidelSmoother
 (
     const word& fieldName,
     const lduMatrix& matrix,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
-    const FieldField<Field, scalar>& interfaceIntCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceIntCoeffs,
     const lduInterfaceFieldPtrsList& interfaces
 )
 :
@@ -69,7 +69,7 @@ void Foam::GaussSeidelSmoother::smooth
     scalarField& psi,
     const lduMatrix& matrix_,
     const scalarField& source,
-    const FieldField<Field, scalar>& interfaceBouCoeffs_,
+    const Field<Field<scalar>>& interfaceBouCoeffs_,
     const lduInterfaceFieldPtrsList& interfaces_,
     const direction cmpt,
     const label nSweeps
@@ -107,8 +107,8 @@ void Foam::GaussSeidelSmoother::smooth
     // To compensate for this, it is necessary to turn the
     // sign of the contribution.
 
-    FieldField<Field, scalar>& mBouCoeffs =
-        const_cast<FieldField<Field, scalar>&>
+    Field<Field<scalar>>& mBouCoeffs =
+        const_cast<Field<Field<scalar>>&>
         (
             interfaceBouCoeffs_
         );

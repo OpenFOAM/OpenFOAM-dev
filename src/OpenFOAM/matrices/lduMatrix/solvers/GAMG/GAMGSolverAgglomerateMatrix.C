@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,18 +95,18 @@ void Foam::GAMGSolver::agglomerateMatrix
         interfaceLevelsBouCoeffs_.set
         (
             fineLevelIndex,
-            new FieldField<Field, scalar>(fineInterfaces.size())
+            new Field<Field<scalar>>(fineInterfaces.size())
         );
-        FieldField<Field, scalar>& coarseInterfaceBouCoeffs =
+        Field<Field<scalar>>& coarseInterfaceBouCoeffs =
             interfaceLevelsBouCoeffs_[fineLevelIndex];
 
         // Set coarse-level internal coefficients
         interfaceLevelsIntCoeffs_.set
         (
             fineLevelIndex,
-            new FieldField<Field, scalar>(fineInterfaces.size())
+            new Field<Field<scalar>>(fineInterfaces.size())
         );
-        FieldField<Field, scalar>& coarseInterfaceIntCoeffs =
+        Field<Field<scalar>>& coarseInterfaceIntCoeffs =
             interfaceLevelsIntCoeffs_[fineLevelIndex];
 
         // Add the coarse level
@@ -199,8 +199,8 @@ void Foam::GAMGSolver::agglomerateInterfaceCoefficients
     const lduInterfacePtrsList& coarseMeshInterfaces,
     PtrList<lduInterfaceField>& coarsePrimInterfaces,
     lduInterfaceFieldPtrsList& coarseInterfaces,
-    FieldField<Field, scalar>& coarseInterfaceBouCoeffs,
-    FieldField<Field, scalar>& coarseInterfaceIntCoeffs
+    Field<Field<scalar>>& coarseInterfaceBouCoeffs,
+    Field<Field<scalar>>& coarseInterfaceIntCoeffs
 ) const
 {
     // Get reference to fine-level interfaces
@@ -208,11 +208,11 @@ void Foam::GAMGSolver::agglomerateInterfaceCoefficients
         interfaceLevel(fineLevelIndex);
 
     // Get reference to fine-level boundary coefficients
-    const FieldField<Field, scalar>& fineInterfaceBouCoeffs =
+    const Field<Field<scalar>>& fineInterfaceBouCoeffs =
         interfaceBouCoeffsLevel(fineLevelIndex);
 
     // Get reference to fine-level internal coefficients
-    const FieldField<Field, scalar>& fineInterfaceIntCoeffs =
+    const Field<Field<scalar>>& fineInterfaceIntCoeffs =
         interfaceIntCoeffsLevel(fineLevelIndex);
 
     const labelListList& patchFineToCoarse =
@@ -250,11 +250,7 @@ void Foam::GAMGSolver::agglomerateInterfaceCoefficients
 
             const labelList& faceRestrictAddressing = patchFineToCoarse[inti];
 
-            coarseInterfaceBouCoeffs.set
-            (
-                inti,
-                new scalarField(nPatchFaces[inti], 0.0)
-            );
+            coarseInterfaceBouCoeffs[inti].setSize(nPatchFaces[inti], 0.0);
             agglomeration_.restrictField
             (
                 coarseInterfaceBouCoeffs[inti],
@@ -262,11 +258,7 @@ void Foam::GAMGSolver::agglomerateInterfaceCoefficients
                 faceRestrictAddressing
             );
 
-            coarseInterfaceIntCoeffs.set
-            (
-                inti,
-                new scalarField(nPatchFaces[inti], 0.0)
-            );
+            coarseInterfaceIntCoeffs[inti].setSize(nPatchFaces[inti], 0.0);
             agglomeration_.restrictField
             (
                 coarseInterfaceIntCoeffs[inti],
@@ -285,13 +277,13 @@ void Foam::GAMGSolver::gatherMatrices
     const label meshComm,
 
     const lduMatrix& mat,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
-    const FieldField<Field, scalar>& interfaceIntCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceIntCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
 
     PtrList<lduMatrix>& otherMats,
-    PtrList<FieldField<Field, scalar>>& otherBouCoeffs,
-    PtrList<FieldField<Field, scalar>>& otherIntCoeffs,
+    PtrList<Field<Field<scalar>>>& otherBouCoeffs,
+    PtrList<Field<Field<scalar>>>& otherIntCoeffs,
     List<boolList>& otherTransforms,
     List<List<label>>& otherRanks
 ) const
@@ -336,27 +328,19 @@ void Foam::GAMGSolver::gatherMatrices
             otherBouCoeffs.set
             (
                 otherI,
-                new FieldField<Field, scalar>(procRanks.size())
+                new Field<Field<scalar>>(procRanks.size())
             );
             otherIntCoeffs.set
             (
                 otherI,
-                new FieldField<Field, scalar>(procRanks.size())
+                new Field<Field<scalar>>(procRanks.size())
             );
             forAll(procRanks, intI)
             {
                 if (procRanks[intI] != -1)
                 {
-                    otherBouCoeffs[otherI].set
-                    (
-                        intI,
-                        new scalarField(fromSlave)
-                    );
-                    otherIntCoeffs[otherI].set
-                    (
-                        intI,
-                        new scalarField(fromSlave)
-                    );
+                    otherBouCoeffs[otherI][intI] = scalarField(fromSlave);
+                    otherIntCoeffs[otherI][intI] = scalarField(fromSlave);
                 }
             }
         }
@@ -414,8 +398,8 @@ void Foam::GAMGSolver::procAgglomerateMatrix
 
     // Resulting matrix
     autoPtr<lduMatrix>& allMatrixPtr,
-    FieldField<Field, scalar>& allInterfaceBouCoeffs,
-    FieldField<Field, scalar>& allInterfaceIntCoeffs,
+    Field<Field<scalar>>& allInterfaceBouCoeffs,
+    Field<Field<scalar>>& allInterfaceIntCoeffs,
     PtrList<lduInterfaceField>& allPrimitiveInterfaces,
     lduInterfaceFieldPtrsList& allInterfaces
 ) const
@@ -423,9 +407,9 @@ void Foam::GAMGSolver::procAgglomerateMatrix
     const lduMatrix& coarsestMatrix = matrixLevels_[levelI];
     const lduInterfaceFieldPtrsList& coarsestInterfaces =
         interfaceLevels_[levelI];
-    const FieldField<Field, scalar>& coarsestBouCoeffs =
+    const Field<Field<scalar>>& coarsestBouCoeffs =
         interfaceLevelsBouCoeffs_[levelI];
-    const FieldField<Field, scalar>& coarsestIntCoeffs =
+    const Field<Field<scalar>>& coarsestIntCoeffs =
         interfaceLevelsIntCoeffs_[levelI];
     const lduMesh& coarsestMesh = coarsestMatrix.mesh();
 
@@ -435,8 +419,8 @@ void Foam::GAMGSolver::procAgglomerateMatrix
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     PtrList<lduMatrix> otherMats;
-    PtrList<FieldField<Field, scalar>> otherBouCoeffs;
-    PtrList<FieldField<Field, scalar>> otherIntCoeffs;
+    PtrList<Field<Field<scalar>>> otherBouCoeffs;
+    PtrList<Field<Field<scalar>>> otherIntCoeffs;
     List<boolList> otherTransforms;
     List<List<label>> otherRanks;
     gatherMatrices
@@ -555,20 +539,20 @@ void Foam::GAMGSolver::procAgglomerateMatrix
             const lduInterface& patch = allMeshInterfaces[intI];
             label size = patch.faceCells().size();
 
-            allInterfaceBouCoeffs.set(intI, new scalarField(size));
-            allInterfaceIntCoeffs.set(intI, new scalarField(size));
+            allInterfaceBouCoeffs[intI].setSize(size);
+            allInterfaceIntCoeffs[intI].setSize(size);
         }
 
         labelList nBounFaces(allMeshInterfaces.size());
         forAll(boundaryMap, proci)
         {
-            const FieldField<Field, scalar>& procBouCoeffs
+            const Field<Field<scalar>>& procBouCoeffs
             (
                 (proci == 0)
               ? coarsestBouCoeffs
               : otherBouCoeffs[proci-1]
             );
-            const FieldField<Field, scalar>& procIntCoeffs
+            const Field<Field<scalar>>& procIntCoeffs
             (
                 (proci == 0)
               ? coarsestIntCoeffs
@@ -649,7 +633,7 @@ void Foam::GAMGSolver::procAgglomerateMatrix
                         allInt[allFacei] = procInt[i];
                     }
                 }
-                else if (procBouCoeffs.set(procIntI))
+                else if (procBouCoeffs[procIntI].size())
                 {
                     // Boundary has become internal face
 
@@ -728,13 +712,13 @@ void Foam::GAMGSolver::procAgglomerateMatrix
 )
 {
     autoPtr<lduMatrix> allMatrixPtr;
-    autoPtr<FieldField<Field, scalar>> allInterfaceBouCoeffs
+    autoPtr<Field<Field<scalar>>> allInterfaceBouCoeffs
     (
-        new FieldField<Field, scalar>(0)
+        new Field<Field<scalar>>(0)
     );
-    autoPtr<FieldField<Field, scalar>> allInterfaceIntCoeffs
+    autoPtr<Field<Field<scalar>>> allInterfaceIntCoeffs
     (
-        new FieldField<Field, scalar>(0)
+        new Field<Field<scalar>>(0)
     );
     autoPtr<PtrList<lduInterfaceField>> allPrimitiveInterfaces
     (

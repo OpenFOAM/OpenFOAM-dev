@@ -49,8 +49,8 @@ Foam::GAMGSolver::GAMGSolver
 (
     const word& fieldName,
     const lduMatrix& matrix,
-    const FieldField<Field, scalar>& interfaceBouCoeffs,
-    const FieldField<Field, scalar>& interfaceIntCoeffs,
+    const Field<Field<scalar>>& interfaceBouCoeffs,
+    const Field<Field<scalar>>& interfaceIntCoeffs,
     const lduInterfaceFieldPtrsList& interfaces,
     const dictionary& solverControls
 )
@@ -417,7 +417,7 @@ const Foam::lduInterfaceFieldPtrsList& Foam::GAMGSolver::interfaceLevel
 }
 
 
-const Foam::FieldField<Foam::Field, Foam::scalar>&
+const Foam::Field<Foam::Field<Foam::scalar>>&
 Foam::GAMGSolver::interfaceBouCoeffsLevel
 (
     const label i
@@ -434,7 +434,7 @@ Foam::GAMGSolver::interfaceBouCoeffsLevel
 }
 
 
-const Foam::FieldField<Foam::Field, Foam::scalar>&
+const Foam::Field<Foam::Field<Foam::scalar>>&
 Foam::GAMGSolver::interfaceIntCoeffsLevel
 (
     const label i

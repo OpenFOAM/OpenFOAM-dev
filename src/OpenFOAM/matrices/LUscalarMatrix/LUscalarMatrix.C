@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::LUscalarMatrix::LUscalarMatrix(const scalarSquareMatrix& matrix)
 Foam::LUscalarMatrix::LUscalarMatrix
 (
     const lduMatrix& ldum,
-    const FieldField<Field, scalar>& interfaceCoeffs,
+    const Field<Field<scalar>>& interfaceCoeffs,
     const lduInterfaceFieldPtrsList& interfaces
 )
 :
@@ -205,7 +205,7 @@ Foam::LUscalarMatrix::LUscalarMatrix
 void Foam::LUscalarMatrix::convert
 (
     const lduMatrix& ldum,
-    const FieldField<Field, scalar>& interfaceCoeffs,
+    const Field<Field<scalar>>& interfaceCoeffs,
     const lduInterfaceFieldPtrsList& interfaces
 )
 {
