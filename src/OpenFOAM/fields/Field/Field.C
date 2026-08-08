@@ -674,7 +674,7 @@ void Foam::Field<Type>::operator=(const tmp<Field>& rhs)
 
 
 template<class Type>
-void Foam::Field<Type>::operator=(const Type& t)
+void Foam::Field<Type>::operator=(const typename Foam::Field<Type>::pType& t)
 {
     List<Type>::operator=(t);
 }
@@ -711,7 +711,7 @@ void Foam::Field<Type>::operator=(const Expression& e)
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+#define COMPUTED_ASSIGNMENT(TYPE, PTYPE, op)                                   \
                                                                                \
 template<class Type>                                                           \
 void Foam::Field<Type>::operator op(const UList<TYPE>& f)                      \
@@ -727,16 +727,23 @@ void Foam::Field<Type>::operator op(const tmp<Field<TYPE>>& tf)                \
 }                                                                              \
                                                                                \
 template<class Type>                                                           \
-void Foam::Field<Type>::operator op(const TYPE& t)                             \
+void Foam::Field<Type>::operator op(const PTYPE& t)                            \
 {                                                                              \
-    TFOR_ALL_F_OP_S(Type, *this, op, TYPE, t)                                  \
+    TFOR_ALL_F_OP_S(Type, *this, op, PTYPE, t)                                 \
 }
 
-COMPUTED_ASSIGNMENT(Type, +=)
-COMPUTED_ASSIGNMENT(Type, -=)
-COMPUTED_ASSIGNMENT(scalar, *=)
-COMPUTED_ASSIGNMENT(scalar, /=)
+#define pType_ typename Foam::Field<Type>::pType
+#define cmptType_ typename Foam::Field<Type>::cmptType
+#define pCmptType_ typename Foam::Field<Type>::pCmptType
 
+COMPUTED_ASSIGNMENT(Type, pType_, +=)
+COMPUTED_ASSIGNMENT(Type,  pType_, -=)
+COMPUTED_ASSIGNMENT(cmptType_, pCmptType_, *=)
+COMPUTED_ASSIGNMENT(cmptType_, pCmptType_, /=)
+
+#undef pCmptType_
+#undef cmptType_
+#undef pType_
 #undef COMPUTED_ASSIGNMENT
 
 

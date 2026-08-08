@@ -73,6 +73,25 @@ Ostream& operator<<(Ostream&, const tmp<Field<Type>>&);
 class unitSet;
 class dictionary;
 
+//- Field type traits
+template<class Type>
+struct FieldTraits
+{
+    using pType = Type;
+    using cmptType = typename pTraits<Type>::cmptType;
+    using pCmptType = cmptType;
+};
+
+//- Field<Field> type traits
+template<class Type>
+struct FieldTraits<Field<Type>>
+{
+    using pType = Type;
+    using cmptType = Field<typename pTraits<Type>::cmptType>;
+    using pCmptType = typename pTraits<Type>::cmptType;
+};
+
+
 /*---------------------------------------------------------------------------*\
                             Class Field Declaration
 \*---------------------------------------------------------------------------*/
@@ -97,10 +116,16 @@ class Field
 public:
 
     //- Component type
-    typedef typename pTraits<Type>::cmptType cmptType;
+    using pType = typename FieldTraits<Type>::pType;
+
+    //- Component type
+    using cmptType = typename FieldTraits<Type>::cmptType;
+
+    //- Component type
+    using pCmptType = typename FieldTraits<Type>::pCmptType;
 
     //- Declare type of subField
-    typedef SubField<Type> subField;
+    using subField = SubField<Type>;
 
 
     // Static Data Members
@@ -327,7 +352,7 @@ public:
         void operator=(const UList<Type>&);
         void operator=(List<Type>&&);
         void operator=(const tmp<Field<Type>>&);
-        void operator=(const Type&);
+        void operator=(const pType&);
         void operator=(const zero);
 
         template<class Form, class Cmpt, direction nCmpt>
@@ -339,21 +364,19 @@ public:
 
         void operator+=(const UList<Type>&);
         void operator+=(const tmp<Field<Type>>&);
+        void operator+=(const pType&);
 
         void operator-=(const UList<Type>&);
         void operator-=(const tmp<Field<Type>>&);
+        void operator-=(const pType&);
 
-        void operator*=(const UList<scalar>&);
-        void operator*=(const tmp<Field<scalar>>&);
+        void operator*=(const UList<cmptType>&);
+        void operator*=(const tmp<Field<cmptType>>&);
+        void operator*=(const pCmptType&);
 
-        void operator/=(const UList<scalar>&);
-        void operator/=(const tmp<Field<scalar>>&);
-
-        void operator+=(const Type&);
-        void operator-=(const Type&);
-
-        void operator*=(const scalar&);
-        void operator/=(const scalar&);
+        void operator/=(const UList<cmptType>&);
+        void operator/=(const tmp<Field<cmptType>>&);
+        void operator/=(const pCmptType&);
 
 
     // IOstream Operators

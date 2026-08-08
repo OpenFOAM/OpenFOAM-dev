@@ -53,7 +53,7 @@ inline void Foam::AveragingMethod<Type>::operator=
     const tmp<Field<Field<Type>>>& x
 )
 {
-    Field<Field<Type>>::operator=(x());
+    Field<Field<Type>>::operator=(x);
     updateGrad();
 }
 
@@ -64,7 +64,7 @@ inline void Foam::AveragingMethod<Type>::operator+=
     const tmp<Field<Field<Type>>>& x
 )
 {
-    Field<Field<Type>>::operator+=(x());
+    Field<Field<Type>>::operator+=(x);
     updateGrad();
 }
 
@@ -75,7 +75,7 @@ inline void Foam::AveragingMethod<Type>::operator*=
     const tmp<Field<Field<Type>>>& x
 )
 {
-    Field<Field<Type>>::operator*=(x());
+    Field<Field<Type>>::operator*=(x);
     updateGrad();
 }
 
@@ -86,7 +86,7 @@ inline void Foam::AveragingMethod<Type>::operator/=
     const tmp<Field<Field<scalar>>>& x
 )
 {
-    field() = field()/x;
+    Field<Field<Type>>::operator/=(x);
     updateGrad();
 }
 
