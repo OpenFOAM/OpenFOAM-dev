@@ -55,7 +55,7 @@ template<class Type>
 class AveragingMethod
 :
     public regIOobject,
-    public FieldField<Field, Type>
+    public Field<Field<Type>>
 {
 protected:
 
@@ -133,6 +133,18 @@ public:
 
     //- Member Functions
 
+        //- Return the field-field
+        const Field<Field<Type>>& field() const
+        {
+            return *this;
+        }
+
+        //- Return the field-field
+        Field<Field<Type>>& field()
+        {
+            return *this;
+        }
+
         //- Add point value to interpolation
         virtual void add
         (
@@ -157,6 +169,8 @@ public:
 
         //- Calculate the average
         virtual void average();
+
+        //- Calculate the weighted average
         virtual void average(const AveragingMethod<scalar>& weight);
 
         //- Dummy write
@@ -175,16 +189,16 @@ public:
         inline void operator=(const Type& x);
 
         //- Assign to tmp
-        inline void operator=(tmp<FieldField<Field, Type>> x);
+        inline void operator=(const tmp<Field<Field<Type>>>& x);
 
         //- Add-equal tmp
-        inline void operator+=(tmp<FieldField<Field, Type>> x);
+        inline void operator+=(const tmp<Field<Field<Type>>>& x);
 
         //- Multiply-equal tmp
-        inline void operator*=(tmp<FieldField<Field, Type>> x);
+        inline void operator*=(const tmp<Field<Field<Type>>>& x);
 
         //- Divide-equal tmp
-        inline void operator/=(tmp<FieldField<Field, scalar>> x);
+        inline void operator/=(const tmp<Field<Field<scalar>>>& x);
 };
 
 

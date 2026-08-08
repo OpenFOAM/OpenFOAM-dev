@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,11 +126,11 @@ public:
         ) const = 0;
 
         //- Collision stress using FieldFields
-        tmp<FieldField<Field, scalar>> tau
+        tmp<Field<Field<scalar>>> tau
         (
-            const FieldField<Field, scalar>& alpha,
-            const FieldField<Field, scalar>& rho,
-            const FieldField<Field, scalar>& uRms
+            const Field<Field<scalar>>& alpha,
+            const Field<Field<scalar>>& rho,
+            const Field<Field<scalar>>& uRms
         ) const;
 };
 

@@ -99,22 +99,22 @@ Foam::scalar Foam::ParticleStressModel::alphaPacked() const
 }
 
 
-Foam::tmp<Foam::FieldField<Foam::Field, Foam::scalar>>
+Foam::tmp<Foam::Field<Foam::Field<Foam::scalar>>>
 Foam::ParticleStressModel::tau
 (
-    const FieldField<Field, scalar>& alpha,
-    const FieldField<Field, scalar>& rho,
-    const FieldField<Field, scalar>& uRms
+    const Field<Field<scalar>>& alpha,
+    const Field<Field<scalar>>& rho,
+    const Field<Field<scalar>>& uRms
 ) const
 {
-    tmp<FieldField<Field, scalar>> value
+    tmp<Field<Field<scalar>>> value
     (
-        new FieldField<Field, scalar>(alpha.size())
+        new Field<Field<scalar>>(alpha.size())
     );
 
     forAll(alpha, i)
     {
-        value->set(i, tau(alpha[i], rho[i], uRms[i]));
+        value->operator[](i) = tau(alpha[i], rho[i], uRms[i]);
     }
 
     return value;

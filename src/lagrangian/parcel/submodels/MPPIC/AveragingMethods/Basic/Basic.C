@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::AveragingMethods::Basic<Type>::Basic
 )
 :
     AveragingMethod<Type>(io, dict, mesh, labelList(1, mesh.nCells())),
-    data_(FieldField<Field, Type>::operator[](0)),
+    data_(Field<Field<Type>>::operator[](0)),
     dataGrad_(mesh.nCells())
 {}
 
@@ -49,7 +49,7 @@ Foam::AveragingMethods::Basic<Type>::Basic
 )
 :
     AveragingMethod<Type>(am),
-    data_(FieldField<Field, Type>::operator[](0)),
+    data_(Field<Field<Type>>::operator[](0)),
     dataGrad_(am.dataGrad_)
 {}
 

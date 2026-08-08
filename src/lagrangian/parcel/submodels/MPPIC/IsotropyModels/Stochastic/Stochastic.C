@@ -160,7 +160,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
                 uSqrAverage,
                 frequencyAverage
             )
-        )();
+        );
 
     // random sampling
     forAllIter(typename CloudType, this->owner(), iter)

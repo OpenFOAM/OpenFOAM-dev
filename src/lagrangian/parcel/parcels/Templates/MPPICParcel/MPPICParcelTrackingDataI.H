@@ -144,13 +144,13 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
 )
 {
     // zero the sums
-    volumeAverage_() = 0;
-    radiusAverage_() = 0;
-    rhoAverage_() = 0;
-    uAverage_() = Zero;
-    uSqrAverage_() = 0;
-    frequencyAverage_() = 0;
-    massAverage_() = 0;
+    volumeAverage_->field() = Zero;
+    radiusAverage_->field() = Zero;
+    rhoAverage_->field() = Zero;
+    uAverage_->field() = Zero;
+    uSqrAverage_->field() = Zero;
+    frequencyAverage_->field() = Zero;
+    massAverage_->field() = Zero;
 
     // temporary weights
     autoPtr<AveragingMethod<scalar>> weightAveragePtr
@@ -206,7 +206,7 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
 
     // sauter mean radius
     radiusAverage_() = volumeAverage_();
-    weightAverage = 0;
+    weightAverage.field() = Zero;
     forAllConstIter(typename TrackCloudType, cloud, iter)
     {
         const typename TrackCloudType::parcelType& p = iter();
@@ -223,7 +223,7 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
     radiusAverage_->average(weightAverage);
 
     // collision frequency
-    weightAverage = 0;
+    weightAverage.field() = Zero;
     forAllConstIter(typename TrackCloudType, cloud, iter)
     {
         const typename TrackCloudType::parcelType& p = iter();

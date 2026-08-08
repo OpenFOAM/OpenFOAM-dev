@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ inline void Foam::AveragingMethod<Type>::operator=
     const AveragingMethod<Type>& x
 )
 {
-    FieldField<Field, Type>::operator=(x);
+    Field<Field<Type>>::operator=(x);
     updateGrad();
 }
 
@@ -42,7 +42,7 @@ inline void Foam::AveragingMethod<Type>::operator=
     const Type& x
 )
 {
-    FieldField<Field, Type>::operator=(x);
+    Field<Field<Type>>::operator=(x);
     updateGrad();
 }
 
@@ -50,10 +50,10 @@ inline void Foam::AveragingMethod<Type>::operator=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator=
 (
-    tmp<FieldField<Field, Type>> x
+    const tmp<Field<Field<Type>>>& x
 )
 {
-    FieldField<Field, Type>::operator=(x());
+    Field<Field<Type>>::operator=(x());
     updateGrad();
 }
 
@@ -61,10 +61,10 @@ inline void Foam::AveragingMethod<Type>::operator=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator+=
 (
-    tmp<FieldField<Field, Type>> x
+    const tmp<Field<Field<Type>>>& x
 )
 {
-    FieldField<Field, Type>::operator+=(x());
+    Field<Field<Type>>::operator+=(x());
     updateGrad();
 }
 
@@ -72,10 +72,10 @@ inline void Foam::AveragingMethod<Type>::operator+=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator*=
 (
-    tmp<FieldField<Field, Type>> x
+    const tmp<Field<Field<Type>>>& x
 )
 {
-    FieldField<Field, Type>::operator*=(x());
+    Field<Field<Type>>::operator*=(x());
     updateGrad();
 }
 
@@ -83,10 +83,10 @@ inline void Foam::AveragingMethod<Type>::operator*=
 template<class Type>
 inline void Foam::AveragingMethod<Type>::operator/=
 (
-    tmp<FieldField<Field, scalar>> x
+    const tmp<Field<Field<scalar>>>& x
 )
 {
-    FieldField<Field, Type>::operator/=(x());
+    field() = field()/x;
     updateGrad();
 }
 

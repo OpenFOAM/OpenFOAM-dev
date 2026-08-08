@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,12 +111,12 @@ public:
     //- Member Functions
 
         //- Time scale
-        virtual tmp<FieldField<Field, scalar>> oneByTau
+        virtual tmp<Field<Field<scalar>>> oneByTau
         (
-            const FieldField<Field, scalar>& alpha,
-            const FieldField<Field, scalar>& r32,
-            const FieldField<Field, scalar>& uSqr,
-            const FieldField<Field, scalar>& f
+            const Field<Field<scalar>>& alpha,
+            const Field<Field<scalar>>& r32,
+            const Field<Field<scalar>>& uSqr,
+            const Field<Field<scalar>>& f
         ) const = 0;
 };
 

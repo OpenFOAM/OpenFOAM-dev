@@ -48,16 +48,13 @@ Foam::AveragingMethod<Type>::AveragingMethod
 )
 :
     regIOobject(io),
-    FieldField<Field, Type>(),
+    Field<Field<Type>>(size.size()),
     dict_(dict),
     mesh_(mesh)
 {
     forAll(size, i)
     {
-        FieldField<Field, Type>::append
-        (
-            new Field<Type>(size[i], Zero)
-        );
+        Field<Field<Type>>::operator[](i).setSize(size[i], Zero);
     }
 }
 
@@ -69,7 +66,7 @@ Foam::AveragingMethod<Type>::AveragingMethod
 )
 :
     regIOobject(am),
-    FieldField<Field, Type>(am),
+    Field<Field<Type>>(am),
     dict_(am.dict_),
     mesh_(am.mesh_)
 {}
@@ -132,7 +129,7 @@ void Foam::AveragingMethod<Type>::average
 {
     updateGrad();
 
-    *this /= max(weight, small);
+    *this /= max(weight.field(), small);
 }
 
 

@@ -54,8 +54,8 @@ Foam::AveragingMethods::Dual<Type>::Dual
     AveragingMethod<Type>(io, dict, mesh, size(mesh)),
     volumeCell_(mesh.V()),
     volumeDual_(mesh.nPoints(), 0.0),
-    dataCell_(FieldField<Field, Type>::operator[](0)),
-    dataDual_(FieldField<Field, Type>::operator[](1))
+    dataCell_(Field<Field<Type>>::operator[](0)),
+    dataDual_(Field<Field<Type>>::operator[](1))
 {
     forAll(this->mesh_.C(), celli)
     {
@@ -90,8 +90,8 @@ Foam::AveragingMethods::Dual<Type>::Dual
     AveragingMethod<Type>(am),
     volumeCell_(am.volumeCell_),
     volumeDual_(am.volumeDual_),
-    dataCell_(FieldField<Field, Type>::operator[](0)),
-    dataDual_(FieldField<Field, Type>::operator[](1))
+    dataCell_(Field<Field<Type>>::operator[](0)),
+    dataDual_(Field<Field<Type>>::operator[](1))
 {}
 
 
