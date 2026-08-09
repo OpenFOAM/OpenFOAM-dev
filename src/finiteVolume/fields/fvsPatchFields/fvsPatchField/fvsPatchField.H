@@ -98,16 +98,28 @@ class fvsPatchField
 
 public:
 
-    // Public Typedefs
+    // Public Types
 
-        //- The patch type
-        typedef fvPatch Patch;
+        //- Declare primitive type
+        using pType = typename FieldTraits<Type>::pType;
 
-        //- The calculated patch field type
-        typedef calculatedFvsPatchField<Type> Calculated;
+        //- Declare component type
+        using cmptType = typename FieldTraits<Type>::cmptType;
 
-        //- The sliced patch field type
-        typedef slicedFvsPatchField<Type> Sliced;
+        //- Declare component primitive type
+        using pCmptType = typename FieldTraits<Type>::pCmptType;
+
+        //- Declare patch type
+        using Patch = fvPatch;
+
+        //- Declare calculated patch field type
+        using Calculated = calculatedFvsPatchField<Type>;
+
+        //- Declare sliced patch field type
+        using Sliced = slicedFvsPatchField<Type>;
+
+        //- Declare component Field type
+        using cmptField = fvsPatchField<cmptType>;
 
 
     //- Runtime type information

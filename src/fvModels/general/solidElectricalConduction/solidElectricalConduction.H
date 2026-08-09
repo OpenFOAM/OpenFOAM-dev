@@ -85,6 +85,7 @@ SourceFiles
 
 #include "fvModel.H"
 #include "volFields.H"
+#include "surfaceFields.H"
 #include "FunctionalGeometricFieldFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

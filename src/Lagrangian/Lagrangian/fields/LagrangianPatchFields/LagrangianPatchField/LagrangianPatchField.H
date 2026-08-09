@@ -96,11 +96,23 @@ public:
 
     // Public Type Definitions
 
-        //- The patch type
-        typedef LagrangianPatch Patch;
+        //- Declare primitive type
+        using pType = typename FieldTraits<Type>::pType;
 
-        //- The calculated patch field type
-        typedef calculatedLagrangianPatchField<Type> Calculated;
+        //- Declare component type
+        using cmptType = typename FieldTraits<Type>::cmptType;
+
+        //- Declare component primitive type
+        using pCmptType = typename FieldTraits<Type>::pCmptType;
+
+        //- Declare patch type
+        using Patch = LagrangianPatch;
+
+        //- Declare calculated patch field type
+        using Calculated = calculatedLagrangianPatchField<Type>;
+
+        //- Declare component Field type
+        using cmptField = LagrangianPatchField<cmptType>;
 
 
     //- Runtime type information

@@ -25,6 +25,7 @@ License
 
 #include "LagrangianEqn.H"
 #include "GeometricField.H"
+#include "LagrangianPatchField.H"
 #include "toSubField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

@@ -115,17 +115,20 @@ class Field
 
 public:
 
-    //- Component type
+    //- Declare primitive type
     using pType = typename FieldTraits<Type>::pType;
 
-    //- Component type
+    //- Declare component type
     using cmptType = typename FieldTraits<Type>::cmptType;
 
-    //- Component type
+    //- Declare component primitive type
     using pCmptType = typename FieldTraits<Type>::pCmptType;
 
-    //- Declare type of subField
+    //- Declare type of subField type
     using subField = SubField<Type>;
+
+    //- Declare component Field type
+    using cmptField = Field<cmptType>;
 
 
     // Static Data Members

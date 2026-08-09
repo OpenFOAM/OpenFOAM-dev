@@ -164,6 +164,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "volFields.H"
+#include "fvsPatchField.H"
 
 namespace Foam
 {

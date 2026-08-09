@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,8 +79,19 @@ class FieldField
 
 public:
 
-    //- Component type
-    typedef typename pTraits<Type>::cmptType cmptType;
+    // Public Type Definitions
+
+        //- Declare primitive type
+        using pType = typename Field<Type>::pType;
+
+        //- Component type
+        using cmptType = typename Field<Type>::cmptType;
+
+        //- Declare component primitive type
+        using pCmptType = typename Field<Type>::pCmptType;
+
+        //- Declare component Field type
+        using cmptField = typename Field<Type>::cmptField;
 
 
     // Constructors
@@ -159,17 +170,17 @@ public:
         void operator-=(const FieldField<Field, Type>&);
         void operator-=(const tmp<FieldField<Field, Type>>&);
 
-        void operator*=(const FieldField<Field, scalar>&);
-        void operator*=(const tmp<FieldField<Field, scalar>>&);
+        void operator*=(const FieldField<Field, pCmptType>&);
+        void operator*=(const tmp<FieldField<Field, pCmptType>>&);
 
-        void operator/=(const FieldField<Field, scalar>&);
-        void operator/=(const tmp<FieldField<Field, scalar>>&);
+        void operator/=(const FieldField<Field, pCmptType>&);
+        void operator/=(const tmp<FieldField<Field, pCmptType>>&);
 
         void operator+=(const Type&);
         void operator-=(const Type&);
 
-        void operator*=(const scalar&);
-        void operator/=(const scalar&);
+        void operator*=(const pCmptType&);
+        void operator/=(const pCmptType&);
 
 
     // IOstream Operators

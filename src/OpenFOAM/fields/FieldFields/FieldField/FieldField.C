@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -376,8 +376,12 @@ void FieldField<Field, Type>::operator op(const TYPE& t)                       \
 
 COMPUTED_ASSIGNMENT(Type, +=)
 COMPUTED_ASSIGNMENT(Type, -=)
-COMPUTED_ASSIGNMENT(scalar, *=)
-COMPUTED_ASSIGNMENT(scalar, /=)
+
+
+#define pCmptType_ typename FieldField<Field, Type>::pCmptType
+
+COMPUTED_ASSIGNMENT(pCmptType_, *=)
+COMPUTED_ASSIGNMENT(pCmptType_, /=)
 
 #undef COMPUTED_ASSIGNMENT
 
