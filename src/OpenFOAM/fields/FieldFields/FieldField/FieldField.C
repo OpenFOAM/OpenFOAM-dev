@@ -335,7 +335,10 @@ void FieldField<Field, Type>::operator=(const tmp<FieldField>& tf)
 
 
 template<template<class> class Field, class Type>
-void FieldField<Field, Type>::operator=(const Type& t)
+void FieldField<Field, Type>::operator=
+(
+    const typename FieldField<Field, Type>::pType& t
+)
 {
     forAll(*this, i)
     {
@@ -344,7 +347,7 @@ void FieldField<Field, Type>::operator=(const Type& t)
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+#define COMPUTED_ASSIGNMENT(TYPE, PTYPE, op)                                   \
                                                                                \
 template<template<class> class Field, class Type>                              \
 void FieldField<Field, Type>::operator op(const FieldField<Field, TYPE>& f)    \
@@ -366,7 +369,7 @@ void FieldField<Field, Type>::operator op                                      \
 }                                                                              \
                                                                                \
 template<template<class> class Field, class Type>                              \
-void FieldField<Field, Type>::operator op(const TYPE& t)                       \
+void FieldField<Field, Type>::operator op(const PTYPE& t)                      \
 {                                                                              \
     forAll(*this, i)                                                           \
     {                                                                          \
@@ -374,14 +377,18 @@ void FieldField<Field, Type>::operator op(const TYPE& t)                       \
     }                                                                          \
 }
 
-COMPUTED_ASSIGNMENT(Type, +=)
-COMPUTED_ASSIGNMENT(Type, -=)
 
+#define pType_ typename FieldField<Field, Type>::pType
+COMPUTED_ASSIGNMENT(Type, pType_, +=)
+COMPUTED_ASSIGNMENT(Type, pType_, -=)
+#undef pType_
 
+#define cmptType_ typename FieldField<Field, Type>::cmptType
 #define pCmptType_ typename FieldField<Field, Type>::pCmptType
-
-COMPUTED_ASSIGNMENT(pCmptType_, *=)
-COMPUTED_ASSIGNMENT(pCmptType_, /=)
+COMPUTED_ASSIGNMENT(cmptType_, pCmptType_, *=)
+COMPUTED_ASSIGNMENT(cmptType_, pCmptType_, /=)
+#undef pCmptType_
+#undef cmptType_
 
 #undef COMPUTED_ASSIGNMENT
 

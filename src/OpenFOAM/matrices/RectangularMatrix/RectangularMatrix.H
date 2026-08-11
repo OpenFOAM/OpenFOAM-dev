@@ -93,7 +93,7 @@ namespace expression
     template<class Type>
     struct Expressionable<RectangularMatrix<Type>>
     :
-        public std::integral_constant<char, -1>
+        public notExpressionable
     {};
 }
 

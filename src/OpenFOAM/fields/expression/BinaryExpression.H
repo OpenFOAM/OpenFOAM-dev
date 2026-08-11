@@ -274,7 +274,7 @@ struct Expressionable<BinaryExpression<A, B, Op>>
             Expressionable<std::decay_t<A>>::value < 0
          || Expressionable<std::decay_t<B>>::value < 0
         ),
-        std::integral_constant<char, -1>,
+        notExpressionable,
         typename std::conditional
         <
             (
@@ -607,7 +607,7 @@ struct Operation<BinaryExpression<A, B, Op>>
 {
     using type = Op;
 
-    static const char precedence = Op::precedence;
+    static const signed char precedence = Op::precedence;
 };
 
 //- Specialise Name for the binary expression. Wraps the names of the

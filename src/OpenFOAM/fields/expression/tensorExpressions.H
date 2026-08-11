@@ -31,6 +31,7 @@ Description
 #define tensorExpressions_H
 
 #include "expressions.H"
+#include "dimensionSet.H"
 
 #include "diagTensor.H"
 #include "sphericalTensor.H"
@@ -49,7 +50,7 @@ namespace Foam
                                                                                \
 struct Func##Op                                                                \
 {                                                                              \
-    static const char precedence =                                             \
+    static const signed char precedence =                                      \
         expression::Operation<void>::precedence;                               \
                                                                                \
     static word name(const word& x)                                            \
@@ -76,6 +77,11 @@ struct Func##Op                                                                \
     {                                                                          \
         return Func(x);                                                        \
     }                                                                          \
+                                                                               \
+    static dimensionSet value(const dimensionSet& x)                           \
+    {                                                                          \
+        return Func(x);                                                        \
+    }                                                                          \
 };                                                                             \
                                                                                \
 UnaryFunction(Func)
@@ -84,7 +90,7 @@ UnaryFunction(Func)
                                                                                \
 struct Func##Op                                                                \
 {                                                                              \
-    static const char precedence =                                             \
+    static const signed char precedence =                                      \
         expression::Operation<void>::precedence;                               \
                                                                                \
     static word name(const word& x)                                            \
@@ -111,6 +117,11 @@ struct Func##Op                                                                \
     {                                                                          \
         return Func(x);                                                        \
     }                                                                          \
+                                                                               \
+    static dimensionSet value(const dimensionSet& x)                           \
+    {                                                                          \
+        return Func(x);                                                        \
+    }                                                                          \
 };                                                                             \
                                                                                \
 UnaryFunction(Func)
@@ -119,7 +130,7 @@ UnaryFunction(Func)
                                                                                \
 struct Func##Op                                                                \
 {                                                                              \
-    static const char precedence =                                             \
+    static const signed char precedence =                                      \
         expression::Operation<void>::precedence;                               \
                                                                                \
     static word name(const word& x)                                            \
@@ -136,6 +147,11 @@ struct Func##Op                                                                \
     {                                                                          \
         return Func(x);                                                        \
     }                                                                          \
+                                                                               \
+    static dimensionSet value(const dimensionSet& x)                           \
+    {                                                                          \
+        return Func(x);                                                        \
+    }                                                                          \
 };                                                                             \
                                                                                \
 UnaryFunction(Func)
@@ -144,7 +160,7 @@ UnaryFunction(Func)
                                                                                \
 struct Func##Op                                                                \
 {                                                                              \
-    static const char precedence =                                             \
+    static const signed char precedence =                                      \
         expression::Operation<void>::precedence;                               \
                                                                                \
     static word name(const word& x)                                            \
@@ -158,6 +174,11 @@ struct Func##Op                                                                \
     }                                                                          \
                                                                                \
     static tensor value(const tensor& x)                                       \
+    {                                                                          \
+        return Func(x);                                                        \
+    }                                                                          \
+                                                                               \
+    static dimensionSet value(const dimensionSet& x)                           \
     {                                                                          \
         return Func(x);                                                        \
     }                                                                          \
@@ -190,7 +211,7 @@ UnaryOpFunction(tensor, tensor, skew)
 
 struct hdualOp
 {
-    static const char precedence = 2;
+    static const signed char precedence = 2;
 
     static word name(const word& x)
     {
@@ -210,6 +231,11 @@ struct hdualOp
     static tensor value(const vector& x)
     {
         return *x;
+    }
+
+    static dimensionSet value(const dimensionSet& x)
+    {
+        return hdual(x);
     }
 };
 

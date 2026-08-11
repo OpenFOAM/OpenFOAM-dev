@@ -73,22 +73,32 @@ Ostream& operator<<(Ostream&, const tmp<Field<Type>>&);
 class unitSet;
 class dictionary;
 
-//- Field type traits
+//- Field types
 template<class Type>
 struct FieldTraits
 {
+    //- Primitive element type
     using pType = Type;
-    using cmptType = typename pTraits<Type>::cmptType;
-    using pCmptType = cmptType;
+
+    //- Primitive element component type
+    using pCmptType = typename pTraits<Type>::cmptType;
+
+    //- Element component type (pCmptType)
+    using cmptType = pCmptType;
 };
 
-//- Field<Field> type traits
+//- Field<Field> types
 template<class Type>
 struct FieldTraits<Field<Type>>
 {
+    //- Primitive element type
     using pType = Type;
-    using cmptType = Field<typename pTraits<Type>::cmptType>;
+
+    //- Primitive element component type
     using pCmptType = typename pTraits<Type>::cmptType;
+
+    //- Element component type (Field of pCmptType)
+    using cmptType = Field<pCmptType>;
 };
 
 
@@ -115,20 +125,22 @@ class Field
 
 public:
 
-    //- Declare primitive type
-    using pType = typename FieldTraits<Type>::pType;
+    // Public Types
 
-    //- Declare component type
-    using cmptType = typename FieldTraits<Type>::cmptType;
+        //- Primitive type
+        using pType = typename FieldTraits<Type>::pType;
 
-    //- Declare component primitive type
-    using pCmptType = typename FieldTraits<Type>::pCmptType;
+        //- Primitive component type
+        using pCmptType = typename FieldTraits<Type>::pCmptType;
 
-    //- Declare type of subField type
-    using subField = SubField<Type>;
+        //- Component type
+        using cmptType = typename FieldTraits<Type>::cmptType;
 
-    //- Declare component Field type
-    using cmptField = Field<cmptType>;
+        //- Component Field type
+        using cmptField = Field<cmptType>;
+
+        //- subField type
+        using subField = SubField<Type>;
 
 
     // Static Data Members
@@ -366,20 +378,40 @@ public:
         void operator=(const Expression& e);
 
         void operator+=(const UList<Type>&);
+        void operator+=(const Field<Type>&);
         void operator+=(const tmp<Field<Type>>&);
         void operator+=(const pType&);
 
+        //- Assign-add to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator+=(const Expression& e);
+
         void operator-=(const UList<Type>&);
+        void operator-=(const Field<Type>&);
         void operator-=(const tmp<Field<Type>>&);
         void operator-=(const pType&);
 
+        //- Assign-subtract to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator-=(const Expression& e);
+
         void operator*=(const UList<cmptType>&);
+        void operator*=(const Field<cmptType>&);
         void operator*=(const tmp<Field<cmptType>>&);
         void operator*=(const pCmptType&);
 
+        //- Assign-multiply to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator*=(const Expression& e);
+
         void operator/=(const UList<cmptType>&);
+        void operator/=(const Field<cmptType>&);
         void operator/=(const tmp<Field<cmptType>>&);
         void operator/=(const pCmptType&);
+
+        //- Assign-divide to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator/=(const Expression& e);
 
 
     // IOstream Operators

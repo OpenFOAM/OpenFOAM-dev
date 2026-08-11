@@ -335,7 +335,7 @@ namespace expression
     template<class Form, class Type>
     struct Expressionable<Matrix<Form, Type>>
     :
-        public std::integral_constant<char, -1>
+        public notExpressionable
     {};
 }
 

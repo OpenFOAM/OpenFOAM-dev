@@ -31,6 +31,8 @@ Description
 #define vectorExpressions_H
 
 #include "expressions.H"
+#include "dimensionSet.H"
+#include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

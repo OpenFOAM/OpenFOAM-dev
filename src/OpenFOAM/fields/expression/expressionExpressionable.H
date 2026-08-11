@@ -64,7 +64,7 @@ struct Expressionable;
 template<class Expression>
 struct Expressionable<Expression>
 :
-    public std::integral_constant<char, 0>
+    public std::integral_constant<signed char, 0>
 {};
 
 template<class Expression, class ... Args>
@@ -72,6 +72,8 @@ struct Expressionable<Expression, Arguments<Args ...>>
 :
     public Expressionable<Expression>
 {};
+
+using notExpressionable = std::integral_constant<signed char, -1>;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

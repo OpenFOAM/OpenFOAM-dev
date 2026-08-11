@@ -79,18 +79,18 @@ class FieldField
 
 public:
 
-    // Public Type Definitions
+    // Public Types
 
-        //- Declare primitive type
+        //- Primitive type
         using pType = typename Field<Type>::pType;
+
+        //- Primitive component type
+        using pCmptType = typename Field<Type>::pCmptType;
 
         //- Component type
         using cmptType = typename Field<Type>::cmptType;
 
-        //- Declare component primitive type
-        using pCmptType = typename Field<Type>::pCmptType;
-
-        //- Declare component Field type
+        //- Component Field type
         using cmptField = typename Field<Type>::cmptField;
 
 
@@ -162,24 +162,22 @@ public:
         void operator=(const FieldField<Field, Type>&);
         void operator=(FieldField<Field, Type>&&);
         void operator=(const tmp<FieldField<Field, Type>>&);
-        void operator=(const Type&);
+        void operator=(const pType&);
 
         void operator+=(const FieldField<Field, Type>&);
         void operator+=(const tmp<FieldField<Field, Type>>&);
+        void operator+=(const pType&);
 
         void operator-=(const FieldField<Field, Type>&);
         void operator-=(const tmp<FieldField<Field, Type>>&);
+        void operator-=(const pType&);
 
-        void operator*=(const FieldField<Field, pCmptType>&);
-        void operator*=(const tmp<FieldField<Field, pCmptType>>&);
-
-        void operator/=(const FieldField<Field, pCmptType>&);
-        void operator/=(const tmp<FieldField<Field, pCmptType>>&);
-
-        void operator+=(const Type&);
-        void operator-=(const Type&);
-
+        void operator*=(const FieldField<Field, cmptType>&);
+        void operator*=(const tmp<FieldField<Field, cmptType>>&);
         void operator*=(const pCmptType&);
+
+        void operator/=(const FieldField<Field, cmptType>&);
+        void operator/=(const tmp<FieldField<Field, cmptType>>&);
         void operator/=(const pCmptType&);
 
 

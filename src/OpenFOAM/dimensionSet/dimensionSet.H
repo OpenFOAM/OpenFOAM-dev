@@ -52,64 +52,19 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 class dimensionSet;
-class unitSet;
+
 template<class Type> class dimensioned;
 typedef dimensioned<scalar> dimensionedScalar;
 
 // Friend Functions
 
-dimensionSet max(const dimensionSet&, const dimensionSet&);
-dimensionSet min(const dimensionSet&, const dimensionSet&);
-dimensionSet cmptMultiply(const dimensionSet&, const dimensionSet&);
-dimensionSet cmptDivide(const dimensionSet&, const dimensionSet&);
-dimensionSet cmptMag(const dimensionSet&);
-
-dimensionSet pow(const dimensionSet&, const scalar);
-dimensionSet pow(const dimensionSet&, const dimensionedScalar&);
-dimensionSet pow(const dimensionedScalar&, const dimensionSet&);
-
-dimensionSet sqr(const dimensionSet&);
-dimensionSet pow3(const dimensionSet&);
-dimensionSet pow4(const dimensionSet&);
-dimensionSet pow5(const dimensionSet&);
-dimensionSet pow6(const dimensionSet&);
-dimensionSet pow025(const dimensionSet&);
-
-dimensionSet sqrt(const dimensionSet&);
-dimensionSet cbrt(const dimensionSet&);
-dimensionSet magSqr(const dimensionSet&);
-dimensionSet mag(const dimensionSet&);
-dimensionSet sign(const dimensionSet&);
-dimensionSet pos(const dimensionSet&);
-dimensionSet pos0(const dimensionSet&);
-dimensionSet neg(const dimensionSet&);
-dimensionSet neg0(const dimensionSet&);
-dimensionSet posPart(const dimensionSet&);
-dimensionSet negPart(const dimensionSet&);
-dimensionSet inv(const dimensionSet&);
-
-// Function to check the argument is dimensionless
-//  for transcendental functions
-dimensionSet trans(const dimensionSet&);
-
-dimensionSet atan2(const dimensionSet&, const dimensionSet&);
-
-// Return the argument; transformations do not change the dimensions
-dimensionSet transform(const dimensionSet&);
-
-dimensionSet normalised(const dimensionSet&);
-dimensionSet perpendicular(const dimensionSet&);
+dimensionSet pow(const dimensionSet& ds, const dimensionedScalar& dS);
+dimensionSet pow(const dimensionedScalar& dS, const dimensionSet& ds);
 
 // Friend operators
 
-dimensionSet operator-(const dimensionSet&);
-dimensionSet operator+(const dimensionSet&, const dimensionSet&);
-dimensionSet operator-(const dimensionSet&, const dimensionSet&);
 dimensionSet operator*(const dimensionSet&, const dimensionSet&);
 dimensionSet operator/(const dimensionSet&, const dimensionSet&);
-dimensionSet operator&(const dimensionSet&, const dimensionSet&);
-dimensionSet operator^(const dimensionSet&, const dimensionSet&);
-dimensionSet operator&&(const dimensionSet&, const dimensionSet&);
 
 // IOstream Operators
 
@@ -269,21 +224,21 @@ public:
 
     // Member Operators
 
-        scalar operator[](const dimensionType) const;
-        scalar& operator[](const dimensionType);
+        inline scalar operator[](const dimensionType) const;
+        inline scalar& operator[](const dimensionType);
 
-        scalar operator[](const label) const;
-        scalar& operator[](const label);
+        inline scalar operator[](const label) const;
+        inline scalar& operator[](const label);
 
         bool operator==(const dimensionSet&) const;
-        bool operator!=(const dimensionSet&) const;
+        inline bool operator!=(const dimensionSet&) const;
 
-        bool operator=(const dimensionSet&) const;
+        inline bool operator=(const dimensionSet&) const;
 
-        bool operator+=(const dimensionSet&) const;
-        bool operator-=(const dimensionSet&) const;
-        bool operator*=(const dimensionSet&);
-        bool operator/=(const dimensionSet&);
+        inline bool operator+=(const dimensionSet&) const;
+        inline bool operator-=(const dimensionSet&) const;
+        inline bool operator*=(const dimensionSet&);
+        inline bool operator/=(const dimensionSet&);
 
         template<class ... Args>
         using typeForArgs = typename typeOfNcmpts<sizeof ... (Args)>::type;
@@ -323,66 +278,11 @@ public:
 
     // Friend Functions
 
-        friend dimensionSet max(const dimensionSet&, const dimensionSet&);
-        friend dimensionSet min(const dimensionSet&, const dimensionSet&);
-        friend dimensionSet cmptMultiply
-        (
-            const dimensionSet&,
-            const dimensionSet&
-        );
-        friend dimensionSet cmptDivide
-        (
-            const dimensionSet&,
-            const dimensionSet&
-        );
-        friend dimensionSet cmptMag(const dimensionSet&);
-
-        friend dimensionSet pow(const dimensionSet&, const scalar);
         friend dimensionSet pow(const dimensionSet&, const dimensionedScalar&);
         friend dimensionSet pow(const dimensionedScalar&, const dimensionSet&);
 
-        friend dimensionSet sqr(const dimensionSet&);
-        friend dimensionSet pow3(const dimensionSet&);
-        friend dimensionSet pow4(const dimensionSet&);
-        friend dimensionSet pow5(const dimensionSet&);
-        friend dimensionSet pow6(const dimensionSet&);
-        friend dimensionSet pow025(const dimensionSet&);
-
-        friend dimensionSet sqrt(const dimensionSet&);
-        friend dimensionSet magSqr(const dimensionSet&);
-        friend dimensionSet mag(const dimensionSet&);
-        friend dimensionSet sign(const dimensionSet&);
-        friend dimensionSet pos0(const dimensionSet&);
-        friend dimensionSet neg(const dimensionSet&);
-        friend dimensionSet inv(const dimensionSet&);
-
-        //- Function to check the argument is dimensionless
-        //  for transcendental functions
-        friend dimensionSet trans(const dimensionSet&);
-
-        friend dimensionSet atan2(const dimensionSet&, const dimensionSet&);
-
-        friend dimensionSet transform(const dimensionSet&);
-
-        friend dimensionSet normalised(const dimensionSet&);
-        friend dimensionSet perpendicular(const dimensionSet&);
-
 
     // Friend Operators
-
-        friend dimensionSet operator-(const dimensionSet&);
-
-        friend dimensionSet operator+
-        (
-            const dimensionSet&,
-            const dimensionSet&
-        );
-
-        friend dimensionSet operator-
-        (
-            const dimensionSet&,
-            const dimensionSet&
-        );
 
         friend dimensionSet operator*
         (
@@ -391,24 +291,6 @@ public:
         );
 
         friend dimensionSet operator/
-        (
-            const dimensionSet&,
-            const dimensionSet&
-        );
-
-        friend dimensionSet operator&
-        (
-            const dimensionSet&,
-            const dimensionSet&
-        );
-
-        friend dimensionSet operator^
-        (
-            const dimensionSet&,
-            const dimensionSet&
-        );
-
-        friend dimensionSet operator&&
         (
             const dimensionSet&,
             const dimensionSet&
@@ -433,6 +315,7 @@ void writeEntry(Ostream& os, const dimensionSet& value);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "dimensions.H"
+#include "dimensionSetI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

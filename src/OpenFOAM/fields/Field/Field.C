@@ -720,6 +720,12 @@ void Foam::Field<Type>::operator op(const UList<TYPE>& f)                      \
 }                                                                              \
                                                                                \
 template<class Type>                                                           \
+void Foam::Field<Type>::operator op(const Field<TYPE>& f)                      \
+{                                                                              \
+    TFOR_ALL_F_OP_F(Type, *this, op, TYPE, f)                                  \
+}                                                                              \
+                                                                               \
+template<class Type>                                                           \
 void Foam::Field<Type>::operator op(const tmp<Field<TYPE>>& tf)                \
 {                                                                              \
     operator op(tf());                                                         \
@@ -730,20 +736,37 @@ template<class Type>                                                           \
 void Foam::Field<Type>::operator op(const PTYPE& t)                            \
 {                                                                              \
     TFOR_ALL_F_OP_S(Type, *this, op, PTYPE, t)                                 \
+}                                                                              \
+                                                                               \
+template<class Type>                                                           \
+template<class Expression, class>                                              \
+void Foam::Field<Type>::operator op(const Expression& e)                       \
+{                                                                              \
+    /* Error if the expression is a different size */                          \
+    expression::assertSameAllContainerProperty<expression::Size>               \
+    (                                                                          \
+        *this,                                                                 \
+        e                                                                      \
+    );                                                                         \
+                                                                               \
+    forAll(*this, i)                                                           \
+    {                                                                          \
+        this->operator[](i) op expression::access(e, i);                       \
+    }                                                                          \
 }
 
 #define pType_ typename Foam::Field<Type>::pType
-#define cmptType_ typename Foam::Field<Type>::cmptType
-#define pCmptType_ typename Foam::Field<Type>::pCmptType
-
 COMPUTED_ASSIGNMENT(Type, pType_, +=)
 COMPUTED_ASSIGNMENT(Type,  pType_, -=)
+#undef pType_
+
+#define cmptType_ typename Foam::Field<Type>::cmptType
+#define pCmptType_ typename Foam::Field<Type>::pCmptType
 COMPUTED_ASSIGNMENT(cmptType_, pCmptType_, *=)
 COMPUTED_ASSIGNMENT(cmptType_, pCmptType_, /=)
-
 #undef pCmptType_
 #undef cmptType_
-#undef pType_
+
 #undef COMPUTED_ASSIGNMENT
 
 

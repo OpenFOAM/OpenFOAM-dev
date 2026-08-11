@@ -36,7 +36,7 @@ Description
 #ifndef expressionDimensionSet_H
 #define expressionDimensionSet_H
 
-#include "dimensionSet.H"
+#include "dimensionedType.H"
 
 #include "expressionOperate.H"
 
@@ -48,6 +48,42 @@ namespace expression
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Exponent>
+class DimensionsOrExponent
+{
+    const dimensionSet& dimensions_;
+
+    const Exponent& exponent_;
+
+public:
+
+    DimensionsOrExponent(const Exponent& exponent)
+    :
+        dimensions_(dimless),
+        exponent_(exponent)
+    {}
+
+    DimensionsOrExponent(const dimensioned<Exponent>& dt)
+    :
+        dimensions_(dt.dimensions()),
+        exponent_(dt.value())
+    {}
+
+    operator const dimensionSet&() const
+    {
+        return dimless;
+    }
+
+    friend dimensionSet pow
+    (
+        const dimensionSet& dimensions,
+        const DimensionsOrExponent<Exponent>& doe
+    )
+    {
+        return pow(dimensions, doe.exponent_);
+    }
+};
 
 template<class Type>
 struct Operate
@@ -65,6 +101,54 @@ struct Operate
     }
 };
 
+template<>
+struct Operate
+<
+    int32_t,
+    Arguments<dimensionSet>,
+    EnableIfNotExpressionable<int32_t>
+>
+{
+    using type = DimensionsOrExponent<int32_t>;
+
+    static type access(const int32_t l, const dimensionSet&)
+    {
+        return type(l);
+    }
+};
+
+template<>
+struct Operate
+<
+    int64_t,
+    Arguments<dimensionSet>,
+    EnableIfNotExpressionable<int64_t>
+>
+{
+    using type = DimensionsOrExponent<int64_t>;
+
+    static type access(const int64_t l, const dimensionSet&)
+    {
+        return type(l);
+    }
+};
+
+template<>
+struct Operate
+<
+    scalar,
+    Arguments<dimensionSet>,
+    EnableIfNotExpressionable<scalar>
+>
+{
+    using type = DimensionsOrExponent<scalar>;
+
+    static type access(const scalar s, const dimensionSet&)
+    {
+        return type(s);
+    }
+};
+
 template<class Type>
 struct Operate
 <
@@ -78,6 +162,22 @@ struct Operate
     static type access(const dimensioned<Type>& dt, const dimensionSet&)
     {
         return dt.dimensions();
+    }
+};
+
+template<>
+struct Operate
+<
+    dimensionedScalar,
+    Arguments<dimensionSet>,
+    EnableIfNotExpressionable<dimensionedScalar>
+>
+{
+    using type = DimensionsOrExponent<scalar>;
+
+    static type access(const dimensionedScalar& ds, const dimensionSet&)
+    {
+        return type(ds);
     }
 };
 

@@ -34,6 +34,7 @@ Description
 
 #include "tensor.H"
 #include "mathematicalConstants.H"
+#include "dimensionSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -327,9 +328,34 @@ inline scalar pseudoAngle
                         Class transformOp Declaration
 \*---------------------------------------------------------------------------*/
 
+// Return the argument; transformations do not change the dimensions
+inline dimensionSet transform(const dimensionSet& ds)
+{
+    return ds;
+}
+
+
+inline dimensionSet transform
+(
+    const dimensionSet& t,
+    const dimensionSet& ds
+)
+{
+    if (dimensionSet::debug && !t.dimensionless())
+    {
+        FatalErrorInFunction
+            << "Transformation tensor is not dimensionless" << endl
+            << "     dimensions : " << t.info()
+            << endl << abort(FatalError);
+    }
+
+    return ds;
+}
+
+
 struct transformOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -341,6 +367,11 @@ struct transformOp
 
     template<class Type>
     static Type value(const tensor& t, const Type& v)
+    {
+        return transform(t, v);
+    }
+
+    static dimensionSet value(const dimensionSet& t, const dimensionSet& v)
     {
         return transform(t, v);
     }

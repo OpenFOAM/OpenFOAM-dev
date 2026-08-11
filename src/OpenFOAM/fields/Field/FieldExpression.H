@@ -40,8 +40,9 @@ struct Expressionable<Field<Type>>
 :
     public std::integral_constant
     <
-        char,
-        std::max(char(0), Expressionable<Type>::value) + char(1)
+        signed char,
+        std::max(static_cast<signed char>(0), Expressionable<Type>::value)
+      + static_cast<signed char>(1)
     >
 {};
 

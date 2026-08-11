@@ -31,11 +31,90 @@ Description
 #define scalarExpressions_H
 
 #include "expressions.H"
+#include "dimensionSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+/*---------------------------------------------------------------------------*\
+                           Class powOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct powOp
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "pow(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const scalar b)
+    {
+        return pow(a, b);
+    }
+
+    static scalar value(const scalar a, const label b)
+    {
+        return integerPow(a, b);
+    }
+
+    template<class Exp>
+    static dimensionSet value(const dimensionSet& a, const Exp& b)
+    {
+        return pow(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                        Class integerPowOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct integerPowOp
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "integerPow(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const label b)
+    {
+        return integerPow(a, b);
+    }
+};
+
+/*---------------------------------------------------------------------------*\
+                        Class integerRootOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct integerRootOp
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return "integerRoot(" + a + ',' + b + ')';
+    }
+
+    static scalar value(const scalar a, const label b)
+    {
+        return integerRoot(a, b);
+    }
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Unary scalar functions
@@ -82,13 +161,18 @@ UnaryScalarOpFunction(y1)
 
 #undef UnaryScalarOpFunction
 
+BinaryFunction(stabilise);
+BinaryFunction(pow);
+BinaryFunction(integerPow);
+BinaryFunction(integerRoot);
+
 /*---------------------------------------------------------------------------*\
                             Class atan2Op Declaration
 \*---------------------------------------------------------------------------*/
 
 struct atan2Op
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -113,7 +197,7 @@ BinaryFunction(atan2);
 
 struct jnOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -138,7 +222,7 @@ BinaryFunction(jn);
 
 struct ynOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;

@@ -157,7 +157,7 @@ namespace expression
     template<class Type>
     struct Expressionable<SquareMatrix<Type>>
     :
-        public std::integral_constant<char, -1>
+        public notExpressionable
     {};
 }
 

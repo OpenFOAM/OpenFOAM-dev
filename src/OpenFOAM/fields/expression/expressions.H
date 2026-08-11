@@ -76,7 +76,7 @@ namespace Foam
                                                                                \
 struct Func##Op                                                                \
 {                                                                              \
-    static const char precedence =                                             \
+    static const signed char precedence =                                      \
         expression::Operation<void>::precedence;                               \
                                                                                \
     static word name(const word& x)                                            \
@@ -85,6 +85,11 @@ struct Func##Op                                                                \
     }                                                                          \
                                                                                \
     static RetType value(const Type& x)                                        \
+    {                                                                          \
+        return Func(x);                                                        \
+    }                                                                          \
+                                                                               \
+    static dimensionSet value(const dimensionSet& x)                           \
     {                                                                          \
         return Func(x);                                                        \
     }                                                                          \
@@ -211,11 +216,6 @@ BinaryOperator(&, inner);
 
 // Cross product operator
 BinaryOperator(^, cross);
-
-BinaryFunction(stabilise);
-BinaryFunction(pow);
-BinaryFunction(integerPow);
-BinaryFunction(integerRoot);
 
 // Maximum functions
 BinaryFunction(max);

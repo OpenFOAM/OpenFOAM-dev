@@ -46,7 +46,8 @@ namespace Foam
 
 struct nopOp
 {
-    static const char precedence = expression::Operation<void>::precedence;
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
 
     static word name(const word& x)
     {
@@ -72,7 +73,7 @@ struct nopOp
 
 struct promoteOp
 {
-    static const char precedence = 2;
+    static const signed char precedence = 2;
 
     static word name(const word& x)
     {
@@ -98,7 +99,7 @@ struct promoteOp
 
 struct negateOp
 {
-    static const char precedence = 2;
+    static const signed char precedence = 2;
 
     static word name(const word& x)
     {
@@ -124,7 +125,7 @@ struct negateOp
 
 struct notOp
 {
-    static const char precedence = 2;
+    static const signed char precedence = 2;
 
     static word name(const word& x)
     {
@@ -150,7 +151,7 @@ struct notOp
 #define UnaryFunctionOp(Func)                                                  \
     struct Func##Op                                                            \
     {                                                                          \
-        static const char precedence =                                         \
+        static const signed char precedence =                                  \
             expression::Operation<void>::precedence;                           \
                                                                                \
         static word name(const word& x)                                        \
@@ -185,7 +186,7 @@ UnaryFunctionOp(cmptMag)
 
 struct addOp
 {
-    static const char precedence = 0;
+    static const signed char precedence = 0;
 
     static const bool associative = true;
 
@@ -227,7 +228,7 @@ using sumOp = addOp;
 
 struct subtractOp
 {
-    static const char precedence = 0;
+    static const signed char precedence = 0;
 
     static const bool associative = false;
 
@@ -255,7 +256,7 @@ struct subtractOp
 
 struct multiplyOp
 {
-    static const char precedence = 1;
+    static const signed char precedence = 1;
 
     static const bool associative = true;
 
@@ -283,7 +284,7 @@ struct multiplyOp
 
 struct divideOp
 {
-    static const char precedence = 1;
+    static const signed char precedence = 1;
 
     static const bool associative = false;
 
@@ -311,7 +312,7 @@ struct divideOp
 
 struct innerOp
 {
-    static const char precedence = 1;
+    static const signed char precedence = 1;
 
     static const bool associative = false;
 
@@ -333,7 +334,7 @@ struct innerOp
 
 struct crossOp
 {
-    static const char precedence = 1;
+    static const signed char precedence = 1;
 
     static const bool associative = false;
 
@@ -355,7 +356,7 @@ struct crossOp
 
 struct stabiliseOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -365,7 +366,8 @@ struct stabiliseOp
         return "stabilise(" + a + ',' + b + ')';
     }
 
-    static scalar value(const scalar a, const scalar b)
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
     {
         return stabilise(a, b);
     }
@@ -377,83 +379,12 @@ struct stabiliseOp
 };
 
 /*---------------------------------------------------------------------------*\
-                           Class powOp Declaration
-\*---------------------------------------------------------------------------*/
-
-struct powOp
-{
-    static const char precedence =
-        expression::Operation<void>::precedence;
-
-    static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return "pow(" + a + ',' + b + ')';
-    }
-
-    static scalar value(const scalar a, const scalar b)
-    {
-        return pow(a, b);
-    }
-
-    static scalar value(const scalar a, const label b)
-    {
-        return integerPow(a, b);
-    }
-};
-
-/*---------------------------------------------------------------------------*\
-                        Class integerPowOp Declaration
-\*---------------------------------------------------------------------------*/
-
-struct integerPowOp
-{
-    static const char precedence =
-        expression::Operation<void>::precedence;
-
-    static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return "integerPow(" + a + ',' + b + ')';
-    }
-
-    static scalar value(const scalar a, const label b)
-    {
-        return integerPow(a, b);
-    }
-};
-
-/*---------------------------------------------------------------------------*\
-                        Class integerRootOp Declaration
-\*---------------------------------------------------------------------------*/
-
-struct integerRootOp
-{
-    static const char precedence =
-        expression::Operation<void>::precedence;
-
-    static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return "integerRoot(" + a + ',' + b + ')';
-    }
-
-    static scalar value(const scalar a, const label b)
-    {
-        return integerRoot(a, b);
-    }
-};
-
-/*---------------------------------------------------------------------------*\
                            Class maxOp Declaration
 \*---------------------------------------------------------------------------*/
 
 struct maxOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -493,7 +424,7 @@ struct maxOp
 
 struct minOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -533,7 +464,7 @@ struct minOp
 
 struct minModOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -573,7 +504,7 @@ struct minModOp
 
 struct cmptMultiplyOp
 {
-    static const char precedence = 1;
+    static const signed char precedence = 1;
 
     static const bool associative = true;
 
@@ -601,7 +532,7 @@ struct cmptMultiplyOp
 
 struct cmptDivideOp
 {
-    static const char precedence = 1;
+    static const signed char precedence = 1;
 
     static const bool associative = false;
 
@@ -629,7 +560,7 @@ struct cmptDivideOp
 
 struct cmptPowOp
 {
-    static const char precedence =
+    static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
@@ -639,7 +570,8 @@ struct cmptPowOp
         return "cmptPow(" + a + ',' + b + ')';
     }
 
-    static scalar value(const scalar a, const scalar b)
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
     {
         return cmptPow(a, b);
     }
