@@ -44,8 +44,7 @@ bool Foam::adjustPhi
         scalar fixedMassOut = 0.0;
         scalar adjustableMassOut = 0.0;
 
-        surfaceScalarField::Boundary& bphi =
-            phi.boundaryFieldRef();
+        surfaceScalarField::Boundary& bphi = phi.boundaryFieldRef();
 
         forAll(bphi, patchi)
         {
@@ -85,16 +84,29 @@ bool Foam::adjustPhi
             }
         }
 
-        // Calculate the total flux in the domain, used for normalisation
-        scalar totalFlux = vSmall + sum(mag(phi)).value();
-
         reduce(massIn, sumOp());
         reduce(fixedMassOut, sumOp());
         reduce(adjustableMassOut, sumOp());
 
+        // Calculate the total flux in the domain, used for normalisation
+        const scalar internalFlux = gSum(mag(phi.primitiveField()));
+        scalar boundaryFlux = 0;
+        forAll(bphi, patchi)
+        {
+            if
+            (
+                !bphi[patchi].patch().coupled()
+             || refCast<const coupledFvPatch>(bphi[patchi].patch()).owner()
+            )
+            {
+                boundaryFlux += sum(mag(bphi[patchi]));
+            }
+        }
+        reduce(boundaryFlux, sumOp());
+        const scalar totalFlux = vSmall + internalFlux + boundaryFlux;
+
         scalar massCorr = 1.0;
         scalar magAdjustableMassOut = mag(adjustableMassOut);
-
         if
         (
             magAdjustableMassOut > vSmall
