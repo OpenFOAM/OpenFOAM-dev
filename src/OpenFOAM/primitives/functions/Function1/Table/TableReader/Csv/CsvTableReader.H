@@ -59,33 +59,14 @@ namespace TableReaders
 {
 
 /*---------------------------------------------------------------------------*\
-                           Using CsvVoid Declaration
-\*---------------------------------------------------------------------------*/
-
-template<typename T>
-using CsvVoid = void;
-
-
-/*---------------------------------------------------------------------------*\
                         Struct CsvLabelType Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, typename = void>
-struct CsvLabelType
-{
-    typedef label type;
-
-    typedef FixedList<label, 1> oldType;
-
-    type operator()(const oldType& ot)
-    {
-        return ot[0];
-    }
-};
-
+template<class Type, class Enable = void>
+struct CsvLabelType;
 
 template<class Type>
-struct CsvLabelType<Type, CsvVoid<typename pTraits<Type>::labelType>>
+struct CsvLabelType<Type, std::enable_if_t<(pTraits<Type>::nComponents > 1)>>
 {
     typedef typename pTraits<Type>::labelType type;
 
@@ -99,6 +80,20 @@ struct CsvLabelType<Type, CsvVoid<typename pTraits<Type>::labelType>>
             setComponent(t, i) = ot[i];
         }
         return t;
+    }
+};
+
+
+template<class Type>
+struct CsvLabelType<Type, std::enable_if_t<(pTraits<Type>::nComponents == 1)>>
+{
+    typedef label type;
+
+    typedef label oldType;
+
+    type operator()(const oldType& ot)
+    {
+        return ot;
     }
 };
 

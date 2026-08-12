@@ -55,20 +55,17 @@ Type CsvReadValue
                 << exit(FatalError);
         }
 
-        result[i] = readScalar
-        (
-            IStringStream(split[component(columns, i)])()
-        );
+        result[i] = read<scalar>(IStringStream(split[component(columns, i)])());
     }
 
     return result;
 }
 
 
-template<>
-inline label CsvReadValue<label>
+template<class Type>
+inline Type CsvReadPrimitiveValue
 (
-    const typename CsvLabelType<scalar>::type& columns,
+    const typename CsvLabelType<Type>::type& columns,
     const List<string>& split
 )
 {
@@ -80,8 +77,20 @@ inline label CsvReadValue<label>
             << exit(FatalError);
     }
 
-    return readLabel(IStringStream(split[component(columns, 0)])());
+    return read<Type>(IStringStream(split[component(columns, 0)])());
 }
+
+
+template<>
+inline label CsvReadValue<label>
+(
+    const typename CsvLabelType<label>::type& columns,
+    const List<string>& split
+)
+{
+    return CsvReadPrimitiveValue<label>(columns, split);
+}
+
 
 template<>
 inline scalar CsvReadValue<scalar>
@@ -90,15 +99,7 @@ inline scalar CsvReadValue<scalar>
     const List<string>& split
 )
 {
-    if (component(columns, 0) >= split.size())
-    {
-        FatalErrorInFunction
-            << "No column " << component(columns, 0) << " in "
-            << split << endl
-            << exit(FatalError);
-    }
-
-    return readScalar(IStringStream(split[component(columns, 0)])());
+    return CsvReadPrimitiveValue<scalar>(columns, split);
 }
 
 
