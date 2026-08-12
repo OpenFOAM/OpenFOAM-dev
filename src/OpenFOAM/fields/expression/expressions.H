@@ -135,6 +135,17 @@ UnaryFunction(cmptMag)
     typename expression::Result                                                \
     <                                                                          \
         typename expression::AllContainers<Expression>::type                   \
+    >::template elementType<Expression> Func(const tmp<Expression>& te)        \
+    {                                                                          \
+        auto x = Func(te());                                                   \
+        te.clear();                                                            \
+        return x;                                                              \
+    }                                                                          \
+                                                                               \
+    template<class Expression, class = EnableIfExpressionable<Expression>>     \
+    typename expression::Result                                                \
+    <                                                                          \
+        typename expression::AllContainers<Expression>::type                   \
     >::template elementType<Expression> gFunc                                  \
     (                                                                          \
         const Expression& e,                                                   \
@@ -151,6 +162,17 @@ UnaryFunction(cmptMag)
         /* global reduction */                                                 \
         reduce(x, expression::Functor<Op>(), Pstream::msgType(), comm);        \
                                                                                \
+        return x;                                                              \
+    }                                                                          \
+                                                                               \
+    template<class Expression, class = EnableIfExpressionable<Expression>>     \
+    typename expression::Result                                                \
+    <                                                                          \
+        typename expression::AllContainers<Expression>::type                   \
+    >::template elementType<Expression> gFunc(const tmp<Expression>& te)       \
+    {                                                                          \
+        auto x = gFunc(te());                                                  \
+        te.clear();                                                            \
         return x;                                                              \
     }
 

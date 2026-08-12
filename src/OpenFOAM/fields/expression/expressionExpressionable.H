@@ -46,6 +46,16 @@ namespace expression
 {
 
 /*---------------------------------------------------------------------------*\
+                          Class expression Declaration
+\*---------------------------------------------------------------------------*/
+
+//- Base class for all unary and binary expressions
+//  Used by EnableIfExpression
+struct expression
+{};
+
+
+/*---------------------------------------------------------------------------*\
                           Class Arguments Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -73,13 +83,32 @@ struct Expressionable<Expression, Arguments<Args ...>>
     public Expressionable<Expression>
 {};
 
+//- Not expressionable
 using notExpressionable = std::integral_constant<signed char, -1>;
+
+//- Not expressionable if the Expression is not expressionable
+template<class Expression>
+using NotExpressionable =
+    std::integral_constant
+    <
+        signed char,
+        std::min(static_cast<signed char>(0), Expressionable<Expression>::value)
+    >;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace expression
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Alias to enable instantiation if a type is a unary or binary expression
+template<class Expression>
+using EnableIfExpression =
+    std::enable_if_t
+    <
+        std::is_base_of<expression::expression, Expression>::value,
+        void
+    >;
 
 //- Alias to enable instantiation if a type (and arguments) is an expression
 template<class Expression, class ... Args>

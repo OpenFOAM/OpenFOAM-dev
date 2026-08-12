@@ -55,6 +55,8 @@ namespace Foam
 
 template<class X, class Op>
 struct UnaryExpression
+:
+    public expression::expression
 {
     X x;
 
@@ -66,6 +68,8 @@ struct UnaryExpression
 
 template<class X, class Op>
 class UnaryExpression<const X&, Op>
+:
+    public expression::expression
 {
     const ConditionalIfBaseOf<refCount, X, tmp<X>, nil> tx_;
 

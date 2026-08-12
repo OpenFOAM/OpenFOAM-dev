@@ -55,6 +55,8 @@ namespace Foam
 
 template<class A, class B, class Op>
 struct BinaryExpression
+:
+    public expression::expression
 {
     A a;
 
@@ -69,6 +71,8 @@ struct BinaryExpression
 
 template<class A, class B, class Op>
 class BinaryExpression<A, const B&, Op>
+:
+    public expression::expression
 {
     const ConditionalIfBaseOf<refCount, B, tmp<B>, nil> tb_;
 
@@ -96,6 +100,8 @@ public:
 
 template<class A, class B, class Op>
 class BinaryExpression<const A&, B, Op>
+:
+    public expression::expression
 {
     const ConditionalIfBaseOf<refCount, A, tmp<A>, nil> ta_;
 
@@ -123,6 +129,8 @@ public:
 
 template<class A, class B, class Op>
 class BinaryExpression<const A&, const B&, Op>
+:
+    public expression::expression
 {
     const ConditionalIfBaseOf<refCount, A, tmp<A>, nil> ta_;
 

@@ -193,6 +193,16 @@ public:
 };
 
 
+namespace expression
+{
+    template<class Type>
+    struct Expressionable<tmp<Type>>
+    :
+        public NotExpressionable<Type>
+    {};
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

@@ -92,8 +92,8 @@ struct ReduceIterable<Container<Type, Args ...>>
         return
             std::accumulate
             (
-                expression::begin(e),
-                expression::end(e),
+                begin(e),
+                end(e),
                 Op::template identity<elementType>(),
                 [](const elementType& x, const operateType& y)
                 {
