@@ -258,6 +258,8 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             false
         );
 
+        otherMesh.rename("meshes"/meshTimeName/mesh().name());
+
         mesh().preChange();
 
         mesh().swap(otherMesh);
