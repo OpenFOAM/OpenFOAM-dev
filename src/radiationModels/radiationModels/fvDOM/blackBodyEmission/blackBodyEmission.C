@@ -166,7 +166,7 @@ Foam::radiationModels::blackBodyEmission::blackBodyEmission
             (
                 IOobject
                 (
-                    "bLambda_" + Foam::name(lambdaI) ,
+                    "bLambda" + Foam::name(lambdaI) ,
                     T.mesh().time().name(),
                     T.mesh(),
                     IOobject::NO_READ,

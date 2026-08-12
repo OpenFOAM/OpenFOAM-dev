@@ -30,6 +30,7 @@ License
 #include "fvm.H"
 #include "wedgePolyPatch.H"
 #include "cyclicTransform.H"
+#include "read.H"
 #include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant;
@@ -181,7 +182,7 @@ void Foam::radiationModels::fvDOM::initialise()
             (
                 IOobject
                 (
-                    "aLambda_" + Foam::name(lambdaI) ,
+                    "aLambda" + Foam::name(lambdaI) ,
                     mesh_.time().name(),
                     mesh_,
                     IOobject::NO_READ,
@@ -202,10 +203,9 @@ void Foam::radiationModels::fvDOM::initialise()
         }
     }
 
-
-    Info<< typeName << ": Created " << IRay_.size() << " rays with average "
-        << "directions (dAve) and solid angles (omega)" << endl;
-    Info<< incrIndent;
+    Info<< indent << typeName << ": Created " << IRay_.size()
+        << " rays with average directions (dAve) and solid angles (omega)"
+        << endl << incrIndent;
     forAll(IRay_, rayId)
     {
         Info<< indent
@@ -580,12 +580,38 @@ void Foam::radiationModels::fvDOM::setRayIdLambdaId
     label& lambdaId
 ) const
 {
-    // Assume name is in the form: <name>_<rayId>_<lambdaId>
-    const size_type i1 = name.find_first_of("_");
-    const size_type i2 = name.find_last_of("_");
+    // The name should be in the form <rayName><rayID><lambdaName><lambdaID>,
+    // where the names are non-numeric and the ID-s are numeric
 
-    rayId = readLabel(IStringStream(name.substr(i1 + 1, i2 - 1))());
-    lambdaId = readLabel(IStringStream(name.substr(i2 + 1, name.size() - 1))());
+    auto parseError = [&]()
+    {
+        FatalErrorInFunction
+            << "Ray-lambda name '" << name << "' could not be parsed"
+            << exit(FatalError);;
+    };
+
+    label ii = 0;
+    FixedList<word::size_type, 3> is;
+
+    for (word::size_type i = 0; i < name.size(); ++ i)
+    {
+        if
+        (
+            (ii % 2 == 0 && isdigit(name[i]))
+         || (ii % 2 == 1 && isalpha(name[i]))
+        )
+        {
+            if (ii >= 3) parseError();
+
+            is[ii] = i;
+            ii ++;
+        }
+    }
+
+    if (ii != 3) parseError();
+
+    rayId = Foam::read<label>(name(is[0], is[1] - is[0]));
+    lambdaId = Foam::read<label>(name(is[2], name.size() - is[2]));
 }
 
 

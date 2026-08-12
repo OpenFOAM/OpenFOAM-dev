@@ -30,12 +30,6 @@ License
 
 using namespace Foam::constant;
 
-const Foam::word Foam::radiationModels::radiativeIntensityRay::intensityPrefix
-(
-    "ILambda"
-);
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
@@ -179,7 +173,7 @@ Foam::radiationModels::radiativeIntensityRay::radiativeIntensityRay
     {
         typeIOobject<volScalarField> IHeader
         (
-            intensityPrefix + "_" + name(rayId) + "_" + name(lambdaI),
+            "I" + name(rayId) + "Lambda" + name(lambdaI),
             mesh_.time().name(),
             mesh_,
             IOobject::MUST_READ,
