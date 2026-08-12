@@ -54,7 +54,7 @@ class DimensionsOrExponent
 {
     const dimensionSet& dimensions_;
 
-    const Exponent& exponent_;
+    const Exponent exponent_;
 
 public:
 
