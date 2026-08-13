@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,15 +108,10 @@ protected:
         fileMonitor& monitor() const;
 
         //- Sort directory entries according to time value
-        static instantList sortTimes(const fileNameList&, const word&);
+        static instantList sortTimes(const fileNameList&);
 
         //- Merge two times
-        static void mergeTimes
-        (
-            const instantList& extraTimes,
-            const word& constantName,
-            instantList& times
-        );
+        static void mergeTimes(const instantList&, instantList&);
 
         //- Helper: check for file (isFile) or directory (!isFile)
         static bool isFileOrDir(const bool isFile, const fileName&);
@@ -474,12 +469,7 @@ public:
             ) const;
 
             //- Get sorted list of times
-            virtual instantList findTimes
-            (
-                const Time&,
-                const fileName&,
-                const word&
-            ) const;
+            virtual instantList findTimes(const Time&, const fileName&) const;
 
             //- Find instance where IOobject is. Fails if cannot be found
             //  and readOpt() is MUST_READ/MUST_READ_IF_MODIFIED. Otherwise

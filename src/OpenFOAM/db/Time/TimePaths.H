@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,13 @@ class TimePaths
     // Private Data
 
         bool processorCase_;
+
         const fileName rootPath_;
+
         fileName globalCaseName_;
+
         const fileName case_;
+
 
 public:
 
@@ -72,7 +76,6 @@ public:
             const fileName& caseName
         );
 
-
         //- Construct given database name, rootPath and casePath
         TimePaths
         (
@@ -85,61 +88,61 @@ public:
 
     // Member Functions
 
-            //- Return true if this is a processor case
-            bool processorCase() const
-            {
-                return processorCase_;
-            }
+        //- Return true if this is a processor case
+        bool processorCase() const
+        {
+            return processorCase_;
+        }
 
-            //- Return root path
-            const fileName& rootPath() const
-            {
-                return rootPath_;
-            }
+        //- Return root path
+        const fileName& rootPath() const
+        {
+            return rootPath_;
+        }
 
-            //- Return global case name
-            const fileName& globalCaseName() const
-            {
-                return globalCaseName_;
-            }
+        //- Return global case name
+        const fileName& globalCaseName() const
+        {
+            return globalCaseName_;
+        }
 
-            //- Return case name
-            const fileName& caseName() const
-            {
-                return case_;
-            }
+        //- Return case name
+        const fileName& caseName() const
+        {
+            return case_;
+        }
 
-            //- Return system name
-            static const word& system()
-            {
-                return systemName;
-            }
+        //- Return system name
+        static const word& system()
+        {
+            return systemName;
+        }
 
-            //- Return system name for the case
-            //  which for parallel runs returns ../system()
-            fileName caseSystem() const;
+        //- Return system name for the case
+        //  which for parallel runs returns ../system()
+        fileName caseSystem() const;
 
-            //- Return constant name
-            static const word& constant()
-            {
-                return constantName;
-            }
+        //- Return constant name
+        static const word& constant()
+        {
+            return constantName;
+        }
 
-            //- Return constant name for the case
-            //  which for parallel runs returns ../constant()
-            fileName caseConstant() const;
+        //- Return constant name for the case
+        //  which for parallel runs returns ../constant()
+        fileName caseConstant() const;
 
-            //- Return the global path
-            fileName globalPath() const
-            {
-                return rootPath()/globalCaseName();
-            }
+        //- Return the global path
+        fileName globalPath() const
+        {
+            return rootPath()/globalCaseName();
+        }
 
-            //- Return path
-            fileName path() const
-            {
-                return rootPath()/caseName();
-            }
+        //- Return path
+        fileName path() const
+        {
+            return rootPath()/caseName();
+        }
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,7 +270,7 @@ Foam::instantList Foam::timeSelector::select0
             << "No time specified or available, selecting 'constant'"
             << endl;
 
-        timeDirs.append(instant(0, runTime.constant()));
+        timeDirs.append(instant(runTime.constant()));
     }
 
     runTime.setTime(timeDirs[0], 0);

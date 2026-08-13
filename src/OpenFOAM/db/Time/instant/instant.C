@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,12 @@ License
 
 const char* const Foam::instant::typeName = "instant";
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::instant::instant()
 {}
+
 
 Foam::instant::instant(const scalar val, const word& tname)
 :
@@ -41,15 +43,22 @@ Foam::instant::instant(const scalar val, const word& tname)
     name_(tname)
 {}
 
+
 Foam::instant::instant(const scalar val)
 :
     value_(val),
     name_(Time::timeName(val))
 {}
 
+
 Foam::instant::instant(const word& tname)
 :
-    value_(atof(tname.c_str())),
+    value_
+    (
+        tname == Time::constantName
+      ? Time::constantValue
+      : atof(tname.c_str())
+    ),
     name_(tname)
 {}
 
@@ -58,7 +67,7 @@ Foam::instant::instant(const word& tname)
 
 bool Foam::instant::equal(const scalar b) const
 {
-    return (value_ < b + small  && value_ > b - small);
+    return value_ < b + small && value_ > b - small;
 }
 
 

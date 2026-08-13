@@ -73,9 +73,7 @@ void Foam::polyMesh::setTopologyWrite(const Foam::IOobject::writeOption wo)
 
 bool Foam::polyMesh::readUpdateIsForward() const
 {
-    scalar time0 = NaN;
-
-    return readScalar(instance().c_str(), time0) && time0 < time().value();
+    return instant(instance()).value() < time().value();
 }
 
 

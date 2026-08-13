@@ -57,11 +57,17 @@ class TimeState
     // Private Data
 
         label timeIndex_;
+
         scalar deltaT_;
+
         scalar deltaTSave_;
+
         scalar deltaT0_;
+
         bool deltaTchanged_;
+
         label writeTimeIndex_;
+
         bool writeTime_;
 
 

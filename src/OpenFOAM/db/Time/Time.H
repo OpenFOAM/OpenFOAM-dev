@@ -31,7 +31,6 @@ Description
 SourceFiles
     Time.C
     TimeIO.C
-    findInstance.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -80,13 +79,13 @@ class Time
         //- Is runtime modification of dictionaries allowed?
         Switch runTimeModifiable_;
 
-        friend class controlIOdictionary;
-
         //- The controlDict
         controlIOdictionary controlDict_;
 
 
 public:
+
+    // Public Enumerations
 
         //- Write control options
         enum class writeControl
@@ -115,18 +114,29 @@ public:
             scientific = ios_base::scientific
         };
 
+
+    // Public Static Data
+
         static const NamedEnum<stopAtControl, 4> stopAtControlNames;
 
         static const NamedEnum<writeControl, 5> writeControlNames;
 
+        static const scalar constantValue;
+
+        //- The default control dictionary name (normally "controlDict")
+        static word controlDictName;
+
 
 protected:
 
-    // Protected data
+    // Protected Data
 
         label  startTimeIndex_;
+
         scalar startTime_;
+
         mutable scalar endTime_;
+
         scalar beginTime_;
 
         //- Optional user-time, defaults to realTime in s
@@ -138,7 +148,8 @@ protected:
 
         scalar writeInterval_;
 
-        label  purgeWrite_;
+        label purgeWrite_;
+
         mutable FIFOStack<word> previousWriteTimes_;
 
         // One-shot writing
@@ -149,6 +160,7 @@ protected:
 
         //- If time is being sub-cycled this is the previous TimeState
         autoPtr<TimeState> prevTimeState_;
+
 
         // Signal handlers for writing
 
@@ -173,6 +185,9 @@ protected:
         //- Maximum time directory name precision
         static const int maxPrecision_;
 
+
+    // Protected Member Functions
+
         //- Adjust the time step so that writing occurs at the specified time
         void adjustDeltaT();
 
@@ -184,6 +199,8 @@ protected:
 
 
 private:
+
+    // Private Data
 
         //- Default write option
         IOstream::streamFormat writeFormat_;
@@ -203,10 +220,11 @@ private:
 
 public:
 
-    TypeName("time");
+    friend class controlIOdictionary;
 
-    //- The default control dictionary name (normally "controlDict")
-    static word controlDictName;
+
+    //- Runtime type information
+    TypeName("time");
 
 
     // Constructors
@@ -386,11 +404,7 @@ public:
             );
 
             //- Search a given directory for valid time directories
-            instantList findTimes
-            (
-                const fileName&,
-                const word& constantName = "constant"
-            ) const;
+            instantList findTimes(const fileName&) const;
 
             //- Return start time index
             virtual label startTimeIndex() const;

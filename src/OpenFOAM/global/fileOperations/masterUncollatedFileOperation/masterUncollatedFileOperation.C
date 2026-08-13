@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1147,7 +1147,7 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::filePath
     (void)lookupProcessorsPath(io.objectPath(globalFile));
 
     // Trigger caching of times
-    (void)findTimes(io.time(), io.time().path(), io.time().constant());
+    (void)findTimes(io.time(), io.time().path());
 
 
     // Determine master filePath and scatter
@@ -1687,12 +1687,7 @@ Foam::fileOperations::masterUncollatedFileOperation::readObjects
             // version of findInstancePath that takes instantList ...
             const instantList timeDirs
             (
-                fileOperation::findTimes
-                (
-                    db.time(),
-                    db.time().path(),
-                    db.time().constant()
-                )
+                fileOperation::findTimes(db.time(), db.time().path())
             );
 
             const instant t(instance);
@@ -2127,7 +2122,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
         (void)lookupProcessorsPath(io.objectPath());
 
         // Trigger caching of times
-        (void)findTimes(io.time(), io.time().path(), io.time().constant());
+        (void)findTimes(io.time(), io.time().path());
 
         bool ok = false;
         if (Pstream::master())  // comm_))
@@ -2288,13 +2283,12 @@ bool Foam::fileOperations::masterUncollatedFileOperation::writeObject
 Foam::instantList Foam::fileOperations::masterUncollatedFileOperation::findTimes
 (
     const Time& time,
-    const fileName& directory,
-    const word& constantName
+    const fileName& directory
 ) const
 {
     if (!time.processorCase())
     {
-        return fileOperation::findTimes(time, directory, constantName);
+        return fileOperation::findTimes(time, directory);
     }
     else
     {
@@ -2316,7 +2310,7 @@ Foam::instantList Foam::fileOperations::masterUncollatedFileOperation::findTimes
                 // Do master-only reading always.
                 bool oldParRun = UPstream::parRun();
                 UPstream::parRun() = false;
-                times = fileOperation::findTimes(time, directory, constantName);
+                times = fileOperation::findTimes(time, directory);
                 UPstream::parRun() = oldParRun;
             }
             Pstream::scatter(times);    //, Pstream::msgType(), comm_);

@@ -62,6 +62,8 @@ int Foam::Time::curPrecision_(Foam::Time::precision_);
 
 const int Foam::Time::maxPrecision_(3 - log10(small));
 
+const Foam::scalar Foam::Time::constantValue = -vGreat;
+
 Foam::word Foam::Time::controlDictName("controlDict");
 
 
@@ -98,54 +100,61 @@ void Foam::Time::adjustDeltaT()
 
 void Foam::Time::setControls()
 {
-    // default is to resume calculation from "latestTime"
-    const word startFrom = controlDict_.lookupOrDefault<word>
-    (
-        "startFrom",
-        "latestTime"
-    );
+    // Determine the start time based on the 'startFrom' setting. By default
+    // this is 'latestTime'. If there are no times available (and 'constant'
+    // doesn't count) then the value of '0' initialised in the constructor is
+    // retained.
+
+    const word startFrom =
+        controlDict_.lookupOrDefault<word>("startFrom", "latestTime");
 
     if (startFrom == "startTime")
     {
         startTime_ = controlDict_.lookup<scalar>("startTime", userUnits());
     }
-    else
+    else if (startFrom == "firstTime")
     {
-        // Search directory for valid time directories
-        const instantList timeDirs = findTimes(path(), constant());
+        const instantList timeDirs = findTimes(path());
 
-        if (startFrom == "firstTime")
+        if (timeDirs.size())
         {
-            if (timeDirs.size())
+            if (timeDirs[0].name() == constant())
             {
-                if (timeDirs[0].name() == constant() && timeDirs.size() >= 2)
+                if (timeDirs.size() >= 2)
                 {
                     startTime_ = userTimeToTime(timeDirs[1].value());
                 }
-                else
-                {
-                    startTime_ = userTimeToTime(timeDirs[0].value());
-                }
+            }
+            else
+            {
+                startTime_ = userTimeToTime(timeDirs[0].value());
             }
         }
-        else if (startFrom == "latestTime")
+    }
+    else if (startFrom == "latestTime")
+    {
+        const instantList timeDirs = findTimes(path());
+
+        if (timeDirs.size())
         {
-            if (timeDirs.size())
+            if (timeDirs[0].name() != constant() || timeDirs.size() >= 2)
             {
                 startTime_ = userTimeToTime(timeDirs.last().value());
             }
         }
-        else
-        {
-            FatalIOErrorInFunction(controlDict_)
-                << "expected startTime, firstTime or latestTime"
-                << " found '" << startFrom << "'"
-                << exit(FatalIOError);
-        }
+    }
+    else
+    {
+        FatalIOErrorInFunction(controlDict_)
+            << "expected startTime, firstTime or latestTime"
+            << " found '" << startFrom << "'"
+            << exit(FatalIOError);
     }
 
     setTime(startTime_, 0);
+
     readDict();
+
     deltaTSave_ = deltaT_;
     deltaT0_ = deltaT_;
 
@@ -658,7 +667,16 @@ Foam::word Foam::Time::timeName(const scalar t, const int precision)
 
 Foam::instantList Foam::Time::times() const
 {
-    return findTimes(path(), constant());
+    return findTimes(path());
+}
+
+
+Foam::instantList Foam::Time::findTimes
+(
+    const fileName& directory
+) const
+{
+    return fileHandler().findTimes(*this, directory);
 }
 
 
@@ -703,7 +721,7 @@ Foam::word Foam::Time::findInstancePath
     // bit is the readDir, not the sorting. Tbd: avoid calling findInstancePath
     // from filePath.
 
-    const instantList timeDirs = findTimes(path(), constant());
+    const instantList timeDirs = findTimes(path());
     // Note:
     // - times will include constant (with value 0) as first element.
     //   For backwards compatibility make sure to find 0 in preference
@@ -730,7 +748,7 @@ Foam::word Foam::Time::findInstancePath(const instant& t) const
 
 Foam::instant Foam::Time::findClosestTime(const scalar t) const
 {
-    const instantList timeDirs = findTimes(path(), constant());
+    const instantList timeDirs = findTimes(path());
 
     // There is only one time (likely "constant") so return it
     if (timeDirs.size() == 1)
@@ -1001,7 +1019,10 @@ void Foam::Time::setTime(const Time& t)
 
 void Foam::Time::setTime(const instant& inst, const label newIndex)
 {
-    value() = userTimeToTime(inst.value());
+    value() =
+        inst.name() == constant()
+      ? beginTime_
+      : userTimeToTime(inst.value());
     dimensionedScalar::name() = inst.name();
     timeIndex_ = newIndex;
 
