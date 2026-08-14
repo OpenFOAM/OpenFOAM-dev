@@ -34,116 +34,26 @@ namespace expression
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- A Field is expressionable
+//- Define Field to be expressionable by iteration
 template<class Type>
 struct Expressionable<Field<Type>>
 :
-    public std::integral_constant
-    <
-        signed char,
-        std::max(static_cast<signed char>(0), Expressionable<Type>::value)
-      + static_cast<signed char>(1)
-    >
+    public ExpressionableIterable<Field<Type>>
 {};
 
-//- Access to a Field by index is expressionable if the type is
-template<class Type>
-struct Expressionable<Field<Type>, Arguments<label>>
-:
-    public Expressionable<Type>
-{};
-
-//- Access to a Field by iterator is expressionable if the type is
-template<class Type>
-struct Expressionable
-<
-    Field<Type>,
-    Arguments<typename Field<Type>::const_iterator>
->
-:
-    public Expressionable<Type>
-{};
-
-//- Define access to a value in a Field by index
-template<class Type>
-struct Operate<Field<Type>, Arguments<label>>
-{
-    using type = const Type&;
-
-    static type access(const Field<Type>& f, const label i)
-    {
-        return f[i];
-    }
-};
-
-//- Define access to the start and end iterators of a Field
-template<class Type, bool Index>
-struct Operate<Field<Type>, Arguments<Bound<Index>>>
-{
-    using type = typename Field<Type>::const_iterator;
-
-    static type access(const Field<Type>& f, const Bound<false>&)
-    {
-        return f.begin();
-    }
-
-    static type access(const Field<Type>& f, const Bound<true>&)
-    {
-        return f.end();
-    }
-};
-
-//- Define access to a value in a Field by dereferencing an iterator. Also
-//  define comparison and incrementation of iterators.
+//- Define Field operations to be expressionable by iteration
 template<class Type, class ... Args>
-struct Operate
-<
-    Field<Type>,
-    Arguments<typename Field<Type>::const_iterator, Args ...>
->
-{
-    using type = const Type&;
+struct Expressionable<Field<Type>, Arguments<Args ...>>
+:
+    public ExpressionableIterable<Field<Type>, Arguments<Args ...>>
+{};
 
-    static type access
-    (
-        const Field<Type>& f,
-        const typename Field<Type>::const_iterator& fi
-    )
-    {
-        return *fi;
-    }
-
-    static bool compare
-    (
-        const Field<Type>& f,
-        const typename Field<Type>::const_iterator& fi,
-        const typename Field<Type>::const_iterator& fj
-    )
-    {
-        return fi == fj;
-    }
-
-    static void advance
-    (
-        const Field<Type>& f,
-        typename Field<Type>::const_iterator& fi
-    )
-    {
-        ++ fi;
-    }
-};
-
-//- Define access to the base expression of a Field as itself
-template<class Type>
-struct Operate<Field<Type>, Arguments<Base>>
-{
-    using type = const Field<Type>&;
-
-    static type access(const Field<Type>& f, const Base&)
-    {
-        return f;
-    }
-};
+//- Define Field to operate by iteration
+template<class Type, class ... Args>
+struct Operate<Field<Type>, Arguments<Args ...>>
+:
+    public OperateIterable<Field<Type>, Arguments<Args ...>>
+{};
 
 //- Define standard iterable types returned by Field expressions
 template<class Type>

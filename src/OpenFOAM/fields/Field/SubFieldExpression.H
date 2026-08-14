@@ -34,116 +34,26 @@ namespace expression
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- A SubField is expressionable
+//- Define SubField to be expressionable by iteration
 template<class Type>
 struct Expressionable<SubField<Type>>
 :
-    public std::integral_constant
-    <
-        signed char,
-        std::max(static_cast<signed char>(0), Expressionable<Type>::value)
-      + static_cast<signed char>(1)
-    >
+    public ExpressionableIterable<SubField<Type>>
 {};
 
-//- Access to a SubField by index is expressionable if the type is
-template<class Type>
-struct Expressionable<SubField<Type>, Arguments<label>>
-:
-    public Expressionable<Type>
-{};
-
-//- Access to a SubField by iterator is expressionable if the type is
-template<class Type>
-struct Expressionable
-<
-    SubField<Type>,
-    Arguments<typename SubField<Type>::const_iterator>
->
-:
-    public Expressionable<Type>
-{};
-
-//- Define access to a value in a SubField by index
-template<class Type>
-struct Operate<SubField<Type>, Arguments<label>>
-{
-    using type = const Type&;
-
-    static type access(const SubField<Type>& f, const label i)
-    {
-        return f[i];
-    }
-};
-
-//- Define access to the start and end iterators of a SubField
-template<class Type, bool Index>
-struct Operate<SubField<Type>, Arguments<Bound<Index>>>
-{
-    using type = typename SubField<Type>::const_iterator;
-
-    static type access(const SubField<Type>& f, const Bound<false>&)
-    {
-        return f.begin();
-    }
-
-    static type access(const SubField<Type>& f, const Bound<true>&)
-    {
-        return f.end();
-    }
-};
-
-//- Define access to a value in a SubField by dereferencing an iterator. Also
-//  define comparison and incrementation of iterators.
+//- Define SubField operations to be expressionable by iteration
 template<class Type, class ... Args>
-struct Operate
-<
-    SubField<Type>,
-    Arguments<typename SubField<Type>::const_iterator, Args ...>
->
-{
-    using type = const Type&;
+struct Expressionable<SubField<Type>, Arguments<Args ...>>
+:
+    public ExpressionableIterable<SubField<Type>, Arguments<Args ...>>
+{};
 
-    static type access
-    (
-        const SubField<Type>& f,
-        const typename SubField<Type>::const_iterator& fi
-    )
-    {
-        return *fi;
-    }
-
-    static bool compare
-    (
-        const SubField<Type>& f,
-        const typename SubField<Type>::const_iterator& fi,
-        const typename SubField<Type>::const_iterator& fj
-    )
-    {
-        return fi == fj;
-    }
-
-    static void advance
-    (
-        const SubField<Type>& f,
-        typename SubField<Type>::const_iterator& fi
-    )
-    {
-        ++ fi;
-    }
-};
-
-//- Define access to the base expression of a SubField as itself
-template<class Type>
-struct Operate<SubField<Type>, Arguments<Base>>
-{
-    using type = const SubField<Type>&;
-
-    static type access(const SubField<Type>& f, const Base&)
-    {
-        return f;
-    }
-};
+//- Define SubField to operate by iteration
+template<class Type, class ... Args>
+struct Operate<SubField<Type>, Arguments<Args ...>>
+:
+    public OperateIterable<SubField<Type>, Arguments<Args ...>>
+{};
 
 //- Define the types returned by SubField expressions as the same as for
 //  Field expressions

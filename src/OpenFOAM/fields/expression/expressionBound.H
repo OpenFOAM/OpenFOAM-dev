@@ -21,9 +21,17 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::expression::Bound
+
+Description
+    An empty structure the type of which is used to indicate access to a bound
+    (i.e., begin or end iterator) of a given container
+
 \*---------------------------------------------------------------------------*/
 
-#include "expressions.H"
+#ifndef expressionBound_H
+#define expressionBound_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -32,48 +40,21 @@ namespace Foam
 namespace expression
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                            Class Bound Declaration
+\*---------------------------------------------------------------------------*/
 
-//- Define DynamicField to be expressionable by iteration
-template<class Type>
-struct Expressionable<DynamicField<Type>>
-:
-    public ExpressionableIterable<DynamicField<Type>>
-{};
-
-//- Define DynamicField operations to be expressionable by iteration
-template<class Type, class ... Args>
-struct Expressionable<DynamicField<Type>, Arguments<Args ...>>
-:
-    public ExpressionableIterable<DynamicField<Type>, Arguments<Args ...>>
-{};
-
-//- Define DynamicField to operate by iteration
-template<class Type, class ... Args>
-struct Operate<DynamicField<Type>, Arguments<Args ...>>
-:
-    public OperateIterable<DynamicField<Type>, Arguments<Args ...>>
-{};
-
-//- Define the types returned by DynamicField expressions as the same as for
-//  Field expressions
-template<class Type>
-struct Result<DynamicField<Type>>
-:
-    public Result<Field<Type>>
-{};
-
-//- Define reduction of DynamicField expressions as the same as for Field
-//  expressions
-template<class Type>
-struct Reduce<DynamicField<Type>>
-:
-    public Reduce<Field<Type>>
+template<bool>
+struct Bound
 {};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace expression
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

@@ -22,7 +22,6 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Classes
-    Foam::expression::Bounds
     Foam::expression::IteratorBase
     Foam::expression::Iterator
     Foam::expression::IteratorNew
@@ -36,6 +35,7 @@ Description
 #define expressionIterator_H
 
 #include "expressionOperate.H"
+#include "expressionBound.H"
 #include "expressionSelect.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,14 +44,6 @@ namespace Foam
 {
 namespace expression
 {
-
-/*---------------------------------------------------------------------------*\
-                            Class Bound Declaration
-\*---------------------------------------------------------------------------*/
-
-template<bool>
-struct Bound
-{};
 
 /*---------------------------------------------------------------------------*\
                            Class IteratorBase Declaration
