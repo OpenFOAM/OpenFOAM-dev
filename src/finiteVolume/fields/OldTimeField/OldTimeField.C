@@ -82,7 +82,7 @@ void Foam::OldTimeField<FieldType>::nullOldestTimeInner()
         }
         else
         {
-            tfield0_ = tmp<Field0Type>(NullObjectRef<FieldType>());
+            tfield0_ = tmp<Field0Type>(NullObjectRef<Field0Type>());
         }
     }
 }
