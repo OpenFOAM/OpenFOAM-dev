@@ -46,7 +46,7 @@ void Foam::OldTimeField<FieldType>::storeOldTimesInner() const
 {
     if (tfield0_.valid())
     {
-        if (notNull(tfield0_()))
+        if (notNull(tfield0_()) && tfield0_.isTmp())
         {
             // Propagate to store the old-old field
             tfield0_.ref().OldTimeField<Field0Type>::storeOldTimesInner();
@@ -62,10 +62,22 @@ void Foam::OldTimeField<FieldType>::storeOldTimesInner() const
                 tfield0_.ref().writeOpt() = field().writeOpt();
             }
         }
-        else
+        else if (isNull(tfield0_()))
         {
             // Reinstate the old-time field
-            oldTime();
+            resetOldTime();
+        }
+        else // if (notNull(tfield0_()) && !tfield0_.isTmp())
+        {
+            #ifdef FULLDEBUG
+            WarningInFunction
+                << field().typeName << " old-time for field "
+                << field().name() << " allocated despite derived "
+                << field().type() << " old-time existing because the latter "
+                << "has not yet been updated" << endl;
+            #endif
+
+            resetOldTime();
         }
     }
 }
@@ -78,6 +90,14 @@ void Foam::OldTimeField<FieldType>::nullOldestTimeInner()
     {
         if (tfield0_().OldTimeField<Field0Type>::tfield0_.valid())
         {
+            if (!tfield0_.isTmp())
+            {
+                FatalErrorInFunction
+                    << field().typeName << "::nullOldestTime called for field "
+                    << field().name() << " rather than " << field().type()
+                    << "::nullOldestTime" << exit(FatalError);
+            }
+
             tfield0_.ref().OldTimeField<Field0Type>::nullOldestTimeInner();
         }
         else
@@ -92,9 +112,27 @@ template<class FieldType>
 template<class OldTimeBaseField>
 void Foam::OldTimeField<FieldType>::setBase(const OldTimeBaseField& otbf) const
 {
+    #ifdef FULLDEBUG
+    if (otbf.tfield0_.valid() && otbf.tfield0_.isTmp())
+    {
+        WarningInFunction
+            << otbf.field().typeName << " old-time for field "
+            << field().name() << " overridden by derived "
+            << field().typeName << " old-time" << endl;
+    }
+    #endif
+
     if (!tfield0_.valid())
     {
         otbf.tfield0_ = tmp<typename Field0Type::Base>();
+    }
+    else if (isNull(tfield0_()))
+    {
+        otbf.tfield0_ =
+            tmp<typename Field0Type::Base>
+            (
+                NullObjectRef<typename Field0Type::Base>()
+            );
     }
     else
     {
@@ -254,6 +292,37 @@ bool Foam::OldTimeField<FieldType>::hasStoredOldTimes() const
 
 
 template<class FieldType>
+void Foam::OldTimeField<FieldType>::resetOldTime() const
+{
+    // Clear the field0Ptr to ensure the old-time field constructor
+    // does not construct the old-old-time field
+    tfield0_ = tmp<Field0Type>();
+    setBase();
+
+    // Construct a copy of the field
+    tfield0_ =
+        OldTimeFieldCopy<FieldType>()
+        (
+            IOobject
+            (
+                field().name() + "_0",
+                field().time().name(),
+                field().db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                field().registerObject()
+            ),
+            field()
+        );
+    setBase();
+
+    // Update the time index
+    timeIndex_ = field().time().timeIndex();
+    setBase();
+}
+
+
+template<class FieldType>
 void Foam::OldTimeField<FieldType>::storeOldTimes() const
 {
     // Store if it has not yet been done in this time-step
@@ -289,6 +358,7 @@ void Foam::OldTimeField<FieldType>::nullOldestTime()
     if (!isOldTime())
     {
         nullOldestTimeInner();
+        setBase();
     }
 }
 
@@ -324,28 +394,7 @@ Foam::OldTimeField<FieldType>::oldTime() const
     if (!tfield0_.valid() || isNull(tfield0_()))
     {
         // Old-time field does not yet exist. Create it.
-
-        // Clear the field0Ptr to ensure the old-time field constructor
-        // does not construct the old-old-time field
-        tfield0_ = tmp<Field0Type>();
-        setBase();
-
-        // Construct a copy of the field
-        tfield0_ =
-            OldTimeFieldCopy<FieldType>()
-            (
-                IOobject
-                (
-                    field().name() + "_0",
-                    field().time().name(),
-                    field().db(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    field().registerObject()
-                ),
-                field()
-            );
-        setBase();
+        resetOldTime();
     }
     else
     {

@@ -237,6 +237,9 @@ public:
         //- Return whether old-time fields have been stored yet
         bool hasStoredOldTimes() const;
 
+        //- Reset the old-time field
+        void resetOldTime() const;
+
         //- Store the old-time fields
         void storeOldTimes() const;
 
@@ -324,6 +327,7 @@ struct OldTimeFieldCopy
     using OldTimeField<FieldType>::timeIndex;                                  \
     using OldTimeField<FieldType>::isOldTime;                                  \
     using OldTimeField<FieldType>::hasStoredOldTimes;                          \
+    using OldTimeField<FieldType>::resetOldTime;                               \
     using OldTimeField<FieldType>::storeOldTimes;                              \
     using OldTimeField<FieldType>::clearOldTimes;                              \
     using OldTimeField<FieldType>::nullOldestTime;                             \
