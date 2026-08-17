@@ -72,7 +72,7 @@ public:
 
     operator const dimensionSet&() const
     {
-        return dimless;
+        return dimensions_;
     }
 
     friend dimensionSet pow
