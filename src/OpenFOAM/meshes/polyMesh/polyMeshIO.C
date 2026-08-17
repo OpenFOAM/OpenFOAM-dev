@@ -446,11 +446,11 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
                 meshDir(),
                 "pointZones",
                 IOobject::READ_IF_PRESENT,
-                facesInst
+                forward ? instance0 : facesInstance()
             )
         );
 
-        if (pointZonesInst != pointZones_.instance())
+        if (pointZonesInst != (forward ? instance0 : pointZones_.instance()))
         {
             pointZoneList newPointZones
             (
@@ -481,11 +481,11 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
                 meshDir(),
                 "faceZones",
                 IOobject::READ_IF_PRESENT,
-                facesInst
+                forward ? instance0 : facesInstance()
             )
         );
 
-        if (faceZonesInst != faceZones_.instance())
+        if (faceZonesInst != (forward ? instance0 : faceZones_.instance()))
         {
             faceZoneList newFaceZones
             (
@@ -516,11 +516,11 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
                 meshDir(),
                 "cellZones",
                 IOobject::READ_IF_PRESENT,
-                facesInst
+                forward ? instance0 : facesInstance()
             )
         );
 
-        if (cellZonesInst != cellZones_.instance())
+        if (cellZonesInst != (forward ? instance0 : cellZones_.instance()))
         {
             cellZoneList newCellZones
             (
