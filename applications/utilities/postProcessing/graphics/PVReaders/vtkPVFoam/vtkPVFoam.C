@@ -149,7 +149,7 @@ int Foam::vtkPVFoam::setTime(int nRequest, const double requestTimes[])
     if (nearestIndex < 0) nearestIndex = 0;
 
     // If the time has changed...
-    if (timeIndex_ != nearestIndex)
+    if (times.size() && timeIndex_ != nearestIndex)
     {
         // Set the time
         timeIndex_ = nearestIndex;
@@ -412,55 +412,80 @@ void Foam::vtkPVFoam::updateFoamMesh()
 {
     DebugInFunction;
 
+    FatalIOError.throwExceptions();
+    FatalError.throwExceptions();
+
     // Clear the mesh if necessary
     clearFoamMesh();
 
-    // Create the OpenFOAM mesh if it does not yet exist
-    if (!procMeshesPtr_.valid())
+    try
     {
-        const bool haveMeshMesh = !meshMesh_.empty();
-        const bool haveMeshRegion = meshRegion_ != polyMesh::defaultRegion;
-
-        DebugInfo
-            << "Creating OpenFOAM mesh"
-            << (haveMeshMesh ? " for mesh " + meshMesh_ : "").c_str()
-            << (haveMeshMesh && haveMeshRegion ? " and" : "")
-            << (haveMeshRegion ? " for region " + meshRegion_ : "").c_str()
-            << " at time=" << procDbsPtr_().completeTime().name() << endl;
-
-        procMeshesPtr_.reset
-        (
-            new domainDecomposition
-            (
-                procDbsPtr_(),
-                meshPath_,
-                meshRegion_
-            )
-        );
-
-        if (reader_->GetDecomposedCase())
+        // Create the OpenFOAM mesh if it does not yet exist
+        if (!procMeshesPtr_.valid())
         {
-            procMeshesPtr_->readReconstruct(true);
+            const bool haveMeshMesh = !meshMesh_.empty();
+            const bool haveMeshRegion = meshRegion_ != polyMesh::defaultRegion;
+
+            DebugInfo
+                << "Creating OpenFOAM mesh"
+                << (haveMeshMesh ? " for mesh " + meshMesh_ : "").c_str()
+                << (haveMeshMesh && haveMeshRegion ? " and" : "")
+                << (haveMeshRegion ? " for region " + meshRegion_ : "").c_str()
+                << " at time=" << procDbsPtr_().completeTime().name() << endl;
+
+            procMeshesPtr_.reset
+            (
+                new domainDecomposition
+                (
+                    procDbsPtr_(),
+                    meshPath_,
+                    meshRegion_
+                )
+            );
+
+            if (reader_->GetDecomposedCase())
+            {
+                procMeshesPtr_->readReconstruct(true);
+            }
+            else
+            {
+                procMeshesPtr_->readComplete();
+            }
         }
         else
         {
-            procMeshesPtr_->readComplete();
+            DebugInfo
+                << "Using existing OpenFOAM mesh" << endl;
+        }
+
+        // Stitch if necessary
+        if (procMeshesPtr_.valid())
+        {
+            procMeshesPtr_->completeMesh().stitcher().reconnect
+            (
+                reader_->GetInterpolateVolFields()
+            );
         }
     }
-    else
+    catch (IOerror& err)
     {
-        DebugInfo
-            << "Using existing OpenFOAM mesh" << endl;
+        Warning<< err << endl;
+        OStringStream oss;
+        oss << err;
+        vtkErrorWithObjectMacro(reader_, << oss.str().c_str());
+        procMeshesPtr_.clear();
+    }
+    catch (error& err)
+    {
+        Warning<< err << endl;
+        OStringStream oss;
+        oss << err;
+        vtkErrorWithObjectMacro(reader_, << oss.str().c_str());
+        procMeshesPtr_.clear();
     }
 
-    // Stitch if necessary
-    if (procMeshesPtr_.valid())
-    {
-        procMeshesPtr_->completeMesh().stitcher().reconnect
-        (
-            reader_->GetInterpolateVolFields()
-        );
-    }
+    FatalIOError.dontThrowExceptions();
+    FatalError.dontThrowExceptions();
 }
 
 

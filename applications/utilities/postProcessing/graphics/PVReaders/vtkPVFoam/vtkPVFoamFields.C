@@ -82,6 +82,8 @@ Foam::IOobjectList Foam::vtkPVFoam::getObjects
 
 void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
 {
+    if (!procMeshesPtr_.valid()) return;
+
     if (reader_->GetDecomposedCase() && !procDbsPtr_->nProcs()) return;
 
     const wordHashSet selectedFields =
@@ -162,6 +164,8 @@ void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
 
 void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
 {
+    if (!procMeshesPtr_.valid()) return;
+
     const fileName lagrangianPrefix =
         meshRegion_ == polyMesh::defaultRegion
       ? fileName(lagrangian::cloud::prefix)
@@ -249,6 +253,8 @@ void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
 
 void Foam::vtkPVFoam::convertLagrangianFields(vtkMultiBlockDataSet* output)
 {
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangeLagrangian_;
 
     const wordHashSet selectedFields = getSelected

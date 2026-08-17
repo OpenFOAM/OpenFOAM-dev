@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -288,8 +288,6 @@ void Foam::vtkPVblockMesh::updateFoamMesh()
     FatalIOError.throwExceptions();
     FatalError.throwExceptions();
 
-    autoPtr<blockMesh> newMeshPtr;
-
     try
     {
         // Set path for the blockMeshDict
@@ -324,7 +322,7 @@ void Foam::vtkPVblockMesh::updateFoamMesh()
         );
         meshDictPtr->store();
 
-        newMeshPtr.set
+        meshPtr_.reset
         (
             new blockMesh
             (
@@ -333,20 +331,22 @@ void Foam::vtkPVblockMesh::updateFoamMesh()
                 meshRegion_
             )
         );
-
-        meshPtr_.reset(newMeshPtr.ptr());
     }
     catch (IOerror& err)
     {
+        Warning<< err << endl;
         OStringStream oss;
         oss << err;
         vtkErrorWithObjectMacro(reader_, << oss.str().c_str());
+        meshPtr_.clear();
     }
     catch (error& err)
     {
+        Warning<< err << endl;
         OStringStream oss;
         oss << err;
         vtkErrorWithObjectMacro(reader_, << oss.str().c_str());
+        meshPtr_.clear();
     }
 
     FatalIOError.dontThrowExceptions();

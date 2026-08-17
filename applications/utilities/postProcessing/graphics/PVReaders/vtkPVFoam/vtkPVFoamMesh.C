@@ -53,6 +53,8 @@ void Foam::vtkPVFoam::convertMeshVolume
 {
     DebugInFunction;
 
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangeVolume_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -95,6 +97,8 @@ void Foam::vtkPVFoam::convertMeshlagrangian
 {
     DebugInFunction;
 
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangelagrangian_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -134,6 +138,8 @@ void Foam::vtkPVFoam::convertMeshLagrangian
 )
 {
     DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
 
     arrayRange& range = arrayRangeLagrangian_;
     range.block(blockNo);      // Set output block
@@ -176,6 +182,10 @@ void Foam::vtkPVFoam::convertMeshPatches
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangePatches_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -251,6 +261,10 @@ void Foam::vtkPVFoam::convertMeshCellZones
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangeCellZones_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -318,6 +332,10 @@ void Foam::vtkPVFoam::convertMeshCellSets
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangeCellSets_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -385,6 +403,10 @@ void Foam::vtkPVFoam::convertMeshFaceZones
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangeFaceZones_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -426,6 +448,10 @@ void Foam::vtkPVFoam::convertMeshFaceSets
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangeFaceSets_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -467,6 +493,10 @@ void Foam::vtkPVFoam::convertMeshPointZones
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangePointZones_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
@@ -509,6 +539,10 @@ void Foam::vtkPVFoam::convertMeshPointSets
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!procMeshesPtr_.valid()) return;
+
     arrayRange& range = arrayRangePointSets_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
