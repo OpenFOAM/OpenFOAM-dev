@@ -74,7 +74,7 @@ Usage
 #include "ensightParticlePositions.H"
 #include "ensightCloudField.H"
 
-#include "fvc.H"
+#include "linear.H"
 
 #include "cellSet.H"
 #include "fvMeshSubset.H"

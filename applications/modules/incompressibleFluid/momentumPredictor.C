@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleFluid.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "fvmDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -49,7 +49,7 @@ void Foam::solvers::incompressibleFluid::momentumPredictor()
 
     if (pimple.momentumPredictor())
     {
-        solve(UEqn == -fvc::grad(p));
+        solve(UEqn == -fvi::grad(p));
 
         fvConstraints().constrain(U);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,85 +23,74 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sweepData.H"
-#include "transformer.H"
-#include "volFields.H"
-#include "surfaceFields.H"
+#include "smoothData.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class TrackingData>
-inline bool Foam::sweepData::update
+inline bool Foam::smoothData::update
 (
-    const sweepData& svf,
-    const point& position,
+    const smoothData& svf,
+    const scalar scale,
     const scalar tol,
     TrackingData& td
 )
 {
-    if (!valid(td))
+    if (!valid(td) || (value_ < vSmall))
     {
-        operator=(svf);
+        // My value not set - take over neighbour
+        value_ = svf.value()/scale;
+
+        // Something changed - let caller know
         return true;
     }
-
-    scalar myDist2 = magSqr(position - origin());
-
-    if (myDist2 < small)
+    else if (svf.value() > (1 + tol)*scale*value_)
     {
-        if (svf.value() > value())
-        {
-            operator=(svf);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+        // Neighbour is too big for me - up my value
+        value_ = svf.value()/scale;
 
-    scalar dist2 = magSqr(position - svf.origin());
-
-    if (dist2 < myDist2)
-    {
-        operator=(svf);
+        // Something changed - let caller know
         return true;
     }
+    else
+    {
+        // Neighbour is not too big for me or change is too small
+        // ...
 
-    return false;
+        // Nothing changed
+        return false;
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::sweepData::sweepData()
+inline Foam::smoothData::smoothData()
 :
-    value_(-great),
-    origin_(vector::max)
+    value_(-great)
 {}
 
 
-inline Foam::sweepData::sweepData(const scalar value, const point& origin)
+inline Foam::smoothData::smoothData(const scalar value)
 :
-    value_(value),
-    origin_(origin)
+    value_(value)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class TrackingData>
-inline bool Foam::sweepData::valid(TrackingData& td) const
+inline bool Foam::smoothData::valid(TrackingData& td) const
 {
     return value_ > -small;
 }
 
 
 template<class TrackingData>
-inline bool Foam::sweepData::sameGeometry
+inline bool Foam::smoothData::sameGeometry
 (
     const fvMesh&,
-    const sweepData&,
+    const smoothData&,
     const scalar,
     TrackingData& td
 ) const
@@ -111,91 +100,68 @@ inline bool Foam::sweepData::sameGeometry
 
 
 template<class TrackingData>
-inline void Foam::sweepData::transform
+inline void Foam::smoothData::transform
 (
     const fvPatch& patch,
     const label patchFacei,
     const transformer& transform,
     TrackingData& td
 )
-{
-    origin_ = transform.transformPosition(origin_);
-}
+{}
 
 
 template<class TrackingData>
-inline bool Foam::sweepData::updateCell
+inline bool Foam::smoothData::updateCell
 (
-    const fvMesh& mesh,
-    const label thisCelli,
-    const labelPair&,
-    const sweepData& svf,
-    const scalar tol,
-    TrackingData& td
-)
-{
-    return update(svf, mesh.C()[thisCelli], tol, td);
-}
-
-
-template<class TrackingData>
-inline bool Foam::sweepData::updateFace
-(
-    const fvMesh& mesh,
-    const labelPair& thisPatchAndFacei,
+    const fvMesh&,
     const label,
-    const sweepData& svf,
+    const labelPair&,
+    const smoothData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    const label thisPatchi = thisPatchAndFacei.first();
-    const label thisFacei = thisPatchAndFacei.second();
+    // Take over info from face if more than deltaRatio larger
+    return update(svf, td.maxRatio, tol, td);
+}
 
-    return
-        update
-        (
-            svf,
-            thisPatchi == -1
-          ? mesh.Cf()[thisFacei]
-          : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
-            tol,
-            td
-        );
+
+template<class TrackingData>
+inline bool Foam::smoothData::updateFace
+(
+    const fvMesh&,
+    const labelPair&,
+    const label,
+    const smoothData& svf,
+    const scalar tol,
+    TrackingData& td
+)
+{
+    // Take over information from cell without any scaling (scale = 1.0)
+    return update(svf, 1.0, tol, td);
 }
 
 
 // Update this (face) with coupled face information.
 template<class TrackingData>
-inline bool Foam::sweepData::updateFace
+inline bool Foam::smoothData::updateFace
 (
-    const fvMesh& mesh,
-    const labelPair& thisPatchAndFacei,
-    const sweepData& svf,
+    const fvMesh&,
+    const labelPair&,
+    const smoothData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    const label thisPatchi = thisPatchAndFacei.first();
-    const label thisFacei = thisPatchAndFacei.second();
-
-    return
-        update
-        (
-            svf,
-            thisPatchi == -1
-          ? mesh.Cf()[thisFacei]
-          : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
-            tol,
-            td
-        );
+    // Take over information from coupled face without any scaling (scale = 1.0)
+    return update(svf, 1.0, tol, td);
 }
 
 
 template<class TrackingData>
-inline bool Foam::sweepData::equal
+inline bool Foam::smoothData::equal
 (
-    const sweepData& rhs,
+    const smoothData& rhs,
     TrackingData& td
 ) const
 {
@@ -205,28 +171,19 @@ inline bool Foam::sweepData::equal
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline void Foam::sweepData::operator=
-(
-    const scalar value
-)
+inline void Foam::smoothData::operator=(const scalar value)
 {
     value_ = value;
 }
 
 
-inline bool Foam::sweepData::operator==
-(
-    const sweepData& rhs
-) const
+inline bool Foam::smoothData::operator==(const smoothData& rhs) const
 {
-    return origin() == rhs.origin();
+    return value_ == rhs.value();
 }
 
 
-inline bool Foam::sweepData::operator!=
-(
-    const sweepData& rhs
-) const
+inline bool Foam::smoothData::operator!=(const smoothData& rhs) const
 {
     return !(*this == rhs);
 }

@@ -54,6 +54,110 @@ const surfaceScalarField& localEulerDdtScheme<Type>::localRDeltaTf() const
 
 
 template<class Type>
+tmp<VolInternalField<Type>>
+localEulerDdtScheme<Type>::fviDdt
+(
+    const dimensioned<Type>& dt
+)
+{
+    const word ddtName("ddt(" + dt.name() + ')');
+
+    return VolInternalField<Type>::New
+    (
+        ddtName,
+        mesh(),
+        dimensioned<Type>
+        (
+            "0",
+            dt.dimensions()/dimensions::time,
+            Zero
+        )
+    );
+}
+
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+localEulerDdtScheme<Type>::fviDdt
+(
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField& rDeltaT = localRDeltaT();
+
+    const word ddtName("ddt(" + vf.name() + ')');
+
+    return VolInternalField<Type>::New
+    (
+        ddtName,
+        rDeltaT*(vf - vf.oldTime())
+    );
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+localEulerDdtScheme<Type>::fviDdt
+(
+    const dimensionedScalar& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField& rDeltaT = localRDeltaT();
+
+    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+
+    return VolInternalField<Type>::New
+    (
+        ddtName,
+        rDeltaT*rho*(vf - vf.oldTime())
+    );
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+localEulerDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField& rDeltaT = localRDeltaT();
+
+    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+
+    return VolInternalField<Type>::New
+    (
+        ddtName,
+        rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
+    );
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+localEulerDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& alpha,
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField& rDeltaT = localRDeltaT();
+
+    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+
+    return VolInternalField<Type>::New
+    (
+        ddtName,
+        rDeltaT*(alpha*rho*vf - alpha.oldTime()*rho.oldTime()*vf.oldTime())
+    );
+}
+
+
+template<class Type>
 tmp<VolField<Type>>
 localEulerDdtScheme<Type>::fvcDdt
 (
@@ -62,20 +166,17 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const word ddtName("ddt(" + dt.name() + ')');
 
-    return tmp<VolField<Type>>
+    return VolField<Type>::New
     (
-        VolField<Type>::New
+        ddtName,
+        mesh(),
+        dimensioned<Type>
         (
-            ddtName,
-            mesh(),
-            dimensioned<Type>
-            (
-                "0",
-                dt.dimensions()/dimensions::time,
-                Zero
-            ),
-            calculatedFvPatchField<Type>::typeName
-        )
+            "0",
+            dt.dimensions()/dimensions::time,
+            Zero
+        ),
+        calculatedFvPatchField<Type>::typeName
     );
 }
 
@@ -91,13 +192,10 @@ localEulerDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt(" + vf.name() + ')');
 
-    return tmp<VolField<Type>>
+    return VolField<Type>::New
     (
-        VolField<Type>::New
-        (
-            ddtName,
-            rDeltaT*(vf - vf.oldTime())
-        )
+        ddtName,
+        rDeltaT*(vf - vf.oldTime())
     );
 }
 
@@ -114,13 +212,10 @@ localEulerDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
 
-    return tmp<VolField<Type>>
+    return VolField<Type>::New
     (
-        VolField<Type>::New
-        (
-            ddtName,
-            rDeltaT*rho*(vf - vf.oldTime())
-        )
+        ddtName,
+        rDeltaT*rho*(vf - vf.oldTime())
     );
 }
 
@@ -137,13 +232,10 @@ localEulerDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
 
-    return tmp<VolField<Type>>
+    return VolField<Type>::New
     (
-        VolField<Type>::New
-        (
-            ddtName,
-            rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
-        )
+        ddtName,
+        rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
     );
 }
 
@@ -161,17 +253,10 @@ localEulerDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
 
-    return tmp<VolField<Type>>
+    return VolField<Type>::New
     (
-        VolField<Type>::New
-        (
-            ddtName,
-            rDeltaT
-           *(
-               alpha*rho*vf
-             - alpha.oldTime()*rho.oldTime()*vf.oldTime()
-           )
-        )
+        ddtName,
+        rDeltaT*(alpha*rho*vf - alpha.oldTime()*rho.oldTime()*vf.oldTime())
     );
 }
 

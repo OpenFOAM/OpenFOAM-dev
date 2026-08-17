@@ -22,11 +22,11 @@ while (simple.correctNonOrthogonal())
 
     if (pressureImplicitPorosity)
     {
-        tpEqn = (fvm::laplacian(trTU(), p) == fvc::div(phiHbyA));
+        tpEqn = (fvm::laplacian(trTU(), p) == fvi::div(phiHbyA));
     }
     else
     {
-        tpEqn = (fvm::laplacian(trAU(), p) == fvc::div(phiHbyA));
+        tpEqn = (fvm::laplacian(trAU(), p) == fvi::div(phiHbyA));
     }
 
     fvScalarMatrix pEqn = tpEqn.ref();
@@ -52,11 +52,11 @@ p.relax();
 
 if (pressureImplicitPorosity)
 {
-    U = HbyA - (trTU()&fvc::grad(p));
+    U.internalFieldRef() = HbyA() - (trTU()&fvi::grad(p));
 }
 else
 {
-    U = HbyA - (trAU()*fvc::grad(p));
+    U.internalFieldRef() = HbyA() - (trAU()*fvi::grad(p));
 }
 
 U.correctBoundaryConditions();

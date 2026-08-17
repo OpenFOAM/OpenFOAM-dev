@@ -24,9 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "relaxation.H"
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvm.H"
-#include "LESModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -73,7 +74,7 @@ Foam::reactionRateFlameAreaModels::relaxation::~relaxation()
 
 void Foam::reactionRateFlameAreaModels::relaxation::correct
 (
-    const volScalarField& sigma
+    const volInternalScalarField& sigma
 )
 {
     dimensionedScalar omega0
@@ -108,18 +109,21 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
         combModel_.turbulence();
 
     // Total strain
-    const volScalarField sigmaTotal
+    const volInternalScalarField sigmaTotal
     (
-        sigma + alpha_*turbulence.epsilon()/(turbulence.k() + kMin)
+        sigma + alpha_*turbulence.epsilon()()()/(turbulence.k()()() + kMin)
     );
 
-    const volScalarField omegaInf(consumptionSpeed_.omega0Sigma(sigmaTotal));
+    const volInternalScalarField omegaInf
+    (
+        consumptionSpeed_.omega0Sigma(sigmaTotal)
+    );
 
     dimensionedScalar sigma0("sigma0", sigma.dimensions(), 0.0);
 
-    const volScalarField tau(C_*mag(sigmaTotal));
+    const volInternalScalarField tau(C_*mag(sigmaTotal));
 
-    volScalarField Rc
+    volInternalScalarField Rc
     (
         (tau*omegaInf*(omega0 - omegaInf) + sqr(omegaMin)*sigmaExt)
        /(sqr(omega0 - omegaInf) + sqr(omegaMin))
@@ -134,8 +138,8 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
          fvm::ddt(rho, omega_)
        + fvm::div(phi, omega_)
       ==
-         rho*Rc*omega0
-       - fvm::SuSp(rho*(tau + Rc), omega_)
+         rho()*Rc*omega0
+       - fvm::SuSp(rho()*(tau + Rc), omega_)
     );
 
     omega_.min(omega0);

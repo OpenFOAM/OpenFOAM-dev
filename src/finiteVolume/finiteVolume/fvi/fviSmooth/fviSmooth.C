@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvcSmooth.H"
+#include "fviSmooth.H"
 #include "volFields.H"
 #include "FvFaceCellWave.H"
 #include "smoothData.H"
@@ -31,7 +31,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::fvc::smooth
+void Foam::fvi::smooth
 (
     volScalarField& field,
     const scalar coeff
@@ -130,7 +130,7 @@ void Foam::fvc::smooth
 }
 
 
-void Foam::fvc::spread
+void Foam::fvi::spread
 (
     volScalarField& field,
     const volScalarField& alpha,
@@ -236,7 +236,7 @@ void Foam::fvc::spread
 }
 
 
-void Foam::fvc::sweep
+void Foam::fvi::sweep
 (
     volScalarField& field,
     const volScalarField& alpha,

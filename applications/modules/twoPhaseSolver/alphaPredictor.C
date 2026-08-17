@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "subCycle.H"
 #include "CMULES.H"
 #include "CrankNicolsonDdtScheme.H"
+#include "fviDiv.H"
 #include "fvcFlux.H"
 #include "fvmSup.H"
 
@@ -114,15 +115,15 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
         );
     }
 
-    tmp<volScalarField> divU;
+    tmp<volInternalScalarField> divU;
 
     if (divergent())
     {
         divU =
         (
             mesh.moving()
-          ? fvc::div(phiCN() + mesh.phi())
-          : fvc::div(phiCN())
+          ? fvi::div(phiCN() + mesh.phi())
+          : fvi::div(phiCN())
         );
     }
 

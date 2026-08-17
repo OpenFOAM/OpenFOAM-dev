@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,10 @@ Description
 
 {
     scalar sumLocalContErr = runTime.deltaTValue()*
-        mag(fvc::div(phia))().weightedAverage(mesh.V()).value();
+        mag(fvi::div(phia))().weightedAverage(mesh.V()).value();
 
     scalar globalContErr = runTime.deltaTValue()*
-        fvc::div(phia)().weightedAverage(mesh.V()).value();
+        fvi::div(phia)().weightedAverage(mesh.V()).value();
     cumulativeAdjointContErr += globalContErr;
 
     Info<< "Adjoint continuity errors : sum local = " << sumLocalContErr

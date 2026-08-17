@@ -29,6 +29,7 @@ License
 #include "adjustPhi.H"
 #include "fvcMeshPhi.H"
 #include "fvcFlux.H"
+#include "fviDdt.H"
 #include "fvcDdt.H"
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
@@ -143,8 +144,8 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 
         fvScalarMatrix p_rghDDtEqn
         (
-            fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
-          + fvc::div(phiHbyA) + fvm::div(phid, p_rgh)
+            fvi::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
+          + fvi::div(phiHbyA) + fvm::div(phid, p_rgh)
          ==
             fvModels().sourceProxy(rho, p_rgh)
         );
@@ -184,8 +185,8 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 
         fvScalarMatrix p_rghDDtEqn
         (
-            fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
-          + fvc::div(phiHbyA)
+            fvi::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
+          + fvi::div(phiHbyA)
          ==
             fvModels().sourceProxy(rho, p_rgh)
         );
@@ -284,7 +285,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 
     if (thermo.dpdt())
     {
-        dpdt = fvc::ddt(p);
+        dpdt = fvi::ddt(p);
     }
 }
 

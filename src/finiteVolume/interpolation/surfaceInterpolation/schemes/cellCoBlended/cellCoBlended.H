@@ -74,7 +74,7 @@ SourceFiles
 #include "blendedSchemeBase.H"
 #include "surfaceInterpolate.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -229,7 +229,7 @@ public:
 
             scalarField sumPhi
             (
-                fvc::surfaceSum(mag(tUflux))().primitiveField()
+                fvi::surfaceSum(mag(tUflux))().primitiveField()
             );
 
             Co.primitiveFieldRef() =

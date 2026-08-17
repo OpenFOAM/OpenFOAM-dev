@@ -28,11 +28,11 @@
 
         fvConstraints.constrain(UEqn);
 
-        volVectorField gradp(fvc::grad(p));
+        volInternalVectorField gradp(fvi::grad(p));
 
         for (int UCorr=0; UCorr<nUCorr; UCorr++)
         {
-            U = trTU() & (UEqn.H() - gradp);
+            U.internalFieldRef() = trTU()() & (UEqn.H()()() - gradp);
         }
         U.correctBoundaryConditions();
 
@@ -44,7 +44,7 @@
 
         fvConstraints.constrain(UEqn);
 
-        solve(UEqn == -fvc::grad(p));
+        solve(UEqn == -fvi::grad(p));
 
         fvConstraints.constrain(U);
 

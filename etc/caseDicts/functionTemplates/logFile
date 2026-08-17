@@ -27,7 +27,6 @@ codeInclude
     // Header files for classes and functions
     #include "OFstream.H"
     #include "OSspecific.H"
-    #include "fvc.H"
 #};
 
 // Header file paths for Make/options, e.g. for momentum transport models

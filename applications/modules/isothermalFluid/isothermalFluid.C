@@ -29,7 +29,8 @@ License
 #include "fvcMeshPhi.H"
 #include "fvcVolumeIntegrate.H"
 #include "fvcReconstruct.H"
-#include "fvcDiv.H"
+#include "linear.H"
+#include "fviDiv.H"
 #include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -71,12 +72,12 @@ Foam::solvers::isothermalFluid::pressureWork
     {
         return
             work
-          + fvc::div
+          + fvi::div
             (
                 fvc::interpolate(rho)*fvc::meshPhi(rho, U),
                 p/rho,
                 "div(phi,(p|rho))"
-            )();
+            );
     }
     else
     {
@@ -302,10 +303,10 @@ void Foam::solvers::isothermalFluid::preSolve()
     // same divergence
     if (correctPhi || mesh.topoChanging())
     {
-        divrhoU = new volScalarField
+        divrhoU = new volInternalScalarField
         (
             "divrhoU",
-            fvc::div(fvc::absolute(phi, rho, U))
+            fvi::div(fvc::absolute(phi, rho, U))
         );
     }
 

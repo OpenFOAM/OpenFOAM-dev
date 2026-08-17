@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 InNamespace
-    Foam::fvc
+    Foam::fvi
 
 Description
-    Calculate the magnitude of the square of the gradient of the gradient of
-    the given volField.
+    Area-weighted average a surfaceField returning a volInternalField
 
 SourceFiles
-    fvcMagSqrGradGrad.C
+    fviAverage.C
 
 \*---------------------------------------------------------------------------*/
 
 
-#ifndef fvcMagSqrGradGrad_H
-#define fvcMagSqrGradGrad_H
+#ifndef fviAverage_H
+#define fviAverage_H
 
 #include "volFieldsFwd.H"
+#include "surfaceFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,22 +45,27 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Namespace fvc functions Declaration
+                      Namespace fvi functions Declaration
 \*---------------------------------------------------------------------------*/
 
-namespace fvc
+namespace fvi
 {
+    //- Area-weighted average a surfaceField creating a volField
     template<class Type>
-    tmp<volScalarField> magSqrGradGrad
-    (
-        const VolField<Type>&
-    );
+    tmp<VolInternalField<Type>> average(const SurfaceField<Type>&);
 
+    //- Area-weighted average a surfaceField creating a volField
     template<class Type>
-    tmp<volScalarField> magSqrGradGrad
-    (
-        const tmp<VolField<Type>>&
-    );
+    tmp<VolInternalField<Type>> average(const tmp<SurfaceField<Type>>&);
+
+
+    //- Area-weighted average a surfaceField creating a volField
+    template<class Type>
+    tmp<VolInternalField<Type>> average(const VolField<Type>&);
+
+    //- Area-weighted average a surfaceField creating a volField
+    template<class Type>
+    tmp<VolInternalField<Type>> average(const tmp<VolField<Type>>&);
 }
 
 
@@ -71,7 +76,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "fvcMagSqrGradGrad.C"
+    #include "fviAverage.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -29,8 +29,8 @@ License
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -160,7 +160,7 @@ void Foam::fv::waveForcing::addSup
 
         eqn += fvm::Sp
         (
-            scale()*(fvc::ddt(rho)()() + fvc::div(rhoPhi)()()),
+            scale()*(fvi::ddt(rho) + fvi::div(rhoPhi)),
             eqn.psi()
         );
     }

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "laplaceFilter.H"
-#include "fvcLaplacian.H"
+#include "fviLaplacian.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -93,67 +93,39 @@ void Foam::laplaceFilter::read(const dictionary& bd)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::laplaceFilter::operator()
+Foam::tmp<Foam::volInternalScalarField> Foam::laplaceFilter::operator[]
 (
-    const tmp<volScalarField>& unFilteredField
+    const volScalarField& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volScalarField> filteredField =
-        unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return unFilteredField() + fvi::laplacian(coeff_, unFilteredField);
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::laplaceFilter::operator()
+Foam::tmp<Foam::volInternalVectorField> Foam::laplaceFilter::operator[]
 (
-    const tmp<volVectorField>& unFilteredField
+    const volVectorField& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volVectorField> filteredField =
-        unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return unFilteredField() + fvi::laplacian(coeff_, unFilteredField);
 }
 
 
-Foam::tmp<Foam::volSymmTensorField> Foam::laplaceFilter::operator()
+Foam::tmp<Foam::volInternalSymmTensorField> Foam::laplaceFilter::operator[]
 (
-    const tmp<volSymmTensorField>& unFilteredField
+    const volSymmTensorField& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volSymmTensorField> filteredField =
-        unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return unFilteredField() + fvi::laplacian(coeff_, unFilteredField);
 }
 
 
-Foam::tmp<Foam::volTensorField> Foam::laplaceFilter::operator()
+Foam::tmp<Foam::volInternalTensorField> Foam::laplaceFilter::operator[]
 (
-    const tmp<volTensorField>& unFilteredField
+    const volTensorField& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volTensorField> filteredField =
-        unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return unFilteredField() + fvi::laplacian(coeff_, unFilteredField);
 }
 
 

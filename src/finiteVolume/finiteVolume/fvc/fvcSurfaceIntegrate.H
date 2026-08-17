@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,51 +53,12 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    void surfaceIntegrate
-    (
-        Field<Type>&,
-        const SurfaceField<Type>&
-    );
-
-    template<class Type>
-    tmp<VolInternalField<Type>>
-    surfaceIntegrate
-    (
-        const SurfaceField<Type>&
-    );
-
-    template<class Type>
-    tmp<VolInternalField<Type>>
-    surfaceIntegrate
-    (
-        const tmp<SurfaceField<Type>>&
-    );
+    tmp<VolField<Type>>
+    surfaceIntegrate(const SurfaceField<Type>&);
 
     template<class Type>
     tmp<VolField<Type>>
-    surfaceIntegrateExtrapolate
-    (
-        const SurfaceField<Type>&
-    );
-
-    template<class Type>
-    tmp<VolField<Type>>
-    surfaceIntegrateExtrapolate
-    (
-        const tmp<SurfaceField<Type>>&
-    );
-
-    template<class Type>
-    tmp<VolInternalField<Type>> surfaceSum
-    (
-        const SurfaceField<Type>&
-    );
-
-    template<class Type>
-    tmp<VolInternalField<Type>> surfaceSum
-    (
-        const tmp<SurfaceField<Type>>&
-    );
+    surfaceIntegrate(const tmp<SurfaceField<Type>>&);
 }
 
 

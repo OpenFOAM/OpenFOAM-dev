@@ -18,7 +18,7 @@ writeControl writeTime;
 codeInclude
 #{
     // Header files for classes and functions, e.g. for fvc::grad
-    #include "fvc.H"
+    #include "fvcGrad.H"
 #};
 
 // Header file paths for Make/options, e.g. for momentum transport models

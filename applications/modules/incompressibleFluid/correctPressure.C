@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "fvcMeshPhi.H"
 #include "fvcFlux.H"
 #include "fvcDdt.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "fvcSnGrad.H"
 #include "fvmLaplacian.H"
 
@@ -69,7 +69,7 @@ void Foam::solvers::incompressibleFluid::correctPressure()
         rAtU = 1.0/max(1.0/rAU - UEqn.H1(), 0.1/rAU);
         phiHbyA +=
             fvc::interpolate(rAtU() - rAU)*fvc::snGrad(p)*mesh.magSf();
-        HbyA -= (rAU - rAtU())*fvc::grad(p);
+        HbyA.internalFieldRef() -= (rAU() - rAtU()())*fvi::grad(p);
     }
 
     if (pimple.nCorrPiso() <= 1)
@@ -90,7 +90,7 @@ void Foam::solvers::incompressibleFluid::correctPressure()
         (
             fvm::laplacian(rAtU(), p)
          ==
-            fvc::div(phiHbyA)
+            fvi::div(phiHbyA)
           - p_rghEqnSource
         );
 
@@ -113,7 +113,7 @@ void Foam::solvers::incompressibleFluid::correctPressure()
     // Explicitly relax pressure for momentum corrector
     p.relax();
 
-    U = HbyA - rAtU*fvc::grad(p);
+    U.internalFieldRef() = HbyA() - rAtU()*fvi::grad(p);
     U.correctBoundaryConditions();
     fvConstraints().constrain(U);
 

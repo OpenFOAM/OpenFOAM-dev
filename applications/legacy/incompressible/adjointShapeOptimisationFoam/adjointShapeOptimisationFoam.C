@@ -58,8 +58,7 @@ Description
 #include "fvModels.H"
 #include "fvConstraints.H"
 
-#include "fvcDdt.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "fvcFlux.H"
 
 #include "fvmDdt.H"
@@ -74,7 +73,7 @@ using namespace Foam;
 template<class Type>
 inline void zeroCells
 (
-    VolField<Type>& vf,
+    VolInternalField<Type>& vf,
     const labelList& cells
 )
 {
@@ -143,7 +142,7 @@ int main(int argc, char *argv[])
 
             fvConstraints.constrain(UEqn);
 
-            solve(UEqn == -fvc::grad(p));
+            solve(UEqn == -fvi::grad(p));
 
             fvConstraints.constrain(U);
 
@@ -161,7 +160,7 @@ int main(int argc, char *argv[])
             {
                 fvScalarMatrix pEqn
                 (
-                    fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
+                    fvm::laplacian(rAU, p) == fvi::div(phiHbyA)
                 );
 
                 pEqn.setReference
@@ -184,7 +183,7 @@ int main(int argc, char *argv[])
             p.relax();
 
             // Momentum corrector
-            U = HbyA - rAU*fvc::grad(p);
+            U.internalFieldRef() = HbyA() - rAU()*fvi::grad(p);
             U.correctBoundaryConditions();
             fvConstraints.constrain(U);
         }
@@ -193,10 +192,13 @@ int main(int argc, char *argv[])
         {
             // Adjoint Momentum predictor
 
-            volVectorField adjointTransposeConvection((fvc::grad(Ua) & U));
-            // volVectorField adjointTransposeConvection
+            volInternalVectorField adjointTransposeConvection
+            (
+                (fvi::grad(Ua) & U())
+            );
+            // volInternalVectorField adjointTransposeConvection
             //(
-            //    fvc::reconstruct
+            //    fvi::reconstruct
             //    (
             //        mesh.magSf()*fvc::dotInterpolate(fvc::snGrad(Ua), U)
             //    )
@@ -219,7 +221,7 @@ int main(int argc, char *argv[])
 
             fvConstraints.constrain(UaEqn);
 
-            solve(UaEqn == -fvc::grad(pa));
+            solve(UaEqn == -fvi::grad(pa));
 
             fvConstraints.constrain(Ua);
 
@@ -235,7 +237,7 @@ int main(int argc, char *argv[])
             {
                 fvScalarMatrix paEqn
                 (
-                    fvm::laplacian(rAUa, pa) == fvc::div(phiHbyAa)
+                    fvm::laplacian(rAUa, pa) == fvi::div(phiHbyAa)
                 );
 
                 paEqn.setReference(paRefCell, paRefValue);
@@ -253,7 +255,7 @@ int main(int argc, char *argv[])
             pa.relax();
 
             // Adjoint momentum corrector
-            Ua = HbyAa - rAUa*fvc::grad(pa);
+            Ua.internalFieldRef() = HbyAa() - rAUa()*fvi::grad(pa);
             Ua.correctBoundaryConditions();
             fvConstraints.constrain(Ua);
         }

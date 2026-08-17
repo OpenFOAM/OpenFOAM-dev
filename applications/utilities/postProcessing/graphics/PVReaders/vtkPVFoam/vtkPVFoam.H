@@ -588,7 +588,7 @@ class vtkPVFoam
             template<class Type>
             void convertVolInternalFieldBlock
             (
-                const typename VolField<Type>::Internal&,
+                const VolInternalField<Type>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const List<polyDecomp>& decompLst
@@ -598,7 +598,7 @@ class vtkPVFoam
             template<class Type>
             void convertVolInternalField
             (
-                const typename VolField<Type>::Internal&,
+                const VolInternalField<Type>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const label datasetNo,

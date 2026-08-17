@@ -286,14 +286,14 @@ Foam::StationaryPhaseModel<BasePhaseModel>::DUDt() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::continuityError() const
 {
     FatalErrorInFunction
         << "Cannot access the continuityError of a stationary phase"
         << abort(FatalError);
 
-    return volScalarField::null();
+    return volInternalScalarField::null();
 }
 
 

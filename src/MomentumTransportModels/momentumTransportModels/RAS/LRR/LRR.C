@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LRR.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "wallDist.H"
@@ -49,7 +50,7 @@ tmp<volScalarField> LRR<BasicMomentumTransportModel>::boundEpsilon()
 template<class BasicMomentumTransportModel>
 void LRR<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_ = boundEpsilon()/epsilon_;
+    this->nut_.internalFieldRef() = boundEpsilon()()/epsilon_();
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -223,11 +224,11 @@ void LRR<BasicMomentumTransportModel>::correct()
 
     ReynoldsStress<RASModel<BasicMomentumTransportModel>>::correct();
 
-    tmp<volTensorField> tgradU(fvc::grad(U));
-    const volTensorField& gradU = tgradU();
+    tmp<volInternalTensorField> tgradU(fvi::grad(U));
+    const volInternalTensorField& gradU = tgradU();
 
-    volSymmTensorField P(-twoSymm(R & gradU));
-    volScalarField G(this->GName(), 0.5*mag(tr(P)));
+    volInternalSymmTensorField P(-twoSymm(R() & gradU));
+    volInternalScalarField G(this->GName(), 0.5*mag(tr(P)));
 
     // Update epsilon and G at the wall
     epsilon_.boundaryFieldRef().updateCoeffs();
@@ -239,8 +240,8 @@ void LRR<BasicMomentumTransportModel>::correct()
       + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
-        Ceps1_*alpha*rho*G*epsilon_/k_
-      - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
+        Ceps1_*alpha()*rho()*G*epsilon_()/k_()
+      - fvm::Sp(Ceps2_*alpha()*rho()*epsilon_()/k_(), epsilon_)
       + epsilonSource()
       + fvModels.source(alpha, rho, epsilon_)
     );
@@ -283,9 +284,9 @@ void LRR<BasicMomentumTransportModel>::correct()
       - fvm::laplacian(alpha*rho*DREff(), R)
       + fvm::Sp(C1_*alpha*rho*epsilon_/k_, R)
       ==
-        alpha*rho*P
-      - (2.0/3.0*(1 - C1_)*I)*alpha*rho*epsilon_
-      - C2_*alpha*rho*dev(P)
+        alpha()*rho()*P
+      - (2.0/3.0*(1 - C1_)*I)*alpha()*rho()*epsilon_()
+      - C2_*alpha()*rho()*dev(P)
       + this->RSource()
       + fvModels.source(alpha, rho, R)
     );
@@ -293,16 +294,16 @@ void LRR<BasicMomentumTransportModel>::correct()
     // Optionally add wall-refection term
     if (wallReflection_)
     {
-        const volVectorField& n(wallDist::New(this->mesh_).n());
-        const volScalarField& y(wallDist::New(this->mesh_).y());
+        const volInternalVectorField& n(wallDist::New(this->mesh_).n());
+        const volInternalScalarField& y(wallDist::New(this->mesh_).y());
 
-        const volSymmTensorField reflect
+        const volInternalSymmTensorField reflect
         (
-            Cref1_*R - ((Cref2_*C2_)*(k_/epsilon_))*dev(P)
+            Cref1_*R() - ((Cref2_*C2_)*(k_()/epsilon_()))*dev(P)
         );
 
         REqn.ref() +=
-            ((3*pow(Cmu_, 0.75)/kappa_)*(alpha*rho*sqrt(k_)/y))
+            ((3*pow(Cmu_, 0.75)/kappa_)*(alpha()*rho()*sqrt(k_())/y))
            *dev(symm((n & reflect)*n));
     }
 

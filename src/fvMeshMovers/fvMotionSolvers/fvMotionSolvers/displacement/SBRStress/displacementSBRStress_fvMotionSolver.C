@@ -26,7 +26,7 @@ License
 #include "displacementSBRStress_fvMotionSolver.H"
 #include "motionDiffusivity.H"
 #include "fvmLaplacian.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvcGrad.H"
 #include "surfaceInterpolate.H"
 #include "fvcLaplacian.H"
@@ -137,7 +137,7 @@ Foam::fvMotionSolvers::displacementSBRStress::newPoints()
             "laplacian(diffusivity,cellDisplacement)"
         )
 
-      + fvc::div
+      + fvi::div
         (
             Df
            *(
@@ -153,14 +153,14 @@ Foam::fvMotionSolvers::displacementSBRStress::newPoints()
         )
 
         /*
-      - fvc::laplacian
+      - fvi::laplacian
         (
             2*Df,
             cellDisplacement_,
             "laplacian(diffusivity,cellDisplacement)"
         )
 
-      + fvc::div
+      + fvi::div
         (
             Df
            *(

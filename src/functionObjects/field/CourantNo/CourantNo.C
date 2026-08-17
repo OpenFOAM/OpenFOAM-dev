@@ -25,7 +25,7 @@ License
 
 #include "CourantNo.H"
 #include "surfaceFields.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -88,7 +88,7 @@ bool Foam::functionObjects::CourantNo::calc()
             byRho
             (
                 (0.5*time_.deltaT())
-               *fvc::surfaceSum(mag(phi))/mesh_.V()
+               *fvi::surfaceSum(mag(phi))/mesh_.V()
             );
 
         tCo->correctBoundaryConditions();

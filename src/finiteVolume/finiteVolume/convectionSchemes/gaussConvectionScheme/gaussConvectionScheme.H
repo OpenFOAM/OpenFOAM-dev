@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,25 +104,31 @@ public:
 
         const surfaceInterpolationScheme<Type>& interpScheme() const;
 
-        tmp<SurfaceField<Type>> interpolate
+        virtual tmp<SurfaceField<Type>> interpolate
         (
             const surfaceScalarField&,
             const VolField<Type>&
         ) const;
 
-        tmp<SurfaceField<Type>> flux
+        virtual tmp<SurfaceField<Type>> flux
         (
             const surfaceScalarField&,
             const VolField<Type>&
         ) const;
 
-        tmp<fvMatrix<Type>> fvmDiv
+        virtual tmp<VolInternalField<Type>> fviDiv
         (
             const surfaceScalarField&,
             const VolField<Type>&
         ) const;
 
-        tmp<VolField<Type>> fvcDiv
+        virtual tmp<VolField<Type>> fvcDiv
+        (
+            const surfaceScalarField&,
+            const VolField<Type>&
+        ) const;
+
+        virtual tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
             const VolField<Type>&

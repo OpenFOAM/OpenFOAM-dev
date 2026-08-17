@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ License
 
 #include "basicFluidSolver.H"
 #include "surfaceFields.H"
-#include "fvcDiv.H"
-#include "fvcSurfaceIntegrate.H"
-#include "fvcVolumeIntegrate.H"
+#include "fviDiv.H"
+#include "fviSurfaceIntegrate.H"
+#include "fviVolumeIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -81,7 +81,7 @@ void Foam::solvers::basicFluidSolver::meshCourantNo() const
     {
         const scalarField sumPhi
         (
-            fvc::surfaceSum(mag(mesh.phi()))().primitiveField()
+            fvi::surfaceSum(mag(mesh.phi()))().primitiveField()
         );
 
         const scalar meshCoNum
@@ -111,7 +111,7 @@ void Foam::solvers::basicFluidSolver::correctCoNum
 {
     const scalarField sumPhi
     (
-        fvc::surfaceSum(mag(phi))().primitiveField()/rho.primitiveField()
+        fvi::surfaceSum(mag(phi))().primitiveField()/rho.primitiveField()
     );
 
     CoNum_ = 0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue();
@@ -150,7 +150,7 @@ void Foam::solvers::basicFluidSolver::continuityErrors
     const surfaceScalarField& phi
 )
 {
-    const volScalarField contErr(fvc::div(phi));
+    const volInternalScalarField contErr(fvi::div(phi));
 
     const scalar sumLocalContErr =
         runTime.deltaTValue()
@@ -187,13 +187,13 @@ void Foam::solvers::basicFluidSolver::continuityErrors
     }
     else
     {
-        const dimensionedScalar totalMass = fvc::domainIntegrate(rho);
+        const dimensionedScalar totalMass = fvi::domainIntegrate(rho());
 
         const scalar sumLocalContErr =
-            (fvc::domainIntegrate(mag(rho - thermoRho))/totalMass).value();
+            (fvi::domainIntegrate(mag(rho() - thermoRho()))/totalMass).value();
 
         const scalar globalContErr =
-            (fvc::domainIntegrate(rho - thermoRho)/totalMass).value();
+            (fvi::domainIntegrate(rho() - thermoRho())/totalMass).value();
 
         cumulativeContErr += globalContErr;
 

@@ -121,6 +121,18 @@ namespace fvm
             const VolField<Type>&
         );
 
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<fvMatrix<Type>> Sp
+        (
+            const Expression& e,
+            const VolField<Type>&
+        );
+
 
     // Implicit/Explicit source depending on sign of coefficient
 
@@ -142,6 +154,18 @@ namespace fvm
         tmp<fvMatrix<Type>> SuSp
         (
             const tmp<volScalarField>&,
+            const VolField<Type>&
+        );
+
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<fvMatrix<Type>> SuSp
+        (
+            const Expression& e,
             const VolField<Type>&
         );
 

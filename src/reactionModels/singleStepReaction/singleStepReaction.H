@@ -85,7 +85,7 @@ protected:
         List<int> specieProd_;
 
         //- Fuel consumption rate
-        volScalarField wFuel_;
+        volInternalScalarField wFuel_;
 
         //- Semi-implicit (true) or explicit (false) treatment
         bool semiImplicit_;

@@ -29,6 +29,8 @@ License
 #include "bound.H"
 #include "wallDist.H"
 #include "fvcMeshPhi.H"
+#include "fviGrad.H"
+#include "fviDiv.H"
 #include "fvmDiv.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -77,15 +79,15 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F1
 }
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volScalarField>
+tmp<volInternalScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F2() const
 {
-    tmp<volScalarField> arg2 = min
+    tmp<volInternalScalarField> arg2 = min
     (
         max
         (
-            (scalar(2)/betaStar_)*sqrt(k_)/(omega_*this->y()),
-            scalar(500)*this->nu()/(sqr(this->y())*omega_)
+            (scalar(2)/betaStar_)*sqrt(k_())/(omega_()*this->y()()),
+            scalar(500)*this->nu()()()/(sqr(this->y()())*omega_())
         ),
         scalar(100)
     );
@@ -94,12 +96,12 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F2() const
 }
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volScalarField>
+tmp<volInternalScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F3() const
 {
-    tmp<volScalarField> arg3 = min
+    tmp<volInternalScalarField> arg3 = min
     (
-        150*this->nu()/(omega_*sqr(this->y())),
+        150*this->nu()()()/(omega_()*sqr(this->y()())),
         scalar(10)
     );
 
@@ -107,10 +109,10 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F3() const
 }
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volScalarField>
+tmp<volInternalScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F23() const
 {
-    tmp<volScalarField> f23(F2());
+    tmp<volInternalScalarField> f23(F2());
 
     if (F3_)
     {
@@ -124,11 +126,11 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F23() const
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
 void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correctNut
 (
-    const volScalarField& S2,
-    const volScalarField& F2
+    const volInternalScalarField& S2,
+    const volInternalScalarField& F2
 )
 {
-    this->nut_ = a1_*k_/max(a1_*omega_, b1_*F2*sqrt(S2));
+    this->nut_.internalFieldRef() = a1_*k_()/max(a1_*omega_(), b1_*F2*sqrt(S2));
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -138,15 +140,15 @@ template<class MomentumTransportModel, class BasicMomentumTransportModel>
 void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::
 correctNut()
 {
-    correctNut(2*magSqr(symm(fvc::grad(this->U_))), F23());
+    correctNut(2*magSqr(symm(fvi::grad(this->U_))), F23());
 }
 
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::Pk
 (
-    const volScalarField::Internal& G
+    const volInternalScalarField& G
 ) const
 {
     return min(G, (c1_*betaStar_)*this->k_()*this->omega_());
@@ -154,11 +156,11 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::Pk
 
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::epsilonByk
 (
-    const volScalarField::Internal& F1,
-    const volScalarField::Internal& F2
+    const volInternalScalarField& F1,
+    const volInternalScalarField& F2
 ) const
 {
     return betaStar_*omega_();
@@ -202,9 +204,9 @@ template<class MomentumTransportModel, class BasicMomentumTransportModel>
 tmp<fvScalarMatrix>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::Qsas
 (
-    const volScalarField::Internal& S2,
-    const volScalarField::Internal& gamma,
-    const volScalarField::Internal& beta
+    const volInternalScalarField& S2,
+    const volInternalScalarField& gamma,
+    const volInternalScalarField& beta
 ) const
 {
     return tmp<fvScalarMatrix>
@@ -342,31 +344,28 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
 
     MomentumTransportModel::correct();
 
-    volScalarField::Internal divU
-    (
-        fvc::div(fvc::absolute(this->phi(), U))()()
-    );
+    const volInternalScalarField divU(fvi::div(fvc::absolute(this->phi(), U)));
 
-    tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField S2(2*magSqr(symm(tgradU())));
-    volScalarField::Internal GbyNu(dev(twoSymm(tgradU()())) && tgradU()());
-    volScalarField::Internal G(this->GName(), nut()*GbyNu);
+    tmp<volInternalTensorField> tgradU = fvi::grad(U);
+    const volInternalScalarField S2(2*magSqr(symm(tgradU())));
+    const volInternalScalarField GbyNu(dev(twoSymm(tgradU())) && tgradU());
+    const volInternalScalarField G(this->GName(), nut()*GbyNu);
     tgradU.clear();
 
     // Update omega and G at the wall
     omega_.boundaryFieldRef().updateCoeffs();
 
-    volScalarField CDkOmega
+    const volScalarField CDkOmega
     (
         (2*alphaOmega2_)*(fvc::grad(k_) & fvc::grad(omega_))/omega_
     );
 
-    volScalarField F1(this->F1(CDkOmega));
-    volScalarField F23(this->F23());
+    const volScalarField F1(this->F1(CDkOmega));
+    const volInternalScalarField F23(this->F23());
 
     {
-        volScalarField::Internal gamma(this->gamma(F1));
-        volScalarField::Internal beta(this->beta(F1));
+        const volInternalScalarField gamma(this->gamma(F1));
+        const volInternalScalarField beta(this->beta(F1));
 
         // Turbulent frequency equation
         tmp<fvScalarMatrix> omegaEqn
@@ -380,7 +379,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
             (
                 GbyNu,
                 (c1_/a1_)*betaStar_*omega_()
-               *max(a1_*omega_(), b1_*F23()*sqrt(S2()))
+               *max(a1_*omega_(), b1_*F23*sqrt(S2))
             )
           - fvm::SuSp((2.0/3.0)*alpha()*rho()*gamma*divU, omega_)
           - fvm::Sp(alpha()*rho()*beta*omega_(), omega_)
@@ -389,7 +388,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
                 alpha()*rho()*(F1() - scalar(1))*CDkOmega()/omega_(),
                 omega_
             )
-          + Qsas(S2(), gamma, beta)
+          + Qsas(S2, gamma, beta)
           + omegaSource()
           + fvModels.source(alpha, rho, omega_)
         );

@@ -108,7 +108,7 @@ Foam::linearUpwind<Type>::correction
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
         tmp<volVectorField> tgradVf =
-            gradScheme_().grad(vf.component(cmpt), gradSchemeName_);
+            gradScheme_().fvcGrad(vf.component(cmpt), gradSchemeName_);
 
         const volVectorField& gradVf = tgradVf();
 

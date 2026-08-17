@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multicomponentFluid.H"
-#include "fvcDdt.H"
+#include "fviDdt.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -81,7 +81,7 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
     fvScalarMatrix EEqn
     (
         fvm::ddt(rho, he) + mvConvection->fvmDiv(phi, he)
-      + fvc::ddt(rho, K) + fvc::div(phi, K)
+      + fvi::ddt(rho, K) + fvi::div(phi, K)
       + pressureWork
         (
             he.name() == "e"

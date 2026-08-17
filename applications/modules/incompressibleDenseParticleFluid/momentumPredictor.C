@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleDenseParticleFluid.H"
-#include "fvcDdt.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
 #include "fvmDiv.H"
@@ -39,7 +40,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::momentumPredictor()
     tUcEqn =
     (
         fvm::ddt(alphac, Uc) + fvm::div(alphaPhic, Uc)
-      - fvm::Sp(fvc::ddt(alphac) + fvc::div(alphaPhic), Uc)
+      - fvm::Sp(fvi::ddt(alphac) + fvi::div(alphaPhic), Uc)
       + momentumTransport->divDevSigma(Uc)
      ==
         fvModels().source(alphac, Uc)

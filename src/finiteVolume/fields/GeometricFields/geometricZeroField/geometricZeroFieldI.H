@@ -59,13 +59,6 @@ Foam::geometricZeroField::internalField() const
 }
 
 
-inline Foam::geometricZeroField::Internal
-Foam::geometricZeroField::v() const
-{
-    return Internal();
-}
-
-
 inline typename Foam::geometricZeroField::Internal::FieldType
 Foam::geometricZeroField::primitiveField() const
 {

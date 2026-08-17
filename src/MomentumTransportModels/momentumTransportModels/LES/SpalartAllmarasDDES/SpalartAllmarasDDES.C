@@ -35,13 +35,13 @@ namespace LESModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDDES<BasicMomentumTransportModel>::rd
 (
-    const volScalarField::Internal& magGradU
+    const volInternalScalarField& magGradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("rd"),
         min
@@ -62,13 +62,13 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::rd
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDDES<BasicMomentumTransportModel>::fd
 (
-    const volScalarField::Internal& magGradU
+    const volInternalScalarField& magGradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("fd"),
         1 - tanh(pow3(8*rd(magGradU)))
@@ -79,15 +79,15 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::fd
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDDES<BasicMomentumTransportModel>::dTilda
 (
-    const volScalarField::Internal& chi,
-    const volScalarField::Internal& fv1,
-    const volTensorField::Internal& gradU
+    const volInternalScalarField& chi,
+    const volInternalScalarField& fv1,
+    const volInternalTensorField& gradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("dTilda"),
         max

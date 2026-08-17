@@ -49,7 +49,7 @@ namespace solvers
 
 void Foam::solvers::shockFluid::correctCoNum(const surfaceScalarField& amaxSf)
 {
-    const scalarField sumAmaxSf(fvc::surfaceSum(amaxSf)().primitiveField());
+    const scalarField sumAmaxSf(fvi::surfaceSum(amaxSf)().primitiveField());
 
     CoNum_ =
         0.5*gMax(sumAmaxSf/mesh.V().primitiveField())*runTime.deltaTValue();

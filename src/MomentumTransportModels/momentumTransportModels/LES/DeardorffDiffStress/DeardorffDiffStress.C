@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "DeardorffDiffStress.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 
@@ -105,15 +106,24 @@ bool DeardorffDiffStress<BasicMomentumTransportModel>::read()
 
 template<class BasicMomentumTransportModel>
 tmp<volScalarField>
-DeardorffDiffStress<BasicMomentumTransportModel>::epsilon() const
+DeardorffDiffStress<BasicMomentumTransportModel>::epsilon
+(
+    const volScalarField& k
+) const
 {
-    const volScalarField k(this->k());
-
     return volScalarField::New
     (
         this->groupName("epsilon"),
         this->Ce_*k*sqrt(k)/this->delta()
     );
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<volScalarField>
+DeardorffDiffStress<BasicMomentumTransportModel>::epsilon() const
+{
+    return epsilon(this->k());
 }
 
 
@@ -145,6 +155,7 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
+
     const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
     const Foam::fvConstraints& fvConstraints
     (
@@ -153,25 +164,24 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correct()
 
     ReynoldsStress<LESModel<BasicMomentumTransportModel>>::correct();
 
-    tmp<volTensorField> tgradU(fvc::grad(U));
-    const volTensorField& gradU = tgradU();
+    tmp<volInternalTensorField> tgradU(fvi::grad(U));
+    const volInternalSymmTensorField D(symm(tgradU()));
+    const volInternalSymmTensorField P(-twoSymm(R & tgradU()));
+    tgradU.clear();
 
-    volSymmTensorField D(symm(gradU));
-
-    volSymmTensorField P(-twoSymm(R & gradU));
-
-    volScalarField k(this->k());
+    const volScalarField k(this->k());
+    const volScalarField epsilon(this->epsilon());
 
     tmp<fvSymmTensorMatrix> REqn
     (
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
-      - fvm::laplacian(I*this->nu() + Cs_*(k/this->epsilon())*R, R)
-      + fvm::Sp(Cm_*alpha*rho*sqrt(k)/this->delta(), R)
+      - fvm::laplacian(I*this->nu() + Cs_*(k/epsilon)*R, R)
+      + fvm::Sp(Cm_*alpha()*rho()*sqrt(k())/this->delta()(), R)
      ==
-        alpha*rho*P
-      + (4.0/5.0)*alpha*rho*k*D
-      - ((2.0/3.0)*(1.0 - Cm_/this->Ce_)*I)*(alpha*rho*this->epsilon())
+        alpha()*rho()*P
+      + (4.0/5.0)*alpha()*rho()*k()*D
+      - ((2.0/3.0)*(1.0 - Cm_/this->Ce_)*I)*(alpha()*rho()*epsilon())
       + this->RSource()
       + fvModels.source(alpha, rho, R)
     );

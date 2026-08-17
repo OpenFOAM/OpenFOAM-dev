@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonlinearEddyViscosity.H"
+#include "fviDiv.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -115,7 +116,7 @@ Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::DivDevTau
 {
     return
     (
-        fvc::div(rho*nonlinearStress_)
+        fvi::div(rho*nonlinearStress_)
       + eddyViscosity<BasicMomentumTransportModel>::DivDevTau(rho, U)
     );
 }

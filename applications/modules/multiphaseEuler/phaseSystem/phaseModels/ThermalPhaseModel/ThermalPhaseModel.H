@@ -62,9 +62,9 @@ class ThermalPhaseModel
     // Private Member Functions
 
         //- Optionally filter the pressure work term as the phase-fraction -> 0
-        tmp<volScalarField> filterPressureWork
+        tmp<volInternalScalarField> filterPressureWork
         (
-            const tmp<volScalarField>& pressureWork
+            const tmp<volInternalScalarField>& pressureWork
         ) const;
 
 

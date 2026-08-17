@@ -264,7 +264,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::DivDevTau
 {
     return
     (
-        fvc::div(fvc::interpolate(this->alpha_*rho)*Refff(U))
+        fvi::div(fvc::interpolate(this->alpha_*rho)*Refff(U))
       - correction(fvm::laplacian(this->alpha_*rho*this->nuEff(), U))
     );
 }

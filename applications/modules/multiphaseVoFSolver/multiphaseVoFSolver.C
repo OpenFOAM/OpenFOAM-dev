@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ void Foam::solvers::multiphaseVoFSolver::correctCoNum()
     const scalarField sumPhi
     (
         mixture.nearInterface()().primitiveField()
-       *fvc::surfaceSum(mag(phi))().primitiveField()
+       *fvi::surfaceSum(mag(phi))().primitiveField()
     );
 
     alphaCoNum =

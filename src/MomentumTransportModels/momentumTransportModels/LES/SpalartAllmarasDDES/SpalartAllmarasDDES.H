@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,14 +65,14 @@ class SpalartAllmarasDDES
 {
     // Private Member Functions
 
-        tmp<volScalarField::Internal> fd
+        tmp<volInternalScalarField> fd
         (
-            const volScalarField::Internal& magGradU
+            const volInternalScalarField& magGradU
         ) const;
 
-        tmp<volScalarField::Internal> rd
+        tmp<volInternalScalarField> rd
         (
-            const volScalarField::Internal& magGradU
+            const volInternalScalarField& magGradU
         ) const;
 
 
@@ -81,11 +81,11 @@ protected:
     // Protected Member Functions
 
         //- Length scale
-        virtual tmp<volScalarField::Internal> dTilda
+        virtual tmp<volInternalScalarField> dTilda
         (
-            const volScalarField::Internal& chi,
-            const volScalarField::Internal& fv1,
-            const volTensorField::Internal& gradU
+            const volInternalScalarField& chi,
+            const volInternalScalarField& fv1,
+            const volInternalTensorField& gradU
         ) const;
 
 

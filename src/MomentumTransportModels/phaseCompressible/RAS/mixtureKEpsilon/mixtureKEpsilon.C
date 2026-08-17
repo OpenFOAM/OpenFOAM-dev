@@ -33,6 +33,7 @@ License
 #include "inletOutletFvPatchFields.H"
 #include "epsilonWallFunctionFvPatchScalarField.H"
 #include "epsilonmWallFunctionFvPatchScalarField.H"
+#include "fviGrad.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -362,6 +363,20 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mix
 
 
 template<class BasicMomentumTransportModel>
+tmp<volInternalScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mix
+(
+    const volInternalScalarField& fc,
+    const volInternalScalarField& fd
+) const
+{
+    const volInternalScalarField& alphal = this->alpha_;
+    const volInternalScalarField& alphag = this->gasTurbulence().alpha_;
+
+    return (alphal*rholEff()()*fc + alphag*rhogEff()()*fd)/rhom_()();
+}
+
+
+template<class BasicMomentumTransportModel>
 tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mixU
 (
     const volScalarField& fc,
@@ -374,6 +389,22 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mixU
     return
         (alphal*rholEff()*fc + alphag*rhogEff()*Ct2_()*fd)
        /(alphal*rholEff() + alphag*rhogEff()*Ct2_());
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<volInternalScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mixU
+(
+    const volInternalScalarField& fc,
+    const volInternalScalarField& fd
+) const
+{
+    const volInternalScalarField& alphal = this->alpha_;
+    const volInternalScalarField& alphag = this->gasTurbulence().alpha_;
+
+    return
+        (alphal*rholEff()()*fc + alphag*rhogEff()()*Ct2_()()*fd)
+       /(alphal*rholEff()() + alphag*rhogEff()()*Ct2_()());
 }
 
 
@@ -518,21 +549,21 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     const surfaceScalarField phim("phim", mixFlux(phil, phig));
 
     // Mixture velocity divergence
-    const volScalarField divUm
+    const volInternalScalarField divUm
     (
         mixU
         (
-            fvc::div(fvc::absolute(phil, Ul)),
-            fvc::div(fvc::absolute(phig, Ug))
+            fvi::div(fvc::absolute(phil, Ul)),
+            fvi::div(fvc::absolute(phig, Ug))
         )
     );
 
-    tmp<volScalarField> Gc;
+    tmp<volInternalScalarField> Gc;
     {
-        tmp<volTensorField> tgradUl = fvc::grad(Ul);
-        Gc = tmp<volScalarField>
+        tmp<volInternalTensorField> tgradUl = fvi::grad(Ul);
+        Gc = tmp<volInternalScalarField>
         (
-            new volScalarField
+            new volInternalScalarField
             (
                 this->GName(),
                 nutl*(tgradUl() && dev(twoSymm(tgradUl())))
@@ -547,12 +578,12 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         Gc.ref().checkOut();
     }
 
-    tmp<volScalarField> Gd;
+    tmp<volInternalScalarField> Gd;
     {
-        tmp<volTensorField> tgradUg = fvc::grad(Ug);
-        Gd = tmp<volScalarField>
+        tmp<volInternalTensorField> tgradUg = fvi::grad(Ug);
+        Gd = tmp<volInternalScalarField>
         (
-            new volScalarField
+            new volInternalScalarField
             (
                 this->GName(),
                 nutg*(tgradUg() && dev(twoSymm(tgradUg())))
@@ -568,7 +599,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     }
 
     // Mixture turbulence generation
-    const volScalarField Gm(mix(Gc, Gd));
+    const volInternalScalarField Gm(mix(Gc, Gd));
 
     // Mixture turbulence viscosity
     const volScalarField nutm(mixU(nutl, nutg));
@@ -582,7 +613,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     (
         fvm::ddt(epsilonm)
       + fvm::div(phim, epsilonm)
-      + fvm::SuSp(-fvc::div(phim), epsilonm)
+      + fvm::SuSp(-fvi::div(phim), epsilonm)
       - fvm::laplacian(DepsilonEff(nutm), epsilonm)
      ==
         C1_*Gm*epsilonm/km
@@ -606,7 +637,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     (
         fvm::ddt(km)
       + fvm::div(phim, km)
-      + fvm::SuSp(-fvc::div(phim), km)
+      + fvm::SuSp(-fvi::div(phim), km)
       - fvm::laplacian(DkEff(nutm), km)
      ==
         Gm

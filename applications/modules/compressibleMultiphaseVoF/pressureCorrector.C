@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,11 @@ License
 #include "findRefCell.H"
 #include "fvcMeshPhi.H"
 #include "fvcFlux.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "fvcDdt.H"
-#include "fvcDiv.H"
 #include "fvcSnGrad.H"
-#include "fvcSup.H"
+#include "fviSup.H"
 #include "fvcReconstruct.H"
 #include "fvmLaplacian.H"
 
@@ -87,8 +88,8 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
             (
                 phasei,
                 (
-                    fvc::ddt(rho) + thermo.psi()*correction(fvm::ddt(p_rgh))
-                  + fvc::div(phi, rho) - fvc::Sp(fvc::div(phi), rho)
+                    fvi::ddt(rho) + thermo.psi()*correction(fvm::ddt(p_rgh))
+                  + fvi::div(phi, rho) - fvi::Sp(fvi::div(phi), rho)
                   - fvModels().sourceProxy(phase, rho, p_rgh)
                 ).ptr()
             );
@@ -101,7 +102,7 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
         {
             fvScalarMatrix p_rghEqnIncomp
             (
-                fvc::div(phiHbyA)
+                fvi::div(phiHbyA)
               - fvm::laplacian(rAUf, p_rgh)
             );
 

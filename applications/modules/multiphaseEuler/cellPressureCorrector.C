@@ -27,9 +27,7 @@ License
 #include "constrainHbyA.H"
 #include "constrainPressure.H"
 #include "findRefCell.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
-#include "fvcSup.H"
+#include "fviDiv.H"
 #include "fvcSnGrad.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
@@ -351,7 +349,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             // Construct the transport part of the pressure equation
             fvScalarMatrix pEqnIncomp
             (
-                fvc::div(phiHbyA)
+                fvi::div(phiHbyA)
               - fvm::laplacian(rAf, p_rgh)
             );
 

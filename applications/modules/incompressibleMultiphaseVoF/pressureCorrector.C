@@ -31,7 +31,7 @@ License
 #include "fvcMeshPhi.H"
 #include "fvcFlux.H"
 #include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
 #include "fvmLaplacian.H"
@@ -97,7 +97,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::pressureCorrector()
         {
             fvScalarMatrix p_rghEqn
             (
-                fvc::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
+                fvi::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
              == p_rghEqnSource
             );
 

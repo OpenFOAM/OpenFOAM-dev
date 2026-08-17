@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,6 +94,9 @@ protected:
 
 
     // Protected Member Functions
+
+        //- Return the turbulence kinetic energy dissipation rate
+        tmp<volScalarField> epsilon(const volScalarField& k) const;
 
         //- Update the eddy-viscosity
         virtual void correctNut();

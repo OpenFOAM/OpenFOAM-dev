@@ -103,19 +103,19 @@ protected:
         //- Bound epsilon
         void boundEpsilon();
 
-        tmp<volScalarField> rCmu
+        tmp<volInternalScalarField> rCmu
         (
-            const volTensorField& gradU,
-            const volScalarField& S2,
-            const volScalarField& magS
+            const volInternalTensorField& gradU,
+            const volInternalScalarField& S2,
+            const volInternalScalarField& magS
         );
 
         //- Correct the eddy-viscosity nut
         virtual void correctNut
         (
-            const volTensorField& gradU,
-            const volScalarField& S2,
-            const volScalarField& magS
+            const volInternalTensorField& gradU,
+            const volInternalScalarField& S2,
+            const volInternalScalarField& magS
         );
 
         //- Correct the eddy-viscosity nut

@@ -138,7 +138,7 @@ public:
 
 
         //- Correct omega
-        virtual void correct(const volScalarField& sigma) = 0;
+        virtual void correct(const volInternalScalarField& sigma) = 0;
 
         //- Update from dictionary
         virtual bool read(const dictionary& dictProperties);

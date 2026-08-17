@@ -35,6 +35,7 @@ SourceFiles
 #define volFieldsFwd_H
 
 #include "GeometricFieldFwd.H"
+#include "DimensionedFieldFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,14 +57,21 @@ template<class Type>
 using VolField = GeometricField<Type, fvMesh, Field>;
 
 template<class Type>
-using VolInternalField = typename VolField<Type>::Internal;
+using VolInternalField = DimensionedField<Type, fvMesh>;
 
-typedef VolField<label> volLabelField;
-typedef VolField<scalar> volScalarField;
-typedef VolField<vector> volVectorField;
-typedef VolField<sphericalTensor> volSphericalTensorField;
-typedef VolField<symmTensor> volSymmTensorField;
-typedef VolField<tensor> volTensorField;
+using volLabelField = VolField<label>;
+using volScalarField = VolField<scalar>;
+using volVectorField = VolField<vector>;
+using volSphericalTensorField = VolField<sphericalTensor>;
+using volSymmTensorField = VolField<symmTensor>;
+using volTensorField = VolField<tensor>;
+
+using volInternalLabelField = VolInternalField<label>;
+using volInternalScalarField = VolInternalField<scalar>;
+using volInternalVectorField = VolInternalField<vector>;
+using volInternalSphericalTensorField = VolInternalField<sphericalTensor>;
+using volInternalSymmTensorField = VolInternalField<symmTensor>;
+using volInternalTensorField = VolInternalField<tensor>;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

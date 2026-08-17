@@ -6,8 +6,8 @@
         fvm::div(phi, he)
       + (
             he.name() == "e"
-          ? fvc::div(phi, volScalarField("Ekp", 0.5*magSqr(U) + p/rho))
-          : fvc::div(phi, volScalarField("K", 0.5*magSqr(U)))
+          ? fvi::div(phi, volScalarField("Ekp", 0.5*magSqr(U) + p/rho))
+          : fvi::div(phi, volScalarField("K", 0.5*magSqr(U)))
         )
       + thermophysicalTransport->divq(he)
      ==

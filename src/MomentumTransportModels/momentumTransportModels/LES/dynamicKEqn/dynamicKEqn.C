@@ -26,6 +26,7 @@ License
 #include "dynamicKEqn.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
+#include "fviDiv.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,7 +50,7 @@ dynamicKEqn<BasicMomentumTransportModel>::KK() const
 
 
 template<class BasicMomentumTransportModel>
-volScalarField dynamicKEqn<BasicMomentumTransportModel>::Ck
+volInternalScalarField dynamicKEqn<BasicMomentumTransportModel>::Ck
 (
     const volSymmTensorField& D,
     const volScalarField& KK
@@ -57,7 +58,7 @@ volScalarField dynamicKEqn<BasicMomentumTransportModel>::Ck
 {
     const volSymmTensorField LL
     (
-        simpleFilter_(dev(filter_(sqr(this->U_)) - (sqr(filter_(this->U_)))))
+        simpleFilter_(dev(filter_(sqr(this->U_)) - sqr(filter_(this->U_))))
     );
 
     const volSymmTensorField MM
@@ -65,16 +66,16 @@ volScalarField dynamicKEqn<BasicMomentumTransportModel>::Ck
         simpleFilter_(-2.0*this->delta()*sqrt(KK)*filter_(D))
     );
 
-    const volScalarField Ck
+    const volInternalScalarField Ck
     (
-        simpleFilter_(0.5*(LL && MM))
+        simpleFilter_[0.5*(LL && MM)]
        /(
-            simpleFilter_(magSqr(MM))
+            simpleFilter_[magSqr(MM)]
           + dimensionedScalar(sqr(MM.dimensions()), vSmall)
         )
     );
 
-    tmp<volScalarField> tfld = 0.5*(mag(Ck) + Ck);
+    tmp<volInternalScalarField> tfld = 0.5*(mag(Ck) + Ck);
     return tfld();
 }
 
@@ -112,7 +113,7 @@ void dynamicKEqn<BasicMomentumTransportModel>::correctNut
     const volScalarField& KK
 )
 {
-    this->nut_ = Ck(D, KK)*sqrt(k_)*this->delta();
+    this->nut_.internalFieldRef() = Ck(D, KK)*sqrt(k_())*this->delta()();
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -238,11 +239,11 @@ void dynamicKEqn<BasicMomentumTransportModel>::correct()
 
     LESeddyViscosity<BasicMomentumTransportModel>::correct();
 
-    volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
+    const volInternalScalarField divU(fvi::div(fvc::absolute(this->phi(), U)));
 
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volSymmTensorField D(dev(symm(tgradU())));
-    const volScalarField G(this->GName(), 2.0*nut*(tgradU() && D));
+    const volInternalScalarField G(this->GName(), 2.0*nut()*(tgradU() && D()));
     tgradU.clear();
 
     const volScalarField KK(this->KK());
@@ -253,9 +254,9 @@ void dynamicKEqn<BasicMomentumTransportModel>::correct()
       + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(), k_)
     ==
-        alpha*rho*G
-      - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
-      - fvm::Sp(Ce(D, KK)*alpha*rho*sqrt(k_)/this->delta(), k_)
+        alpha()*rho()*G
+      - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
+      - fvm::Sp(Ce(D, KK)*alpha()*rho()*sqrt(k_())/this->delta()(), k_)
       + kSource()
       + fvModels.source(alpha, rho, k_)
     );

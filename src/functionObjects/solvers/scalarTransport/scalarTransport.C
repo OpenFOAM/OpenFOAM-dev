@@ -26,7 +26,7 @@ License
 #include "scalarTransport.H"
 #include "surfaceFields.H"
 #include "fvmDdt.H"
-#include "fvcDdt.H"
+#include "fviDdt.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
@@ -366,7 +366,7 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
 
         fvScalarMatrix sEqn
         (
-            fvm::ddt(s_) - fvc::ddt(s_)
+            fvm::ddt(s_) - fvi::ddt(s_)
           - fvm::laplacian
             (
                 D,
@@ -509,7 +509,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         {
             const volScalarField::Internal Co
             (
-                (0.5*time_.deltaT())*fvc::surfaceSum(mag(phi))/mesh_.V()
+                (0.5*time_.deltaT())*fvi::surfaceSum(mag(phi))/mesh_.V()
             );
 
             const surfaceScalarField cnBDCoeff
@@ -554,7 +554,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
         if (tsPhiCN0.valid())
         {
-            sEqn += fvc::div(tsPhiCN0());
+            sEqn += fvi::div(tsPhiCN0());
         }
 
         sEqn.solve();

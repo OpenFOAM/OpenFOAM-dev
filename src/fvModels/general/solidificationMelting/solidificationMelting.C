@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidificationMelting.H"
-#include "fvcDdt.H"
+#include "fviDdt.H"
 #include "fvMatrices.H"
 #include "basicThermo.H"
 #include "uniformDimensionedFields.H"
@@ -235,7 +235,8 @@ void Foam::fv::solidificationMelting::apply
             << type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    const volScalarField Cp(this->Cp());
+    const tmp<volScalarField> tCp(this->Cp());
+    const volScalarField& Cp = tCp();
 
     update(Cp);
 
@@ -244,11 +245,11 @@ void Foam::fv::solidificationMelting::apply
     // Contributions added to rhs of solver equation
     if (eqn.psi().dimensions() == dimensions::temperature)
     {
-        eqn -= L/Cp*(fvc::ddt(rho, alpha1_));
+        eqn -= L/Cp()*(fvi::ddt(rho, alpha1_));
     }
     else
     {
-        eqn -= L*(fvc::ddt(rho, alpha1_));
+        eqn -= L*(fvi::ddt(rho, alpha1_));
     }
 }
 

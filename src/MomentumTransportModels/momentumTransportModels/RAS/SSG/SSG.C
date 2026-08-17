@@ -218,11 +218,11 @@ void SSG<BasicMomentumTransportModel>::correct()
 
     ReynoldsStress<RASModel<BasicMomentumTransportModel>>::correct();
 
-    tmp<volTensorField> tgradU(fvc::grad(U));
-    const volTensorField& gradU = tgradU();
+    tmp<volInternalTensorField> tgradU(fvi::grad(U));
+    const volInternalTensorField& gradU = tgradU();
 
-    volSymmTensorField P(-twoSymm(R & gradU));
-    volScalarField G(this->GName(), 0.5*mag(tr(P)));
+    volInternalSymmTensorField P(-twoSymm(R & gradU));
+    volInternalScalarField G(this->GName(), 0.5*mag(tr(P)));
 
     // Update epsilon and G at the wall
     epsilon_.boundaryFieldRef().updateCoeffs();
@@ -234,8 +234,8 @@ void SSG<BasicMomentumTransportModel>::correct()
       + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
-        Ceps1_*alpha*rho*G*epsilon_/k_
-      - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
+        Ceps1_*alpha()*rho()*G*epsilon_()/k_()
+      - fvm::Sp(Ceps2_*alpha()*rho()*epsilon_()/k_(), epsilon_)
       + epsilonSource()
       + fvModels.source(alpha, rho, epsilon_)
     );
@@ -270,9 +270,9 @@ void SSG<BasicMomentumTransportModel>::correct()
         }
     }
 
-    volSymmTensorField b(dev(R)/(2*k_));
-    volSymmTensorField S(symm(gradU));
-    volTensorField Omega(skew(gradU));
+    volInternalSymmTensorField b(dev(R())/(2*k_()));
+    volInternalSymmTensorField S(symm(gradU));
+    volInternalTensorField Omega(skew(gradU));
 
     // Reynolds stress equation
     tmp<fvSymmTensorMatrix> REqn
@@ -280,12 +280,12 @@ void SSG<BasicMomentumTransportModel>::correct()
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
       - fvm::laplacian(alpha*rho*DREff(), R)
-      + fvm::Sp(((C1_/2)*epsilon_ + (C1s_/2)*G)*alpha*rho/k_, R)
+      + fvm::Sp(((C1_/2)*epsilon_() + (C1s_/2)*G)*alpha()*rho()/k_(), R)
      ==
-        alpha*rho*P
-      - ((1.0/3.0)*I)*(((2.0 - C1_)*epsilon_ - C1s_*G)*alpha*rho)
-      + (C2_*(alpha*rho*epsilon_))*dev(innerSqr(b))
-      + alpha*rho*k_
+        alpha()*rho()*P
+      - ((1.0/3.0)*I)*(((2.0 - C1_)*epsilon_() - C1s_*G)*alpha()*rho())
+      + (C2_*(alpha()*rho()*epsilon_()))*dev(innerSqr(b))
+      + alpha()*rho()*k_()
        *(
             (C3_ - C3s_*mag(b))*dev(S)
           + C4_*dev(twoSymm(b&S))

@@ -27,7 +27,7 @@ License
 
 #include "fluidThermo.H"
 #include "fvmLaplacian.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvcSnGrad.H"
 #include "surfaceInterpolate.H"
 #include "constrainPressure.H"
@@ -95,7 +95,7 @@ void Foam::hydrostaticInitialisation
 
                 fvScalarMatrix ph_rghEqn
                 (
-                    fvm::laplacian(rhof, ph_rgh) == fvc::div(phig)
+                    fvm::laplacian(rhof, ph_rgh) == fvi::div(phig)
                 );
 
                 ph_rghEqn.solve();

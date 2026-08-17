@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SpalartAllmaras.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "bound.H"
@@ -57,13 +58,13 @@ tmp<volScalarField> SpalartAllmaras<BasicMomentumTransportModel>::fv1
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fv2
+tmp<volInternalScalarField> SpalartAllmaras<BasicMomentumTransportModel>::fv2
 (
-    const volScalarField::Internal& chi,
-    const volScalarField::Internal& fv1
+    const volInternalScalarField& chi,
+    const volInternalScalarField& fv1
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("fv2"),
         1.0 - chi/(1.0 + chi*fv1)
@@ -72,20 +73,20 @@ tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fv2
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmaras<BasicMomentumTransportModel>::Stilda
 (
-    const volScalarField::Internal& chi,
-    const volScalarField::Internal& fv1
+    const volInternalScalarField& chi,
+    const volInternalScalarField& fv1
 ) const
 {
-    const volScalarField::Internal Omega
+    const volInternalScalarField Omega
     (
         typedName("Omega"),
-        ::sqrt(2.0)*mag(skew(fvc::grad(this->U_)().v()))
+        ::sqrt(2.0)*mag(skew(fvi::grad(this->U_)))
     );
 
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("Stilda"),
         (
@@ -101,12 +102,12 @@ SpalartAllmaras<BasicMomentumTransportModel>::Stilda
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fw
+tmp<volInternalScalarField> SpalartAllmaras<BasicMomentumTransportModel>::fw
 (
-    const volScalarField::Internal& Stilda
+    const volInternalScalarField& Stilda
 ) const
 {
-    const volScalarField::Internal r
+    const volInternalScalarField r
     (
         typedName("r"),
         min
@@ -124,9 +125,9 @@ tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fw
         )
     );
 
-    const volScalarField::Internal g(typedName("g"), r + Cw2_*(pow6(r) - r));
+    const volInternalScalarField g(typedName("g"), r + Cw2_*(pow6(r) - r));
 
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("fw"),
         g*pow((1.0 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0)
@@ -314,14 +315,14 @@ void SpalartAllmaras<BasicMomentumTransportModel>::correct()
     const volScalarField chi(this->chi());
     const volScalarField fv1(this->fv1(chi));
 
-    const volScalarField::Internal Stilda(this->Stilda(chi, fv1));
+    const volInternalScalarField Stilda(this->Stilda(chi, fv1));
 
     tmp<fvScalarMatrix> nuTildaEqn
     (
         fvm::ddt(alpha, rho, nuTilda_)
       + fvm::div(alphaRhoPhi, nuTilda_)
       - fvm::laplacian(alpha*rho*DnuTildaEff(), nuTilda_)
-      - Cb2_/sigmaNut_*alpha*rho*magSqr(fvc::grad(nuTilda_))
+      - Cb2_/sigmaNut_*alpha()*rho()*magSqr(fvi::grad(nuTilda_))
      ==
         Cb1_*alpha()*rho()*Stilda*nuTilda_()
       - fvm::Sp

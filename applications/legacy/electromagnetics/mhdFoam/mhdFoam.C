@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,13 @@ Description
 #include "constrainPressure.H"
 #include "constrainHbyA.H"
 
-#include "fvcDdt.H"
-#include "fvcGrad.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
+#include "fviGrad.H"
+
 #include "fvcFlux.H"
 
+#include "fvcDdt.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
@@ -93,14 +96,14 @@ int main(int argc, char *argv[])
             (
                 fvm::ddt(U)
               + fvm::div(phi, U)
-              - fvc::div(phiB, 2.0*DBU*B)
+              - fvi::div(phiB, 2.0*DBU*B)
               - fvm::laplacian(nu, U)
-              + fvc::grad(DBU*magSqr(B))
+              + fvi::grad(DBU*magSqr(B))
             );
 
             if (piso.momentumPredictor())
             {
-                solve(UEqn == -fvc::grad(p));
+                solve(UEqn == -fvi::grad(p));
             }
 
 
@@ -124,7 +127,7 @@ int main(int argc, char *argv[])
                 {
                     fvScalarMatrix pEqn
                     (
-                        fvm::laplacian(rAUf, p) == fvc::div(phiHbyA)
+                        fvm::laplacian(rAUf, p) == fvi::div(phiHbyA)
                     );
 
                     pEqn.setReference
@@ -143,7 +146,7 @@ int main(int argc, char *argv[])
 
                 #include "continuityErrs.H"
 
-                U = HbyA - rAU*fvc::grad(p);
+                U.internalFieldRef() = HbyA() - rAU()*fvi::grad(p);
                 U.correctBoundaryConditions();
             }
         }
@@ -155,7 +158,7 @@ int main(int argc, char *argv[])
             (
                 fvm::ddt(B)
               + fvm::div(phi, B)
-              - fvc::div(phiB, U)
+              - fvi::div(phiB, U)
               - fvm::laplacian(DB, B)
             );
 
@@ -170,7 +173,7 @@ int main(int argc, char *argv[])
             {
                 fvScalarMatrix pBEqn
                 (
-                    fvm::laplacian(rABf, pB) == fvc::div(phiB)
+                    fvm::laplacian(rABf, pB) == fvi::div(phiB)
                 );
 
                 pBEqn.solve();

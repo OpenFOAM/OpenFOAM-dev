@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Maxwell.H"
+#include "fviDiv.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "uniformDimensionedFields.H"
@@ -330,9 +331,9 @@ Maxwell<BasicMomentumTransportModel>::DivDevTau
 {
     return
     (
-        fvc::div(this->alpha_*rho*this->nuMSum_*fvc::grad(U))
-      + fvc::div(this->alpha_*rho*sigma_)
-      - fvc::div(this->alpha_*rho*this->nu()*dev2(T(fvc::grad(U))))
+        fvi::div(this->alpha_*rho*this->nuMSum_*fvc::grad(U))
+      + fvi::div(this->alpha_*rho*sigma_)
+      - fvi::div(this->alpha_*rho*this->nu()*dev2(T(fvc::grad(U))))
       - fvm::laplacian(this->alpha_*rho*nu0(), U)
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "simpleFilter.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -40,27 +40,22 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-inline Foam::tmp<Foam::VolField<Type>> Foam::simpleFilter::filter
+inline Foam::tmp<Foam::VolInternalField<Type>> Foam::simpleFilter::filter
 (
-    const tmp<VolField<Type>>& unFilteredField
+    const VolField<Type>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<VolField<Type>> filteredField
+    tmp<VolInternalField<Type>> filteredField
     (
-        VolField<Type>::New
+        VolInternalField<Type>::New
         (
             "simpleFilteredField",
-            fvc::surfaceSum
+            fvi::surfaceSum
             (
                 mesh().magSf()*fvc::interpolate(unFilteredField)
-            )/fvc::surfaceSum(mesh().magSf()),
-            extrapolatedCalculatedFvPatchField<Type>::typeName
+            )/fvi::surfaceSum(mesh().magSf())
         )
     );
-
-    unFilteredField.clear();
 
     return filteredField;
 }
@@ -91,36 +86,36 @@ void Foam::simpleFilter::read(const dictionary&)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::simpleFilter::operator()
+Foam::tmp<Foam::volInternalScalarField> Foam::simpleFilter::operator[]
 (
-    const tmp<volScalarField>& unFilteredField
+    const volScalarField& unFilteredField
 ) const
 {
     return filter(unFilteredField);
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::simpleFilter::operator()
+Foam::tmp<Foam::volInternalVectorField> Foam::simpleFilter::operator[]
 (
-    const tmp<volVectorField>& unFilteredField
+    const volVectorField& unFilteredField
 ) const
 {
     return filter(unFilteredField);
 }
 
 
-Foam::tmp<Foam::volSymmTensorField> Foam::simpleFilter::operator()
+Foam::tmp<Foam::volInternalSymmTensorField> Foam::simpleFilter::operator[]
 (
-    const tmp<volSymmTensorField>& unFilteredField
+    const volSymmTensorField& unFilteredField
 ) const
 {
     return filter(unFilteredField);
 }
 
 
-Foam::tmp<Foam::volTensorField> Foam::simpleFilter::operator()
+Foam::tmp<Foam::volInternalTensorField> Foam::simpleFilter::operator[]
 (
-    const tmp<volTensorField>& unFilteredField
+    const volTensorField& unFilteredField
 ) const
 {
     return filter(unFilteredField);

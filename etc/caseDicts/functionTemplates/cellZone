@@ -18,7 +18,7 @@ writeControl writeTime;
 
 // Header files for classes and functions
 // Example:
-// #include "fvc.H"
+// #include "fvcGrad.H"
 codeInclude
 #{
 #};

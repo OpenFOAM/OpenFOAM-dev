@@ -28,7 +28,7 @@ License
 #include "surfaceFields.H"
 #include "fvmDdt.H"
 #include "fvmLaplacian.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fixedValueFvPatchFields.H"
 #include "zeroGradientFvPatchFields.H"
 #include "adjustPhi.H"
@@ -45,7 +45,7 @@ void Foam::fv::CorrectPhi
     const volVectorField& U,
     const volScalarField& p,
     const RAUfType& rAU,
-    const autoPtr<volScalarField>& divU,
+    const autoPtr<volInternalScalarField>& divU,
     const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pcorrControl
 )
@@ -101,8 +101,8 @@ void Foam::fv::CorrectPhi
          ==
             (
                 divU.valid()
-              ? fvc::div(phi) - divU()
-              : fvc::div(phi)
+              ? fvi::div(phi) - divU()
+              : fvi::div(phi)
             )
         );
 
@@ -125,7 +125,7 @@ void Foam::fv::CorrectPhi
     const volScalarField& p,
     const volScalarField& psi,
     const RAUfType& rAU,
-    const volScalarField& divRhoU,
+    const volInternalScalarField& divRhoU,
     nonOrthogonalSolutionControl& pcorrControl
 )
 {
@@ -170,7 +170,7 @@ void Foam::fv::CorrectPhi
         fvScalarMatrix pcorrEqn
         (
             fvm::ddt(psi, pcorr)
-          + fvc::div(phi)
+          + fvi::div(phi)
           - fvm::laplacian(rAU, pcorr)
          ==
             divRhoU

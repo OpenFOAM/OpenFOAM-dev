@@ -26,6 +26,7 @@ License
 #include "isothermalFilm.H"
 #include "surfaceTensionModel.H"
 #include "fvmDiv.H"
+#include "fviGrad.H"
 #include "fvcSnGrad.H"
 #include "fvcLaplacian.H"
 #include "fvcReconstruct.H"
@@ -81,7 +82,7 @@ Foam::solvers::isothermalFilm::pe() const
     p.internalFieldRef() +=
         max
         (
-            VbyA.v()*(nHat.v() & fvModels().source(alpha, rho, U)().Su()),
+            VbyA()*(nHat() & fvModels().source(alpha, rho, U)().Su()),
             dimensionedScalar(p.dimensions(), 0)
         );
 
@@ -116,7 +117,7 @@ void Foam::solvers::isothermalFilm::momentumPredictor()
     // Thermocapillary force
     if (thermocapillary)
     {
-        UEqn -= fvc::grad(sigma)/VbyA;
+        UEqn -= fvi::grad(sigma)/VbyA;
     }
 
     UEqn.relax();

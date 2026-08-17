@@ -28,12 +28,12 @@ License
 
 #include "subCycle.H"
 
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "fvcSnGrad.H"
 #include "fvcFlux.H"
 #include "fvcMeshPhi.H"
-#include "fvcSup.H"
+#include "fviSup.H"
 
 #include "fvmDdt.H"
 #include "fvmLaplacian.H"
@@ -199,8 +199,8 @@ void Foam::phaseSystem::solve
             new volScalarField::Internal
             (
                 IOobject::groupName("Su", phase.name()),
-                min(alpha.v(), scalar(1))
-               *fvc::div(fvc::absolute(phi_, phase.U()))->v()
+                min(alpha(), scalar(1))
+               *fvi::div(fvc::absolute(phi_, phase.U()))
             )
         );
 
@@ -761,7 +761,7 @@ void Foam::phaseSystem::solve
 
                     fvScalarMatrix alphaEqn
                     (
-                        fvm::ddt(alpha) - fvc::ddt(alpha)
+                        fvm::ddt(alpha) - fvi::ddt(alpha)
                       - fvm::laplacian(alphaDByAf, alpha, "bounded")
                     );
 

@@ -71,7 +71,7 @@ if (ign.ignited())
         betav*fvm::ddt(rho, b)
       + mvConvection->fvmDiv(phi, b)
       + fvm::div(phiSt, b)
-      - fvm::Sp(fvc::div(phiSt), b)
+      - fvm::Sp(fvi::div(phiSt), b)
       - fvm::laplacian(Db, b)
      ==
         betav*fvModels.source(rho, b)

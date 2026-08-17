@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,11 @@ class LamBremhorstKE
 {
     // Private Member Functions
 
-        tmp<volScalarField> Rt() const;
-        tmp<volScalarField> fMu(const volScalarField& Rt) const;
-        tmp<volScalarField> f1(const volScalarField& fMu) const;
-        tmp<volScalarField> f2(const volScalarField& Rt) const;
-        void correctNut(const volScalarField& fMu);
+        tmp<volInternalScalarField> Rt() const;
+        tmp<volInternalScalarField> fMu(const volInternalScalarField& Rt) const;
+        tmp<volInternalScalarField> f1(const volInternalScalarField& fMu) const;
+        tmp<volInternalScalarField> f2(const volInternalScalarField& Rt) const;
+        void correctNut(const volInternalScalarField& fMu);
 
 
 protected:

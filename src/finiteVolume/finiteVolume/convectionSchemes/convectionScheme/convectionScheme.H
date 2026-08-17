@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,13 +172,19 @@ public:
             const VolField<Type>&
         ) const = 0;
 
-        virtual tmp<fvMatrix<Type>> fvmDiv
+        virtual tmp<VolInternalField<Type>> fviDiv
         (
             const surfaceScalarField&,
             const VolField<Type>&
         ) const = 0;
 
         virtual tmp<VolField<Type>> fvcDiv
+        (
+            const surfaceScalarField&,
+            const VolField<Type>&
+        ) const = 0;
+
+        virtual tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
             const VolField<Type>&

@@ -87,6 +87,63 @@ void SLTSDdtScheme<Type>::relaxedDiag
 
 
 template<class Type>
+tmp<volInternalScalarField> SLTSDdtScheme<Type>::fviSLrDeltaT() const
+{
+    const surfaceScalarField& phi =
+        mesh().objectRegistry::template
+            lookupObject<surfaceScalarField>(phiName_);
+
+    const dimensionedScalar& deltaT = mesh().time().deltaT();
+
+    tmp<volInternalScalarField> trDeltaT
+    (
+        volInternalScalarField::New
+        (
+            "rDeltaT",
+            mesh(),
+            dimensionedScalar(dimless/dimensions::time, 0)
+        )
+    );
+
+    volInternalScalarField& rDeltaT = trDeltaT.ref();
+
+    relaxedDiag(rDeltaT, phi);
+
+    if (phi.dimensions() == dimensionSet(0, 3, -1, 0, 0))
+    {
+        rDeltaT.primitiveFieldRef() = max
+        (
+            rDeltaT.primitiveField()/mesh().V().primitiveField(),
+            scalar(1)/deltaT.value()
+        );
+    }
+    else if (phi.dimensions() == dimensionSet(1, 0, -1, 0, 0))
+    {
+        const volInternalScalarField& rho =
+            mesh().objectRegistry::template lookupObject<volScalarField>
+            (
+                rhoName_
+            ).oldTime();
+
+        rDeltaT.primitiveFieldRef() = max
+        (
+            rDeltaT.primitiveField()/(rho.primitiveField()
+           *mesh().V().primitiveField()),
+            scalar(1)/deltaT.value()
+        );
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Incorrect dimensions of phi: " << phi.dimensions()
+            << abort(FatalError);
+    }
+
+    return trDeltaT;
+}
+
+
+template<class Type>
 tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
 {
     const surfaceScalarField& phi =
@@ -147,13 +204,182 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
 
 
 template<class Type>
+tmp<VolInternalField<Type>>
+SLTSDdtScheme<Type>::fviDdt
+(
+    const dimensioned<Type>& dt
+)
+{
+    const volInternalScalarField rDeltaT(fviSLrDeltaT());
+
+    const word ddtName("ddt("+dt.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*dt*(1.0 - mesh().V0()/mesh().V())
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            mesh(),
+            dimensioned<Type>
+            (
+                "0",
+                dt.dimensions()/dimensions::time,
+                Zero
+            )
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+SLTSDdtScheme<Type>::fviDdt
+(
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField rDeltaT(fviSLrDeltaT());
+
+    const word ddtName("ddt("+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*(vf - vf.oldTime()*mesh().V0()/mesh().V())
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*(vf - vf.oldTime())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+SLTSDdtScheme<Type>::fviDdt
+(
+    const dimensionedScalar& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField rDeltaT(fviSLrDeltaT());
+
+    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*rho*(vf - vf.oldTime()*mesh().V0()/mesh().V())
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*rho*(vf - vf.oldTime())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+SLTSDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField rDeltaT(fviSLrDeltaT());
+
+    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*
+            (
+                rho*vf
+              - rho.oldTime()*vf.oldTime()*mesh().V0()/mesh().V()
+            )
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+SLTSDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& alpha,
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const volInternalScalarField rDeltaT(fviSLrDeltaT());
+
+    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*
+            (
+                alpha*rho*vf
+              - alpha.oldTime()*rho.oldTime()*vf.oldTime()
+               *mesh().Vsc0()/mesh().Vsc()
+            )
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*(alpha*rho*vf - alpha.oldTime()*rho.oldTime()*vf.oldTime())
+        );
+    }
+}
+
+
+template<class Type>
 tmp<VolField<Type>>
 SLTSDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
 )
 {
-    const volScalarField rDeltaT(SLrDeltaT());
+    const volInternalScalarField rDeltaT(SLrDeltaT());
 
     const word ddtName("ddt("+dt.name()+')');
 
@@ -182,20 +408,17 @@ SLTSDdtScheme<Type>::fvcDdt
     }
     else
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
+            ddtName,
+            mesh(),
+            dimensioned<Type>
             (
-                ddtName,
-                mesh(),
-                dimensioned<Type>
-                (
-                    "0",
-                    dt.dimensions()/dimensions::time,
-                    Zero
-                ),
-                calculatedFvPatchField<Type>::typeName
-            )
+                "0",
+                dt.dimensions()/dimensions::time,
+                Zero
+            ),
+            calculatedFvPatchField<Type>::typeName
         );
     }
 }
@@ -214,28 +437,22 @@ SLTSDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
+            ddtName,
+            rDeltaT()*(vf() - vf.oldTime()()*mesh().V0()/mesh().V()),
+            rDeltaT.boundaryField()*
             (
-                ddtName,
-                rDeltaT()*(vf() - vf.oldTime()()*mesh().V0()/mesh().V()),
-                rDeltaT.boundaryField()*
-                (
-                    vf.boundaryField() - vf.oldTime().boundaryField()
-                )
+                vf.boundaryField() - vf.oldTime().boundaryField()
             )
         );
     }
     else
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
-            (
-                ddtName,
-                rDeltaT*(vf - vf.oldTime())
-            )
+            ddtName,
+            rDeltaT*(vf - vf.oldTime())
         );
     }
 }
@@ -255,28 +472,22 @@ SLTSDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
+            ddtName,
+            rDeltaT()*rho*(vf() - vf.oldTime()()*mesh().V0()/mesh().V()),
+            rDeltaT.boundaryField()*rho.value()*
             (
-                ddtName,
-                rDeltaT()*rho*(vf() - vf.oldTime()()*mesh().V0()/mesh().V()),
-                rDeltaT.boundaryField()*rho.value()*
-                (
-                    vf.boundaryField() - vf.oldTime().boundaryField()
-                )
+                vf.boundaryField() - vf.oldTime().boundaryField()
             )
         );
     }
     else
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
-            (
-                ddtName,
-                rDeltaT*rho*(vf - vf.oldTime())
-            )
+            ddtName,
+            rDeltaT*rho*(vf - vf.oldTime())
         );
     }
 }
@@ -296,34 +507,28 @@ SLTSDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
+            ddtName,
+            rDeltaT()*
             (
-                ddtName,
-                rDeltaT()*
-                (
-                    rho()*vf()
-                  - rho.oldTime()()*vf.oldTime()()*mesh().V0()/mesh().V()
-                ),
-                rDeltaT.boundaryField()*
-                (
-                    rho.boundaryField()*vf.boundaryField()
-                  - rho.oldTime().boundaryField()
-                   *vf.oldTime().boundaryField()
-                )
+                rho()*vf()
+              - rho.oldTime()()*vf.oldTime()()*mesh().V0()/mesh().V()
+            ),
+            rDeltaT.boundaryField()*
+            (
+                rho.boundaryField()*vf.boundaryField()
+              - rho.oldTime().boundaryField()
+               *vf.oldTime().boundaryField()
             )
         );
     }
     else
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
-            (
-                ddtName,
-                rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
-            )
+            ddtName,
+            rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
         );
     }
 }
@@ -344,42 +549,33 @@ SLTSDdtScheme<Type>::fvcDdt
 
     if (mesh().moving())
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
+            ddtName,
+            rDeltaT()*
             (
-                ddtName,
-                rDeltaT()*
-                (
-                    alpha()*rho()*vf()
-                  - alpha.oldTime()()*rho.oldTime()()*vf.oldTime()()
-                   *mesh().Vsc0()/mesh().Vsc()
-                ),
-                rDeltaT.boundaryField()*
-                (
-                    alpha.boundaryField()
-                   *rho.boundaryField()
-                   *vf.boundaryField()
+                alpha()*rho()*vf()
+              - alpha.oldTime()()*rho.oldTime()()*vf.oldTime()()
+               *mesh().Vsc0()/mesh().Vsc()
+            ),
+            rDeltaT.boundaryField()*
+            (
+                alpha.boundaryField()
+               *rho.boundaryField()
+               *vf.boundaryField()
 
-                  - alpha.oldTime().boundaryField()
-                   *rho.oldTime().boundaryField()
-                   *vf.oldTime().boundaryField()
-                )
+              - alpha.oldTime().boundaryField()
+               *rho.oldTime().boundaryField()
+               *vf.oldTime().boundaryField()
             )
         );
     }
     else
     {
-        return tmp<VolField<Type>>
+        return VolField<Type>::New
         (
-            VolField<Type>::New
-            (
-                ddtName,
-                rDeltaT
-               *(
-                   alpha*rho*vf - alpha.oldTime()*rho.oldTime()*vf.oldTime()
-                )
-            )
+            ddtName,
+            rDeltaT*(alpha*rho*vf - alpha.oldTime()*rho.oldTime()*vf.oldTime())
         );
     }
 }

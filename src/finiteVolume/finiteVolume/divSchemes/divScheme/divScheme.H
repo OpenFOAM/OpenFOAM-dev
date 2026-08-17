@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,10 +135,11 @@ public:
             return mesh_;
         }
 
-        virtual tmp<VolField<typename innerProduct<vector, Type>::type>> fvcDiv
-        (
-            const VolField<Type>&
-        ) = 0;
+        virtual tmp<VolInternalField<typename innerProduct<vector, Type>::type>>
+        fviDiv(const VolField<Type>&) = 0;
+
+        virtual tmp<VolField<typename innerProduct<vector, Type>::type>>
+        fvcDiv(const VolField<Type>&) = 0;
 
 
     // Member Operators

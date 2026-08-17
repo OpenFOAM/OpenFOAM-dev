@@ -79,7 +79,7 @@ V == max
     dimensionedScalar(V.dimensions(), 0)
 );
 
-volScalarField delta
+volInternalScalarField delta
 (
     IOobject
     (
@@ -89,5 +89,5 @@ volScalarField delta
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    fvc::grad(V)().component(Foam::vector::X)
+    fvi::grad(V)().component(Foam::vector::X)
 );

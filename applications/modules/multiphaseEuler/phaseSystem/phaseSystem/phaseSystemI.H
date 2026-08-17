@@ -205,13 +205,13 @@ inline Foam::surfaceScalarField& Foam::phaseSystem::phi()
 }
 
 
-inline const Foam::volScalarField& Foam::phaseSystem::dpdt() const
+inline const Foam::volInternalScalarField& Foam::phaseSystem::dpdt() const
 {
     return dpdt_;
 }
 
 
-inline Foam::volScalarField& Foam::phaseSystem::dpdt()
+inline Foam::volInternalScalarField& Foam::phaseSystem::dpdt()
 {
     return dpdt_;
 }

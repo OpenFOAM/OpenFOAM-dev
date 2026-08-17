@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,6 +132,35 @@ public:
         {
             return mesh_;
         }
+
+        virtual tmp<VolInternalField<Type>> fviDdt
+        (
+            const dimensioned<Type>&
+        ) = 0;
+
+        virtual tmp<VolInternalField<Type>> fviDdt
+        (
+            const VolInternalField<Type>&
+        ) = 0;
+
+        virtual tmp<VolInternalField<Type>> fviDdt
+        (
+            const dimensionedScalar&,
+            const VolInternalField<Type>&
+        ) = 0;
+
+        virtual tmp<VolInternalField<Type>> fviDdt
+        (
+            const volInternalScalarField&,
+            const VolInternalField<Type>&
+        ) = 0;
+
+        virtual tmp<VolInternalField<Type>> fviDdt
+        (
+            const volInternalScalarField& alpha,
+            const volInternalScalarField& rho,
+            const VolInternalField<Type>&
+        ) = 0;
 
         virtual tmp<VolField<Type>> fvcDdt
         (

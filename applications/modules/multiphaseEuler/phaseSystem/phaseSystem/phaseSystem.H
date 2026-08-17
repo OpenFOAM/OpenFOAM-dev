@@ -185,7 +185,7 @@ protected:
         surfaceScalarField phi_;
 
         //- Rate of change of pressure
-        volScalarField dpdt_;
+        volInternalScalarField dpdt_;
 
         //- Interface compression coefficients
         cAlphaTable cAlphas_;
@@ -314,10 +314,10 @@ public:
             inline surfaceScalarField& phi();
 
             //- Return the rate of change of the pressure
-            inline const volScalarField& dpdt() const;
+            inline const volInternalScalarField& dpdt() const;
 
             //- Access the rate of change of the pressure
-            inline volScalarField& dpdt();
+            inline volInternalScalarField& dpdt();
 
             //- Return MRF zones
             inline const MRFZones& MRF() const;
@@ -445,7 +445,7 @@ public:
             void correctPhi
             (
                 const volScalarField& p_rgh,
-                const autoPtr<volScalarField>& divU,
+                const autoPtr<volInternalScalarField>& divU,
                 const pressureReference& pressureReference,
                 nonOrthogonalSolutionControl& pimple
             );

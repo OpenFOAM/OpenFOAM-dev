@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "qZeta.H"
-#include "fvcMagSqrGradGrad.H"
+#include "fviGrad.H"
+#include "fviMagSqrGradGrad.H"
 #include "bound.H"
 #include "makeMomentumTransportModel.H"
 
@@ -217,8 +218,12 @@ void qZeta::correct()
 
     eddyViscosity<incompressible::RASModel>::correct();
 
-    volScalarField G(GName(), nut_/(2.0*q_)*2*magSqr(symm(fvc::grad(U_))));
-    const volScalarField E(nu()*nut_/q_*fvc::magSqrGradGrad(U_));
+    volInternalScalarField G
+    (
+        GName(),
+        nut_()/(2.0*q_())*2*magSqr(symm(fvi::grad(U_)))
+    );
+    const volInternalScalarField E(nu()()*nut_()/q_()*fvi::magSqrGradGrad(U_));
 
     // Zeta equation
     tmp<fvScalarMatrix> zetaEqn

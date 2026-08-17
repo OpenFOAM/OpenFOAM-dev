@@ -40,6 +40,115 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
+tmp<VolInternalField<Type>>
+steadyStateDdtScheme<Type>::fviDdt
+(
+    const dimensioned<Type>& dt
+)
+{
+    return VolInternalField<Type>::New
+    (
+        "ddt("+dt.name()+')',
+        mesh(),
+        dimensioned<Type>
+        (
+            "0",
+            dt.dimensions()/dimensions::time,
+            Zero
+        )
+    );
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+steadyStateDdtScheme<Type>::fviDdt
+(
+    const VolInternalField<Type>& vf
+)
+{
+    return VolInternalField<Type>::New
+    (
+        "ddt("+vf.name()+')',
+        mesh(),
+        dimensioned<Type>
+        (
+            "0",
+            vf.dimensions()/dimensions::time,
+            Zero
+        )
+    );
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+steadyStateDdtScheme<Type>::fviDdt
+(
+    const dimensionedScalar& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    return VolInternalField<Type>::New
+    (
+        "ddt("+rho.name()+','+vf.name()+')',
+        mesh(),
+        dimensioned<Type>
+        (
+            "0",
+            rho.dimensions()*vf.dimensions()/dimensions::time,
+            Zero
+        )
+    );
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+steadyStateDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    return VolInternalField<Type>::New
+    (
+        "ddt("+rho.name()+','+vf.name()+')',
+        mesh(),
+        dimensioned<Type>
+        (
+            "0",
+            rho.dimensions()*vf.dimensions()/dimensions::time,
+            Zero
+        )
+    );
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+steadyStateDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& alpha,
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    return VolInternalField<Type>::New
+    (
+        "ddt("+alpha.name()+','+rho.name()+','+vf.name()+')',
+        mesh(),
+        dimensioned<Type>
+        (
+            "0",
+            rho.dimensions()*vf.dimensions()/dimensions::time,
+            Zero
+        )
+    );
+}
+
+
+template<class Type>
 tmp<VolField<Type>>
 steadyStateDdtScheme<Type>::fvcDdt
 (

@@ -147,10 +147,22 @@ protected:
             const volScalarField& fd
         ) const;
 
+        tmp<volInternalScalarField> mix
+        (
+            const volInternalScalarField& fc,
+            const volInternalScalarField& fd
+        ) const;
+
         tmp<volScalarField> mixU
         (
             const volScalarField& fc,
             const volScalarField& fd
+        ) const;
+
+        tmp<volInternalScalarField> mixU
+        (
+            const volInternalScalarField& fc,
+            const volInternalScalarField& fd
         ) const;
 
         tmp<surfaceScalarField> mixFlux

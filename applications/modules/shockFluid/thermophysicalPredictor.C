@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ License
 
 #include "shockFluid.H"
 #include "fvmDdt.H"
-#include "fvcDiv.H"
-#include "fvcDdt.H"
+#include "fviDiv.H"
+#include "fviDdt.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -53,8 +53,8 @@ void Foam::solvers::shockFluid::thermophysicalPredictor()
 
     fvScalarMatrix EEqn
     (
-        fvm::ddt(rho, e) + fvc::div(phiEp)
-      + fvc::ddt(rho, K)
+        fvm::ddt(rho, e) + fvi::div(phiEp)
+      + fvi::ddt(rho, K)
      ==
         fvModels().source(rho, e)
     );
@@ -67,7 +67,7 @@ void Foam::solvers::shockFluid::thermophysicalPredictor()
             devTau() & (a_pos()*U_pos() + a_neg()*U_neg())
         );
 
-        EEqn += thermophysicalTransport->divq(e) + fvc::div(devTauDotU);
+        EEqn += thermophysicalTransport->divq(e) + fvi::div(devTauDotU);
     }
 
     EEqn.relax();

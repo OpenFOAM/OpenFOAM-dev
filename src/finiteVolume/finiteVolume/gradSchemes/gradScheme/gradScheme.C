@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ License
 
 #include "fv.H"
 #include "objectRegistry.H"
+#include "fvMesh.H"
+#include "extrapolatedCalculatedFvPatchField.H"
 #include "solution.H"
 
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
@@ -85,9 +87,148 @@ Foam::tmp
 <
     Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
-Foam::fv::gradScheme<Type>::grad
+Foam::fv::gradScheme<Type>::fvcGrad_
 (
-    const VolField<Type>& vsf,
+    const VolField<Type>& vf,
+    const word& name
+) const
+{
+    typedef typename outerProduct<vector, Type>::type GradType;
+
+    const fvMesh& mesh = vf.mesh();
+
+    tmp<VolField<GradType>> tGrad
+    (
+        VolField<GradType>::New
+        (
+            name,
+            mesh,
+            vf.dimensions()/dimensions::length,
+            extrapolatedCalculatedFvPatchField<GradType>::typeName
+        )
+    );
+    VolField<GradType>& grad = tGrad.ref();
+
+    calcGrad(grad.internalFieldRef(), vf);
+
+    // Correct the boundary conditions
+    grad.correctBoundaryConditions();
+    correctBoundaryConditions(vf, grad);
+
+    return tGrad;
+}
+
+
+template<class Type>
+void Foam::fv::gradScheme<Type>::correctBoundaryConditions
+(
+    const VolField<Type>& vf,
+    VolField<typename outerProduct<vector, Type>::type>& gGrad
+)
+{
+    typename VolField<typename outerProduct<vector, Type>::type>::Boundary&
+        gGradbf = gGrad.boundaryFieldRef();
+
+    forAll(vf.boundaryField(), patchi)
+    {
+        if (!vf.boundaryField()[patchi].coupled())
+        {
+            const vectorField n
+            (
+                vf.mesh().Sf().boundaryField()[patchi]
+              / vf.mesh().magSf().boundaryField()[patchi]
+            );
+
+            gGradbf[patchi] += n *
+            (
+                vf.boundaryField()[patchi].snGrad()
+              - (n & gGradbf[patchi])
+            );
+        }
+    }
+}
+
+
+template<class Type>
+Foam::tmp
+<
+    Foam::VolInternalField
+    <
+        typename Foam::outerProduct<Foam::vector, Type>::type
+    >
+>
+Foam::fv::gradScheme<Type>::fviGrad
+(
+    const VolField<Type>& vf,
+    const word& name
+) const
+{
+    typedef typename outerProduct<vector, Type>::type GradType;
+
+    const fvMesh& mesh = vf.mesh();
+
+    tmp<VolInternalField<GradType>> tGrad
+    (
+        VolInternalField<GradType>::New
+        (
+            name,
+            mesh,
+            vf.dimensions()/dimensions::length
+        )
+    );
+
+    calcGrad(tGrad.ref(), vf);
+
+    return tGrad;
+}
+
+
+template<class Type>
+Foam::tmp
+<
+    Foam::VolInternalField
+    <
+        typename Foam::outerProduct<Foam::vector, Type>::type
+    >
+>
+Foam::fv::gradScheme<Type>::fviGrad
+(
+    const VolField<Type>& vf
+) const
+{
+    return fviGrad(vf, "grad(" + vf.name() + ')');
+}
+
+
+template<class Type>
+Foam::tmp
+<
+    Foam::VolInternalField
+    <
+        typename Foam::outerProduct<Foam::vector, Type>::type
+    >
+>
+Foam::fv::gradScheme<Type>::fviGrad
+(
+    const tmp<VolField<Type>>& tvf
+) const
+{
+    typedef typename outerProduct<vector, Type>::type GradType;
+
+    tmp<VolInternalField<GradType>> tgrad = fviGrad(tvf());
+    tvf.clear();
+    return tgrad;
+}
+
+
+template<class Type>
+Foam::tmp
+<
+    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
+>
+Foam::fv::gradScheme<Type>::fvcGrad
+(
+    const VolField<Type>& vf,
     const word& name
 ) const
 {
@@ -101,32 +242,32 @@ Foam::fv::gradScheme<Type>::grad
             foundObject<VolField<GradType>>(name)
         )
         {
-            solution::cachePrintMessage("Calculating and caching", name, vsf);
-            tmp<VolField<GradType>> tgGrad = calcGrad(vsf, name);
+            solution::cachePrintMessage("Calculating and caching", name, vf);
+            tmp<VolField<GradType>> tgGrad = fvcGrad_(vf, name);
             regIOobject::store(tgGrad.ptr());
         }
 
-        solution::cachePrintMessage("Retrieving", name, vsf);
+        solution::cachePrintMessage("Retrieving", name, vf);
         VolField<GradType>& gGrad =
             mesh().objectRegistry::template lookupObjectRef<VolField<GradType>>
             (
                 name
             );
 
-        if (gGrad.upToDate(vsf))
+        if (gGrad.upToDate(vf))
         {
             return gGrad;
         }
         else
         {
-            solution::cachePrintMessage("Deleting", name, vsf);
+            solution::cachePrintMessage("Deleting", name, vf);
             gGrad.release();
             delete &gGrad;
 
-            solution::cachePrintMessage("Recalculating", name, vsf);
-            tmp<VolField<GradType>> tgGrad = calcGrad(vsf, name);
+            solution::cachePrintMessage("Recalculating", name, vf);
+            tmp<VolField<GradType>> tgGrad = fvcGrad_(vf, name);
 
-            solution::cachePrintMessage("Storing", name, vsf);
+            solution::cachePrintMessage("Storing", name, vf);
             regIOobject::store(tgGrad.ptr());
             VolField<GradType>& gGrad =
                 mesh().objectRegistry::template
@@ -155,14 +296,14 @@ Foam::fv::gradScheme<Type>::grad
 
             if (gGrad.ownedByRegistry())
             {
-                solution::cachePrintMessage("Deleting", name, vsf);
+                solution::cachePrintMessage("Deleting", name, vf);
                 gGrad.release();
                 delete &gGrad;
             }
         }
 
-        solution::cachePrintMessage("Calculating", name, vsf);
-        return calcGrad(vsf, name);
+        solution::cachePrintMessage("Calculating", name, vf);
+        return fvcGrad_(vf, name);
     }
 }
 
@@ -172,12 +313,12 @@ Foam::tmp
 <
     Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
-Foam::fv::gradScheme<Type>::grad
+Foam::fv::gradScheme<Type>::fvcGrad
 (
-    const VolField<Type>& vsf
+    const VolField<Type>& vf
 ) const
 {
-    return grad(vsf, "grad(" + vsf.name() + ')');
+    return fvcGrad(vf, "grad(" + vf.name() + ')');
 }
 
 
@@ -186,15 +327,15 @@ Foam::tmp
 <
     Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
 >
-Foam::fv::gradScheme<Type>::grad
+Foam::fv::gradScheme<Type>::fvcGrad
 (
-    const tmp<VolField<Type>>& tvsf
+    const tmp<VolField<Type>>& tvf
 ) const
 {
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<VolField<GradType>> tgrad = grad(tvsf());
-    tvsf.clear();
+    tmp<VolField<GradType>> tgrad = fvcGrad(tvf());
+    tvf.clear();
     return tgrad;
 }
 

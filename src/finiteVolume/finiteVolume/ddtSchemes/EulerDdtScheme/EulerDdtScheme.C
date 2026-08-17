@@ -25,7 +25,6 @@ License
 
 #include "EulerDdtScheme.H"
 #include "surfaceInterpolate.H"
-#include "fvcDiv.H"
 #include "fvMatrices.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -39,6 +38,180 @@ namespace fv
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+tmp<VolInternalField<Type>>
+EulerDdtScheme<Type>::fviDdt
+(
+    const dimensioned<Type>& dt
+)
+{
+    const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    const word ddtName("ddt("+dt.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*dt*(1.0 - mesh().Vsc0()/mesh().Vsc())
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            mesh(),
+            dimensioned<Type>
+            (
+                "0",
+                dt.dimensions()/dimensions::time,
+                Zero
+            )
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+EulerDdtScheme<Type>::fviDdt
+(
+    const VolInternalField<Type>& vf
+)
+{
+    const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    const word ddtName("ddt("+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*(vf - vf.oldTime()*mesh().Vsc0()/mesh().Vsc())
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*(vf - vf.oldTime())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+EulerDdtScheme<Type>::fviDdt
+(
+    const dimensionedScalar& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*rho*(vf - vf.oldTime()*mesh().Vsc0()/mesh().Vsc())
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*rho*(vf - vf.oldTime())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+EulerDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*
+            (
+                rho*vf
+              - rho.oldTime()
+               *vf.oldTime()*mesh().Vsc0()/mesh().Vsc()
+            )
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+EulerDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& alpha,
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+
+    if (mesh().moving())
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT*
+            (
+                alpha*rho*vf
+              - alpha.oldTime()*rho.oldTime()
+               *vf.oldTime()*mesh().Vsc0()/mesh().Vsc()
+            )
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDeltaT
+           *(
+               alpha*rho*vf
+             - alpha.oldTime()*rho.oldTime()*vf.oldTime()
+            )
+        );
+    }
+}
+
 
 template<class Type>
 tmp<VolField<Type>>

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "anisotropicFilter.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvcSurfaceIntegrate.H"
 #include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
@@ -40,20 +41,18 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-inline Foam::tmp<Foam::VolField<Type>> Foam::anisotropicFilter::filter
+inline Foam::tmp<Foam::VolInternalField<Type>> Foam::anisotropicFilter::filter
 (
-    const tmp<VolField<Type>>& unFilteredField
+    const VolField<Type>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<VolField<Type>> tmpFilteredField
+    tmp<VolInternalField<Type>> tmpFilteredField
     (
-        VolField<Type>::New
+        VolInternalField<Type>::New
         (
             "anisotropicFilteredField",
             mesh(),
-            unFilteredField().dimensions()
+            unFilteredField.dimensions()
         )
     );
 
@@ -61,11 +60,9 @@ inline Foam::tmp<Foam::VolField<Type>> Foam::anisotropicFilter::filter
     {
         tmpFilteredField.ref().replace
         (
-            d, anisotropicFilter::operator()(unFilteredField().component(d))
+            d, anisotropicFilter::operator[](unFilteredField.component(d))
         );
     }
-
-    unFilteredField.clear();
 
     return tmpFilteredField;
 }
@@ -90,8 +87,7 @@ Foam::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector(dimensions::area, Zero),
-        calculatedFvPatchVectorField::typeName
+        dimensionedVector(dimensions::area, Zero)
     )
 {
     for (direction d=0; d<vector::nComponents; d++)
@@ -103,7 +99,7 @@ Foam::anisotropicFilter::anisotropicFilter
             sqr
             (
                 2.0*mesh.V().primitiveField()
-               /fvc::surfaceSum(mag(mesh.Sf().component(d)))().primitiveField()
+               /fvi::surfaceSum(mag(mesh.Sf().component(d)))().primitiveField()
             )
         );
     }
@@ -130,20 +126,19 @@ Foam::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector(dimensions::area, Zero),
-        calculatedFvPatchScalarField::typeName
+        dimensionedVector(dimensions::area, Zero)
     )
 {
     for (direction d=0; d<vector::nComponents; d++)
     {
-        coeff_.primitiveFieldRef().replace
+        coeff_.replace
         (
             d,
             (1/widthCoeff_)*
             sqr
             (
-                2.0*mesh.V().primitiveField()
-               /fvc::surfaceSum(mag(mesh.Sf().component(d)))().primitiveField()
+                2.0*mesh.V()
+               /fvi::surfaceSum(mag(mesh.Sf().component(d)))
             )
         );
     }
@@ -160,51 +155,44 @@ void Foam::anisotropicFilter::read(const dictionary& bd)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::anisotropicFilter::operator()
+Foam::tmp<Foam::volInternalScalarField> Foam::anisotropicFilter::operator[]
 (
-    const tmp<volScalarField>& unFilteredField
+    const volScalarField& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volScalarField> tmpFilteredField =
-        unFilteredField
+    return
+        unFilteredField()
       + (
            coeff_
-         & fvc::surfaceIntegrateExtrapolate
+         & fvi::surfaceIntegrate
            (
-               mesh().Sf()
-              *fvc::snGrad(unFilteredField())
+               mesh().Sf()*fvc::snGrad(unFilteredField)
            )
         );
-
-    unFilteredField.clear();
-
-    return tmpFilteredField;
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::anisotropicFilter::operator()
+Foam::tmp<Foam::volInternalVectorField> Foam::anisotropicFilter::operator[]
 (
-    const tmp<volVectorField>& unFilteredField
+    const volVectorField& unFilteredField
 ) const
 {
     return filter(unFilteredField);
 }
 
 
-Foam::tmp<Foam::volSymmTensorField> Foam::anisotropicFilter::operator()
+Foam::tmp<Foam::volInternalSymmTensorField> Foam::anisotropicFilter::operator[]
 (
-    const tmp<volSymmTensorField>& unFilteredField
+    const volSymmTensorField& unFilteredField
 ) const
 {
     return filter(unFilteredField);
 }
 
 
-Foam::tmp<Foam::volTensorField> Foam::anisotropicFilter::operator()
+Foam::tmp<Foam::volInternalTensorField> Foam::anisotropicFilter::operator[]
 (
-    const tmp<volTensorField>& unFilteredField
+    const volTensorField& unFilteredField
 ) const
 {
     return filter(unFilteredField);

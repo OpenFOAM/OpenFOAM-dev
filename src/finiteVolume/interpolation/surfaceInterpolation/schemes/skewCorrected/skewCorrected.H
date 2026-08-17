@@ -161,7 +161,7 @@ public:
                     > (mesh).interpolate
                     (
                         fv::gaussGrad<typename pTraits<Type>::cmptType>
-                        (mesh).grad(vf.component(cmpt))
+                        (mesh).fvcGrad(vf.component(cmpt))
                     )
                 );
             }

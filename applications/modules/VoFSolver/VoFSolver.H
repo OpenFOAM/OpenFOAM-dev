@@ -136,7 +136,7 @@ protected:
         //- Pointer to the momentum divergence field
         //  used in correctPhi to ensure the corrected phi has the
         //  same divergence
-        autoPtr<volScalarField> divU;
+        autoPtr<volInternalScalarField> divU;
 
         //- Optional LTS reciprocal time-step field
         tmp<volScalarField> trDeltaT;

@@ -38,17 +38,17 @@ namespace RASModels
 template<class BasicMomentumTransportModel>
 tmp<fvScalarMatrix> kOmegaSSTSAS<BasicMomentumTransportModel>::Qsas
 (
-    const volScalarField::Internal& S2,
-    const volScalarField::Internal& gamma,
-    const volScalarField::Internal& beta
+    const volInternalScalarField& S2,
+    const volInternalScalarField& gamma,
+    const volInternalScalarField& beta
 ) const
 {
-    volScalarField::Internal L
+    volInternalScalarField L
     (
         sqrt(this->k_())/(pow025(this->betaStar_)*this->omega_())
     );
 
-    volScalarField::Internal Lvk
+    volInternalScalarField Lvk
     (
         max
         (
@@ -77,8 +77,8 @@ tmp<fvScalarMatrix> kOmegaSSTSAS<BasicMomentumTransportModel>::Qsas
               - (2*C_/sigmaPhi_)*this->k_()
                *max
                 (
-                    magSqr(fvc::grad(this->omega_)()())/sqr(this->omega_()),
-                    magSqr(fvc::grad(this->k_)()())/sqr(this->k_())
+                    magSqr(fvi::grad(this->omega_))/sqr(this->omega_()),
+                    magSqr(fvi::grad(this->k_))/sqr(this->k_())
                 ),
                 dimensionedScalar(dimensionSet(0, 0, -2, 0, 0), 0)
             ),

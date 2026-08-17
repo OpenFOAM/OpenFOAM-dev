@@ -47,32 +47,33 @@ void kOmega2006<BasicMomentumTransportModel>::boundOmega()
 template<class BasicMomentumTransportModel>
 void kOmega2006<BasicMomentumTransportModel>::correctNut
 (
-    const volTensorField& gradU
+    const volInternalTensorField& gradU
 )
 {
-    this->nut_ = k_/max(omega_, Clim_*sqrt(2/betaStar_)*mag(dev(symm(gradU))));
+    this->nut_.internalFieldRef() =
+        k_()/max(omega_(), Clim_*sqrt(2/betaStar_)*mag(dev(symm(gradU))));
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> kOmega2006<BasicMomentumTransportModel>::beta
+tmp<volInternalScalarField> kOmega2006<BasicMomentumTransportModel>::beta
 (
-    const volTensorField& gradU
+    const volInternalTensorField& gradU
 ) const
 {
-    const volSymmTensorField::Internal S(symm(gradU()));
-    const volSymmTensorField::Internal Shat(S - 0.5*tr(S)*I);
-    const volTensorField::Internal Omega(skew(gradU.v()));
+    const volInternalSymmTensorField S(symm(gradU));
+    const volInternalSymmTensorField Shat(S - 0.5*tr(S)*I);
+    const volInternalTensorField Omega(skew(gradU));
 
-    const volScalarField::Internal ChiOmega
+    const volInternalScalarField ChiOmega
     (
         typedName("ChiOmega"),
-        mag((Omega & Omega) && Shat)/pow3(betaStar_*omega_.v())
+        mag((Omega & Omega) && Shat)/pow3(betaStar_*omega_())
     );
 
-    const volScalarField::Internal fBeta
+    const volInternalScalarField fBeta
     (
         typedName("fBeta"),
         (1 + 85*ChiOmega)/(1 + 100*ChiOmega)
@@ -83,12 +84,12 @@ tmp<volScalarField::Internal> kOmega2006<BasicMomentumTransportModel>::beta
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmega2006<BasicMomentumTransportModel>::CDkOmega() const
 {
     return max
     (
-        sigmaDo_*(fvc::grad(k_)().v() & fvc::grad(omega_)().v())/omega_(),
+        sigmaDo_*(fvi::grad(k_) & fvi::grad(omega_))/omega_(),
         dimensionedScalar(dimensions::turbulentOmega/dimensions::time, 0)
     );
 }
@@ -99,7 +100,7 @@ kOmega2006<BasicMomentumTransportModel>::CDkOmega() const
 template<class BasicMomentumTransportModel>
 void kOmega2006<BasicMomentumTransportModel>::correctNut()
 {
-    correctNut(fvc::grad(this->U_));
+    correctNut(fvi::grad(this->U_));
 }
 
 
@@ -243,17 +244,17 @@ void kOmega2006<BasicMomentumTransportModel>::correct()
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
-    volScalarField::Internal divU
+    const volInternalScalarField divU
     (
         typedName("divU"),
-        fvc::div(fvc::absolute(this->phi(), U))().v()
+        fvi::div(fvc::absolute(this->phi(), U))
     );
 
-    const volTensorField gradU(fvc::grad(U));
-    volScalarField::Internal G
+    const volInternalTensorField gradU(fvi::grad(U));
+    const volInternalScalarField G
     (
         this->GName(),
-        nut.v()*(dev(twoSymm(gradU.v())) && gradU.v())
+        nut()*(dev(twoSymm(gradU)) && gradU)
     );
 
     // Update omega and G at the wall

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,33 +21,60 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Namespace
-    Foam::fvm
-
-Description
-    Namespace of functions to calculate implicit derivatives returning a
-    matrix.
-
-    Temporal derivatives are calculated using Euler-implicit, backward
-    differencing or Crank-Nicolson. Spatial derivatives are calculated
-    using Gauss' Theorem.
-
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvm_H
-#define fvm_H
+#include "fviCurl.H"
+#include "fviGrad.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "fvmDdt.H"
-#include "fvmD2dt2.H"
-#include "fvmDiv.H"
-#include "fvmLaplacian.H"
-#include "fvmSup.H"
+namespace Foam
+{
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#endif
+namespace fvi
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+tmp<VolInternalField<Type>>
+curl(const VolField<Type>& vf)
+{
+    word nameCurlVf = "curl(" + vf.name() + ')';
+
+    // Gausses theorem curl
+    // tmp<VolInternalField<Type>> tcurlVf =
+    // fvi::surfaceIntegrateExtrapolate(vf.mesh().Sf() ^ fvi::interpolate(vf));
+
+    // Calculate curl as the Hodge dual of the skew-symmetric part of grad
+    tmp<VolInternalField<Type>> tcurlVf =
+        2.0*(*skew(fvi::grad(vf, nameCurlVf)));
+
+    tcurlVf.ref().rename(nameCurlVf);
+
+    return tcurlVf;
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+curl(const tmp<VolField<Type>>& tvf)
+{
+    tmp<VolInternalField<Type>> Curl(fvi::curl(tvf()));
+    tvf.clear();
+    return Curl;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace fvi
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //

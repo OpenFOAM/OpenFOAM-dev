@@ -226,7 +226,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         VolField<Type>::New
         (
             typedName("interpolate(" + srcFld.name() + ")"),
-            srcToTgt<Type>(srcFld.v(), leftOverTgtFld.v())(),
+            srcToTgt<Type>(srcFld(), leftOverTgtFld())(),
             leftOverTgtFld.boundaryField()
         );
     typename VolField<Type>::Boundary& tgtBfld =

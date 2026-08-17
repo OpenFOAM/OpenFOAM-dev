@@ -97,7 +97,7 @@ protected:
         tmp<volScalarField> KK() const;
 
         //- Calculate Ck by filtering the velocity field U
-        volScalarField Ck
+        volInternalScalarField Ck
         (
             const volSymmTensorField& D,
             const volScalarField& KK

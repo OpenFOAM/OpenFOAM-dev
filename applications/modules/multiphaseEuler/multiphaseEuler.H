@@ -159,7 +159,7 @@ protected:
         //- Stored divU from the previous mesh so that it can be
         //  mapped and used in correctPhi to ensure the corrected phi
         //  has the same divergence
-        autoPtr<volScalarField> divU;
+        autoPtr<volInternalScalarField> divU;
 
         //- Read controls
         virtual bool read();

@@ -1,0 +1,132 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "fviReconstruct.H"
+#include "fvMesh.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace fvi
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
+reconstruct
+(
+    const SurfaceField<Type>& ssf
+)
+{
+    typedef typename outerProduct<vector, Type>::type GradType;
+
+    const fvMesh& mesh = ssf.mesh()();
+
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
+
+    const volVectorField& C = mesh.C();
+    const surfaceVectorField& Cf = mesh.Cf();
+
+    tmp<VolInternalField<GradType>> treconField
+    (
+        VolInternalField<GradType>::New
+        (
+            "reconstruct("+ssf.name()+')',
+            mesh,
+            dimensioned<GradType>
+            (
+                "0",
+                ssf.dimensions()/dimensions::area,
+                Zero
+            )
+        )
+    );
+
+    Field<GradType>& rf = treconField();
+
+    forAll(owner, facei)
+    {
+        label own = owner[facei];
+        label nei = neighbour[facei];
+
+        rf[own] += (Cf[facei] - C[own])*ssf[facei];
+        rf[nei] -= (Cf[facei] - C[nei])*ssf[facei];
+    }
+
+    const typename SurfaceField<Type>::
+    Boundary& bsf = ssf.boundaryField();
+
+    forAll(bsf, patchi)
+    {
+        const fvsPatchField<Type>& psf = bsf[patchi];
+
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
+        const vectorField& pCf = Cf.boundaryField()[patchi];
+
+        forAll(pOwner, pFacei)
+        {
+            label own = pOwner[pFacei];
+            rf[own] += (pCf[pFacei] - C[own])*psf[pFacei];
+        }
+    }
+
+    rf /= mesh.V();
+
+    return treconField;
+}
+
+
+template<class Type>
+tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
+reconstruct
+(
+    const tmp<SurfaceField<Type>>& tssf
+)
+{
+    typedef typename outerProduct<vector, Type>::type GradType;
+    tmp<VolInternalField<GradType>> tvf
+    (
+        fvi::reconstruct(tssf())
+    );
+    tssf.clear();
+    return tvf;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace fvi
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// ************************************************************************* //

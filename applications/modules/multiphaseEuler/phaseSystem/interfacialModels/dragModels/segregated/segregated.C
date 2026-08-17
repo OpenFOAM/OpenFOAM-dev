@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "segregated.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "surfaceInterpolate.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -104,8 +104,8 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         max
         (
             (
-                rho2*mag(fvc::grad(I1)()())
-              + rho1*mag(fvc::grad(I2)()())
+                rho2*mag(fvi::grad(I1))
+              + rho1*mag(fvi::grad(I2))
             )/(rho1 + rho2),
             residualAlpha/2/L
         )

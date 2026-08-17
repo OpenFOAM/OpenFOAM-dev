@@ -27,7 +27,6 @@ License
 #include "absorptionEmissionModel.H"
 #include "scatterModel.H"
 #include "constants.H"
-#include "fvm.H"
 #include "wedgePolyPatch.H"
 #include "cyclicTransform.H"
 #include "read.H"

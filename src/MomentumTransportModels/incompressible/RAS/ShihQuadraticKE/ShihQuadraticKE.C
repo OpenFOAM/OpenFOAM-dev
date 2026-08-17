@@ -201,10 +201,10 @@ void ShihQuadraticKE::correct()
     tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
 
-    volScalarField G
+    volInternalScalarField G
     (
         GName(),
-        (nut_*twoSymm(gradU) - nonlinearStress_) && gradU
+        (nut_()*twoSymm(gradU()) - nonlinearStress_()) && gradU()
     );
 
 
@@ -218,8 +218,8 @@ void ShihQuadraticKE::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
       ==
-        Ceps1_*G*epsilon_/k_
-      - fvm::Sp(Ceps2_*epsilon_/k_, epsilon_)
+        Ceps1_*G*epsilon_()/k_()
+      - fvm::Sp(Ceps2_*epsilon_()/k_(), epsilon_)
     );
 
     epsEqn.ref().relax();
@@ -236,7 +236,7 @@ void ShihQuadraticKE::correct()
       - fvm::laplacian(DkEff(), k_)
       ==
         G
-      - fvm::Sp(epsilon_/k_, k_)
+      - fvm::Sp(epsilon_()/k_(), k_)
     );
 
     kEqn.ref().relax();

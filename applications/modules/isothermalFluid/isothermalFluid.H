@@ -95,7 +95,7 @@ protected:
 
         //- Rate of change of the pressure
         //  Used in the enthalpy equation
-        volScalarField::Internal dpdt;
+        volInternalScalarField dpdt;
 
 
     // Optional buoyancy
@@ -163,7 +163,7 @@ protected:
         //- Pointer to the vol momentum divergence field
         //  used in correctPhi to ensure the corrected phi has the
         //  same divergence
-        autoPtr<volScalarField> divrhoU;
+        autoPtr<volInternalScalarField> divrhoU;
 
         //- Optional LTS reciprocal time-step field
         tmp<volScalarField> trDeltaT;

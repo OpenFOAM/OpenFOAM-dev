@@ -27,7 +27,7 @@ License
 #include "basicThermo.H"
 #include "compressibleMomentumTransportModel.H"
 #include "fvMatrices.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -97,7 +97,7 @@ void Foam::fv::viscousHeating::addSup
     const compressible::momentumTransportModel& momentumTransport =
         mesh().lookupType<compressible::momentumTransportModel>();
 
-    eqn -= fvc::div
+    eqn -= fvi::div
     (
         fvc::dotInterpolate
         (
@@ -119,7 +119,7 @@ void Foam::fv::viscousHeating::addSup
     const compressible::momentumTransportModel& momentumTransport =
         mesh().lookupType<compressible::momentumTransportModel>(phaseName_);
 
-    eqn -= fvc::div
+    eqn -= fvi::div
     (
         fvc::dotInterpolate
         (

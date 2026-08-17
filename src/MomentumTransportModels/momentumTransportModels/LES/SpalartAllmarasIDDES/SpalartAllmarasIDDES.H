@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,28 +78,28 @@ class SpalartAllmarasIDDES
 
     // Private Member Functions
 
-        tmp<volScalarField::Internal> IDDESalpha() const;
+        tmp<volInternalScalarField> IDDESalpha() const;
 
-        tmp<volScalarField::Internal> ft
+        tmp<volInternalScalarField> ft
         (
-            const volScalarField::Internal& magGradU
+            const volInternalScalarField& magGradU
         ) const;
 
-        tmp<volScalarField::Internal> fl
+        tmp<volInternalScalarField> fl
         (
-            const volScalarField::Internal& magGradU
+            const volInternalScalarField& magGradU
         ) const;
 
-        tmp<volScalarField::Internal> rd
+        tmp<volInternalScalarField> rd
         (
-            const volScalarField::Internal& nur,
-            const volScalarField::Internal& magGradU
+            const volInternalScalarField& nur,
+            const volInternalScalarField& magGradU
         ) const;
 
         //- Delay function
-        tmp<volScalarField::Internal> fd
+        tmp<volInternalScalarField> fd
         (
-            const volScalarField::Internal& magGradU
+            const volInternalScalarField& magGradU
         ) const;
 
 
@@ -108,11 +108,11 @@ protected:
     // Protected Member Functions
 
         //- Length scale
-        virtual tmp<volScalarField::Internal> dTilda
+        virtual tmp<volInternalScalarField> dTilda
         (
-            const volScalarField::Internal& chi,
-            const volScalarField::Internal& fv1,
-            const volTensorField::Internal& gradU
+            const volInternalScalarField& chi,
+            const volInternalScalarField& fv1,
+            const volInternalTensorField& gradU
         ) const;
 
 

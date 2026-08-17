@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "boundedDdtScheme.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
 #include "fvcDdt.H"
 #include "fvMatrices.H"
 #include "fvmSup.H"
@@ -40,6 +40,65 @@ namespace fv
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+tmp<VolInternalField<Type>>
+boundedDdtScheme<Type>::fviDdt
+(
+    const dimensioned<Type>& dt
+)
+{
+    return scheme_.ref().fviDdt(dt);
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+boundedDdtScheme<Type>::fviDdt
+(
+    const VolInternalField<Type>& vf
+)
+{
+    return scheme_.ref().fviDdt(vf);
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+boundedDdtScheme<Type>::fviDdt
+(
+    const dimensionedScalar& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    return scheme_.ref().fviDdt(rho, vf);
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+boundedDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    return scheme_.ref().fviDdt(rho, vf) - fvi::ddt(rho)*vf;
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+boundedDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& alpha,
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    return scheme_.ref().fviDdt(alpha, rho, vf) - fvi::ddt(alpha, rho)*vf;
+}
+
 
 template<class Type>
 tmp<VolField<Type>>

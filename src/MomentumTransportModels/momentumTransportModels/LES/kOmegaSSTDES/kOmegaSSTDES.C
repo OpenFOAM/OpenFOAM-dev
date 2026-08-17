@@ -35,7 +35,7 @@ namespace LESModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmegaSSTDES<BasicMomentumTransportModel>::Lt() const
 {
     return sqrt(this->k_())/(this->betaStar_*this->omega_());
@@ -43,10 +43,10 @@ kOmegaSSTDES<BasicMomentumTransportModel>::Lt() const
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> kOmegaSSTDES<BasicMomentumTransportModel>::FDES
+tmp<volInternalScalarField> kOmegaSSTDES<BasicMomentumTransportModel>::FDES
 (
-    const volScalarField::Internal& F1,
-    const volScalarField::Internal& F2
+    const volInternalScalarField& F1,
+    const volInternalScalarField& F2
 ) const
 {
     switch (FSST_)
@@ -67,11 +67,11 @@ tmp<volScalarField::Internal> kOmegaSSTDES<BasicMomentumTransportModel>::FDES
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmegaSSTDES<BasicMomentumTransportModel>::epsilonByk
 (
-    const volScalarField::Internal& F1,
-    const volScalarField::Internal& F2
+    const volInternalScalarField& F1,
+    const volInternalScalarField& F2
 ) const
 {
     return this->betaStar_*this->omega_()*FDES(F1, F2);

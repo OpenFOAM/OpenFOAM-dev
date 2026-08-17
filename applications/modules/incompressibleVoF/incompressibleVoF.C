@@ -112,7 +112,7 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
             U,
             p_rgh,
             rAU,
-            autoPtr<volScalarField>(),
+            autoPtr<volInternalScalarField>(),
             pressureReference(),
             pimple
         );

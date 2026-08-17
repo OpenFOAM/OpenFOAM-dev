@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PrinceBlanch.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -97,7 +97,7 @@ void Foam::populationBalance::coalescenceModels::PrinceBlanch::precompute()
     if (laminarShear_)
     {
         shearStrainRate_() =
-            sqrt(2.0)*mag(symm(fvc::grad(popBal_.continuousPhase().U())));
+            sqrt(2.0)*mag(symm(fvi::grad(popBal_.continuousPhase().U())));
     }
 }
 

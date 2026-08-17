@@ -347,6 +347,291 @@ CrankNicolsonDdtScheme<Type>::CrankNicolsonDdtScheme
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+tmp<VolInternalField<Type>>
+CrankNicolsonDdtScheme<Type>::fviDdt
+(
+    const dimensioned<Type>& dt
+)
+{
+    const word ddtName("ddt(" + dt.name() + ')');
+
+    if (mesh().moving())
+    {
+        DDt0Field<VolField<Type>>& ddt0 =
+            ddt0_<VolField<Type>>
+            (
+                "ddt0(" + dt.name() + ')',
+                dt.dimensions()
+            );
+
+        dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            (
+                (rDtCoef*dt)*(mesh().V() - mesh().V0())
+              - mesh().V0()*offCentre_(ddt0()())
+            )/mesh().V()
+        );
+    }
+    else
+    {
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            mesh(),
+            dimensioned<Type>
+            (
+                "0",
+                dt.dimensions()/dimensions::time,
+                Zero
+            )
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+CrankNicolsonDdtScheme<Type>::fviDdt
+(
+    const VolInternalField<Type>& vf
+)
+{
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
+        (
+            "ddt0(" + vf.name() + ')',
+            vf.dimensions()
+        );
+
+    const word ddtName("ddt(" + vf.name() + ')');
+
+    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+
+    if (mesh().moving())
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            (
+                rDtCoef*
+                (
+                    mesh().V()*vf
+                  - mesh().V0()*vf.oldTime()
+                ) - mesh().V0()*offCentre_(ddt0()())
+            )/mesh().V()
+        );
+    }
+    else
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDtCoef*(vf - vf.oldTime()) - offCentre_(ddt0()())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+CrankNicolsonDdtScheme<Type>::fviDdt
+(
+    const dimensionedScalar& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
+        (
+            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            rho.dimensions()*vf.dimensions()
+        );
+
+    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+
+    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+
+    if (mesh().moving())
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            (
+                rDtCoef*rho*
+                (
+                    mesh().V()*vf
+                  - mesh().V0()*vf.oldTime()
+                ) - mesh().V0()*offCentre_(ddt0()())
+            )/mesh().V()
+        );
+    }
+    else
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDtCoef*rho*(vf - vf.oldTime()) - offCentre_(ddt0()())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+CrankNicolsonDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
+        (
+            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            rho.dimensions()*vf.dimensions()
+        );
+
+    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+
+    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+
+    if (mesh().moving())
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            (
+                rDtCoef*
+                (
+                    mesh().V()*rho*vf
+                  - mesh().V0()*rho.oldTime()
+                   *vf.oldTime()
+                ) - mesh().V00()*offCentre_(ddt0()())
+            )/mesh().V()
+        );
+    }
+    else
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDtCoef*(rho*vf - rho.oldTime()*vf.oldTime()) - offCentre_(ddt0()())
+        );
+    }
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+CrankNicolsonDdtScheme<Type>::fviDdt
+(
+    const volInternalScalarField& alpha,
+    const volInternalScalarField& rho,
+    const VolInternalField<Type>& vf
+)
+{
+    DDt0Field<VolField<Type>>& ddt0 =
+        ddt0_<VolField<Type>>
+        (
+            "ddt0(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')',
+            alpha.dimensions()*rho.dimensions()*vf.dimensions()
+        );
+
+    const word ddtName
+    (
+        "ddt(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')'
+    );
+
+    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+
+    if (mesh().moving())
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            (
+                rDtCoef*
+                (
+                    mesh().V()*alpha*rho*vf
+                  - mesh().V0()*alpha.oldTime()*rho.oldTime()*vf.oldTime()
+                ) - mesh().V00()*offCentre_(ddt0()())
+            )/mesh().V()
+        );
+    }
+    else
+    {
+        if (evaluate(ddt0))
+        {
+            FatalErrorInFunction
+                << ddt0.name() << " not available" << exit(FatalError);
+        }
+
+        return VolInternalField<Type>::New
+        (
+            ddtName,
+            rDtCoef
+           *(
+                alpha*rho*vf
+              - alpha.oldTime()*rho.oldTime()*vf.oldTime()
+            )
+          - offCentre_(ddt0()())
+        );
+    }
+}
+
+
+template<class Type>
 tmp<VolField<Type>>
 CrankNicolsonDdtScheme<Type>::fvcDdt
 (
@@ -454,8 +739,8 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             (
                 rDtCoef*
                 (
-                    mesh().V()*vf
-                  - mesh().V0()*vf.oldTime()
+                    mesh().V()*vf()
+                  - mesh().V0()*vf.oldTime()()
                 ) - mesh().V0()*offCentre_(ddt0()())
             )/mesh().V(),
             rDtCoef.value()*
@@ -535,7 +820,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 (
                     mesh().V()*vf()
                   - mesh().V0()*vf.oldTime()()
-                ) - mesh().V0()*offCentre_(ddt0())()
+                ) - mesh().V0()*offCentre_(ddt0()())
             )/mesh().V(),
             rDtCoef.value()*rho.value()*
             (
@@ -619,7 +904,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                     mesh().V()*rho()*vf()
                   - mesh().V0()*rho.oldTime()()
                    *vf.oldTime()()
-                ) - mesh().V00()*offCentre_(ddt0())()
+                ) - mesh().V00()*offCentre_(ddt0()())
             )/mesh().V(),
             rDtCoef.value()*
             (
@@ -717,7 +1002,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 (
                     mesh().V()*alpha()*rho()*vf()
                   - mesh().V0()*alpha.oldTime()()*rho.oldTime()()*vf.oldTime()()
-                ) - mesh().V00()*offCentre_(ddt0())()
+                ) - mesh().V00()*offCentre_(ddt0()())
             )/mesh().V(),
             rDtCoef.value()*
             (

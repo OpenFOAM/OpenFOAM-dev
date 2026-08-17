@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "MaxwellStefan.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvcLaplacian.H"
 #include "fvcSnGrad.H"
 #include "fvmSup.H"
@@ -795,7 +795,7 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divq
         sumJh -= sumJ*fvc::interpolate(hi);
     }
 
-    tmpDivq.ref() += fvc::div(sumJh*he.mesh().magSf());
+    tmpDivq.ref() += fvi::div(sumJh*he.mesh().magSf());
 
     return tmpDivq;
 }
@@ -898,7 +898,7 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divj
 {
     return
         BasicThermophysicalTransportModel::divj(Yi)
-      + fvc::div(jexp()[this->thermo().specieIndex(Yi)]*Yi.mesh().magSf());
+      + fvi::div(jexp()[this->thermo().specieIndex(Yi)]*Yi.mesh().magSf());
 }
 
 

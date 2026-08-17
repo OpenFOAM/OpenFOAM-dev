@@ -28,8 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 
 #include "fvmDdt.H"
-
-#include "fvcDdt.H"
+#include "fviDdt.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -159,7 +158,7 @@ Foam::solvers::incompressibleDriftFlux::incompressibleDriftFlux(fvMesh& mesh)
             U,
             p_rgh,
             rAU,
-            autoPtr<volScalarField>(),
+            autoPtr<volInternalScalarField>(),
             pressureReference(),
             pimple
         );
@@ -193,7 +192,7 @@ void Foam::solvers::incompressibleDriftFlux::prePredictor()
 
         fvScalarMatrix alpha1Eqn
         (
-            fvm::ddt(alpha1) - fvc::ddt(alpha1)
+            fvm::ddt(alpha1) - fvi::ddt(alpha1)
           - fvm::laplacian(nuEff, alpha1)
         );
 

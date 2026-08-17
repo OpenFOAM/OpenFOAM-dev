@@ -84,8 +84,6 @@ public:
 
         inline Internal internalField() const;
 
-        inline Internal v() const;
-
         inline typename Internal::FieldType primitiveField() const;
 
         inline Boundary boundaryField() const;

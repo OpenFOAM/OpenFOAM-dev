@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "boundedConvectionScheme.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvcSurfaceIntegrate.H"
 #include "fvMatrices.H"
 #include "fvmSup.H"
@@ -65,16 +66,16 @@ boundedConvectionScheme<Type>::flux
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-boundedConvectionScheme<Type>::fvmDiv
+tmp<VolInternalField<Type>>
+boundedConvectionScheme<Type>::fviDiv
 (
     const surfaceScalarField& faceFlux,
     const VolField<Type>& vf
 ) const
 {
     return
-        scheme_().fvmDiv(faceFlux, vf)
-      - fvm::Sp(fvc::surfaceIntegrate(faceFlux), vf);
+        scheme_().fviDiv(faceFlux, vf)
+      - fvi::surfaceIntegrate(faceFlux)*vf;
 }
 
 
@@ -88,7 +89,21 @@ boundedConvectionScheme<Type>::fvcDiv
 {
     return
         scheme_().fvcDiv(faceFlux, vf)
-      - fvc::surfaceIntegrateExtrapolate(faceFlux)*vf;
+      - fvc::surfaceIntegrate(faceFlux)*vf;
+}
+
+
+template<class Type>
+tmp<fvMatrix<Type>>
+boundedConvectionScheme<Type>::fvmDiv
+(
+    const surfaceScalarField& faceFlux,
+    const VolField<Type>& vf
+) const
+{
+    return
+        scheme_().fvmDiv(faceFlux, vf)
+      - fvm::Sp(fvi::surfaceIntegrate(faceFlux), vf);
 }
 
 

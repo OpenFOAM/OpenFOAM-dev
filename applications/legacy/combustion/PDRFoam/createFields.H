@@ -71,7 +71,7 @@ turbulenceThermophysicalTransportModels::unityLewisEddyDiffusivity
 > thermophysicalTransport(turbulence(), thermo, true);
 
 Info<< "Creating field dpdt\n" << endl;
-volScalarField dpdt
+volInternalScalarField dpdt
 (
     IOobject
     (

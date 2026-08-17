@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,26 @@ class gradScheme
         const fvMesh& mesh_;
 
 
+protected:
+
+        //- Calculate and return the grad of the given field
+        //  which may have been cached
+        tmp<VolField<typename outerProduct<vector, Type>::type>>
+        fvcGrad_
+        (
+            const VolField<Type>&,
+            const word& name
+        ) const;
+
+        //- Correct the boundary values of the gradient using the patchField
+        //  snGrad functions
+        static void correctBoundaryConditions
+        (
+            const VolField<Type>&,
+            VolField<typename outerProduct<vector, Type>::type>&
+        );
+
+
 public:
 
     //- Runtime type information
@@ -119,20 +139,44 @@ public:
             return mesh_;
         }
 
-        //- Calculate and return the grad of the given field.
-        //  Used by grad either to recalculate the cached gradient when it is
-        //  out of date with respect to the field or when it is not cached.
-        virtual tmp<VolField<typename outerProduct<vector, Type>::type>>
-        calcGrad
+        //- Set the grad field to the gradient of the volField vf
+        virtual void calcGrad
         (
-            const VolField<Type>&,
-            const word& name
+            VolInternalField<typename outerProduct<vector, Type>::type>& grad,
+            const VolField<Type>& vf
         ) const = 0;
 
         //- Calculate and return the grad of the given field
         //  which may have been cached
+        tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
+        fviGrad
+        (
+            const VolField<Type>&,
+            const word& name
+        ) const;
+
+        //- Calculate and return the grad of the given field
+        //  with the default name
+        //  which may have been cached
+        tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
+        fviGrad
+        (
+            const VolField<Type>&
+        ) const;
+
+        //- Calculate and return the grad of the given field
+        //  with the default name
+        //  which may have been cached
+        tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
+        fviGrad
+        (
+            const tmp<VolField<Type>>&
+        ) const;
+
+        //- Calculate and return the grad of the given field
+        //  which may have been cached
         tmp<VolField<typename outerProduct<vector, Type>::type>>
-        grad
+        fvcGrad
         (
             const VolField<Type>&,
             const word& name
@@ -142,7 +186,7 @@ public:
         //  with the default name
         //  which may have been cached
         tmp<VolField<typename outerProduct<vector, Type>::type>>
-        grad
+        fvcGrad
         (
             const VolField<Type>&
         ) const;
@@ -151,7 +195,7 @@ public:
         //  with the default name
         //  which may have been cached
         tmp<VolField<typename outerProduct<vector, Type>::type>>
-        grad
+        fvcGrad
         (
             const tmp<VolField<Type>>&
         ) const;

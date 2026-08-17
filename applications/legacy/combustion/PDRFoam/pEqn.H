@@ -51,7 +51,7 @@ else
         fvScalarMatrix pEqn
         (
             betav*fvm::ddt(psi, p)
-          + fvc::div(phiHbyA)
+          + fvi::div(phiHbyA)
           - fvm::laplacian(rho*invA, p)
          ==
             betav*fvModels.sourceProxy(rho, p)
@@ -69,12 +69,12 @@ else
 #include "rhoEqn.H"
 #include "continuityErrs.H"
 
-U = HbyA - (invA & (betav*fvc::grad(p)));
+U.internalFieldRef() = HbyA() - (invA() & (betav()*fvi::grad(p)));
 U.correctBoundaryConditions();
 fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
 if (thermo.dpdt())
 {
-    dpdt = fvc::ddt(p);
+    dpdt = fvi::ddt(p);
 }

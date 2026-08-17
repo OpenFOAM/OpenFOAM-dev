@@ -95,7 +95,7 @@ public:
     // Member Functions
 
         //- Correct omega
-        virtual void correct(const volScalarField& sigma);
+        virtual void correct(const volInternalScalarField& sigma);
 
 
     // IO

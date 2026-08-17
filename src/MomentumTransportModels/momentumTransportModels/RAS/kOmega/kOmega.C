@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmega.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "bound.H"
@@ -190,16 +191,13 @@ void kOmega<BasicMomentumTransportModel>::correct()
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
-    volScalarField::Internal divU
-    (
-        fvc::div(fvc::absolute(this->phi(), U))().v()
-    );
+    volInternalScalarField divU(fvi::div(fvc::absolute(this->phi(), U)));
 
-    tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField::Internal G
+    tmp<volInternalTensorField> tgradU = fvi::grad(U);
+    volInternalScalarField G
     (
         this->GName(),
-        nut.v()*(dev(twoSymm(tgradU().v())) && tgradU().v())
+        nut*(dev(twoSymm(tgradU())) && tgradU())
     );
     tgradU.clear();
 

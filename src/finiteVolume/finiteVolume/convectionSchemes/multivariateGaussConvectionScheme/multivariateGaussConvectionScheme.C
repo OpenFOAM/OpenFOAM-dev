@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ multivariateGaussConvectionScheme<Type>::flux
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-multivariateGaussConvectionScheme<Type>::fvmDiv
+tmp<VolInternalField<Type>>
+multivariateGaussConvectionScheme<Type>::fviDiv
 (
     const surfaceScalarField& faceFlux,
     const VolField<Type>& vf
@@ -86,7 +86,7 @@ multivariateGaussConvectionScheme<Type>::fvmDiv
         this->mesh(),
         faceFlux,
         tinterpScheme_()(vf)
-    ).fvmDiv(faceFlux, vf);
+    ).fviDiv(faceFlux, vf);
 }
 
 
@@ -104,6 +104,23 @@ multivariateGaussConvectionScheme<Type>::fvcDiv
         faceFlux,
         tinterpScheme_()(vf)
     ).fvcDiv(faceFlux, vf);
+}
+
+
+template<class Type>
+tmp<fvMatrix<Type>>
+multivariateGaussConvectionScheme<Type>::fvmDiv
+(
+    const surfaceScalarField& faceFlux,
+    const VolField<Type>& vf
+) const
+{
+    return gaussConvectionScheme<Type>
+    (
+        this->mesh(),
+        faceFlux,
+        tinterpScheme_()(vf)
+    ).fvmDiv(faceFlux, vf);
 }
 
 

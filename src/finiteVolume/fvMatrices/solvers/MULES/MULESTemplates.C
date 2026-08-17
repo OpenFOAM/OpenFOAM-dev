@@ -25,7 +25,7 @@ License
 
 #include "MULES.H"
 #include "upwind.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "localEulerDdtScheme.H"
 #include "wedgeFvPatch.H"
 #include "linear.H"
@@ -51,7 +51,7 @@ void Foam::MULES::explicitSolve
     const scalarField& psi0 = psi.oldTime();
 
     psiIf = 0.0;
-    fvc::surfaceIntegrate(psiIf, psiPhi);
+    fvi::surfaceIntegrate(psiIf, psiPhi);
 
     if (mesh.moving())
     {

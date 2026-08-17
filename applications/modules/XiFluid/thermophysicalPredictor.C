@@ -26,10 +26,12 @@ License
 #include "XiFluid.H"
 #include "bXiIgnition.H"
 
+#include "fviDdt.H"
+#include "fviSup.H"
+#include "fvcFlux.H"
+
 #include "fvcDdt.H"
 #include "fvmDiv.H"
-#include "fvcSup.H"
-#include "fvcFlux.H"
 
 #include "EulerDdtScheme.H"
 #include "gaussConvectionScheme.H"
@@ -120,7 +122,7 @@ void Foam::solvers::XiFluid::burn()
            .fvmDiv(phiSt, b)
         );
 
-        const volScalarField::Internal divPhiSt(fvc::div(phiSt));
+        const volScalarField::Internal divPhiSt(fvi::div(phiSt));
 
         //- Construct the b source matrix
         fvScalarMatrix bSource
@@ -230,7 +232,7 @@ void Foam::solvers::XiFluid::burn()
     (
         "bSource",
         tSu() + tSp()*b()
-      - fvc::div(tbPhiStUD() + bPhiStCorr)()
+      - fvi::div(tbPhiStUD() + bPhiStCorr)()
     );
 
     // Set the unburnt and burnt gas stabilisation coefficients
@@ -462,8 +464,8 @@ void Foam::solvers::XiFluid::HuSolve
       + fvmStab(b, bStab, Du, hu)
 
         // Pressure-work
-      + fvc::ddt(b, rho, K) + fvc::div(alphaPhiu_, K)
-      + (b + bStab)*rhoByRhou*pressureWork(-dpdt)
+      + fvi::ddt(b, rho, K) + fvi::div(alphaPhiu_, K)
+      + (b() + bStab)*rhoByRhou*pressureWork(-dpdt)
 
         // Diffusive transport within the unburnt gas
       + uThermophysicalTransport_->divq(hu)
@@ -506,8 +508,8 @@ void Foam::solvers::XiFluid::HbSolve
       + fvmStab(c, cStab, Db, hb)
 
         // Pressure-work
-      + fvc::ddt(c, rho, K) + fvc::div(alphaPhib_, K)
-      + (c + cStab)*rhoByRhob*pressureWork(-dpdt)
+      + fvi::ddt(c, rho, K) + fvi::div(alphaPhib_, K)
+      + (c() + cStab)*rhoByRhob*pressureWork(-dpdt)
 
         // Diffusive transport within the burnt gas
       + bThermophysicalTransport_->divq(hb)

@@ -137,7 +137,7 @@ protected:
             volScalarField gammaInt_;
 
             //- Effective intermittency
-            volScalarField::Internal gammaIntEff_;
+            volInternalScalarField gammaIntEff_;
 
 
     // Protected Member Functions
@@ -146,52 +146,52 @@ protected:
         virtual tmp<volScalarField> F1(const volScalarField& CDkOmega) const;
 
         //- Modified form of the k-omega SST k production rate
-        virtual tmp<volScalarField::Internal> Pk
+        virtual tmp<volInternalScalarField> Pk
         (
-            const volScalarField::Internal& G
+            const volInternalScalarField& G
         ) const;
 
         //- Modified form of the k-omega SST epsilon/k
-        virtual tmp<volScalarField::Internal> epsilonByk
+        virtual tmp<volInternalScalarField> epsilonByk
         (
-            const volScalarField::Internal& F1,
-            const volScalarField::Internal& F2
+            const volInternalScalarField& F1,
+            const volInternalScalarField& F2
         ) const;
 
         //- Freestream blending-function
-        tmp<volScalarField::Internal> Fthetat
+        tmp<volInternalScalarField> Fthetat
         (
-            const volScalarField::Internal& Us,
-            const volScalarField::Internal& Omega,
-            const volScalarField::Internal& nu
+            const volInternalScalarField& Us,
+            const volInternalScalarField& Omega,
+            const volInternalScalarField& nu
         ) const;
 
         //- Empirical correlation for critical Reynolds number where the
         //  intermittency first starts to increase in the boundary layer
-        tmp<volScalarField::Internal> ReThetac() const;
+        tmp<volInternalScalarField> ReThetac() const;
 
         //- Empirical correlation that controls the length of the
         //  transition region
-        tmp<volScalarField::Internal> Flength
+        tmp<volInternalScalarField> Flength
         (
-            const volScalarField::Internal& nu
+            const volInternalScalarField& nu
         ) const;
 
         //- Transition onset location control function
-        tmp<volScalarField::Internal> Fonset
+        tmp<volInternalScalarField> Fonset
         (
-            const volScalarField::Internal& Rev,
-            const volScalarField::Internal& ReThetac,
-            const volScalarField::Internal& RT
+            const volInternalScalarField& Rev,
+            const volInternalScalarField& ReThetac,
+            const volInternalScalarField& RT
         ) const;
 
         //- Return the transition onset momentum-thickness Reynolds number
         // (based on freestream conditions)
-        tmp<volScalarField::Internal> ReThetat0
+        tmp<volInternalScalarField> ReThetat0
         (
-            const volScalarField::Internal& Us,
-            const volScalarField::Internal& dUsds,
-            const volScalarField::Internal& nu
+            const volInternalScalarField& Us,
+            const volInternalScalarField& dUsds,
+            const volInternalScalarField& nu
         ) const;
 
         //- Solve the turbulence equations and correct the turbulence viscosity

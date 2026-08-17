@@ -65,7 +65,7 @@ Foam::linearUpwind<Foam::vector>::correction
         )
     );
 
-    tmp<volTensorField> tgradVf = gradScheme_().grad(vf, gradSchemeName_);
+    tmp<volTensorField> tgradVf = gradScheme_().fvcGrad(vf, gradSchemeName_);
     const volTensorField& gradVf = tgradVf();
 
     forAll(faceFlux, facei)

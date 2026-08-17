@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ protected:
         autoPtr<phaseCompressible::momentumTransportModel> momentumTransport_;
 
         //- Continuity error
-        volScalarField continuityError_;
+        volInternalScalarField continuityError_;
 
         //- Kinetic Energy
         mutable tmp<volScalarField> K_;
@@ -210,7 +210,7 @@ public:
             virtual tmp<fvVectorMatrix> DUDt() const;
 
             //- Return the continuity error
-            virtual tmp<volScalarField> continuityError() const;
+            virtual tmp<volInternalScalarField> continuityError() const;
 
             //- Return the phase kinetic energy
             virtual tmp<volScalarField> K() const;

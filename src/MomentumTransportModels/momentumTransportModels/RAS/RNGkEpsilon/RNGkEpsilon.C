@@ -199,31 +199,31 @@ void RNGkEpsilon<BasicMomentumTransportModel>::correct()
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
-    volScalarField::Internal divU
+    const volInternalScalarField divU
     (
         typedName("divU"),
-        fvc::div(fvc::absolute(this->phi(), U))()
+        fvi::div(fvc::absolute(this->phi(), U))()
     );
 
-    tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField::Internal S2
+    tmp<volInternalTensorField> tgradU = fvi::grad(U);
+    const volInternalScalarField S2
     (
         typedName("S2"),
-        (tgradU().v() && dev(twoSymm(tgradU().v())))
+        (tgradU() && dev(twoSymm(tgradU())))
     );
     tgradU.clear();
 
-    volScalarField::Internal G(this->GName(), nut()*S2);
+    const volInternalScalarField G(this->GName(), nut()*S2);
 
-    volScalarField::Internal eta
+    const volInternalScalarField eta
     (
         typedName("eta"),
         sqrt(mag(S2))*k_()/epsilon_()
     );
 
-    volScalarField::Internal eta3(typedName("eta3"), eta*sqr(eta));
+    const volInternalScalarField eta3(typedName("eta3"), eta*sqr(eta));
 
-    volScalarField::Internal R
+    const volInternalScalarField R
     (
         typedName("R"),
         ((eta*(-eta/eta0_ + scalar(1)))/(beta_*eta3 + scalar(1)))

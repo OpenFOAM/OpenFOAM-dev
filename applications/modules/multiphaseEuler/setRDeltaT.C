@@ -25,7 +25,7 @@ License
 
 #include "multiphaseEuler.H"
 #include "fvcSmooth.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -53,7 +53,7 @@ void Foam::solvers::multiphaseEuler::setRDeltaT()
     }
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.internalFieldRef() = fvc::surfaceSum(maxPhi)/((2*maxCo)*mesh.V());
+    rDeltaT.internalFieldRef() = fvi::surfaceSum(maxPhi)/((2*maxCo)*mesh.V());
 
     // Clip to user-defined maximum and minimum time-steps
     scalar minRDeltaT = gMin(rDeltaT.primitiveField());

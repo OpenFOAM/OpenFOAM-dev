@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,9 @@ class simpleFilter
     // Private Member Functions
 
         template<class Type>
-        inline tmp<VolField<Type>> filter
+        inline tmp<VolInternalField<Type>> filter
         (
-            const tmp<VolField<Type>>& unFilteredField
+            const VolField<Type>& unFilteredField
         ) const;
 
 
@@ -92,28 +92,25 @@ public:
 
     // Member Operators
 
-        virtual tmp<volScalarField> operator()
+        virtual tmp<volInternalScalarField> operator[]
         (
-            const tmp<volScalarField>&
+            const volScalarField&
         ) const;
 
-        virtual tmp<volVectorField> operator()
+        virtual tmp<volInternalVectorField> operator[]
         (
-            const tmp<volVectorField>&
+            const volVectorField&
         ) const;
 
-        virtual tmp<volSymmTensorField> operator()
+        virtual tmp<volInternalSymmTensorField> operator[]
         (
-            const tmp<volSymmTensorField>&
+            const volSymmTensorField&
         ) const;
 
-        virtual tmp<volTensorField> operator()
+        virtual tmp<volInternalTensorField> operator[]
         (
-            const tmp<volTensorField>&
+            const volTensorField&
         ) const;
-
-
-    // Member Operators
 
         //- Disallow default bitwise assignment
         void operator=(const simpleFilter&) = delete;

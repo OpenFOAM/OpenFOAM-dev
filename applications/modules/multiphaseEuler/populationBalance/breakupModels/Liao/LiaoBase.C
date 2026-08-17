@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LiaoBase.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "uniformDimensionedFields.H"
 
@@ -104,7 +104,7 @@ void Foam::populationBalance::LiaoBase::precompute()
     kolmogorovLengthScale_ = pow025(pow3(nuc)/epsilonc);
 
     shearStrainRate_ =
-        sqrt(2.0)*mag(symm(fvc::grad(popBal_.continuousPhase().U())));
+        sqrt(2.0)*mag(symm(fvi::grad(popBal_.continuousPhase().U())));
 
     eddyStrainRate_ = sqrt(rhoc*epsilonc/muc);
 

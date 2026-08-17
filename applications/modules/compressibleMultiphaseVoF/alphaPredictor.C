@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "compressibleMultiphaseVoF.H"
 #include "subCycle.H"
 #include "CMULES.H"
+#include "fviDiv.H"
 #include "fvcFlux.H"
 #include "fvcMeshPhi.H"
 
@@ -114,7 +115,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve()
         dimensionedScalar(dimless, 0)
     );
 
-    const volScalarField divU(fvc::div(fvc::absolute(phi, U)));
+    const volInternalScalarField divU(fvi::div(fvc::absolute(phi, U)));
 
     forAll(phases, phasei)
     {
@@ -144,7 +145,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve()
             ),
             // Divergence term is handled explicitly to be
             // consistent with the explicit transport solution
-            divU.v()*min(alpha.v(), scalar(1))
+            divU*min(alpha(), scalar(1))
         );
 
         {

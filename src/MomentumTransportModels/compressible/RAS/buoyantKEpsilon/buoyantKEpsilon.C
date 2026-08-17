@@ -25,7 +25,7 @@ License
 
 #include "buoyantKEpsilon.H"
 #include "uniformDimensionedFields.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -83,7 +83,7 @@ bool buoyantKEpsilon<BasicMomentumTransportModel>::read()
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField>
+tmp<volInternalScalarField>
 buoyantKEpsilon<BasicMomentumTransportModel>::Gcoef() const
 {
     const uniformDimensionedVectorField& g =
@@ -91,7 +91,7 @@ buoyantKEpsilon<BasicMomentumTransportModel>::Gcoef() const
         lookupObject<uniformDimensionedVectorField>("g");
 
     return
-        (Cg_*this->Cmu_)*this->alpha_*this->k_*(g & fvc::grad(this->rho_))
+        (Cg_*this->Cmu_)*this->alpha_()*this->k_()*(g & fvi::grad(this->rho_))
        /this->epsilon_;
 }
 
@@ -125,12 +125,12 @@ buoyantKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
 
     if (mag(g.value()) > small)
     {
-        vector gHat(g.value()/mag(g.value()));
+        const vector gHat(g.value()/mag(g.value()));
 
-        volScalarField v(gHat & this->U_);
-        volScalarField u
+        volInternalScalarField v(gHat & this->U_());
+        volInternalScalarField u
         (
-            mag(this->U_ - gHat*v)
+            mag(this->U_() - gHat*v)
           + dimensionedScalar(dimensions::velocity, small)
         );
 

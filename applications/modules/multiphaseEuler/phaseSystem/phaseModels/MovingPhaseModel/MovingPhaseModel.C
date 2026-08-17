@@ -35,8 +35,8 @@ License
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "fvcFlux.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -271,7 +271,7 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctContinuityError
 )
 {
     volScalarField& rho = this->rho();
-    continuityError_ = fvc::ddt(*this, rho) + fvc::div(alphaRhoPhi_) - source;
+    continuityError_ = fvi::ddt(*this, rho) + fvi::div(alphaRhoPhi_) - source;
 }
 
 
@@ -366,7 +366,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UfEqn()
     return
     (
         fvm::div(alphaRhoPhi_, U_)
-      + fvm::SuSp(fvc::ddt(*this, rho) - this->continuityError(), U_)
+      + fvm::SuSp(fvi::ddt(*this, rho) - this->continuityError(), U_)
       + this->fluid().MRF().DDt(alpha*rho, U_)
       + momentumTransport_->divDevTau(U_)
     );
@@ -523,7 +523,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UgradU() const
     const surfaceScalarField& aphi(taphi());
 
     return
-        fvm::div(aphi, U_) - fvm::Sp(fvc::div(aphi), U_)
+        fvm::div(aphi, U_) - fvm::Sp(fvi::div(aphi), U_)
       + this->fluid().MRF().DDt(U_);
 }
 
@@ -537,7 +537,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::DUDt() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::continuityError() const
 {
     return continuityError_;

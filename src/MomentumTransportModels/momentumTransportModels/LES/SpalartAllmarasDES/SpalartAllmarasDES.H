@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,50 +92,50 @@ protected:
 
         tmp<volScalarField> fv1(const volScalarField& chi) const;
 
-        tmp<volScalarField::Internal> fv2
+        tmp<volInternalScalarField> fv2
         (
-            const volScalarField::Internal& chi,
-            const volScalarField::Internal& fv1
+            const volInternalScalarField& chi,
+            const volInternalScalarField& fv1
         ) const;
 
-        tmp<volScalarField::Internal> Omega
+        tmp<volInternalScalarField> Omega
         (
-            const volTensorField::Internal& gradU
+            const volInternalTensorField& gradU
         ) const;
 
-        tmp<volScalarField::Internal> Stilda
+        tmp<volInternalScalarField> Stilda
         (
-            const volScalarField::Internal& chi,
-            const volScalarField::Internal& fv1,
-            const volScalarField::Internal& Omega,
-            const volScalarField::Internal& dTilda
+            const volInternalScalarField& chi,
+            const volInternalScalarField& fv1,
+            const volInternalScalarField& Omega,
+            const volInternalScalarField& dTilda
         ) const;
 
-        tmp<volScalarField::Internal> r
+        tmp<volInternalScalarField> r
         (
-            const volScalarField::Internal& nur,
-            const volScalarField::Internal& Omega,
-            const volScalarField::Internal& dTilda
+            const volInternalScalarField& nur,
+            const volInternalScalarField& Omega,
+            const volInternalScalarField& dTilda
         ) const;
 
-        tmp<volScalarField::Internal> fw
+        tmp<volInternalScalarField> fw
         (
-            const volScalarField::Internal& Omega,
-            const volScalarField::Internal& dTilda
+            const volInternalScalarField& Omega,
+            const volInternalScalarField& dTilda
         ) const;
 
         //- Length scale
-        virtual tmp<volScalarField::Internal> dTilda
+        virtual tmp<volInternalScalarField> dTilda
         (
-            const volScalarField::Internal& chi,
-            const volScalarField::Internal& fv1,
-            const volTensorField::Internal& gradU
+            const volInternalScalarField& chi,
+            const volInternalScalarField& fv1,
+            const volInternalTensorField& gradU
         ) const;
 
         //- Cache the LES region indicator field
         virtual void cacheLESRegion
         (
-            const volScalarField::Internal& dTilda
+            const volInternalScalarField& dTilda
         ) const;
 
         void correctNut(const volScalarField& fv1);

@@ -25,7 +25,7 @@ License
 
 #include "fvMeshStitcher.H"
 #include "globalIndex.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "MultiRegionList.H"
 #include "meshObjects.H"
 #include "movingWallVelocityFvPatchVectorField.H"
@@ -1828,7 +1828,7 @@ bool Foam::fvMeshStitcher::connectThis
 
     if (any(patchCoupleds))
     {
-        const volScalarField::Internal o(openness());
+        const scalarField o(openness());
         const scalar gMaxO = gMax(o);
         Info<< indent << "Cell min/average/max openness = "
             << gMin(o) << '/' << gAverage(o) << '/' << gMaxO << endl;
@@ -1843,7 +1843,7 @@ bool Foam::fvMeshStitcher::connectThis
         {
             for (label i = 0; i <= mesh_.phi().nOldTimes(false); ++ i)
             {
-                const volScalarField::Internal vce(volumeConservationError(i));
+                const scalarField vce(volumeConservationError(i));
                 const scalar gMinVce = gMin(vce);
                 const scalar gMaxVce = gMax(vce);
                 Info<< indent << "Cell min/average/max ";
@@ -1945,7 +1945,7 @@ bool Foam::fvMeshStitcher::connectThis
             }
         }
 
-        const volScalarField::Internal pvf(projectedVolumeFraction());
+        const scalarField pvf(projectedVolumeFraction());
         const scalar gMaxPvf = gMax(pvf);
         Info<< indent << "Cell min/average/max projected volume fraction = "
             << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMaxPvf << endl;
@@ -2209,12 +2209,12 @@ Foam::fvMeshStitcher::openness() const
         DimensionedField<scalar, fvMesh>::New
         (
             "openness",
-            mag(fvc::surfaceIntegrate(mesh_.Sf()))*mesh_.V()
+            mag(fvi::surfaceIntegrate(mesh_.Sf()))*mesh_.V()
            /max
             (
-                mag(fvc::surfaceSum(cmptMag(mesh_.Sf())))(),
-                (small*sqr(cbrt(mesh_.V())))()
-            )()
+                mag(fvi::surfaceSum(cmptMag(mesh_.Sf()))()),
+                (small*sqr(cbrt(mesh_.V())))
+            )
         );
 }
 
@@ -2241,7 +2241,7 @@ Foam::fvMeshStitcher::volumeConservationError(const label n) const
         DimensionedField<scalar, fvMesh>::New
         (
             "volumeConservationError" + word(n == 0 ? "" : "_0"),
-            fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V()
+            fvi::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V()
         );
 }
 
@@ -2255,7 +2255,7 @@ Foam::fvMeshStitcher::projectedVolumeFraction() const
             "projectedVolumeFraction",
             mag
             (
-                fvc::surfaceIntegrate(mesh_.Sf() & mesh_.Cf())
+                fvi::surfaceIntegrate(mesh_.Sf() & mesh_.Cf())
                /mesh_.nSolutionD()
               - 1
             )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,13 +109,11 @@ public:
             const vector& dcf
         );
 
-        //- Return the gradient of the given field to the gradScheme::grad
-        //  for optional caching
-        virtual tmp<VolField <typename outerProduct<vector, Type>::type>>
-        calcGrad
+        //- Set the grad field to the gradient of the volField vf
+        virtual void calcGrad
         (
-            const VolField<Type>& vsf,
-            const word& name
+            VolInternalField<typename outerProduct<vector, Type>::type>& grad,
+            const VolField<Type>& vf
         ) const;
 
 
@@ -179,18 +177,18 @@ inline void cellMDLimitedGrad<Type>::limitFace
 // * * * * * * * * Template Member Function Specialisations  * * * * * * * * //
 
 template<>
-tmp<volVectorField> cellMDLimitedGrad<scalar>::calcGrad
+void cellMDLimitedGrad<scalar>::calcGrad
 (
-    const volScalarField& vsf,
-    const word& name
+    volInternalVectorField& grad,
+    const volScalarField& vsf
 ) const;
 
 
 template<>
-tmp<volTensorField> cellMDLimitedGrad<vector>::calcGrad
+void cellMDLimitedGrad<vector>::calcGrad
 (
-    const volVectorField& vsf,
-    const word& name
+    volInternalTensorField& grad,
+    const volVectorField& vsf
 ) const;
 
 

@@ -26,7 +26,7 @@ License
 #include "VoFSolver.H"
 #include "fvCorrectPhi.H"
 #include "fvcMeshPhi.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -42,10 +42,10 @@ void Foam::solvers::VoFSolver::moveMesh()
         )
         {
             // Construct and register divU for correctPhi
-            divU = new volScalarField
+            divU = new volInternalScalarField
             (
                 "divU0",
-                fvc::div(fvc::absolute(phi, U))
+                fvi::div(fvc::absolute(phi, U))
             );
         }
 

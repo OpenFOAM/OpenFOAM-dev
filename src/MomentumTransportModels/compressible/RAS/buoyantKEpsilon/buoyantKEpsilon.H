@@ -90,7 +90,7 @@ protected:
 
     // Protected Member Functions
 
-        tmp<volScalarField> Gcoef() const;
+        tmp<volInternalScalarField> Gcoef() const;
 
         virtual tmp<fvScalarMatrix> kSource() const;
         virtual tmp<fvScalarMatrix> epsilonSource() const;

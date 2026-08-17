@@ -167,7 +167,7 @@ void Foam::fv::solidElectricalConduction::addSup
     fvMatrix<scalar>& eqn
 ) const
 {
-    eqn += fvc::div(I_*fvc::interpolate(phi_));
+    eqn += fvi::div(I_*fvc::interpolate(phi_));
 }
 
 

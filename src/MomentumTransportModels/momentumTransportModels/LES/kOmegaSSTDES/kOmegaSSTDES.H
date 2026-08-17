@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,21 +98,21 @@ protected:
     // Protected Member Functions
 
         //- Return the turbulent length-scale
-        tmp<volScalarField::Internal> Lt() const;
+        tmp<volInternalScalarField> Lt() const;
 
         //- The DES dissipation-rate multiplier with options zonal filtering
         //  based on either F1 or F2
-        virtual tmp<volScalarField::Internal> FDES
+        virtual tmp<volInternalScalarField> FDES
         (
-            const volScalarField::Internal& F1,
-            const volScalarField::Internal& F2
+            const volInternalScalarField& F1,
+            const volInternalScalarField& F2
         ) const;
 
         //- Return epsilon/k which for standard RAS is betaStar*omega
-        virtual tmp<volScalarField::Internal> epsilonByk
+        virtual tmp<volInternalScalarField> epsilonByk
         (
-            const volScalarField::Internal& F1,
-            const volScalarField::Internal& F2
+            const volInternalScalarField& F1,
+            const volInternalScalarField& F2
         ) const;
 
 

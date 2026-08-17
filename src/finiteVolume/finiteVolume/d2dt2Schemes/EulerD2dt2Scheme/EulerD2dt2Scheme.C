@@ -235,8 +235,14 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
     {
         const scalar halfRdeltaT2 = rDeltaT2/2.0;
 
-        const scalarField VV0(mesh().V() + mesh().V0());
-        const scalarField V0V00(mesh().V0() + mesh().V00());
+        const scalarField VV0
+        (
+            mesh().V().primitiveField() + mesh().V0().primitiveField()
+        );
+        const scalarField V0V00
+        (
+            mesh().V0().primitiveField() + mesh().V00().primitiveField()
+        );
 
         fvm.diag() = (coefft*halfRdeltaT2)*VV0;
 
@@ -250,7 +256,7 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
     }
     else
     {
-        fvm.diag() = (coefft*rDeltaT2)*mesh().V();
+        fvm.diag() = (coefft*rDeltaT2)*mesh().V().primitiveField();
 
         fvm.source() = rDeltaT2*mesh().V().primitiveField()*
         (
@@ -295,8 +301,14 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
     {
         const scalar halfRdeltaT2 = 0.5*rDeltaT2;
 
-        const scalarField VV0(mesh().V() + mesh().V0());
-        const scalarField V0V00(mesh().V0() + mesh().V00());
+        const scalarField VV0
+        (
+            mesh().V().primitiveField() + mesh().V0().primitiveField()
+        );
+        const scalarField V0V00
+        (
+            mesh().V0().primitiveField() + mesh().V00().primitiveField()
+        );
 
         fvm.diag() = rho.value()*(coefft*halfRdeltaT2)*VV0;
 

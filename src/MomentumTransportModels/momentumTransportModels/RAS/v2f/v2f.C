@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "v2f.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "bound.H"
@@ -47,25 +48,30 @@ tmp<volScalarField> v2f<BasicMomentumTransportModel>::boundEpsilon()
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField> v2f<BasicMomentumTransportModel>::Ts() const
+tmp<volInternalScalarField> v2f<BasicMomentumTransportModel>::Ts() const
 {
-    return max(k_/epsilon_, 6.0*sqrt(this->nu()/epsilon_));
+    return max(k_()/epsilon_(), 6.0*sqrt(this->nu()()/epsilon_()));
 }
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField> v2f<BasicMomentumTransportModel>::Ls() const
+tmp<volInternalScalarField> v2f<BasicMomentumTransportModel>::Ls() const
 {
     return
-        CL_*max(pow(k_, 1.5)
-       /epsilon_, Ceta_*pow025(pow3(this->nu())/epsilon_));
+        CL_
+       *max
+        (
+            pow(k_(), 1.5)/epsilon_(),
+            Ceta_*pow025(pow3(this->nu()()())/epsilon_())
+        );
 }
 
 
 template<class BasicMomentumTransportModel>
 void v2f<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_ = min(boundEpsilon()/epsilon_, this->Cmu_*v2_*Ts());
+    this->nut_.internalFieldRef() =
+        min(boundEpsilon()()/epsilon_(), this->Cmu_*v2_()*Ts());
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -219,27 +225,27 @@ void v2f<BasicMomentumTransportModel>::correct()
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
-    volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
+    const volInternalScalarField divU(fvi::div(fvc::absolute(this->phi(), U)));
 
     // Use N=6 so that f=0 at walls
     const dimensionedScalar N("N", dimless, 6.0);
 
-    const volTensorField gradU(fvc::grad(U));
-    const volScalarField S2(2*magSqr(dev(symm(gradU))));
+    const volInternalTensorField gradU(fvi::grad(U));
+    const volInternalScalarField S2(2*magSqr(dev(symm(gradU))));
 
-    const volScalarField G(this->GName(), nut*S2);
-    const volScalarField Ts(this->Ts());
-    const volScalarField L2(typedName("L2"), sqr(Ls()));
-    const volScalarField v2fAlpha
+    const volInternalScalarField G(this->GName(), nut()*S2);
+    const volInternalScalarField Ts(this->Ts());
+    const volInternalScalarField L2(typedName("L2"), sqr(Ls()));
+    const volInternalScalarField v2fAlpha
     (
         typedName("alpha"),
-        1.0/Ts*((C1_ - N)*v2_ - 2.0/3.0*k_*(C1_ - 1.0))
+        1.0/Ts*((C1_ - N)*v2_() - 2.0/3.0*k_()*(C1_ - 1.0))
     );
 
-    const volScalarField Ceps1
+    const volInternalScalarField Ceps1
     (
         typedName("Ceps1"),
-        1.4*(1.0 + 0.05*min(sqrt(k_/v2_), scalar(100.0)))
+        1.4*(1.0 + 0.05*min(sqrt(k_()/v2_()), scalar(100.0)))
     );
 
     // Update epsilon (and possibly G) at the wall
@@ -253,8 +259,8 @@ void v2f<BasicMomentumTransportModel>::correct()
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
         Ceps1*alpha*rho*G/Ts
-      - fvm::SuSp(((2.0/3.0)*Ceps1 + Ceps3_)*alpha*rho*divU, epsilon_)
-      - fvm::Sp(Ceps2_*alpha*rho/Ts, epsilon_)
+      - fvm::SuSp(((2.0/3.0)*Ceps1 + Ceps3_)*alpha()*rho()*divU, epsilon_)
+      - fvm::Sp(Ceps2_*alpha()*rho()/Ts, epsilon_)
       + fvModels.source(alpha, rho, epsilon_)
     );
 
@@ -273,9 +279,9 @@ void v2f<BasicMomentumTransportModel>::correct()
       + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(), k_)
      ==
-        alpha*rho*G
-      - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
-      - fvm::Sp(alpha*rho*epsilon_/k_, k_)
+        alpha()*rho()*G
+      - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
+      - fvm::Sp(alpha()*rho()*epsilon_()/k_(), k_)
       + fvModels.source(alpha, rho, k_)
     );
 
@@ -309,8 +315,8 @@ void v2f<BasicMomentumTransportModel>::correct()
       + fvm::div(alphaRhoPhi, v2_)
       - fvm::laplacian(alpha*rho*DkEff(), v2_)
       ==
-        alpha*rho*min(k_*f_, C2_*G - v2fAlpha)
-      - fvm::Sp(N*alpha*rho*epsilon_/k_, v2_)
+        alpha()*rho()*min(k_()*f_(), C2_*G - v2fAlpha)
+      - fvm::Sp(N*alpha()*rho()*epsilon_()/k_(), v2_)
       + fvModels.source(alpha, rho, v2_)
     );
 

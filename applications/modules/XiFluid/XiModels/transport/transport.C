@@ -28,7 +28,8 @@ License
 #include "XiProfile.H"
 #include "XiGModel.H"
 #include "fvmDiv.H"
-#include "fvcLaplacian.H"
+#include "fviGrad.H"
+#include "fviLaplacian.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "addToRunTimeSelectionTable.H"
@@ -131,17 +132,20 @@ void Foam::XiModels::transport::correct()
     (
         fvm::ddt(rho_, Xi_)
       + fvm::div(phi + phiXi, Xi_, "div(phiXi,Xi)")
-      - fvm::Sp(fvc::div(phiXi), Xi_)
-      - fvc::laplacian(Db, Xi_)
+      - fvm::Sp(fvi::div(phiXi), Xi_)
+      - fvi::laplacian(Db, Xi_)
      ==
-        rho_*R
-      - fvm::Sp(rho_*(R - G), Xi_)
+        rho_()*R
+      - fvm::Sp(rho_()*(R - G), Xi_)
       + fvModels.source(rho_, Xi_)
     );
 
     if (strainReduction_)
     {
-        const tmp<volTensorField> tgradU(fvc::grad(momentumTransport_.U()));
+        const tmp<volInternalTensorField> tgradU
+        (
+            fvi::grad(momentumTransport_.U())
+        );
         const volTensorField::Internal& gradU(tgradU());
 
         const volScalarField::Internal rhoSigma
@@ -159,7 +163,7 @@ void Foam::XiModels::transport::correct()
 
     if (curvatureReduction_)
     {
-        const tmp<volTensorField> tgradSt(fvc::grad(Su_*Xi_*n));
+        const tmp<volInternalTensorField> tgradSt(fvi::grad(Su_*Xi_*n));
         const volTensorField::Internal& gradSt(tgradSt());
 
         const volScalarField::Internal rhoSigmaSt

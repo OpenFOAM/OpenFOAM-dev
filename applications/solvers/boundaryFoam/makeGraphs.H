@@ -41,5 +41,5 @@ setWriter::New(runTime.controlDict().lookup("graphFormat"))->write
 
     "uv", R.component(symmTensor::XY)().primitiveField(),
 
-    "gammaDot", mag(fvc::grad(U))().primitiveField()
+    "gammaDot", mag(fvi::grad(U))().primitiveField()
 );

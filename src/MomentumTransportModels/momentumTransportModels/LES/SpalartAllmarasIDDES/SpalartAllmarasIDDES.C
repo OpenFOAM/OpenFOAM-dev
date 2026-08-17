@@ -35,10 +35,10 @@ namespace LESModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasIDDES<BasicMomentumTransportModel>::IDDESalpha() const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("alpha"),
         max(0.25 - this->y()()/IDDESDelta_.hmax(), scalar(-5))
@@ -47,13 +47,13 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::IDDESalpha() const
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasIDDES<BasicMomentumTransportModel>::ft
 (
-    const volScalarField::Internal& magGradU
+    const volInternalScalarField& magGradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("ft"),
         tanh(pow3(sqr(ct_)*rd(this->nut_, magGradU)))
@@ -62,13 +62,13 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::ft
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasIDDES<BasicMomentumTransportModel>::fl
 (
-    const volScalarField::Internal& magGradU
+    const volInternalScalarField& magGradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("fl"),
         tanh(pow(sqr(cl_)*rd(this->nu(), magGradU), 10))
@@ -77,14 +77,14 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::fl
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasIDDES<BasicMomentumTransportModel>::rd
 (
-    const volScalarField::Internal& nur,
-    const volScalarField::Internal& magGradU
+    const volInternalScalarField& nur,
+    const volInternalScalarField& magGradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("rd"),
         min
@@ -104,13 +104,13 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::rd
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasIDDES<BasicMomentumTransportModel>::fd
 (
-    const volScalarField::Internal& magGradU
+    const volInternalScalarField& magGradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("fd"),
         1 - tanh(pow3(8*rd(this->nuEff(), magGradU)))
@@ -121,60 +121,60 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::fd
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
 (
-    const volScalarField::Internal& chi,
-    const volScalarField::Internal& fv1,
-    const volTensorField::Internal& gradU
+    const volInternalScalarField& chi,
+    const volInternalScalarField& fv1,
+    const volInternalTensorField& gradU
 ) const
 {
-    const volScalarField::Internal alpha(IDDESalpha());
+    const volInternalScalarField alpha(IDDESalpha());
 
-    const volScalarField::Internal expTerm
+    const volInternalScalarField expTerm
     (
         typedName("expTerm"),
         exp(sqr(alpha))
     );
 
-    const volScalarField::Internal magGradU(typedName("magGradU"), mag(gradU));
+    const volInternalScalarField magGradU(typedName("magGradU"), mag(gradU));
 
-    tmp<volScalarField::Internal> fHill
+    tmp<volInternalScalarField> fHill
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             typedName("fHill"),
             2*(pos0(alpha)*pow(expTerm, -11.09) + neg(alpha)*pow(expTerm, -9.0))
         )
     );
 
-    tmp<volScalarField::Internal> fStep
+    tmp<volInternalScalarField> fStep
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             typedName("fStep"),
             min(2*pow(expTerm, -9.0), scalar(1))
         )
     );
 
-    const volScalarField::Internal fHyb
+    const volInternalScalarField fHyb
     (
         typedName("fHyb"),
         max(1 - fd(magGradU), fStep)
     );
 
-    tmp<volScalarField::Internal> fAmp
+    tmp<volInternalScalarField> fAmp
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             typedName("fAmp"),
             1 - max(ft(magGradU), fl(magGradU))
         )
     );
 
-    tmp<volScalarField::Internal> fRestore
+    tmp<volInternalScalarField> fRestore
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             typedName("fRestore"),
             max(fHill - 1, scalar(0))*fAmp
@@ -182,7 +182,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
     );
 
     // IGNORING ft2 terms
-    const volScalarField::Internal Psi
+    const volInternalScalarField Psi
     (
         typedName("Psi"),
         sqrt
@@ -199,7 +199,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
         )
     );
 
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("dTilda"),
         max

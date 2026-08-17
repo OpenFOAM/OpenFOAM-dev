@@ -36,23 +36,20 @@ makeFvGradScheme(cellMDLimitedGrad)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-Foam::tmp<Foam::volVectorField>
-Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
+void Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
 (
-    const volScalarField& vsf,
-    const word& name
+    volInternalVectorField& grad,
+    const volScalarField& vsf
 ) const
 {
-    const fvMesh& mesh = vsf.mesh();
-
-    tmp<volVectorField> tGrad = basicGradScheme_().calcGrad(vsf, name);
+    basicGradScheme_().calcGrad(grad, vsf);
 
     if (k_ < small)
     {
-        return tGrad;
+        return;
     }
 
-    volVectorField& g = tGrad.ref();
+    const fvMesh& mesh = vsf.mesh();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -135,7 +132,7 @@ Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
         // owner side
         limitFace
         (
-            g[own],
+            grad[own],
             maxVsf[own],
             minVsf[own],
             Cf[facei] - C[own]
@@ -144,7 +141,7 @@ Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
         // neighbour side
         limitFace
         (
-            g[nei],
+            grad[nei],
             maxVsf[nei],
             minVsf[nei],
             Cf[facei] - C[nei]
@@ -163,39 +160,31 @@ Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
 
             limitFace
             (
-                g[own],
+                grad[own],
                 maxVsf[own],
                 minVsf[own],
                 pCf[pFacei] - C[own]
             );
         }
     }
-
-    g.correctBoundaryConditions();
-    gaussGrad<scalar>::correctBoundaryConditions(vsf, g);
-
-    return tGrad;
 }
 
 
 template<>
-Foam::tmp<Foam::volTensorField>
-Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
+void Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
 (
-    const volVectorField& vsf,
-    const word& name
+    volInternalTensorField& grad,
+    const volVectorField& vvf
 ) const
 {
-    const fvMesh& mesh = vsf.mesh();
-
-    tmp<volTensorField> tGrad = basicGradScheme_().calcGrad(vsf, name);
+    basicGradScheme_().calcGrad(grad, vvf);
 
     if (k_ < small)
     {
-        return tGrad;
+        return;
     }
 
-    volTensorField& g = tGrad.ref();
+    const fvMesh& mesh = vvf.mesh();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -203,26 +192,26 @@ Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    vectorField maxVsf(vsf.primitiveField());
-    vectorField minVsf(vsf.primitiveField());
+    vectorField maxVvf(vvf.primitiveField());
+    vectorField minVvf(vvf.primitiveField());
 
     forAll(owner, facei)
     {
         label own = owner[facei];
         label nei = neighbour[facei];
 
-        const vector& vsfOwn = vsf[own];
-        const vector& vsfNei = vsf[nei];
+        const vector& vvfOwn = vvf[own];
+        const vector& vvfNei = vvf[nei];
 
-        maxVsf[own] = max(maxVsf[own], vsfNei);
-        minVsf[own] = min(minVsf[own], vsfNei);
+        maxVvf[own] = max(maxVvf[own], vvfNei);
+        minVvf[own] = min(minVvf[own], vvfNei);
 
-        maxVsf[nei] = max(maxVsf[nei], vsfOwn);
-        minVsf[nei] = min(minVsf[nei], vsfOwn);
+        maxVvf[nei] = max(maxVvf[nei], vvfOwn);
+        minVvf[nei] = min(minVvf[nei], vvfOwn);
     }
 
 
-    const volVectorField::Boundary& bsf = vsf.boundaryField();
+    const volVectorField::Boundary& bsf = vvf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -236,10 +225,10 @@ Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
             forAll(pOwner, pFacei)
             {
                 label own = pOwner[pFacei];
-                const vector& vsfNei = psfNei[pFacei];
+                const vector& vvfNei = psfNei[pFacei];
 
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
+                maxVvf[own] = max(maxVvf[own], vvfNei);
+                minVvf[own] = min(minVvf[own], vvfNei);
             }
         }
         else
@@ -247,25 +236,25 @@ Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
             forAll(pOwner, pFacei)
             {
                 label own = pOwner[pFacei];
-                const vector& vsfNei = psf[pFacei];
+                const vector& vvfNei = psf[pFacei];
 
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
+                maxVvf[own] = max(maxVvf[own], vvfNei);
+                minVvf[own] = min(minVvf[own], vvfNei);
             }
         }
     }
 
-    maxVsf -= vsf;
-    minVsf -= vsf;
+    maxVvf -= vvf;
+    minVvf -= vvf;
 
     if (k_ < 1.0)
     {
-        const vectorField maxMinVsf((1.0/k_ - 1.0)*(maxVsf - minVsf));
-        maxVsf += maxMinVsf;
-        minVsf -= maxMinVsf;
+        const vectorField maxMinVvf((1.0/k_ - 1.0)*(maxVvf - minVvf));
+        maxVvf += maxMinVvf;
+        minVvf -= maxMinVvf;
 
-        // maxVsf *= 1.0/k_;
-        // minVsf *= 1.0/k_;
+        // maxVvf *= 1.0/k_;
+        // minVvf *= 1.0/k_;
     }
 
 
@@ -277,18 +266,18 @@ Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
         // owner side
         limitFace
         (
-            g[own],
-            maxVsf[own],
-            minVsf[own],
+            grad[own],
+            maxVvf[own],
+            minVvf[own],
             Cf[facei] - C[own]
         );
 
         // neighbour side
         limitFace
         (
-            g[nei],
-            maxVsf[nei],
-            minVsf[nei],
+            grad[nei],
+            maxVvf[nei],
+            minVvf[nei],
             Cf[facei] - C[nei]
         );
     }
@@ -305,18 +294,13 @@ Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
 
             limitFace
             (
-                g[own],
-                maxVsf[own],
-                minVsf[own],
+                grad[own],
+                maxVvf[own],
+                minVvf[own],
                 pCf[pFacei] - C[own]
             );
         }
     }
-
-    g.correctBoundaryConditions();
-    gaussGrad<vector>::correctBoundaryConditions(vsf, g);
-
-    return tGrad;
 }
 
 

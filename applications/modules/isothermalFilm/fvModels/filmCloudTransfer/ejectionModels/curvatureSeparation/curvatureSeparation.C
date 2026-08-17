@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "curvatureSeparation.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -162,7 +162,7 @@ curvatureSeparation::curvatureSeparation
 )
 :
     ejectionModel(dict, film),
-    gradNHat_(fvc::grad(film_.nHat)),
+    gradNHat_(fvi::grad(film_.nHat)),
     deltaByR1Min_
     (
         dict.optionalTypeDict(typeName)
@@ -277,28 +277,28 @@ void curvatureSeparation::correct()
 void curvatureSeparation::topoChange(const polyTopoChangeMap& map)
 {
     ejectionModel::topoChange(map);
-    gradNHat_ = fvc::grad(film_.nHat);
+    gradNHat_ = fvi::grad(film_.nHat);
 }
 
 
 void curvatureSeparation::mapMesh(const polyMeshMap& map)
 {
     ejectionModel::mapMesh(map);
-    gradNHat_ = fvc::grad(film_.nHat);
+    gradNHat_ = fvi::grad(film_.nHat);
 }
 
 
 void curvatureSeparation::distribute(const polyDistributionMap& map)
 {
     ejectionModel::distribute(map);
-    gradNHat_ = fvc::grad(film_.nHat);
+    gradNHat_ = fvi::grad(film_.nHat);
 }
 
 
 bool curvatureSeparation::movePoints()
 {
     ejectionModel::movePoints();
-    gradNHat_ = fvc::grad(film_.nHat);
+    gradNHat_ = fvi::grad(film_.nHat);
 
     return true;
 }

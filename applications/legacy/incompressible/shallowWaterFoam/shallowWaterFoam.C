@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
 #include "pimpleControl.H"
 
 #include "fvcDdt.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "fvcSnGrad.H"
 #include "fvcFlux.H"
 
@@ -86,11 +86,11 @@ int main(int argc, char *argv[])
             {
                 if (rotating)
                 {
-                    solve(hUEqn + (F ^ hU) == -magg*h*fvc::grad(h + h0));
+                    solve(hUEqn + (F ^ hU) == -magg*h()*fvi::grad(h + h0));
                 }
                 else
                 {
-                    solve(hUEqn == -magg*h*fvc::grad(h + h0));
+                    solve(hUEqn == -magg*h()*fvi::grad(h + h0));
                 }
 
                 // Constrain the momentum to be in the geometry if 3D geometry
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
                     fvScalarMatrix hEqn
                     (
                         fvm::ddt(h)
-                      + fvc::div(phiHbyA)
+                      + fvi::div(phiHbyA)
                       - fvm::laplacian(ghrAUf, h)
                     );
 
@@ -144,12 +144,13 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                hU = HbyA - rAU*h*magg*fvc::grad(h + h0);
+                hU.internalFieldRef() =
+                    HbyA() - rAU()*h()*magg*fvi::grad(h + h0);
 
                 // Constrain the momentum to be in the geometry if 3D geometry
                 if (mesh.nGeometricD() == 3)
                 {
-                    hU -= (gHat & hU)*gHat;
+                    hU.internalFieldRef() -= (gHat & hU())*gHat;
                 }
 
                 hU.correctBoundaryConditions();

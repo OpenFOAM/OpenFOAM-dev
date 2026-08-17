@@ -34,7 +34,7 @@ License
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcFlux.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -170,7 +170,7 @@ Foam::wordList Foam::solvers::isothermalFilm::alphaTypes() const
 
 void Foam::solvers::isothermalFilm::correctCoNum()
 {
-    const scalarField sumPhi(fvc::surfaceSum(mag(phi))().primitiveField());
+    const scalarField sumPhi(fvi::surfaceSum(mag(phi))().primitiveField());
 
     CoNum = 0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue();
 

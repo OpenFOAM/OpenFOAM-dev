@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "compressibleMultiphaseVoF.H"
 #include "fvcMeshPhi.H"
-#include "fvcDdt.H"
+#include "fviDdt.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
@@ -41,9 +41,9 @@ void Foam::solvers::compressibleMultiphaseVoF::thermophysicalPredictor()
         fvm::ddt(rho, T) + fvm::div(rhoPhi, T) - fvm::Sp(contErr(), T)
       - fvm::laplacian(mixture.alphaEff(momentumTransport.nut()), T)
       + (
-            fvc::div(fvc::absolute(phi, U), p)()() // - contErr()/rho*p
-          + (fvc::ddt(rho, K) + fvc::div(rhoPhi, K))()()
-          - (U()&(fvModels().source(rho, U)&U)()) - contErr()*K
+            fvi::div(fvc::absolute(phi, U), p) // - contErr()/rho*p
+          + (fvi::ddt(rho, K) + fvi::div(rhoPhi, K))
+          - (U()&(fvModels().source(rho, U)&U)()) - contErr()*K()
         )*mixture.rCv()()
      ==
         fvModels().source(rho, T)

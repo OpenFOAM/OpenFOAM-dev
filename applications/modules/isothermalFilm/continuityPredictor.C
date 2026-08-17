@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "isothermalFilm.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "fvmDdt.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -38,7 +38,7 @@ void Foam::solvers::isothermalFilm::continuityPredictor()
 
     fvScalarMatrix alphaEqn
     (
-        fvm::ddt(rho, alpha_) + fvc::div(alphaRhoPhi)
+        fvm::ddt(rho, alpha_) + fvi::div(alphaRhoPhi)
       ==
         fvModels().source(rho, alpha_)
     );
@@ -63,7 +63,7 @@ void Foam::solvers::isothermalFilm::correctContinuityError()
 {
     contErr =
     (
-        fvc::ddt(rho, alpha)()() + fvc::div(alphaRhoPhi)()()
+        fvi::ddt(rho, alpha) + fvi::div(alphaRhoPhi)
       - (fvModels().source(rho, alpha) & alpha)()()
     );
 }

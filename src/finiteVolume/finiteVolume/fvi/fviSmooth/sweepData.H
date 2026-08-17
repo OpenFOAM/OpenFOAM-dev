@@ -25,7 +25,7 @@ Class
     Foam::sweepData
 
 Description
-    Helper class used by fvc::sweep function.
+    Helper class used by fvi::sweep function.
 
 SourceFiles
     sweepData.H

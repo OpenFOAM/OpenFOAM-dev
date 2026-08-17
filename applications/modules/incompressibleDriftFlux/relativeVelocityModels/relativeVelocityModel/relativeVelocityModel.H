@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ public:
         tmp<volSymmTensorField> tauDm() const;
 
         //- Return the div stress tensor due to the phase transport
-        tmp<volVectorField> divDevTau() const;
+        tmp<volInternalVectorField> divDevTau() const;
 
         //- Update the diffusion velocity
         virtual void correct();

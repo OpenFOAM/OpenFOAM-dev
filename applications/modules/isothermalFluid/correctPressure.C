@@ -29,8 +29,9 @@ License
 #include "adjustPhi.H"
 #include "fvcMeshPhi.H"
 #include "fvcFlux.H"
+#include "fviDdt.H"
 #include "fvcDdt.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
 #include "fvcVolumeIntegrate.H"
@@ -120,7 +121,7 @@ void Foam::solvers::isothermalFluid::correctPressure()
         if (pimple.consistent())
         {
             phiHbyA += (rhorAAtUf - rhorAUf)*fvc::snGrad(p)*mesh.magSf();
-            HbyA += (rAAtU - rAU)*fvc::grad(p);
+            HbyA.internalFieldRef() += (rAAtU() - rAU())*fvi::grad(p);
         }
 
         // Update the pressure BCs to ensure flux consistency
@@ -130,8 +131,8 @@ void Foam::solvers::isothermalFluid::correctPressure()
 
         fvScalarMatrix pDDtEqn
         (
-            fvc::ddt(rho) + psi*correction(fvm::ddt(p))
-          + fvc::div(phiHbyA) + fvm::div(phid, p)
+            fvi::ddt(rho) + psi*correction(fvm::ddt(p))
+          + fvi::div(phiHbyA) + fvm::div(phid, p)
          ==
             fvModels().sourceProxy(rho, p)
         );
@@ -164,7 +165,7 @@ void Foam::solvers::isothermalFluid::correctPressure()
         if (pimple.consistent())
         {
             phiHbyA += (rhorAAtUf - rhorAUf)*fvc::snGrad(p)*mesh.magSf();
-            HbyA += (rAAtU - rAU)*fvc::grad(p);
+            HbyA.internalFieldRef() += (rAAtU() - rAU())*fvi::grad(p);
         }
 
         // Update the pressure BCs to ensure flux consistency
@@ -179,8 +180,8 @@ void Foam::solvers::isothermalFluid::correctPressure()
 
         fvScalarMatrix pDDtEqn
         (
-            fvc::ddt(rho) + psi*correction(fvm::ddt(p))
-          + fvc::div(phiHbyA)
+            fvi::ddt(rho) + psi*correction(fvm::ddt(p))
+          + fvi::div(phiHbyA)
          ==
             fvModels().sourceProxy(rho, p)
         );
@@ -226,7 +227,7 @@ void Foam::solvers::isothermalFluid::correctPressure()
     // Explicitly relax pressure for momentum corrector
     p.relax();
 
-    U = HbyA - rAAtU*fvc::grad(p);
+    U.internalFieldRef() = HbyA() - rAAtU()*fvi::grad(p);
     U.correctBoundaryConditions();
     fvConstraints().constrain(U);
     K = 0.5*magSqr(U);
@@ -260,7 +261,7 @@ void Foam::solvers::isothermalFluid::correctPressure()
 
     if (thermo.dpdt())
     {
-        dpdt = fvc::ddt(p);
+        dpdt = fvi::ddt(p);
     }
 }
 

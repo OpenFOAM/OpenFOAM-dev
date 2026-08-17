@@ -25,7 +25,8 @@ License
 
 #include "VoFSolidificationMelting.H"
 #include "compressibleTwoPhaseVoFMixture.H"
-#include "fvcDdt.H"
+#include "fvMatrix.H"
+#include "fviDdt.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -158,7 +159,7 @@ void Foam::fv::VoFSolidificationMelting::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    eqn += L_*(fvc::ddt(rho, alphaSolid_));
+    eqn += L_*(fvi::ddt(rho, alphaSolid_));
 }
 
 

@@ -98,7 +98,7 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
         }
     }
 
-    rf /= mesh.V();
+    rf /= mesh.V().primitiveField();
 
     treconField.ref().correctBoundaryConditions();
 

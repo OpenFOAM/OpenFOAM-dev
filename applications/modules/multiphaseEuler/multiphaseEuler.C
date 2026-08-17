@@ -26,8 +26,8 @@ License
 #include "multiphaseEuler.H"
 #include "localEulerDdtScheme.H"
 #include "surfaceFields.H"
-#include "fvcDiv.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviDiv.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvcMeshPhi.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -71,7 +71,7 @@ void Foam::solvers::multiphaseEuler::correctCoNum()
 {
     scalarField sumPhi
     (
-        fvc::surfaceSum(mag(phi))().primitiveField()
+        fvi::surfaceSum(mag(phi))().primitiveField()
     );
 
     forAll(movingPhases, movingPhasei)
@@ -79,7 +79,7 @@ void Foam::solvers::multiphaseEuler::correctCoNum()
         sumPhi = max
         (
             sumPhi,
-            fvc::surfaceSum(mag(movingPhases[movingPhasei].phi()))()
+            fvi::surfaceSum(mag(movingPhases[movingPhasei].phi()))()
            .primitiveField()
         );
     }
@@ -218,10 +218,10 @@ void Foam::solvers::multiphaseEuler::preSolve()
     if (correctPhi || mesh.topoChanging())
     {
         // Construct and register divU for mapping
-        divU = new volScalarField
+        divU = new volInternalScalarField
         (
             "divU0",
-            fvc::div(fvc::absolute(phi, movingPhases[0].U()))
+            fvi::div(fvc::absolute(phi, movingPhases[0].U()))
         );
     }
 

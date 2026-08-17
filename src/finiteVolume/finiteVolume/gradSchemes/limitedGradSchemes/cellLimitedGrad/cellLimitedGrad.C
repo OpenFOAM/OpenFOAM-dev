@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellLimitedGrad.H"
-#include "gaussGrad.H"
+#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,27 +59,20 @@ void Foam::fv::cellLimitedGrad<Type, Limiter>::limitGradient
 
 
 template<class Type, class Limiter>
-Foam::tmp
-<
-    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
->
-Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
+void Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
 (
-    const VolField<Type>& vsf,
-    const word& name
+    VolInternalField<typename outerProduct<vector, Type>::type>& grad,
+    const VolField<Type>& vf
 ) const
 {
-    const fvMesh& mesh = vsf.mesh();
-
-    tmp<VolField<typename outerProduct<vector, Type>::type>>
-        tGrad = basicGradScheme_().calcGrad(vsf, name);
+    basicGradScheme_().calcGrad(grad, vf);
 
     if (k_ < small)
     {
-        return tGrad;
+        return;
     }
 
-    VolField<typename outerProduct<vector, Type>::type>& g = tGrad.ref();
+    const fvMesh& mesh = vf.mesh();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -87,27 +80,27 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    Field<Type> maxVsf(vsf.primitiveField());
-    Field<Type> minVsf(vsf.primitiveField());
+    Field<Type> maxVf(vf.primitiveField());
+    Field<Type> minVf(vf.primitiveField());
 
     forAll(owner, facei)
     {
         label own = owner[facei];
         label nei = neighbour[facei];
 
-        const Type& vsfOwn = vsf[own];
-        const Type& vsfNei = vsf[nei];
+        const Type& vfOwn = vf[own];
+        const Type& vfNei = vf[nei];
 
-        maxVsf[own] = max(maxVsf[own], vsfNei);
-        minVsf[own] = min(minVsf[own], vsfNei);
+        maxVf[own] = max(maxVf[own], vfNei);
+        minVf[own] = min(minVf[own], vfNei);
 
-        maxVsf[nei] = max(maxVsf[nei], vsfOwn);
-        minVsf[nei] = min(minVsf[nei], vsfOwn);
+        maxVf[nei] = max(maxVf[nei], vfOwn);
+        minVf[nei] = min(minVf[nei], vfOwn);
     }
 
 
     const typename VolField<Type>::Boundary& bsf =
-        vsf.boundaryField();
+        vf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -121,10 +114,10 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
             forAll(pOwner, pFacei)
             {
                 label own = pOwner[pFacei];
-                const Type& vsfNei = psfNei[pFacei];
+                const Type& vfNei = psfNei[pFacei];
 
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
+                maxVf[own] = max(maxVf[own], vfNei);
+                minVf[own] = min(minVf[own], vfNei);
             }
         }
         else
@@ -132,28 +125,28 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
             forAll(pOwner, pFacei)
             {
                 label own = pOwner[pFacei];
-                const Type& vsfNei = psf[pFacei];
+                const Type& vfNei = psf[pFacei];
 
-                maxVsf[own] = max(maxVsf[own], vsfNei);
-                minVsf[own] = min(minVsf[own], vsfNei);
+                maxVf[own] = max(maxVf[own], vfNei);
+                minVf[own] = min(minVf[own], vfNei);
             }
         }
     }
 
-    maxVsf -= vsf;
-    minVsf -= vsf;
+    maxVf -= vf;
+    minVf -= vf;
 
     if (k_ < 1.0)
     {
-        const Field<Type> maxMinVsf((1.0/k_ - 1.0)*(maxVsf - minVsf));
-        maxVsf += maxMinVsf;
-        minVsf -= maxMinVsf;
+        const Field<Type> maxMinVf((1.0/k_ - 1.0)*(maxVf - minVf));
+        maxVf += maxMinVf;
+        minVf -= maxMinVf;
     }
 
 
     // Create limiter initialised to 1
     // Note: the limiter is not permitted to be > 1
-    Field<Type> limiter(vsf.primitiveField().size(), pTraits<Type>::one);
+    Field<Type> limiter(vf.primitiveField().size(), pTraits<Type>::one);
 
     forAll(owner, facei)
     {
@@ -164,18 +157,18 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
         limitFace
         (
             limiter[own],
-            maxVsf[own],
-            minVsf[own],
-            (Cf[facei] - C[own]) & g[own]
+            maxVf[own],
+            minVf[own],
+            (Cf[facei] - C[own]) & grad[own]
         );
 
         // neighbour side
         limitFace
         (
             limiter[nei],
-            maxVsf[nei],
-            minVsf[nei],
-            (Cf[facei] - C[nei]) & g[nei]
+            maxVf[nei],
+            minVf[nei],
+            (Cf[facei] - C[nei]) & grad[nei]
         );
     }
 
@@ -191,26 +184,22 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
             limitFace
             (
                 limiter[own],
-                maxVsf[own],
-                minVsf[own],
-                ((pCf[pFacei] - C[own]) & g[own])
+                maxVf[own],
+                minVf[own],
+                ((pCf[pFacei] - C[own]) & grad[own])
             );
         }
     }
 
     if (fv::debug)
     {
-        Info<< "gradient limiter for: " << vsf.name()
+        Info<< "gradient limiter for: " << vf.name()
             << " max = " << gMax(limiter)
             << " min = " << gMin(limiter)
             << " average: " << gAverage(limiter) << endl;
     }
 
-    limitGradient(limiter, g);
-    g.correctBoundaryConditions();
-    gaussGrad<Type>::correctBoundaryConditions(vsf, g);
-
-    return tGrad;
+    limitGradient(limiter, grad);
 }
 
 

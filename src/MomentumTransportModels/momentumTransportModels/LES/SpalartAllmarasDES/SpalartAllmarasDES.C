@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SpalartAllmarasDES.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 
@@ -63,14 +64,14 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::fv1
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDES<BasicMomentumTransportModel>::fv2
 (
-    const volScalarField::Internal& chi,
-    const volScalarField::Internal& fv1
+    const volInternalScalarField& chi,
+    const volInternalScalarField& fv1
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("fv2"),
         1.0 - chi/(1.0 + chi*fv1)
@@ -79,13 +80,13 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::fv2
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDES<BasicMomentumTransportModel>::Omega
 (
-    const volTensorField::Internal& gradU
+    const volInternalTensorField& gradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("Omega"),
         sqrt(2.0)*mag(skew(gradU))
@@ -94,16 +95,16 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::Omega
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDES<BasicMomentumTransportModel>::Stilda
 (
-    const volScalarField::Internal& chi,
-    const volScalarField::Internal& fv1,
-    const volScalarField::Internal& Omega,
-    const volScalarField::Internal& dTilda
+    const volInternalScalarField& chi,
+    const volInternalScalarField& fv1,
+    const volInternalScalarField& Omega,
+    const volInternalScalarField& dTilda
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("Stilda"),
         max
@@ -117,14 +118,14 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::Stilda
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> SpalartAllmarasDES<BasicMomentumTransportModel>::r
+tmp<volInternalScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::r
 (
-    const volScalarField::Internal& nur,
-    const volScalarField::Internal& Omega,
-    const volScalarField::Internal& dTilda
+    const volInternalScalarField& nur,
+    const volInternalScalarField& Omega,
+    const volInternalScalarField& dTilda
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("r"),
         min
@@ -145,17 +146,17 @@ tmp<volScalarField::Internal> SpalartAllmarasDES<BasicMomentumTransportModel>::r
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDES<BasicMomentumTransportModel>::fw
 (
-    const volScalarField::Internal& Omega,
-    const volScalarField::Internal& dTilda
+    const volInternalScalarField& Omega,
+    const volInternalScalarField& dTilda
 ) const
 {
-    const volScalarField::Internal r(this->r(nuTilda_, Omega, dTilda));
-    const volScalarField::Internal g(typedName("g"), r + Cw2_*(pow6(r) - r));
+    const volInternalScalarField r(this->r(nuTilda_, Omega, dTilda));
+    const volInternalScalarField g(typedName("g"), r + Cw2_*(pow6(r) - r));
 
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("fw"),
         g*pow((1 + pow6(Cw3_))/(pow6(g) + pow6(Cw3_)), 1.0/6.0)
@@ -164,15 +165,15 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::fw
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 SpalartAllmarasDES<BasicMomentumTransportModel>::dTilda
 (
-    const volScalarField::Internal& chi,
-    const volScalarField::Internal& fv1,
-    const volTensorField::Internal& gradU
+    const volInternalScalarField& chi,
+    const volInternalScalarField& fv1,
+    const volInternalTensorField& gradU
 ) const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         typedName("dTilda"),
         min(CDES_*this->delta()(), this->y())
@@ -183,12 +184,12 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::dTilda
 template<class BasicMomentumTransportModel>
 void SpalartAllmarasDES<BasicMomentumTransportModel>::cacheLESRegion
 (
-    const volScalarField::Internal& dTilda
+    const volInternalScalarField& dTilda
 ) const
 {
     if (this->mesh_.temporaryObjectCached(typedName("LESRegion")))
     {
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             typedName("LESRegion"),
             neg(dTilda - this->y()())
@@ -317,7 +318,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::k() const
     const volScalarField chi(this->chi());
     const volScalarField fv1(this->fv1(chi));
 
-    volScalarField dTildaExtrapolated
+    volScalarField dTilda
     (
         IOobject
         (
@@ -325,20 +326,16 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::k() const
             this->mesh_.time().name(),
             this->mesh_
         ),
-        this->mesh_,
-        dimensions::length,
+        this->dTilda(chi, fv1, fvi::grad(this->U_)),
         zeroGradientFvPatchScalarField::typeName
     );
-    dTildaExtrapolated.internalFieldRef() =
-        dTilda(chi, fv1, fvc::grad(this->U_));
-    dTildaExtrapolated.correctBoundaryConditions();
 
     tmp<volScalarField> tk
     (
         volScalarField::New
         (
             typedName("k"),
-            sqr(this->nut()/ck_/dTildaExtrapolated)
+            sqr(this->nut()/ck_/dTilda)
         )
     );
 
@@ -381,10 +378,10 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correct()
     const volScalarField chi(this->chi());
     const volScalarField fv1(this->fv1(chi));
 
-    tmp<volTensorField> tgradU = fvc::grad(U);
-    const volScalarField::Internal Omega(this->Omega(tgradU()));
-    const volScalarField::Internal dTilda(this->dTilda(chi, fv1, tgradU()));
-    const volScalarField::Internal Stilda
+    tmp<volInternalTensorField> tgradU = fvi::grad(U);
+    const volInternalScalarField Omega(this->Omega(tgradU()));
+    const volInternalScalarField dTilda(this->dTilda(chi, fv1, tgradU()));
+    const volInternalScalarField Stilda
     (
         this->Stilda(chi, fv1, Omega, dTilda)
     );
@@ -395,7 +392,7 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correct()
         fvm::ddt(alpha, rho, nuTilda_)
       + fvm::div(alphaRhoPhi, nuTilda_)
       - fvm::laplacian(alpha*rho*DnuTildaEff(), nuTilda_)
-      - Cb2_/sigmaNut_*alpha*rho*magSqr(fvc::grad(nuTilda_))
+      - Cb2_/sigmaNut_*alpha()*rho()*magSqr(fvi::grad(nuTilda_))
      ==
         Cb1_*alpha()*rho()*Stilda*nuTilda_()
       - fvm::Sp

@@ -30,17 +30,13 @@ License
 #include "GeometricField.H"
 #include "zeroGradientFvPatchField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp
-<
-    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
->
-Foam::fv::fourthGrad<Type>::calcGrad
+void Foam::fv::fourthGrad<Type>::calcGrad
 (
-    const VolField<Type>& vsf,
-    const word& name
+    VolInternalField<typename outerProduct<vector, Type>::type>& fGrad,
+    const VolField<Type>& vf
 ) const
 {
     // The fourth-order gradient is calculated in two passes.  First,
@@ -50,28 +46,17 @@ Foam::fv::fourthGrad<Type>::calcGrad
 
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    const fvMesh& mesh = vsf.mesh();
+    const fvMesh& mesh = vf.mesh();
 
     // Assemble the second-order least-square gradient
     // Calculate the second-order least-square gradient
     tmp<VolField<GradType>> tsecondfGrad
-      = leastSquaresGrad<Type>(mesh).grad
+      = leastSquaresGrad<Type>(mesh).fvcGrad
         (
-            vsf,
-            "leastSquaresGrad(" + vsf.name() + ")"
+            vf,
+            "leastSquaresGrad(" + vf.name() + ")"
         );
-    const VolField<GradType>& secondfGrad =
-        tsecondfGrad();
-
-    tmp<VolField<GradType>> tfGrad
-    (
-        VolField<GradType>::New
-        (
-            name,
-            secondfGrad
-        )
-    );
-    VolField<GradType>& fGrad = tfGrad.ref();
+    const VolField<GradType>& secondfGrad = tsecondfGrad();
 
     const vectorField& C = mesh.C();
 
@@ -88,6 +73,8 @@ Foam::fv::fourthGrad<Type>::calcGrad
 
     // Assemble the fourth-order gradient
 
+    fGrad = Zero;
+
     // Internal faces
     forAll(own, facei)
     {
@@ -102,7 +89,7 @@ Foam::fv::fourthGrad<Type>::calcGrad
     }
 
     // Boundary faces
-    forAll(vsf.boundaryField(), patchi)
+    forAll(vf.boundaryField(), patchi)
     {
         if (secondfGrad.boundaryField()[patchi].coupled())
         {
@@ -111,7 +98,7 @@ Foam::fv::fourthGrad<Type>::calcGrad
 
             const scalarField& lambdap = lambda.boundaryField()[patchi];
 
-            const fvPatch& p = vsf.boundaryField()[patchi].patch();
+            const fvPatch& p = vf.boundaryField()[patchi].patch();
 
             const labelUList& faceCells = p.faceCells();
 
@@ -137,11 +124,6 @@ Foam::fv::fourthGrad<Type>::calcGrad
             }
         }
     }
-
-    fGrad.correctBoundaryConditions();
-    gaussGrad<Type>::correctBoundaryConditions(vsf, fGrad);
-
-    return tfGrad;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,18 +164,24 @@ public:
             return mesh_;
         }
 
-        virtual tmp<fvMatrix<Type>> fvmLaplacian
+        virtual tmp<VolInternalField<Type>> fviLaplacian
+        (
+            const VolField<Type>&
+        ) = 0;
+
+        virtual tmp<VolInternalField<Type>> fviLaplacian
         (
             const SurfaceField<GType>&,
             const VolField<Type>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type>> fvmLaplacian
+        virtual tmp<VolInternalField<Type>> fviLaplacian
         (
             const VolField<GType>&,
             const VolField<Type>&
         );
 
+
         virtual tmp<VolField<Type>> fvcLaplacian
         (
             const VolField<Type>&
@@ -188,6 +194,19 @@ public:
         ) = 0;
 
         virtual tmp<VolField<Type>> fvcLaplacian
+        (
+            const VolField<GType>&,
+            const VolField<Type>&
+        );
+
+
+        virtual tmp<fvMatrix<Type>> fvmLaplacian
+        (
+            const SurfaceField<GType>&,
+            const VolField<Type>&
+        ) = 0;
+
+        virtual tmp<fvMatrix<Type>> fvmLaplacian
         (
             const VolField<GType>&,
             const VolField<Type>&

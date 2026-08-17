@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonUnityLewisEddyDiffusivity.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvcLaplacian.H"
 #include "fvcSnGrad.H"
 #include "fvmSup.H"
@@ -231,7 +231,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
     }
 
     tmpDivq.ref() -=
-        fvc::div
+        fvi::div
         (
             fvc::interpolate
             (

@@ -528,11 +528,6 @@ public:
         //- Return a const-reference to the dimensioned internal field
         inline const Internal& internalField() const;
 
-        //- Return a const-reference to the dimensioned internal field
-        //  of a "vol" field.  Useful in the formulation of source-terms
-        //  for FV equations
-        inline const Internal& v() const;
-
         //- Return a reference to the primitive field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
 #include "adjustPhi.H"
 
 #include "fvcDdt.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "fvcFlux.H"
 
 #include "fvmDdt.H"
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
         if (piso.momentumPredictor())
         {
-            solve(UEqn == -fvc::grad(p));
+            solve(UEqn == -fvi::grad(p));
         }
 
         // --- PISO loop
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
                 fvScalarMatrix pEqn
                 (
-                    fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
+                    fvm::laplacian(rAU, p) == fvi::div(phiHbyA)
                 );
 
                 pEqn.setReference(pRefCell, pRefValue);
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
             #include "continuityErrs.H"
 
-            U = HbyA - rAU*fvc::grad(p);
+            U.internalFieldRef() = HbyA() - rAU()*fvi::grad(p);
             U.correctBoundaryConditions();
         }
 

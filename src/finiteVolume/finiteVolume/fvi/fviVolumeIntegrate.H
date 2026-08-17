@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 InNamespace
-    Foam::fvc
+    Foam::fvi
 
 Description
-    Calculate the field for explicit evaluation of implicit and explicit
-    sources.
+    Volume integrate volField creating a volField.
+
+    Volume integrate volField over the whole domain
+    creating a dimensioned\<Type\>
 
 SourceFiles
-    fvcSup.C
+    fviVolumeIntegrate.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvcSup_H
-#define fvcSup_H
+
+#ifndef fviVolumeIntegrate_H
+#define fviVolumeIntegrate_H
 
 #include "volFieldsFwd.H"
+#include "primitiveFieldsFwd.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,68 +49,43 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Namespace fvc functions Declaration
+                      Namespace fvi functions Declaration
 \*---------------------------------------------------------------------------*/
 
-namespace fvc
+namespace fvi
 {
-   // Explicit source
+    template<class Type>
+    tmp<Field<Type>> volumeIntegrate(const VolField<Type>&);
 
-        template<class Type>
-        tmp<VolField<Type>> Su
-        (
-            const VolField<Type>&,
-            const VolField<Type>&
-        );
-
-        template<class Type>
-        tmp<VolField<Type>> Su
-        (
-            const tmp<VolField<Type>>&,
-            const VolField<Type>&
-        );
+    template<class Type>
+    tmp<Field<Type>> volumeIntegrate(const tmp<VolField<Type>>&);
 
 
-    // Implicit source
+    template<class Type>
+    tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, fvMesh>&);
 
-        template<class Type>
-        tmp<VolField<Type>> Sp
-        (
-            const volScalarField&,
-            const VolField<Type>&
-        );
-
-        template<class Type>
-        tmp<VolField<Type>> Sp
-        (
-            const tmp<volScalarField>&,
-            const VolField<Type>&
-        );
+    template<class Type>
+    tmp<Field<Type>> volumeIntegrate
+    (
+        const tmp<DimensionedField<Type, fvMesh>>&
+    );
 
 
-        template<class Type>
-        tmp<VolField<Type>> Sp
-        (
-            const dimensionedScalar&,
-            const VolField<Type>&
-        );
+    template<class Type>
+    dimensioned<Type> domainIntegrate(const VolField<Type>&);
+
+    template<class Type>
+    dimensioned<Type> domainIntegrate(const tmp<VolField<Type>>&);
 
 
-    // Implicit/Explicit source depending on sign of coefficient
+    template<class Type>
+    dimensioned<Type> domainIntegrate(const DimensionedField<Type, fvMesh>&);
 
-        template<class Type>
-        tmp<VolField<Type>> SuSp
-        (
-            const volScalarField&,
-            const VolField<Type>&
-        );
-
-        template<class Type>
-        tmp<VolField<Type>> SuSp
-        (
-            const tmp<volScalarField>&,
-            const VolField<Type>&
-        );
+    template<class Type>
+    dimensioned<Type> domainIntegrate
+    (
+        const tmp<DimensionedField<Type, fvMesh>>&
+    );
 }
 
 
@@ -116,7 +96,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "fvcSup.C"
+    #include "fviVolumeIntegrate.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

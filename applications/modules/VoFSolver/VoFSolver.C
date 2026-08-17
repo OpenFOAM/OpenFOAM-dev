@@ -26,7 +26,7 @@ License
 #include "VoFSolver.H"
 #include "localEulerDdtScheme.H"
 #include "linear.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvcMeshPhi.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -237,10 +237,10 @@ void Foam::solvers::VoFSolver::preSolve()
     if (correctPhi && divergent())
     {
         // Construct and register divU for mapping
-        divU = new volScalarField
+        divU = new volInternalScalarField
         (
             "divU0",
-            fvc::div(fvc::absolute(phi, U))
+            fvi::div(fvc::absolute(phi, U))
         );
     }
 

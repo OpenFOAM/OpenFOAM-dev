@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,65 +21,55 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+InNamespace
+    Foam::fvi
+
+Description
+    Calculate the curl of the given volField by constructing the Hodge-dual of
+    the symmetric part of the gradient, returning a volInternalField
+
+SourceFiles
+    fviCurl.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "fvcMagSqrGradGrad.H"
-#include "fvcGrad.H"
-#include "fvMesh.H"
+
+#ifndef fviCurl_H
+#define fviCurl_H
+
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                      Namespace fvi functions Declaration
+\*---------------------------------------------------------------------------*/
 
-namespace fvc
+namespace fvi
 {
+    template<class Type>
+    tmp<VolInternalField<Type>> curl(const VolField<Type>&);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-tmp<volScalarField> magSqrGradGrad
-(
-    const VolField<Type>& vf
-)
-{
-    tmp<volScalarField> tMagSqrGradGrad
-    (
-        magSqr(fvc::grad(fvc::grad(vf.component(0))))
-    );
-
-    // Loop over other vector field components
-    for (direction cmpt = 1; cmpt < pTraits<Type>::nComponents; cmpt++)
-    {
-        tMagSqrGradGrad.ref() +=
-            magSqr(fvc::grad(fvc::grad(vf.component(cmpt))))();
-    }
-
-    return tMagSqrGradGrad;
+    template<class Type>
+    tmp<VolInternalField<Type>> curl(const tmp<VolField<Type>>&);
 }
 
-
-template<class Type>
-tmp<volScalarField>
-magSqrGradGrad
-(
-    const tmp<VolField<Type>>& tvf
-)
-{
-    tmp<volScalarField> tMagSqrGradGrad(fvc::magSqrGradGrad(tvf()));
-    tvf.clear();
-    return tMagSqrGradGrad;
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace fvc
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "fviCurl.C"
+#endif
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

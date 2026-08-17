@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEpsilonLopesdaCosta.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "porosityForce.H"
@@ -41,7 +42,7 @@ namespace RASModels
 template<class BasicMomentumTransportModel>
 void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setPorosityCoefficient
 (
-    volScalarField::Internal& C,
+    volInternalScalarField& C,
     const porosityModels::powerLawLopesdaCosta& pm
 )
 {
@@ -63,7 +64,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setPorosityCoefficient
 template<class BasicMomentumTransportModel>
 void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setCdAv
 (
-    volScalarField::Internal& C,
+    volInternalScalarField& C,
     const porosityModels::powerLawLopesdaCosta& pm
 )
 {
@@ -147,8 +148,8 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correctNut()
 template<class BasicMomentumTransportModel>
 tmp<fvScalarMatrix> kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kSource
 (
-    const volScalarField::Internal& magU,
-    const volScalarField::Internal& magU3
+    const volInternalScalarField& magU,
+    const volInternalScalarField& magU3
 ) const
 {
     return fvm::Su(CdAv_*(betap_*magU3 - betad_*magU*k_()), k_);
@@ -159,8 +160,8 @@ template<class BasicMomentumTransportModel>
 tmp<fvScalarMatrix>
 kEpsilonLopesdaCosta<BasicMomentumTransportModel>::epsilonSource
 (
-    const volScalarField::Internal& magU,
-    const volScalarField::Internal& magU3
+    const volInternalScalarField& magU,
+    const volInternalScalarField& magU3
 ) const
 {
     return fvm::Su
@@ -380,24 +381,21 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
-    volScalarField::Internal divU
-    (
-        fvc::div(fvc::absolute(this->phi(), U))().v()
-    );
+    volInternalScalarField divU(fvi::div(fvc::absolute(this->phi(), U)));
 
-    tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField::Internal G
+    tmp<volInternalTensorField> tgradU = fvi::grad(U);
+    volInternalScalarField G
     (
         this->GName(),
-        nut.v()*(dev(twoSymm(tgradU().v())) && tgradU().v())
+        nut()*(dev(twoSymm(tgradU())) && tgradU())
     );
     tgradU.clear();
 
     // Update epsilon and G at the wall
     epsilon_.boundaryFieldRef().updateCoeffs();
 
-    volScalarField::Internal magU(mag(U));
-    volScalarField::Internal magU3(pow3(magU));
+    volInternalScalarField magU(mag(U));
+    volInternalScalarField magU3(pow3(magU));
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn

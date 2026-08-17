@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,15 +61,15 @@ class anisotropicFilter
     // Private Data
 
         scalar widthCoeff_;
-        volVectorField coeff_;
+        volInternalVectorField coeff_;
 
 
     // Private Member Functions
 
         template<class Type>
-        inline tmp<VolField<Type>> filter
+        inline tmp<VolInternalField<Type>> filter
         (
-            const tmp<VolField<Type>>& unFilteredField
+            const VolField<Type>& unFilteredField
         ) const;
 
 
@@ -103,27 +103,29 @@ public:
 
     // Member Operators
 
+        virtual tmp<volInternalScalarField> operator[]
+        (
+            const volScalarField&
+        ) const;
+
+        virtual tmp<volInternalVectorField> operator[]
+        (
+            const volVectorField&
+        ) const;
+
+        virtual tmp<volInternalSymmTensorField> operator[]
+        (
+            const volSymmTensorField&
+        ) const;
+
+        virtual tmp<volInternalTensorField> operator[]
+        (
+            const volTensorField&
+        ) const;
+
+
+        //- Disallow default bitwise assignment
         void operator=(const anisotropicFilter&) = delete;
-
-        virtual tmp<volScalarField> operator()
-        (
-            const tmp<volScalarField>&
-        ) const;
-
-        virtual tmp<volVectorField> operator()
-        (
-            const tmp<volVectorField>&
-        ) const;
-
-        virtual tmp<volSymmTensorField> operator()
-        (
-            const tmp<volSymmTensorField>&
-        ) const;
-
-        virtual tmp<volTensorField> operator()
-        (
-            const tmp<volTensorField>&
-        ) const;
 };
 
 

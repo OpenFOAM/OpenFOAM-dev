@@ -89,9 +89,9 @@ void Foam::reactionModels::infinitelyFastChemistry::correct()
     {
         const volScalarField& YO2 = this->thermo().Y("O2");
 
-        this->wFuel_ ==
-            this->rho()/(this->mesh().time().deltaT()*C_)
-           *min(YFuel, YO2/s.value());
+        this->wFuel_ =
+            this->rho()()/(this->mesh().time().deltaT()*C_)
+           *min(YFuel(), YO2()/s.value());
     }
 }
 

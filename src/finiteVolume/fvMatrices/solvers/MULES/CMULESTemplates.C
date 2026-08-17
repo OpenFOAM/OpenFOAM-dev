@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "CMULES.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "localEulerDdtScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -42,7 +42,7 @@ void Foam::MULES::correct
     Info<< "MULES: Correcting " << psi.name() << endl;
 
     scalarField psiIf(psi.size(), 0);
-    fvc::surfaceIntegrate(psiIf, phiCorr);
+    fvi::surfaceIntegrate(psiIf, phiCorr);
 
     psi.primitiveFieldRef() =
     (

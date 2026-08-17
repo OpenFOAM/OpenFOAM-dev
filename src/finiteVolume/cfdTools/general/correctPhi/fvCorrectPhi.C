@@ -34,7 +34,7 @@ void Foam::fv::correctPhi
     const volVectorField& U,
     const volScalarField& p,
     const autoPtr<volScalarField>& rAU,
-    const autoPtr<volScalarField>& divU,
+    const autoPtr<volInternalScalarField>& divU,
     const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pcorrControl
 )
@@ -79,7 +79,7 @@ void Foam::fv::correctPhi
     const volScalarField& p,
     const volScalarField& psi,
     const autoPtr<volScalarField>& rAU,
-    const volScalarField& divRhoU,
+    const volInternalScalarField& divRhoU,
     nonOrthogonalSolutionControl& pcorrControl
 )
 {

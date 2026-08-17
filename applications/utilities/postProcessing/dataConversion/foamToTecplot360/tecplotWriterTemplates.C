@@ -31,8 +31,6 @@ License
 
 #include "tecplotWriter.H"
 
-#include "fvc.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>

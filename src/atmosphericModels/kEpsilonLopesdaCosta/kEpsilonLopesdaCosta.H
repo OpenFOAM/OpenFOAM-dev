@@ -86,18 +86,18 @@ protected:
         // Standard model coefficients
 
             volScalarField Cmu_;
-            volScalarField::Internal C1_;
-            volScalarField::Internal C2_;
+            volInternalScalarField C1_;
+            volInternalScalarField C2_;
             volScalarField sigmak_;
             volScalarField sigmaEps_;
 
         // Lopes da Costa porosity coefficients
 
-            volScalarField::Internal CdAv_;
-            volScalarField::Internal betap_;
-            volScalarField::Internal betad_;
-            volScalarField::Internal C4_;
-            volScalarField::Internal C5_;
+            volInternalScalarField CdAv_;
+            volInternalScalarField betap_;
+            volInternalScalarField betad_;
+            volInternalScalarField C4_;
+            volInternalScalarField C5_;
 
 
         // Fields
@@ -110,13 +110,13 @@ protected:
 
         void setPorosityCoefficient
         (
-            volScalarField::Internal& C,
+            volInternalScalarField& C,
             const porosityModels::powerLawLopesdaCosta& pm
         );
 
         void setCdAv
         (
-            volScalarField::Internal& C,
+            volInternalScalarField& C,
             const porosityModels::powerLawLopesdaCosta& pm
         );
 
@@ -130,14 +130,14 @@ protected:
 
         virtual tmp<fvScalarMatrix> kSource
         (
-            const volScalarField::Internal& magU,
-            const volScalarField::Internal& magU3
+            const volInternalScalarField& magU,
+            const volInternalScalarField& magU3
         ) const;
 
         virtual tmp<fvScalarMatrix> epsilonSource
         (
-            const volScalarField::Internal& magU,
-            const volScalarField::Internal& magU3
+            const volInternalScalarField& magU,
+            const volInternalScalarField& magU3
         ) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,110 +21,64 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+InNamespace
+    Foam::fvi
+
+Description
+    Construct a volInternalField from a surface field using a combine operator
+
+SourceFiles
+    fviCellReduce.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "volFields.H"
-#include "surfaceFields.H"
+#ifndef fviCellReduce_H
+#define fviCellReduce_H
+
+#include "volFieldsFwd.H"
+#include "surfaceFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                      Namespace fvi functions Declaration
+\*---------------------------------------------------------------------------*/
 
-namespace fvc
+namespace fvi
 {
+    template<class Type, class CombineOp>
+    tmp<VolInternalField<Type>> cellReduce
+    (
+        const SurfaceField<Type>&,
+        const CombineOp& cop,
+        const Type& nullValue = pTraits<Type>::zero
+    );
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-tmp<VolField<Type>>
-Su
-(
-    const VolField<Type>& su,
-    const VolField<Type>& vf
-)
-{
-    return su;
+    template<class Type, class CombineOp>
+    tmp<VolInternalField<Type>> cellReduce
+    (
+        const tmp<SurfaceField<Type>>&,
+        const CombineOp& cop,
+        const Type& nullValue = pTraits<Type>::zero
+    );
 }
 
-template<class Type>
-tmp<VolField<Type>>
-Su
-(
-    const tmp<VolField<Type>>& tsu,
-    const VolField<Type>& vf
-)
-{
-    return tsu;
-}
-
-
-template<class Type>
-tmp<VolField<Type>>
-Sp
-(
-    const volScalarField& sp,
-    const VolField<Type>& vf
-)
-{
-    return sp*vf;
-}
-
-template<class Type>
-tmp<VolField<Type>>
-Sp
-(
-    const tmp<volScalarField>& tsp,
-    const VolField<Type>& vf
-)
-{
-    return tsp*vf;
-}
-
-
-template<class Type>
-tmp<VolField<Type>>
-Sp
-(
-    const dimensionedScalar& sp,
-    const VolField<Type>& vf
-)
-{
-    return sp*vf;
-}
-
-
-template<class Type>
-tmp<VolField<Type>>
-SuSp
-(
-    const volScalarField& sp,
-    const VolField<Type>& vf
-)
-{
-    return sp*vf;
-}
-
-template<class Type>
-tmp<VolField<Type>>
-SuSp
-(
-    const tmp<volScalarField>& tsp,
-    const VolField<Type>& vf
-)
-{
-    return tsp*vf;
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace fvc
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "fviCellReduce.C"
+#endif
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

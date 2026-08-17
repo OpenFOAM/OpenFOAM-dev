@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 #include "adjustPhi.H"
 #include "fvcMeshPhi.H"
 #include "fvcFlux.H"
+#include "fviDdt.H"
 #include "fvcDdt.H"
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
@@ -87,8 +88,8 @@ void Foam::solvers::incompressibleDenseParticleFluid::correctPressure()
         (
             fvm::laplacian(alphacf*rADUcf, p)
          ==
-            fvc::ddt(alphac)
-          + fvc::div(alphacf*phiHbyAD)
+            fvi::ddt(alphac)
+          + fvi::div(alphacf*phiHbyAD)
           + fvModels().sourceProxy(alphac, p)
         );
 

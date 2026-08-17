@@ -60,7 +60,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::motionCorrector()
                     Uc,
                     p,
                     autoPtr<volScalarField>(),
-                    autoPtr<volScalarField>(),
+                    autoPtr<volInternalScalarField>(),
                     pressureReference,
                     pimple
                 );

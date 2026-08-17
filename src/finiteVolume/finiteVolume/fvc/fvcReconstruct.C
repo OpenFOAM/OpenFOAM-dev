@@ -27,7 +27,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,10 +44,7 @@ namespace fvc
 
 template<class Type>
 tmp<VolField<typename outerProduct<vector, Type>::type>>
-reconstruct
-(
-    const SurfaceField<Type>& ssf
-)
+reconstruct(const SurfaceField<Type>& ssf)
 {
     typedef typename outerProduct<vector, Type>::type GradType;
 
@@ -72,8 +69,8 @@ reconstruct
     }
 
     treconField.ref().internalFieldRef() =
-        inv(surfaceSum(SfHat*mesh.Sf()), mesh.solutionD())
-      & surfaceSum(SfHat*ssf);
+        inv(fvi::surfaceSum(SfHat*mesh.Sf()), mesh.solutionD())
+      & fvi::surfaceSum(SfHat*ssf);
 
     treconField.ref().correctBoundaryConditions();
 
@@ -89,10 +86,7 @@ reconstruct
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<VolField<GradType>> tvf
-    (
-        fvc::reconstruct(tssf())
-    );
+    tmp<VolField<GradType>> tvf(fvc::reconstruct(tssf()));
     tssf.clear();
     return tvf;
 }

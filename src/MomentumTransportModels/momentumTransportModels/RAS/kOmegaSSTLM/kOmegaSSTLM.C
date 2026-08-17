@@ -48,9 +48,9 @@ tmp<volScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::F1
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Pk
+tmp<volInternalScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::Pk
 (
-    const volScalarField::Internal& G
+    const volInternalScalarField& G
 ) const
 {
     return gammaIntEff_*kOmegaSST<BasicMomentumTransportModel>::Pk(G);
@@ -58,11 +58,11 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Pk
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmegaSSTLM<BasicMomentumTransportModel>::epsilonByk
 (
-    const volScalarField::Internal& F1,
-    const volScalarField::Internal& F2
+    const volInternalScalarField& F1,
+    const volInternalScalarField& F2
 ) const
 {
     return
@@ -72,25 +72,25 @@ kOmegaSSTLM<BasicMomentumTransportModel>::epsilonByk
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Fthetat
+tmp<volInternalScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::Fthetat
 (
-    const volScalarField::Internal& Us,
-    const volScalarField::Internal& Omega,
-    const volScalarField::Internal& nu
+    const volInternalScalarField& Us,
+    const volInternalScalarField& Omega,
+    const volInternalScalarField& nu
 ) const
 {
-    const volScalarField::Internal& omega = this->omega_();
-    const volScalarField::Internal& y = this->y()();
+    const volInternalScalarField& omega = this->omega_();
+    const volInternalScalarField& y = this->y()();
 
-    const volScalarField::Internal yBydelta
+    const volInternalScalarField yBydelta
     (
         sqr(Us)
        /max(375*Omega*nu*ReThetat_(), sqr(deltaU_))
     );
-    const volScalarField::Internal ReOmega(sqr(y)*omega/nu);
-    const volScalarField::Internal Fwake(exp(-sqr(ReOmega/1e5)));
+    const volInternalScalarField ReOmega(sqr(y)*omega/nu);
+    const volInternalScalarField Fwake(exp(-sqr(ReOmega/1e5)));
 
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         this->groupName("Fthetat"),
         min
@@ -107,19 +107,19 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Fthetat
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmegaSSTLM<BasicMomentumTransportModel>::ReThetac() const
 {
-    tmp<volScalarField::Internal> tReThetac
+    tmp<volInternalScalarField> tReThetac
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             this->groupName("ReThetac"),
             this->mesh_,
             dimless
         )
     );
-    volScalarField::Internal& ReThetac = tReThetac.ref();
+    volInternalScalarField& ReThetac = tReThetac.ref();
 
     forAll(ReThetac, celli)
     {
@@ -143,24 +143,24 @@ kOmegaSSTLM<BasicMomentumTransportModel>::ReThetac() const
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Flength
+tmp<volInternalScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::Flength
 (
-    const volScalarField::Internal& nu
+    const volInternalScalarField& nu
 ) const
 {
-    tmp<volScalarField::Internal> tFlength
+    tmp<volInternalScalarField> tFlength
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             this->groupName("Flength"),
             this->mesh_,
             dimless
         )
     );
-    volScalarField::Internal& Flength = tFlength.ref();
+    volInternalScalarField& Flength = tFlength.ref();
 
-    const volScalarField::Internal& omega = this->omega_();
-    const volScalarField::Internal& y = this->y()();
+    const volInternalScalarField& omega = this->omega_();
+    const volInternalScalarField& y = this->y()();
 
     forAll(ReThetat_, celli)
     {
@@ -201,24 +201,24 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Flength
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volInternalScalarField>
 kOmegaSSTLM<BasicMomentumTransportModel>::ReThetat0
 (
-    const volScalarField::Internal& Us,
-    const volScalarField::Internal& dUsds,
-    const volScalarField::Internal& nu
+    const volInternalScalarField& Us,
+    const volInternalScalarField& dUsds,
+    const volInternalScalarField& nu
 ) const
 {
-    tmp<volScalarField::Internal> tReThetat0
+    tmp<volInternalScalarField> tReThetat0
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             this->groupName("ReThetat0"),
             this->mesh_,
             dimless
         )
     );
-    volScalarField::Internal& ReThetat0 = tReThetat0.ref();
+    volInternalScalarField& ReThetat0 = tReThetat0.ref();
 
     const volScalarField& k = this->k_;
 
@@ -311,23 +311,23 @@ kOmegaSSTLM<BasicMomentumTransportModel>::ReThetat0
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Fonset
+tmp<volInternalScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::Fonset
 (
-    const volScalarField::Internal& Rev,
-    const volScalarField::Internal& ReThetac,
-    const volScalarField::Internal& RT
+    const volInternalScalarField& Rev,
+    const volInternalScalarField& ReThetac,
+    const volInternalScalarField& RT
 ) const
 {
-    const volScalarField::Internal Fonset1(Rev/(2.193*ReThetac));
+    const volInternalScalarField Fonset1(Rev/(2.193*ReThetac));
 
-    const volScalarField::Internal Fonset2
+    const volInternalScalarField Fonset2
     (
         min(max(Fonset1, pow4(Fonset1)), scalar(2))
     );
 
-    const volScalarField::Internal Fonset3(max(1 - pow3(RT/2.5), scalar(0)));
+    const volInternalScalarField Fonset3(max(1 - pow3(RT/2.5), scalar(0)));
 
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         this->groupName("Fonset"),
         max(Fonset2 - Fonset3, scalar(0))
@@ -447,8 +447,8 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
     const volScalarField& k = this->k_;
     const volScalarField& omega = this->omega_;
     const tmp<volScalarField> tnu = this->nu();
-    const volScalarField::Internal& nu = tnu()();
-    const volScalarField::Internal& y = this->y()();
+    const volInternalScalarField& nu = tnu()();
+    const volInternalScalarField& y = this->y()();
     const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
     const Foam::fvConstraints& fvConstraints
     (
@@ -456,18 +456,18 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
     );
 
     // Fields derived from the velocity gradient
-    tmp<volTensorField> tgradU = fvc::grad(U);
-    const volScalarField::Internal Omega(sqrt(2*magSqr(skew(tgradU()()))));
-    const volScalarField::Internal S(sqrt(2*magSqr(symm(tgradU()()))));
-    const volScalarField::Internal Us(max(mag(U()), deltaU_));
-    const volScalarField::Internal dUsds((U() & (U() & tgradU()()))/sqr(Us));
+    tmp<volInternalTensorField> tgradU = fvi::grad(U);
+    const volInternalScalarField Omega(sqrt(2*magSqr(skew(tgradU()))));
+    const volInternalScalarField S(sqrt(2*magSqr(symm(tgradU()))));
+    const volInternalScalarField Us(max(mag(U()), deltaU_));
+    const volInternalScalarField dUsds((U() & (U() & tgradU()))/sqr(Us));
     tgradU.clear();
 
-    const volScalarField::Internal Fthetat(this->Fthetat(Us, Omega, nu));
+    const volInternalScalarField Fthetat(this->Fthetat(Us, Omega, nu));
 
     {
-        const volScalarField::Internal t(500*nu/sqr(Us));
-        const volScalarField::Internal Pthetat
+        const volInternalScalarField t(500*nu/sqr(Us));
+        const volInternalScalarField Pthetat
         (
             alpha()*rho()*(cThetat_/t)*(1 - Fthetat)
         );
@@ -490,20 +490,20 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
         bound(ReThetat_, 0);
     }
 
-    const volScalarField::Internal ReThetac(this->ReThetac());
-    const volScalarField::Internal Rev(sqr(y)*S/nu);
-    const volScalarField::Internal RT(k()/(nu*omega()));
+    const volInternalScalarField ReThetac(this->ReThetac());
+    const volInternalScalarField Rev(sqr(y)*S/nu);
+    const volInternalScalarField RT(k()/(nu*omega()));
 
     {
-        const volScalarField::Internal Pgamma
+        const volInternalScalarField Pgamma
         (
             alpha()*rho()
            *ca1_*Flength(nu)*S*sqrt(gammaInt_()*Fonset(Rev, ReThetac, RT))
         );
 
-        const volScalarField::Internal Fturb(exp(-pow4(0.25*RT)));
+        const volInternalScalarField Fturb(exp(-pow4(0.25*RT)));
 
-        const volScalarField::Internal Egamma
+        const volInternalScalarField Egamma
         (
             alpha()*rho()*ca2_*Omega*Fturb*gammaInt_()
         );
@@ -527,8 +527,8 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
         bound(gammaInt_, 0);
     }
 
-    const volScalarField::Internal Freattach(exp(-pow4(RT/20.0)));
-    const volScalarField::Internal gammaSep
+    const volInternalScalarField Freattach(exp(-pow4(RT/20.0)));
+    const volInternalScalarField gammaSep
     (
         min(2*max(Rev/(3.235*ReThetac) - 1, scalar(0))*Freattach, scalar(2))
        *Fthetat

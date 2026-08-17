@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "gaussConvectionScheme.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvcSurfaceIntegrate.H"
 #include "fvMatrices.H"
 
@@ -72,6 +73,50 @@ gaussConvectionScheme<Type>::flux
 
 
 template<class Type>
+tmp<VolInternalField<Type>>
+gaussConvectionScheme<Type>::fviDiv
+(
+    const surfaceScalarField& faceFlux,
+    const VolField<Type>& vf
+) const
+{
+    tmp<VolInternalField<Type>> tConvection
+    (
+        fvi::surfaceIntegrate(flux(faceFlux, vf))
+    );
+
+    tConvection.ref().rename
+    (
+        "convection(" + faceFlux.name() + ',' + vf.name() + ')'
+    );
+
+    return tConvection;
+}
+
+
+template<class Type>
+tmp<VolField<Type>>
+gaussConvectionScheme<Type>::fvcDiv
+(
+    const surfaceScalarField& faceFlux,
+    const VolField<Type>& vf
+) const
+{
+    tmp<VolField<Type>> tConvection
+    (
+        fvc::surfaceIntegrate(flux(faceFlux, vf))
+    );
+
+    tConvection.ref().rename
+    (
+        "convection(" + faceFlux.name() + ',' + vf.name() + ')'
+    );
+
+    return tConvection;
+}
+
+
+template<class Type>
 tmp<fvMatrix<Type>>
 gaussConvectionScheme<Type>::fvmDiv
 (
@@ -113,7 +158,7 @@ gaussConvectionScheme<Type>::fvmDiv
             faceFlux*tinterpScheme_().correction(vf)
         );
 
-        fvm += fvc::surfaceIntegrate(tfaceFluxCorrection());
+        fvm += fvi::surfaceIntegrate(tfaceFluxCorrection());
 
         if (vf.mesh().schemes().fluxRequired(vf.name()))
         {
@@ -122,28 +167,6 @@ gaussConvectionScheme<Type>::fvmDiv
     }
 
     return tfvm;
-}
-
-
-template<class Type>
-tmp<VolField<Type>>
-gaussConvectionScheme<Type>::fvcDiv
-(
-    const surfaceScalarField& faceFlux,
-    const VolField<Type>& vf
-) const
-{
-    tmp<VolField<Type>> tConvection
-    (
-        fvc::surfaceIntegrateExtrapolate(flux(faceFlux, vf))
-    );
-
-    tConvection.ref().rename
-    (
-        "convection(" + faceFlux.name() + ',' + vf.name() + ')'
-    );
-
-    return tConvection;
 }
 
 

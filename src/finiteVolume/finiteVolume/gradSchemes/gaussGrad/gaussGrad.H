@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,15 @@ protected:
         tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
+    // Protected Member Functions
+
+        static void calcGrad
+        (
+            VolInternalField<typename outerProduct<vector, Type>::type>& grad,
+            const SurfaceField<Type>& sf
+        );
+
+
 public:
 
     //- Runtime type information
@@ -112,30 +121,32 @@ public:
 
     // Member Functions
 
+        //- Set the grad field to the gradient of the volField vf
+        virtual void calcGrad
+        (
+            VolInternalField<typename outerProduct<vector, Type>::type>& grad,
+            const VolField<Type>& vf
+        ) const;
+
+        // using fv::gradScheme<Type>::fviGrad;
+        using fv::gradScheme<Type>::fvcGrad;
+
         //- Return the gradient of the given field
         //  calculated using Gauss' theorem on the given surface field
-        static tmp<VolField<typename outerProduct<vector, Type>::type>>
-        gradf
+        static tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
+        fviGrad
         (
             const SurfaceField<Type>&,
             const word& name
         );
 
-        //- Return the gradient of the given field to the gradScheme::grad
-        //  for optional caching
-        virtual tmp<VolField<typename outerProduct<vector, Type>::type>>
-        calcGrad
+        //- Return the gradient of the given field
+        //  calculated using Gauss' theorem on the given surface field
+        static tmp<VolField<typename outerProduct<vector, Type>::type>>
+        fvcGrad
         (
-            const VolField<Type>& vsf,
+            const SurfaceField<Type>&,
             const word& name
-        ) const;
-
-        //- Correct the boundary values of the gradient using the patchField
-        // snGrad functions
-        static void correctBoundaryConditions
-        (
-            const VolField<Type>&,
-            VolField<typename outerProduct<vector, Type>::type>&
         );
 
 

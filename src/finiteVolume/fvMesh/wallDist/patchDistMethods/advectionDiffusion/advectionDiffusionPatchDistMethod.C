@@ -26,7 +26,7 @@ License
 #include "advectionDiffusionPatchDistMethod.H"
 #include "surfaceInterpolate.H"
 #include "fvcGrad.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
@@ -134,7 +134,7 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
         fvScalarMatrix yEqn
         (
             fvm::div(yPhi, y)
-          - fvm::Sp(fvc::div(yPhi), y)
+          - fvm::Sp(fvi::div(yPhi), y)
           - epsilon_*y*fvm::laplacian(y)
          ==
             dimensionedScalar(dimless, 1.0)

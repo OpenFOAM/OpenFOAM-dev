@@ -23,16 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-inline const typename
-Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Internal&
-Foam::GeometricField<Type, GeoMesh, PrimitiveField>::v() const
-{
-    static_assert(isVolMesh<GeoMesh>::value, "Only valid for volFields");
-    return *this;
-}
-
-
 template<>
 inline Foam::tmp<Foam::GeometricField<Foam::scalar, Foam::fvMesh>>
 Foam::GeometricField<Foam::scalar, Foam::fvMesh>::component

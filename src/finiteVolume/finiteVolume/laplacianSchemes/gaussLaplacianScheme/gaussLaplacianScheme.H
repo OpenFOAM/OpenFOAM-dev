@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,6 +110,30 @@ public:
 
     // Member Functions
 
+        tmp<VolInternalField<Type>> fviLaplacian
+        (
+            const VolField<Type>&
+        );
+
+        tmp<VolInternalField<Type>> fviLaplacian
+        (
+            const SurfaceField<GType>&,
+            const VolField<Type>&
+        );
+
+
+        tmp<VolField<Type>> fvcLaplacian
+        (
+            const VolField<Type>&
+        );
+
+        tmp<VolField<Type>> fvcLaplacian
+        (
+            const SurfaceField<GType>&,
+            const VolField<Type>&
+        );
+
+
         static tmp<fvMatrix<Type>> fvmLaplacianUncorrected
         (
             const surfaceScalarField& gammaMagSf,
@@ -117,18 +141,7 @@ public:
             const VolField<Type>&
         );
 
-        tmp<VolField<Type>> fvcLaplacian
-        (
-            const VolField<Type>&
-        );
-
         tmp<fvMatrix<Type>> fvmLaplacian
-        (
-            const SurfaceField<GType>&,
-            const VolField<Type>&
-        );
-
-        tmp<VolField<Type>> fvcLaplacian
         (
             const SurfaceField<GType>&,
             const VolField<Type>&
@@ -144,16 +157,24 @@ public:
 template<>                                                                     \
 tmp<fvMatrix<Type>> gaussLaplacianScheme<Type, scalar>::fvmLaplacian           \
 (                                                                              \
-    const SurfaceField<scalar>&,                 \
-    const VolField<Type>&                         \
+    const SurfaceField<scalar>&,                                               \
+    const VolField<Type>&                                                      \
 );                                                                             \
                                                                                \
 template<>                                                                     \
-tmp<VolField<Type>>                               \
+tmp<VolInternalField<Type>>                                                    \
+gaussLaplacianScheme<Type, scalar>::fviLaplacian                               \
+(                                                                              \
+    const SurfaceField<scalar>&,                                               \
+    const VolField<Type>&                                                      \
+);                                                                             \
+                                                                               \
+template<>                                                                     \
+tmp<VolField<Type>>                                                            \
 gaussLaplacianScheme<Type, scalar>::fvcLaplacian                               \
 (                                                                              \
-    const SurfaceField<scalar>&,                 \
-    const VolField<Type>&                         \
+    const SurfaceField<scalar>&,                                               \
+    const VolField<Type>&                                                      \
 );
 
 

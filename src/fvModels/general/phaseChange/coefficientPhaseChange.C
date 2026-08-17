@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coefficientPhaseChange.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "multicomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -87,7 +87,7 @@ Foam::fv::coefficientPhaseChange::timesY1
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::fv::coefficientPhaseChange::mDotByAlpha1Y1() const
 {
-    return C_*mag(fvc::grad(alpha1_))()();
+    return C_*mag(fvi::grad(alpha1_));
 }
 
 

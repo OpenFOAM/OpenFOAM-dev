@@ -203,7 +203,7 @@ Foam::reactionModels::singleStepReaction::~singleStepReaction()
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::reactionModels::singleStepReaction::R(const label speciei) const
 {
-    return wFuel_()*specieStoichCoeffs()[speciei];
+    return wFuel_*specieStoichCoeffs()[speciei];
 }
 
 
@@ -212,7 +212,7 @@ Foam::reactionModels::singleStepReaction::R(volScalarField& Y) const
 {
     const label specieI = thermo_.species()[Y.member()];
 
-    volScalarField wSpecie
+    volInternalScalarField wSpecie
     (
         wFuel_*specieStoichCoeffs()[specieI]
     );
@@ -221,7 +221,7 @@ Foam::reactionModels::singleStepReaction::R(volScalarField& Y) const
     {
         const label fNorm = specieProd()[specieI];
         const volScalarField fres(this->fres(specieI));
-        wSpecie /= max(fNorm*(Y - fres), scalar(1e-2));
+        wSpecie /= max(fNorm*(Y() - fres()), scalar(1e-2));
 
         return -fNorm*wSpecie*fres + fNorm*fvm::Sp(wSpecie, Y);
     }

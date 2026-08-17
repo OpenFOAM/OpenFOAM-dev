@@ -25,8 +25,8 @@ License
 
 #include "compressibleMultiphaseVoF.H"
 #include "geometricZeroField.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -123,7 +123,7 @@ void Foam::solvers::compressibleMultiphaseVoF::prePredictor()
 {
     multiphaseVoFSolver::prePredictor();
 
-    contErr = fvc::ddt(rho)()() + fvc::div(rhoPhi)()();
+    contErr = fvi::ddt(rho) + fvi::div(rhoPhi);
 
     forAll(mixture.phases(), phasei)
     {

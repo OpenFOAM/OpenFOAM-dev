@@ -75,14 +75,14 @@ Foam::scalar Foam::consumptionSpeed::omega0Sigma
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::consumptionSpeed::omega0Sigma
+Foam::tmp<Foam::volInternalScalarField> Foam::consumptionSpeed::omega0Sigma
 (
-    const volScalarField& sigma
+    const volInternalScalarField& sigma
 )
 {
-    tmp<volScalarField> tomega0
+    tmp<volInternalScalarField> tomega0
     (
-        volScalarField::New
+        volInternalScalarField::New
         (
             "omega0",
             sigma.mesh(),
@@ -94,28 +94,11 @@ Foam::tmp<Foam::volScalarField> Foam::consumptionSpeed::omega0Sigma
         )
     );
 
-    volScalarField& omega0 = tomega0.ref();
+    volInternalScalarField& omega0 = tomega0.ref();
 
-    volScalarField::Internal& iomega0 = omega0;
-
-    forAll(iomega0, celli)
+    forAll(omega0, celli)
     {
-        iomega0[celli] = omega0Sigma(sigma[celli], 1.0);
-    }
-
-    volScalarField::Boundary& bomega0 = omega0.boundaryFieldRef();
-
-    forAll(bomega0, patchi)
-    {
-        forAll(bomega0[patchi], facei)
-        {
-            bomega0[patchi][facei] =
-                omega0Sigma
-                (
-                    sigma.boundaryField()[patchi][facei],
-                    1.0
-                );
-        }
+        omega0[celli] = omega0Sigma(sigma[celli], 1.0);
     }
 
     return tomega0;

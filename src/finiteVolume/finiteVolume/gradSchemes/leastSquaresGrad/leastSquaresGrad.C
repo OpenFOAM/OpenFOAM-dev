@@ -25,47 +25,22 @@ License
 
 #include "leastSquaresGrad.H"
 #include "leastSquaresVectors.H"
-#include "gaussGrad.H"
-#include "fvMesh.H"
-#include "GeometricField.H"
-#include "extrapolatedCalculatedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp
-<
-    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
->
-Foam::fv::leastSquaresGrad<Type>::calcGrad
+void Foam::fv::leastSquaresGrad<Type>::calcGrad
 (
-    const VolField<Type>& vsf,
-    const word& name
+    VolInternalField<typename outerProduct<vector, Type>::type>& grad,
+    const VolField<Type>& vsf
 ) const
 {
-    typedef typename outerProduct<vector, Type>::type GradType;
-
     const fvMesh& mesh = vsf.mesh();
-
-    tmp<VolField<GradType>> tlsGrad
-    (
-        VolField<GradType>::New
-        (
-            name,
-            mesh,
-            dimensioned<GradType>
-            (
-                "zero",
-                vsf.dimensions()/dimensions::length,
-                Zero
-            ),
-            extrapolatedCalculatedFvPatchField<GradType>::typeName
-        )
-    );
-    VolField<GradType>& lsGrad = tlsGrad.ref();
 
     // Get reference to least square vectors
     const leastSquaresVectors& lsv = leastSquaresVectors::New(mesh);
+
+    grad = Zero;
 
     const surfaceVectorField& ownLs = lsv.pVectors();
     const surfaceVectorField& neiLs = lsv.nVectors();
@@ -80,8 +55,8 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
 
         Type deltaVsf = vsf[neiFacei] - vsf[ownFacei];
 
-        lsGrad[ownFacei] += ownLs[facei]*deltaVsf;
-        lsGrad[neiFacei] -= neiLs[facei]*deltaVsf;
+        grad[ownFacei] += ownLs[facei]*deltaVsf;
+        grad[neiFacei] -= neiLs[facei]*deltaVsf;
     }
 
     // Boundary faces
@@ -101,7 +76,7 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
 
             forAll(neiVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFacei]] +=
+                grad[faceCells[patchFacei]] +=
                     patchOwnLs[patchFacei]
                    *(neiVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
@@ -112,18 +87,12 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
 
             forAll(patchVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFacei]] +=
+                grad[faceCells[patchFacei]] +=
                      patchOwnLs[patchFacei]
                     *(patchVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
         }
     }
-
-
-    lsGrad.correctBoundaryConditions();
-    gaussGrad<Type>::correctBoundaryConditions(vsf, lsGrad);
-
-    return tlsGrad;
 }
 
 

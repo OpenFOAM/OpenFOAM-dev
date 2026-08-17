@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,28 +95,25 @@ public:
 
     // Member Operators
 
-        virtual tmp<volScalarField> operator()
+        virtual tmp<volInternalScalarField> operator[]
         (
-            const tmp<volScalarField>&
+            const volScalarField&
         ) const;
 
-        virtual tmp<volVectorField> operator()
+        virtual tmp<volInternalVectorField> operator[]
         (
-            const tmp<volVectorField>&
+            const volVectorField&
         ) const;
 
-        virtual tmp<volSymmTensorField> operator()
+        virtual tmp<volInternalSymmTensorField> operator[]
         (
-            const tmp<volSymmTensorField>&
+            const volSymmTensorField&
         ) const;
 
-        virtual tmp<volTensorField> operator()
+        virtual tmp<volInternalTensorField> operator[]
         (
-            const tmp<volTensorField>&
+            const volTensorField&
         ) const;
-
-
-    // Member Operators
 
         //- Disallow default bitwise assignment
         void operator=(const laplaceFilter&) = delete;

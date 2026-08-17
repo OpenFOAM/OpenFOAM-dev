@@ -79,9 +79,9 @@
 
             // Calculate kernel area from b field consistent with the
             // discretisation of the b equation.
-            const volScalarField mgb
+            const volInternalScalarField mgb
             (
-                fvc::div(nf, b, "div(phiSt,b)") - b*fvc::div(nf) + dMgb
+                fvi::div(nf, b, "div(phiSt,b)") - b*fvi::div(nf) + dMgb
             );
             const scalar AkEst =
                 gSum(mgb.primitiveField()*mesh.V().primitiveField());

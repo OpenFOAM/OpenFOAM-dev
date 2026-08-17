@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LienLeschziner.H"
+#include "fviGrad.H"
 #include "wallDist.H"
 #include "bound.H"
 #include "makeMomentumTransportModel.H"
@@ -204,11 +205,11 @@ void LienLeschziner::correct()
 
     eddyViscosity<incompressible::RASModel>::correct();
 
-    tmp<volTensorField> tgradU = fvc::grad(U_);
-    volScalarField G
+    tmp<volInternalTensorField> tgradU = fvi::grad(U_);
+    volInternalScalarField G
     (
         GName(),
-        nut_*(tgradU() && twoSymm(tgradU()))
+        nut_()*(tgradU() && twoSymm(tgradU()))
     );
     tgradU.clear();
 

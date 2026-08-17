@@ -25,8 +25,8 @@ License
 
 #include "addToRunTimeSelectionTable.H"
 #include "fixedValueFvPatchField.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
@@ -145,7 +145,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
     // comparable to the solution tolerance.
     auto writeDDt = [&](const label i)
     {
-        const volScalarField DDtAlpha
+        const volScalarField::Internal DDtAlpha
         (
             "DDt("
           + IOobject::groupName
@@ -154,7 +154,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
                 IOobject::group(alpha.name())
             )
           + ")",
-            fvc::ddt(alpha) + fvc::div(alphaPhi)
+            fvi::ddt(alpha) + fvi::div(alphaPhi)
         );
         Info<< type() << ": Writing " << DDtAlpha.name() << endl;
         DDtAlpha.write();
@@ -179,8 +179,8 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
             fvScalarMatrix PhiEqn
             (
                 fvm::laplacian(Phi, PhiLaplacianScheme)
-              + fvc::ddt(alpha)
-              + fvc::div(alphaPhi)
+              + fvi::ddt(alpha)
+              + fvi::div(alphaPhi)
             );
 
             PhiEqn.solve(pName_);
@@ -201,8 +201,8 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
             fvScalarMatrix PhiEqn
             (
                 fvm::laplacian(Phi, PhiLaplacianScheme)
-              + fvc::ddt(rho, alpha)
-              + fvc::div(alphaPhi)
+              + fvi::ddt(rho, alpha)
+              + fvi::div(alphaPhi)
             );
 
             PhiEqn.solve(pName_);
@@ -425,7 +425,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
              ==
                 fvModels.source(alpha, s_)
               - fvm::ddt(residualAlpha_, s_)
-              + fvc::ddt(residualAlpha_, s_)
+              + fvi::ddt(residualAlpha_, s_)
             );
 
             if (diffusivity_ != scalarTransport::diffusivityType::none)
@@ -469,7 +469,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
              ==
                 fvModels.source(alpha, rho, s_)
               - fvm::ddt(residualAlpha_*rho, s_)
-              + fvc::ddt(residualAlpha_*rho, s_)
+              + fvi::ddt(residualAlpha_*rho, s_)
             );
 
             if (diffusivity_ != scalarTransport::diffusivityType::none)

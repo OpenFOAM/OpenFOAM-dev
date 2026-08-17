@@ -25,7 +25,7 @@ License
 
 #include "forcing.H"
 #include "fvMatrix.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "fvcVolumeIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -154,7 +154,7 @@ Foam::dimensionedScalar Foam::fv::forcing::regionLength() const
         const volScalarField scale(scale_->value(x));
 
         vs += fvc::domainIntegrate(scale);
-        vgrads += fvc::domainIntegrate(directions_[i] & fvc::grad(scale));
+        vgrads += fvc::domainIntegrate(directions_[i] & fvi::grad(scale));
     }
 
     return vs/vgrads;

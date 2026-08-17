@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,8 @@ License
 #include "VoFCavitation.H"
 #include "VoFSolver.H"
 #include "incompressibleTwoPhaseVoFMixture.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -187,11 +187,11 @@ void Foam::fv::VoFCavitation::addSup
 
         if (&U == &eqn.psi())
         {
-            eqn += fvm::Sp(fvc::ddt(rho) + fvc::div(rhoPhi), eqn.psi());
+            eqn += fvm::Sp(fvi::ddt(rho) + fvi::div(rhoPhi), eqn.psi());
         }
         else
         {
-            eqn += (fvc::ddt(rho) + fvc::div(rhoPhi))*U;
+            eqn += (fvi::ddt(rho) + fvi::div(rhoPhi))*U;
         }
     }
     else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
 {
     const scalarField sumPhi
     (
-        fvc::surfaceSum(mag(phi))().primitiveField()
+        fvi::surfaceSum(mag(phi))().primitiveField()
        /h.primitiveField()
     );
 
@@ -47,7 +47,7 @@ Description
     // Gravity wave Courant number
     const scalar waveCoNum = 0.25*gMax
     (
-        fvc::surfaceSum
+        fvi::surfaceSum
         (
             fvc::interpolate(sqrt(h))*mesh.magSf()
         )().primitiveField()/mesh.V().primitiveField()

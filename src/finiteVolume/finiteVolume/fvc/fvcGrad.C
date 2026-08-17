@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ grad
     const SurfaceField<Type>& ssf
 )
 {
-    return fv::gaussGrad<Type>::gradf(ssf, "grad(" + ssf.name() + ')');
+    return fv::gaussGrad<Type>::fvcGrad(ssf, "grad(" + ssf.name() + ')');
 }
 
 
@@ -79,7 +79,7 @@ grad
     (
         vf.mesh(),
         vf.mesh().schemes().grad(name)
-    )().grad(vf, name);
+    )().fvcGrad(vf, name);
 }
 
 

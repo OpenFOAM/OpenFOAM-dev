@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEpsilon.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "bound.H"
@@ -49,7 +50,7 @@ tmp<volScalarField> kEpsilon<BasicMomentumTransportModel>::boundEpsilon()
 template<class BasicMomentumTransportModel>
 void kEpsilon<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_ = boundEpsilon()/epsilon_;
+    this->nut_.internalFieldRef() = boundEpsilon()()/epsilon_();
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -194,16 +195,13 @@ void kEpsilon<BasicMomentumTransportModel>::correct()
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
-    volScalarField::Internal divU
-    (
-        fvc::div(fvc::absolute(this->phi(), U))()
-    );
+    volInternalScalarField divU(fvi::div(fvc::absolute(this->phi(), U)));
 
-    tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField::Internal G
+    tmp<volInternalTensorField> tgradU = fvi::grad(U);
+    volInternalScalarField G
     (
         this->GName(),
-        nut()*(dev(twoSymm(tgradU().v())) && tgradU().v())
+        nut()*(dev(twoSymm(tgradU())) && tgradU())
     );
     tgradU.clear();
 

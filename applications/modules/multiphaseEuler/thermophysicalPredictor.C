@@ -26,7 +26,6 @@ License
 #include "multiphaseEuler.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
-#include "fvcSup.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"

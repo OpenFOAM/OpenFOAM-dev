@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ namespace Foam
             const volVectorField& U,
             const volScalarField& p,
             const autoPtr<volScalarField>& rAU,
-            const autoPtr<volScalarField>& divU,
+            const autoPtr<volInternalScalarField>& divU,
             const pressureReference& pressureReference,
             nonOrthogonalSolutionControl& pcorrControl
         );
@@ -90,7 +90,7 @@ namespace Foam
             const volScalarField& p,
             const volScalarField& psi,
             const autoPtr<volScalarField>& rAU,
-            const volScalarField& divRhoU,
+            const volInternalScalarField& divRhoU,
             nonOrthogonalSolutionControl& pcorrControl
         );
     }

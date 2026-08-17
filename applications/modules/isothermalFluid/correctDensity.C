@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "isothermalFluid.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -34,7 +34,7 @@ void Foam::solvers::isothermalFluid::correctDensity()
 
     fvScalarMatrix rhoEqn
     (
-        fvm::ddt(rho) + fvc::div(phi)
+        fvm::ddt(rho) + fvi::div(phi)
       ==
         fvModels().source(rho)
     );

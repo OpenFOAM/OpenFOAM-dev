@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ SourceFiles
 #include "volFields.H"
 #include "typeInfo.H"
 #include "autoPtr.H"
+#include "extrapolatedCalculatedFvPatchField.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,23 +58,6 @@ class LESfilter
     // Private Data
 
         const fvMesh& mesh_;
-
-
-protected:
-
-    //- Temporary function to ensure the coupled boundary conditions of the
-    //  field are correct for filtering.
-    //
-    //  Following the rewrite of the turbulence models to use
-    //  GeometricField::InternalField for sources etc. delta() will return a
-    //  GeometricField::InternalField and filters will take a
-    //  tmp<GeometricField::InternalField> argument and handle the coupled BCs
-    //  appropriately
-    template<class GeoFieldType>
-    void correctBoundaryConditions(const tmp<GeoFieldType>& tgf) const
-    {
-        const_cast<GeoFieldType&>(tgf()).correctBoundaryConditions();
-    }
 
 
 public:
@@ -141,25 +125,68 @@ public:
 
         void operator=(const LESfilter&) = delete;
 
-        virtual tmp<volScalarField> operator()
+        virtual tmp<volInternalScalarField> operator[]
         (
-            const tmp<volScalarField>&
+            const volScalarField&
         ) const = 0;
 
-        virtual tmp<volVectorField> operator()
+        virtual tmp<volInternalVectorField> operator[]
         (
-            const tmp<volVectorField>&
+            const volVectorField&
         ) const = 0;
 
-        virtual tmp<volSymmTensorField> operator()
+        virtual tmp<volInternalSymmTensorField> operator[]
         (
-            const tmp<volSymmTensorField>&
+            const volSymmTensorField&
         ) const = 0;
 
-        virtual tmp<volTensorField> operator()
+        virtual tmp<volInternalTensorField> operator[]
         (
-            const tmp<volTensorField>&
+            const volTensorField&
         ) const = 0;
+
+        template<class FieldType>
+        tmp<typename FieldType::Internal> operator[]
+        (
+            const tmp<FieldType>& tf
+        ) const
+        {
+            tmp<typename FieldType::Internal> result =  operator[](tf());
+            tf.clear();
+            return result;
+        }
+
+        template<class FieldType>
+        tmp<FieldType> operator()(const FieldType& f) const
+        {
+            return FieldType::New
+            (
+                "filtered(" + f.name() + ')',
+                operator[](f),
+                extrapolatedCalculatedFvPatchField
+                <
+                    typename FieldType::Type_
+                >::typeName
+            );
+        }
+
+        template<class FieldType>
+        tmp<FieldType> operator()(const tmp<FieldType>& tf) const
+        {
+            tmp<FieldType> result = FieldType::New
+            (
+                "filtered(" + tf().name() + ')',
+                operator[](tf()),
+                extrapolatedCalculatedFvPatchField
+                <
+                    typename FieldType::Type_
+                >::typeName
+            );
+
+            tf.clear();
+
+            return result;
+        }
 };
 
 

@@ -26,7 +26,7 @@ License
 #include "phaseSystem.H"
 #include "surfaceTensionCoefficientModel.H"
 #include "surfaceInterpolate.H"
-#include "fvcDdt.H"
+#include "fviDdt.H"
 #include "localEulerDdtScheme.H"
 #include "fvcDiv.H"
 #include "fvcGrad.H"
@@ -680,7 +680,7 @@ void Foam::phaseSystem::correctKinematics()
         // Update the pressure time-derivative if required
         if (!updateDpdt && phaseModels_[phasei].thermo().dpdt())
         {
-            dpdt_ = fvc::ddt(phaseModels_[phasei].fluidThermo().p());
+            dpdt_ = fvi::ddt(phaseModels_[phasei].fluidThermo().p());
             updateDpdt = true;
         }
     }
@@ -797,7 +797,7 @@ void Foam::phaseSystem::correctBoundaryFlux()
 void Foam::phaseSystem::correctPhi
 (
     const volScalarField& p_rgh,
-    const autoPtr<volScalarField>& divU,
+    const autoPtr<volInternalScalarField>& divU,
     const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pimple
 )

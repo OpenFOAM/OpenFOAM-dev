@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "gaussDivScheme.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvcSurfaceIntegrate.H"
-#include "fvMatrices.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,15 +40,30 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
+tmp<VolInternalField<typename innerProduct<vector, Type>::type>>
+gaussDivScheme<Type>::fviDiv(const VolField<Type>& vf)
+{
+    tmp<VolInternalField<typename innerProduct<vector, Type>::type>> tDiv
+    (
+        fvi::surfaceIntegrate
+        (
+            this->tinterpScheme_().dotInterpolate(this->mesh_.Sf(), vf)
+        )
+    );
+
+    tDiv.ref().rename("div(" + vf.name() + ')');
+
+    return tDiv;
+}
+
+
+template<class Type>
 tmp<VolField<typename innerProduct<vector, Type>::type>>
-gaussDivScheme<Type>::fvcDiv
-(
-    const VolField<Type>& vf
-)
+gaussDivScheme<Type>::fvcDiv(const VolField<Type>& vf)
 {
     tmp<VolField<typename innerProduct<vector, Type>::type>> tDiv
     (
-        fvc::surfaceIntegrateExtrapolate
+        fvc::surfaceIntegrate
         (
             this->tinterpScheme_().dotInterpolate(this->mesh_.Sf(), vf)
         )

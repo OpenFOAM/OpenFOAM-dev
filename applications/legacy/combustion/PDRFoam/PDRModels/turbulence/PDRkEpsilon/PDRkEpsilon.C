@@ -25,6 +25,7 @@ License
 
 #include "PDRkEpsilon.H"
 #include "PDRDragModel.H"
+#include "fviGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -122,15 +123,19 @@ void PDRkEpsilon::correct()
 
     RASModel::correct();
 
-    volScalarField divU(fvc::div(phi_/fvc::interpolate(rho_)));
+    volInternalScalarField divU(fvi::div(phi_/fvc::interpolate(rho_)));
 
     if (mesh_.moving())
     {
-        divU += fvc::div(mesh_.phi());
+        divU += fvi::div(mesh_.phi());
     }
 
-    tmp<volTensorField> tgradU = fvc::grad(U_);
-    volScalarField G(GName(), rho_*nut_*(tgradU() && dev(twoSymm(tgradU()))));
+    tmp<volInternalTensorField> tgradU = fvi::grad(U_);
+    volInternalScalarField G
+    (
+        GName(),
+        rho_()*nut_()*(tgradU() && dev(twoSymm(tgradU())))
+    );
     tgradU.clear();
 
     // Update epsilon and G at the wall
@@ -147,10 +152,12 @@ void PDRkEpsilon::correct()
     const PDRDragModel& drag =
         U_.db().lookupObject<PDRDragModel>("PDRDragModel");
 
-    volScalarField GR(drag.Gk());
+    volInternalScalarField GR(drag.Gk());
 
-    volScalarField LI
-        (C4_*(Lobs + dimensionedScalar(dimensions::length, rootVSmall)));
+    volInternalScalarField LI
+    (
+        C4_*(Lobs() + dimensionedScalar(dimensions::length, rootVSmall))
+    );
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -159,10 +166,10 @@ void PDRkEpsilon::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(rho_*DepsilonEff(), epsilon_)
      ==
-        C1_*betav*G*epsilon_/k_
-      + 1.5*pow(Cmu_, 3.0/4.0)*GR*sqrt(k_)/LI
-      - fvm::SuSp(((2.0/3.0)*C1_)*betav*rho_*divU, epsilon_)
-      - fvm::Sp(C2_*betav*rho_*epsilon_/k_, epsilon_)
+        C1_*betav()*G*epsilon_()/k_()
+      + 1.5*pow(Cmu_, 3.0/4.0)*GR*sqrt(k_())/LI
+      - fvm::SuSp(((2.0/3.0)*C1_)*betav()*rho_()*divU, epsilon_)
+      - fvm::Sp(C2_*betav()*rho_()*epsilon_()/k_(), epsilon_)
     );
 
     epsEqn.ref().relax();
@@ -182,7 +189,7 @@ void PDRkEpsilon::correct()
       - fvm::laplacian(rho_*DkEff(), k_)
      ==
         betav*G + GR
-      - fvm::SuSp((2.0/3.0)*betav*rho_*divU, k_)
+      - fvm::SuSp((2.0/3.0)*betav()*rho_()*divU, k_)
       - fvm::Sp(betav*rho_*epsilon_/k_, k_)
     );
 

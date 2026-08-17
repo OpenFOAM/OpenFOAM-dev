@@ -93,7 +93,10 @@ public:
     // Member Functions
 
         //- Return speed consumption rate temp
-        tmp<volScalarField> omega0Sigma(const volScalarField& sigma);
+        tmp<volInternalScalarField> omega0Sigma
+        (
+            const volInternalScalarField& sigma
+        );
 
 
         // Access functions

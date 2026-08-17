@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "twoPhaseVoFSolver.H"
 #include "fvcSmooth.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvcAverage.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -90,7 +90,7 @@ void Foam::solvers::twoPhaseVoFSolver::setInterfaceRDeltaT
                 rDeltaT(),
                 pos0(alpha1Bar() - alphaSpreadMin)
                *pos0(alphaSpreadMax - alpha1Bar())
-               *fvc::surfaceSum(mag(phi))/((2*maxAlphaCo)*mesh.V())
+               *fvi::surfaceSum(mag(phi))/((2*maxAlphaCo)*mesh.V())
             );
     }
 

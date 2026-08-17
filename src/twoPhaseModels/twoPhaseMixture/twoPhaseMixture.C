@@ -26,7 +26,7 @@ License
 #include "twoPhaseMixture.H"
 #include "viscosityModel.H"
 #include "surfaceInterpolate.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -233,7 +233,7 @@ Foam::twoPhaseMixture::interfaceFraction() const
 
     const surfaceScalarField alphaf(fvc::interpolate(alpha1_));
 
-    const volVectorField::Internal gradAlpha(fvc::grad(alpha1_));
+    const volVectorField::Internal gradAlpha(fvi::grad(alpha1_));
     const volVectorField::Internal n
     (
         gradAlpha

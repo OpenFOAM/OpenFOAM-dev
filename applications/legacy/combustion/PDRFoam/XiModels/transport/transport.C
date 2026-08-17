@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ void Foam::XiModels::transport::correct
         betav*fvm::ddt(rho_, Xi_)
       + mvConvection.fvmDiv(phi_, Xi_)
       + fvm::div(phiXi, Xi_)
-      - fvm::Sp(fvc::div(phiXi), Xi_)
+      - fvm::Sp(fvi::div(phiXi), Xi_)
      ==
         betav*rho_*R
       - fvm::Sp(betav*rho_*(R - G), Xi_)

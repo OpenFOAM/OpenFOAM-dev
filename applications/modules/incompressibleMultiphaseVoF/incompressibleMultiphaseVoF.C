@@ -126,7 +126,7 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
             U,
             p_rgh,
             rAU,
-            autoPtr<volScalarField>(),
+            autoPtr<volInternalScalarField>(),
             pressureReference(),
             pimple
         );

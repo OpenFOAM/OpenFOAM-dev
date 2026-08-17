@@ -36,7 +36,7 @@
                 fvm::laplacian(rho*trTU(), p)
               + fvModels.sourceProxy(rho, p)
              ==
-                fvc::div(phiHbyA)
+                fvi::div(phiHbyA)
             );
         }
         else
@@ -46,7 +46,7 @@
                 fvm::laplacian(rho*trAU(), p)
               + fvModels.sourceProxy(rho, p)
              ==
-                fvc::div(phiHbyA)
+                fvi::div(phiHbyA)
             );
         }
 
@@ -73,11 +73,11 @@
 
     if (pressureImplicitPorosity)
     {
-        U = HbyA - (trTU() & fvc::grad(p));
+        U.internalFieldRef() = HbyA() - (trTU()() & fvi::grad(p));
     }
     else
     {
-        U = HbyA - trAU()*fvc::grad(p);
+        U.internalFieldRef() = HbyA() - trAU()()*fvi::grad(p);
     }
 
     U.correctBoundaryConditions();

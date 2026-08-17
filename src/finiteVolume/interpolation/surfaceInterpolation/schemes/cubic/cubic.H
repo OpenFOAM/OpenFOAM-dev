@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ public:
                             (
                                 mesh,
                                 mesh.schemes().grad(gradSchemeName_)
-                            )().grad(vf.component(cmpt)),
+                            )().fvcGrad(vf.component(cmpt)),
                             kVecP,
                             kVecN
                         ) & mesh.delta()

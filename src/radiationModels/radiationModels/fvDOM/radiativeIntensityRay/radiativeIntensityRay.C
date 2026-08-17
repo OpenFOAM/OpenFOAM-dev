@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "radiativeIntensityRay.H"
-#include "fvm.H"
+#include "fvmDiv.H"
 #include "fvDOM.H"
 #include "constants.H"
 

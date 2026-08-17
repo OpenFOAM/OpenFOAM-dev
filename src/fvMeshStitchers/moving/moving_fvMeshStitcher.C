@@ -26,6 +26,7 @@ License
 #include "moving_fvMeshStitcher.H"
 #include "FvFaceCellWave.H"
 #include "fvMeshSubset.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvmLaplacian.H"
 #include "meshPhiCorrectInfo.H"
 #include "meshPhiPreCorrectInfo.H"
@@ -517,7 +518,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
     // Calculate the volume conservation error for the sub mesh
     const volScalarField::Internal subVce
     (
-        fvc::surfaceIntegrate(subPhi*subMesh.time().deltaT())
+        fvi::surfaceIntegrate(subPhi*subMesh.time().deltaT())
       - (subV - subV0)/subV
     );
 
@@ -651,7 +652,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
     const volScalarField::Internal dVdtError
     (
         (subV - subV0)/subMesh.time().deltaT()
-      - fvc::surfaceIntegrate(subPhi + subDeltaPhi)*subV
+      - fvi::surfaceIntegrate(subPhi + subDeltaPhi)*subV
     );
 
     // Construct track data for the correction wave

@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multiphaseEuler.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
-#include "fvcSup.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
+#include "fviSup.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
@@ -61,15 +61,15 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
         {
             pEqnComp +=
                 (
-                    fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
-                  - fvc::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), rho)
-                )/rho;
+                    fvi::ddt(alpha, rho) + fvi::div(phase.alphaRhoPhi())
+                  - fvi::Sp(fvi::ddt(alpha) + fvi::div(phase.alphaPhi()), rho)
+                )/rho();
         }
 
         // Mesh dilatation correction
         if (mesh.moving())
         {
-            pEqnComp += fvc::div(mesh.phi())*alpha;
+            pEqnComp += fvi::div(mesh.phi())*alpha;
         }
 
         // Compressibility
@@ -90,7 +90,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
                         (
                             phase.fluidThermo().psi()*fvm::ddt(p_rgh)
                           + fvm::div(phid, p_rgh)
-                          - fvm::Sp(fvc::div(phid), p_rgh)
+                          - fvm::Sp(fvi::div(phid), p_rgh)
                         )
                     );
 

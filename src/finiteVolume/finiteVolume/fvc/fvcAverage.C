@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvcAverage.H"
-#include "fvcSurfaceIntegrate.H"
+#include "fviSurfaceIntegrate.H"
 #include "fvMesh.H"
 #include "linear.H"
 
@@ -68,8 +68,8 @@ average
 
     av.primitiveFieldRef() =
     (
-        surfaceSum(mesh.magSf()*ssf)().primitiveField()
-       /surfaceSum(mesh.magSf())().primitiveField()
+        fvi::surfaceSum(mesh.magSf()*ssf)().primitiveField()
+       /fvi::surfaceSum(mesh.magSf())().primitiveField()
     );
 
     typename VolField<Type>::

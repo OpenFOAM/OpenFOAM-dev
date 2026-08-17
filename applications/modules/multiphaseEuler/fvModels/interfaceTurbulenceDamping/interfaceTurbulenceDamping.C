@@ -25,7 +25,7 @@ License
 
 #include "interfaceTurbulenceDamping.H"
 #include "surfaceInterpolate.H"
-#include "fvcGrad.H"
+#include "fviGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -73,10 +73,10 @@ Foam::fv::interfaceTurbulenceDamping::interfaceFraction
 
     const surfaceScalarField alphaf(fvc::interpolate(alpha));
 
-    const volVectorField gradAlpha(fvc::grad(alpha));
+    const volInternalVectorField gradAlpha(fvi::grad(alpha));
     const volVectorField::Internal n
     (
-        gradAlpha()/(mag(gradAlpha()) + phase_.fluid().deltaN())
+        gradAlpha/(mag(gradAlpha) + phase_.fluid().deltaN())
     );
 
     const scalarField& ialpha = alpha;

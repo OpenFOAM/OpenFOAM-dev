@@ -52,14 +52,6 @@ Foam::UniformGeometricField<Type>::internalField() const
 
 
 template<class Type>
-inline const typename Foam::UniformGeometricField<Type>::Internal&
-Foam::UniformGeometricField<Type>::v() const
-{
-    return *this;
-}
-
-
-template<class Type>
 inline typename Foam::UniformGeometricField<Type>::Internal::FieldType
 Foam::UniformGeometricField<Type>::primitiveField() const
 {

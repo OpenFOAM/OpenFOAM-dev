@@ -25,25 +25,16 @@ License
 
 #include "LeastSquaresGrad.H"
 #include "LeastSquaresVectors.H"
-#include "gaussGrad.H"
-#include "fvMesh.H"
-#include "extrapolatedCalculatedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class Stencil>
-Foam::tmp
-<
-    Foam::VolField<typename Foam::outerProduct<Foam::vector, Type>::type>
->
-Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
+void Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
 (
-    const VolField<Type>& vtf,
-    const word& name
+    VolInternalField<typename outerProduct<vector, Type>::type>& grad,
+    const VolField<Type>& vtf
 ) const
 {
-    typedef typename outerProduct<vector, Type>::type GradType;
-
     const fvMesh& mesh = vtf.mesh();
 
     // Get reference to least square vectors
@@ -51,24 +42,6 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
     (
         mesh
     );
-
-    tmp<VolField<GradType>> tlsGrad
-    (
-        VolField<GradType>::New
-        (
-            name,
-            mesh,
-            dimensioned<GradType>
-            (
-                "zero",
-                vtf.dimensions()/dimensions::length,
-                Zero
-            ),
-            extrapolatedCalculatedFvPatchField<GradType>::typeName
-        )
-    );
-    VolField<GradType>& lsGrad = tlsGrad.ref();
-    Field<GradType>& lsGradIf = lsGrad;
 
     const extendedCentredCellToCellStencil& stencil = lsv.stencil();
     const List<List<label>>& stencilAddr = stencil.stencil();
@@ -103,6 +76,8 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
     // Do all swapping to complete flatVtf
     stencil.map().distribute(flatVtf);
 
+    grad = Zero;
+
     // Accumulate the cell-centred gradient from the
     // weighted least-squares vectors and the flattened field values
     forAll(stencilAddr, celli)
@@ -112,15 +87,9 @@ Foam::fv::LeastSquaresGrad<Type, Stencil>::calcGrad
 
         forAll(compactCells, i)
         {
-            lsGradIf[celli] += lsvc[i]*flatVtf[compactCells[i]];
+            grad[celli] += lsvc[i]*flatVtf[compactCells[i]];
         }
     }
-
-    // Correct the boundary conditions
-    lsGrad.correctBoundaryConditions();
-    gaussGrad<Type>::correctBoundaryConditions(vtf, lsGrad);
-
-    return tlsGrad;
 }
 
 

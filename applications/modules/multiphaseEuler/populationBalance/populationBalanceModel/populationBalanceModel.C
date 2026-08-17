@@ -34,8 +34,8 @@ License
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
-#include "fvcDdt.H"
-#include "fvcDiv.H"
+#include "fviDdt.H"
+#include "fviDiv.H"
 #include "distribution.H"
 #include "fvSpecificSource.H"
 #include "growthFvScalarFieldSource.H"
@@ -384,8 +384,8 @@ void Foam::populationBalanceModel::precomputeExpansion()
         expansionRates_.set
         (
             phase.index(),
-          - (fvc::ddt(alpha, rho)()() + fvc::div(phase.alphaRhoPhi())()())/rho()
-          + fvc::ddt(alpha)()() + fvc::div(phase.alphaPhi())()()
+          - (fvi::ddt(alpha, rho) + fvi::div(phase.alphaRhoPhi()))/rho()
+          + fvi::ddt(alpha) + fvi::div(phase.alphaPhi())
         );
     }
 }
@@ -582,7 +582,7 @@ void Foam::populationBalanceModel::computeDilatationErrors()
         dilatationErrors_.set
         (
             phase.index(),
-            fvc::ddt(alpha)()() + fvc::div(phase.alphaPhi())()()
+            fvi::ddt(alpha) + fvi::div(phase.alphaPhi())
           - (fluid_.fvModels().source(alpha, rho) & rho)()()/rho()
         );
 

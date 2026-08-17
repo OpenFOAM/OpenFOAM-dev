@@ -117,21 +117,21 @@ protected:
 
         tmp<volScalarField> fv1(const volScalarField& chi) const;
 
-        tmp<volScalarField::Internal> fv2
+        tmp<volInternalScalarField> fv2
         (
-            const volScalarField::Internal& chi,
-            const volScalarField::Internal& fv1
+            const volInternalScalarField& chi,
+            const volInternalScalarField& fv1
         ) const;
 
-        tmp<volScalarField::Internal> Stilda
+        tmp<volInternalScalarField> Stilda
         (
-            const volScalarField::Internal& chi,
-            const volScalarField::Internal& fv1
+            const volInternalScalarField& chi,
+            const volInternalScalarField& fv1
         ) const;
 
-        tmp<volScalarField::Internal> fw
+        tmp<volInternalScalarField> fw
         (
-            const volScalarField::Internal& Stilda
+            const volInternalScalarField& Stilda
         ) const;
 
         void correctNut(const volScalarField& fv1);

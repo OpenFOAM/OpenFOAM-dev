@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multiphaseEuler.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "fvcMeshPhi.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -41,10 +41,10 @@ void Foam::solvers::multiphaseEuler::moveMesh()
         )
         {
             // Construct and register divU for mapping
-            divU = new volScalarField
+            divU = new volInternalScalarField
             (
                 "divU0",
-                fvc::div
+                fvi::div
                 (
                     fvc::absolute(phi, movingPhases[0].U())
                 )

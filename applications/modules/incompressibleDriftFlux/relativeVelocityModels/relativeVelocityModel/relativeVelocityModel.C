@@ -28,7 +28,7 @@ License
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
 #include "fvcGrad.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -181,9 +181,10 @@ Foam::tmp<Foam::volSymmTensorField> Foam::relativeVelocityModel::tauDm() const
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::relativeVelocityModel::divDevTau() const
+Foam::tmp<Foam::volInternalVectorField>
+Foam::relativeVelocityModel::divDevTau() const
 {
-    return fvc::div(tauDm());
+    return fvi::div(tauDm());
 }
 
 

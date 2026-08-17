@@ -25,6 +25,7 @@ License
 
 #include "transport_SuModel.H"
 #include "laminarFlameSpeed.H"
+#include "fviGrad.H"
 #include "fvmDiv.H"
 #include "fvcLaplacian.H"
 #include "fvModels.H"
@@ -113,23 +114,23 @@ void Foam::SuModels::transport::correct()
     const surfaceScalarField& phi = momentumTransport_.alphaRhoPhi();
     const volVectorField& U(momentumTransport_.U());
 
-    const volScalarField sigmas
+    const volInternalScalarField sigmas
     (
-        ((n & n)*fvc::div(U) - (n & fvc::grad(U) & n))/Xi
+        ((n() & n())*fvi::div(U) - (n() & fvi::grad(U) & n()))/Xi()
       + (
-            (n & n)*fvc::div(Su_*n)
-          - (n & fvc::grad(Su_*n) & n)
-        )*(Xi + scalar(1))/(2*Xi)
+            (n() & n())*fvi::div(Su_*n)
+          - (n() & fvi::grad(Su_*n) & n())
+        )*(Xi() + scalar(1))/(2*Xi())
     );
 
-    const volScalarField Su0(Su0_->Su());
+    const volInternalScalarField Su0(Su0_->Su());
 
-    const volScalarField SuInf
+    const volInternalScalarField SuInf
     (
         Su0*max(scalar(1) - sigmas/sigmaExt_, scalar(0.01))
     );
 
-    const volScalarField Rc
+    const volInternalScalarField Rc
     (
         (sigmas*SuInf*(Su0 - SuInf) + sqr(SuMin_)*sigmaExt_)
         /(sqr(Su0 - SuInf) + sqr(SuMin_))
@@ -139,10 +140,10 @@ void Foam::SuModels::transport::correct()
     (
         fvm::ddt(rho, Su_)
       + fvm::div(phi + phiXi, Su_, "div(phiXi,Su)")
-      - fvm::Sp(fvc::div(phiXi), Su_)
+      - fvm::Sp(fvi::div(phiXi), Su_)
       ==
-      - fvm::SuSp(-rho*Rc*Su0/Su_, Su_)
-      - fvm::SuSp(rho*(sigmas + Rc), Su_)
+      - fvm::SuSp(-rho()*Rc*Su0/Su_(), Su_)
+      - fvm::SuSp(rho()*(sigmas + Rc), Su_)
       + fvModels.source(rho, Su_)
     );
 
