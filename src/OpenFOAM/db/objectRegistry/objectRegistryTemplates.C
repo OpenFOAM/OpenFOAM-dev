@@ -237,6 +237,13 @@ const Type& Foam::objectRegistry::lookupType(const word& group) const
 }
 
 
+template<class Type>
+Type& Foam::objectRegistry::lookupTypeRef(const word& group) const
+{
+    return const_cast<Type&>(lookupType<Type>(group));
+}
+
+
 template<class Object>
 bool Foam::objectRegistry::cacheTemporaryObject(Object& ob) const
 {

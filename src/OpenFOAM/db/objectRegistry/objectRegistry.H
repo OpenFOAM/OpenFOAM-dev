@@ -220,7 +220,8 @@ public:
             template<class Type>
             const Type& lookupObject(const word& name) const;
 
-            //- Lookup and return the object reference of the given Type
+            //- Lookup and return the object reference of the given Type and
+            //  name
             template<class Type>
             Type& lookupObjectRef(const word& name) const;
 
@@ -233,6 +234,11 @@ public:
             //  the name is derived from the type name and given group
             template<class Type>
             const Type& lookupType(const word& group = word::null) const;
+
+            //- Lookup and return the object reference of the given Type
+            //  the name is derived from the type name and given group
+            template<class Type>
+            Type& lookupTypeRef(const word& group = word::null) const;
 
             //- Return new event number.
             uint64_t getEvent() const;
