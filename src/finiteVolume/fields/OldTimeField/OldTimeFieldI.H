@@ -35,9 +35,10 @@ inline Foam::label Foam::OldTimeField<FieldType>::timeIndex() const
 
 
 template<class FieldType>
-inline Foam::label& Foam::OldTimeField<FieldType>::timeIndex()
+inline void Foam::OldTimeField<FieldType>::setTimeIndex(const label timeIndex)
 {
-    return timeIndex_;
+    timeIndex_ = timeIndex;
+    setBase();
 }
 
 

@@ -228,8 +228,8 @@ public:
         //- Return the time index of the field
         inline label timeIndex() const;
 
-        //- Return a non-const reference to the time index of the field
-        inline label& timeIndex();
+        //- Set the time index of the field
+        inline void setTimeIndex(const label);
 
         //- Return whether or not this is an old-time field
         bool isOldTime() const;
@@ -325,6 +325,7 @@ struct OldTimeFieldCopy
     using OldTimeField<FieldType>::readOldTimeIfPresent;                       \
     using OldTimeField<FieldType>::copyOldTimes;                               \
     using OldTimeField<FieldType>::timeIndex;                                  \
+    using OldTimeField<FieldType>::setTimeIndex;                               \
     using OldTimeField<FieldType>::isOldTime;                                  \
     using OldTimeField<FieldType>::hasStoredOldTimes;                          \
     using OldTimeField<FieldType>::resetOldTime;                               \

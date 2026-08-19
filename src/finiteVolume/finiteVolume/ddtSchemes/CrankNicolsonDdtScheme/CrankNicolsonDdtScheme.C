@@ -55,7 +55,7 @@ CrankNicolsonDdtScheme<Type>::DDt0Field<GeoField>::DDt0Field
 {
     // Set the time-index to the beginning of the run to ensure the field
     // is updated during the first time-step
-    this->timeIndex() = mesh.time().startTimeIndex();
+    this->setTimeIndex(mesh.time().startTimeIndex());
 }
 
 

@@ -94,8 +94,8 @@ public:
 
             // Correct the time index of the field
             // to correspond to the global time
-            gf_.timeIndex() = time().timeIndex();
-            gf0_.timeIndex() = time().timeIndex();
+            gf_.setTimeIndex(time().timeIndex());
+            gf0_.setTimeIndex(time().timeIndex());
         }
     }
 
@@ -113,8 +113,8 @@ public:
     //  outer iteration
     void updateTimeIndex()
     {
-        gf_.timeIndex() = time().timeIndex() + 1;
-        gf0_.timeIndex() = time().timeIndex() + 1;
+        gf_.setTimeIndex(time().timeIndex() + 1);
+        gf0_.setTimeIndex(time().timeIndex() + 1);
     }
 };
 
@@ -191,8 +191,8 @@ public:
 
                 // Correct the time index of the fields
                 // to correspond to the global time
-                gfs_[i].timeIndex() = time().timeIndex();
-                gf0s_[i].timeIndex() = time().timeIndex();
+                gfs_[i].setTimeIndex(time().timeIndex());
+                gf0s_[i].setTimeIndex(time().timeIndex());
             }
         }
     }
@@ -213,8 +213,8 @@ public:
     {
         forAll(gfs_, i)
         {
-            gfs_[i].timeIndex() = time().timeIndex() + 1;
-            gf0s_[i].timeIndex() = time().timeIndex() + 1;
+            gfs_[i].setTimeIndex(time().timeIndex() + 1);
+            gf0s_[i].setTimeIndex(time().timeIndex() + 1);
         }
     }
 };
