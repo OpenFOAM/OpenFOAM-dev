@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,6 +287,7 @@ void readCells
     const cellModel& hex = *(cellModeller::lookup("hex"));
     const cellModel& prism = *(cellModeller::lookup("prism"));
     const cellModel& tet = *(cellModeller::lookup("tet"));
+    const cellModel& pyr = *(cellModeller::lookup("pyr"));
 
     labelHashSet skippedElements;
 
@@ -386,6 +387,31 @@ void readCells
                 >> cVerts[3] >> cVerts[4] >> cVerts[5];
 
             cellVerts.append(cellShape(prism, cVerts, true));
+            cellMaterial.append(physProp);
+            addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
+
+            if (cellVerts.last().size() != cVerts.size())
+            {
+                Info<< "Line:" << is.lineNumber()
+                    << " element:" << celli
+                    << " type:" << feID
+                    << " collapsed from " << cVerts << nl
+                    << " to:" << cellVerts.last()
+                    << endl;
+            }
+        }
+        else if (feID == 119 || feID == 312)
+        {
+            // Pyramid.
+            is.getLine(line);
+
+            labelList cVerts(5);
+            IStringStream lineStr(line);
+            lineStr
+                >> cVerts[0] >> cVerts[1] >> cVerts[2]
+                >> cVerts[3] >> cVerts[4] ;
+
+            cellVerts.append(cellShape(pyr, cVerts, true));
             cellMaterial.append(physProp);
             addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
 
