@@ -129,7 +129,7 @@ public:
         inline nil Yslicer
         (
             const fvSource& model,
-            const volScalarField::Internal& source
+            const volInternalScalarField& source
         ) const;
 
         //- Get the composition of a source cell

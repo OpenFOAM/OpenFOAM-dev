@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,13 +67,13 @@ protected:
     // Protected Member Functions
 
         //- Return the liquid density
-        inline const volScalarField::Internal& alphal() const
+        inline const volInternalScalarField& alphal() const
         {
             return phases_.alpha(liquidIndex_);
         }
 
         //- Return the vapour density
-        inline const volScalarField::Internal& alphav() const
+        inline const volInternalScalarField& alphav() const
         {
             return phases_.alpha(!liquidIndex_);
         }
@@ -146,22 +146,22 @@ public:
         //- Return the mass condensation and vaporisation rates as a
         //  coefficient to multiply alphav for the condensation rate and a
         //  coefficient to multiply alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField::Internal>> mDotcvAlpha() const = 0;
+        virtual Pair<tmp<volInternalScalarField>> mDotcvAlpha() const = 0;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField::Internal>> mDotcvP() const = 0;
+        virtual Pair<tmp<volInternalScalarField>> mDotcvP() const = 0;
 
         //- Return the mass transfer rates of the two phases as coefficients to
         //  multiply the volume fraction of the other phase
-        inline Pair<tmp<volScalarField::Internal>> mDot12Alpha() const
+        inline Pair<tmp<volInternalScalarField>> mDot12Alpha() const
         {
             return liquidIndex_ ? reverse(mDotcvAlpha()) : mDotcvAlpha();
         }
 
         //- Return the mass transfer rates of the two phases as coefficients to
         //  multiply (p - pSat)
-        inline Pair<tmp<volScalarField::Internal>> mDot12P() const
+        inline Pair<tmp<volInternalScalarField>> mDot12P() const
         {
             return liquidIndex_ ? reverse(mDotcvP()) : mDotcvP();
         }

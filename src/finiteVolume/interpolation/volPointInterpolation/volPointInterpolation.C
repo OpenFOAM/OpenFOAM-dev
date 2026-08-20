@@ -160,7 +160,7 @@ Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
     typename volVectorField::Boundary CBnf
     (
         mesh().boundary(),
-        volVectorField::Internal::null(),
+        volInternalVectorField::null(),
         calculatedFvPatchField<vector>::typeName
     );
     forAll(fvbm, patchi)

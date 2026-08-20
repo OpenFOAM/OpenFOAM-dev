@@ -147,11 +147,11 @@ void executeFunctionObjects
     ReadFields(volTensorField);
 
     // Read internal fields
-    ReadFields(volScalarField::Internal);
-    ReadFields(volVectorField::Internal);
-    ReadFields(volSphericalTensorField::Internal);
-    ReadFields(volSymmTensorField::Internal);
-    ReadFields(volTensorField::Internal);
+    ReadFields(volInternalScalarField);
+    ReadFields(volInternalVectorField);
+    ReadFields(volInternalSphericalTensorField);
+    ReadFields(volInternalSymmTensorField);
+    ReadFields(volInternalTensorField);
 
     // Read surface fields
     ReadFields(surfaceScalarField);

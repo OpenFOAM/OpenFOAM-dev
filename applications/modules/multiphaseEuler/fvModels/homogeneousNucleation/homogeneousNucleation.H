@@ -76,13 +76,13 @@ private:
         mutable label pressureEquationIndex_;
 
         //- Diameter of nucleated clusters
-        mutable volScalarField::Internal d_;
+        mutable volInternalScalarField d_;
 
         //- Phase change rate, per unit volume of the solution
-        mutable volScalarField::Internal mDotByAlphaSolution_;
+        mutable volInternalScalarField mDotByAlphaSolution_;
 
         //- Phase change rate
-        mutable volScalarField::Internal mDot_;
+        mutable volInternalScalarField mDot_;
 
 
     // Private Member Functions
@@ -95,7 +95,7 @@ private:
 
         //- Calculate and return the diameter of nucleates and the phase change
         //  rate per quantity of the solution phase
-        virtual Pair<tmp<volScalarField::Internal>>
+        virtual Pair<tmp<volInternalScalarField>>
             dAndMDotByAlphaSolution() const = 0;
 
 
@@ -104,7 +104,7 @@ protected:
     // Protected Member Functions
 
         //- Return the surface tension coefficient between the phases
-        tmp<volScalarField::Internal> sigma() const;
+        tmp<volInternalScalarField> sigma() const;
 
 
 public:

@@ -143,7 +143,7 @@ public:
 
         //- Return the burnt gas prompt specie mass fractions
         //  corresponding to the given unburnt gas specie mass fractions
-        virtual PtrList<volScalarField::Internal> prompt
+        virtual PtrList<volInternalScalarField> prompt
         (
             const PtrList<volScalarField>& Yu
         ) const = 0;

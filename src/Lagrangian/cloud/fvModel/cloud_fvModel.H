@@ -88,7 +88,7 @@ class cloud
         // Sources
 
             //- Return the material source for the given phase
-            tmp<volScalarField::Internal> S
+            tmp<volInternalScalarField> S
             (
                 const word& phaseName,
                 const dimensionSet& dims

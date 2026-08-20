@@ -63,7 +63,7 @@ void writeCellLabels
     const labelList& elems
 )
 {
-    volScalarField::Internal fld
+    volInternalScalarField fld
     (
         IOobject
         (
@@ -796,7 +796,7 @@ int main(int argc, char *argv[])
             "cellProc",
             cellToRegion
         );
-        Info<< nl << "Written decomposition as volScalarField::Internal to "
+        Info<< nl << "Written decomposition as volInternalScalarField to "
             << "cellProc for use in postprocessing."
             << nl << endl;
 

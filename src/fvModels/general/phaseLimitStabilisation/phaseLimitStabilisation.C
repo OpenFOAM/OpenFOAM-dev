@@ -90,10 +90,10 @@ void Foam::fv::phaseLimitStabilisation::addSupType
     fvMatrix<Type>& eqn
 ) const
 {
-    if (mesh().foundObject<volScalarField::Internal>(rateName_))
+    if (mesh().foundObject<volInternalScalarField>(rateName_))
     {
-        const volScalarField::Internal& rate =
-            mesh().lookupObjectRef<volScalarField::Internal>(rateName_);
+        const volInternalScalarField& rate =
+            mesh().lookupObjectRef<volInternalScalarField>(rateName_);
 
         addStabilisation(alpha, rho.internalField()*rate, eqn);
     }
@@ -108,12 +108,12 @@ void Foam::fv::phaseLimitStabilisation::addSupType
     {
         FatalErrorInFunction
             << nl
-            << "    request for " << volScalarField::Internal::typeName
+            << "    request for " << volInternalScalarField::typeName
             << " or " << uniformDimensionedScalarField::typeName
             << " " << rateName_ << " from objectRegistry " << this->name()
             << " failed\n    available objects of type "
-            << volScalarField::Internal::typeName << " are" << nl
-            << mesh().toc<volScalarField::Internal>()
+            << volInternalScalarField::typeName << " are" << nl
+            << mesh().toc<volInternalScalarField>()
             << "\n    available objects of type "
             << uniformDimensionedScalarField::typeName << " are" << nl
             << mesh().toc<uniformDimensionedScalarField>()

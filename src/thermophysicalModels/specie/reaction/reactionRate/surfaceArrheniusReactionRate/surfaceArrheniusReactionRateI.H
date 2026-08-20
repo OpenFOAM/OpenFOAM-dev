@@ -48,7 +48,7 @@ inline void Foam::surfaceArrheniusReactionRate::preEvaluate() const
 {
     ArrheniusReactionRate::preEvaluate();
 
-    tAv_ = ob_.lookupObject<volScalarField::Internal>(AvName_);
+    tAv_ = ob_.lookupObject<volInternalScalarField>(AvName_);
 }
 
 
@@ -56,7 +56,7 @@ inline void Foam::surfaceArrheniusReactionRate::postEvaluate() const
 {
     ArrheniusReactionRate::postEvaluate();
 
-    tAv_ = tmp<volScalarField::Internal>(nullptr);
+    tAv_ = tmp<volInternalScalarField>(nullptr);
 }
 
 

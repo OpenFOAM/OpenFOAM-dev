@@ -204,7 +204,7 @@ public:
             virtual tmp<volScalarField> Rp() const = 0;
 
             //- Source term component (constant)
-            virtual tmp<volScalarField::Internal> Ru() const = 0;
+            virtual tmp<volInternalScalarField> Ru() const = 0;
 
             //- Energy source term
             virtual tmp<fvScalarMatrix> Sh

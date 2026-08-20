@@ -167,9 +167,9 @@ Foam::functionObjects::adjustTimeStepToReaction::maxDeltaT() const
     const fluidMulticomponentThermo& thermo = reaction.thermo();
 
     // Build a mass turnover rate
-    volScalarField::Internal rhoDotByRho
+    volInternalScalarField rhoDotByRho
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "rhoDotByRho",
             reaction.mesh(),

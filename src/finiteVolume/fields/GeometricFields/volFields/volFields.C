@@ -32,20 +32,20 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTemplate2TypeNameAndDebug(volLabelField::Internal, 0);
-defineTemplate2TypeNameAndDebug(volScalarField::Internal, 0);
-defineTemplate2TypeNameAndDebug(volVectorField::Internal, 0);
+defineTemplate2TypeNameAndDebug(volInternalLabelField, 0);
+defineTemplate2TypeNameAndDebug(volInternalScalarField, 0);
+defineTemplate2TypeNameAndDebug(volInternalVectorField, 0);
 defineTemplate2TypeNameAndDebug
 (
-    volSphericalTensorField::Internal,
+    volInternalSphericalTensorField,
     0
 );
 defineTemplate2TypeNameAndDebug
 (
-    volSymmTensorField::Internal,
+    volInternalSymmTensorField,
     0
 );
-defineTemplate2TypeNameAndDebug(volTensorField::Internal, 0);
+defineTemplate2TypeNameAndDebug(volInternalTensorField, 0);
 
 defineTemplateTypeNameAndDebug(volLabelField, 0);
 defineTemplateTypeNameAndDebug(volScalarField, 0);

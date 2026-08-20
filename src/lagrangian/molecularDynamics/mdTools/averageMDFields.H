@@ -76,7 +76,7 @@ if (runTime.writeTime())
         }
     }
 
-    volVectorField::Internal& itotalVelocity = totalVelocity;
+    volInternalVectorField& itotalVelocity = totalVelocity;
 
     forAll(itotalVelocity, tV)
     {
@@ -149,7 +149,7 @@ if (runTime.writeTime())
         }
     }
 
-    volScalarField::Internal& itotalTemperature =
+    volInternalScalarField& itotalTemperature =
         totalTemperature;
 
     forAll(itotalTemperature, tT)
@@ -208,7 +208,7 @@ if (runTime.writeTime())
         }
     }
 
-    volScalarField::Internal& itotalMeanKE = totalMeanKE;
+    volInternalScalarField& itotalMeanKE = totalMeanKE;
 
     forAll(itotalMeanKE, tMKE)
     {

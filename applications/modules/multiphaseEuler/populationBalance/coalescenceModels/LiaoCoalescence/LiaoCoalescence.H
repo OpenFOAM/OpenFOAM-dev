@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,22 +145,22 @@ class LiaoCoalescence
         Switch wakeEntrainment_;
 
         //- Coefficient containing maximum packing limit
-        volScalarField::Internal CPack_;
+        volInternalScalarField CPack_;
 
         //- Limiter for the CPack coefficient
         dimensionedScalar CPackMax_;
 
         //- Critical diameter
-        volScalarField::Internal dCrit_;
+        volInternalScalarField dCrit_;
 
         //- Relative velocity for turbulent collisions
-        mutable volScalarField::Internal uRelTurb_;
+        mutable volInternalScalarField uRelTurb_;
 
         //- Relative velocity for buoyancy-induced collisions
-        mutable volScalarField::Internal uRelBuoy_;
+        mutable volInternalScalarField uRelBuoy_;
 
         //- Relative velocity for shear-induced collisions
-        mutable volScalarField::Internal uRelShear_;
+        mutable volInternalScalarField uRelShear_;
 
 
 public:
@@ -188,7 +188,7 @@ public:
         virtual void precompute();
 
         //- Return the coalescence rate between two groups
-        virtual tmp<volScalarField::Internal> rate
+        virtual tmp<volInternalScalarField> rate
         (
             const label i,
             const label j

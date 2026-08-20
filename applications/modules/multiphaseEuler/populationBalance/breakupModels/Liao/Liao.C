@@ -71,7 +71,7 @@ void Foam::populationBalance::breakupModels::Liao::precompute()
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::breakupModels::Liao::rate
 (
     const label i,
@@ -82,30 +82,30 @@ Foam::populationBalance::breakupModels::Liao::rate
     const dimensionedScalar& dSphj = popBal_.dSph(j);
     const dimensionedScalar& vj = popBal_.v(j);
 
-    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+    const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
 
     tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
-    const volScalarField::Internal& sigma = tsigma();
+    const volInternalScalarField& sigma = tsigma();
 
     tmp<volScalarField> tmuc(popBal_.continuousPhase().fluidThermo().mu());
-    const volScalarField::Internal& muc = tmuc();
+    const volInternalScalarField& muc = tmuc();
 
     const dimensionedScalar dk(cbrt(pow3(dSphj) - pow3(dSphi)));
 
-    const volScalarField::Internal tauCrit1
+    const volInternalScalarField tauCrit1
     (
         6*sigma/dSphj*(sqr(dSphi/dSphj) + sqr(dk/dSphj) - 1)
     );
 
-    const volScalarField::Internal tauCrit2
+    const volInternalScalarField tauCrit2
     (
         sigma/min(dk, dSphi)
     );
 
-    const volScalarField::Internal tauCrit(max(tauCrit1, tauCrit2));
+    const volInternalScalarField tauCrit(max(tauCrit1, tauCrit2));
 
-    tmp<volScalarField::Internal> tbinaryBreakupRate =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tbinaryBreakupRate =
+        volInternalScalarField::New
         (
             "binaryBreakupRate",
             popBal_.mesh(),
@@ -115,14 +115,14 @@ Foam::populationBalance::breakupModels::Liao::rate
                 scalar(0)
             )
         );
-    volScalarField::Internal& binaryBreakupRate = tbinaryBreakupRate.ref();
+    volInternalScalarField& binaryBreakupRate = tbinaryBreakupRate.ref();
 
     if (turbulence_)
     {
         tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-        const volScalarField::Internal& epsilonc = tepsilonc();
+        const volInternalScalarField& epsilonc = tepsilonc();
 
-        const volScalarField::Internal tauTurb
+        const volInternalScalarField tauTurb
         (
             pos(dSphj - kolmogorovLengthScale_)*BTurb_*rhoc
            *sqr(cbrt(epsilonc*dSphj))
@@ -137,7 +137,7 @@ Foam::populationBalance::breakupModels::Liao::rate
 
     if (laminarShear_)
     {
-        const volScalarField::Internal tauShear
+        const volInternalScalarField tauShear
         (
             BShear_*muc*shearStrainRate_
         );
@@ -151,7 +151,7 @@ Foam::populationBalance::breakupModels::Liao::rate
 
     if (turbulentShear_)
     {
-        const volScalarField::Internal tauEddy
+        const volInternalScalarField tauEddy
         (
             pos0(kolmogorovLengthScale_ - dSphj)
            *BEddy_
@@ -167,7 +167,7 @@ Foam::populationBalance::breakupModels::Liao::rate
 
     if (interfacialFriction_)
     {
-        const volScalarField::Internal tauFric
+        const volInternalScalarField tauFric
         (
             BFric_*0.5*rhoc*sqr(uTerminal_[j])*Cd_[j]
         );

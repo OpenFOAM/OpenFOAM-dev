@@ -220,7 +220,7 @@ void curvatureSeparation::correct()
     const vectorField& U = film_.U();
 
     const tmp<volScalarField> tsigma = film_.sigma();
-    const volScalarField::Internal& sigma = tsigma();
+    const volInternalScalarField& sigma = tsigma();
 
     const scalarField invR1(calcInvR1(film_.U));
     const scalarField cosAngle(calcCosAngle(film_.alphaRhoPhi));

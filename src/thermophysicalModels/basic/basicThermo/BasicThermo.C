@@ -138,7 +138,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::volScalarFieldMixtureProperty
 
 template<class MixtureType, class BasicThermoType>
 template<class Mixture, class Method, class ... Args>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::volInternalScalarFieldProperty
 (
     const word& psiName,
@@ -148,16 +148,16 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::volInternalScalarFieldProperty
     const Args& ... args
 ) const
 {
-    tmp<volScalarField::Internal> tPsi
+    tmp<volInternalScalarField> tPsi
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             IOobject::groupName(psiName, this->group()),
             this->mesh(),
             psiDim
         )
     );
-    volScalarField::Internal& psi = tPsi.ref();
+    volInternalScalarField& psi = tPsi.ref();
 
     auto Yslicer = this->Yslicer();
 
@@ -237,7 +237,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::patchFieldProperty
 
 template<class MixtureType, class BasicThermoType>
 template<class Mixture, class Method, class ... Args>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::fieldSourceProperty
 (
     const word& psiName,
@@ -245,20 +245,20 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::fieldSourceProperty
     Mixture mixture,
     Method psiMethod,
     const fvSource& model,
-    const volScalarField::Internal& source,
+    const volInternalScalarField& source,
     const Args& ... args
 ) const
 {
-    tmp<volScalarField::Internal> tPsi
+    tmp<volInternalScalarField> tPsi
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             IOobject::groupName(psiName, this->group()),
             this->mesh(),
             psiDim
         )
     );
-    volScalarField::Internal& psi = tPsi.ref();
+    volInternalScalarField& psi = tPsi.ref();
 
     auto Yslicer = this->Yslicer(model, source);
 
@@ -504,11 +504,11 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::he
 (
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     return volInternalScalarFieldProperty
@@ -562,12 +562,12 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::he
 (
-    const volScalarField::Internal& T,
+    const volInternalScalarField& T,
     const fvSource& model,
-    const volScalarField::Internal& source
+    const volInternalScalarField& source
 ) const
 {
     return fieldSourceProperty
@@ -644,11 +644,11 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::hs
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::hs
 (
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     return volInternalScalarFieldProperty
@@ -738,11 +738,11 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::ha
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::ha
 (
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     return volInternalScalarFieldProperty

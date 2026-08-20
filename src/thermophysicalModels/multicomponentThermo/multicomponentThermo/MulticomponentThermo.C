@@ -80,7 +80,7 @@ Foam::MulticomponentThermo<BaseThermo>::volScalarFieldPropertyi
 
 template<class BaseThermo>
 template<class Method, class ... Args>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::MulticomponentThermo<BaseThermo>::volInternalScalarFieldPropertyi
 (
     const word& psiName,
@@ -93,9 +93,9 @@ Foam::MulticomponentThermo<BaseThermo>::volInternalScalarFieldPropertyi
     const typename BaseThermo::mixtureType::thermoType& thermo =
         this->specieThermo(speciei);
 
-    tmp<volScalarField::Internal> tPsi
+    tmp<volInternalScalarField> tPsi
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             IOobject::groupName(psiName, this->T_.group()),
             this->T_.mesh(),
@@ -103,7 +103,7 @@ Foam::MulticomponentThermo<BaseThermo>::volInternalScalarFieldPropertyi
         )
     );
 
-    volScalarField::Internal& psi = tPsi.ref();
+    volInternalScalarField& psi = tPsi.ref();
 
     forAll(psi, celli)
     {
@@ -286,12 +286,12 @@ Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hei
 
 
 template<class BaseThermo>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::MulticomponentThermo<BaseThermo>::hei
 (
     const label speciei,
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     return volInternalScalarFieldPropertyi
@@ -358,12 +358,12 @@ Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hsi
 
 
 template<class BaseThermo>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::MulticomponentThermo<BaseThermo>::hsi
 (
     const label speciei,
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     return volInternalScalarFieldPropertyi
@@ -430,12 +430,12 @@ Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hai
 
 
 template<class BaseThermo>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::MulticomponentThermo<BaseThermo>::hai
 (
     const label speciei,
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     return volInternalScalarFieldPropertyi

@@ -50,7 +50,7 @@ coalesces() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::noCoalescence::rate
 (
     const label i,
@@ -58,7 +58,7 @@ Foam::populationBalance::coalescenceModels::noCoalescence::rate
 ) const
 {
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "coalescenceRate",
             popBal_.mesh(),

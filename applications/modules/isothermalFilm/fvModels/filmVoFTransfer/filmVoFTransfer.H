@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ class filmVoFTransfer
         scalar transferRateCoeff_;
 
         //- Cached transfer rate
-        volScalarField::Internal transferRate_;
+        volInternalScalarField transferRate_;
 
 
     // Private Member Functions

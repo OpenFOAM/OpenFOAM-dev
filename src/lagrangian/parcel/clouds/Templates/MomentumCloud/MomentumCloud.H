@@ -230,10 +230,10 @@ protected:
         // Sources
 
             //- Momentum
-            autoPtr<volVectorField::Internal> UTrans_;
+            autoPtr<volInternalVectorField> UTrans_;
 
             //- Coefficient for carrier phase U equation
-            autoPtr<volScalarField::Internal> UCoeff_;
+            autoPtr<volInternalScalarField> UCoeff_;
 
 
         // Initialisation
@@ -479,16 +479,16 @@ public:
                 // Momentum
 
                     //- Return momentum source
-                    inline tmp<volVectorField::Internal> UTrans() const;
+                    inline tmp<volInternalVectorField> UTrans() const;
 
                     //- Access momentum source
-                    inline volVectorField::Internal& UTransRef();
+                    inline volInternalVectorField& UTransRef();
 
                     //- Return coefficient for carrier phase U equation
-                    inline tmp<volScalarField::Internal> UCoeff() const;
+                    inline tmp<volInternalScalarField> UCoeff() const;
 
                     //- Access coefficient for carrier phase U equation
-                    inline volScalarField::Internal& UCoeffRef();
+                    inline volInternalScalarField& UCoeffRef();
 
                     //- Return tmp momentum source term
                     inline tmp<fvVectorMatrix> SU

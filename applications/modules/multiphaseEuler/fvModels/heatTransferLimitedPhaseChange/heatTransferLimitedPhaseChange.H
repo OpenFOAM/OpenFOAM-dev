@@ -115,11 +115,11 @@ private:
         mutable label pressureEquationIndex_;
 
         //- The phase change rate
-        mutable volScalarField::Internal mDot_;
+        mutable volInternalScalarField mDot_;
 
         //- The derivative of the phase change rate w.r.t. the pressure. Only
         //  valid if pressure implicit is selected.
-        mutable autoPtr<volScalarField::Internal> dmDotdpPtr_;
+        mutable autoPtr<volInternalScalarField> dmDotdpPtr_;
 
 
     // Private Member Functions

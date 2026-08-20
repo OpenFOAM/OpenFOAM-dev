@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ public:
             //- Add coalescence contribution to secondary property source
             virtual void addCoalescence
             (
-                const volScalarField::Internal& Su,
+                const volInternalScalarField& Su,
                 const label i,
                 const label j,
                 const label k
@@ -143,7 +143,7 @@ public:
             //- Add breakup contribution to secondary property source
             virtual void addBreakup
             (
-                const volScalarField::Internal& Su,
+                const volInternalScalarField& Su,
                 const label i,
                 const label j
             );

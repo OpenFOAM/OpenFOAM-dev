@@ -127,8 +127,8 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
         );
     }
 
-    tmp<volScalarField::Internal> Su;
-    tmp<volScalarField::Internal> Sp;
+    tmp<volInternalScalarField> Su;
+    tmp<volInternalScalarField> Sp;
 
     alphaSuSp(Su, Sp);
 

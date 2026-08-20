@@ -120,9 +120,9 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
     );
 
     const rhoThermo& solidThermo = solid_.thermo();
-    const volScalarField::Internal& solidT = solidThermo.T();
+    const volInternalScalarField& solidT = solidThermo.T();
     const rhoThermo& liquidThermo = liquid_.thermo();
-    const volScalarField::Internal& liquidT = liquidThermo.T();
+    const volInternalScalarField& liquidT = liquidThermo.T();
     const rhoThermo& vapourThermo = vapour_.thermo();
 
     // Estimate the surface temperature from the surrounding temperature and
@@ -130,20 +130,20 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
     // qQuenching are used in this calculation.
     const Pair<tmp<volScalarField>> Hs =
         solver_.heatTransfer.Hs(liquid_, solid_, scalar(0));
-    const volScalarField::Internal& liquidH = Hs.first();
-    const volScalarField::Internal& solidH = Hs.second();
-    const volScalarField::Internal Tsurface
+    const volInternalScalarField& liquidH = Hs.first();
+    const volInternalScalarField& solidH = Hs.second();
+    const volInternalScalarField Tsurface
     (
         (solidH*solidT + liquidH*liquidT + qEvaporative_ + qQuenching_)
        /max(solidH + liquidH, rootVSmallH)
     );
 
-    const volScalarField::Internal Tsat
+    const volInternalScalarField Tsat
     (
         Tsat_->value(liquid_.fluidThermo().p()())
     );
 
-    const volScalarField::Internal L(this->L(Tsat));
+    const volInternalScalarField L(this->L(Tsat));
 
     // Wetted fraction
     wetFraction_ = partitioningModel_->wetFraction
@@ -191,26 +191,26 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
         );
 
     const tmp<volScalarField> tliquidRho(liquidThermo.rho());
-    const volScalarField::Internal& liquidRho = tliquidRho();
+    const volInternalScalarField& liquidRho = tliquidRho();
     const tmp<volScalarField> tvapourRho(vapourThermo.rho());
-    const volScalarField::Internal& vapourRho = tvapourRho();
-    const volScalarField::Internal& liquidCp = liquidThermo.Cp();
-    const volScalarField::Internal& liquidkappa = liquidThermo.kappa();
+    const volInternalScalarField& vapourRho = tvapourRho();
+    const volInternalScalarField& liquidCp = liquidThermo.Cp();
+    const volInternalScalarField& liquidkappa = liquidThermo.kappa();
 
     // Area fractions: Del Valle & Kenning (1985)
-    const volScalarField::Internal Ja
+    const volInternalScalarField Ja
     (
         liquidRho*liquidCp*(Tsat - min(Tsurface, Tsat))/(liquidRho*L)
     );
-    const volScalarField::Internal Al
+    const volInternalScalarField Al
     (
         wetFraction_*4.8*exp(min(-Ja/80, log(vGreat)))
     );
-    const volScalarField::Internal A2
+    const volInternalScalarField A2
     (
         min(pi*sqr(dDeparture_)*nucleationSiteDensity_*Al/4, scalar(1))
     );
-    const volScalarField::Internal A2E
+    const volInternalScalarField A2E
     (
         min(pi*sqr(dDeparture_)*nucleationSiteDensity_*Al/4, scalar(5))
     );
@@ -230,7 +230,7 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
     qEvaporative_ = mDot_*L;
 
     // Quenching heat transfer coefficient
-    const volScalarField::Internal hQuenching
+    const volInternalScalarField hQuenching
     (
         2
        *liquidkappa
@@ -386,12 +386,12 @@ bool Foam::fv::phaseSurfaceBoiling::addsSupToField(const word& fieldName) const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::phaseSurfaceBoiling::Lfraction() const
 {
     // Put all the latent heat into the liquid
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             name() + ":Lfraction",
             mesh(),
@@ -400,29 +400,29 @@ Foam::fv::phaseSurfaceBoiling::Lfraction() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::phaseSurfaceBoiling::d() const
 {
     return dDeparture_;
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::phaseSurfaceBoiling::nDot() const
 {
     return fDeparture_;
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::phaseSurfaceBoiling::tau() const
 {
     NotImplemented;
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::phaseSurfaceBoiling::mDot() const
 {
     return mDot_;

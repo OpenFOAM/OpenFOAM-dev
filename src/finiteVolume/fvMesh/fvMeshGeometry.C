@@ -221,7 +221,7 @@ Foam::surfaceVectorField& Foam::fvMesh::CfRef()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::volScalarField::Internal& Foam::fvMesh::V() const
+const Foam::volInternalScalarField& Foam::fvMesh::V() const
 {
     if (!VPtr_)
     {
@@ -249,7 +249,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V() const
 }
 
 
-const Foam::volScalarField::Internal& Foam::fvMesh::V0() const
+const Foam::volInternalScalarField& Foam::fvMesh::V0() const
 {
     if (!V0Ptr_ || Foam::isNull(V0Ptr_))
     {
@@ -262,7 +262,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V0() const
 }
 
 
-const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
+const Foam::volInternalScalarField& Foam::fvMesh::V00() const
 {
     if (!V00Ptr_)
     {
@@ -278,7 +278,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fvMesh::Vsc() const
+Foam::tmp<Foam::volInternalScalarField> Foam::fvMesh::Vsc() const
 {
     if (moving() && time().subCycling())
     {
@@ -306,7 +306,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fvMesh::Vsc() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fvMesh::Vsc0() const
+Foam::tmp<Foam::volInternalScalarField> Foam::fvMesh::Vsc0() const
 {
     if (moving() && time().subCycling())
     {

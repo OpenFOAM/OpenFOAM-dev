@@ -70,18 +70,18 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
     const phaseSystem::phaseModelPartialList& movingPhases =
         phase_.fluid().movingPhases();
 
-    volScalarField::Internal transferRate
+    volInternalScalarField transferRate
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "transferRate",
             mesh,
             dimensionedScalar(dimless/dimensions::time, 0)
         )
     );
-    volScalarField::Internal psiTransferRate
+    volInternalScalarField psiTransferRate
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "psiTransferRate",
             mesh,
@@ -106,7 +106,7 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
 
             if (notNull(otherTurbulence))
             {
-                const volScalarField::Internal phaseTransferRate
+                const volInternalScalarField phaseTransferRate
                 (
                     movingPhases[phasei]
                    *min
@@ -123,7 +123,7 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
         }
     }
 
-    const volScalarField::Internal transferCoeff
+    const volInternalScalarField transferCoeff
     (
         max(alphaInversion_ - alpha(), scalar(0))*rho()
     );

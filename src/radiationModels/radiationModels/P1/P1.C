@@ -270,9 +270,9 @@ Foam::tmp<Foam::volScalarField> Foam::radiationModels::P1::Rp() const
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::radiationModels::P1::Ru() const
 {
-    const volScalarField::Internal& G = G_();
-    const volScalarField::Internal E = absorptionEmission_->ECont()()();
-    const volScalarField::Internal a = absorptionEmission_->aCont()()();
+    const volInternalScalarField& G = G_();
+    const volInternalScalarField E = absorptionEmission_->ECont()()();
+    const volInternalScalarField a = absorptionEmission_->aCont()()();
 
     return a*G - E;
 }

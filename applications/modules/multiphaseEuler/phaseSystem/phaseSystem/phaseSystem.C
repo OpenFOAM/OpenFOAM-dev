@@ -635,7 +635,7 @@ void Foam::phaseSystem::correct()
 
 void Foam::phaseSystem::correctContinuityError
 (
-    const PtrList<volScalarField::Internal>& dmdts
+    const PtrList<volInternalScalarField>& dmdts
 )
 {
     forAll(movingPhaseModels_, movingPhasei)

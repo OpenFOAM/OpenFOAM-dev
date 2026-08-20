@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,14 +133,14 @@ public:
 
         //- Calculate and return the departure diameter field for a stationary
         //  phase and fluid interface
-        virtual tmp<volScalarField::Internal> dDeparture
+        virtual tmp<volInternalScalarField> dDeparture
         (
             const phaseModel& liquid,
             const phaseModel& vapor,
             const phaseModel& solid,
-            const volScalarField::Internal& Tf,
-            const volScalarField::Internal& Tsatw,
-            const volScalarField::Internal& L
+            const volInternalScalarField& Tf,
+            const volInternalScalarField& Tsatw,
+            const volInternalScalarField& L
         ) const;
 
         //- Calculate and return the departure diameter field for a stationary

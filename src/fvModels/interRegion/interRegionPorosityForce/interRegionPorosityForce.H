@@ -90,7 +90,7 @@ class interRegionPorosityForce
         word UName_;
 
         //- Porosity mapping filter
-        volScalarField::Internal filter_;
+        volInternalScalarField filter_;
 
         //- Run-time selectable porosity model
         mutable autoPtr<porosityModel> porosityPtr_;

@@ -299,7 +299,7 @@ void Foam::MULES::limit
     surfaceScalarField& phiCorr = psiPhi;
     phiCorr -= phiBD;
 
-    tmp<volScalarField::Internal> tVsc = mesh.Vsc();
+    tmp<volInternalScalarField> tVsc = mesh.Vsc();
     const scalarField& V = tVsc();
 
     // Correction equation source

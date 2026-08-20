@@ -67,13 +67,13 @@ void Foam::fv::waveForcing::readCoeffs(const dictionary& dict)
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::waveForcing::scale() const
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::waveForcing::scale() const
 {
-    return tmp<volScalarField::Internal>(scale_());
+    return tmp<volInternalScalarField>(scale_());
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::waveForcing::forceCoeff() const
 {
     if (lambdaCoeff_ > 0)
@@ -133,7 +133,7 @@ void Foam::fv::waveForcing::addSup
 {
     if (alpha.name() == alphaName_ && &alpha == &eqn.psi())
     {
-        const volScalarField::Internal forceCoeff(this->forceCoeff());
+        const volInternalScalarField forceCoeff(this->forceCoeff());
 
         eqn -= fvm::Sp(forceCoeff, eqn.psi());
         eqn += forceCoeff*alphaWaves_();
@@ -150,7 +150,7 @@ void Foam::fv::waveForcing::addSup
 {
     if (U.name() == UName_ && &U == &eqn.psi())
     {
-        const volScalarField::Internal forceCoeff(rho()*this->forceCoeff());
+        const volInternalScalarField forceCoeff(rho()*this->forceCoeff());
 
         eqn -= fvm::Sp(forceCoeff, eqn.psi());
         eqn += forceCoeff*Uwaves_();
@@ -209,7 +209,7 @@ void Foam::fv::waveForcing::correct()
     const vectorField uLiq(waves_.ULiquid(t, ccs));
     const vectorField uLiqp(waves_.ULiquid(t, pts));
 
-    alphaWaves_ = volScalarField::Internal::New
+    alphaWaves_ = volInternalScalarField::New
     (
         "alphaWaves",
         mesh(),
@@ -217,7 +217,7 @@ void Foam::fv::waveForcing::correct()
         levelSetFraction(mesh(), h, hp, false)
     );
 
-    Uwaves_ = volVectorField::Internal::New
+    Uwaves_ = volInternalVectorField::New
     (
         "Uwaves",
         mesh(),

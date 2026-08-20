@@ -446,7 +446,7 @@ public:
             tmp<VolInternalField<Type>> Su() const;
 
             //- Return the implicit source
-            tmp<volScalarField::Internal> Sp() const;
+            tmp<volInternalScalarField> Sp() const;
 
             //- Return the H operation source
             tmp<VolField<Type>> H() const;
@@ -516,23 +516,23 @@ public:
         void operator+=(const zero&);
         void operator-=(const zero&);
 
-        void operator*=(const volScalarField::Internal&);
+        void operator*=(const volInternalScalarField&);
 
         //- Assign-multiply by an expression
         template<class Expression, class = EnableIfExpression<Expression>>
         void operator*=(const Expression& e);
 
-        void operator*=(const tmp<volScalarField::Internal>&);
+        void operator*=(const tmp<volInternalScalarField>&);
         void operator*=(const tmp<volScalarField>&);
         void operator*=(const dimensioned<scalar>&);
 
-        void operator/=(const volScalarField::Internal&);
+        void operator/=(const volInternalScalarField&);
 
         //- Assign-divide by an expression
         template<class Expression, class = EnableIfExpression<Expression>>
         void operator/=(const Expression& e);
 
-        void operator/=(const tmp<volScalarField::Internal>&);
+        void operator/=(const tmp<volInternalScalarField>&);
         void operator/=(const tmp<volScalarField>&);
         void operator/=(const dimensioned<scalar>&);
 
@@ -1184,7 +1184,7 @@ tmp<fvMatrix<Type>> operator-
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const volScalarField::Internal&,
+    const volInternalScalarField&,
     const fvMatrix<Type>&
 );
 
@@ -1203,7 +1203,7 @@ tmp<fvMatrix<Type>> operator*
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const tmp<volScalarField::Internal>&,
+    const tmp<volInternalScalarField>&,
     const fvMatrix<Type>&
 );
 
@@ -1217,7 +1217,7 @@ tmp<fvMatrix<Type>> operator*
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const volScalarField::Internal&,
+    const volInternalScalarField&,
     const tmp<fvMatrix<Type>>&
 );
 
@@ -1236,7 +1236,7 @@ tmp<fvMatrix<Type>> operator*
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const tmp<volScalarField::Internal>&,
+    const tmp<volInternalScalarField>&,
     const tmp<fvMatrix<Type>>&
 );
 
@@ -1266,7 +1266,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator/
 (
     const fvMatrix<Type>&,
-    const volScalarField::Internal&
+    const volInternalScalarField&
 );
 
 template
@@ -1285,7 +1285,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator/
 (
     const fvMatrix<Type>&,
-    const tmp<volScalarField::Internal>&
+    const tmp<volInternalScalarField>&
 );
 
 template<class Type>
@@ -1299,7 +1299,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator/
 (
     const tmp<fvMatrix<Type>>&,
-    const volScalarField::Internal&
+    const volInternalScalarField&
 );
 
 template
@@ -1318,7 +1318,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator/
 (
     const tmp<fvMatrix<Type>>&,
-    const tmp<volScalarField::Internal>&
+    const tmp<volInternalScalarField>&
 );
 
 template<class Type>

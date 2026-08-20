@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     specified \c field when the phase volume fraction is below \c
     residualAlpha. The stabilisation rate is provided by the registered \c rate
     which can either be a uniformDimensionedScalarField, a volScalarField or a
-    volScalarField::Internal. The \c field is currently stabilised towards zero
+    volInternalScalarField. The \c field is currently stabilised towards zero
     in the limit of the phase volume fraction approaching zero but this could
     be extended to support a specified value or a value or field looked-up from
     the database.

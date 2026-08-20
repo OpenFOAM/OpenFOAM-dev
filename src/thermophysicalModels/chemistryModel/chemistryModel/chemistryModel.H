@@ -71,7 +71,7 @@ protected:
         const scalar deltaTChemMax_;
 
         //- Latest estimation of integration step
-        volScalarField::Internal deltaTChem_;
+        volInternalScalarField deltaTChem_;
 
 
 public:
@@ -131,10 +131,10 @@ public:
         virtual label nReaction() const = 0;
 
         //- Return the latest estimation of integration step
-        inline const volScalarField::Internal& deltaTChem() const;
+        inline const volInternalScalarField& deltaTChem() const;
 
         //- Return reaction rates of the species [kg/m^3/s]
-        virtual const PtrList<volScalarField::Internal>& RR() const = 0;
+        virtual const PtrList<volInternalScalarField>& RR() const = 0;
 
         //- Return the name of reactioni
         virtual inline const word& reactionName
@@ -143,13 +143,13 @@ public:
         ) const = 0;
 
         //- Return the rate of reactioni [kmol/m^3/s]
-        virtual tmp<volScalarField::Internal> reactionRR
+        virtual tmp<volInternalScalarField> reactionRR
         (
             const label reactioni
         ) const = 0;
 
         //- Return reaction rates of the species in reactioni [kg/m^3/s]
-        virtual PtrList<volScalarField::Internal> specieReactionRR
+        virtual PtrList<volInternalScalarField> specieReactionRR
         (
             const label reactioni
         ) const = 0;

@@ -69,7 +69,7 @@ void Foam::ThermoCloud<CloudType>::setModels()
     {
         radAreaP_.reset
         (
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -86,7 +86,7 @@ void Foam::ThermoCloud<CloudType>::setModels()
 
         radT4_.reset
         (
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -103,7 +103,7 @@ void Foam::ThermoCloud<CloudType>::setModels()
 
         radAreaPT4_.reset
         (
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -168,7 +168,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     radAreaPT4_(nullptr),
     hsTrans_
     (
-        new volScalarField::Internal
+        new volInternalScalarField
         (
             IOobject
             (
@@ -184,7 +184,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     ),
     hsCoeff_
     (
-        new volScalarField::Internal
+        new volInternalScalarField
         (
             IOobject
             (
@@ -237,7 +237,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     radAreaPT4_(nullptr),
     hsTrans_
     (
-        new volScalarField::Internal
+        new volInternalScalarField
         (
             IOobject
             (
@@ -253,7 +253,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     ),
     hsCoeff_
     (
-        new volScalarField::Internal
+        new volInternalScalarField
         (
             IOobject
             (
@@ -272,7 +272,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     {
         radAreaP_.reset
         (
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -289,7 +289,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
 
         radT4_.reset
         (
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -306,7 +306,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
 
         radAreaPT4_.reset
         (
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (

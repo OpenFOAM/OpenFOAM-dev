@@ -774,12 +774,12 @@ Foam::Pair<const Foam::scalarField&> Foam::fv::wallBoiling::alphats
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallBoiling::Lfraction() const
 {
     // Put all the latent heat into the liquid
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             name() + ":Lfraction",
             mesh(),
@@ -788,13 +788,13 @@ Foam::fv::wallBoiling::Lfraction() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallBoiling::d() const
 {
     tmp<volScalarField> tdVapour = vapour_.d();
-    const volScalarField::Internal& dVapour = tdVapour();
+    const volInternalScalarField& dVapour = tdVapour();
 
-    const volScalarField::Internal mask
+    const volInternalScalarField mask
     (
         neg
         (
@@ -804,9 +804,9 @@ Foam::fv::wallBoiling::d() const
         )
     );
 
-    tmp<volScalarField::Internal> td =
-        volScalarField::Internal::New(name() + ":d", mask*dVapour);
-    volScalarField::Internal& d = td.ref();
+    tmp<volInternalScalarField> td =
+        volInternalScalarField::New(name() + ":d", mask*dVapour);
+    volInternalScalarField& d = td.ref();
 
     forAll(mDot_.boundaryField(), patchi)
     {
@@ -830,17 +830,17 @@ Foam::fv::wallBoiling::d() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallBoiling::nDot() const
 {
-    tmp<volScalarField::Internal> tnDot =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tnDot =
+        volInternalScalarField::New
         (
             name() + ":nDot",
             mesh(),
             dimensionedScalar(inv(dimensions::time), scalar(0))
         );
-    volScalarField::Internal& nDot = tnDot.ref();
+    volInternalScalarField& nDot = tnDot.ref();
 
     forAll(mDot_.boundaryField(), patchi)
     {
@@ -862,15 +862,15 @@ Foam::fv::wallBoiling::nDot() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallBoiling::tau() const
 {
     NotImplemented;
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallBoiling::mDot() const
 {
     return mDot_.internalField();

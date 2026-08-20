@@ -142,7 +142,7 @@ public:
         virtual tmp<volScalarField> Av() const;
 
         //- ...
-        tmp<volScalarField::Internal> fSum() const;
+        tmp<volInternalScalarField> fSum() const;
 
         //- Correct the model
         virtual void correct();

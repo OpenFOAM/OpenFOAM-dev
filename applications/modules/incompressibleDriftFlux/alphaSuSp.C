@@ -47,19 +47,19 @@ Foam::solvers::incompressibleDriftFlux::alphaPhi
 
 void Foam::solvers::incompressibleDriftFlux::alphaSuSp
 (
-    tmp<volScalarField::Internal>& tSu,
-    tmp<volScalarField::Internal>& tSp
+    tmp<volInternalScalarField>& tSu,
+    tmp<volInternalScalarField>& tSp
 )
 {
     if (!divergent()) return;
 
     const dimensionedScalar Szero(dimless/dimensions::time, 0);
 
-    tSp = volScalarField::Internal::New("Sp", mesh, Szero);
-    tSu = volScalarField::Internal::New("Su", mesh, Szero);
+    tSp = volInternalScalarField::New("Sp", mesh, Szero);
+    tSu = volInternalScalarField::New("Su", mesh, Szero);
 
-    volScalarField::Internal& Sp = tSp.ref();
-    volScalarField::Internal& Su = tSu.ref();
+    volInternalScalarField& Sp = tSp.ref();
+    volInternalScalarField& Su = tSu.ref();
 
     if (fvModels().addsSupToField(alpha1.name()))
     {

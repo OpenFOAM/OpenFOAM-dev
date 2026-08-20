@@ -104,7 +104,7 @@ void Foam::reactionModels::PaSR::correct()
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::PaSR::R(const label speciei) const
 {
     return kappa_()*laminar::R(speciei);

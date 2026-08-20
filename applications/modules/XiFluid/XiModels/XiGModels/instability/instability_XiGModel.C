@@ -74,10 +74,10 @@ Foam::XiGModels::instability::~instability()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::XiGModels::instability::G() const
 {
-    const volScalarField::Internal turbXiG(XiGModel_->G());
+    const volInternalScalarField turbXiG(XiGModel_->G());
     return (Gin_*Gin_/(Gin_ + turbXiG) + turbXiG);
 }
 

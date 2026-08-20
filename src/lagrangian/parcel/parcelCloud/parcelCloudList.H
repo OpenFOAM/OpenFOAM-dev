@@ -147,10 +147,10 @@ public:
                 tmp<fvVectorMatrix> SU(const volVectorField& U) const;
 
                 //- Momentum transfer [kg m/s]
-                tmp<volVectorField::Internal> UTrans() const;
+                tmp<volInternalVectorField> UTrans() const;
 
                 //- Momentum transfer coefficient [kg]
-                tmp<volScalarField::Internal> UCoeff() const;
+                tmp<volInternalScalarField> UCoeff() const;
 
 
             // Energy
@@ -159,10 +159,10 @@ public:
                 tmp<fvScalarMatrix> Sh(const volScalarField& hs) const;
 
                 //- Sensible enthalpy transfer [J]
-                tmp<volScalarField::Internal> hsTrans() const;
+                tmp<volInternalScalarField> hsTrans() const;
 
                 //- Sensible enthalpy transfer coefficient [J/K]
-                tmp<volScalarField::Internal> hsCoeff() const;
+                tmp<volInternalScalarField> hsCoeff() const;
 
                 //- Return equivalent particulate emission [kg/m/s^3]
                 tmp<volScalarField> Ep() const;
@@ -187,7 +187,7 @@ public:
                 tmp<fvScalarMatrix> Srho(const volScalarField& rho) const;
 
                 //- Return total mass source [kg/m^3/s]
-                tmp<volScalarField::Internal> Srho() const;
+                tmp<volInternalScalarField> Srho() const;
 
 
         // I-O

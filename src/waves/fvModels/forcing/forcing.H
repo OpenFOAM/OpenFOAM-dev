@@ -93,10 +93,10 @@ protected:
         dimensionedScalar regionLength() const;
 
         //- Return the scale distribution
-        virtual tmp<volScalarField::Internal> scale() const;
+        virtual tmp<volInternalScalarField> scale() const;
 
         //- Return the force coefficient
-        virtual tmp<volScalarField::Internal> forceCoeff() const;
+        virtual tmp<volInternalScalarField> forceCoeff() const;
 
         //- Optionally write the forcing fields:
         //  forcing:scale, forcing:forceCoeff

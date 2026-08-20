@@ -152,7 +152,7 @@ bool Foam::functionObjects::specieReactionRates::write()
             file() << token::TAB << reactioni;
         }
 
-        const PtrList<volScalarField::Internal> RR
+        const PtrList<volInternalScalarField> RR
         (
             chemistry.specieReactionRR(reactioni)
         );

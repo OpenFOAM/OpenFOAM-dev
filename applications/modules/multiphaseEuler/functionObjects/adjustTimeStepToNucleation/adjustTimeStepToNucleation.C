@@ -111,8 +111,8 @@ Foam::functionObjects::adjustTimeStepToNucleation::maxDeltaT() const
     {
         bool found = false;
 
-        tmp<volScalarField::Internal> tTau =
-            volScalarField::Internal::New
+        tmp<volInternalScalarField> tTau =
+            volInternalScalarField::New
             (
                 typedName("tau"),
                 mesh(),

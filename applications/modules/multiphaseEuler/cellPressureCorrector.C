@@ -145,7 +145,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     }
 
     // Mass transfer rates
-    PtrList<volScalarField::Internal> dmdts(populationBalanceSystem_.dmdts());
+    PtrList<volInternalScalarField> dmdts(populationBalanceSystem_.dmdts());
 
     // --- Optional momentum predictor
     if (predictMomentum)

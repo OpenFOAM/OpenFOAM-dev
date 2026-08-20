@@ -119,17 +119,17 @@ bool Foam::fv::KochFriedlanderSintering::addsSupToField
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::KochFriedlanderSintering::tau
 (
-    const volScalarField::Internal& kappa
+    const volInternalScalarField& kappa
 ) const
 {
     const label i = kappaNameToGroupIndices_[kappa.name()];
 
-    const volScalarField::Internal& T = popBal_.phases()[i].thermo().T();
+    const volInternalScalarField& T = popBal_.phases()[i].thermo().T();
 
-    const volScalarField::Internal dp(6/max(6/popBal_.dSph(i), kappa));
+    const volInternalScalarField dp(6/max(6/popBal_.dSph(i), kappa));
 
     return Cs_*pow(dp, n_)*pow(T, m_)*exp(Ta_/T*(1 - dpMin_/dp));
 }
@@ -145,7 +145,7 @@ void Foam::fv::KochFriedlanderSintering::addSup
 {
     const label i = kappaNameToGroupIndices_[kappa.name()];
 
-    const volScalarField::Internal R(alphaFi()*rho()/tau(kappa));
+    const volInternalScalarField R(alphaFi()*rho()/tau(kappa));
 
     eqn += R*6/popBal_.dSph(i) - fvm::Sp(R, kappa);
 }

@@ -126,16 +126,16 @@ Foam::wallBoilingModels::departureFrequencyModels::Cole::fDeparture
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::wallBoilingModels::departureFrequencyModels::Cole::fDeparture
 (
     const phaseModel& liquid,
     const phaseModel& vapour,
     const phaseModel& solid,
-    const volScalarField::Internal& Tl,
-    const volScalarField::Internal& Tsatw,
-    const volScalarField::Internal& L,
-    const volScalarField::Internal& dDep
+    const volInternalScalarField& Tl,
+    const volInternalScalarField& Tsatw,
+    const volInternalScalarField& L,
+    const volInternalScalarField& dDep
 ) const
 {
     return

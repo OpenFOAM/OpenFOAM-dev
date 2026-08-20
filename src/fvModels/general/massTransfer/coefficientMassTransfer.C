@@ -65,7 +65,7 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::coefficientMassTransfer::mDot() const
 {
     const volScalarField& alpha1 =
@@ -88,7 +88,7 @@ void Foam::fv::coefficientMassTransfer::addSup
         const volScalarField& alpha1 =
             mesh().lookupObject<volScalarField>(alphaNames().first());
 
-        const volScalarField::Internal SByAlpha1
+        const volInternalScalarField SByAlpha1
         (
             C_*mag(fvi::grad(alpha1))/rho(i)
         );
@@ -125,7 +125,7 @@ void Foam::fv::coefficientMassTransfer::addSup
         const volScalarField& alpha1 =
             mesh().lookupObject<volScalarField>(alphaNames().first());
 
-        const volScalarField::Internal SByAlpha1(C_*mag(fvi::grad(alpha1)));
+        const volInternalScalarField SByAlpha1(C_*mag(fvi::grad(alpha1)));
 
         if (i == 0)
         {

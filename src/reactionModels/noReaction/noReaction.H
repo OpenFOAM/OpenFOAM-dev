@@ -83,7 +83,7 @@ public:
         virtual void correct();
 
         //- Specie consumption rate field
-        virtual tmp<volScalarField::Internal> R(const label speciei) const;
+        virtual tmp<volInternalScalarField> R(const label speciei) const;
 
         //- Specie consumption rate matrix
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;

@@ -65,7 +65,7 @@ void Foam::MULES::limiter
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighb = mesh.neighbour();
-    tmp<volScalarField::Internal> tVsc = mesh.Vsc();
+    tmp<volInternalScalarField> tVsc = mesh.Vsc();
     const scalarField& V = tVsc();
 
     const surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryField();

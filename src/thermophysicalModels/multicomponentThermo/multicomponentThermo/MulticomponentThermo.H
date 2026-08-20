@@ -67,9 +67,9 @@ protected:
             const Args& ... args
         ) const;
 
-        //- Return a volScalarField::Internal of the given property
+        //- Return a volInternalScalarField of the given property
         template<class Method, class ... Args>
-        tmp<volScalarField::Internal> volInternalScalarFieldPropertyi
+        tmp<volInternalScalarField> volInternalScalarFieldPropertyi
         (
             const word& psiName,
             const dimensionSet& psiDim,
@@ -190,11 +190,11 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy [J/kg]
-            virtual tmp<volScalarField::Internal> hei
+            virtual tmp<volInternalScalarField> hei
             (
                 const label speciei,
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Enthalpy/Internal energy [J/kg]
@@ -222,11 +222,11 @@ public:
             ) const;
 
             //- Sensible enthalpy [J/kg]
-            virtual tmp<volScalarField::Internal> hsi
+            virtual tmp<volInternalScalarField> hsi
             (
                 const label speciei,
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Sensible enthalpy [J/kg]
@@ -254,11 +254,11 @@ public:
             ) const;
 
             //- Absolute enthalpy [J/kg]
-            virtual tmp<volScalarField::Internal> hai
+            virtual tmp<volInternalScalarField> hai
             (
                 const label speciei,
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Absolute enthalpy [J/kg]

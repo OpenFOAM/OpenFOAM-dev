@@ -65,7 +65,7 @@ Foam::diameterModels::IATEsources::turbulentBreakUp::R
     volScalarField& kappai
 ) const
 {
-    volScalarField::Internal R
+    volInternalScalarField R
     (
         IOobject
         (

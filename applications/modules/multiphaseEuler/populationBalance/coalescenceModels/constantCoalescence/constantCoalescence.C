@@ -62,7 +62,7 @@ constantCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::constantCoalescence::rate
 (
     const label i,
@@ -70,7 +70,7 @@ Foam::populationBalance::coalescenceModels::constantCoalescence::rate
 ) const
 {
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "coalescenceRate",
             popBal_.mesh(),

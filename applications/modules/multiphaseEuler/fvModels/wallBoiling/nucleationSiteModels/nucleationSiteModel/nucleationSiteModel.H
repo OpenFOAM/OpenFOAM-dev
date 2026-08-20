@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,16 +110,16 @@ public:
         ) const = 0;
 
         //- Calculate and return the nucleation-site density
-        virtual tmp<volScalarField::Internal> nucleationSiteDensity
+        virtual tmp<volInternalScalarField> nucleationSiteDensity
         (
             const phaseModel& liquid,
             const phaseModel& vapor,
             const phaseModel& solid,
-            const volScalarField::Internal& Tf,
-            const volScalarField::Internal& Tsatw,
-            const volScalarField::Internal& L,
-            const volScalarField::Internal& dDep,
-            const volScalarField::Internal& fDep
+            const volInternalScalarField& Tf,
+            const volInternalScalarField& Tsatw,
+            const volInternalScalarField& L,
+            const volInternalScalarField& dDep,
+            const volInternalScalarField& fDep
         ) const = 0;
 
         //- Calculate and return the nucleation-site density

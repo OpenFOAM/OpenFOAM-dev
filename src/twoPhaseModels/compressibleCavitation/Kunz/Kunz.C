@@ -65,35 +65,35 @@ Foam::compressible::cavitationModels::Kunz::Kunz
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::compressible::cavitationModels::Kunz::mvCoeff() const
 {
     return Cv_*rhov()/(0.5*rhol()*sqr(UInf_)*tInf_);
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::compressible::cavitationModels::Kunz::mcCoeff() const
 {
     return Cc_*rhov()/tInf_;
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::compressible::cavitationModels::Kunz::mDotcvAlphal() const
 {
-    const volScalarField::Internal& p =
+    const volInternalScalarField& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal alphal
+    const volInternalScalarField alphal
     (
         min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal pSatv(this->pSatv());
-    const volScalarField::Internal pSatl(this->pSatl());
+    const volInternalScalarField pSatv(this->pSatv());
+    const volInternalScalarField pSatl(this->pSatl());
 
-    return Pair<tmp<volScalarField::Internal>>
+    return Pair<tmp<volInternalScalarField>>
     (
         mcCoeff()*sqr(alphal)
        *max(p - pSatv, p0_)/max(p - pSatv, 0.01*pSatv),
@@ -102,26 +102,26 @@ Foam::compressible::cavitationModels::Kunz::mDotcvAlphal() const
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::compressible::cavitationModels::Kunz::mDotcvP() const
 {
-    const volScalarField::Internal& p =
+    const volInternalScalarField& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal alphav
+    const volInternalScalarField alphav
     (
         min(max(this->alphav(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal alphal
+    const volInternalScalarField alphal
     (
         min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal pSatv(this->pSatv());
-    const volScalarField::Internal pSatl(this->pSatl());
+    const volInternalScalarField pSatv(this->pSatv());
+    const volInternalScalarField pSatl(this->pSatl());
 
-    return Pair<tmp<volScalarField::Internal>>
+    return Pair<tmp<volInternalScalarField>>
     (
         mcCoeff()*alphav*sqr(alphal)*pos0(p - pSatv)
        /max(p - pSatv, 0.01*pSatv),

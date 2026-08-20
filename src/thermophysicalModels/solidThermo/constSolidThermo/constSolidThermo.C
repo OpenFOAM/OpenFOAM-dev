@@ -156,10 +156,10 @@ Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::he
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::constSolidThermo::he
+Foam::tmp<Foam::volInternalScalarField> Foam::constSolidThermo::he
 (
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     return Cv_()*T;
@@ -176,15 +176,15 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::he
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::constSolidThermo::he
+Foam::tmp<Foam::volInternalScalarField> Foam::constSolidThermo::he
 (
-    const volScalarField::Internal& T,
+    const volInternalScalarField& T,
     const fvSource& model,
-    const volScalarField::Internal& source
+    const volInternalScalarField& source
 ) const
 {
     NotImplemented;
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 
@@ -219,14 +219,14 @@ Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::hs
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::constSolidThermo::hs
+Foam::tmp<Foam::volInternalScalarField> Foam::constSolidThermo::hs
 (
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     NotImplemented;
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 
@@ -270,14 +270,14 @@ Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::ha
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::constSolidThermo::ha
+Foam::tmp<Foam::volInternalScalarField> Foam::constSolidThermo::ha
 (
-    const volScalarField::Internal& p,
-    const volScalarField::Internal& T
+    const volInternalScalarField& p,
+    const volInternalScalarField& T
 ) const
 {
     NotImplemented;
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 

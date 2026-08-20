@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ private:
         PtrList<volScalarField> dColls_;
 
         //- Groups' explicit sources
-        PtrList<volScalarField::Internal> Sus_;
+        PtrList<volInternalScalarField> Sus_;
 
 
     // Private Member Functions
@@ -141,7 +141,7 @@ public:
             virtual const volScalarField& fld(const label i) const;
 
             //- Access a secondary property source
-            virtual volScalarField::Internal& src(const label i);
+            virtual volInternalScalarField& src(const label i);
 
             //- Return the representative surface area of a group
             virtual tmp<volScalarField> a(const label i) const;

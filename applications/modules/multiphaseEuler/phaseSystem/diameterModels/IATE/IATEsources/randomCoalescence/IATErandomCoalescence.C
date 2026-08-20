@@ -66,7 +66,7 @@ Foam::diameterModels::IATEsources::randomCoalescence::R
     volScalarField& kappai
 ) const
 {
-    volScalarField::Internal R
+    volInternalScalarField R
     (
         IOobject
         (

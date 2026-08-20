@@ -33,7 +33,7 @@ Usage
 
     Options:
       - \par -cellProc
-        Write cell processor indices as a volScalarField::Internal for
+        Write cell processor indices as a volInternalScalarField for
         post-processing.
 
       - \par -region \<regionName\> \n
@@ -160,8 +160,8 @@ void decomposeUniform
 
 void writeDecomposition(const domainDecomposition& meshes)
 {
-    // Write as volScalarField::Internal for postprocessing.
-    volScalarField::Internal cellProc
+    // Write as volInternalScalarField for postprocessing.
+    volInternalScalarField cellProc
     (
         IOobject
         (
@@ -178,7 +178,7 @@ void writeDecomposition(const domainDecomposition& meshes)
 
     cellProc.write();
 
-    Info<< "Wrote decomposition as volScalarField::Internal to "
+    Info<< "Wrote decomposition as volInternalScalarField to "
         << cellProc.name() << " for use in postprocessing"
         << endl;
 }
@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
     argList::addBoolOption
     (
         "cellProc",
-        "write cell processor indices as a volScalarField::Internal for "
+        "write cell processor indices as a volInternalScalarField for "
         "post-processing"
     );
     argList::addBoolOption

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ class DSMCCloud
         volScalarField sigmaTcRMax_;
 
         //- A field holding the remainder from the previous collision selections
-        volScalarField::Internal collisionSelectionRemainder_;
+        volInternalScalarField collisionSelectionRemainder_;
 
         //- Heat flux at surface field
         volScalarField q_;

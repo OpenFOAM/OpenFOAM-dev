@@ -132,7 +132,7 @@ Foam::populationBalance::shapeModels::fractal::fractal
         Sus_.set
         (
             i,
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 populationBalanceModel::groupFieldIo
                 (
@@ -193,7 +193,7 @@ Foam::populationBalance::shapeModels::fractal::fld(const label i) const
 }
 
 
-Foam::volScalarField::Internal&
+Foam::volInternalScalarField&
 Foam::populationBalance::shapeModels::fractal::src(const label i)
 {
     return Sus_[i];

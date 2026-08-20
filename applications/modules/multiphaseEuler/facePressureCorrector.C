@@ -152,7 +152,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
     }
 
     // Mass transfer rates
-    PtrList<volScalarField::Internal> dmdts(populationBalanceSystem_.dmdts());
+    PtrList<volInternalScalarField> dmdts(populationBalanceSystem_.dmdts());
 
     // --- Pressure corrector loop
     while (pimple.correct())

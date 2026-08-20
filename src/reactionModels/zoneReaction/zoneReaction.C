@@ -154,7 +154,7 @@ void Foam::reactionModels::zoneReaction::correct()
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::zoneReaction::R(const label speciei) const
 {
     return filter(reactionModelPtr_->R(speciei));

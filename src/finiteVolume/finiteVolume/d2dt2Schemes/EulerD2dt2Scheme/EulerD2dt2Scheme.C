@@ -64,8 +64,8 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
     {
         const dimensionedScalar halfRdeltaT2(rDeltaT2/2.0);
 
-        const volScalarField::Internal VV0(mesh().V() + mesh().V0());
-        const volScalarField::Internal V0V00(mesh().V0() + mesh().V00());
+        const volInternalScalarField VV0(mesh().V() + mesh().V0());
+        const volInternalScalarField V0V00(mesh().V0() + mesh().V00());
 
         return VolField<Type>::New
         (
@@ -129,12 +129,12 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         const dimensionedScalar halfRdeltaT2(0.5*rDeltaT2);
         const dimensionedScalar quarterRdeltaT2(0.25*rDeltaT2);
 
-        const volScalarField::Internal VV0rhoRho0
+        const volInternalScalarField VV0rhoRho0
         (
             (mesh().V() + mesh().V0())*(rho() + rho.oldTime()())
         );
 
-        const volScalarField::Internal V0V00rho0Rho00
+        const volInternalScalarField V0V00rho0Rho00
         (
             (mesh().V0() + mesh().V00())
            *(

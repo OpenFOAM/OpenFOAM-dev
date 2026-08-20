@@ -88,7 +88,7 @@ void BrunDripping::correct()
     const scalarField& rho = film_.rho;
 
     const tmp<volScalarField> tsigma = film_.sigma();
-    const volScalarField::Internal& sigma = tsigma();
+    const volInternalScalarField& sigma = tsigma();
 
     const scalar magg = mag(film_.g.value());
     const vector gHat = -film_.g.value()/magg;

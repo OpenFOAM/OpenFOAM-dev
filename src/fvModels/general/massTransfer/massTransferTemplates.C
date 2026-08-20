@@ -104,7 +104,7 @@ void Foam::fv::massTransfer::addSupType
         // If a corresponding field exists then transfer its value
         if (!isNull(otherField))
         {
-            const volScalarField::Internal S(this->S(field.name())/rho(i));
+            const volInternalScalarField S(this->S(field.name())/rho(i));
 
             eqn += posPart(S)*otherField();
 
@@ -184,7 +184,7 @@ void Foam::fv::massTransfer::addSupType
         // If a corresponding field exists then transfer its value
         if (!isNull(otherField))
         {
-            const volScalarField::Internal S(this->S(field.name()));
+            const volInternalScalarField S(this->S(field.name()));
 
             eqn += posPart(S)*otherField();
 

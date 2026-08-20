@@ -146,16 +146,16 @@ KocamustafaogullariIshiiDepartureDiameter::dDeparture
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::wallBoilingModels::departureDiameterModels::
 KocamustafaogullariIshiiDepartureDiameter::dDeparture
 (
     const phaseModel& liquid,
     const phaseModel& vapour,
     const phaseModel& solid,
-    const volScalarField::Internal& Tf,
-    const volScalarField::Internal& Tsatw,
-    const volScalarField::Internal& L
+    const volInternalScalarField& Tf,
+    const volInternalScalarField& Tsatw,
+    const volInternalScalarField& L
 ) const
 {
     return calculate

@@ -537,7 +537,7 @@ void Foam::fv::rotorDisk::addSup
     fvMatrix<vector>& eqn
 ) const
 {
-    volVectorField::Internal force
+    volInternalVectorField force
     (
         IOobject
         (
@@ -582,7 +582,7 @@ void Foam::fv::rotorDisk::addSup
     fvMatrix<vector>& eqn
 ) const
 {
-    volVectorField::Internal force
+    volInternalVectorField force
     (
         IOobject
         (

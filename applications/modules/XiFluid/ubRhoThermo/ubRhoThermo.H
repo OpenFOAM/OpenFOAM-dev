@@ -196,7 +196,7 @@ public:
 
         //- Return the burnt gas prompt specie mass fractions
         //  corresponding to the current unburnt gas specie mass fractions
-        PtrList<volScalarField::Internal> prompt() const;
+        PtrList<volInternalScalarField> prompt() const;
 
         //- Reset the mixture to an unburnt state
         // for multi-cycle simulations with EGR
@@ -273,10 +273,10 @@ public:
 
             //- Enthalpy/Internal energy
             //  for given pressure and temperature [J/kg]
-            virtual tmp<volScalarField::Internal> he
+            virtual tmp<volInternalScalarField> he
             (
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Enthalpy/Internal energy for cell-set [J/kg]
@@ -294,11 +294,11 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy for source [J/kg]
-            virtual tmp<volScalarField::Internal> he
+            virtual tmp<volInternalScalarField> he
             (
-                const volScalarField::Internal& T,
+                const volInternalScalarField& T,
                 const fvSource& model,
-                const volScalarField::Internal& source
+                const volInternalScalarField& source
             ) const;
 
             //- Enthalpy/Internal energy for source [J/kg]
@@ -323,10 +323,10 @@ public:
 
             //- Sensible enthalpy
             //  for given pressure and temperature [J/kg]
-            virtual tmp<volScalarField::Internal> hs
+            virtual tmp<volInternalScalarField> hs
             (
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Sensible enthalpy for cell-set [J/kg]
@@ -356,10 +356,10 @@ public:
 
             //- Absolute enthalpy
             //  for given pressure and temperature [J/kg]
-            virtual tmp<volScalarField::Internal> ha
+            virtual tmp<volInternalScalarField> ha
             (
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Absolute enthalpy for cell-set [J/kg]

@@ -148,19 +148,19 @@ private:
         label nIter_;
 
         //- The surface temperature
-        volScalarField::Internal Ts_;
+        volInternalScalarField Ts_;
 
         //- Explicit coefficients for each side and each specie
-        Pair<PtrList<volScalarField::Internal>> mDotSus_;
+        Pair<PtrList<volInternalScalarField>> mDotSus_;
 
         //- Implicit coefficients for each side and each specie
-        Pair<PtrList<volScalarField::Internal>> mDotSps_;
+        Pair<PtrList<volInternalScalarField>> mDotSps_;
 
         //- Counter for the evaluations of the pressure equation sources
         mutable label pressureEquationIndex_;
 
         //- The phase change rate
-        mutable volScalarField::Internal mDot_;
+        mutable volInternalScalarField mDot_;
 
 
     // Private Member Functions

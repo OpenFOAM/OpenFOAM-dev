@@ -48,7 +48,7 @@ Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
     y_
     (
         mesh.boundary(),
-        volScalarField::Internal::null(),
+        volInternalScalarField::null(),
         calculatedFvPatchScalarField::typeName
     )
 {

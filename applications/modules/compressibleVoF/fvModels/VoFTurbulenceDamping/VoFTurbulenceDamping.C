@@ -119,7 +119,7 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    const volScalarField::Internal aRhoSqrnu
+    const volInternalScalarField aRhoSqrnu
     (
         mixture_.alpha1()()*mixture_.rho1()()*sqr(mixture_.thermo1().nu()()())
       + mixture_.alpha2()()*mixture_.rho2()()*sqr(mixture_.thermo2().nu()()())
@@ -157,7 +157,7 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    tmp<volScalarField::Internal> taRhoSqrnu;
+    tmp<volInternalScalarField> taRhoSqrnu;
 
     if (mixture_.alpha1().name() == alpha.name())
     {

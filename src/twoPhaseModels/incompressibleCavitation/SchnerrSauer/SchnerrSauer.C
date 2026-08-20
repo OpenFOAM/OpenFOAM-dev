@@ -67,10 +67,10 @@ Foam::cavitationModels::SchnerrSauer::SchnerrSauer
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::cavitationModels::SchnerrSauer::rRb
 (
-    const volScalarField::Internal& limitedAlphal
+    const volInternalScalarField& limitedAlphal
 ) const
 {
     return cbrt
@@ -89,18 +89,18 @@ Foam::cavitationModels::SchnerrSauer::alphaNuc() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::cavitationModels::SchnerrSauer::pCoeff
 (
-    const volScalarField::Internal& p
+    const volInternalScalarField& p
 ) const
 {
-    const volScalarField::Internal limitedAlphal
+    const volInternalScalarField limitedAlphal
     (
         min(max(alphal(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal rho
+    const volInternalScalarField rho
     (
         limitedAlphal*rhol()
       + (scalar(1) - limitedAlphal)*rhov()
@@ -112,20 +112,20 @@ Foam::cavitationModels::SchnerrSauer::pCoeff
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::cavitationModels::SchnerrSauer::mDotcvAlpha() const
 {
-    const volScalarField::Internal& p =
+    const volInternalScalarField& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal pCoeff(this->pCoeff(p));
+    const volInternalScalarField pCoeff(this->pCoeff(p));
 
-    const volScalarField::Internal limitedAlphal
+    const volInternalScalarField limitedAlphal
     (
         min(max(alphal(), scalar(0)), scalar(1))
     );
 
-    return Pair<tmp<volScalarField::Internal>>
+    return Pair<tmp<volInternalScalarField>>
     (
         Cc_*limitedAlphal*pCoeff*max(p - pSat(), p0_),
        -Cv_*(1.0 + alphaNuc() - limitedAlphal)*pCoeff*min(p - pSat(), p0_)
@@ -133,22 +133,22 @@ Foam::cavitationModels::SchnerrSauer::mDotcvAlpha() const
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::cavitationModels::SchnerrSauer::mDotcvP() const
 {
-    const volScalarField::Internal& p =
+    const volInternalScalarField& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal pCoeff(this->pCoeff(p));
+    const volInternalScalarField pCoeff(this->pCoeff(p));
 
-    const volScalarField::Internal limitedAlphal
+    const volInternalScalarField limitedAlphal
     (
         min(max(alphal(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal apCoeff(limitedAlphal*pCoeff);
+    const volInternalScalarField apCoeff(limitedAlphal*pCoeff);
 
-    return Pair<tmp<volScalarField::Internal>>
+    return Pair<tmp<volInternalScalarField>>
     (
         Cc_*(1.0 - limitedAlphal)*pos0(p - pSat())*apCoeff,
         (-Cv_)*(1.0 + alphaNuc() - limitedAlphal)*neg(p - pSat())*apCoeff

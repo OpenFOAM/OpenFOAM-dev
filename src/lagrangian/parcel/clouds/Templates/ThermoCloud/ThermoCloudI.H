@@ -253,7 +253,7 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
         if (this->solution().semiImplicit("h"))
         {
             const volScalarField& Cp(carrierThermo_.Cp());
-            const volScalarField::Internal
+            const volInternalScalarField
                 Vdt(this->mesh().V()*this->time().deltaT());
 
             if (hs.dimensions() == dimensions::temperature)

@@ -58,10 +58,10 @@ protected:
         const solvers::isothermalFilm& film_;
 
         //- Cached ejection rate (transfer to cloud)
-        volScalarField::Internal rate_;
+        volInternalScalarField rate_;
 
         //- Cached diameter of ejected droplets
-        volScalarField::Internal diameter_;
+        volInternalScalarField diameter_;
 
 
 public:
@@ -113,13 +113,13 @@ public:
     // Member Functions
 
         //- Return ejection rate (transfer to cloud)
-        const volScalarField::Internal& rate() const
+        const volInternalScalarField& rate() const
         {
             return rate_;
         }
 
         //- Return diameter of ejected droplets
-        const volScalarField::Internal& diameter() const
+        const volInternalScalarField& diameter() const
         {
             return diameter_;
         }

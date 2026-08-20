@@ -110,9 +110,9 @@ bool Foam::functionObjects::bXiQdot::execute()
         const bRhoMulticomponentThermo& bThermo =
             mesh_.lookupObject<bRhoMulticomponentThermo>(bThermoName);
 
-        const volScalarField::Internal& bSource
+        const volInternalScalarField& bSource
         (
-            mesh_.lookupObject<volScalarField::Internal>("bSource")
+            mesh_.lookupObject<volInternalScalarField>("bSource")
         );
 
         store

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,10 +110,10 @@ public:
                 ) const = 0;
 
                 //- Momentum transfer [kg m/s]
-                virtual tmp<volVectorField::Internal> UTrans() const = 0;
+                virtual tmp<volInternalVectorField> UTrans() const = 0;
 
                 //- Momentum transfer coefficient [kg]
-                virtual tmp<volScalarField::Internal> UCoeff() const = 0;
+                virtual tmp<volInternalScalarField> UCoeff() const = 0;
 
 
             // Energy
@@ -125,10 +125,10 @@ public:
                 ) const = 0;
 
                 //- Sensible enthalpy transfer [J]
-                virtual tmp<volScalarField::Internal> hsTrans() const = 0;
+                virtual tmp<volInternalScalarField> hsTrans() const = 0;
 
                 //- Sensible enthalpy transfer coefficient [J/K]
-                virtual tmp<volScalarField::Internal> hsCoeff() const = 0;
+                virtual tmp<volInternalScalarField> hsCoeff() const = 0;
 
                 //- Return equivalent particulate emission [kg/m/s^3]
                 virtual tmp<volScalarField> Ep() const = 0;
@@ -156,7 +156,7 @@ public:
                 ) const = 0;
 
                 //- Return total mass source [kg/m^3/s]
-                virtual tmp<volScalarField::Internal> Srho() const = 0;
+                virtual tmp<volInternalScalarField> Srho() const = 0;
 
 
         // I-O

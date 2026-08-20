@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,13 +131,13 @@ class waveForcing
         const word UName_;
 
         //- Phase-fraction field calculated from the current wave form
-        tmp<volScalarField::Internal> alphaWaves_;
+        tmp<volInternalScalarField> alphaWaves_;
 
         //- Velocity field calculated from the current wave form
-        tmp<volVectorField::Internal> Uwaves_;
+        tmp<volInternalVectorField> Uwaves_;
 
         //- Forcing coefficient scale field
-        autoPtr<volScalarField::Internal> scale_;
+        autoPtr<volInternalScalarField> scale_;
 
 
     // Private Member Functions
@@ -146,10 +146,10 @@ class waveForcing
         void readCoeffs(const dictionary& dict);
 
         //- Return the scale distribution
-        virtual tmp<volScalarField::Internal> scale() const;
+        virtual tmp<volInternalScalarField> scale() const;
 
         //- Return the force coefficient
-        virtual tmp<volScalarField::Internal> forceCoeff() const;
+        virtual tmp<volInternalScalarField> forceCoeff() const;
 
 
 public:

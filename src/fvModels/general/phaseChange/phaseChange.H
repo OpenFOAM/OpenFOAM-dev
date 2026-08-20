@@ -207,7 +207,7 @@ public:
             //- Return the latent heat for a given changing temperature
             tmp<DimensionedField<scalar, fvMesh>> L
             (
-                const volScalarField::Internal& Tchange,
+                const volInternalScalarField& Tchange,
                 const label mDoti = -1
             ) const;
 

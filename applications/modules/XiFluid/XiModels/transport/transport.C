@@ -104,14 +104,14 @@ void Foam::XiModels::transport::correct()
 
     const volScalarField XiEqEta(XiEqModel_->XiEq());
 
-    const volScalarField::Internal GEta(XiGModel_->G());
-    const volScalarField::Internal R(GEta*XiEqEta()/(XiEqEta() - 0.999));
-    const volScalarField::Internal XiEqStar(R/(R - GEta));
-    const volScalarField::Internal XiEq
+    const volInternalScalarField GEta(XiGModel_->G());
+    const volInternalScalarField R(GEta*XiEqEta()/(XiEqEta() - 0.999));
+    const volInternalScalarField XiEqStar(R/(R - GEta));
+    const volInternalScalarField XiEq
     (
         1 + XiProfile_->profile()()()*(XiEqStar - 1)
     );
-    const volScalarField::Internal G(R*(XiEq - 1)/XiEq);
+    const volInternalScalarField G(R*(XiEq - 1)/XiEq);
 
     const surfaceScalarField& phiSt =
         mesh.lookupObject<surfaceScalarField>("phiSt");
@@ -146,9 +146,9 @@ void Foam::XiModels::transport::correct()
         (
             fvi::grad(momentumTransport_.U())
         );
-        const volTensorField::Internal& gradU(tgradU());
+        const volInternalTensorField& gradU(tgradU());
 
-        const volScalarField::Internal rhoSigma
+        const volInternalScalarField rhoSigma
         (
             rho_()
            *max
@@ -164,9 +164,9 @@ void Foam::XiModels::transport::correct()
     if (curvatureReduction_)
     {
         const tmp<volInternalTensorField> tgradSt(fvi::grad(Su_*Xi_*n));
-        const volTensorField::Internal& gradSt(tgradSt());
+        const volInternalTensorField& gradSt(tgradSt());
 
-        const volScalarField::Internal rhoSigmaSt
+        const volInternalScalarField rhoSigmaSt
         (
             rho_()
            *max

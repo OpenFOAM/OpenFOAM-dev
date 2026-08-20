@@ -336,7 +336,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     UIntegrator_(nullptr),
     UTrans_
     (
-        new volVectorField::Internal
+        new volInternalVectorField
         (
             IOobject
             (
@@ -352,7 +352,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     ),
     UCoeff_
     (
-        new volScalarField::Internal
+        new volInternalScalarField
         (
             IOobject
             (
@@ -431,7 +431,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     UIntegrator_(c.UIntegrator_->clone()),
     UTrans_
     (
-        new volVectorField::Internal
+        new volInternalVectorField
         (
             IOobject
             (
@@ -447,7 +447,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     ),
     UCoeff_
     (
-        new volScalarField::Internal
+        new volInternalScalarField
         (
             IOobject
             (

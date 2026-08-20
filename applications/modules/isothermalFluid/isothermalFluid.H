@@ -201,9 +201,9 @@ private:
 protected:
 
         //- Adds the mesh-motion work to the pressure work term provided
-        tmp<volScalarField::Internal> pressureWork
+        tmp<volInternalScalarField> pressureWork
         (
-            const tmp<volScalarField::Internal>&
+            const tmp<volInternalScalarField>&
         ) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,12 +86,12 @@ Foam::fv::multiphaseEulerCavitation::multiphaseEulerCavitation
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::multiphaseEulerCavitation::Lfraction() const
 {
     // Put all the latent heat into the liquid
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             name() + ":Lfraction",
             mesh(),
@@ -100,20 +100,20 @@ Foam::fv::multiphaseEulerCavitation::Lfraction() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::multiphaseEulerCavitation::mDot() const
 {
-    const Pair<tmp<volScalarField::Internal>> coeffs
+    const Pair<tmp<volInternalScalarField>> coeffs
     (
         cavitationModel_->mDot12P()
     );
 
-    const volScalarField::Internal& p = liquid_.fluidThermo().p();
-    const volScalarField::Internal pSat1(cavitationModel_->pSat1());
-    const volScalarField::Internal pSat2(cavitationModel_->pSat2());
+    const volInternalScalarField& p = liquid_.fluidThermo().p();
+    const volInternalScalarField pSat1(cavitationModel_->pSat1());
+    const volInternalScalarField pSat2(cavitationModel_->pSat2());
 
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             name() + ":mDot",
             coeffs[0]*(p - pSat1) - coeffs[1]*(p - pSat2)
@@ -136,7 +136,7 @@ void Foam::fv::multiphaseEulerCavitation::addSup
      && &eqn.psi() == &p_rgh_
     )
     {
-        const Pair<tmp<volScalarField::Internal>> coeffs
+        const Pair<tmp<volInternalScalarField>> coeffs
         (
             cavitationModel_->mDot12P()
         );

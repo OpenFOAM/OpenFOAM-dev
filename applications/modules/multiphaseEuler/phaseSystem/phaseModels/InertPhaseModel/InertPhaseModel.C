@@ -59,11 +59,11 @@ bool Foam::InertPhaseModel<BasePhaseModel>::inert() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::InertPhaseModel<BasePhaseModel>::R(const label speciei) const
 {
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             IOobject::groupName("R_" + this->Y()[speciei].name(), this->name()),
             this->mesh(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,7 @@ class isotropicDamping
         //- Source term to momentum equation
         void add
         (
-            const volScalarField::Internal& forceCoeff,
+            const volInternalScalarField& forceCoeff,
             fvMatrix<vector>& eqn
         ) const;
 

@@ -51,7 +51,7 @@ void Foam::fv::homogeneousNucleation::correctDAndMDot() const
 {
     Info<< type() << ": " << name() << endl << incrIndent;
 
-    Pair<tmp<volScalarField::Internal>> dAndMDotByAlphaSolution =
+    Pair<tmp<volInternalScalarField>> dAndMDotByAlphaSolution =
         this->dAndMDotByAlphaSolution();
 
     d_ = dAndMDotByAlphaSolution.first();
@@ -59,8 +59,8 @@ void Foam::fv::homogeneousNucleation::correctDAndMDot() const
     mDotByAlphaSolution_ = dAndMDotByAlphaSolution.second();
     infoField("mDotByAlphaSolution", mDotByAlphaSolution_, debug);
 
-    const volScalarField::Internal alphaSolution =
-        mesh().lookupObject<volScalarField::Internal>(alphaNames().first());
+    const volInternalScalarField alphaSolution =
+        mesh().lookupObject<volInternalScalarField>(alphaNames().first());
 
     mDot_ = alphaSolution*mDotByAlphaSolution_;
     infoField("mDot", mDot_);
@@ -71,7 +71,7 @@ void Foam::fv::homogeneousNucleation::correctDAndMDot() const
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::homogeneousNucleation::sigma() const
 {
     return vfToVif(fluid_.sigma(phaseInterface(solution_, nucleate_)));
@@ -145,14 +145,14 @@ Foam::fv::homogeneousNucleation::homogeneousNucleation
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::homogeneousNucleation::d() const
 {
     return d_;
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::homogeneousNucleation::nDot() const
 {
     const ThermoRefPair<multicomponentThermo> multicomponentThermos =
@@ -163,27 +163,27 @@ Foam::fv::homogeneousNucleation::nDot() const
     const volScalarField& p = this->p();
     const volScalarField& T = thermoSolution.T();
 
-    const volScalarField::Internal rhoNucleate
+    const volInternalScalarField rhoNucleate
     (
         multicomponentThermos.valid().second()
       ? vfToVif(multicomponentThermos.second().rhoi(specieis().second(), p, T))
       : vfToVif(thermos().second().rho())
     );
 
-    const volScalarField::Internal v(constant::mathematical::pi/6*pow3(d_));
+    const volInternalScalarField v(constant::mathematical::pi/6*pow3(d_));
 
     return mDot_/(rhoNucleate*v);
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::homogeneousNucleation::mDot() const
 {
     return mDot_;
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::homogeneousNucleation::tau() const
 {
     static const dimensionedScalar mDotRootVSmall
@@ -198,12 +198,12 @@ Foam::fv::homogeneousNucleation::tau() const
     const multicomponentThermo& thermoSolution = multicomponentThermos.first();
 
     // Solution molecular mass and density
-    const volScalarField::Internal WSolution(vfToVif(thermoSolution.W()));
-    const volScalarField::Internal rhoSolution(vfToVif(thermoSolution.rho()));
+    const volInternalScalarField WSolution(vfToVif(thermoSolution.W()));
+    const volInternalScalarField rhoSolution(vfToVif(thermoSolution.rho()));
 
     // Mass and mole fractions of the nucleating specie in the fluid
-    const volScalarField::Internal& Yi = thermoSolution.Y()[specieis().first()];
-    const volScalarField::Internal Xi
+    const volInternalScalarField& Yi = thermoSolution.Y()[specieis().first()];
+    const volInternalScalarField Xi
     (
         Yi*WSolution/thermoSolution.Wi(specieis().first())
     );

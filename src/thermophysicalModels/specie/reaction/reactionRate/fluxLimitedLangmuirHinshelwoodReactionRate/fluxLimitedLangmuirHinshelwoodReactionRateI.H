@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,7 +201,7 @@ Foam::fluxLimitedLangmuirHinshelwoodReactionRate::preEvaluate() const
 {
     if (!AvUniform_)
     {
-        tAv_ = ob_.lookupObject<volScalarField::Internal>(AvName_);
+        tAv_ = ob_.lookupObject<volInternalScalarField>(AvName_);
     }
 }
 
@@ -211,7 +211,7 @@ Foam::fluxLimitedLangmuirHinshelwoodReactionRate::postEvaluate() const
 {
     if (!AvUniform_)
     {
-        tAv_ = tmp<volScalarField::Internal>(nullptr);
+        tAv_ = tmp<volInternalScalarField>(nullptr);
     }
 }
 

@@ -161,17 +161,17 @@ Foam::diameterModels::populationBalance::Av() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::diameterModels::populationBalance::fSum() const
 {
-    tmp<volScalarField::Internal> tsumFi =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tsumFi =
+        volInternalScalarField::New
         (
             "sumFi",
             phase().mesh(),
             dimensionedScalar(dimless, 0)
         );
-    volScalarField::Internal& sumFi = tsumFi.ref();
+    volInternalScalarField& sumFi = tsumFi.ref();
 
     const populationBalanceModel& popBal = this->popBal();
 

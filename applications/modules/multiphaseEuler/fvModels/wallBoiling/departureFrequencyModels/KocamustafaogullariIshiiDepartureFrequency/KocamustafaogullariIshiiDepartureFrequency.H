@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,15 +129,15 @@ public:
         ) const;
 
         //- Calculate and return the bubble departure frequency
-        virtual tmp<volScalarField::Internal> fDeparture
+        virtual tmp<volInternalScalarField> fDeparture
         (
             const phaseModel& liquid,
             const phaseModel& vapour,
             const phaseModel& solid,
-            const volScalarField::Internal& Tf,
-            const volScalarField::Internal& Tsatw,
-            const volScalarField::Internal& L,
-            const volScalarField::Internal& dDep
+            const volInternalScalarField& Tf,
+            const volInternalScalarField& Tsatw,
+            const volInternalScalarField& L,
+            const volInternalScalarField& dDep
         ) const;
 
         //- Calculate and return the bubble departure frequency

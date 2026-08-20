@@ -71,7 +71,7 @@ Foam::compressible::cavitationModels::Saito::Saito
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::compressible::cavitationModels::Saito::fT
 (
     const rhoFluidThermo& thermo
@@ -81,29 +81,29 @@ Foam::compressible::cavitationModels::Saito::fT
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::compressible::cavitationModels::Saito::mDotcvAlphal() const
 {
-    const volScalarField::Internal& p = thermol().p();
+    const volInternalScalarField& p = thermol().p();
 
-    const volScalarField::Internal alphav
+    const volInternalScalarField alphav
     (
         min(max(this->alphav(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal alphal
+    const volInternalScalarField alphal
     (
         min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal alphavNuc(max(alphav, alphaNuc_));
+    const volInternalScalarField alphavNuc(max(alphav, alphaNuc_));
 
-    const volScalarField::Internal A(Ca_*alphal*alphavNuc);
+    const volInternalScalarField A(Ca_*alphal*alphavNuc);
 
-    const volScalarField::Internal mvCoeff(Cv_*A*rhol()/(rhov()*fT(thermol())));
-    const volScalarField::Internal mcCoeff(Cc_*A/fT(thermol()));
+    const volInternalScalarField mvCoeff(Cv_*A*rhol()/(rhov()*fT(thermol())));
+    const volInternalScalarField mcCoeff(Cc_*A/fT(thermol()));
 
-    return Pair<tmp<volScalarField::Internal>>
+    return Pair<tmp<volInternalScalarField>>
     (
         mcCoeff*alphal*max(p - pSatv(), p0_),
        -mvCoeff*alphavNuc*min(p - pSatl(), p0_)
@@ -111,29 +111,29 @@ Foam::compressible::cavitationModels::Saito::mDotcvAlphal() const
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::compressible::cavitationModels::Saito::mDotcvP() const
 {
-    const volScalarField::Internal& p = thermol().p();
+    const volInternalScalarField& p = thermol().p();
 
-    const volScalarField::Internal alphav
+    const volInternalScalarField alphav
     (
         min(max(this->alphav(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal alphal
+    const volInternalScalarField alphal
     (
         min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal alphavNuc(max(alphav, alphaNuc_));
+    const volInternalScalarField alphavNuc(max(alphav, alphaNuc_));
 
-    const volScalarField::Internal A(Ca_*alphal*alphavNuc);
+    const volInternalScalarField A(Ca_*alphal*alphavNuc);
 
-    const volScalarField::Internal mvCoeff(Cv_*A*rhol()/(rhov()*fT(thermol())));
-    const volScalarField::Internal mcCoeff(Cc_*A/fT(thermol()));
+    const volInternalScalarField mvCoeff(Cv_*A*rhol()/(rhov()*fT(thermol())));
+    const volInternalScalarField mcCoeff(Cc_*A/fT(thermol()));
 
-    return Pair<tmp<volScalarField::Internal>>
+    return Pair<tmp<volInternalScalarField>>
     (
         mcCoeff*alphal*alphav*pos0(p - pSatv()),
        -mvCoeff*alphal*alphavNuc*neg(p - pSatl())

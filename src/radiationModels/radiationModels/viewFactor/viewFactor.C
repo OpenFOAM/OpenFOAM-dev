@@ -692,7 +692,7 @@ Foam::tmp<Foam::volScalarField> Foam::radiationModels::viewFactor::Rp() const
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::radiationModels::viewFactor::Ru() const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         "Ru",
         mesh_,

@@ -151,9 +151,9 @@ template<class CloudType>
 inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::ReactingCloud<CloudType>::Srho() const
 {
-    tmp<volScalarField::Internal> trhoTrans
+    tmp<volInternalScalarField> trhoTrans
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             this->name() + ":rhoTrans",
             this->mesh(),

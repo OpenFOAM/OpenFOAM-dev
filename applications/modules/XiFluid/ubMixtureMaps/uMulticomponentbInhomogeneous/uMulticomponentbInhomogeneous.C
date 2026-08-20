@@ -102,13 +102,13 @@ Foam::ubMixtureMaps::uMulticomponentbInhomogeneous::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::PtrList<Foam::volScalarField::Internal>
+Foam::PtrList<Foam::volInternalScalarField>
 Foam::ubMixtureMaps::uMulticomponentbInhomogeneous::prompt
 (
     const PtrList<volScalarField>& Yu
 ) const
 {
-    PtrList<volScalarField::Internal> Yp(1);
+    PtrList<volInternalScalarField> Yp(1);
     Yp.set(bInhomogeneousMixture::FT, Yu[fu_]());
 
     return Yp;

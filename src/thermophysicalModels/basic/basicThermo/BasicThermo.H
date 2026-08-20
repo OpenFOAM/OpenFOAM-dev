@@ -102,9 +102,9 @@ protected:
             const Args& ... args
         ) const;
 
-        //- Return a volScalarField::Internal of the given property
+        //- Return a volInternalScalarField of the given property
         template<class Mixture, class Method, class ... Args>
-        tmp<volScalarField::Internal> volInternalScalarFieldProperty
+        tmp<volInternalScalarField> volInternalScalarFieldProperty
         (
             const word& psiName,
             const dimensionSet& psiDim,
@@ -135,14 +135,14 @@ protected:
 
         //- Return a scalarField of the given property for a source
         template<class Mixture, class Method, class ... Args>
-        tmp<volScalarField::Internal> fieldSourceProperty
+        tmp<volInternalScalarField> fieldSourceProperty
         (
             const word& psiName,
             const dimensionSet& psiDim,
             Mixture mixture,
             Method psiMethod,
             const fvSource& model,
-            const volScalarField::Internal& source,
+            const volInternalScalarField& source,
             const Args& ... args
         ) const;
 
@@ -297,10 +297,10 @@ public:
 
             //- Enthalpy/Internal energy
             //  for given pressure and temperature [J/kg]
-            virtual tmp<volScalarField::Internal> he
+            virtual tmp<volInternalScalarField> he
             (
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Enthalpy/Internal energy for cell-set [J/kg]
@@ -318,11 +318,11 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy for source [J/kg]
-            virtual tmp<volScalarField::Internal> he
+            virtual tmp<volInternalScalarField> he
             (
-                const volScalarField::Internal& T,
+                const volInternalScalarField& T,
                 const fvSource& model,
-                const volScalarField::Internal& source
+                const volInternalScalarField& source
             ) const;
 
             //- Enthalpy/Internal energy for source [J/kg]
@@ -347,10 +347,10 @@ public:
 
             //- Sensible enthalpy
             //  for given pressure and temperature [J/kg]
-            virtual tmp<volScalarField::Internal> hs
+            virtual tmp<volInternalScalarField> hs
             (
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Sensible enthalpy for patch [J/kg/K]
@@ -380,10 +380,10 @@ public:
 
             //- Absolute enthalpy
             //  for given pressure and temperature [J/kg]
-            virtual tmp<volScalarField::Internal> ha
+            virtual tmp<volInternalScalarField> ha
             (
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const;
 
             //- Absolute enthalpy for patch [J/kg/K]

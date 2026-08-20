@@ -90,7 +90,7 @@ void Foam::fv::OUForce::addSup
 {
     const vectorField& K(K_);
 
-    eqn += volVectorField::Internal
+    eqn += volInternalVectorField
     (
         IOobject
         (

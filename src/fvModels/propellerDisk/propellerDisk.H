@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ protected:
         //- Propeller function
         autoPtr<Function1<vector2D>> propellerFunction_;
 
-        mutable autoPtr<volVectorField::Internal> forcePtr_;
+        mutable autoPtr<volInternalVectorField> forcePtr_;
 
         //- Current force of the fluid on the propeller
         mutable vector force_;
@@ -202,7 +202,7 @@ private:
             vectorField& Usource,
             const AlphaFieldType& alpha,
             const RhoFieldType& rho,
-            const volVectorField::Internal& U
+            const volInternalVectorField& U
         ) const;
 
 

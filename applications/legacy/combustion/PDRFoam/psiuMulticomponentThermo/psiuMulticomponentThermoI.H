@@ -90,7 +90,7 @@ inline Foam::DimensionedFieldListAndSlicer<Foam::scalar, Foam::fvMesh>
 Foam::psiuMulticomponentThermo::implementation::Yslicer
 (
     const fvSource& model,
-    const volScalarField::Internal& source
+    const volInternalScalarField& source
 ) const
 {
     PtrList<DimensionedField<scalar, fvMesh>> result(Y_.size());

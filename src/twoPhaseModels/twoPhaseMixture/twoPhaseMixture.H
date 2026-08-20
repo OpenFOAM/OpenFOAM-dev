@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ public:
         virtual const volScalarField& rho() const = 0;
 
         //- Interface fraction in a cell
-        tmp<volScalarField::Internal> interfaceFraction() const;
+        tmp<volInternalScalarField> interfaceFraction() const;
 
         //- Correct the mixture properties
         virtual void correct() = 0;

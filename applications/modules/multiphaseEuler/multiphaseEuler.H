@@ -197,7 +197,7 @@ private:
         //- Return the list of pressure equation compressibility contributions
         PtrList<fvScalarMatrix> compressibilityEqns
         (
-            const PtrList<volScalarField::Internal>& dmdts
+            const PtrList<volInternalScalarField>& dmdts
         ) const;
 
 

@@ -92,7 +92,7 @@ private:
 
         //- Calculate and return the diameter of nucleates and the phase change
         //  rate per quantity of the solution phase
-        virtual Pair<tmp<volScalarField::Internal>>
+        virtual Pair<tmp<volInternalScalarField>>
             dAndMDotByAlphaSolution() const;
 
 

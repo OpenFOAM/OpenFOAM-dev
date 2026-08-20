@@ -70,7 +70,7 @@ void Foam::fv::cloud::fail
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::cloud::S
 (
     const word& phaseName,
     const dimensionSet& dims
@@ -98,14 +98,14 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
     }
     if (!isPhase && isMultiphase && dims == dimless && notNull(ctcdfCloud))
     {
-        tmp<volScalarField::Internal> tS =
-            volScalarField::Internal::New
+        tmp<volInternalScalarField> tS =
+            volInternalScalarField::New
             (
                 "S",
                 mesh(),
                 dimensionedScalar(inv(dimensions::time), scalar(0))
             );
-        volScalarField::Internal& S = tS.ref();
+        volInternalScalarField& S = tS.ref();
 
         const carrierEqnTable carrierEqns =
             coupledCloud_.carrierEqns<scalar>("1");
@@ -145,8 +145,8 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
     // Mass source
     if (!isPhase && dims == dimensions::density)
     {
-        tmp<volScalarField::Internal> tS =
-            volScalarField::Internal::New
+        tmp<volInternalScalarField> tS =
+            volInternalScalarField::New
             (
                 "S",
                 mesh(),
@@ -156,7 +156,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
                     scalar(0)
                 )
             );
-        volScalarField::Internal& S = tS.ref();
+        volInternalScalarField& S = tS.ref();
 
         const carrierEqnTable carrierEqns =
             coupledCloud_.carrierEqns<scalar>("rho");
@@ -183,7 +183,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
         << (isPhase ? "for phase " + phaseName : "").c_str()
         << " with dimensions " << dims << exit(FatalError);
 
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 
@@ -194,11 +194,11 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::cloud::Sfield
     const dimensionSet& dims
 ) const
 {
-    const volScalarField::Internal S(this->S(field.group(), dims));
+    const volInternalScalarField S(this->S(field.group(), dims));
 
     tmp<typename VolField<Type>::Internal> sourceCoeff =
         field.sources()[name()].sourceCoeff(*this, S);
-    tmp<typename volScalarField::Internal> internalCoeff =
+    tmp<volInternalScalarField> internalCoeff =
         field.sources()[name()].internalCoeff(*this, S);
 
     return S*sourceCoeff + fvm::Sp(S*internalCoeff, field);

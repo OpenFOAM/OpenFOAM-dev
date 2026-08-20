@@ -67,7 +67,7 @@ void Foam::solvers::multiphaseVoFSolver::setInterfaceRDeltaT
         // Further limit the reciprocal time-step
         // in the vicinity of the interface
 
-        const volScalarField::Internal alphaCoRdeltaT
+        const volInternalScalarField alphaCoRdeltaT
         (
             fvi::surfaceSum(mag(phi))/((2*maxAlphaCo)*mesh.V())
         );

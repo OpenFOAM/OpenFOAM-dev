@@ -507,7 +507,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
         if (ocCoeff > 0)
         {
-            const volScalarField::Internal Co
+            const volInternalScalarField Co
             (
                 (0.5*time_.deltaT())*fvi::surfaceSum(mag(phi))/mesh_.V()
             );

@@ -66,7 +66,7 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::fv::homogeneousLiquidPhaseSeparation::dAndMDotByAlphaSolution() const
 {
     #define infoFieldVariable(field, print) infoField(#field, field, print)
@@ -87,11 +87,11 @@ Foam::fv::homogeneousLiquidPhaseSeparation::dAndMDotByAlphaSolution() const
     infoFieldVariable(T, debug);
 
     // Phase molecular masses and densities
-    const volScalarField::Internal rhoSolution(vfToVif(thermoSolution.rho()));
-    const volScalarField::Internal WPrecipitate
+    const volInternalScalarField rhoSolution(vfToVif(thermoSolution.rho()));
+    const volInternalScalarField WPrecipitate
     (
         multicomponentThermos.valid().second()
-      ? volScalarField::Internal::New
+      ? volInternalScalarField::New
         (
             "W",
             mesh(),
@@ -99,7 +99,7 @@ Foam::fv::homogeneousLiquidPhaseSeparation::dAndMDotByAlphaSolution() const
         )
       : vfToVif(thermos().second().W())
     );
-    const volScalarField::Internal rhoPrecipitate
+    const volInternalScalarField rhoPrecipitate
     (
         multicomponentThermos.valid().second()
       ? vfToVif(multicomponentThermos.second().rhoi(specieis().second(), p, T))
@@ -110,19 +110,19 @@ Foam::fv::homogeneousLiquidPhaseSeparation::dAndMDotByAlphaSolution() const
     infoFieldVariable(rhoPrecipitate, debug);
 
     // Viscosity
-    const volScalarField::Internal muSolution(vfToVif(thermoSolution.mu()));
+    const volInternalScalarField muSolution(vfToVif(thermoSolution.mu()));
 
     // Surface tension
-    const volScalarField::Internal sigma(this->sigma());
+    const volInternalScalarField sigma(this->sigma());
     infoFieldVariable(sigma, debug);
 
     // Mass fraction of nucleating specie
-    const volScalarField::Internal Yi = thermoSolution.Y()[specieis().first()];
+    const volInternalScalarField Yi = thermoSolution.Y()[specieis().first()];
 
     // Saturation mass fraction and concentration
-    const volScalarField::Internal solubility
+    const volInternalScalarField solubility
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "YSat",
             mesh(),
@@ -130,42 +130,42 @@ Foam::fv::homogeneousLiquidPhaseSeparation::dAndMDotByAlphaSolution() const
             solubilityCurve_->value(T)
         )
     );
-    const volScalarField::Internal YSat(solubility/(solubility + 1));
-    const volScalarField::Internal cSat(YSat*rhoSolution/WPrecipitate);
+    const volInternalScalarField YSat(solubility/(solubility + 1));
+    const volInternalScalarField cSat(YSat*rhoSolution/WPrecipitate);
     infoFieldVariable(YSat, debug);
     infoFieldVariable(cSat, debug);
 
     // Supersaturation of the nucleating specie
-    const volScalarField::Internal S(Yi/YSat);
+    const volInternalScalarField S(Yi/YSat);
     infoFieldVariable(S, true);
 
     // Mass and diameter of one molecule in the precipitate
-    const volScalarField::Internal mMolc(WPrecipitate/NNA);
-    const volScalarField::Internal dMolc(cbrt(6/pi*(mMolc/rhoPrecipitate)));
+    const volInternalScalarField mMolc(WPrecipitate/NNA);
+    const volInternalScalarField dMolc(cbrt(6/pi*(mMolc/rhoPrecipitate)));
     infoFieldVariable(mMolc, debug);
     infoFieldVariable(dMolc, debug);
 
     // Diameter and mass of a nucleus
-    tmp<volScalarField::Internal> td =
+    tmp<volInternalScalarField> td =
         4*sigma*mMolc/rhoPrecipitate/(k*T()*log(max(S, 1 + small)));
-    const volScalarField::Internal& d = td();
-    const volScalarField::Internal m(pi/6*pow3(d)*rhoPrecipitate);
+    const volInternalScalarField& d = td();
+    const volInternalScalarField m(pi/6*pow3(d)*rhoPrecipitate);
     infoFieldVariable(d, true);
     infoField("m/mMolc", m/mMolc, debug);
 
     // Free energy cost of a nucleus
-    const volScalarField::Internal deltaPhiStar(pi/3*sigma*sqr(d));
+    const volInternalScalarField deltaPhiStar(pi/3*sigma*sqr(d));
     infoFieldVariable(deltaPhiStar, debug);
 
     // Number-based nucleation rate; i.e., number of nuclei created per second
     // per unit volume
-    const volScalarField::Internal J
+    const volInternalScalarField J
     (
         cSat*NNA*k*T()/(3*pi*pow3(dMolc)*muSolution)*exp(-deltaPhiStar/(k*T()))
     );
     infoFieldVariable(J, debug);
 
-    return Pair<tmp<volScalarField::Internal>>(td, J*m);
+    return Pair<tmp<volInternalScalarField>>(td, J*m);
 
     #undef infoFieldVariable
 }

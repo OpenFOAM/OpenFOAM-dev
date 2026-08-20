@@ -62,10 +62,10 @@ void Foam::solvers::isothermalFluid::continuityErrors()
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::solvers::isothermalFluid::pressureWork
 (
-    const tmp<volScalarField::Internal>& work
+    const tmp<volInternalScalarField>& work
 ) const
 {
     if (mesh.moving())

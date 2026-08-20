@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,13 +84,13 @@ Foam::wallBoilingModels::partitioningModels::phaseFraction::wetFraction
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::wallBoilingModels::partitioningModels::phaseFraction::wetFraction
 (
-    const volScalarField::Internal& alphaLiquid
+    const volInternalScalarField& alphaLiquid
 ) const
 {
-    return tmp<volScalarField::Internal>(alphaLiquid);
+    return tmp<volInternalScalarField>(alphaLiquid);
 }
 
 

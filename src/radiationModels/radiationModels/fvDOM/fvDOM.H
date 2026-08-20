@@ -182,7 +182,7 @@ public:
             virtual tmp<volScalarField> Rp() const;
 
             //- Source term component (constant)
-            virtual tmp<volScalarField::Internal> Ru() const;
+            virtual tmp<volInternalScalarField> Ru() const;
 
 
         // Access

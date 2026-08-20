@@ -149,7 +149,7 @@ void Foam::fv::semiImplicitSource::addSupType
     UIndirectList<Type>(Su, zone_.zone()) =
         fieldSu_[field.name()].template value<Type>(t)/VDash;
 
-    volScalarField::Internal Sp
+    volInternalScalarField Sp
     (
         IOobject
         (

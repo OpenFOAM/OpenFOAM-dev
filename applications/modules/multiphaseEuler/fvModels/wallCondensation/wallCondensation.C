@@ -407,12 +407,12 @@ Foam::Pair<const Foam::scalarField&> Foam::fv::wallCondensation::alphats
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallCondensation::Lfraction() const
 {
     // Put all the latent heat into the vapour
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             name() + ":Lfraction",
             mesh(),
@@ -421,14 +421,14 @@ Foam::fv::wallCondensation::Lfraction() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallCondensation::mDot() const
 {
     return mDot_.internalField();
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::wallCondensation::mDotDy() const
 {
     return mDotDy_.internalField();
@@ -526,8 +526,8 @@ void Foam::fv::wallCondensation::addSup
         if (!species().found(specieName)) return;
 
         // The transferring specie. Add a linearised source.
-        tmp<volScalarField::Internal> tmDot = this->mDot();
-        tmp<volScalarField::Internal> tmDotDy = this->mDotDy();
+        tmp<volInternalScalarField> tmDot = this->mDot();
+        tmp<volInternalScalarField> tmDotDy = this->mDotDy();
 
         eqn += s*(tmDot() + correction(fvm::Sp(tmDotDy, eqn.psi())));
 

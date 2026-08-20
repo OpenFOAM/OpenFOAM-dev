@@ -162,11 +162,11 @@ Foam::dimensionedScalar Foam::fv::forcing::regionLength() const
 
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::forcing::scale() const
 {
-    tmp<volScalarField::Internal> tscale
+    tmp<volInternalScalarField> tscale
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             typedName("scale"),
             mesh(),
@@ -174,7 +174,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
         )
     );
 
-    volScalarField::Internal& scale = tscale.ref();
+    volInternalScalarField& scale = tscale.ref();
 
     forAll(origins_, i)
     {
@@ -187,14 +187,14 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff() const
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::forcing::forceCoeff() const
 {
-    tmp<volScalarField::Internal> tscale(this->scale());
-    const volScalarField::Internal& scale = tscale();
+    tmp<volInternalScalarField> tscale(this->scale());
+    const volInternalScalarField& scale = tscale();
 
-    tmp<volScalarField::Internal> tforceCoeff
+    tmp<volInternalScalarField> tforceCoeff
     (
-        volScalarField::Internal::New(typedName("forceCoeff"), lambda_*scale)
+        volInternalScalarField::New(typedName("forceCoeff"), lambda_*scale)
     );
 
     // Damp the cells adjacent to the boundary with lambdaBoundary if specified

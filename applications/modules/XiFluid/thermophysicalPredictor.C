@@ -94,8 +94,8 @@ void Foam::solvers::XiFluid::burn()
     tmp<surfaceScalarField> tbPhiStUD;
     tmp<surfaceScalarField> tbLaplacianPhi;
     tmp<surfaceScalarField> tbLaplacianPhiCorr;
-    tmp<volScalarField::Internal> tSu;
-    tmp<volScalarField::Internal> tSp;
+    tmp<volInternalScalarField> tSu;
+    tmp<volInternalScalarField> tSp;
 
     // Bounded implicit b predictor
     {
@@ -122,7 +122,7 @@ void Foam::solvers::XiFluid::burn()
            .fvmDiv(phiSt, b)
         );
 
-        const volScalarField::Internal divPhiSt(fvi::div(phiSt));
+        const volInternalScalarField divPhiSt(fvi::div(phiSt));
 
         //- Construct the b source matrix
         fvScalarMatrix bSource
@@ -163,7 +163,7 @@ void Foam::solvers::XiFluid::burn()
         tSp = bSource.Sp();
     }
 
-    const volScalarField::Internal& Sp = tSp();
+    const volInternalScalarField& Sp = tSp();
 
     const word divbName("div(phi,b)");
 
@@ -228,7 +228,7 @@ void Foam::solvers::XiFluid::burn()
 
     // Set the b-equation source term
     // for the solution of the unburnt and burnt gas energy and species
-    const volScalarField::Internal bSource
+    const volInternalScalarField bSource
     (
         "bSource",
         tSu() + tSp()*b()
@@ -236,8 +236,8 @@ void Foam::solvers::XiFluid::burn()
     );
 
     // Set the unburnt and burnt gas stabilisation coefficients
-    const volScalarField::Internal bStab(max(bMin_ - b, scalar(0)));
-    const volScalarField::Internal cStab(max(bMin_ - c, scalar(0)));
+    const volInternalScalarField bStab(max(bMin_ - b, scalar(0)));
+    const volInternalScalarField cStab(max(bMin_ - c, scalar(0)));
 
     // Solve for the unburnt gas energy and species
     uSolve(bStab, bSource);
@@ -249,8 +249,8 @@ void Foam::solvers::XiFluid::burn()
 
 void Foam::solvers::XiFluid::uSolve
 (
-    const volScalarField::Internal& bStab,
-    const volScalarField::Internal& bSource
+    const volInternalScalarField& bStab,
+    const volInternalScalarField& bSource
 )
 {
     PtrList<volScalarField>& Yu = thermo_.uThermo().Y();
@@ -285,8 +285,8 @@ void Foam::solvers::XiFluid::uSolve
 
 void Foam::solvers::XiFluid::bSolve
 (
-    const volScalarField::Internal& cStab,
-    const volScalarField::Internal& bSource
+    const volInternalScalarField& cStab,
+    const volInternalScalarField& bSource
 )
 {
     PtrList<volScalarField>& Yb = thermo_.bThermo().Y();
@@ -295,7 +295,7 @@ void Foam::solvers::XiFluid::bSolve
     {
         bReaction_->correct();
 
-        const PtrList<volScalarField::Internal> Yp(thermo_.prompt());
+        const PtrList<volInternalScalarField> Yp(thermo_.prompt());
 
         forAll(Yb, i)
         {
@@ -327,7 +327,7 @@ void Foam::solvers::XiFluid::bSolve
 Foam::tmp<Foam::fvScalarMatrix> Foam::solvers::XiFluid::fvmStab
 (
     const volScalarField& bc,
-    const volScalarField::Internal& bcStab,
+    const volInternalScalarField& bcStab,
     const volScalarField& D,
     volScalarField& f
 )
@@ -358,7 +358,7 @@ void Foam::solvers::XiFluid::ubSolve
     const word& fName,
     const volScalarField& alpha,
     const volScalarField& bc,
-    const volScalarField::Internal& bcStab,
+    const volInternalScalarField& bcStab,
     const surfaceScalarField& alphaPhiub,
     const volScalarField& D,
     const thermophysicalTransportModel& thermophysicalTransport,
@@ -398,7 +398,7 @@ void Foam::solvers::XiFluid::uSolve
 (
     volScalarField& fu,
     const word& fuName,
-    const volScalarField::Internal& bStab,
+    const volInternalScalarField& bStab,
     const fvScalarMatrix& source
 )
 {
@@ -423,7 +423,7 @@ void Foam::solvers::XiFluid::bSolve
 (
     volScalarField& fb,
     const word& fbName,
-    const volScalarField::Internal& cStab,
+    const volInternalScalarField& cStab,
     const fvScalarMatrix& source
 )
 {
@@ -446,13 +446,13 @@ void Foam::solvers::XiFluid::bSolve
 
 void Foam::solvers::XiFluid::HuSolve
 (
-    const volScalarField::Internal& bStab,
-    const volScalarField::Internal& bSource
+    const volInternalScalarField& bStab,
+    const volInternalScalarField& bSource
 )
 {
     volScalarField& hu = thermo_.uThermo().he();
 
-    const volScalarField::Internal rhoByRhou(thermo_.rho()/uThermo.rho()());
+    const volInternalScalarField rhoByRhou(thermo_.rho()/uThermo.rho()());
 
     const volScalarField Du("Du", rho*(momentumTransport.nut() + uThermo.nu()));
 
@@ -490,13 +490,13 @@ void Foam::solvers::XiFluid::HuSolve
 
 void Foam::solvers::XiFluid::HbSolve
 (
-    const volScalarField::Internal& cStab,
-    const volScalarField::Internal& bSource
+    const volInternalScalarField& cStab,
+    const volInternalScalarField& bSource
 )
 {
     volScalarField& hb = thermo_.bThermo().he();
 
-    const volScalarField::Internal rhoByRhob(thermo_.rho()/bThermo.rho()());
+    const volInternalScalarField rhoByRhob(thermo_.rho()/bThermo.rho()());
 
     const volScalarField Db("Db", rho*(momentumTransport.nut() + bThermo.nu()));
 
@@ -560,7 +560,7 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
 
         if (thermo_.bThermo().Y().size())
         {
-            const PtrList<volScalarField::Internal> Yp(thermo_.prompt());
+            const PtrList<volInternalScalarField> Yp(thermo_.prompt());
 
             forAll(Yp, i)
             {
@@ -579,7 +579,7 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
     }
     else
     {
-        const volScalarField::Internal bStab
+        const volInternalScalarField bStab
         (
             IOobject
             (
@@ -591,7 +591,7 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
             scalar(0)
         );
 
-        const volScalarField::Internal bSource
+        const volInternalScalarField bSource
         (
             IOobject
             (

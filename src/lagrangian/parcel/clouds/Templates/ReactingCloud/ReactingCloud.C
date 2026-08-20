@@ -107,7 +107,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
         rhoTrans_.set
         (
             i,
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -149,7 +149,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
         rhoTrans_.set
         (
             i,
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -265,7 +265,7 @@ void Foam::ReactingCloud<CloudType>::relaxSources
 {
     CloudType::relaxSources(cloudOldTime);
 
-    typedef volScalarField::Internal dsfType;
+    typedef volInternalScalarField dsfType;
 
     forAll(rhoTrans_, fieldi)
     {
@@ -281,7 +281,7 @@ void Foam::ReactingCloud<CloudType>::scaleSources()
 {
     CloudType::scaleSources();
 
-    typedef volScalarField::Internal dsfType;
+    typedef volInternalScalarField dsfType;
 
     forAll(rhoTrans_, fieldi)
     {

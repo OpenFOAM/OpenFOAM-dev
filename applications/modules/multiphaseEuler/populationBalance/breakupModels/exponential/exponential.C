@@ -58,11 +58,11 @@ Foam::populationBalance::breakupModels::exponential::exponential
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::breakupModels::exponential::rate(const label i) const
 {
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "breakupRate",
             popBal_.mesh(),

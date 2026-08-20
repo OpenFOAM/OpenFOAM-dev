@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,9 @@ class CourantNo
     // Private Member Functions
 
         //- Divide the Courant number by rho if required
-        tmp<volScalarField::Internal> byRho
+        tmp<volInternalScalarField> byRho
         (
-            const tmp<volScalarField::Internal>& Co
+            const tmp<volInternalScalarField>& Co
         ) const;
 
         //- Calculate the Courant number field and return true if successful

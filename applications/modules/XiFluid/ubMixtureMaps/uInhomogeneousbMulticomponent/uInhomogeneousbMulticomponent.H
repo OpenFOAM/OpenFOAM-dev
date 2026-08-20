@@ -92,7 +92,7 @@ public:
 
     // Member Functions
 
-        virtual PtrList<volScalarField::Internal> prompt
+        virtual PtrList<volInternalScalarField> prompt
         (
             const PtrList<volScalarField>& Yu
         ) const;

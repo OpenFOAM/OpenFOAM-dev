@@ -65,11 +65,11 @@ void Foam::reactionModels::noReaction::correct()
 {}
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::noReaction::R(const label speciei) const
 {
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             typedName("R_" + this->thermo().Y()[speciei].name()),
             this->mesh(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,13 +68,13 @@ protected:
         const populationBalanceModel& popBal_;
 
         //- Kolmogorov length scale
-        volScalarField::Internal kolmogorovLengthScale_;
+        volInternalScalarField kolmogorovLengthScale_;
 
         //- Shear strain rate
-        volScalarField::Internal shearStrainRate_;
+        volInternalScalarField shearStrainRate_;
 
         //- Eddy strain rate
-        volScalarField::Internal eddyStrainRate_;
+        volInternalScalarField eddyStrainRate_;
 
         //- Terminal velocities
         PtrList<dimensionedScalar> uTerminal_;

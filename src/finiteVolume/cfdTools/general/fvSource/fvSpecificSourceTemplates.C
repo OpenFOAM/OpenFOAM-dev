@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void Foam::fvSpecificSource::addSupType
         << "field=" << field.name()
         << ", eqnField=" << eqn.psi().name() << endl;
 
-    tmp<volScalarField::Internal> tS(S(field.name()));
+    tmp<volInternalScalarField> tS(S(field.name()));
 
     if (&field == &eqn.psi())
     {
@@ -53,8 +53,8 @@ void Foam::fvSpecificSource::addSupType
                 field.dimensions(),
                 field.sources()[name()].sourceCoeff(*this, tS())
             );
-        tmp<typename volScalarField::Internal> internalCoeff =
-            volScalarField::Internal::New
+        tmp<volInternalScalarField> internalCoeff =
+            volInternalScalarField::New
             (
                 "internalCoeff",
                 mesh(),

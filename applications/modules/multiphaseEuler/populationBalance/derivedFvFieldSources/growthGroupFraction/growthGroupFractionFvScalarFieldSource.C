@@ -56,11 +56,11 @@ Foam::growthGroupFractionFvScalarFieldSource::w
     }
 
     // Create the weight normalisation field if it does not yet exist
-    const bool haveW = db().foundObject<volScalarField::Internal>(wName);
+    const bool haveW = db().foundObject<volInternalScalarField>(wName);
     if (!haveW)
     {
-        volScalarField::Internal* wPtr =
-            new volScalarField::Internal
+        volInternalScalarField* wPtr =
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -77,8 +77,8 @@ Foam::growthGroupFractionFvScalarFieldSource::w
     }
 
     // Update the weight normalisation field if it is out of date
-    volScalarField::Internal& w =
-        db().lookupObjectRef<volScalarField::Internal>(wName);
+    volInternalScalarField& w =
+        db().lookupObjectRef<volInternalScalarField>(wName);
     if (!haveW || !w.hasStoredOldTimes())
     {
         w.primitiveFieldRef() = scalar(0);

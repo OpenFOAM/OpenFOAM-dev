@@ -95,7 +95,7 @@ public:
     // Member Functions
 
         //- Return the flame-wrinkling generation rate
-        virtual tmp<volScalarField::Internal> G() const;
+        virtual tmp<volInternalScalarField> G() const;
 
 
     // Member Operators

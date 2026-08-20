@@ -88,15 +88,15 @@ Foam::fv::reactionDrivenPhaseChange::reactionDrivenPhaseChange
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::reactionDrivenPhaseChange::mDot(const label mDoti) const
 {
-    const volScalarField::Internal& alpha1 = phase1_, alpha2 = phase2_;
+    const volInternalScalarField& alpha1 = phase1_, alpha2 = phase2_;
 
     const labelPair specieis = this->specieis(mDoti);
 
-    tmp<volScalarField::Internal> tResult =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tResult =
+        volInternalScalarField::New
         (
             name() + ":mDot_" + species()[mDoti],
             mesh(),

@@ -1141,7 +1141,7 @@ void Foam::cellCutPlot::writeLayers
     const word& functionName
 )
 {
-    volTensorField::Internal layers
+    volInternalTensorField layers
     (
         IOobject
         (

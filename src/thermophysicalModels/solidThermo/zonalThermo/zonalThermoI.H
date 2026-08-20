@@ -60,7 +60,7 @@ inline Foam::label Foam::zonalThermo::implementation::patchFaceComposition
 inline Foam::nil Foam::zonalThermo::implementation::Yslicer
 (
     const fvSource& model,
-    const volScalarField::Internal& source
+    const volInternalScalarField& source
 ) const
 {
     return nil();

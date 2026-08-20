@@ -56,7 +56,7 @@ void Foam::fv::homogeneousCondensation::readCoeffs(const dictionary& dict)
 }
 
 
-Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
+Foam::Pair<Foam::tmp<Foam::volInternalScalarField>>
 Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
 {
     #define infoFieldVariable(field, print) infoField(#field, field, print)
@@ -76,12 +76,12 @@ Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
     infoFieldVariable(T, debug);
 
     // Phase molecular masses and densities
-    const volScalarField::Internal WGas(vfToVif(thermoGas.W()));
-    const volScalarField::Internal rhoGas(vfToVif(thermoGas.rho()));
-    const volScalarField::Internal WLiquid
+    const volInternalScalarField WGas(vfToVif(thermoGas.W()));
+    const volInternalScalarField rhoGas(vfToVif(thermoGas.rho()));
+    const volInternalScalarField WLiquid
     (
         multicomponentThermos.valid().second()
-      ? volScalarField::Internal::New
+      ? volInternalScalarField::New
         (
             "W",
             mesh(),
@@ -89,7 +89,7 @@ Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
         )
       : vfToVif(thermos().second().W())
     );
-    const volScalarField::Internal rhoLiquid
+    const volInternalScalarField rhoLiquid
     (
         multicomponentThermos.valid().second()
       ? vfToVif(multicomponentThermos.second().rhoi(specieis().second(), p, T))
@@ -101,46 +101,46 @@ Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
     infoFieldVariable(rhoLiquid, debug);
 
     // Surface tension
-    const volScalarField::Internal sigma(this->sigma());
+    const volInternalScalarField sigma(this->sigma());
     infoFieldVariable(sigma, debug);
 
     // Mole fraction of nucleating specie
-    const volScalarField::Internal Xi
+    const volInternalScalarField Xi
     (
         thermoGas.Y()[specieis().first()]()
        *WGas/thermoGas.Wi(specieis().first())
     );
 
     // Saturation pressure and concentration
-    const volScalarField::Internal pSat(pSat_->value(T()));
-    const volScalarField::Internal cSat(pSat/p()*rhoGas/WGas);
+    const volInternalScalarField pSat(pSat_->value(T()));
+    const volInternalScalarField cSat(pSat/p()*rhoGas/WGas);
     infoFieldVariable(pSat, debug);
     infoFieldVariable(cSat, debug);
 
     // Supersaturation of the nucleating specie
-    const volScalarField::Internal S(Xi*p()/pSat);
+    const volInternalScalarField S(Xi*p()/pSat);
     infoFieldVariable(S, true);
 
     // Mass and diameter of one molecule in the liquid
-    const volScalarField::Internal mMolc(WLiquid/NNA);
-    const volScalarField::Internal dMolc(cbrt(6/pi*(mMolc/rhoLiquid)));
+    const volInternalScalarField mMolc(WLiquid/NNA);
+    const volInternalScalarField dMolc(cbrt(6/pi*(mMolc/rhoLiquid)));
     infoFieldVariable(mMolc, debug);
     infoFieldVariable(dMolc, debug);
 
     // Diameter and mass of a nucleus
-    tmp<volScalarField::Internal> td =
+    tmp<volInternalScalarField> td =
         4*sigma*mMolc/rhoLiquid/(k*T()*log(max(S, 1 + small)));
-    const volScalarField::Internal d = td();
-    const volScalarField::Internal m(pi/6*pow3(d)*rhoLiquid);
+    const volInternalScalarField d = td();
+    const volInternalScalarField m(pi/6*pow3(d)*rhoLiquid);
     infoFieldVariable(d, true);
     infoField("m/mMolc", m/mMolc, debug);
 
     // Free energy cost of a nucleus
-    const volScalarField::Internal deltaPhiStar(pi/3*sigma*sqr(d));
+    const volInternalScalarField deltaPhiStar(pi/3*sigma*sqr(d));
     infoFieldVariable(deltaPhiStar, debug);
 
     // ?
-    const volScalarField::Internal betaIStar1
+    const volInternalScalarField betaIStar1
     (
         sqrt(6*k*T()*(1/mMolc + 1/m))*sqr(dMolc/2 + d/2)
     );
@@ -148,7 +148,7 @@ Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
 
     // Number-based nucleation rate; i.e., number of nuclei created per second
     // per unit volume
-    const volScalarField::Internal J
+    const volInternalScalarField J
     (
         betaIStar1
        *sqr(cSat*NNA)
@@ -158,7 +158,7 @@ Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
     );
     infoFieldVariable(J, debug);
 
-    return Pair<tmp<volScalarField::Internal>>(td, J*m);
+    return Pair<tmp<volInternalScalarField>>(td, J*m);
 
     #undef infoFieldVariable
 }

@@ -70,25 +70,25 @@ protected:
     // Protected Member Functions
 
         //- Return the liquid density
-        inline const volScalarField::Internal& alphal() const
+        inline const volInternalScalarField& alphal() const
         {
             return phases_.alpha(liquidIndex_);
         }
 
         //- Return the vapour density
-        inline const volScalarField::Internal& alphav() const
+        inline const volInternalScalarField& alphav() const
         {
             return phases_.alpha(!liquidIndex_);
         }
 
         //- Return the liquid density
-        inline const volScalarField::Internal& rhol() const
+        inline const volInternalScalarField& rhol() const
         {
             return phases_.rho(liquidIndex_);
         }
 
         //- Return the vapour density
-        inline const volScalarField::Internal& rhov() const
+        inline const volInternalScalarField& rhov() const
         {
             return phases_.rho(!liquidIndex_);
         }
@@ -106,13 +106,13 @@ protected:
         }
 
         //- Return the saturation vapour pressure for the liquid
-        inline tmp<volScalarField::Internal> pSatl() const
+        inline tmp<volInternalScalarField> pSatl() const
         {
             return pSat_->value(thermol().T()());
         }
 
         //- Return the saturation vapour pressure for the vapour
-        inline tmp<volScalarField::Internal> pSatv() const
+        inline tmp<volInternalScalarField> pSatv() const
         {
             return pSat_->value(thermov().T()());
         }
@@ -168,13 +168,13 @@ public:
     // Member Functions
 
         //- Return the saturation vapour pressure for phase 1
-        inline tmp<volScalarField::Internal> pSat1() const
+        inline tmp<volInternalScalarField> pSat1() const
         {
             return liquidIndex_ ? pSatv() : pSatl();
         }
 
         //- Return the saturation vapour pressure for phase 2
-        inline tmp<volScalarField::Internal> pSat2() const
+        inline tmp<volInternalScalarField> pSat2() const
         {
             return liquidIndex_ ? pSatl() : pSatv();
         }
@@ -182,22 +182,22 @@ public:
         //- Return the mass condensation and vaporisation rates as a
         //  coefficient to multiply alphav for the condensation rate and a
         //  coefficient to multiply alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField::Internal>> mDotcvAlphal() const = 0;
+        virtual Pair<tmp<volInternalScalarField>> mDotcvAlphal() const = 0;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField::Internal>> mDotcvP() const = 0;
+        virtual Pair<tmp<volInternalScalarField>> mDotcvP() const = 0;
 
         //- Return the mass transfer rates of the two phases as coefficients to
         //  multiply the volume fraction of the other phase
-        inline Pair<tmp<volScalarField::Internal>> mDot12Alpha() const
+        inline Pair<tmp<volInternalScalarField>> mDot12Alpha() const
         {
             return liquidIndex_ ? reverse(mDotcvAlphal()) : mDotcvAlphal();
         }
 
         //- Return the mass transfer rates of the two phases as coefficients to
         //  multiply (p - pSat)
-        inline Pair<tmp<volScalarField::Internal>> mDot12P() const
+        inline Pair<tmp<volInternalScalarField>> mDot12P() const
         {
             return liquidIndex_ ? reverse(mDotcvP()) : mDotcvP();
         }

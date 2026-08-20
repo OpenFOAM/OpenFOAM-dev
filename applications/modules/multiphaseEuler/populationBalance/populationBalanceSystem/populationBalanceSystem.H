@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class populationBalanceSystem
         void addDmdts
         (
             const populationBalanceModel::dmdtfTable& dmdtfs,
-            PtrList<volScalarField::Internal>& dmdts
+            PtrList<volInternalScalarField>& dmdts
         ) const;
 
         //- Add momentum transfer terms which result from mass transfers
@@ -113,7 +113,7 @@ public:
     // Member Functions
 
         //- Return the mass transfer rates for each phase
-        PtrList<volScalarField::Internal> dmdts() const;
+        PtrList<volInternalScalarField> dmdts() const;
 
         //- Return the momentum transfer matrices for the cell-based algorithm
         autoPtr<HashPtrTable<fvVectorMatrix>> momentumTransfer();

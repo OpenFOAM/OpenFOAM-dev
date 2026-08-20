@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::populationBalance::SecondaryPropertyModel<ModelType>::
 template<class ModelType>
 void Foam::populationBalance::SecondaryPropertyModel<ModelType>::addCoalescence
 (
-    const volScalarField::Internal& Su,
+    const volInternalScalarField& Su,
     const label i,
     const label j,
     const label k
@@ -59,8 +59,8 @@ void Foam::populationBalance::SecondaryPropertyModel<ModelType>::addCoalescence
 {
     const PtrList<dimensionedScalar>& vs = this->popBal().vs();
 
-    const volScalarField::Internal& propj = fld(j);
-    const volScalarField::Internal& propk = fld(k);
+    const volInternalScalarField& propj = fld(j);
+    const volInternalScalarField& propk = fld(k);
 
     src(i) += (propj*vs[j] + propk*vs[k])/(vs[j] + vs[k])*Su;
 }
@@ -69,12 +69,12 @@ void Foam::populationBalance::SecondaryPropertyModel<ModelType>::addCoalescence
 template<class ModelType>
 void Foam::populationBalance::SecondaryPropertyModel<ModelType>::addBreakup
 (
-    const volScalarField::Internal& Su,
+    const volInternalScalarField& Su,
     const label i,
     const label j
 )
 {
-    const volScalarField::Internal& propj = fld(j);
+    const volInternalScalarField& propj = fld(j);
 
     src(i) += propj*Su;
 }

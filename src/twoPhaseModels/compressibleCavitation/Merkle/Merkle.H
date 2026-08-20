@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ class Merkle
 
     // Private Member functions
 
-        tmp<volScalarField::Internal> mvCoeff() const;
+        tmp<volInternalScalarField> mvCoeff() const;
 
 
 public:
@@ -139,11 +139,11 @@ public:
         //- Return the mass condensation and vaporisation rates as a
         //  coefficient to multiply alphav for the condensation rate and a
         //  coefficient to multiply alphal for the vaporisation rate
-        virtual Pair<tmp<volScalarField::Internal>> mDotcvAlphal() const;
+        virtual Pair<tmp<volInternalScalarField>> mDotcvAlphal() const;
 
         //- Return the mass condensation and vaporisation rates as coefficients
         //  to multiply (p - pSat)
-        virtual Pair<tmp<volScalarField::Internal>> mDotcvP() const;
+        virtual Pair<tmp<volInternalScalarField>> mDotcvP() const;
 
         //- Correct the Merkle phaseChange model
         virtual void correct();

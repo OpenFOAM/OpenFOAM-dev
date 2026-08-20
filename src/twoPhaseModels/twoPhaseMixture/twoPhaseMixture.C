@@ -211,21 +211,21 @@ bool Foam::twoPhaseMixture::read()
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::twoPhaseMixture::interfaceFraction() const
 {
     const fvMesh& mesh = alpha1_.mesh();
 
-    tmp<volScalarField::Internal> tA
+    tmp<volInternalScalarField> tA
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "A",
             mesh,
             dimensionedScalar(dimless, 0)
         )
     );
-    volScalarField::Internal& A = tA.ref();
+    volInternalScalarField& A = tA.ref();
 
     const surfaceVectorField& Sf = mesh.Sf();
     const labelUList& own = mesh.owner();
@@ -233,8 +233,8 @@ Foam::twoPhaseMixture::interfaceFraction() const
 
     const surfaceScalarField alphaf(fvc::interpolate(alpha1_));
 
-    const volVectorField::Internal gradAlpha(fvi::grad(alpha1_));
-    const volVectorField::Internal n
+    const volInternalVectorField gradAlpha(fvi::grad(alpha1_));
+    const volInternalVectorField n
     (
         gradAlpha
        /(mag(gradAlpha) + dimensionedScalar(inv(dimensions::length), small))

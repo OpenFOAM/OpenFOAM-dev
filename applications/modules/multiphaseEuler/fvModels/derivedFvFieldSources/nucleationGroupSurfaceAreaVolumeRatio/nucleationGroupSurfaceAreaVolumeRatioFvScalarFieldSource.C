@@ -71,7 +71,7 @@ Foam::nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource::sourceValue
 ) const
 {
     // Get the surface area volume ratio of the nucleates
-    tmp<volScalarField::Internal> kappa =
+    tmp<volInternalScalarField> kappa =
         6/refCast<const fv::nucleation>(model).d();
 
     // Scale the value by the source for the corresponding group fraction

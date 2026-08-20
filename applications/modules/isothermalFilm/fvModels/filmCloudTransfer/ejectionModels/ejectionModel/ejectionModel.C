@@ -45,7 +45,7 @@ Foam::ejectionModel::ejectionModel
     film_(film),
     rate_
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "ejectionRate",
             film.mesh,
@@ -54,7 +54,7 @@ Foam::ejectionModel::ejectionModel
     ),
     diameter_
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "ejectionDiameter",
             film.mesh,

@@ -75,7 +75,7 @@ Foam::fv::filmVoFTransfer::filmVoFTransfer
     ),
     transferRate_
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "transferRate",
             mesh,

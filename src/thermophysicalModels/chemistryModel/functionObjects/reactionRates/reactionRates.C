@@ -143,7 +143,7 @@ bool Foam::functionObjects::reactionRates::write()
 
     for (label reactioni = 0; reactioni < nReaction; reactioni ++)
     {
-        const volScalarField::Internal RR
+        const volInternalScalarField RR
         (
             chemistry.reactionRR(reactioni)
         );

@@ -111,12 +111,12 @@ void Foam::fv::compressible::VoFCavitation::addSup
         // Volume-fraction linearisation
         if (&alpha == &eqn.psi())
         {
-            const Pair<tmp<volScalarField::Internal>> mDot12Alpha
+            const Pair<tmp<volInternalScalarField>> mDot12Alpha
             (
                 cavitation_->mDot12Alpha()
             );
-            const volScalarField::Internal& mDot1Alpha2 = mDot12Alpha[0]();
-            const volScalarField::Internal& mDot2Alpha1 = mDot12Alpha[1]();
+            const volInternalScalarField& mDot1Alpha2 = mDot12Alpha[0]();
+            const volInternalScalarField& mDot2Alpha1 = mDot12Alpha[1]();
 
             eqn +=
                 (&alpha == &alpha1 ? mDot1Alpha2 : mDot2Alpha1)
@@ -126,16 +126,16 @@ void Foam::fv::compressible::VoFCavitation::addSup
         // Pressure linearisation
         else if (&eqn.psi() == &solver.p_rgh)
         {
-            const Pair<tmp<volScalarField::Internal>> mDot12P
+            const Pair<tmp<volInternalScalarField>> mDot12P
             (
                 cavitation_->mDot12P()
             );
-            const volScalarField::Internal& mDot1P = mDot12P[0];
-            const volScalarField::Internal& mDot2P = mDot12P[1];
+            const volInternalScalarField& mDot1P = mDot12P[0];
+            const volInternalScalarField& mDot2P = mDot12P[1];
 
-            const volScalarField::Internal& rho =
+            const volInternalScalarField& rho =
                 mesh().lookupObject<volScalarField>("rho");
-            const volScalarField::Internal& gh =
+            const volInternalScalarField& gh =
                 mesh().lookupObject<volScalarField>("gh");
 
             eqn +=
@@ -148,12 +148,12 @@ void Foam::fv::compressible::VoFCavitation::addSup
         // continuity error terms.
         else
         {
-            const Pair<tmp<volScalarField::Internal>> mDot12Alpha
+            const Pair<tmp<volInternalScalarField>> mDot12Alpha
             (
                 cavitation_->mDot12Alpha()
             );
-            const volScalarField::Internal mDot1(mDot12Alpha[0]*alpha2());
-            const volScalarField::Internal mDot2(mDot12Alpha[1]*alpha1());
+            const volInternalScalarField mDot1(mDot12Alpha[0]*alpha2());
+            const volInternalScalarField mDot2(mDot12Alpha[1]*alpha1());
 
             eqn += s*(mDot1 - mDot2);
         }

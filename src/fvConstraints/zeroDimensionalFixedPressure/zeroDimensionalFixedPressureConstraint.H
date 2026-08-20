@@ -92,7 +92,7 @@ class zeroDimensionalFixedPressureConstraint
         autoPtr<Function1<scalar>> p_;
 
         //- The mass or volume source
-        mutable autoPtr<volScalarField::Internal> sourcePtr_;
+        mutable autoPtr<volInternalScalarField> sourcePtr_;
 
 
     // Private Member Functions
@@ -102,10 +102,10 @@ class zeroDimensionalFixedPressureConstraint
 
         //- Get the mass source
         template<class AlphaFieldType>
-        tmp<volScalarField::Internal> massSource
+        tmp<volInternalScalarField> massSource
         (
             const AlphaFieldType& alpha,
-            const volScalarField::Internal& rho
+            const volInternalScalarField& rho
         ) const;
 
         //- Non-virtual read
@@ -160,23 +160,23 @@ public:
         // Constraints
 
             //- Return the mass or volume source for the pressure equation
-            tmp<volScalarField::Internal> pEqnSource
+            tmp<volInternalScalarField> pEqnSource
             (
                 const volScalarField& rho,
                 fvMatrix<scalar>& pEqn
             ) const;
 
             //- Return the mass source
-            tmp<volScalarField::Internal> massSource
+            tmp<volInternalScalarField> massSource
             (
-                const volScalarField::Internal& rho
+                const volInternalScalarField& rho
             ) const;
 
             //- Return the mass source for a given phase
-            tmp<volScalarField::Internal> massSource
+            tmp<volInternalScalarField> massSource
             (
-                const volScalarField::Internal& alpha,
-                const volScalarField::Internal& rho
+                const volInternalScalarField& alpha,
+                const volInternalScalarField& rho
             ) const;
 
             //- Apply the constraint to the pressure equation

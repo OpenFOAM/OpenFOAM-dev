@@ -194,11 +194,11 @@ public:
             ) const = 0;
 
             //- Enthalpy/Internal energy [J/kg]
-            virtual tmp<volScalarField::Internal> hei
+            virtual tmp<volInternalScalarField> hei
             (
                 const label speciei,
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const = 0;
 
             //- Enthalpy/Internal energy [J/kg]
@@ -226,11 +226,11 @@ public:
             ) const = 0;
 
             //- Sensible enthalpy [J/kg]
-            virtual tmp<volScalarField::Internal> hsi
+            virtual tmp<volInternalScalarField> hsi
             (
                 const label speciei,
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const = 0;
 
             //- Sensible enthalpy [J/kg]
@@ -258,11 +258,11 @@ public:
             ) const = 0;
 
             //- Absolute enthalpy [J/kg]
-            virtual tmp<volScalarField::Internal> hai
+            virtual tmp<volInternalScalarField> hai
             (
                 const label speciei,
-                const volScalarField::Internal& p,
-                const volScalarField::Internal& T
+                const volInternalScalarField& p,
+                const volInternalScalarField& T
             ) const = 0;
 
             //- Absolute enthalpy [J/kg]
@@ -394,7 +394,7 @@ public:
         inline DimensionedFieldListAndSlicer<scalar, fvMesh> Yslicer
         (
             const fvSource& model,
-            const volScalarField::Internal& source
+            const volInternalScalarField& source
         ) const;
 
         //- Get the composition of a source cell

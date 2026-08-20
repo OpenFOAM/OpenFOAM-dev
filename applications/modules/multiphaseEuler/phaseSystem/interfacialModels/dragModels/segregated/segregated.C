@@ -72,16 +72,16 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
     const volScalarField& alpha1(interface_.phase1());
     const volScalarField& alpha2(interface_.phase2());
 
-    const volScalarField::Internal& rho1(interface_.phase1().rho());
-    const volScalarField::Internal& rho2(interface_.phase2().rho());
+    const volInternalScalarField& rho1(interface_.phase1().rho());
+    const volInternalScalarField& rho2(interface_.phase2().rho());
 
     tmp<volScalarField> tnu1(interface_.phase1().fluidThermo().nu());
     tmp<volScalarField> tnu2(interface_.phase2().fluidThermo().nu());
 
-    const volScalarField::Internal& nu1(tnu1());
-    const volScalarField::Internal& nu2(tnu2());
+    const volInternalScalarField& nu1(tnu1());
+    const volInternalScalarField& nu2(tnu2());
 
-    const volScalarField::Internal L(cbrt(mesh.V()));
+    const volInternalScalarField L(cbrt(mesh.V()));
 
     const dimensionedScalar residualAlpha
     (
@@ -99,7 +99,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
     (
         alpha2/max(alpha1 + alpha2, residualAlpha)
     );
-    const volScalarField::Internal magGradI
+    const volInternalScalarField magGradI
     (
         max
         (
@@ -111,31 +111,31 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         )
     );
 
-    const volScalarField::Internal muI(rho1*nu1*rho2*nu2/(rho1*nu1 + rho2*nu2));
+    const volInternalScalarField muI(rho1*nu1*rho2*nu2/(rho1*nu1 + rho2*nu2));
 
-    const volScalarField::Internal limitedAlpha1
+    const volInternalScalarField limitedAlpha1
     (
         max(alpha1, interface_.phase1().residualAlpha())
     );
 
-    const volScalarField::Internal limitedAlpha2
+    const volInternalScalarField limitedAlpha2
     (
         max(alpha2, interface_.phase2().residualAlpha())
     );
 
-    const volScalarField::Internal muAlphaI
+    const volInternalScalarField muAlphaI
     (
         limitedAlpha1*rho1*nu1*limitedAlpha2*rho2*nu2
        /(limitedAlpha2*rho1*nu1 + limitedAlpha1*rho2*nu2)
     );
 
-    const volScalarField::Internal ReI
+    const volInternalScalarField ReI
     (
         (interface_.rho()()()*interface_.magUr()()())
        /(magGradI*limitedAlpha1*limitedAlpha2*muI)
     );
 
-    const volScalarField::Internal lambda(m_*ReI + n_*muAlphaI/muI);
+    const volInternalScalarField lambda(m_*ReI + n_*muAlphaI/muI);
 
     tmp<volScalarField> tK
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,22 +150,22 @@ protected:
             Switch radiation_;
 
             //- Radiation sum of parcel projected areas
-            autoPtr<volScalarField::Internal> radAreaP_;
+            autoPtr<volInternalScalarField> radAreaP_;
 
             //- Radiation sum of parcel temperature^4
-            autoPtr<volScalarField::Internal> radT4_;
+            autoPtr<volInternalScalarField> radT4_;
 
             //- Radiation sum of parcel projected areas * temperature^4
-            autoPtr<volScalarField::Internal> radAreaPT4_;
+            autoPtr<volInternalScalarField> radAreaPT4_;
 
 
         // Sources
 
             //- Sensible enthalpy transfer [J/kg]
-            autoPtr<volScalarField::Internal> hsTrans_;
+            autoPtr<volInternalScalarField> hsTrans_;
 
             //- Coefficient for carrier phase hs equation [W/K]
-            autoPtr<volScalarField::Internal> hsCoeff_;
+            autoPtr<volInternalScalarField> hsCoeff_;
 
 
     // Protected Member Functions
@@ -287,23 +287,23 @@ public:
                 inline bool radiation() const;
 
                 //- Radiation sum of parcel projected areas [m^2]
-                inline volScalarField::Internal& radAreaP();
+                inline volInternalScalarField& radAreaP();
 
                 //- Radiation sum of parcel projected areas [m^2]
-                inline const volScalarField::Internal&
+                inline const volInternalScalarField&
                     radAreaP() const;
 
                 //- Radiation sum of parcel temperature^4 [K4]
-                inline volScalarField::Internal& radT4();
+                inline volInternalScalarField& radT4();
 
                 //- Radiation sum of parcel temperature^4 [K4]
-                inline const volScalarField::Internal& radT4() const;
+                inline const volInternalScalarField& radT4() const;
 
                 //- Radiation sum of parcel projected area*temperature^4 [m2K4]
-                inline volScalarField::Internal& radAreaPT4();
+                inline volInternalScalarField& radAreaPT4();
 
                 //- Radiation sum of parcel temperature^4 [m2K4]
-                inline const volScalarField::Internal&
+                inline const volInternalScalarField&
                     radAreaPT4() const;
 
 
@@ -312,16 +312,16 @@ public:
                 // Enthalpy
 
                     //- Return sensible enthalpy transfer [J/kg]
-                    inline tmp<volScalarField::Internal> hsTrans() const;
+                    inline tmp<volInternalScalarField> hsTrans() const;
 
                     //- Access sensible enthalpy transfer [J/kg]
-                    inline volScalarField::Internal& hsTransRef();
+                    inline volInternalScalarField& hsTransRef();
 
                     //- Return coefficient for carrier phase hs equation
-                    inline tmp<volScalarField::Internal> hsCoeff() const;
+                    inline tmp<volInternalScalarField> hsCoeff() const;
 
                     //- Access coefficient for carrier phase hs equation
-                    inline volScalarField::Internal& hsCoeffRef();
+                    inline volInternalScalarField& hsCoeffRef();
 
                     //- Return sensible enthalpy source term [J/kg/m^3/s]
                     inline tmp<fvScalarMatrix> Sh

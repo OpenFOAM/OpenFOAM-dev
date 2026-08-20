@@ -193,11 +193,11 @@ Foam::tmp<Foam::fvVectorMatrix> Foam::parcelCloudList::SU
 }
 
 
-Foam::tmp<Foam::volVectorField::Internal> Foam::parcelCloudList::UTrans() const
+Foam::tmp<Foam::volInternalVectorField> Foam::parcelCloudList::UTrans() const
 {
-    tmp<volVectorField::Internal> tUTrans
+    tmp<volInternalVectorField> tUTrans
     (
-        volVectorField::Internal::New
+        volInternalVectorField::New
         (
             cloudNamesName + ":UTrans",
             mesh_,
@@ -212,11 +212,11 @@ Foam::tmp<Foam::volVectorField::Internal> Foam::parcelCloudList::UTrans() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::UCoeff() const
+Foam::tmp<Foam::volInternalScalarField> Foam::parcelCloudList::UCoeff() const
 {
-    tmp<volScalarField::Internal> tUCoeff
+    tmp<volInternalScalarField> tUCoeff
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             cloudNamesName + ":UCoeff",
             mesh_,
@@ -245,11 +245,11 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::parcelCloudList::Sh
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::hsTrans() const
+Foam::tmp<Foam::volInternalScalarField> Foam::parcelCloudList::hsTrans() const
 {
-    tmp<volScalarField::Internal> thsTrans
+    tmp<volInternalScalarField> thsTrans
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             cloudNamesName + ":hsTrans",
             mesh_,
@@ -264,11 +264,11 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::hsTrans() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::hsCoeff() const
+Foam::tmp<Foam::volInternalScalarField> Foam::parcelCloudList::hsCoeff() const
 {
-    tmp<volScalarField::Internal> thsCoeff
+    tmp<volInternalScalarField> thsCoeff
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             cloudNamesName + ":hsCoeff",
             mesh_,
@@ -387,11 +387,11 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::parcelCloudList::Srho
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::Srho() const
+Foam::tmp<Foam::volInternalScalarField> Foam::parcelCloudList::Srho() const
 {
-    tmp<volScalarField::Internal> tSrho
+    tmp<volInternalScalarField> tSrho
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             cloudNamesName + ":Srho",
             mesh_,

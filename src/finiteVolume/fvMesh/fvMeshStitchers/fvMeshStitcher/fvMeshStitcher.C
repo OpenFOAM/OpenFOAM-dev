@@ -2234,8 +2234,8 @@ Foam::fvMeshStitcher::volumeConservationError(const label n) const
     const dimensionedScalar deltaT =
         n == 0 ? mesh_.time().deltaT() : mesh_.time().deltaT0();
 
-    const volScalarField::Internal& V = n == 0 ? mesh_.V() : mesh_.V0();
-    const volScalarField::Internal& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
+    const volInternalScalarField& V = n == 0 ? mesh_.V() : mesh_.V0();
+    const volInternalScalarField& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
 
     return
         DimensionedField<scalar, fvMesh>::New

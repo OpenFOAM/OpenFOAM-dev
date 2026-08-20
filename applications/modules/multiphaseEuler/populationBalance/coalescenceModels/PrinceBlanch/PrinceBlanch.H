@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,7 +179,7 @@ class PrinceBlanch
         Switch laminarShear_;
 
         //- Continuous phase shear strain rate
-        autoPtr<volScalarField::Internal> shearStrainRate_;
+        autoPtr<volInternalScalarField> shearStrainRate_;
 
 
 public:
@@ -207,7 +207,7 @@ public:
         virtual void precompute();
 
         //- Return the coalescence rate between two groups
-        virtual tmp<volScalarField::Internal> rate
+        virtual tmp<volInternalScalarField> rate
         (
             const label i,
             const label j

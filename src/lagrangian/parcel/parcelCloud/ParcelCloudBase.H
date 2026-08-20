@@ -149,9 +149,9 @@ public:
                 }
 
                 //- Momentum transfer [kg m/s]
-                tmp<volVectorField::Internal> UTrans() const
+                tmp<volInternalVectorField> UTrans() const
                 {
-                    return volVectorField::Internal::New
+                    return volInternalVectorField::New
                     (
                         this->name() + ":UTrans",
                         this->mesh(),
@@ -160,9 +160,9 @@ public:
                 }
 
                 //- Momentum transfer coefficient [kg]
-                tmp<volScalarField::Internal> UCoeff() const
+                tmp<volInternalScalarField> UCoeff() const
                 {
-                    return volScalarField::Internal::New
+                    return volInternalScalarField::New
                     (
                         this->name() + ":UCoeffs",
                         this->mesh(),
@@ -183,9 +183,9 @@ public:
                 }
 
                 //- Sensible enthalpy transfer [J]
-                tmp<volScalarField::Internal> hsTrans() const
+                tmp<volInternalScalarField> hsTrans() const
                 {
-                    return volScalarField::Internal::New
+                    return volInternalScalarField::New
                     (
                         this->name() + ":hsTrans",
                         this->mesh(),
@@ -194,9 +194,9 @@ public:
                 }
 
                 //- Sensible enthalpy transfer coefficient [J/T]
-                tmp<volScalarField::Internal> hsCoeff() const
+                tmp<volInternalScalarField> hsCoeff() const
                 {
-                    return volScalarField::Internal::New
+                    return volInternalScalarField::New
                     (
                         this->name() + ":hsCoeffs",
                         this->mesh(),
@@ -275,11 +275,11 @@ public:
                 }
 
                 //- Return total mass source [kg/m^3/s]
-                tmp<volScalarField::Internal> Srho() const
+                tmp<volInternalScalarField> Srho() const
                 {
-                    return tmp<volScalarField::Internal>
+                    return tmp<volInternalScalarField>
                     (
-                        volScalarField::Internal::New
+                        volInternalScalarField::New
                         (
                             this->name() + ":Srho",
                             this->mesh(),

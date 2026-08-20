@@ -141,13 +141,13 @@ class phaseSurfaceCondensation
         bool specieSemiImplicit_;
 
         //- Heat transfer rate
-        mutable volScalarField::Internal q_;
+        mutable volInternalScalarField q_;
 
         //- Mass transfer rate
-        mutable volScalarField::Internal mDot_;
+        mutable volInternalScalarField mDot_;
 
         //- The derivative of mass transfer rate
-        mutable volScalarField::Internal mDotDy_;
+        mutable volInternalScalarField mDotDy_;
 
 
     // Private Member Functions

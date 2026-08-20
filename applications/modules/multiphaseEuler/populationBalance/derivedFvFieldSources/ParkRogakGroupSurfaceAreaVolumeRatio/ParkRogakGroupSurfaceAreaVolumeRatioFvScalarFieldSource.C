@@ -42,36 +42,36 @@ Foam::ParkRogakGroupSurfaceAreaVolumeRatioFvScalarFieldSource::value
     const populationBalance::shapeModels::fractal& fractal =
         refCast<const populationBalance::shapeModels::fractal>(popBal.shape());
 
-    const volScalarField::Internal& kappaj = fractal.fld(j);
+    const volInternalScalarField& kappaj = fractal.fld(j);
 
     const dimensionedScalar& vi = popBal.v(i);
     const dimensionedScalar& vj = popBal.v(j);
 
-    const volScalarField::Internal a(kappaj*vj);
+    const volInternalScalarField a(kappaj*vj);
 
-    const volScalarField::Internal da1
+    const volInternalScalarField da1
     (
         (2.0/3.0)
        *(vi - vj)
        *(kappaj + fractal.Df(j)*(1/fractal.d(j)()() - kappaj/6))
     );
 
-    const volScalarField::Internal dp
+    const volInternalScalarField dp
     (
         6/kappaj + 6*((vi - vj)*a - vj*da1)/sqr(a)
     );
 
-    tmp<volScalarField::Internal> np
+    tmp<volInternalScalarField> np
     (
         6*vi/constant::mathematical::pi/pow3(dp)
     );
 
-    tmp<volScalarField::Internal> dc
+    tmp<volInternalScalarField> dc
     (
         dp*pow(np/fractal.alphaC(i), 1/fractal.Df(i))
     );
 
-    tmp<volScalarField::Internal> da2
+    tmp<volInternalScalarField> da2
     (
         (vi - vj)*(4/dp + 2*fractal.Df(i)/3*(1/dc - 1/dp))
     );

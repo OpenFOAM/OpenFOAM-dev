@@ -288,7 +288,7 @@ public:
         inline DimensionedFieldListAndSlicer<scalar, fvMesh> Yslicer
         (
             const fvSource& model,
-            const volScalarField::Internal& source
+            const volInternalScalarField& source
         ) const;
 
         //- Get the composition of a source cell

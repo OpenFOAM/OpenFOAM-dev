@@ -145,7 +145,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
     // comparable to the solution tolerance.
     auto writeDDt = [&](const label i)
     {
-        const volScalarField::Internal DDtAlpha
+        const volInternalScalarField DDtAlpha
         (
             "DDt("
           + IOobject::groupName

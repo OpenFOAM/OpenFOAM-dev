@@ -88,7 +88,7 @@ public:
         virtual bool inert() const;
 
         //- Return the consumption rate for a specie
-        virtual tmp<volScalarField::Internal> R(const label speciei) const;
+        virtual tmp<volInternalScalarField> R(const label speciei) const;
 
         //- Return consumption rate matrix for a specie
         virtual tmp<fvScalarMatrix> R(volScalarField& Yi) const;

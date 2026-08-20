@@ -38,7 +38,7 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
     vectorField& Usource,
     const AlphaFieldType& alpha,
     const RhoFieldType& rho,
-    const volVectorField::Internal& U
+    const volInternalVectorField& U
 ) const
 {
     const labelList& cells = zone_.zone();
@@ -46,7 +46,7 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
 
     if (!forcePtr_.valid())
     {
-        forcePtr_ = new volVectorField::Internal
+        forcePtr_ = new volInternalVectorField
         (
             IOobject
             (
@@ -65,7 +65,7 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
         );
     }
 
-    volVectorField::Internal& force = forcePtr_();
+    volInternalVectorField& force = forcePtr_();
 
     const vector centre(this->centre());
     const vector normal(this->normal());

@@ -74,7 +74,7 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
     // Heat release rate time scale
     if (alphaTemp < 1)
     {
-        volScalarField::Internal rDeltaTT
+        volInternalScalarField rDeltaTT
         (
             mag(reaction->Qdot())/(alphaTemp*rho*thermo.Cp()*thermo.T())
         );
@@ -95,7 +95,7 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
 
         const dictionary Yref(pimpleDict.subDict("Yref"));
 
-        volScalarField::Internal rDeltaTY
+        volInternalScalarField rDeltaTY
         (
             IOobject
             (

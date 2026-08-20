@@ -166,25 +166,25 @@ class phaseSurfaceBoiling
         mutable label pressureEquationIndex_;
 
         //- Surface liquid fraction
-        mutable volScalarField::Internal wetFraction_;
+        mutable volInternalScalarField wetFraction_;
 
         //- Departure diameter
-        mutable volScalarField::Internal dDeparture_;
+        mutable volInternalScalarField dDeparture_;
 
         //- Departure frequency
-        mutable volScalarField::Internal fDeparture_;
+        mutable volInternalScalarField fDeparture_;
 
         //- Nucleation site density
-        mutable volScalarField::Internal nucleationSiteDensity_;
+        mutable volInternalScalarField nucleationSiteDensity_;
 
         //- Quenching heat transfer rate
-        mutable volScalarField::Internal qQuenching_;
+        mutable volInternalScalarField qQuenching_;
 
         //- Evaporative heat transfer rate
-        mutable volScalarField::Internal qEvaporative_;
+        mutable volInternalScalarField qEvaporative_;
 
         //- Mass transfer rate
-        mutable volScalarField::Internal mDot_;
+        mutable volInternalScalarField mDot_;
 
 
     // Private Member Functions

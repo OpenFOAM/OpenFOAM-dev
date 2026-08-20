@@ -200,7 +200,7 @@ Foam::reactionModels::singleStepReaction::~singleStepReaction()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::singleStepReaction::R(const label speciei) const
 {
     return wFuel_*specieStoichCoeffs()[speciei];

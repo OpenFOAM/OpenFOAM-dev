@@ -92,14 +92,14 @@ Foam::populationBalance::LiaoBase::LiaoBase
 
 void Foam::populationBalance::LiaoBase::precompute()
 {
-    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+    const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
     tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
-    const volScalarField::Internal muc = tmu();
+    const volInternalScalarField muc = tmu();
     tmp<volScalarField> tnu(popBal_.continuousPhase().fluidThermo().nu());
-    const volScalarField::Internal nuc = tnu();
+    const volInternalScalarField nuc = tnu();
 
     kolmogorovLengthScale_ = pow025(pow3(nuc)/epsilonc);
 

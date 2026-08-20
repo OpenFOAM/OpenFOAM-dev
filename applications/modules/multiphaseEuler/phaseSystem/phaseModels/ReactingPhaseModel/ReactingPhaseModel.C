@@ -71,7 +71,7 @@ bool Foam::ReactingPhaseModel<BasePhaseModel>::inert() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::ReactingPhaseModel<BasePhaseModel>::R(const label speciei) const
 {
     return reaction_->R(speciei);

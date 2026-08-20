@@ -25,13 +25,13 @@ internalField
 
     evaluate
     #{
-        const volScalarField::Internal z(C.component(2));
+        const volInternalScalarField z(C.component(2));
 
         const dimensionedScalar h = $<dimensionedScalar>interfaceHeight;
         const dimensionedScalar dh = $<dimensionedScalar>interfaceThickness;
 
         // Linear ramp over the interface thickness
-        tmp<volScalarField::Internal> r =
+        tmp<volInternalScalarField> r =
             min(max(0.5 + (h - z)/dh, scalar(0)), scalar(1));
 
         // Smooth cosine function for the volume fraction

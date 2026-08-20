@@ -120,7 +120,7 @@ class Standard
         const ReactionList<ThermoType> reactions_;
 
         //- List of reaction rate per specie [kg/m^3/s]
-        PtrList<volScalarField::Internal> RR_;
+        PtrList<volInternalScalarField> RR_;
 
         //- Temporary mass fraction field
         mutable scalarField Y_;
@@ -204,7 +204,7 @@ public:
             virtual inline label nReaction() const;
 
             //- Return reaction rates of the species [kg/m^3/s]
-            virtual inline const PtrList<volScalarField::Internal>& RR() const;
+            virtual inline const PtrList<volInternalScalarField>& RR() const;
 
             //- Return the name of reactioni
             virtual inline const word& reactionName
@@ -213,13 +213,13 @@ public:
             ) const;
 
             //- Return the rate of reactioni [kmol/m^3/s]
-            virtual tmp<volScalarField::Internal> reactionRR
+            virtual tmp<volInternalScalarField> reactionRR
             (
                 const label reactioni
             ) const;
 
             //- Return reaction rates of the species in reactioni [kg/m^3/s]
-            virtual PtrList<volScalarField::Internal> specieReactionRR
+            virtual PtrList<volInternalScalarField> specieReactionRR
             (
                 const label reactioni
             ) const;

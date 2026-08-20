@@ -211,22 +211,22 @@ protected:
         //- Solve for the unburnt gas thermophysical state
         void uSolve
         (
-            const volScalarField::Internal& bStab,
-            const volScalarField::Internal& bSource
+            const volInternalScalarField& bStab,
+            const volInternalScalarField& bSource
         );
 
         //- Solve for the unburnt gas thermophysical state
         void bSolve
         (
-            const volScalarField::Internal& cStab,
-            const volScalarField::Internal& bSource
+            const volInternalScalarField& cStab,
+            const volInternalScalarField& bSource
         );
 
         // Advective-diffusive stabilisation for b,c -> 0
         tmp<fvScalarMatrix> fvmStab
         (
             const volScalarField& bc,
-            const volScalarField::Internal& bcStab,
+            const volInternalScalarField& bcStab,
             const volScalarField& D,
             volScalarField& f
         );
@@ -238,7 +238,7 @@ protected:
             const word& fName,
             const volScalarField& alpha,
             const volScalarField& bc,
-            const volScalarField::Internal& bcStab,
+            const volInternalScalarField& bcStab,
             const surfaceScalarField& alphaPhiub,
             const volScalarField& D,
             const thermophysicalTransportModel& thermophysicalTransport,
@@ -251,7 +251,7 @@ protected:
         (
             volScalarField& fu,
             const word& fuName,
-            const volScalarField::Internal& bStab,
+            const volInternalScalarField& bStab,
             const fvScalarMatrix& source
         );
 
@@ -260,22 +260,22 @@ protected:
         (
             volScalarField& fb,
             const word& fbName,
-            const volScalarField::Internal& cStab,
+            const volInternalScalarField& cStab,
             const fvScalarMatrix& source
         );
 
         //- Solve the unburnt enthalpy equation
         void HuSolve
         (
-            const volScalarField::Internal& bStab,
-            const volScalarField::Internal& bSource
+            const volInternalScalarField& bStab,
+            const volInternalScalarField& bSource
         );
 
         //- Solve the burnt enthalpy equation
         void HbSolve
         (
-            const volScalarField::Internal& cStab,
-            const volScalarField::Internal& bSource
+            const volInternalScalarField& cStab,
+            const volInternalScalarField& bSource
         );
 
 

@@ -88,15 +88,15 @@ Foam::fv::massTransfer::lookupPhaseFieldNames
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransfer::rho
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::massTransfer::rho
 (
     const label i
 ) const
 {
     // Compressible case. Lookup the field.
-    if (mesh().foundObject<volScalarField::Internal>(rhoNames()[i]))
+    if (mesh().foundObject<volInternalScalarField>(rhoNames()[i]))
     {
-        return mesh().lookupObject<volScalarField::Internal>(rhoNames()[i]);
+        return mesh().lookupObject<volInternalScalarField>(rhoNames()[i]);
     }
 
     // Incompressible case. Read from the physical properties dictionary.
@@ -111,7 +111,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransfer::rho
         if (physicalProperties.found("rho"))
         {
             return
-                volScalarField::Internal::New
+                volInternalScalarField::New
                 (
                     rhoNames()[i],
                     mesh(),
@@ -130,7 +130,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransfer::rho
         << "Could not determine the density " << rhoNames()[i]
         << " for phase " << phaseNames()[i]
         << exit(FatalError);
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 
@@ -218,7 +218,7 @@ bool Foam::fv::massTransfer::addsSupToField(const word& fieldName) const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::massTransfer::S(const word& fieldName) const
 {
     return sign(phaseNames(), IOobject::group(fieldName))*mDot();

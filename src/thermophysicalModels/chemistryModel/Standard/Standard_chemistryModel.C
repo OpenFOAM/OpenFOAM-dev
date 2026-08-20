@@ -73,7 +73,7 @@ Foam::chemistryModels::Standard<ThermoType>::Standard
         RR_.set
         (
             fieldi,
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -450,8 +450,8 @@ Foam::chemistryModels::Standard<ThermoType>::reactionRR
     const label reactioni
 ) const
 {
-    tmp<volScalarField::Internal> tRR =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tRR =
+        volInternalScalarField::New
         (
             "RR:" + reactions_[reactioni].name(),
             this->mesh(),
@@ -461,7 +461,7 @@ Foam::chemistryModels::Standard<ThermoType>::reactionRR
                 0
             )
         );
-    volScalarField::Internal& RR = tRR.ref();
+    volInternalScalarField& RR = tRR.ref();
 
     if (!this->chemistry_ || mechRed_.reactionDisabled(reactioni))
     {
@@ -518,13 +518,13 @@ Foam::chemistryModels::Standard<ThermoType>::specieReactionRR
     const label reactioni
 ) const
 {
-    PtrList<volScalarField::Internal> RR(nSpecie_);
+    PtrList<volInternalScalarField> RR(nSpecie_);
     for (label i=0; i<nSpecie_; i++)
     {
         RR.set
         (
             i,
-            volScalarField::Internal::New
+            volInternalScalarField::New
             (
                 "RR:" + reactions_[reactioni].name() + ":" + Yvf_[i].name(),
                 this->mesh(),

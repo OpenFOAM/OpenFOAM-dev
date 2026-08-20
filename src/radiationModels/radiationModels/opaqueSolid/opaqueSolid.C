@@ -97,7 +97,7 @@ Foam::tmp<Foam::volScalarField> Foam::radiationModels::opaqueSolid::Rp() const
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::radiationModels::opaqueSolid::Ru() const
 {
-    return volScalarField::Internal::New
+    return volInternalScalarField::New
     (
         "Ru",
         mesh_,

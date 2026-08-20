@@ -158,7 +158,7 @@ bool Foam::fv::meanVelocityForce::constrain
 {
     zone_.regenerate();
 
-    volVectorField::Internal Su
+    volInternalVectorField Su
     (
         IOobject
         (

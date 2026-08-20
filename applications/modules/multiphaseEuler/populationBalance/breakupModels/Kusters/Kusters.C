@@ -60,18 +60,18 @@ Foam::populationBalance::breakupModels::Kusters::Kusters
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::breakupModels::Kusters::rate(const label i) const
 {
     using Foam::constant::mathematical::pi;
 
     tmp<volScalarField> tdi = popBal_.d(i);
-    const volScalarField::Internal& di = tdi();
+    const volInternalScalarField& di = tdi();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
     tmp<volScalarField> tnu(popBal_.continuousPhase().fluidThermo().nu());
-    const volScalarField::Internal nuc = tnu();
+    const volInternalScalarField nuc = tnu();
 
     return
         sqrt(4*epsilonc/(15*pi*nuc))

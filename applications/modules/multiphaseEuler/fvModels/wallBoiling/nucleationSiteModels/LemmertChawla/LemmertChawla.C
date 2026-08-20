@@ -120,18 +120,18 @@ nucleationSiteDensity
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::
 nucleationSiteDensity
 (
     const phaseModel& liquid,
     const phaseModel& vapour,
     const phaseModel& solid,
-    const volScalarField::Internal& Tf,
-    const volScalarField::Internal& Tsatw,
-    const volScalarField::Internal& L,
-    const volScalarField::Internal& dDep,
-    const volScalarField::Internal& fDep
+    const volInternalScalarField& Tf,
+    const volInternalScalarField& Tsatw,
+    const volInternalScalarField& L,
+    const volInternalScalarField& dDep,
+    const volInternalScalarField& fDep
 ) const
 {
     return calculate(Tsatw, Tf);

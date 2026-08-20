@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ class fluxLimitedLangmuirHinshelwoodReactionRate
         const objectRegistry& ob_;
 
         //- Surface area per unit volume field
-        mutable tmp<volScalarField::Internal> tAv_;
+        mutable tmp<volInternalScalarField> tAv_;
 
 
     // Private Member Functions

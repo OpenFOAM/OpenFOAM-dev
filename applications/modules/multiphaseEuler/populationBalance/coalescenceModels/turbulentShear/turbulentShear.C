@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::populationBalance::coalescenceModels::turbulentShear::turbulentShear
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::turbulentShear::rate
 (
     const label i,
@@ -70,16 +70,16 @@ Foam::populationBalance::coalescenceModels::turbulentShear::rate
 ) const
 {
     tmp<volScalarField> tdi = popBal_.d(i);
-    const volScalarField::Internal& di = tdi();
+    const volInternalScalarField& di = tdi();
     tmp<volScalarField> tdj = popBal_.d(j);
-    const volScalarField::Internal& dj = tdj();
+    const volInternalScalarField& dj = tdj();
 
-    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+    const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
     tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
-    const volScalarField::Internal muc = tmu();
+    const volInternalScalarField muc = tmu();
 
     return C_*sqrt(epsilonc*rhoc/muc)*pow3(di + dj);
 }

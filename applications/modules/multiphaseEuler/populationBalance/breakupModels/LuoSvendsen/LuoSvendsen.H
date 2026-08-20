@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ private:
         dimensionedScalar minEddyRatio_;
 
         //- Kolmogorov length scale
-        volScalarField::Internal kolmogorovLengthScale_;
+        volInternalScalarField kolmogorovLengthScale_;
 
 
 public:
@@ -207,7 +207,7 @@ public:
         virtual void precompute();
 
         //- Return the breakup rate between two groups
-        virtual tmp<volScalarField::Internal> rate
+        virtual tmp<volInternalScalarField> rate
         (
             const label i,
             const label j

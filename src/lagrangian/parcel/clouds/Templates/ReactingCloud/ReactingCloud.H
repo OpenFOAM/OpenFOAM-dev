@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,7 @@ protected:
         // Sources
 
             //- Mass transfer fields - one per carrier phase specie
-            PtrList<volScalarField::Internal> rhoTrans_;
+            PtrList<volInternalScalarField> rhoTrans_;
 
 
     // Protected Member Functions
@@ -230,15 +230,15 @@ public:
                 //- Mass
 
                     //- Return reference to mass source for field i
-                    inline volScalarField::Internal&
+                    inline volInternalScalarField&
                         rhoTrans(const label i);
 
                     //- Return const access to mass source fields
-                    inline const PtrList<volScalarField::Internal>&
+                    inline const PtrList<volInternalScalarField>&
                         rhoTrans() const;
 
                     //- Return reference to mass source fields
-                    inline PtrList<volScalarField::Internal>&
+                    inline PtrList<volInternalScalarField>&
                         rhoTrans();
 
                     //- Return mass source term for specie i - specie eqn
@@ -250,7 +250,7 @@ public:
 
                     //- Return tmp total mass source for carrier phase
                     //  - fully explicit
-                    inline tmp<volScalarField::Internal> Srho() const;
+                    inline tmp<volInternalScalarField> Srho() const;
 
                     //- Return total mass source term [kg/m^3/s]
                     inline tmp<fvScalarMatrix> Srho

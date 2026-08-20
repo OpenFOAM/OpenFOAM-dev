@@ -230,7 +230,7 @@ const Foam::volScalarField& Foam::fv::phaseChange::p() const
 
 Foam::tmp<Foam::volScalarField> Foam::fv::phaseChange::vifToVf
 (
-    const tmp<volScalarField::Internal>& tvif
+    const tmp<volInternalScalarField>& tvif
 )
 {
     tmp<volScalarField> tvf =
@@ -251,12 +251,12 @@ Foam::tmp<Foam::volScalarField> Foam::fv::phaseChange::vifToVf
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::vfToVif
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::phaseChange::vfToVif
 (
     const tmp<volScalarField>& tvf
 )
 {
-    tmp<volScalarField::Internal> tvif(tvf.ptr());
+    tmp<volInternalScalarField> tvif(tvf.ptr());
 
     tvf.clear();
 
@@ -367,23 +367,23 @@ const Foam::labelPair& Foam::fv::phaseChange::specieis(const label mDoti) const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::phaseChange::Tchange() const
 {
-    tmp<volScalarField::Internal> tTchange =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tTchange =
+        volInternalScalarField::New
         (
             name() + ":Tchange",
             mesh(),
             dimensions::temperature
         );
-    volScalarField::Internal& Tchange = tTchange.ref();
+    volInternalScalarField& Tchange = tTchange.ref();
 
-    tmp<volScalarField::Internal> tmDot = this->mDot();
-    const volScalarField::Internal& mDot = tmDot();
+    tmp<volInternalScalarField> tmDot = this->mDot();
+    const volInternalScalarField& mDot = tmDot();
 
-    const volScalarField::Internal& T1 = thermos().first().T();
-    const volScalarField::Internal& T2 = thermos().second().T();
+    const volInternalScalarField& T1 = thermos().first().T();
+    const volInternalScalarField& T2 = thermos().second().T();
 
     forAll(Tchange, i)
     {
@@ -397,17 +397,17 @@ Foam::fv::phaseChange::Tchange() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::phaseChange::Lfraction() const
 {
-    const volScalarField::Internal& kappa1 = thermos().first().kappa();
-    const volScalarField::Internal& kappa2 = thermos().second().kappa();
+    const volInternalScalarField& kappa1 = thermos().first().kappa();
+    const volInternalScalarField& kappa2 = thermos().second().kappa();
 
     return kappa2/(kappa1 + kappa2);
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::L
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::phaseChange::L
 (
     const label mDoti
 ) const
@@ -416,9 +416,9 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::L
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::L
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::phaseChange::L
 (
-    const volScalarField::Internal& Tchange,
+    const volInternalScalarField& Tchange,
     const label mDoti
 ) const
 {
@@ -427,10 +427,10 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::L
 
     const labelPair specieis = this->specieis(mDoti);
 
-    const volScalarField::Internal& p = this->p();
+    const volInternalScalarField& p = this->p();
 
     // Absolute enthalpies at the interface
-    Pair<tmp<volScalarField::Internal>> has;
+    Pair<tmp<volInternalScalarField>> has;
     for (label j = 0; j < 2; ++ j)
     {
         has[j] =
@@ -473,7 +473,7 @@ Foam::tmp<Foam::scalarField> Foam::fv::phaseChange::L
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot() const
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::phaseChange::mDot() const
 {
     if (species().empty())
     {
@@ -482,8 +482,8 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot() const
             << type() << exit(FatalError);
     }
 
-    tmp<volScalarField::Internal> tmDot =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tmDot =
+        volInternalScalarField::New
         (
             "mDot",
             mesh(),
@@ -499,7 +499,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::phaseChange::mDot
 (
     const label mDoti
 ) const
@@ -521,7 +521,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot
             << type() << exit(FatalError);
     }
 
-    return tmp<volScalarField::Internal>(nullptr);
+    return tmp<volInternalScalarField>(nullptr);
 }
 
 
@@ -542,8 +542,8 @@ void Foam::fv::phaseChange::addSup
     // Energy equation
     if (index(heNames(), heOrYi.name()) != -1)
     {
-        const volScalarField::Internal& p = this->p();
-        tmp<volScalarField::Internal> tTchange = this->Tchange();
+        const volInternalScalarField& p = this->p();
+        tmp<volInternalScalarField> tTchange = this->Tchange();
 
         for
         (
@@ -553,7 +553,7 @@ void Foam::fv::phaseChange::addSup
         )
         {
             const labelPair specieis = this->specieis(mDoti);
-            tmp<volScalarField::Internal> tmDot = this->mDot(mDoti);
+            tmp<volInternalScalarField> tmDot = this->mDot(mDoti);
 
             // Direct transfer of energy due to mass transfer
             eqn +=

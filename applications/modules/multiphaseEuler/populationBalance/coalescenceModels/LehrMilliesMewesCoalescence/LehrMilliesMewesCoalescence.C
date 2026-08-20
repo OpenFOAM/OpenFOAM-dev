@@ -64,7 +64,7 @@ LehrMilliesMewesCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::LehrMilliesMewesCoalescence::rate
 (
     const label i,
@@ -79,9 +79,9 @@ Foam::populationBalance::coalescenceModels::LehrMilliesMewesCoalescence::rate
     const phaseModel& phasej = popBal_.phases()[j];
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
 
-    const volScalarField::Internal uChar
+    const volInternalScalarField uChar
     (
         max
         (

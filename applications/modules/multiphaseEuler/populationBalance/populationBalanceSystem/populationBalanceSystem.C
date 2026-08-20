@@ -40,7 +40,7 @@ namespace Foam
 void Foam::populationBalanceSystem::addDmdts
 (
     const populationBalanceModel::dmdtfTable& dmdtfs,
-    PtrList<volScalarField::Internal>& dmdts
+    PtrList<volInternalScalarField>& dmdts
 ) const
 {
     forAllConstIter(populationBalanceModel::dmdtfTable, dmdtfs, dmdtfIter)
@@ -68,9 +68,9 @@ void Foam::populationBalanceSystem::addDmdtUfs
     {
         const phaseInterface interface(fluid_, dmdtfIter.key());
 
-        const volScalarField::Internal& dmdtf = *dmdtfIter();
-        const volScalarField::Internal dmdtf21(posPart(dmdtf));
-        const volScalarField::Internal dmdtf12(negPart(dmdtf));
+        const volInternalScalarField& dmdtf = *dmdtfIter();
+        const volInternalScalarField dmdtf21(posPart(dmdtf));
+        const volInternalScalarField dmdtf12(negPart(dmdtf));
 
         const phaseModel& phase1 = fluid_.phases()[interface.phase1().name()];
         const phaseModel& phase2 = fluid_.phases()[interface.phase2().name()];
@@ -101,9 +101,9 @@ void Foam::populationBalanceSystem::addDmdtHefs
     {
         const phaseInterface interface(fluid_, dmdtfIter.key());
 
-        const volScalarField::Internal& dmdtf = *dmdtfIter();
-        const volScalarField::Internal dmdtf21(posPart(dmdtf));
-        const volScalarField::Internal dmdtf12(negPart(dmdtf));
+        const volInternalScalarField& dmdtf = *dmdtfIter();
+        const volInternalScalarField dmdtf21(posPart(dmdtf));
+        const volInternalScalarField dmdtf12(negPart(dmdtf));
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
@@ -111,10 +111,10 @@ void Foam::populationBalanceSystem::addDmdtHefs
         const rhoFluidThermo& thermo2 = phase2.fluidThermo();
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
-        const volScalarField::Internal hs1(thermo1.hs());
-        const volScalarField::Internal hs2(thermo2.hs());
-        const volScalarField::Internal K1(phase1.K());
-        const volScalarField::Internal K2(phase2.K());
+        const volInternalScalarField hs1(thermo1.hs());
+        const volInternalScalarField hs2(thermo2.hs());
+        const volInternalScalarField K1(phase1.K());
+        const volInternalScalarField K2(phase2.K());
 
         // Transfer of sensible enthalpy within the phases
         eqns[phase1.name()] +=
@@ -143,9 +143,9 @@ void Foam::populationBalanceSystem::addDmdtYfs
     {
         const phaseInterface interface(fluid_, dmdtfIter.key());
 
-        const volScalarField::Internal& dmdtf = *dmdtfIter();
-        const volScalarField::Internal dmdtf12(negPart(dmdtf));
-        const volScalarField::Internal dmdtf21(posPart(dmdtf));
+        const volInternalScalarField& dmdtf = *dmdtfIter();
+        const volInternalScalarField dmdtf12(negPart(dmdtf));
+        const volInternalScalarField dmdtf21(posPart(dmdtf));
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
@@ -212,10 +212,10 @@ Foam::populationBalanceSystem::~populationBalanceSystem()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::PtrList<Foam::volScalarField::Internal>
+Foam::PtrList<Foam::volInternalScalarField>
 Foam::populationBalanceSystem::dmdts() const
 {
-    PtrList<volScalarField::Internal> dmdts(fluid_.phases().size());
+    PtrList<volInternalScalarField> dmdts(fluid_.phases().size());
 
     forAll(populationBalances_, popBali)
     {

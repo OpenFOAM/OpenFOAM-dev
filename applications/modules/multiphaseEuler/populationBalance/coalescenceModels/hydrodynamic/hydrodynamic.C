@@ -55,7 +55,7 @@ Foam::populationBalance::coalescenceModels::hydrodynamic::hydrodynamic
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::hydrodynamic::rate
 (
     const label i,
@@ -63,7 +63,7 @@ Foam::populationBalance::coalescenceModels::hydrodynamic::rate
 ) const
 {
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "coalescenceRate",
             popBal_.mesh(),

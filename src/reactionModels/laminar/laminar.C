@@ -127,7 +127,7 @@ void Foam::reactionModels::laminar::correct()
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::laminar::R(const label speciei) const
 {
     return chemistryPtr_->RR()[speciei];

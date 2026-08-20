@@ -120,7 +120,7 @@ void Foam::populationBalance::shapeModel::correct()
 
 void Foam::populationBalance::shapeModel::addCoalescence
 (
-    const volScalarField::Internal& Su,
+    const volInternalScalarField& Su,
     const label i,
     const label j,
     const label k
@@ -130,7 +130,7 @@ void Foam::populationBalance::shapeModel::addCoalescence
 
 void Foam::populationBalance::shapeModel::addBreakup
 (
-    const volScalarField::Internal& Su,
+    const volInternalScalarField& Su,
     const label i,
     const label j
 )

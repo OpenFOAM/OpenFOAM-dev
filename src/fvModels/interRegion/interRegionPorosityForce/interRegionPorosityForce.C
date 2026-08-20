@@ -71,7 +71,7 @@ Foam::fv::interRegionPorosityForce::interRegionPorosityForce
     UName_(word::null),
     filter_
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "filter",
             mesh,

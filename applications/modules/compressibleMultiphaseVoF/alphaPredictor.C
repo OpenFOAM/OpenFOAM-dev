@@ -123,7 +123,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve()
 
         surfaceScalarField& alphaPhi = alphaPhis[phasei];
 
-        volScalarField::Internal Sp
+        volInternalScalarField Sp
         (
             IOobject
             (
@@ -135,7 +135,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve()
             dimensionedScalar(alpha.vDot().dimensions(), 0)
         );
 
-        volScalarField::Internal Su
+        volInternalScalarField Su
         (
             IOobject
             (

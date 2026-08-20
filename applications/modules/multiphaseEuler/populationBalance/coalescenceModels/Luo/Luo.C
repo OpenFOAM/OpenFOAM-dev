@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::populationBalance::coalescenceModels::Luo::Luo
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::Luo::rate
 (
     const label i,
@@ -77,10 +77,10 @@ Foam::populationBalance::coalescenceModels::Luo::rate
     const dimensionedScalar& dSphi = popBal_.dSph(i);
     const dimensionedScalar& dSphj = popBal_.dSph(j);
 
-    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+    const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
 
     tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
-    const volScalarField::Internal& sigma = tsigma();
+    const volInternalScalarField& sigma = tsigma();
 
     const dispersedPhaseInterface interface
     (
@@ -108,14 +108,14 @@ Foam::populationBalance::coalescenceModels::Luo::rate
         <
             virtualMassModels::dispersedVirtualMassModel
         >(interface).Cvm();
-    const volScalarField::Internal& Cvm = tCvm();
+    const volInternalScalarField& Cvm = tCvm();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
 
     const dimensionedScalar xi = dSphi/dSphj;
 
-    const volScalarField::Internal uij
+    const volInternalScalarField uij
     (
         sqrt(beta_)*cbrt(epsilonc*dSphi)*sqrt(1 + pow(xi, -2.0/3.0))
     );

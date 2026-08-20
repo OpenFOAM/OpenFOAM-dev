@@ -51,18 +51,18 @@ Foam::fvMeshToFvMesh::fvMeshToFvMesh
     {
         Info<< typeName << ": Writing target coverage" << endl;
 
-        volScalarField::Internal
+        volInternalScalarField
         (
             "tgtCoverage",
             srcToTgt<scalar>
             (
-                volScalarField::Internal::New
+                volInternalScalarField::New
                 (
                     "1",
                     srcMesh_,
                     dimensionedScalar(dimless, scalar(1))
                 )(),
-                volScalarField::Internal::New
+                volInternalScalarField::New
                 (
                     "0",
                     tgtMesh_,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ ballisticCollisions
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::ballisticCollisions::rate
 (
     const label i,
@@ -72,11 +72,11 @@ Foam::populationBalance::coalescenceModels::ballisticCollisions::rate
     using Foam::constant::physicoChemical::k;
 
     tmp<volScalarField> tdi = popBal_.d(i);
-    const volScalarField::Internal& di = tdi();
+    const volInternalScalarField& di = tdi();
     tmp<volScalarField> tdj = popBal_.d(j);
-    const volScalarField::Internal& dj = tdj();
+    const volInternalScalarField& dj = tdj();
 
-    const volScalarField::Internal& Tc = popBal_.continuousPhase().thermo().T();
+    const volInternalScalarField& Tc = popBal_.continuousPhase().thermo().T();
 
     return
         sqrt(3*k*Tc/popBal_.phases()[i].rho()())

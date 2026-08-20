@@ -69,7 +69,7 @@ Foam::populationBalance::coalescenceModels::PrinceBlanch::PrinceBlanch
     {
         shearStrainRate_.set
         (
-            new volScalarField::Internal
+            new volInternalScalarField
             (
                 IOobject
                 (
@@ -102,7 +102,7 @@ void Foam::populationBalance::coalescenceModels::PrinceBlanch::precompute()
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::coalescenceModels::PrinceBlanch::rate
 (
     const label i,
@@ -114,20 +114,20 @@ Foam::populationBalance::coalescenceModels::PrinceBlanch::rate
     const dimensionedScalar& dSphi = popBal_.dSph(i);
     const dimensionedScalar& dSphj = popBal_.dSph(j);
 
-    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+    const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
 
     tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
-    const volScalarField::Internal& sigma = tsigma();
+    const volInternalScalarField& sigma = tsigma();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
 
     const uniformDimensionedVectorField& g =
         popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
     const dimensionedScalar rij(1/(1/dSphi + 1/dSphj));
 
-    const volScalarField::Internal collisionEfficiency
+    const volInternalScalarField collisionEfficiency
     (
         exp
         (
@@ -138,14 +138,14 @@ Foam::populationBalance::coalescenceModels::PrinceBlanch::rate
         )
     );
 
-    tmp<volScalarField::Internal> tcoalescenceRate =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tcoalescenceRate =
+        volInternalScalarField::New
         (
             "coalescenceRate",
             popBal_.mesh(),
             dimensionedScalar(dimensions::volume/dimensions::time, scalar(0))
         );
-    volScalarField::Internal& coalescenceRate = tcoalescenceRate.ref();
+    volInternalScalarField& coalescenceRate = tcoalescenceRate.ref();
 
     if (turbulence_)
     {

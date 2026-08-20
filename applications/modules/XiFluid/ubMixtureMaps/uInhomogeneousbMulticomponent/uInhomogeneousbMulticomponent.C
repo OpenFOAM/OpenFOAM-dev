@@ -96,19 +96,19 @@ Foam::ubMixtureMaps::uInhomogeneousbMulticomponent::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::PtrList<Foam::volScalarField::Internal>
+Foam::PtrList<Foam::volInternalScalarField>
 Foam::ubMixtureMaps::uInhomogeneousbMulticomponent::prompt
 (
     const PtrList<volScalarField>& Yu
 ) const
 {
     const PtrList<volScalarField>& Yb = bThermo_.Y();
-    PtrList<volScalarField::Internal> Yp(Yb.size());
+    PtrList<volInternalScalarField> Yp(Yb.size());
 
     const uInhomogeneousMixture& um = uMixtureCast<uInhomogeneousMixture>();
 
-    const volScalarField::Internal& ftb = Yu[uInhomogeneousMixture::FU];
-    const volScalarField::Internal fub
+    const volInternalScalarField& ftb = Yu[uInhomogeneousMixture::FU];
+    const volInternalScalarField fub
     (
         max
         (
@@ -119,14 +119,14 @@ Foam::ubMixtureMaps::uInhomogeneousbMulticomponent::prompt
 
     Yp.set(fu_, fub);
 
-    const volScalarField::Internal oxb(1 - ftb - (ftb - fub)*um.stoicRatio());
+    const volInternalScalarField oxb(1 - ftb - (ftb - fub)*um.stoicRatio());
 
     forAll(ox_, i)
     {
         Yp.set(ox_[i].first(), ox_[i].second()*oxb);
     }
 
-    const volScalarField::Internal prb(1 - fub - oxb);
+    const volInternalScalarField prb(1 - fub - oxb);
 
     forAll(pr_, i)
     {
@@ -140,7 +140,7 @@ Foam::ubMixtureMaps::uInhomogeneousbMulticomponent::prompt
             Yp.set
             (
                 i,
-                volScalarField::Internal::New
+                volInternalScalarField::New
                 (
                     Yb[i].name(),
                     ftb.mesh(),

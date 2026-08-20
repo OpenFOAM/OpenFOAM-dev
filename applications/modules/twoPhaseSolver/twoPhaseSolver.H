@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,8 +153,8 @@ protected:
         //- Calculate the alpha equation sources
         virtual void alphaSuSp
         (
-            tmp<volScalarField::Internal>& Su,
-            tmp<volScalarField::Internal>& Sp
+            tmp<volInternalScalarField>& Su,
+            tmp<volInternalScalarField>& Sp
         ) = 0;
 
         //- Correct the interface properties following mesh-change

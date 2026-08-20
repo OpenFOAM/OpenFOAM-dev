@@ -36,7 +36,7 @@ License
 Foam::PtrList<Foam::fvScalarMatrix>
 Foam::solvers::multiphaseEuler::compressibilityEqns
 (
-    const PtrList<volScalarField::Internal>& dmdts
+    const PtrList<volInternalScalarField>& dmdts
 ) const
 {
     volScalarField& p_rgh = p_rgh_;

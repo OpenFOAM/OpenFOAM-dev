@@ -248,7 +248,7 @@ bool Foam::fv::uniformGrowth::addsSupToField(const word& fieldName) const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::uniformGrowth::S
+Foam::tmp<Foam::volInternalScalarField> Foam::fv::uniformGrowth::S
 (
     const word& fieldName
 ) const
@@ -256,15 +256,15 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::uniformGrowth::S
     const label i = findIndex(phaseNames_, IOobject::group(fieldName));
     const phaseModel& phase = popBal_.fluid().phases()[phaseNames_[i]];
 
-    tmp<volScalarField::Internal> tSumNPhase =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tSumNPhase =
+        volInternalScalarField::New
         (
             IOobject::groupName(name() + ":sumN", phase.name()),
             mesh(),
             dimensionedScalar(inv(dimensions::volume), scalar(0))
         );
-    tmp<volScalarField::Internal> tSumN =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tSumN =
+        volInternalScalarField::New
         (
             name() + ":sumN",
             mesh(),
@@ -273,7 +273,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::uniformGrowth::S
 
     forAll(popBal_.fs(), i)
     {
-        tmp<volScalarField::Internal> tN =
+        tmp<volInternalScalarField> tN =
             popBal_.phases()[i]()*popBal_.f(i)/popBal_.v(i);
 
         if (&popBal_.phases()[i] == &phase)

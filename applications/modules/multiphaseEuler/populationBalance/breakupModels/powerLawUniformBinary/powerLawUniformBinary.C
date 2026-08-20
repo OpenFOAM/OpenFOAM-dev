@@ -57,7 +57,7 @@ powerLawUniformBinary
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::breakupModels::powerLawUniformBinary::rate
 (
     const label i,
@@ -67,7 +67,7 @@ Foam::populationBalance::breakupModels::powerLawUniformBinary::rate
     const dimensionedScalar& vj = popBal_.vs()[j];
 
     return
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "binaryBreakupRate",
             popBal_.mesh(),

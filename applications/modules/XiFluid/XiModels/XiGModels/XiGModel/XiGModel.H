@@ -145,7 +145,7 @@ public:
     // Member Functions
 
         //- Return the flame-wrinkling generation rate
-        virtual tmp<volScalarField::Internal> G() const = 0;
+        virtual tmp<volInternalScalarField> G() const = 0;
 
         //- Update properties from the given XiProperties dictionary
         bool read(const dictionary& XiProperties);

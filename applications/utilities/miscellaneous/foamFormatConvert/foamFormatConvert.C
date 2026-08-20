@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -332,11 +332,11 @@ int main(int argc, char *argv[])
              || headerClassName == pointSymmTensorField::typeName
              || headerClassName == pointTensorField::typeName
 
-             || headerClassName == volScalarField::Internal::typeName
-             || headerClassName == volVectorField::Internal::typeName
-             || headerClassName == volSphericalTensorField::Internal::typeName
-             || headerClassName == volSymmTensorField::Internal::typeName
-             || headerClassName == volTensorField::Internal::typeName
+             || headerClassName == volInternalScalarField::typeName
+             || headerClassName == volInternalVectorField::typeName
+             || headerClassName == volInternalSphericalTensorField::typeName
+             || headerClassName == volInternalSymmTensorField::typeName
+             || headerClassName == volInternalTensorField::typeName
             )
             {
                 Info<< "        Reading " << headerClassName

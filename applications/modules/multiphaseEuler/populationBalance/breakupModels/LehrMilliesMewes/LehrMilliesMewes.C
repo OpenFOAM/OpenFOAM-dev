@@ -56,7 +56,7 @@ Foam::populationBalance::breakupModels::LehrMilliesMewes::LehrMilliesMewes
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::breakupModels::LehrMilliesMewes::rate
 (
     const label i,
@@ -68,15 +68,15 @@ Foam::populationBalance::breakupModels::LehrMilliesMewes::rate
     const dimensionedScalar& dSphi = popBal_.dSph(i);
     const dimensionedScalar& dSphj = popBal_.dSph(j);
 
-    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+    const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
 
     tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(j));
-    const volScalarField::Internal& sigma = tsigma();
+    const volInternalScalarField& sigma = tsigma();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
 
-    volScalarField::Internal L
+    volInternalScalarField L
     (
         pow(sigma/rhoc, 3.0/5.0)/pow(epsilonc, 2.0/5.0)
     );
@@ -85,7 +85,7 @@ Foam::populationBalance::breakupModels::LehrMilliesMewes::rate
     // functions due to small exponents
     L.dimensions().reset(dimensions::length);
 
-    const volScalarField::Internal T
+    const volInternalScalarField T
     (
         pow(sigma/rhoc, 2.0/5.0)/pow(epsilonc, 3.0/5.0)
     );

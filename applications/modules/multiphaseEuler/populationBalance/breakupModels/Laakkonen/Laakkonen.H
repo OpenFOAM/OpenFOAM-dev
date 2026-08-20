@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ public:
     // Member Functions
 
         //- Return the breakup rate for a group
-        virtual tmp<volScalarField::Internal> rate(const label i) const;
+        virtual tmp<volInternalScalarField> rate(const label i) const;
 };
 
 

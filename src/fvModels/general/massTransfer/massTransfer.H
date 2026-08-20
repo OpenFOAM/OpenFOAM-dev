@@ -96,7 +96,7 @@ protected:
         static inline label sign(const Pair<word>& names, const word& name);
 
         //- Return the density
-        tmp<volScalarField::Internal> rho(const label i) const;
+        tmp<volInternalScalarField> rho(const label i) const;
 
         //- Return the corresponding field in the other phase, or a null
         //  reference if no such field exists

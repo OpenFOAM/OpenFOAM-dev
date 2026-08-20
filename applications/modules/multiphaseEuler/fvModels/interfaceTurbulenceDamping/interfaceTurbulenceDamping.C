@@ -48,7 +48,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::interfaceTurbulenceDamping::interfaceFraction
 (
     const volScalarField& alpha
@@ -56,16 +56,16 @@ Foam::fv::interfaceTurbulenceDamping::interfaceFraction
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<volScalarField::Internal> tA
+    tmp<volInternalScalarField> tA
     (
-        volScalarField::Internal::New
+        volInternalScalarField::New
         (
             "A",
             mesh,
             dimensionedScalar(dimless, 0)
         )
     );
-    volScalarField::Internal& A = tA.ref();
+    volInternalScalarField& A = tA.ref();
 
     const surfaceVectorField& Sf = mesh.Sf();
     const labelUList& own = mesh.owner();
@@ -74,7 +74,7 @@ Foam::fv::interfaceTurbulenceDamping::interfaceFraction
     const surfaceScalarField alphaf(fvc::interpolate(alpha));
 
     const volInternalVectorField gradAlpha(fvi::grad(alpha));
-    const volVectorField::Internal n
+    const volInternalVectorField n
     (
         gradAlpha/(mag(gradAlpha) + phase_.fluid().deltaN())
     );
@@ -144,7 +144,7 @@ void Foam::fv::interfaceTurbulenceDamping::addRhoSup
     const phaseSystem::phaseModelPartialList& movingPhases =
         phase_.fluid().movingPhases();
 
-    volScalarField::Internal aSqrnu
+    volInternalScalarField aSqrnu
     (
         movingPhases[0]()*sqr(movingPhases[0].fluidThermo().nu()()())
     );
@@ -262,7 +262,7 @@ void Foam::fv::interfaceTurbulenceDamping::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    const volScalarField::Internal aSqrnu
+    const volInternalScalarField aSqrnu
     (
         alpha()*sqr(phase_.fluidThermo().nu()()())
     );

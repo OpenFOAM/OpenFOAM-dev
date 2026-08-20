@@ -49,10 +49,10 @@ void Foam::fv::coefficientPhaseChange::readCoeffs(const dictionary& dict)
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::coefficientPhaseChange::timesY1
 (
-    tmp<volScalarField::Internal> mDot
+    tmp<volInternalScalarField> mDot
 ) const
 {
     const ThermoRefPair<multicomponentThermo> mcThermos =
@@ -68,8 +68,8 @@ Foam::fv::coefficientPhaseChange::timesY1
         return mcThermos.first().Y()[specieis().first()]()*mDot;
     }
 
-    tmp<volScalarField::Internal> tY1 =
-        volScalarField::Internal::New
+    tmp<volInternalScalarField> tY1 =
+        volInternalScalarField::New
         (
             typedName("Y1"),
             mcThermos.first().Y()[specieis(0).first()]
@@ -84,7 +84,7 @@ Foam::fv::coefficientPhaseChange::timesY1
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::coefficientPhaseChange::mDotByAlpha1Y1() const
 {
     return C_*mag(fvi::grad(alpha1_));
@@ -118,20 +118,20 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::coefficientPhaseChange::mDot() const
 {
     return timesY1(alpha1_()*mDotByAlpha1Y1());
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::coefficientPhaseChange::mDot(const label mDoti) const
 {
     const ThermoRefPair<multicomponentThermo> mcThermos =
         thermos().thermos<multicomponentThermo>();
 
-    tmp<volScalarField::Internal> tmDot = alpha1_()*mDotByAlpha1Y1();
+    tmp<volInternalScalarField> tmDot = alpha1_()*mDotByAlpha1Y1();
 
     if (mcThermos.valid().first())
     {
@@ -155,7 +155,7 @@ void Foam::fv::coefficientPhaseChange::addSup
 
     if (i != -1)
     {
-        const volScalarField::Internal mDotByAlpha1(timesY1(mDotByAlpha1Y1()));
+        const volInternalScalarField mDotByAlpha1(timesY1(mDotByAlpha1Y1()));
 
         if (i == 0)
         {

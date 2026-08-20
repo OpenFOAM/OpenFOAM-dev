@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ protected:
         volScalarField& p;
 
         //- Compressibility source
-        volScalarField::Internal vDot;
+        volInternalScalarField vDot;
 
         //- Compressibility source stabilisation tolerance
         scalar vDotResidualAlpha;
@@ -134,10 +134,10 @@ protected:
     // Cached temporary fields
 
         //- Phase-1 continuity error
-        tmp<volScalarField::Internal> contErr1;
+        tmp<volInternalScalarField> contErr1;
 
         //- Phase-2 continuity error
-        tmp<volScalarField::Internal> contErr2;
+        tmp<volInternalScalarField> contErr2;
 
 
     // Protected Member Functions
@@ -176,8 +176,8 @@ protected:
         //- Calculate the alpha equation sources
         virtual void alphaSuSp
         (
-            tmp<volScalarField::Internal>& Su,
-            tmp<volScalarField::Internal>& Sp
+            tmp<volInternalScalarField>& Su,
+            tmp<volInternalScalarField>& Sp
         );
 
         //- Return the momentum equation stress term

@@ -193,7 +193,7 @@ void Foam::solvers::isothermalFilm::continuityErrors()
 
     if (mass.value() > small)
     {
-        const volScalarField::Internal massContErr
+        const volInternalScalarField massContErr
         (
             runTime.deltaT()*magSf*contErr()
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,21 +59,21 @@ Foam::populationBalance::breakupModels::Laakkonen::Laakkonen
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::populationBalance::breakupModels::Laakkonen::rate(const label i) const
 {
     const dimensionedScalar& dSphi = popBal_.dSph(i);
 
-    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
-    const volScalarField::Internal& rhod = popBal_.phases()[i].rho();
+    const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
+    const volInternalScalarField& rhod = popBal_.phases()[i].rho();
 
     tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
-    const volScalarField::Internal& sigma = tsigma();
+    const volInternalScalarField& sigma = tsigma();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-    const volScalarField::Internal& epsilonc = tepsilonc();
+    const volInternalScalarField& epsilonc = tepsilonc();
     tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
-    const volScalarField::Internal muc = tmu();
+    const volInternalScalarField muc = tmu();
 
     return
         C1_
