@@ -507,42 +507,6 @@ scalar sumMag(const FieldField<Field, Type>& f)
 
 TMP_UNARY_FUNCTION(scalar, sumMag)
 
-template<template<class> class Field, class Type>
-Type average(const FieldField<Field, Type>& f)
-{
-    if (f.size())
-    {
-        label n = 0;
-
-        forAll(f, i)
-        {
-            n += f[i].size();
-        }
-
-        if (n == 0)
-        {
-            WarningInFunction
-                << "empty fieldField, returning zero" << endl;
-
-            return Zero;
-        }
-
-        Type avrg = sum(f)/n;
-
-        return avrg;
-    }
-    else
-    {
-        WarningInFunction
-            << "empty fieldField, returning zero" << endl;
-
-        return Zero;
-    }
-}
-
-TMP_UNARY_FUNCTION(Type, average)
-
-
 #define G_UNARY_FUNCTION(returnType, gFunc, func, rFunc)                       \
                                                                                \
 template<template<class> class Field, class Type>                              \
@@ -560,37 +524,6 @@ G_UNARY_FUNCTION(Type, gSum, sum, sum)
 G_UNARY_FUNCTION(scalar, gSumMag, sumMag, sum)
 
 #undef G_UNARY_FUNCTION
-
-
-template<template<class> class Field, class Type>
-Type gAverage(const FieldField<Field, Type>& f)
-{
-    label n = 0;
-
-    forAll(f, i)
-    {
-        n += f[i].size();
-    }
-
-    reduce(n, sumOp());
-
-    if (n > 0)
-    {
-        Type avrg = gSum(f)/n;
-
-        return avrg;
-    }
-    else
-    {
-        WarningInFunction
-            << "empty fieldField, returning zero" << endl;
-
-        return Zero;
-    }
-}
-
-TMP_UNARY_FUNCTION(Type, gAverage)
-
 #undef TMP_UNARY_FUNCTION
 
 

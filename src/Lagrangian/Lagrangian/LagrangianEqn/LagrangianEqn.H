@@ -371,6 +371,16 @@ public:
 };
 
 
+namespace expression
+{
+    template<class Type>
+    struct Expressionable<LagrangianEqn<Type>>
+    :
+        public notExpressionable
+    {};
+}
+
+
 //- Negation
 template<class Type>
 tmp<LagrangianEqn<Type>> operator-(const LagrangianEqn<Type>& eqn);

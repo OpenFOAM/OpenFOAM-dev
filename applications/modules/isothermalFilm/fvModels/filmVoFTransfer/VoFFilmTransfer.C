@@ -310,7 +310,7 @@ void Foam::fv::VoFFilmTransfer::addSup
         }
         else
         {
-            eqn -= alpha()*rho()*he*transferRate_;
+            eqn -= alpha()*rho()*he()*transferRate_;
         }
     }
     else
@@ -351,7 +351,7 @@ void Foam::fv::VoFFilmTransfer::addSup
         }
         else
         {
-            eqn -= alpha_()*rho()*U*transferRate_;
+            eqn -= alpha_()*rho()*U()*transferRate_;
         }
     }
     else
@@ -380,7 +380,7 @@ inline Foam::tmp<Foam::Field<Type>> Foam::fv::VoFFilmTransfer::TransferRate
         (
             UIndirectList<Type>
             (
-                alpha_()*transferRate_*mesh().V()*f,
+                eval(alpha_()*transferRate_*mesh().V()*f),
                 faceCells
             )
         )
@@ -391,21 +391,21 @@ inline Foam::tmp<Foam::Field<Type>> Foam::fv::VoFFilmTransfer::TransferRate
 Foam::tmp<Foam::scalarField>
 Foam::fv::VoFFilmTransfer::rhoTransferRate() const
 {
-    return TransferRate<scalar>(thermo_.rho()());
+    return TransferRate<scalar>(thermo_.rho()()());
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::fv::VoFFilmTransfer::heTransferRate() const
 {
-    return TransferRate<scalar>(thermo_.rho()()*thermo_.he()());
+    return TransferRate<scalar>(thermo_.rho()()()*thermo_.he()());
 }
 
 
 Foam::tmp<Foam::vectorField>
 Foam::fv::VoFFilmTransfer::UTransferRate() const
 {
-    return TransferRate<vector>(thermo_.rho()()*VoF_.U());
+    return TransferRate<vector>(thermo_.rho()()()*VoF_.U());
 }
 
 

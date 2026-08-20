@@ -166,7 +166,7 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correct()
 
     tmp<volInternalTensorField> tgradU(fvi::grad(U));
     const volInternalSymmTensorField D(symm(tgradU()));
-    const volInternalSymmTensorField P(-twoSymm(R & tgradU()));
+    const volInternalSymmTensorField P(-twoSymm(R() & tgradU()));
     tgradU.clear();
 
     const volScalarField k(this->k());

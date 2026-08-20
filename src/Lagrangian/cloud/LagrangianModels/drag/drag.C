@@ -55,13 +55,13 @@ void Foam::Lagrangian::drag::addUSup
 
     if (eqn.isPsi(U))
     {
-        eqn.Su += D*Uc;
+        eqn.Su += eval(D*Uc);
         eqn -= Lagrangianm::Sp(D, U);
     }
     else
     {
         eqn += Lagrangianm::Sp(D, Uc);
-        eqn.Su -= D*U;
+        eqn.Su -= eval(D*U);
     }
 }
 

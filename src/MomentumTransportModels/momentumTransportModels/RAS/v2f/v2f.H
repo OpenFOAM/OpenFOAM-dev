@@ -169,7 +169,7 @@ protected:
         virtual void correctNut();
 
         //- Return time scale, Ts
-        tmp<volInternalScalarField> Ts() const;
+        tmp<volScalarField> Ts() const;
 
         //- Return length scale, Ls
         tmp<volInternalScalarField> Ls() const;

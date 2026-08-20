@@ -26,10 +26,12 @@ License
 #ifndef DimensionedFields_H
 #define DimensionedFields_H
 
-#include "DimensionedScalarField.H"
-#include "DimensionedVectorField.H"
-#include "DimensionedTensorField.H"
-#include "DimensionedSphericalTensorField.H"
+#include "DimensionedField.H"
+#include "scalarField.H"
+#include "vectorField.H"
+#include "sphericalTensorField.H"
+#include "symmTensorField.H"
+#include "tensorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

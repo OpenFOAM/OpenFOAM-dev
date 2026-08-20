@@ -137,7 +137,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
 
     const volScalarField nr(sqrt(max(N - (Uhat & ns & Uhat), scalar(1e-4))));
 
-    const scalarField cellWidth(pow(mesh.V(), 1.0/3.0));
+    const scalarField cellWidth(pow(mesh.V().primitiveField(), 1.0/3.0));
 
     const scalarField upLocal
     (

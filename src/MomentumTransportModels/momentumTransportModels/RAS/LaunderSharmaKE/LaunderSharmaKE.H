@@ -105,7 +105,7 @@ protected:
 
     // Private Member Functions
 
-        tmp<volInternalScalarField> fMu() const;
+        tmp<volScalarField> fMu() const;
         tmp<volInternalScalarField> f2() const;
 
         //- Bound epsilon

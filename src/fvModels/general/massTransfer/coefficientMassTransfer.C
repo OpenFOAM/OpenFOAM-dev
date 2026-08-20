@@ -99,7 +99,9 @@ void Foam::fv::coefficientMassTransfer::addSup
         }
         else
         {
-            eqn += SByAlpha1*alpha1 - correction(fvm::Sp(SByAlpha1, eqn.psi()));
+            eqn +=
+                SByAlpha1*alpha1()
+              - correction(fvm::Sp(SByAlpha1, eqn.psi()));
         }
     }
     else
@@ -131,7 +133,9 @@ void Foam::fv::coefficientMassTransfer::addSup
         }
         else
         {
-            eqn += SByAlpha1*alpha1 - correction(fvm::Sp(SByAlpha1, eqn.psi()));
+            eqn +=
+                SByAlpha1*alpha1()
+              - correction(fvm::Sp(SByAlpha1, eqn.psi()));
         }
     }
     else

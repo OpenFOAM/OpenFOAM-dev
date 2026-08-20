@@ -65,7 +65,7 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::internalCoeff
     const label i = this->i();
     const volScalarField& fi = popBal.f(i);
 
-    return fi.sources()[model.name()].internalCoeff(model, source)*fi;
+    return fi.sources()[model.name()].internalCoeff(model, source)*fi();
 }
 
 
@@ -116,11 +116,14 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeff
 
     return
         i ==  popBal.diameters()[i].iFirst()
-      ? neg(source)*tsourceCoeffs.second()
+      ? eval(neg(source)*tsourceCoeffs.second())
       : i == popBal.diameters()[i].iLast()
-      ? pos(source)*tsourceCoeffs.first()
-      : pos(source)*tsourceCoeffs.first()
-      + neg(source)*tsourceCoeffs.second();
+      ? eval(pos(source)*tsourceCoeffs.first())
+      : eval
+        (
+            pos(source)*tsourceCoeffs.first()
+          + neg(source)*tsourceCoeffs.second()
+        );
 }
 
 

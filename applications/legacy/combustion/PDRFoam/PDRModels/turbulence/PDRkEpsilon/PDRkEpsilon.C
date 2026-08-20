@@ -188,7 +188,7 @@ void PDRkEpsilon::correct()
       + fvm::div(phi_, k_)
       - fvm::laplacian(rho_*DkEff(), k_)
      ==
-        betav*G + GR
+        betav()*G + GR
       - fvm::SuSp((2.0/3.0)*betav()*rho_()*divU, k_)
       - fvm::Sp(betav*rho_*epsilon_/k_, k_)
     );

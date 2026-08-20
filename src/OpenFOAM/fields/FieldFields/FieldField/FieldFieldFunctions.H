@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,11 +210,6 @@ scalar sumMag(const FieldField<Field, Type>& f);
 
 TMP_UNARY_FUNCTION(scalar, sumMag)
 
-template<template<class> class Field, class Type>
-Type average(const FieldField<Field, Type>& f);
-
-TMP_UNARY_FUNCTION(Type, average)
-
 
 #define G_UNARY_FUNCTION(returnType, gFunc, func, rFunc)                       \
                                                                                \
@@ -228,13 +223,6 @@ G_UNARY_FUNCTION(Type, gSum, sum, sum)
 G_UNARY_FUNCTION(scalar, gSumMag, sumMag, sum)
 
 #undef G_UNARY_FUNCTION
-
-
-template<template<class> class Field, class Type>
-Type gAverage(const FieldField<Field, Type>& f);
-
-TMP_UNARY_FUNCTION(Type, gAverage)
-
 #undef TMP_UNARY_FUNCTION
 
 

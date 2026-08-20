@@ -231,8 +231,8 @@ bool Foam::AveragingMethod<Type>::write(const bool write) const
     }
 
     // average
-    cellValue.primitiveFieldRef() /= mesh_.V();
-    cellGrad.primitiveFieldRef() /= mesh_.V();
+    cellValue.primitiveFieldRef() /= mesh_.V().primitiveField();
+    cellGrad.primitiveFieldRef() /= mesh_.V().primitiveField();
     pointValue.primitiveFieldRef() /= pointVolume;
     pointGrad.primitiveFieldRef() /= pointVolume;
 

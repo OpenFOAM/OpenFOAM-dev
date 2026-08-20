@@ -70,21 +70,27 @@ void Foam::solvers::compressibleVoF::thermophysicalPredictor()
         )
 
       + fvi::ddt(alpha1, rho1, e1) + fvi::div(alphaRhoPhi1, e1)
-      - contErr1()*e1
+      - contErr1()*e1()
       + fvi::ddt(alpha2, rho2, e2) + fvi::div(alphaRhoPhi2, e2)
-      - contErr2()*e2
+      - contErr2()*e2()
 
       - fvm::laplacian(thermophysicalTransport.kappaEff(), T)
 
       + (
             mixture.totalInternalEnergy()
           ?
-            fvi::div(fvc::absolute(phi, U), p)
-          + (fvi::ddt(rho, K) + fvi::div(rhoPhi, K))
-          - (U()&(fvModels().source(rho, U)&U)())
-          - (contErr1() + contErr2())*K()
+            eval
+            (
+                fvi::div(fvc::absolute(phi, U), p)
+              + (fvi::ddt(rho, K) + fvi::div(rhoPhi, K))
+              - (U() & (fvModels().source(rho, U) & U)()())
+              - (contErr1() + contErr2())*K()
+            )
           :
-            p()*fvi::div(fvc::absolute(phi, U))
+            eval
+            (
+                p()*fvi::div(fvc::absolute(phi, U))
+            )
         )
      ==
         (e1Source&e1)

@@ -1263,7 +1263,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
         }
         else
         {
-            V0Ptr_->scalarField::operator=(V());
+            V0Ptr_->scalarField::operator=(V().primitiveField());
         }
     }
 

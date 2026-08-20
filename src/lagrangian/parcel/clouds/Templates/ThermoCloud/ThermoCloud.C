@@ -463,7 +463,7 @@ void Foam::ThermoCloud<CloudType>::preEvolve()
 {
     CloudType::preEvolve();
 
-    this->pAmbient() = carrierThermo_.p().average().value();
+    this->pAmbient() = average(carrierThermo_.p()).value();
 }
 
 

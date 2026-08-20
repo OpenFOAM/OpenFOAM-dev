@@ -26,7 +26,7 @@ License
 #include "forcing.H"
 #include "fvMatrix.H"
 #include "fviGrad.H"
-#include "fvcVolumeIntegrate.H"
+#include "fviVolumeIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -153,8 +153,8 @@ Foam::dimensionedScalar Foam::fv::forcing::regionLength() const
 
         const volScalarField scale(scale_->value(x));
 
-        vs += fvc::domainIntegrate(scale);
-        vgrads += fvc::domainIntegrate(directions_[i] & fvi::grad(scale));
+        vs += fvi::domainIntegrate(scale);
+        vgrads += fvi::domainIntegrate(directions_[i] & fvi::grad(scale));
     }
 
     return vs/vgrads;
@@ -180,7 +180,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
     {
         const dimensionedVector o(dimLength, origins_[i]);
         const dimensionedVector d(dimless, directions_[i]);
-        scale = max(scale, scale_->value((mesh().C()() - o) & d));
+        scale = max(scale, scale_->value(eval((mesh().C()() - o) & d)));
     }
 
     return tscale;

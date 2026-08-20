@@ -58,31 +58,11 @@ tmp<volScalarField> Smagorinsky<BasicMomentumTransportModel>::k
 
 
 template<class BasicMomentumTransportModel>
-tmp<volInternalScalarField> Smagorinsky<BasicMomentumTransportModel>::k
-(
-    const tmp<volInternalTensorField>& gradU
-) const
-{
-    volInternalSymmTensorField D(symm(gradU));
-
-    volInternalScalarField a(this->Ce_/this->delta()());
-    volInternalScalarField b((2.0/3.0)*tr(D));
-    volInternalScalarField c(2*this->Ck_*this->delta()()*(dev(D) && D));
-
-    return volInternalScalarField::New
-    (
-        this->groupName("k"),
-        sqr((-b + sqrt(sqr(b) + 4*a*c))/(2*a))
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
 void Smagorinsky<BasicMomentumTransportModel>::correctNut()
 {
-    volInternalScalarField k(this->k(fvi::grad(this->U_)));
+    const volScalarField k(this->k(fvc::grad(this->U_)));
 
-    this->nut_.internalFieldRef() = this->Ck_*this->delta()()*sqrt(k);
+    this->nut_ = this->Ck_*this->delta()*sqrt(k);
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }

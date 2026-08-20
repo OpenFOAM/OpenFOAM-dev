@@ -115,7 +115,10 @@ protected:
 
         tmp<volScalarField> chi() const;
 
-        tmp<volScalarField> fv1(const volScalarField& chi) const;
+        tmp<volScalarField> fv1
+        (
+            const volScalarField& chi
+        ) const;
 
         tmp<volInternalScalarField> fv2
         (

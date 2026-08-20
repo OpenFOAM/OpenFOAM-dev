@@ -226,7 +226,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H() const
     Hphi.primitiveFieldRef() = (lduMatrix::H(psi_.primitiveField()) + source_);
     addBoundarySource(Hphi.primitiveFieldRef());
 
-    Hphi.primitiveFieldRef() /= psi_.mesh().V();
+    Hphi.primitiveFieldRef() /= psi_.mesh().V().primitiveField();
     Hphi.correctBoundaryConditions();
 
     return tHphi;
@@ -251,7 +251,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H1() const
     H1_.primitiveFieldRef() = lduMatrix::H1();
     // addBoundarySource(Hphi.primitiveField());
 
-    H1_.primitiveFieldRef() /= psi_.mesh().V();
+    H1_.primitiveFieldRef() /= psi_.mesh().V().primitiveField();
     H1_.correctBoundaryConditions();
 
     return tH1;

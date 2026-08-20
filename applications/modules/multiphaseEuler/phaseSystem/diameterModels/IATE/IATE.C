@@ -164,7 +164,7 @@ void Foam::diameterModels::IATE::correct()
       - fvm::Sp(fvi::div(phase().phi()), kappai_)
      ==
         R
-      + fvModels.source(alpha, rho, kappai_)/(alphaAv*rho)
+      + fvModels.source(alpha, rho, kappai_)/(alphaAv*rho())
     );
 
     kappaiEqn.relax();

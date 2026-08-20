@@ -59,8 +59,8 @@ int main(int argc, char *argv[])
     );
 
     Info<< nl
-        << "p.v().size(): "
-        << p.v().size() << endl;
+        << "p().size(): "
+        << p().size() << endl;
 
     Info<< "Reading field U\n" << endl;
     volVectorField U
@@ -117,6 +117,9 @@ int main(int argc, char *argv[])
     Info<< nl
         << "Detailed SolverPerformance<symmTensor>: " << nl
         << "  " << sP << endl;
+
+    tmp<volScalarField> hmm(p() + p());
+    Info << hmm << endl;
 
     return 0;
 }

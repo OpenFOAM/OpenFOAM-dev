@@ -69,7 +69,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
         // Mesh dilatation correction
         if (mesh.moving())
         {
-            pEqnComp += fvi::div(mesh.phi())*alpha;
+            pEqnComp += fvi::div(mesh.phi())*alpha();
         }
 
         // Compressibility
@@ -113,7 +113,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
         // Mass transfer
         if (dmdts.set(phasei))
         {
-            pEqnComp -= dmdts[phasei]/rho;
+            pEqnComp -= dmdts[phasei]/rho();
         }
     }
 

@@ -39,11 +39,10 @@ namespace LESModels
 template<class BasicMomentumTransportModel>
 void dynamicLagrangian<BasicMomentumTransportModel>::correctNut
 (
-    const volInternalTensorField& gradU
+    const volTensorField& gradU
 )
 {
-    this->nut_.internalFieldRef() =
-        (flm_()/fmm_())*sqr(this->delta()())*mag(dev(symm(gradU)));
+    this->nut_ = (flm_/fmm_)*sqr(this->delta())*mag(dev(symm(gradU)));
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -52,7 +51,7 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correctNut
 template<class BasicMomentumTransportModel>
 void dynamicLagrangian<BasicMomentumTransportModel>::correctNut()
 {
-    correctNut(fvi::grad(this->U_));
+    correctNut(fvc::grad(this->U_));
 }
 
 

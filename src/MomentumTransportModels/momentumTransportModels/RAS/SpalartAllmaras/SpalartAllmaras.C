@@ -40,9 +40,14 @@ namespace RASModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField> SpalartAllmaras<BasicMomentumTransportModel>::chi() const
+tmp<volScalarField>
+SpalartAllmaras<BasicMomentumTransportModel>::chi() const
 {
-    return volScalarField::New(typedName("chi"), nuTilda_/this->nu());
+    return volScalarField::New
+    (
+        typedName("chi"),
+        nuTilda_/this->nu()
+    );
 }
 
 
@@ -52,8 +57,11 @@ tmp<volScalarField> SpalartAllmaras<BasicMomentumTransportModel>::fv1
     const volScalarField& chi
 ) const
 {
-    const volScalarField chi3(typedName("chi3"), pow3(chi));
-    return volScalarField::New(typedName("fv1"), chi3/(chi3 + pow3(Cv1_)));
+    return volScalarField::New
+    (
+        typedName("fv1"),
+        pow3(chi)/(pow3(chi) + pow3(Cv1_))
+    );
 }
 
 
@@ -93,7 +101,7 @@ SpalartAllmaras<BasicMomentumTransportModel>::Stilda
             max
             (
                 Omega
-              + fv2(chi, fv1)*nuTilda_/sqr(kappa_*this->y()()),
+              + fv2(chi, fv1)*nuTilda_()/sqr(kappa_*this->y()()),
                 Cs_*Omega
             )
         )
@@ -315,7 +323,7 @@ void SpalartAllmaras<BasicMomentumTransportModel>::correct()
     const volScalarField chi(this->chi());
     const volScalarField fv1(this->fv1(chi));
 
-    const volInternalScalarField Stilda(this->Stilda(chi, fv1));
+    const volInternalScalarField Stilda(this->Stilda(chi, fv1()));
 
     tmp<fvScalarMatrix> nuTildaEqn
     (

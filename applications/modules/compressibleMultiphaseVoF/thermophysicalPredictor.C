@@ -43,8 +43,8 @@ void Foam::solvers::compressibleMultiphaseVoF::thermophysicalPredictor()
       + (
             fvi::div(fvc::absolute(phi, U), p) // - contErr()/rho*p
           + (fvi::ddt(rho, K) + fvi::div(rhoPhi, K))
-          - (U()&(fvModels().source(rho, U)&U)()) - contErr()*K()
-        )*mixture.rCv()()
+          - (U()&(fvModels().source(rho, U)&U)()()) - contErr()*K()
+        )*mixture.rCv()()()
      ==
         fvModels().source(rho, T)
     );

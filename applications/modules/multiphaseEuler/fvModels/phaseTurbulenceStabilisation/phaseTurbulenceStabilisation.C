@@ -117,7 +117,8 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
                 );
 
                 transferRate += phaseTransferRate;
-                psiTransferRate += phaseTransferRate*(otherTurbulence.*psi)()();
+                psiTransferRate +=
+                    phaseTransferRate*(otherTurbulence.*psi)()()();
             }
         }
     }

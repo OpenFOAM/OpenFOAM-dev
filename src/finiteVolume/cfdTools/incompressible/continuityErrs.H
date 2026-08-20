@@ -32,11 +32,12 @@ Description
 {
     volInternalScalarField contErr(fvi::div(phi));
 
-    scalar sumLocalContErr = runTime.deltaTValue()*
-        mag(contErr)().weightedAverage(mesh.V()).value();
+    scalar sumLocalContErr =
+        runTime.deltaTValue()
+       *weightedAverage(eval(mag(contErr))(), mesh.V()).value();
 
-    scalar globalContErr = runTime.deltaTValue()*
-        contErr.weightedAverage(mesh.V()).value();
+    scalar globalContErr =
+        runTime.deltaTValue()*weightedAverage(contErr, mesh.V()).value();
     cumulativeContErr += globalContErr;
 
     Info<< "time step continuity errors : sum local = " << sumLocalContErr

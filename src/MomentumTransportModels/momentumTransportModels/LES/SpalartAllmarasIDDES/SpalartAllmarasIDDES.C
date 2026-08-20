@@ -41,7 +41,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::IDDESalpha() const
     return volInternalScalarField::New
     (
         typedName("alpha"),
-        max(0.25 - this->y()()/IDDESDelta_.hmax(), scalar(-5))
+        max(0.25 - this->y()()/IDDESDelta_.hmax()(), scalar(-5))
     );
 }
 
@@ -205,8 +205,8 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
         max
         (
             dimensionedScalar(dimensions::length, small),
-            fHyb*(1 + fRestore*Psi)*this->y()
-          + (1 - fHyb)*this->CDES_*Psi*this->delta()
+            fHyb*(1 + fRestore*Psi)*this->y()()
+          + (1 - fHyb)*this->CDES_*Psi*this->delta()()
         )
     );
 }

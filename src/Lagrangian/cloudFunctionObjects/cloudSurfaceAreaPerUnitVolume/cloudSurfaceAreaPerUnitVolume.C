@@ -86,15 +86,18 @@ bool Foam::functionObjects::cloudSurfaceAreaPerUnitVolume::execute()
     (
         "a",
         isCloud<clouds::grouped>()
-      ? cloud<clouds::grouped>().number(c.mesh())
-       *cloud<clouds::shaped>().a(c.mesh())
+      ? eval
+        (
+            cloud<clouds::grouped>().number(c.mesh())()
+            *cloud<clouds::shaped>().a(c.mesh())()
+        )
       : cloud<clouds::shaped>().a(c.mesh())
     );
 
     objectRegistryFunctionObject::store
     (
         AvName_,
-        Lagrangianc::accumulate<fvMesh>(a)/fvMeshFunctionObject::mesh_.V()
+        eval(Lagrangianc::accumulate<fvMesh>(a)/fvMeshFunctionObject::mesh_.V())
     );
 
     return true;

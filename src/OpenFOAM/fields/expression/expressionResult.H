@@ -44,6 +44,7 @@ Description
 #define expressionResult_H
 
 #include "expressionIterator.H"
+#include "expressionContainers.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -110,6 +111,17 @@ struct ResultIterable<Container<Type, Args ...>>
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace expression
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Expression>
+using ElementType = typename expression::Result
+<
+    typename expression::AllContainers<Expression>::type
+>::template elementType<Expression>;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

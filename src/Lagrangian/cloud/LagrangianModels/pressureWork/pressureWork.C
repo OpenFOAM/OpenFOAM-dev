@@ -114,7 +114,7 @@ void Foam::Lagrangian::pressureWork::addSup
 
     // Evaluate the time derivative of the specific volume
     tmp<LagrangianEqn<scalar>> dOneByRhoDt =
-        - Lagrangianm::ddt0(rho)/(rho*rho.oldTime());
+        - Lagrangianm::ddt0(rho)/eval(rho*rho.oldTime());
 
     // If this is the particle energy equation, then construct corrections to
     // the above time derivative. If not then just apply it directly.
@@ -129,27 +129,27 @@ void Foam::Lagrangian::pressureWork::addSup
         // Correct for changes in pressure
         const LagrangianSubScalarSubField psi(subMesh.sub(fluidThermo.psi()));
         dOneByRhoDtCorr.ref().deltaTSu -=
-            psi*(p - pPrevPtr_())/(rho*rho.oldTime());
+            eval(psi*(p - pPrevPtr_())/(rho*rho.oldTime()));
 
         // Correct for changes in energy
         const LagrangianSubScalarSubField Cv(subMesh.sub(fluidThermo.Cv()));
         tmp<LagrangianSubScalarField> alphavByRhoCv =
             fluidThermo.alphav(subMesh)/(rho*Cv);
         dOneByRhoDtCorr.ref().deltaTSp += alphavByRhoCv();
-        dOneByRhoDtCorr.ref().deltaTSu -= alphavByRhoCv()*e;
+        dOneByRhoDtCorr.ref().deltaTSu -= eval(alphavByRhoCv()*e);
 
         // Correct for non-ideal thermodynamic modelling
         tmp<LagrangianSubScalarField> gamma(fluidThermo.Cp(subMesh)/Cv);
-        dOneByRhoDtCorr.ref() /= gamma - p*alphavByRhoCv;
+        dOneByRhoDtCorr.ref() /= eval(gamma - p*alphavByRhoCv);
 
-        eqn -= m*p*(dOneByRhoDt + dOneByRhoDtCorr);
+        eqn -= eval(m*p)*(dOneByRhoDt + dOneByRhoDtCorr);
     }
     else
     {
         const LagrangianSubScalarField& pc =
             cloud<clouds::coupledToThermalFluid>().pc(subMesh);
 
-        eqn -= m*pc*dOneByRhoDt;
+        eqn -= eval(m*pc)*dOneByRhoDt;
     }
 }
 

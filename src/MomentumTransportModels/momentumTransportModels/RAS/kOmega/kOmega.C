@@ -197,7 +197,7 @@ void kOmega<BasicMomentumTransportModel>::correct()
     volInternalScalarField G
     (
         this->GName(),
-        nut*(dev(twoSymm(tgradU())) && tgradU())
+        nut()*(dev(twoSymm(tgradU())) && tgradU())
     );
     tgradU.clear();
 

@@ -141,7 +141,8 @@ void Foam::fv::massDiffusionLimitedPhaseChange::correctMDot() const
                 s
                *(
                    mDotSus_[i][phaseIcmSpeciei]
-                 + mDotSps_[i][phaseIcmSpeciei]*phaseIcm.thermo().Y()[speciei]
+                 + mDotSps_[i][phaseIcmSpeciei]
+                  *phaseIcm.thermo().Y()[speciei]()
                 );
         }
     }
@@ -313,7 +314,8 @@ Foam::fv::massDiffusionLimitedPhaseChange::mDot(const label mDoti) const
             s
            *(
                mDotSus_[i][phaseIcmSpeciei]
-             + mDotSps_[i][phaseIcmSpeciei]*phaseIcm.thermo().Y()[speciei]
+             + mDotSps_[i][phaseIcmSpeciei]
+              *phaseIcm.thermo().Y()[speciei]()
             );
     }
 
@@ -392,7 +394,8 @@ void Foam::fv::massDiffusionLimitedPhaseChange::addSup
             {
                 eqn -=
                     mDotSus_[i][phaseIcmSpeciei]
-                  + mDotSps_[i][phaseIcmSpeciei]*phaseIcm.thermo().Y()[speciei];
+                  + mDotSps_[i][phaseIcmSpeciei]
+                   *phaseIcm.thermo().Y()[speciei]();
             }
         }
 
@@ -517,7 +520,7 @@ void Foam::fv::massDiffusionLimitedPhaseChange::correct()
                    *s*L(Ts_, mDoti)
                 );
 
-                mDotL.ref() += rhoKDL*(Yf - phaseIcm.thermo().Y()[speciei]);
+                mDotL.ref() += rhoKDL*(Yf - phaseIcm.thermo().Y()[speciei]());
                 mDotLPrime.ref() += rhoKDL*YfPrime;
             }
         }

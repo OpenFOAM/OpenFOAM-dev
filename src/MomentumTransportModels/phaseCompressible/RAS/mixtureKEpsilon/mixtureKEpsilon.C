@@ -372,7 +372,7 @@ tmp<volInternalScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mix
     const volInternalScalarField& alphal = this->alpha_;
     const volInternalScalarField& alphag = this->gasTurbulence().alpha_;
 
-    return (alphal*rholEff()()*fc + alphag*rhogEff()()*fd)/rhom_()();
+    return (alphal*rholEff()()()*fc + alphag*rhogEff()()()*fd)/rhom_()();
 }
 
 
@@ -403,8 +403,8 @@ tmp<volInternalScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::mixU
     const volInternalScalarField& alphag = this->gasTurbulence().alpha_;
 
     return
-        (alphal*rholEff()()*fc + alphag*rhogEff()()*Ct2_()()*fd)
-       /(alphal*rholEff()() + alphag*rhogEff()()*Ct2_()());
+        (alphal*rholEff()()()*fc + alphag*rhogEff()()()*Ct2_()()*fd)
+       /(alphal*rholEff()()() + alphag*rhogEff()()()*Ct2_()());
 }
 
 
@@ -566,7 +566,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
             new volInternalScalarField
             (
                 this->GName(),
-                nutl*(tgradUl() && dev(twoSymm(tgradUl())))
+                nutl()*(tgradUl() && dev(twoSymm(tgradUl())))
             )
         );
         tgradUl.clear();
@@ -586,7 +586,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
             new volInternalScalarField
             (
                 this->GName(),
-                nutg*(tgradUg() && dev(twoSymm(tgradUg())))
+                nutg()*(tgradUg() && dev(twoSymm(tgradUg())))
             )
         );
         tgradUg.clear();
@@ -616,7 +616,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
       + fvm::SuSp(-fvi::div(phim), epsilonm)
       - fvm::laplacian(DepsilonEff(nutm), epsilonm)
      ==
-        C1_*Gm*epsilonm/km
+        C1_*Gm*epsilonm()/km()
       - fvm::SuSp(((2.0/3.0)*C1_)*divUm, epsilonm)
       - fvm::Sp(C2_*epsilonm/km, epsilonm)
       + epsilonSource()

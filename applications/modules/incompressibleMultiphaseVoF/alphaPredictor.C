@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve()
         rhoPhi += alphaPhi*alpha.rho();
 
         Info<< alpha.name() << " volume fraction, min, max = "
-            << alpha.weightedAverage(mesh.V()).value()
+            << weightedAverage(alpha, mesh.V()).value()
             << ' ' << min(alpha).value()
             << ' ' << max(alpha).value()
             << endl;
@@ -137,7 +137,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve()
     }
 
     Info<< "Phase-sum volume fraction, min, max = "
-        << sumAlpha.weightedAverage(mesh.V()).value()
+        << weightedAverage(sumAlpha, mesh.V()).value()
         << ' ' << min(sumAlpha).value()
         << ' ' << max(sumAlpha).value()
         << endl;

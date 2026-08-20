@@ -136,6 +136,8 @@ TMP_REDUCTION_FUNCTION(Type, gSumCmptMag)
 template<class Type>
 Type average(const UList<Type>& f);
 
+TMP_REDUCTION_FUNCTION(Type, average)
+
 template<class Type>
 Type gAverage
 (
@@ -143,7 +145,6 @@ Type gAverage
     const label comm = UPstream::worldComm
 );
 
-TMP_REDUCTION_FUNCTION(Type, average)
 TMP_REDUCTION_FUNCTION(Type, gAverage)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

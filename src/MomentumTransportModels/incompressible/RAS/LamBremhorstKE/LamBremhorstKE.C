@@ -65,19 +65,20 @@ tmp<volScalarField> LamBremhorstKE::boundEpsilon()
 }
 
 
-tmp<volInternalScalarField> LamBremhorstKE::Rt() const
+tmp<volScalarField> LamBremhorstKE::Rt() const
 {
-    return sqr(k_())/(nu()()*epsilon_());
+    return sqr(k_)/(nu()*epsilon_);
 }
 
 
-tmp<volInternalScalarField> LamBremhorstKE::fMu
+tmp<volScalarField> LamBremhorstKE::fMu
 (
-    const volInternalScalarField& Rt
+    const volScalarField& Rt
 ) const
 {
-    tmp<volInternalScalarField> Ry(sqrt(k_())*y()()/nu()());
-    return sqr(scalar(1) - exp(-0.0165*Ry))*(scalar(1) + 20.5/(Rt + small));
+    return
+        sqr(scalar(1) - exp(-0.0165*sqrt(k_)*y()/nu()))
+       *(scalar(1) + 20.5/(Rt + small));
 }
 
 
@@ -99,9 +100,9 @@ tmp<volInternalScalarField> LamBremhorstKE::f2
 }
 
 
-void LamBremhorstKE::correctNut(const volInternalScalarField& fMu)
+void LamBremhorstKE::correctNut(const volScalarField& fMu)
 {
-    nut_.internalFieldRef() = fMu*Cmu_*sqr(k_())/epsilon_();
+    nut_ = fMu*Cmu_*sqr(k_)/epsilon_;
     nut_.correctBoundaryConditions();
 }
 
@@ -212,8 +213,8 @@ void LamBremhorstKE::correct()
     // Update epsilon and G at the wall
     epsilon_.boundaryFieldRef().updateCoeffs();
 
-    const volInternalScalarField Rt(this->Rt());
-    const volInternalScalarField fMu(this->fMu(Rt));
+    const volScalarField Rt(this->Rt());
+    const volScalarField fMu(this->fMu(Rt));
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -222,8 +223,8 @@ void LamBremhorstKE::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
      ==
-        Ceps1_*f1(fMu)*G*epsilon_()/k_()
-      - fvm::Sp(Ceps2_*f2(Rt)*epsilon_()/k_(), epsilon_)
+        Ceps1_*f1(fMu())*G*epsilon_()/k_()
+      - fvm::Sp(Ceps2_*f2(Rt())*epsilon_()/k_(), epsilon_)
     );
 
     epsEqn.ref().relax();

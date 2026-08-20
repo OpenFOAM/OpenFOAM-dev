@@ -116,8 +116,8 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
             volScalarField& sourceField = trhoTrans.ref();
 
             sourceField.primitiveFieldRef() =
-                rhoTrans_[i]
-               /(this->time().deltaTValue()*this->mesh().V());
+                rhoTrans_[i].primitiveField()
+               /(this->time().deltaTValue()*this->mesh().V().primitiveField());
 
             const dimensionedScalar Yismall(dimless, small);
 
@@ -133,7 +133,8 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
             );
             fvScalarMatrix& fvm = tfvm.ref();
 
-            fvm.source() = -rhoTrans_[i]/this->time().deltaTValue();
+            fvm.source() =
+                -rhoTrans_[i].primitiveField()/this->time().deltaTValue();
 
             return tfvm;
         }
@@ -169,10 +170,11 @@ Foam::ReactingCloud<CloudType>::Srho() const
         scalarField& sourceField = trhoTrans.ref();
         forAll(rhoTrans_, i)
         {
-            sourceField += rhoTrans_[i];
+            sourceField += rhoTrans_[i].primitiveField();
         }
 
-        sourceField /= this->time().deltaTValue()*this->mesh().V();
+        sourceField /=
+            this->time().deltaTValue()*this->mesh().V().primitiveField();
     }
 
     return trhoTrans;
@@ -198,9 +200,10 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
             scalarField& sourceField = trhoTrans.ref();
             forAll(rhoTrans_, i)
             {
-                sourceField += rhoTrans_[i];
+                sourceField += rhoTrans_[i].primitiveField();
             }
-            sourceField /= this->time().deltaTValue()*this->mesh().V();
+            sourceField /=
+                this->time().deltaTValue()*this->mesh().V().primitiveField();
 
             return
                 fvm::Sp(neg(trhoTrans())*trhoTrans()/rho, rho)
@@ -225,7 +228,7 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
             scalarField& sourceField = trhoTransV.ref();
             forAll(rhoTrans_, i)
             {
-                sourceField += rhoTrans_[i];
+                sourceField += rhoTrans_[i].primitiveField();
             }
             sourceField /= this->time().deltaTValue();
 

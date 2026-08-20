@@ -99,7 +99,7 @@ Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt
     tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
 
     tEqn.ref().deltaTSp += m;
-    tEqn.ref().deltaTSu -= m.oldTime()*psi.oldTime();
+    tEqn.ref().deltaTSu -= eval(m.oldTime()*psi.oldTime());
 
     return tEqn;
 }
@@ -114,7 +114,7 @@ Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt0
 {
     tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi.mesh()));
 
-    tEqn.ref().deltaTSu += psi - psi.oldTime();
+    tEqn.ref().deltaTSu += eval(psi - psi.oldTime());
 
     return tEqn;
 }
@@ -130,7 +130,7 @@ Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt0
 {
     tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi.mesh()));
 
-    tEqn.ref().deltaTSu += m*psi - m.oldTime()*psi.oldTime();
+    tEqn.ref().deltaTSu += eval(m*psi - m.oldTime()*psi.oldTime());
 
     return tEqn;
 }

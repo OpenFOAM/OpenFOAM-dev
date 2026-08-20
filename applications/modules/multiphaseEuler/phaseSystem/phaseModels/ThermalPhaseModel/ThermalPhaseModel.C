@@ -125,8 +125,7 @@ Foam::ThermalPhaseModel<BasePhaseModel>::heEqn()
     const tmp<volInternalScalarField> tcontErr(this->continuityError());
     const volInternalScalarField& contErr(tcontErr());
 
-    tmp<volScalarField> tK(this->K());
-    const volScalarField& K(tK());
+    const volScalarField& K(this->K());
 
     volScalarField& he = this->thermo_->he();
 
@@ -137,7 +136,7 @@ Foam::ThermalPhaseModel<BasePhaseModel>::heEqn()
       - fvm::Sp(contErr, he)
 
       + fvi::ddt(alpha, rho, K) + fvi::div(alphaRhoPhi, K)
-      - contErr*K
+      - contErr*K()
 
       + this->divq(he)
      ==
@@ -155,7 +154,7 @@ Foam::ThermalPhaseModel<BasePhaseModel>::heEqn()
                 fvc::absolute(alphaRhoPhi, alpha, rho, U),
                 this->fluidThermo().p()/rho
             )
-          + (fvi::ddt(alpha) - contErr/rho)*this->fluidThermo().p()
+          + (fvi::ddt(alpha) - contErr/rho())*this->fluidThermo().p()()
         );
     }
     else if (this->thermo_->dpdt())

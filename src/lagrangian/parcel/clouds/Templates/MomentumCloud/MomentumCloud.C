@@ -302,7 +302,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     rndGen_(0),
     stdNormal_(rndGen_.generator()),
     cellOccupancyPtr_(),
-    cellLengthScale_(mag(cbrt(this->mesh().V()))),
+    cellLengthScale_(mag(cbrt(this->mesh().V().primitiveField()))),
     rho_(rho),
     U_(U),
     mu_(mu),
@@ -730,7 +730,7 @@ void Foam::MomentumCloud<CloudType>::topoChange(const polyTopoChangeMap& map)
 
     injectors_.topoChange();
 
-    cellLengthScale_ = mag(cbrt(this->mesh().V()));
+    cellLengthScale_ = mag(cbrt(this->mesh().V().primitiveField()));
 }
 
 
@@ -743,7 +743,7 @@ void Foam::MomentumCloud<CloudType>::mapMesh(const polyMeshMap& map)
 
     injectors_.topoChange();
 
-    cellLengthScale_ = mag(cbrt(this->mesh().V()));
+    cellLengthScale_ = mag(cbrt(this->mesh().V().primitiveField()));
 }
 
 
@@ -756,7 +756,7 @@ void Foam::MomentumCloud<CloudType>::distribute(const polyDistributionMap& map)
 
     injectors_.topoChange();
 
-    cellLengthScale_ = mag(cbrt(this->mesh().V()));
+    cellLengthScale_ = mag(cbrt(this->mesh().V().primitiveField()));
 }
 
 

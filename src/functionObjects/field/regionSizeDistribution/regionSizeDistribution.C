@@ -434,7 +434,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
         << fvc::domainIntegrate(alpha).value()
         << endl;
 
-    const scalar meshVol = gSum(mesh_.V());
+    const scalar meshVol = gSum(mesh_.V().primitiveField());
     const scalar maxDropletVol = 1.0/6.0*pow(maxDiam_, 3);
     const scalar delta = (maxDiam_-minDiam_)/nBins_;
 

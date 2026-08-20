@@ -221,7 +221,7 @@ void SSG<BasicMomentumTransportModel>::correct()
     tmp<volInternalTensorField> tgradU(fvi::grad(U));
     const volInternalTensorField& gradU = tgradU();
 
-    volInternalSymmTensorField P(-twoSymm(R & gradU));
+    volInternalSymmTensorField P(-twoSymm(R() & gradU));
     volInternalScalarField G(this->GName(), 0.5*mag(tr(P)));
 
     // Update epsilon and G at the wall

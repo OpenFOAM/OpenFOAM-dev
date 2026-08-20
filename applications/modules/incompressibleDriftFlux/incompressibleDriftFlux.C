@@ -204,7 +204,7 @@ void Foam::solvers::incompressibleDriftFlux::prePredictor()
         alphaPhi2 = phi - alphaPhi1;
 
         Info<< "Phase-1 volume fraction = "
-            << alpha1.weightedAverage(mesh.Vsc()).value()
+            << weightedAverage(alpha1(), mesh.Vsc()()).value()
             << "  Min(" << alpha1.name() << ") = " << min(alpha1).value()
             << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
             << endl;

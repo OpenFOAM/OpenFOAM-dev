@@ -261,14 +261,14 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
                 return
                     hsTrans()/Vdt
                   - fvm::SuSp(hsCoeff()/Vdt, hs)
-                  + (hsCoeff()/Vdt)*hs;
+                  + (hsCoeff()/Vdt)*hs();
             }
             else
             {
                 return
                     hsTrans()/Vdt
-                  - fvm::SuSp(hsCoeff()/(Cp*Vdt), hs)
-                  + hsCoeff()/(Cp*Vdt)*hs;
+                  - fvm::SuSp(hsCoeff()/(Cp()*Vdt), hs)
+                  + hsCoeff()/(Cp()*Vdt)*hs();
             }
         }
         else
@@ -279,7 +279,8 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
             );
             fvScalarMatrix& fvm = tfvm.ref();
 
-            fvm.source() = -hsTrans()/(this->time().deltaT());
+            fvm.source() =
+                -hsTrans()().primitiveField()/this->time().deltaT().value();
 
             return tfvm;
         }

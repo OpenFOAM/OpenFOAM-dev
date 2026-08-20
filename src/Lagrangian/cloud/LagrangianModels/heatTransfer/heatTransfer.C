@@ -109,7 +109,7 @@ void Foam::Lagrangian::heatTransfer::addSup
         const LagrangianSubScalarSubField Cv(subMesh.sub(thermalCloud_.Cv));
         const LagrangianSubScalarField HbyCv(H/Cv);
 
-        eqn.Su += H*(Tc - T) + HbyCv*e;
+        eqn.Su += eval(H*(Tc - T) + HbyCv*e);
         eqn -= Lagrangianm::Sp(HbyCv, e);
     }
     else
@@ -118,7 +118,7 @@ void Foam::Lagrangian::heatTransfer::addSup
         const LagrangianSubScalarField& Cpvc = cctfCloud.Cpvc(subMesh);
         const LagrangianSubScalarField HbyCpvc(H/Cpvc);
 
-        eqn.Su += H*(Tc - T) - HbyCpvc*hec;
+        eqn.Su += eval(H*(Tc - T) - HbyCpvc*hec);
         eqn += Lagrangianm::Sp(HbyCpvc, hec);
     }
 }

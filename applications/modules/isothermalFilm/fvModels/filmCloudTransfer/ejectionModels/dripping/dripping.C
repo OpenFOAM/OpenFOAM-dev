@@ -83,7 +83,7 @@ void dripping::correct()
 {
     const scalar piBy6 = constant::mathematical::pi/6;
 
-    const scalarField gnHat(film_.nHat() & (-film_.g));
+    const scalarField gnHat(film_.nHat().primitiveField() & (-film_.g.value()));
     const scalarField& magSf = film_.magSf;
 
     const scalarField& delta = film_.delta;

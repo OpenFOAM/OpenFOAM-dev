@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,8 +84,8 @@ bool Foam::functionObjects::cloudKineticEnergy::execute()
     (
         KEName_,
         isCloud<clouds::massive>()
-      ? cloud<clouds::massive>().m(c.mesh())*magSqr(c.U(c.mesh())())/2
-      : cloud<clouds::shaped>().v(c.mesh())*magSqr(c.U(c.mesh())())/2
+      ? eval(cloud<clouds::massive>().m(c.mesh())*magSqr(c.U(c.mesh())())/2)
+      : eval(cloud<clouds::shaped>().v(c.mesh())*magSqr(c.U(c.mesh())())/2)
     );
 
     return true;

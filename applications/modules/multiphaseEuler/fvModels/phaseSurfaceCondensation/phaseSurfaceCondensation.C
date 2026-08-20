@@ -143,9 +143,9 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
 
     mDot_ =
         (1 - f)*mDot_
-      - f*freeSurf*vapourThermo.Wi(speciei)/vapourThermo.W()()
-       *diffusiveMassTransferModel_->KinThe(vapour_)()
-       *ttmVapour.D(vapour_.Y(species()[0]))()
+      - f*freeSurf*vapourThermo.Wi(speciei)/vapourThermo.W()()()
+       *diffusiveMassTransferModel_->KinThe(vapour_)()()
+       *ttmVapour.D(vapour_.Y(species()[0]))()()
        *log(max(1 - xc, scalar(0.001))/max(1 - xw, scalar(0.001)));
     mDot_.max(scalar(0));
 
@@ -156,8 +156,8 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
         mDotDy_ =
             (1 - f)*mDotDy_
           + f*freeSurf
-           *diffusiveMassTransferModel_->KinThe(vapour_)()
-           *ttmVapour.D(vapour_.Y(species()[0]))()
+           *diffusiveMassTransferModel_->KinThe(vapour_)()()
+           *ttmVapour.D(vapour_.Y(species()[0]))()()
            /(1 - min(xc, scalar(0.999)))*pos(xc - xw);
     }
     else

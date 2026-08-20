@@ -153,8 +153,8 @@ void Foam::fv::VoFCavitation::addSup
             (
                 cavitation_->mDot12Alpha()
             );
-            const volScalarField::Internal vDot1(mDot12Alpha[0]*alpha2/rho);
-            const volScalarField::Internal vDot2(mDot12Alpha[1]*alpha1/rho);
+            const volScalarField::Internal vDot1(mDot12Alpha[0]*alpha2()/rho);
+            const volScalarField::Internal vDot2(mDot12Alpha[1]*alpha1()/rho);
 
             eqn += s*(vDot1 - vDot2);
         }
@@ -191,7 +191,7 @@ void Foam::fv::VoFCavitation::addSup
         }
         else
         {
-            eqn += (fvi::ddt(rho) + fvi::div(rhoPhi))*U;
+            eqn += (fvi::ddt(rho) + fvi::div(rhoPhi))*U();
         }
     }
     else

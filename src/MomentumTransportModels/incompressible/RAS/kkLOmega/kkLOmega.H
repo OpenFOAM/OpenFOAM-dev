@@ -119,22 +119,22 @@ class kkLOmega
 
         tmp<volScalarField> fv(const volScalarField& Ret) const;
 
-        tmp<volInternalScalarField> fINT() const;
+        tmp<volScalarField> fINT() const;
 
         tmp<volScalarField> fSS(const volScalarField& omega) const;
 
-        tmp<volInternalScalarField> Cmu(const volInternalScalarField& S) const;
+        tmp<volScalarField> Cmu(const volScalarField& S) const;
 
-        tmp<volInternalScalarField> BetaTS
+        tmp<volScalarField> BetaTS
         (
-            const volInternalScalarField& Rew
+            const volScalarField& Rew
         ) const;
 
-        tmp<volInternalScalarField> fTaul
+        tmp<volScalarField> fTaul
         (
-            const volInternalScalarField& lambdaEff,
-            const volInternalScalarField& ktL,
-            const volInternalScalarField& omega
+            const volScalarField& lambdaEff,
+            const volScalarField& ktL,
+            const volScalarField& omega
         ) const;
 
         tmp<volScalarField> alphaT

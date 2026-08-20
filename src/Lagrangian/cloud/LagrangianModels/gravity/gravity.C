@@ -124,7 +124,7 @@ void Foam::Lagrangian::gravity::addSup
 
         const dimensionedScalar& rhoByRhoc = ctcdfCloud.rhoByRhoc;
 
-        eqn.Su += vOrM*g*(1 - 1/rhoByRhoc);
+        eqn.Su += eval(vOrM*g*(1 - 1/rhoByRhoc));
     }
     else if (isCloud<clouds::coupledToFluid>() && isCloud<clouds::massive>())
     {
@@ -135,7 +135,7 @@ void Foam::Lagrangian::gravity::addSup
         const LagrangianSubScalarSubField& rho = mCloud.rho(U.mesh());
         const LagrangianSubScalarField& rhoc = ctfCloud.rhoc(U.mesh());
 
-        eqn.Su += vOrM*g*(1 - rhoc/rho);
+        eqn.Su += eval(vOrM*g*(1 - rhoc/rho));
     }
     else if (isCloud<clouds::coupledToFluid>() && !isCloud<clouds::massive>())
     {
@@ -143,7 +143,7 @@ void Foam::Lagrangian::gravity::addSup
     }
     else
     {
-        eqn.Su += vOrM*g;
+        eqn.Su += eval(vOrM*g);
     }
 }
 

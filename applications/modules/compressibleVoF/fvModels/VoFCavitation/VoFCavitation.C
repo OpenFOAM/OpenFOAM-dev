@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,8 +152,8 @@ void Foam::fv::compressible::VoFCavitation::addSup
             (
                 cavitation_->mDot12Alpha()
             );
-            const volScalarField::Internal mDot1(mDot12Alpha[0]*alpha2);
-            const volScalarField::Internal mDot2(mDot12Alpha[1]*alpha1);
+            const volScalarField::Internal mDot1(mDot12Alpha[0]*alpha2());
+            const volScalarField::Internal mDot2(mDot12Alpha[1]*alpha1());
 
             eqn += s*(mDot1 - mDot2);
         }

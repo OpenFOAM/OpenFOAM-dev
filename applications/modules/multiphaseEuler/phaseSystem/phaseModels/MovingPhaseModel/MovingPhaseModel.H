@@ -213,7 +213,7 @@ public:
             virtual tmp<volInternalScalarField> continuityError() const;
 
             //- Return the phase kinetic energy
-            virtual tmp<volScalarField> K() const;
+            virtual const volScalarField& K() const;
 
 
         // Compressibility (variable density)

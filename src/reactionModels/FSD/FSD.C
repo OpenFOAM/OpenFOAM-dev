@@ -124,8 +124,11 @@ void Foam::reactionModels::FSD::calculateSourceNorm()
     const volInternalScalarField cAux(scalar(1) - ft_());
 
     const dimensionedScalar dMgft = 1e-3*
-        (ft_()*cAux*mgft)().weightedAverage(this->mesh().V())
-       /((ft_()*cAux)().weightedAverage(this->mesh().V()) + small)
+        sum(ft_()*cAux*mgft*this->mesh().V())
+       /(
+            sum(ft_()*cAux*this->mesh().V())
+          + dimensionedScalar(dimVolume, rootVSmall)
+        )
       + dimensionedScalar(mgft.dimensions(), small);
 
     mgft += dMgft;
@@ -308,7 +311,7 @@ void Foam::reactionModels::FSD::calculateSourceNorm()
 
     const volScalarField fres(this->fres(fuelI));
 
-    this->wFuel_ = mgft*pc*omegaFuelBar;
+    this->wFuel_ = mgft*pc()*omegaFuelBar();
 }
 
 

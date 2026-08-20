@@ -568,7 +568,7 @@ void Foam::fv::phaseChange::addSup
             // Optional linearisation
             if (energySemiImplicit_)
             {
-                eqn += -fvm::SuSp(-s*tmDot(), heOrYi) - s*tmDot()*heOrYi;
+                eqn += -fvm::SuSp(-s*tmDot(), heOrYi) - s*tmDot()*heOrYi();
             }
 
             // Latent heat of phase change

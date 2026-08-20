@@ -52,11 +52,11 @@ p.relax();
 
 if (pressureImplicitPorosity)
 {
-    U.internalFieldRef() = HbyA() - (trTU()&fvi::grad(p));
+    U.internalFieldRef() = HbyA() - (trTU()()&fvi::grad(p));
 }
 else
 {
-    U.internalFieldRef() = HbyA() - (trAU()*fvi::grad(p));
+    U.internalFieldRef() = HbyA() - (trAU()()*fvi::grad(p));
 }
 
 U.correctBoundaryConditions();

@@ -223,7 +223,7 @@ Foam::reactionModels::singleStepReaction::R(volScalarField& Y) const
         const volScalarField fres(this->fres(specieI));
         wSpecie /= max(fNorm*(Y() - fres()), scalar(1e-2));
 
-        return -fNorm*wSpecie*fres + fNorm*fvm::Sp(wSpecie, Y);
+        return -fNorm*wSpecie*fres() + fNorm*fvm::Sp(wSpecie, Y);
     }
     else
     {

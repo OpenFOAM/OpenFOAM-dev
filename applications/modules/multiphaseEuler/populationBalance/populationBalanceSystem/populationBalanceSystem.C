@@ -48,7 +48,7 @@ void Foam::populationBalanceSystem::addDmdts
         const phaseInterface interface(fluid_, dmdtfIter.key());
 
         addField(interface.phase1(), "dmdt", *dmdtfIter(), dmdts);
-        addField(interface.phase2(), "dmdt", - *dmdtfIter(), dmdts);
+        addField(interface.phase2(), "dmdt", eval(-*dmdtfIter()), dmdts);
     }
 }
 
@@ -118,9 +118,9 @@ void Foam::populationBalanceSystem::addDmdtHefs
 
         // Transfer of sensible enthalpy within the phases
         eqns[phase1.name()] +=
-            dmdtf*hs1 + fvm::Sp(dmdtf12, he1) - dmdtf12*he1;
+            dmdtf*hs1 + fvm::Sp(dmdtf12, he1) - dmdtf12*he1();
         eqns[phase2.name()] -=
-            dmdtf*hs2 + fvm::Sp(dmdtf21, he2) - dmdtf21*he2;
+            dmdtf*hs2 + fvm::Sp(dmdtf21, he2) - dmdtf21*he2();
 
         // Transfer of sensible enthalpy between the phases
         eqns[phase1.name()] += dmdtf21*(hs2 - hs1);
@@ -155,8 +155,8 @@ void Foam::populationBalanceSystem::addDmdtYfs
             const volScalarField& Y1 = phase1.Y()[Yi1];
             const volScalarField& Y2 = phase2.Y(Y1.member());
 
-            eqns[Y1.name()] += dmdtf21*Y2 + fvm::Sp(dmdtf12, Y1);
-            eqns[Y2.name()] -= dmdtf12*Y1 + fvm::Sp(dmdtf21, Y2);
+            eqns[Y1.name()] += dmdtf21*Y2() + fvm::Sp(dmdtf12, Y1);
+            eqns[Y2.name()] -= dmdtf12*Y1() + fvm::Sp(dmdtf21, Y2);
         }
     }
 }

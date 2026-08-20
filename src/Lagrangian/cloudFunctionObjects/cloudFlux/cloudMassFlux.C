@@ -52,8 +52,11 @@ Foam::functionObjects::cloudMassFlux::q
         isCloud<clouds::grouped>()
       ? toSubField
         (
-            cloud<clouds::grouped>().number(fraction.mesh())
-           *cloud<clouds::massive>().m(fraction.mesh())
+            eval
+            (
+                cloud<clouds::grouped>().number(fraction.mesh())
+               *cloud<clouds::massive>().m(fraction.mesh())
+            )
         )
       : toSubField
         (

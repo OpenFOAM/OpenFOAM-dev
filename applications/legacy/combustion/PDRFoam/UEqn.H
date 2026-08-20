@@ -14,7 +14,7 @@
 
     if (pimple.momentumPredictor())
     {
-        U.internalFieldRef() = invA & (UEqn.H()()() - betav*fvi::grad(p));
+        U.internalFieldRef() = invA() & (UEqn.H()()() - betav()*fvi::grad(p));
         U.correctBoundaryConditions();
         fvConstraints.constrain(U);
         K = 0.5*magSqr(U);

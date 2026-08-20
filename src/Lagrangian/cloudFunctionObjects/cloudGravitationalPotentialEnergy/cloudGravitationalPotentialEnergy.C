@@ -103,8 +103,8 @@ bool Foam::functionObjects::cloudGravitationalPotentialEnergy::execute()
     (
         GPEName_,
         isCloud<clouds::massive>()
-      ? cloud<clouds::massive>().m(c.mesh())*(-g & c.mesh().position())
-      : cloud<clouds::shaped>().v(c.mesh())*(-g & c.mesh().position())
+      ? eval(cloud<clouds::massive>().m(c.mesh())*(-g & c.mesh().position()))
+      : eval(cloud<clouds::shaped>().v(c.mesh())*(-g & c.mesh().position()))
     );
 
     return true;

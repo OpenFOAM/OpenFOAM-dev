@@ -24,12 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "collisionPhaseTransfer.H"
-#include "addToRunTimeSelectionTable.H"
 #include "carried.H"
 #include "grouped.H"
 #include "massive.H"
 #include "standardNormal.H"
 #include "LagrangianmSp.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -119,7 +119,7 @@ void Foam::Lagrangian::collisionPhaseTransfer::addSupType
     if (eqn.isPsi(field))
     {
         // Add an implicit source to the cloud
-        eqn.deltaTSp -= PhitPtr_()*vOrM;
+        eqn.deltaTSp -= eval(PhitPtr_()*vOrM);
     }
     else
     {
@@ -276,6 +276,7 @@ void Foam::Lagrangian::collisionPhaseTransfer::calculate
     // interface during this step
     PhitPtr_.set
     (
+        eval
         (
             max(mag(alphac_.grad(subMesh)), rootVSmall/L)
            *mag(cloud().U(subMesh))

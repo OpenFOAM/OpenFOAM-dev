@@ -116,7 +116,7 @@ public:
         inline tmp(const tmp<T>&, bool allowTransfer);
 
         //- Construct from an expression
-        template<class Expression, class = EnableIfExpressionable<Expression>>
+        template<class Expression, class = EnableIfExpression<Expression>>
         inline tmp(const Expression& e);
 
 

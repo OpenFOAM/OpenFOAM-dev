@@ -150,7 +150,7 @@ void Foam::vtkPVFoam::convertSurfaceField
 
     // To avoid whichPatch first flatten the field
     Field<Type> flatFld(mesh.nFaces(), Zero);
-    SubField<Type>(flatFld, nInternalFaces) = tf.internalField();
+    SubField<Type>(flatFld, nInternalFaces) = tf.primitiveField();
     forAll(tf.boundaryField(), patchi)
     {
         const fvsPatchField<Type>& ptf = tf.boundaryField()[patchi];

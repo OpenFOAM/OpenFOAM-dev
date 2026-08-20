@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ Foam::LagrangianSp<Type>::Su(const LagrangianEqn<Type>& eqn) const
         tmp<LagrangianCoeff<Type, false>>
         (
             valid()
-          ? new LagrangianCoeff<Type, false>(eqn, S()*eqn.psi())
+          ? new LagrangianCoeff<Type, false>(eqn, eval(S()*eqn.psi()))
           : new LagrangianCoeff<Type, false>(eqn)
         );
 }

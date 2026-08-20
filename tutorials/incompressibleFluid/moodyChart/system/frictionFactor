@@ -61,12 +61,13 @@ codeRead
 codeWrite
 #{
     const volVectorField& U = mesh().lookupObject<volVectorField>("U");
-    const scalar Umean = mag(fvc::domainIntegrate(U).value())/gSum(mesh().V());
-    scalar Re = Umean*$diameter / $nu;
+    const scalar Umean =
+        mag(fvc::domainIntegrate(U).value())/gSum(mesh().V()).value();
+    const scalar Re = Umean*$diameter / $nu;
 
-    scalar gradP =
+    const scalar gradP =
         mesh().lookupObject<volVectorField::Internal>("gradPUSu")[0].x();
-    scalar fDarcy = gradP*$diameter /(0.5*sqr(Umean));
+    const scalar fDarcy = gradP*$diameter /(0.5*sqr(Umean));
 
     file()<< mesh().time().userTimeValue() << tab
           << Re << tab

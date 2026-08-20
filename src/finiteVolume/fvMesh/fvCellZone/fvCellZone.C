@@ -51,7 +51,7 @@ Foam::fvCellZone::fvCellZone(const fvMesh& mesh)
     generatedCellZone(mesh),
     mesh_(mesh),
     nGlobalCells_(returnReduce(mesh.nCells(), sumOp())),
-    V_(gSum(mesh_.V()))
+    V_(gSum(mesh_.V()).value())
 {}
 
 

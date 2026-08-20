@@ -54,7 +54,7 @@ tmp<VolInternalField<scalar>> magSqrGradGrad
     for (direction cmpt = 1; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
         tMagSqrGradGrad.ref() +=
-            magSqr(fvi::grad(fvc::grad(vf.component(cmpt))))();
+            magSqr(fvi::grad(fvc::grad(vf.component(cmpt))));
     }
 
     return tMagSqrGradGrad;

@@ -130,7 +130,8 @@ bool Foam::functionObjects::turbulenceIntensity::write()
 
     const scalar minTurbulenceIntensity = min(turbulenceIntensity).value();
     const scalar maxTurbulenceIntensity = max(turbulenceIntensity).value();
-    const scalar avgTurbulenceIntensity = turbulenceIntensity.average().value();
+    const scalar avgTurbulenceIntensity =
+        average(turbulenceIntensity()).value();
 
     if (Pstream::master())
     {

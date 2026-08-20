@@ -1,4 +1,4 @@
 Info<< "magnetic flux divergence error = "
     << runTime.deltaTValue()
-      *mag(fvi::div(phiB))().weightedAverage(mesh.V()).value()
+      *weightedAverage(eval(mag(fvi::div(phiB)))(), mesh.V()).value()
     << endl;

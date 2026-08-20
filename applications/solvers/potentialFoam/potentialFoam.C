@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     }
 
     Info<< "Continuity error = "
-        << mag(fvi::div(phi))().weightedAverage(mesh.V()).value()
+        << weightedAverage(eval(mag(fvi::div(phi)))(), mesh.V()).value()
         << endl;
 
     U = fvc::reconstruct(MRF.absolute(phi));

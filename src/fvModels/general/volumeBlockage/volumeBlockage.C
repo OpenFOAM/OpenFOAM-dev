@@ -189,7 +189,7 @@ void Foam::fv::volumeBlockage::addAlphaSupType
 
         const volScalarField AByB(volumeAlpha()/(1 - volumeAlpha()));
 
-        eqn -= AByB*fvi::div(phi);
+        eqn -= AByB()*fvi::div(phi);
     }
     else
     {

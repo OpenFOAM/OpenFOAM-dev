@@ -85,8 +85,8 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
       + pressureWork
         (
             he.name() == "e"
-          ? mvConvection->fvcDiv(phi, p/rho)()
-          : -dpdt
+          ? mvConvection->fviDiv(phi, p/rho)
+          : eval(-dpdt)
         )
       + thermophysicalTransport->divq(he)
      ==

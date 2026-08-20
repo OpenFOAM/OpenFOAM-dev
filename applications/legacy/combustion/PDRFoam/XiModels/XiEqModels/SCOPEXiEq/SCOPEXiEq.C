@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::XiEqModels::SCOPEXiEq::SCOPEXiEq
     XiEqCoef_(XiEqModelCoeffs_.lookup<scalar>("XiEqCoef")),
     XiEqExp_(XiEqModelCoeffs_.lookup<scalar>("XiEqExp")),
     lCoef_(XiEqModelCoeffs_.lookup<scalar>("lCoef")),
-    SuMin_(0.01*Su.average()),
+    SuMin_(0.01*average(Su)),
     uPrimeCoef_(XiEqModelCoeffs_.lookup<scalar>("uPrimeCoef")),
     subGridSchelkin_
     (

@@ -50,7 +50,7 @@ dynamicKEqn<BasicMomentumTransportModel>::KK() const
 
 
 template<class BasicMomentumTransportModel>
-volInternalScalarField dynamicKEqn<BasicMomentumTransportModel>::Ck
+tmp<volScalarField> dynamicKEqn<BasicMomentumTransportModel>::Ck
 (
     const volSymmTensorField& D,
     const volScalarField& KK
@@ -66,17 +66,16 @@ volInternalScalarField dynamicKEqn<BasicMomentumTransportModel>::Ck
         simpleFilter_(-2.0*this->delta()*sqrt(KK)*filter_(D))
     );
 
-    const volInternalScalarField Ck
+    const volScalarField Ck
     (
-        simpleFilter_[0.5*(LL && MM)]
+        simpleFilter_(0.5*(LL && MM))
        /(
-            simpleFilter_[magSqr(MM)]
+            simpleFilter_(magSqr(MM))
           + dimensionedScalar(sqr(MM.dimensions()), vSmall)
         )
     );
 
-    tmp<volInternalScalarField> tfld = 0.5*(mag(Ck) + Ck);
-    return tfld();
+    return 0.5*(mag(Ck) + Ck);
 }
 
 
@@ -113,7 +112,7 @@ void dynamicKEqn<BasicMomentumTransportModel>::correctNut
     const volScalarField& KK
 )
 {
-    this->nut_.internalFieldRef() = Ck(D, KK)*sqrt(k_())*this->delta()();
+    this->nut_ = Ck(D, KK)*sqrt(k_)*this->delta();
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -243,7 +242,11 @@ void dynamicKEqn<BasicMomentumTransportModel>::correct()
 
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volSymmTensorField D(dev(symm(tgradU())));
-    const volInternalScalarField G(this->GName(), 2.0*nut()*(tgradU() && D()));
+    const volInternalScalarField G
+    (
+        this->GName(),
+        2.0*nut()*(tgradU()() && D())
+    );
     tgradU.clear();
 
     const volScalarField KK(this->KK());
@@ -256,7 +259,7 @@ void dynamicKEqn<BasicMomentumTransportModel>::correct()
     ==
         alpha()*rho()*G
       - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
-      - fvm::Sp(Ce(D, KK)*alpha()*rho()*sqrt(k_())/this->delta()(), k_)
+      - fvm::Sp(Ce(D, KK)()*alpha()*rho()*sqrt(k_())/this->delta()(), k_)
       + kSource()
       + fvModels.source(alpha, rho, k_)
     );

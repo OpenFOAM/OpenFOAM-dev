@@ -40,7 +40,7 @@ namespace LESModels
 template<class BasicMomentumTransportModel>
 void kEqn<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_.internalFieldRef() = Ck_*sqrt(k_())*this->delta()();
+    this->nut_ = Ck_*sqrt(k_)*this->delta();
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }

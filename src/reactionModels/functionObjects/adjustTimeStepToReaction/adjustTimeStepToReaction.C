@@ -180,12 +180,13 @@ Foam::functionObjects::adjustTimeStepToReaction::maxDeltaT() const
     {
         if (thermo.solveSpecie(i))
         {
-            rhoDotByRho += mag(reaction.R(i))/2/thermo.rho()();
+            rhoDotByRho += mag(reaction.R(i))/2/thermo.rho()()();
         }
     }
 
     // Convert to a time-scale
-    const scalar reactionDeltaT1 = maxCo_/max(gMax(rhoDotByRho), vSmall);
+    const scalar reactionDeltaT1 =
+        maxCo_/max(gMax(rhoDotByRho.primitiveField()), vSmall);
 
     // We want to clip the time-step to the time-scale, but also additionally
     // reduce the time-step significantly if that time-scale is reducing

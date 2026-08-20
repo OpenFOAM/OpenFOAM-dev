@@ -38,7 +38,7 @@ namespace expression
 template<class Type>
 struct Expressionable<pointPatchField<Type>>
 :
-    public std::integral_constant<char, 1>
+    public std::integral_constant<signed char, 1>
 {};
 
 //- Define access to a pointPatchField as returning a Field, but do not

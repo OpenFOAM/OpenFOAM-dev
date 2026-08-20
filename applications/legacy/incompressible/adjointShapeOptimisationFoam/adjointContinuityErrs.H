@@ -31,10 +31,10 @@ Description
 
 {
     scalar sumLocalContErr = runTime.deltaTValue()*
-        mag(fvi::div(phia))().weightedAverage(mesh.V()).value();
+        weightedAverage(eval(mag(fvi::div(phia)))(), mesh.V()).value();
 
     scalar globalContErr = runTime.deltaTValue()*
-        fvi::div(phia)().weightedAverage(mesh.V()).value();
+        weightedAverage(fvi::div(phia)(), mesh.V()).value();
     cumulativeAdjointContErr += globalContErr;
 
     Info<< "Adjoint continuity errors : sum local = " << sumLocalContErr

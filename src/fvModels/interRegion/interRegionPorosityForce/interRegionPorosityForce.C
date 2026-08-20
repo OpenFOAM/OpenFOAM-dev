@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ void Foam::fv::interRegionPorosityForce::addSup
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
     porosityPtr_->addResistance(porosityEqn);
-    eqn -= alpha*filter_*porosityEqn;
+    eqn -= alpha()*filter_*porosityEqn;
 }
 
 

@@ -47,11 +47,10 @@ void kOmega2006<BasicMomentumTransportModel>::boundOmega()
 template<class BasicMomentumTransportModel>
 void kOmega2006<BasicMomentumTransportModel>::correctNut
 (
-    const volInternalTensorField& gradU
+    const volTensorField& gradU
 )
 {
-    this->nut_.internalFieldRef() =
-        k_()/max(omega_(), Clim_*sqrt(2/betaStar_)*mag(dev(symm(gradU))));
+    this->nut_ = k_/max(omega_, Clim_*sqrt(2/betaStar_)*mag(dev(symm(gradU))));
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -100,7 +99,7 @@ kOmega2006<BasicMomentumTransportModel>::CDkOmega() const
 template<class BasicMomentumTransportModel>
 void kOmega2006<BasicMomentumTransportModel>::correctNut()
 {
-    correctNut(fvi::grad(this->U_));
+    correctNut(fvc::grad(this->U_));
 }
 
 
@@ -250,11 +249,11 @@ void kOmega2006<BasicMomentumTransportModel>::correct()
         fvi::div(fvc::absolute(this->phi(), U))
     );
 
-    const volInternalTensorField gradU(fvi::grad(U));
+    const volTensorField gradU(fvc::grad(U));
     const volInternalScalarField G
     (
         this->GName(),
-        nut()*(dev(twoSymm(gradU)) && gradU)
+        nut()*(dev(twoSymm(gradU())) && gradU())
     );
 
     // Update omega and G at the wall
@@ -269,7 +268,7 @@ void kOmega2006<BasicMomentumTransportModel>::correct()
      ==
         gamma_*alpha()*rho()*G*omega_()/k_()
       - fvm::SuSp(((2.0/3.0)*gamma_)*alpha()*rho()*divU, omega_)
-      - fvm::Sp(beta(gradU)*alpha()*rho()*omega_(), omega_)
+      - fvm::Sp(beta(gradU())*alpha()*rho()*omega_(), omega_)
       + alpha()*rho()*CDkOmega()
       + omegaSource()
       + fvModels.source(alpha, rho, omega_)

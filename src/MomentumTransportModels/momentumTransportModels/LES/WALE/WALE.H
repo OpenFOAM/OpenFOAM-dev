@@ -100,13 +100,6 @@ protected:
         //  calculated from the given velocity gradient
         tmp<volScalarField> k(const volTensorField& gradU) const;
 
-        //- Return SGS kinetic energy
-        //  calculated from the given velocity gradient
-        tmp<volInternalScalarField> k
-        (
-            const volInternalTensorField& gradU
-        ) const;
-
         //- Update the SGS eddy-viscosity
         virtual void correctNut();
 

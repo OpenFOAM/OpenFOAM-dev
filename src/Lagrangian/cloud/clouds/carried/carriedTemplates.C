@@ -25,6 +25,7 @@ License
 
 #include "carried.H"
 #include "CarrierField.H"
+#include "fvPatchField.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

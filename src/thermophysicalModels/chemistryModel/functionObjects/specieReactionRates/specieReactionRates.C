@@ -25,7 +25,7 @@ License
 
 #include "specieReactionRates.H"
 #include "chemistryModel.H"
-#include "fvcVolumeIntegrate.H"
+#include "fviVolumeIntegrate.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
 #include "polyDistributionMap.H"
@@ -164,7 +164,7 @@ bool Foam::functionObjects::specieReactionRates::write()
 
             if (zone_.all())
             {
-                sumVRRi = fvc::domainIntegrate(RR[speciei]).value();
+                sumVRRi = fvi::domainIntegrate(RR[speciei]).value();
             }
             else
             {
@@ -173,7 +173,8 @@ bool Foam::functionObjects::specieReactionRates::write()
                     (
                         scalarField
                         (
-                            fvMeshFunctionObject::mesh_.V()*RR[speciei],
+                            fvMeshFunctionObject::mesh_.V().primitiveField()
+                           *RR[speciei].primitiveField(),
                             zone_.zone()
                         )
                     );

@@ -120,7 +120,7 @@ bool Foam::functionObjects::LagrangianDistribution::multiplyWeight
     const GeoField<scalar>& w =
         mesh().lookupObject<GeoField<scalar>>(weightFieldName);
 
-    weight *= w;
+    weight *= w.primitiveField();
 
     return true;
 }

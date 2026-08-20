@@ -73,11 +73,10 @@ Foam::cavitationModels::SchnerrSauer::rRb
     const volScalarField::Internal& limitedAlphal
 ) const
 {
-    return pow
+    return cbrt
     (
         ((4*constant::mathematical::pi*n_)/3)
-       *limitedAlphal/(1.0 + alphaNuc() - limitedAlphal),
-        1.0/3.0
+       *limitedAlphal/(1.0 + alphaNuc() - limitedAlphal)
     );
 }
 

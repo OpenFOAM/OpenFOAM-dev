@@ -71,7 +71,7 @@ template<class Type> void surfaceIntegrate
         }
     }
 
-    ivf /= mesh.Vsc();
+    ivf /= mesh.Vsc()().primitiveField();
 }
 
 

@@ -50,7 +50,7 @@ tmp<volScalarField> kEpsilon<BasicMomentumTransportModel>::boundEpsilon()
 template<class BasicMomentumTransportModel>
 void kEpsilon<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_.internalFieldRef() = boundEpsilon()()/epsilon_();
+    this->nut_ = boundEpsilon()/epsilon_;
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }

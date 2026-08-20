@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,8 +40,8 @@ Foam::Lagrangian::SpSchemes::upwind<Type, SpType>::LagrangianmSp
 {
     tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
 
-    tEqn.ref().Su += pos(Sp)*this->inner(Sp, psi);
-    tEqn.ref().Sp += neg(Sp)*Sp;
+    tEqn.ref().Su += eval(pos(Sp)*this->inner(Sp, psi));
+    tEqn.ref().Sp += eval(neg(Sp)*Sp);
 
     return tEqn;
 }

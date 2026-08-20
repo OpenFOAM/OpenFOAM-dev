@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiGModels::basicSubGrid::G() const
     tmp<volScalarField> tGtot = XiGModel_->G();
     volScalarField& Gtot = tGtot.ref();
 
-    const scalarField Cw = pow(Su_.mesh().V(), 2.0/3.0);
+    const scalarField Cw = pow(Su_.mesh().V().primitiveField(), 2.0/3.0);
     scalarField N(Nv.primitiveField()*Cw);
 
     forAll(N, celli)

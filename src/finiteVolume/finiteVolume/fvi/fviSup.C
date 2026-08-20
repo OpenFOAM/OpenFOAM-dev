@@ -49,6 +49,16 @@ Su
     return su;
 }
 
+template<class Type, class Expression, class>
+tmp<VolInternalField<Type>> Su
+(
+    const Expression& su,
+    const VolField<Type>&
+)
+{
+    return eval(su);
+}
+
 template<class Type>
 tmp<VolInternalField<Type>>
 Su
@@ -72,6 +82,16 @@ Sp
     return sp*vf;
 }
 
+template<class Type, class Expression, class>
+tmp<VolInternalField<Type>> Sp
+(
+    const Expression& sp,
+    const VolField<Type>& vf
+)
+{
+    return eval(sp*vf.internalField());
+}
+
 template<class Type>
 tmp<VolInternalField<Type>>
 Sp
@@ -80,7 +100,7 @@ Sp
     const VolField<Type>& vf
 )
 {
-    return tsp*vf;
+    return tsp*vf();
 }
 
 
@@ -105,6 +125,16 @@ SuSp
 )
 {
     return sp*vf;
+}
+
+template<class Type, class Expression, class>
+tmp<VolInternalField<Type>> SuSp
+(
+    const Expression& sp,
+    const VolField<Type>& vf
+)
+{
+    return eval(sp*vf.internalField());
 }
 
 template<class Type>

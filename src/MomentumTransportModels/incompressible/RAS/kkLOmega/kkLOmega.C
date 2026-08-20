@@ -62,13 +62,13 @@ tmp<volScalarField> kkLOmega::fv(const volScalarField& Ret) const
 }
 
 
-tmp<volInternalScalarField> kkLOmega::fINT() const
+tmp<volScalarField> kkLOmega::fINT() const
 {
     return
     (
         min
         (
-            kt_()/(Cint_*(kl_() + kt_() + kMin_)),
+            kt_/(Cint_*(kl_ + kt_ + kMin_)),
             dimensionedScalar(dimless, 1)
         )
     );
@@ -81,26 +81,26 @@ tmp<volScalarField> kkLOmega::fSS(const volScalarField& Omega) const
 }
 
 
-tmp<volInternalScalarField> kkLOmega::Cmu(const volInternalScalarField& S) const
+tmp<volScalarField> kkLOmega::Cmu(const volScalarField& S) const
 {
-    return(1/(A0_ + As_*(S/(omega_() + omegaMin_))));
+    return(1/(A0_ + As_*(S/(omega_ + omegaMin_))));
 }
 
 
-tmp<volInternalScalarField> kkLOmega::BetaTS
+tmp<volScalarField> kkLOmega::BetaTS
 (
-    const volInternalScalarField& ReOmega
+    const volScalarField& ReOmega
 ) const
 {
     return(scalar(1) - exp(-sqr(max(ReOmega - CtsCrit_, scalar(0)))/Ats_));
 }
 
 
-tmp<volInternalScalarField> kkLOmega::fTaul
+tmp<volScalarField> kkLOmega::fTaul
 (
-    const volInternalScalarField& lambdaEff,
-    const volInternalScalarField& ktL,
-    const volInternalScalarField& Omega
+    const volScalarField& lambdaEff,
+    const volScalarField& ktL,
+    const volScalarField& Omega
 ) const
 {
     return
@@ -424,28 +424,26 @@ void kkLOmega::correct()
 
     const volScalarField Omega(sqrt(2.0)*mag(skew(gradU)));
 
-    const volInternalScalarField S2(2*magSqr(dev(symm(gradU()))));
+    const volScalarField S2(2*magSqr(dev(symm(gradU))));
 
     const volScalarField ktS(fSS(Omega)*fw*kt_);
 
     const volScalarField fv(this->fv(sqr(fw)*kt_/nu()/(omega_ + omegaMin_)));
 
-    const volInternalScalarField nuts
-    (
-        fv()*fINT()*Cmu(sqrt(S2))*sqrt(ktS())*lambdaEff()
-    );
-    const volInternalScalarField Pkt(this->GName(), nuts*S2);
+    const volScalarField nuts(fv*fINT()*Cmu(sqrt(S2))*sqrt(ktS)*lambdaEff);
 
-    const volInternalScalarField ktL(kt_ - ktS);
-    const volInternalScalarField ReOmega(sqr(y())*Omega/nu()()());
+    const volInternalScalarField Pkt(this->GName(), nuts()*S2());
 
-    const volInternalScalarField nutl
+    const volScalarField ktL(kt_ - ktS);
+    const volScalarField ReOmega(sqr(y)*Omega/nu());
+
+    const volScalarField nutl
     (
         min
         (
-            C11_*fTaul(lambdaEff(), ktL, Omega)*Omega*sqr(lambdaEff())
-           *sqrt(ktL)*lambdaEff()/nu()()()
-          + C12_*BetaTS(ReOmega)*sqr(sqr(lambdaEff()/Clambda_)*Omega)/nu()()()
+            C11_*fTaul(lambdaEff, ktL, Omega)*Omega*sqr(lambdaEff)
+           *sqrt(ktL)*lambdaEff/nu()
+          + C12_*BetaTS(ReOmega)*sqr(sqr(lambdaEff/Clambda_)*Omega)/nu()
           , 0.5*(kl_ + ktL)/(sqrt(S2) + omegaMin_)
         )
     );
@@ -460,7 +458,7 @@ void kkLOmega::correct()
 
     const volInternalScalarField Rbp
     (
-        CR_*(1 - exp(-phiBP(Omega)()/Abp_))*omega_
+        CR_*(1 - exp(-phiBP(Omega)/Abp_))*omega_()
        /(fw() + fwMin)
     );
 
@@ -469,7 +467,7 @@ void kkLOmega::correct()
     // Natural source term divided by kl_
     const volInternalScalarField Rnat
     (
-        CrNat_*(1 - exp(-phiNAT(ReOmega, fNatCrit)/Anat_))*Omega
+        CrNat_*(1 - exp(-phiNAT(ReOmega, fNatCrit)/Anat_))*Omega()
     );
 
 
@@ -485,8 +483,8 @@ void kkLOmega::correct()
         Cw1_*Pkt*omega_()/(kt_() + kMin_)
       - fvm::SuSp
         (
-            (1 - CwR_/(fw() + fwMin))*kl_()*(Rbp + Rnat)/(kt_() + kMin_)
-          , omega_
+            (1 - CwR_/(fw() + fwMin))*kl_()*(Rbp + Rnat)/(kt_() + kMin_),
+            omega_
         )
       - fvm::Sp(Cw2_*sqr(fw())*omega_(), omega_)
       + (
@@ -512,7 +510,7 @@ void kkLOmega::correct()
       - fvm::laplacian(nu(), kl_)
      ==
         Pkl
-      - fvm::Sp(Rbp + Rnat + Dl/(kl_() + kMin_), kl_)
+      - fvm::Sp(Rbp + Rnat + Dl()/(kl_() + kMin_), kl_)
     );
 
     klEqn.ref().relax();
@@ -532,8 +530,8 @@ void kkLOmega::correct()
       - fvm::laplacian(DkEff(alphaTEff), kt_)
      ==
         Pkt
-      + (Rbp + Rnat)*kl_
-      - fvm::Sp(omega_ + Dt/(kt_+ kMin_), kt_)
+      + (Rbp + Rnat)*kl_()
+      - fvm::Sp(omega_() + Dt()/(kt_() + kMin_), kt_)
     );
 
     ktEqn.ref().relax();
@@ -548,7 +546,7 @@ void kkLOmega::correct()
 
 
     // Re-calculate turbulent viscosity
-    nut_.internalFieldRef() = nuts + nutl;
+    nut_ = nuts + nutl;
     nut_.correctBoundaryConditions();
 }
 

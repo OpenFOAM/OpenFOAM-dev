@@ -223,7 +223,10 @@ void qZeta::correct()
         GName(),
         nut_()/(2.0*q_())*2*magSqr(symm(fvi::grad(U_)))
     );
-    const volInternalScalarField E(nu()()*nut_()/q_()*fvi::magSqrGradGrad(U_));
+    const volInternalScalarField E
+    (
+        nu()()()*nut_()/q_()*fvi::magSqrGradGrad(U_)
+    );
 
     // Zeta equation
     tmp<fvScalarMatrix> zetaEqn
@@ -232,8 +235,12 @@ void qZeta::correct()
       + fvm::div(phi_, zeta_)
       - fvm::laplacian(DzetaEff(), zeta_)
      ==
-        (2.0*C1_ - 1)*G*zeta_/q_
-      - fvm::SuSp((2.0*C2_*f2() - dimensionedScalar(1.0))*zeta_/q_, zeta_)
+        (2.0*C1_ - 1)*G*zeta_()/q_()
+      - fvm::SuSp
+        (
+            (2.0*C2_*f2()()() - dimensionedScalar(1.0))*zeta_()/q_(),
+            zeta_
+        )
       + E
     );
 

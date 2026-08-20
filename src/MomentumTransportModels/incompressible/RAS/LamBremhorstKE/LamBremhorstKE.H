@@ -65,11 +65,12 @@ class LamBremhorstKE
 {
     // Private Member Functions
 
-        tmp<volInternalScalarField> Rt() const;
-        tmp<volInternalScalarField> fMu(const volInternalScalarField& Rt) const;
+        tmp<volScalarField> Rt() const;
+        tmp<volScalarField> fMu(const volScalarField& Rt) const;
         tmp<volInternalScalarField> f1(const volInternalScalarField& fMu) const;
         tmp<volInternalScalarField> f2(const volInternalScalarField& Rt) const;
-        void correctNut(const volInternalScalarField& fMu);
+
+        void correctNut(const volScalarField& fMu);
 
 
 protected:

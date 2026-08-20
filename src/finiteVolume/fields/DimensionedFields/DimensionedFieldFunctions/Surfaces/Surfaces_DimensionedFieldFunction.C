@@ -127,7 +127,8 @@ void Foam::DimensionedFieldFunctions::Surfaces<DimensionedFieldType>::evaluate()
 
     forAll(surfacesPtr_(), i)
     {
-        this->field_ +=
+        this->field_ += eval
+        (
             DimensionedField
             <
                 scalar,
@@ -143,7 +144,8 @@ void Foam::DimensionedFieldFunctions::Surfaces<DimensionedFieldType>::evaluate()
                     this->field_.mesh().poly()
                 )
             )
-           *(values_[i] - this->field_);
+           *(values_[i] - this->field_)
+        );
     }
 }
 

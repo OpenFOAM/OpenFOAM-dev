@@ -248,6 +248,32 @@ UnaryOperator(*, hdual)
 #undef UnarySymmTensorOpFunction
 #undef UnaryTensorDevOpFunction
 
+/*---------------------------------------------------------------------------*\
+                            Class ddotOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct ddotOp
+{
+    static const signed char precedence = 1;
+
+    static const bool associative = false;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + "&&" + b;
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return a && b;
+    }
+};
+
+// Inner product (ddot) operator
+BinaryOperator(&&, ddot);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

@@ -134,11 +134,14 @@ Foam::anisotropicFilter::anisotropicFilter
         coeff_.replace
         (
             d,
-            (1/widthCoeff_)*
-            sqr
+            eval
             (
-                2.0*mesh.V()
-               /fvi::surfaceSum(mag(mesh.Sf().component(d)))
+                (1/widthCoeff_)
+               *sqr
+                (
+                    2.0*mesh.V()
+                   /fvi::surfaceSum(mag(mesh.Sf().component(d)))
+                )
             )
         );
     }

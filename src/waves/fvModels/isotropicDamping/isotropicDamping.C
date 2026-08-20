@@ -111,7 +111,7 @@ void Foam::fv::isotropicDamping::addSup
     fvMatrix<vector>& eqn
 ) const
 {
-    add(rho*this->forceCoeff(), eqn);
+    add(rho()*this->forceCoeff(), eqn);
 }
 
 

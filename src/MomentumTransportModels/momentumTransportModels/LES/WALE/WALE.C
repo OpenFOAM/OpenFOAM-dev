@@ -89,42 +89,9 @@ tmp<volScalarField> WALE<BasicMomentumTransportModel>::k
 
 
 template<class BasicMomentumTransportModel>
-tmp<volInternalScalarField> WALE<BasicMomentumTransportModel>::k
-(
-    const volInternalTensorField& gradU
-) const
-{
-    volInternalScalarField magSqrSd(magSqr(Sd(gradU)));
-
-    return volInternalScalarField::New
-    (
-        this->groupName("k"),
-        sqr(sqr(Cw_)*this->delta()()/Ck_)*
-        (
-            pow3(magSqrSd)
-           /(
-               sqr
-               (
-                   pow(magSqr(symm(gradU)), 5.0/2.0)
-                 + pow(magSqrSd, 5.0/4.0)
-               )
-             + dimensionedScalar
-               (
-                   "small",
-                   dimensionSet(0, 0, -10, 0, 0),
-                   small
-               )
-           )
-        )
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
 void WALE<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_.internalFieldRef() =
-        Ck_*this->delta()()*sqrt(this->k(fvi::grad(this->U_)));
+    this->nut_ = Ck_*this->delta()*sqrt(this->k(fvc::grad(this->U_)));
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }

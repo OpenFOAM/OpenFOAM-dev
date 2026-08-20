@@ -298,7 +298,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::continuityError() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+const Foam::volScalarField&
 Foam::StationaryPhaseModel<BasePhaseModel>::K() const
 {
     FatalErrorInFunction

@@ -170,7 +170,7 @@ void Foam::populationBalanceModel::birthByCoalescence
         {
             dmdtfs_[interfaceij] +=
                 (interfaceij.index(phases_[i]) == 0 ? +1 : -1)
-               *vs_[j]/vjk*Sui*phases_[j].rho();
+               *vs_[j]/vjk*Sui*phases_[j].rho()();
         }
 
         const phaseInterface interfaceik(phases_[i], phases_[k]);
@@ -179,7 +179,7 @@ void Foam::populationBalanceModel::birthByCoalescence
         {
             dmdtfs_[interfaceik] +=
                 (interfaceik.index(phases_[i]) == 0 ? +1 : -1)
-               *vs_[k]/vjk*Sui*phases_[k].rho();
+               *vs_[k]/vjk*Sui*phases_[k].rho()();
         }
 
         shapeModel_->addCoalescence(Sui, i, j, k);
@@ -194,11 +194,11 @@ void Foam::populationBalanceModel::deathByCoalescence
     const volScalarField::Internal& rate
 )
 {
-    Sp_[i] -= rate*phases_[i]*fs_[j]*phases_[j]/vs_[j];
+    Sp_[i] -= rate*phases_[i]()*fs_[j]()*phases_[j]()/vs_[j];
 
     if (i == j) return;
 
-    Sp_[j] -= rate*phases_[j]*phases_[i]*fs_[i]/vs_[i];
+    Sp_[j] -= rate*phases_[j]()*phases_[i]()*fs_[i]()/vs_[i];
 }
 
 
@@ -212,7 +212,7 @@ void Foam::populationBalanceModel::birthByDaughterSizeDistributionBreakup
     {
         const volScalarField::Internal Sui
         (
-            rate*phases_[k]*fs_[k]
+            rate*phases_[k]()*fs_[k]()
            *vs_[i]/vs_[k]
            *daughterSizeDistributionBreakupModel_->dsd().nik(i, k)
         );
@@ -225,7 +225,7 @@ void Foam::populationBalanceModel::birthByDaughterSizeDistributionBreakup
         {
             dmdtfs_[interface] +=
                 (interface.index(phases_[i]) == 0 ? +1 : -1)
-               *Sui*phases_[k].rho();
+               *Sui*phases_[k].rho()();
         }
 
         shapeModel_->addBreakup(Sui, i, k);
@@ -239,7 +239,7 @@ void Foam::populationBalanceModel::deathByDaughterSizeDistributionBreakup
     const volScalarField::Internal& rate
 )
 {
-    Sp_[i] -= rate*phases_[i];
+    Sp_[i] -= rate*phases_[i]();
 }
 
 
@@ -250,7 +250,7 @@ void Foam::populationBalanceModel::birthByBinaryBreakup
     const volScalarField::Internal& rate
 )
 {
-    const volScalarField::Internal Su(rate*phases_[j]*fs_[j]);
+    const volScalarField::Internal Su(rate*phases_[j]()*fs_[j]());
 
     {
         const volScalarField::Internal Sui
@@ -266,7 +266,7 @@ void Foam::populationBalanceModel::birthByBinaryBreakup
         {
             dmdtfs_[interfaceij] +=
                 (interfaceij.index(phases_[i]) == 0 ? +1 : -1)
-               *Sui*phases_[j].rho();
+               *Sui*phases_[j].rho()();
         }
 
         shapeModel_->addBreakup(Sui, i, j);
@@ -293,7 +293,7 @@ void Foam::populationBalanceModel::birthByBinaryBreakup
         {
             dmdtfs_[interfacekj] +=
                 (interfacekj.index(phases_[k]) == 0 ? +1 : -1)
-               *Suk*phases_[j].rho();
+               *Suk*phases_[j].rho()();
         }
 
         shapeModel_->addBreakup(Suk, k, j);
@@ -308,7 +308,7 @@ void Foam::populationBalanceModel::deathByBinaryBreakup
     const volScalarField::Internal& rate
 )
 {
-    Sp_[i] -= rate*phases_[i]*binaryBreakupDeltas_[j][i];
+    Sp_[i] -= rate*phases_[i]()*binaryBreakupDeltas_[j][i];
 }
 
 
@@ -455,7 +455,7 @@ void Foam::populationBalanceModel::computeExpansion()
 
         expansionDmdtfs_[interface01] +=
             (interface01.index(phase0) == 0 ? -1 : +1)
-           *(- tSus0.second()*phase0.rho() + tSus1.first()*phase1.rho());
+           *(-tSus0.second()*phase0.rho()() + tSus1.first()*phase1.rho()());
     }
 }
 
@@ -516,8 +516,8 @@ Foam::populationBalanceModel::modelSourceRhoSus
 
                 tRhoSus[Sui] =
                     Sui == 0
-                  ? posPart(S)*sourceCoeffs.first()
-                  : negPart(S)*sourceCoeffs.second();
+                  ? eval(posPart(S)*sourceCoeffs.first())
+                  : eval(negPart(S)*sourceCoeffs.second());
             }
         }
     }
@@ -568,7 +568,13 @@ void Foam::populationBalanceModel::computeDilatationErrors()
         const phaseInterface interface(fluid_, dmdtfIter.key());
 
         addField(interface.phase1(), "dmdt", *dmdtfIter(), modelSourceDmdts);
-        addField(interface.phase2(), "dmdt", - *dmdtfIter(), modelSourceDmdts);
+        addField
+        (
+            interface.phase2(),
+            "dmdt",
+            eval(-*dmdtfIter()),
+            modelSourceDmdts
+        );
     }
 
     forAll(uniquePhases_, uniquePhasei)
@@ -589,13 +595,13 @@ void Foam::populationBalanceModel::computeDilatationErrors()
         for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
         {
             dilatationErrors_[phase.index()] -=
-                Su_[i] + expansionSu(i) + (Sp_[i] + expansionSp(i))*fs_[i];
+                Su_[i] + expansionSu(i) + (Sp_[i] + expansionSp(i))*fs_[i]();
         }
 
         if (modelSourceDmdts.set(phase.index()))
         {
             dilatationErrors_[phase.index()] -=
-                modelSourceDmdts[phase.index()]/rho;
+                modelSourceDmdts[phase.index()]/rho();
         }
     }
 }
@@ -850,7 +856,7 @@ Foam::populationBalanceModel::populationBalanceModel
                 << ": dSph = " << dSphs_[i].value()
                 << ", min/average/max fraction = "
                 << min(fs_[i]()).value() << '/'
-                << average(fs_[i]()).value() << '/'
+                << average(fs_[i]()) << '/'
                 << max(fs_[i]()).value() << endl;
         }
 
@@ -1424,9 +1430,9 @@ Foam::populationBalanceModel::modelSourceSu
 
     return
         tRhoSus.first().valid() && tRhoSus.second().valid()
-      ? (tRhoSus.first() + tRhoSus.second())/phases_[i].rho()
-      : tRhoSus.first().valid() ? tRhoSus.first()/phases_[i].rho()
-      : tRhoSus.second().valid() ? tRhoSus.second()/phases_[i].rho()
+      ? (tRhoSus.first() + tRhoSus.second())/phases_[i].rho()()
+      : tRhoSus.first().valid() ? tRhoSus.first()/phases_[i].rho()()
+      : tRhoSus.second().valid() ? tRhoSus.second()/phases_[i].rho()()
       : volScalarField::Internal::New(zeroSu.name(), mesh(), zeroSu);
 }
 
@@ -1517,8 +1523,8 @@ void Foam::populationBalanceModel::solve()
     const volScalarField alphaFNm1(phases_.last()*fs_.last());
 
     Info<< "populationBalance " << this->name() << ": Group fraction "
-        << "first/last = " << alphaF0.weightedAverage(mesh().V()).value()
-        << '/' << alphaFNm1.weightedAverage(mesh().V()).value() << endl;
+        << "first/last = " << weightedAverage(alphaF0, mesh().V()).value()
+        << '/' << weightedAverage(alphaFNm1, mesh().V()).value() << endl;
 
     if (solverDict().lookupOrDefault<Switch>("scale", true))
     {
@@ -1557,7 +1563,7 @@ void Foam::populationBalanceModel::solve()
             Info<< diameter.phase().name()
                 << ": Group fraction sum min/average/max = "
                 << min(fSum).value() << '/'
-                << fSum.weightedAverage(mesh().V()).value() << '/'
+                << weightedAverage(fSum, mesh().V()).value() << '/'
                 << max(fSum).value() << endl;
         }
     }

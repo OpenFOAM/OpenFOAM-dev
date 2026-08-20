@@ -40,26 +40,6 @@ namespace fvi
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type>>
-volumeIntegrate(const VolField<Type>& vf)
-{
-    return vf.mesh().V().primitiveField()*vf.primitiveField();
-}
-
-
-template<class Type>
-tmp<Field<Type>> volumeIntegrate(const tmp<VolField<Type>>& tvf)
-{
-    tmp<Field<Type>> tvivf
-    (
-        tvf().mesh().V().primitiveField()*tvf().primitiveField()
-    );
-    tvf.clear();
-    return tvivf;
-}
-
-
-template<class Type>
 tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, fvMesh>& df)
 {
     return df.mesh().V().primitiveField()*df.primitiveField();
@@ -80,28 +60,6 @@ volumeIntegrate(const tmp<DimensionedField<Type, fvMesh>>& tdf)
 
 
 template<class Type>
-dimensioned<Type>
-domainIntegrate(const VolField<Type>& vf)
-{
-    return dimensioned<Type>
-    (
-        "domainIntegrate(" + vf.name() + ')',
-        dimensions::volume*vf.dimensions(),
-        gSum(fvi::volumeIntegrate(vf))
-    );
-}
-
-
-template<class Type>
-dimensioned<Type> domainIntegrate(const tmp<VolField<Type>>& tvf)
-{
-    dimensioned<Type> integral = domainIntegrate(tvf());
-    tvf.clear();
-    return integral;
-}
-
-
-template<class Type>
 dimensioned<Type> domainIntegrate(const DimensionedField<Type, fvMesh>& df)
 {
     return dimensioned<Type>
@@ -109,6 +67,29 @@ dimensioned<Type> domainIntegrate(const DimensionedField<Type, fvMesh>& df)
         "domainIntegrate(" + df.name() + ')',
         dimensions::volume*df.dimensions(),
         gSum(fvi::volumeIntegrate(df))
+    );
+}
+
+
+template<class Expression, class>
+ElementType<Expression> domainIntegrate(const Expression& e)
+{
+    const fvMesh& mesh = expression::getAll<expression::Mesh<fvMesh>>(e);
+
+    return ElementType<Expression>
+    (
+        "domainIntegrate(" + expression::name(e) + ')',
+        dimensions::volume*expression::access(e, dimensions::invalid),
+        gSum
+        (
+            mesh.V().primitiveField()
+           *expression::access
+            (
+                e,
+                expression::Value(),
+                expression::Base()
+            )
+        )
     );
 }
 

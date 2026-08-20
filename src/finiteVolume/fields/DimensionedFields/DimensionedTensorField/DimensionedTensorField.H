@@ -35,43 +35,13 @@ SourceFiles
 #ifndef DimensionedTensorField_H
 #define DimensionedTensorField_H
 
-#include "DimensionedSphericalTensorField.H"
-#include "DimensionedSymmTensorField.H"
-#include "tensor.H"
-
-#define TEMPLATE template<class GeoMesh, template<class> class PrimitiveField>
-#define TEMPLATE2                                                              \
-    template                                                                   \
-    <                                                                          \
-        class GeoMesh,                                                         \
-        template<class> class PrimitiveField1,                                 \
-        template<class> class PrimitiveField2                                  \
-    >
-#include "DimensionedFieldFunctionsM.H"
+#include "DimensionedField.H"
+#include "tensorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(scalar, tensor, tr, transform)
-UNARY_FUNCTION(sphericalTensor, tensor, sph, transform)
-UNARY_FUNCTION(symmTensor, tensor, symm, transform)
-UNARY_FUNCTION(symmTensor, tensor, twoSymm, transform)
-UNARY_FUNCTION(tensor, tensor, skew, transform)
-UNARY_FUNCTION(tensor, tensor, dev, transform)
-UNARY_FUNCTION(tensor, tensor, dev2, transform)
-UNARY_FUNCTION(scalar, tensor, det, transform)
-UNARY_FUNCTION(tensor, tensor, cof, cof)
-UNARY_FUNCTION(tensor, tensor, inv, inv)
-UNARY_FUNCTION(vector, tensor, eigenValues, transform)
-UNARY_FUNCTION(tensor, tensor, eigenVectors, sign)
-
-UNARY_FUNCTION(vector, symmTensor, eigenValues, transform)
-UNARY_FUNCTION(symmTensor, symmTensor, eigenVectors, sign)
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -90,19 +60,11 @@ tmp<DimensionedField<tensor, GeoMesh, Field>> inv
 );
 
 
-// * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
-
-UNARY_OPERATOR(vector, tensor, *, hdual, transform)
-UNARY_OPERATOR(tensor, vector, *, hdual, transform)
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 #ifdef NoRepository
     #include "DimensionedTensorField.C"

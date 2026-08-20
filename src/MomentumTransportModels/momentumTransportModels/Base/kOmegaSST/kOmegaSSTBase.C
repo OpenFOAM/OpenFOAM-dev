@@ -29,7 +29,7 @@ License
 #include "bound.H"
 #include "wallDist.H"
 #include "fvcMeshPhi.H"
-#include "fviGrad.H"
+#include "fvcGrad.H"
 #include "fviDiv.H"
 #include "fvmDiv.H"
 
@@ -79,40 +79,50 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F1
 }
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volInternalScalarField>
+tmp<volScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F2() const
 {
-    tmp<volInternalScalarField> arg2 = min
+    return tanh
     (
-        max
+        sqr
         (
-            (scalar(2)/betaStar_)*sqrt(k_())/(omega_()*this->y()()),
-            scalar(500)*this->nu()()()/(sqr(this->y()())*omega_())
-        ),
-        scalar(100)
+            min
+            (
+                max
+                (
+                    (scalar(2)/betaStar_)*sqrt(k_)/(omega_*this->y()),
+                    scalar(500)*this->nu()/(sqr(this->y())*omega_)
+                ),
+                scalar(100)
+            )
+        )
     );
-
-    return tanh(sqr(arg2));
 }
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volInternalScalarField>
+tmp<volScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F3() const
 {
-    tmp<volInternalScalarField> arg3 = min
-    (
-        150*this->nu()()()/(omega_()*sqr(this->y()())),
-        scalar(10)
-    );
-
-    return 1 - tanh(pow4(arg3));
+    return
+        1
+      - tanh
+        (
+            pow4
+            (
+                min
+                (
+                    150*this->nu()/(omega_*sqr(this->y())),
+                    scalar(10)
+                )
+            )
+        );
 }
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
-tmp<volInternalScalarField>
+tmp<volScalarField>
 kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F23() const
 {
-    tmp<volInternalScalarField> f23(F2());
+    tmp<volScalarField> f23(F2());
 
     if (F3_)
     {
@@ -126,11 +136,11 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F23() const
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
 void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correctNut
 (
-    const volInternalScalarField& S2,
-    const volInternalScalarField& F2
+    const volScalarField& S2,
+    const volScalarField& F2
 )
 {
-    this->nut_.internalFieldRef() = a1_*k_()/max(a1_*omega_(), b1_*F2*sqrt(S2));
+    this->nut_ = a1_*k_/max(a1_*omega_, b1_*F2*sqrt(S2));
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -140,7 +150,7 @@ template<class MomentumTransportModel, class BasicMomentumTransportModel>
 void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::
 correctNut()
 {
-    correctNut(2*magSqr(symm(fvi::grad(this->U_))), F23());
+    correctNut(2*magSqr(symm(fvc::grad(this->U_))), F23());
 }
 
 
@@ -346,9 +356,9 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
 
     const volInternalScalarField divU(fvi::div(fvc::absolute(this->phi(), U)));
 
-    tmp<volInternalTensorField> tgradU = fvi::grad(U);
-    const volInternalScalarField S2(2*magSqr(symm(tgradU())));
-    const volInternalScalarField GbyNu(dev(twoSymm(tgradU())) && tgradU());
+    tmp<volTensorField> tgradU = fvc::grad(U);
+    const volScalarField S2(2*magSqr(symm(tgradU())));
+    const volInternalScalarField GbyNu(dev(twoSymm(tgradU()())) && tgradU()());
     const volInternalScalarField G(this->GName(), nut()*GbyNu);
     tgradU.clear();
 
@@ -361,7 +371,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
     );
 
     const volScalarField F1(this->F1(CDkOmega));
-    const volInternalScalarField F23(this->F23());
+    const volScalarField F23(this->F23());
 
     {
         const volInternalScalarField gamma(this->gamma(F1));
@@ -379,7 +389,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
             (
                 GbyNu,
                 (c1_/a1_)*betaStar_*omega_()
-               *max(a1_*omega_(), b1_*F23*sqrt(S2))
+               *max(a1_*omega_(), b1_*F23()*sqrt(S2()))
             )
           - fvm::SuSp((2.0/3.0)*alpha()*rho()*gamma*divU, omega_)
           - fvm::Sp(alpha()*rho()*beta*omega_(), omega_)
@@ -410,7 +420,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
      ==
         alpha()*rho()*Pk(G)
       - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
-      - fvm::Sp(alpha()*rho()*epsilonByk(F1, F23), k_)
+      - fvm::Sp(alpha()*rho()*epsilonByk(F1, F23()), k_)
       + kSource()
       + fvModels.source(alpha, rho, k_)
     );

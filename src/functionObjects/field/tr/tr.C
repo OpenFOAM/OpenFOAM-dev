@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ bool Foam::functionObjects::tr::calc()
             processed                                                          \
          || CalcTr<pTraits<Type>::rank>::calc<GeoField<Type>>(*this);
     FOR_ALL_FIELD_TYPES(calcTrType, VolField);
-    FOR_ALL_FIELD_TYPES(calcTrType, VolInternalField);
+    //***HGW FOR_ALL_FIELD_TYPES(calcTrType, VolInternalField);
     FOR_ALL_FIELD_TYPES(calcTrType, SurfaceField);
     #undef calcTrType
 

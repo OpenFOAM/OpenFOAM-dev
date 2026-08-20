@@ -190,7 +190,7 @@ void Foam::clouds::parcel::calculate
 
         // Correct the diameter for the change in mass, assuming the density
         // remains constant
-        spherical::correct(toSubField(m/rho));
+        spherical::correct(toSubField(eval(m/rho)));
 
         // Calculate mass exchanges with the carrier
         if (context == cloud::contextType::fvModel && final)
@@ -219,7 +219,7 @@ void Foam::clouds::parcel::calculate
         thermo().correct(subMesh);
 
         // Correct the diameter for changes in density
-        spherical::correct(toSubField(m/rho));
+        spherical::correct(toSubField(eval(m/rho)));
 
         // Calculate energy exchanges with the carrier
         if (context == cloud::contextType::fvModel && final)

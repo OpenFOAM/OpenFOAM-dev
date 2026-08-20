@@ -223,7 +223,7 @@ void Foam::diameterModels::populationBalance::correct()
     d_ = 6*sumFi/tsumFiAbyV;
 
     Info<< indent << phase().name() << " min/Sauter-mean/max diameter = "
-        << min(d_).value() << '/' << d_.weightedAverage(d_.mesh().V()).value()
+        << min(d_).value() << '/' << weightedAverage(d_, d_.mesh().V()).value()
         << '/' << max(d_).value() << endl;
 }
 

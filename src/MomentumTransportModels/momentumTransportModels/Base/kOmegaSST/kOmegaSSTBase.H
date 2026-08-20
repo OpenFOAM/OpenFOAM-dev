@@ -150,9 +150,9 @@ protected:
     // Protected Member Functions
 
         virtual tmp<volScalarField> F1(const volScalarField& CDkOmega) const;
-        virtual tmp<volInternalScalarField> F2() const;
-        virtual tmp<volInternalScalarField> F3() const;
-        virtual tmp<volInternalScalarField> F23() const;
+        virtual tmp<volScalarField> F2() const;
+        virtual tmp<volScalarField> F3() const;
+        virtual tmp<volScalarField> F23() const;
 
         tmp<volScalarField> blend
         (
@@ -205,8 +205,8 @@ protected:
 
         virtual void correctNut
         (
-            const volInternalScalarField& S2,
-            const volInternalScalarField& F2
+            const volScalarField& S2,
+            const volScalarField& F2
         );
 
         virtual void correctNut();

@@ -85,7 +85,8 @@ Foam::Lagrangian::GidaspowErgunWenYuDrag::calcD
 
     tmp<LagrangianSubScalarField> tmucByRhoOrMuc =
         isCloud<clouds::coupledToConstantDensityFluid>()
-      ? (
+      ? eval
+        (
             cloud<clouds::coupledToConstantDensityFluid>().nuc(model, subMesh)
            /cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
         )

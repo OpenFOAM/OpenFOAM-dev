@@ -104,10 +104,13 @@ bool Foam::functionObjects::bXiProgress::execute()
 
 bool Foam::functionObjects::bXiProgress::write()
 {
-    const volScalarField& b =
+    const volInternalScalarField& b =
         mesh_.lookupObject<volScalarField>("b");
 
-    const scalar progress((scalar(1) - b)().weightedAverage(mesh_.V()).value());
+    const scalar progress
+    (
+        weightedAverage(eval(scalar(1) - b)(), mesh_.V()).value()
+    );
 
     logFiles::write();
 

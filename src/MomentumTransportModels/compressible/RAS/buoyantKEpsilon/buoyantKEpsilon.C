@@ -86,13 +86,13 @@ template<class BasicMomentumTransportModel>
 tmp<volInternalScalarField>
 buoyantKEpsilon<BasicMomentumTransportModel>::Gcoef() const
 {
-    const uniformDimensionedVectorField& g =
+    const dimensionedVector& g =
         this->mesh_.objectRegistry::template
         lookupObject<uniformDimensionedVectorField>("g");
 
     return
         (Cg_*this->Cmu_)*this->alpha_()*this->k_()*(g & fvi::grad(this->rho_))
-       /this->epsilon_;
+       /this->epsilon_();
 }
 
 
@@ -100,7 +100,7 @@ template<class BasicMomentumTransportModel>
 tmp<fvScalarMatrix>
 buoyantKEpsilon<BasicMomentumTransportModel>::kSource() const
 {
-    const uniformDimensionedVectorField& g =
+    const dimensionedVector& g =
         this->mesh_.objectRegistry::template
         lookupObject<uniformDimensionedVectorField>("g");
 

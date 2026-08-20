@@ -191,7 +191,7 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::addSupType
     if (eqn.isPsi(field))
     {
         // Add an implicit source to the cloud
-        eqn.Sp -= Sp*vOrM;
+        eqn.Sp -= eval(Sp*vOrM);
     }
     else
     {

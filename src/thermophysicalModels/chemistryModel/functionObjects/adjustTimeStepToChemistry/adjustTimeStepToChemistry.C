@@ -106,7 +106,7 @@ Foam::scalar Foam::functionObjects::adjustTimeStepToChemistry::maxDeltaT() const
             IOobject::groupName("chemistryProperties", phaseName_)
         );
 
-    return gMin(chemistry.deltaTChem());
+    return gMin(chemistry.deltaTChem()).value();
 }
 
 

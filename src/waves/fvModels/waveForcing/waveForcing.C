@@ -150,7 +150,7 @@ void Foam::fv::waveForcing::addSup
 {
     if (U.name() == UName_ && &U == &eqn.psi())
     {
-        const volScalarField::Internal forceCoeff(rho*this->forceCoeff());
+        const volScalarField::Internal forceCoeff(rho()*this->forceCoeff());
 
         eqn -= fvm::Sp(forceCoeff, eqn.psi());
         eqn += forceCoeff*Uwaves_();

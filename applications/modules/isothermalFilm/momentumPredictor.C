@@ -117,7 +117,7 @@ void Foam::solvers::isothermalFilm::momentumPredictor()
     // Thermocapillary force
     if (thermocapillary)
     {
-        UEqn -= fvi::grad(sigma)/VbyA;
+        UEqn -= fvi::grad(sigma)/VbyA();
     }
 
     UEqn.relax();

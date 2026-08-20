@@ -81,7 +81,7 @@ class kOmega2006
 {
     // Private Member Functions
 
-        void correctNut(const volInternalTensorField& gradU);
+        void correctNut(const volTensorField& gradU);
 
         tmp<volInternalScalarField> beta
         (

@@ -4,7 +4,7 @@
     fvScalarMatrix EaEqn
     (
         betav*fvm::ddt(rho, hea) + mvConvection->fvmDiv(phi, hea)
-      + betav*fvi::ddt(rho, K) + fvi::div(phi, K)
+      + betav()*fvi::ddt(rho, K) + fvi::div(phi, K)
       + (
             hea.name() == "ea"
           ? fvi::div(fvc::absolute(phi, rho, U), p/rho)

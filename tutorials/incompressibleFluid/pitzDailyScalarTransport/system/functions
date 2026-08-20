@@ -36,7 +36,7 @@ mixingQualityCheck
         );
 
         const scalar maxT = max(T).value();
-        const scalar meanT = T.weightedAverage(mesh().V()).value();
+        const scalar meanT = weightedAverage(T, mesh().V()).value();
 
         const scalar mixingQuality = meanT/maxT;
         Info << "mixingQuality = " << mixingQuality << endl;

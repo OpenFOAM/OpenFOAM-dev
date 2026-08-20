@@ -57,7 +57,7 @@ Foam::functionObjects::CourantNo::byRho
 {
     if (Co().dimensions() == dimensions::density)
     {
-        return Co/obr_.lookupObject<volScalarField>(rhoName_);
+        return Co/obr_.lookupObject<volInternalScalarField>(rhoName_);
     }
     else
     {

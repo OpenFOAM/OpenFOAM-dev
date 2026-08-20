@@ -284,7 +284,8 @@ void realizableKE<BasicMomentumTransportModel>::correct()
         C1*alpha()*rho()*magS*epsilon_()
       - fvm::Sp
         (
-            C2_*alpha()*rho()*epsilon_()/(k_() + sqrt(this->nu()()*epsilon_())),
+            C2_*alpha()*rho()*epsilon_()
+           /(k_() + sqrt(this->nu()()()*epsilon_())),
             epsilon_
         )
       + epsilonSource()

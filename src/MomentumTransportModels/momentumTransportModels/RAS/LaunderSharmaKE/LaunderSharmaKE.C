@@ -39,11 +39,11 @@ namespace RASModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-tmp<volInternalScalarField>
+tmp<volScalarField>
 LaunderSharmaKE<BasicMomentumTransportModel>::fMu() const
 {
     return
-        exp(-3.4/sqr(scalar(1) + sqr(k_())/(this->nu()()()*epsilon_())/50.0));
+        exp(-3.4/sqr(scalar(1) + sqr(k_)/(this->nu()*epsilon_)/50.0));
 }
 
 
@@ -68,7 +68,7 @@ template<class BasicMomentumTransportModel>
 void LaunderSharmaKE<BasicMomentumTransportModel>::correctNut()
 {
     boundEpsilon();
-    this->nut_.internalFieldRef() = Cmu_*fMu()*sqr(k_())/epsilon_();
+    this->nut_ = Cmu_*fMu()*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }

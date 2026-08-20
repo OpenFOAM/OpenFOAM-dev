@@ -55,13 +55,6 @@ namespace Foam
 namespace fvi
 {
     template<class Type>
-    tmp<Field<Type>> volumeIntegrate(const VolField<Type>&);
-
-    template<class Type>
-    tmp<Field<Type>> volumeIntegrate(const tmp<VolField<Type>>&);
-
-
-    template<class Type>
     tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, fvMesh>&);
 
     template<class Type>
@@ -72,14 +65,14 @@ namespace fvi
 
 
     template<class Type>
-    dimensioned<Type> domainIntegrate(const VolField<Type>&);
-
-    template<class Type>
-    dimensioned<Type> domainIntegrate(const tmp<VolField<Type>>&);
-
-
-    template<class Type>
     dimensioned<Type> domainIntegrate(const DimensionedField<Type, fvMesh>&);
+
+    template
+    <
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    ElementType<Expression> domainIntegrate(const Expression&);
 
     template<class Type>
     dimensioned<Type> domainIntegrate

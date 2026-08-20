@@ -83,7 +83,7 @@ Foam::inverseVolumeDiffusivity::operator()() const
         zeroGradientFvPatchScalarField::typeName
     );
 
-    V.primitiveFieldRef() = mesh().V();
+    V.primitiveFieldRef() = mesh().V().primitiveField();
     V.correctBoundaryConditions();
 
     return surfaceScalarField::New

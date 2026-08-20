@@ -81,7 +81,7 @@ Foam::Function1LagrangianFieldSource::value
                 subMesh.sub(function.name()),
                 subMesh,
                 dims,
-                function.value(t0 + fractionSf*(t1 - t0))
+                function.value(eval(t0 + fractionSf*(t1 - t0)))
             );
     }
     else

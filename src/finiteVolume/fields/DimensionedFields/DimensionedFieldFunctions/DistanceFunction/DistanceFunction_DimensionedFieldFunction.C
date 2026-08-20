@@ -86,7 +86,7 @@ void Foam::DimensionedFieldFunctions::DistanceFunction<DimensionedFieldType>::
 evaluate()
 {
     this->field_.primitiveFieldRef() =
-        funcPtr_->value(direction_ & this->field_.mesh().C());
+        funcPtr_->value(direction_ & this->field_.mesh().C().primitiveField());
 }
 
 

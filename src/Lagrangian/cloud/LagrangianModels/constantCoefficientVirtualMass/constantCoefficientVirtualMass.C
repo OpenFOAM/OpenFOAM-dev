@@ -60,8 +60,8 @@ Foam::Lagrangian::constantCoefficientVirtualMass::calcVOrMAdd
 
     return
         isCloud<clouds::coupledToConstantDensityFluid>()
-      ? Cvm_*v/cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
-      : Cvm_*v*cloud<clouds::coupledToFluid>().rhoc(subMesh);
+      ? eval(Cvm_*v/cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc)
+      : eval(Cvm_*v*cloud<clouds::coupledToFluid>().rhoc(subMesh));
 }
 
 
@@ -83,7 +83,7 @@ void Foam::Lagrangian::constantCoefficientVirtualMass::addUSup
         eqn -= Lagrangianm::ddt0(vOrMAdd, U);
     }
 
-    eqn.Su += vOrMAdd*cloud<clouds::carried>().DUDtc(U.mesh());
+    eqn.Su += eval(vOrMAdd*cloud<clouds::carried>().DUDtc(U.mesh()));
 }
 
 

@@ -38,11 +38,9 @@ if (ign.ignited())
     dimensionedScalar dMgb("dMgb", mgb.dimensions(), small);
 
     {
-        volScalarField bc(b*c);
-
-        dMgb += 1.0e-3*
-            (bc*mgb)().weightedAverage(mesh.V())
-           /(bc.weightedAverage(mesh.V()) + small);
+        const volInternalScalarField bc(b()*c());
+        dMgb += 1.0e-3*sum(bc*mgb()*mesh.V())
+       /(sum(bc*mesh.V()) + dimensionedScalar(dimVolume, rootVSmall));
     }
 
     mgb += dMgb;

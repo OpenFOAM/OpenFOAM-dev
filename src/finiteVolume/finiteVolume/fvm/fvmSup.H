@@ -56,14 +56,26 @@ namespace fvm
         template<class Type>
         tmp<fvMatrix<Type>> Su
         (
-            const DimensionedField<Type, fvMesh>&,
+            const VolInternalField<Type>&,
+            const VolField<Type>&
+        );
+
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<fvMatrix<Type>> Su
+        (
+            const Expression& e,
             const VolField<Type>&
         );
 
         template<class Type>
         tmp<fvMatrix<Type>> Su
         (
-            const tmp<DimensionedField<Type, fvMesh>>&,
+            const tmp<VolInternalField<Type>>&,
             const VolField<Type>&
         );
 
@@ -87,14 +99,26 @@ namespace fvm
         template<class Type>
         tmp<fvMatrix<Type>> Sp
         (
-            const volScalarField::Internal&,
+            const volInternalScalarField&,
+            const VolField<Type>&
+        );
+
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<fvMatrix<Type>> Sp
+        (
+            const Expression& e,
             const VolField<Type>&
         );
 
         template<class Type>
         tmp<fvMatrix<Type>> Sp
         (
-            const tmp<volScalarField::Internal>&,
+            const tmp<volInternalScalarField>&,
             const VolField<Type>&
         );
 
@@ -121,32 +145,32 @@ namespace fvm
             const VolField<Type>&
         );
 
-        template
-        <
-            class Type,
-            class Expression,
-            class = EnableIfExpressionable<Expression>
-        >
-        tmp<fvMatrix<Type>> Sp
-        (
-            const Expression& e,
-            const VolField<Type>&
-        );
-
 
     // Implicit/Explicit source depending on sign of coefficient
 
         template<class Type>
         tmp<fvMatrix<Type>> SuSp
         (
-            const volScalarField::Internal&,
+            const volInternalScalarField&,
+            const VolField<Type>&
+        );
+
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<fvMatrix<Type>> SuSp
+        (
+            const Expression& e,
             const VolField<Type>&
         );
 
         template<class Type>
         tmp<fvMatrix<Type>> SuSp
         (
-            const tmp<volScalarField::Internal>&,
+            const tmp<volInternalScalarField>&,
             const VolField<Type>&
         );
 
@@ -154,18 +178,6 @@ namespace fvm
         tmp<fvMatrix<Type>> SuSp
         (
             const tmp<volScalarField>&,
-            const VolField<Type>&
-        );
-
-        template
-        <
-            class Type,
-            class Expression,
-            class = EnableIfExpressionable<Expression>
-        >
-        tmp<fvMatrix<Type>> SuSp
-        (
-            const Expression& e,
             const VolField<Type>&
         );
 
@@ -182,7 +194,7 @@ namespace fvm
         template<class Type>
         tmp<fvMatrix<Type>> S
         (
-            const Pair<tmp<volScalarField::Internal>>&,
+            const Pair<tmp<volInternalScalarField>>&,
             const VolField<Type>&
         );
 }

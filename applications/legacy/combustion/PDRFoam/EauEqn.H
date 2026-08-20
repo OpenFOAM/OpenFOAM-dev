@@ -5,12 +5,12 @@ if (ign.ignited())
     fvScalarMatrix heauEqn
     (
         betav*fvm::ddt(rho, heau) + mvConvection->fvmDiv(phi, heau)
-      + (betav*fvi::ddt(rho, K) + fvi::div(phi, K))*rho()/thermo.rhou()()
+      + (betav()*fvi::ddt(rho, K) + fvi::div(phi, K))*rho()/thermo.rhou()()()
       + (
             heau.name() == "eau"
-          ? fvi::div(fvc::absolute(phi, rho, U), p/rho)
-           *rho()/thermo.rhou()()
-          : -betav()*dpdt*rho()/thermo.rhou()()
+          ? eval(fvi::div(fvc::absolute(phi, rho, U), p/rho)
+           *rho()/thermo.rhou()()())
+          : eval(-betav()*dpdt*rho()/thermo.rhou()()())
         )
       - fvm::laplacian(Db, heau)
 

@@ -50,7 +50,7 @@ tmp<volScalarField> LRR<BasicMomentumTransportModel>::boundEpsilon()
 template<class BasicMomentumTransportModel>
 void LRR<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_.internalFieldRef() = boundEpsilon()()/epsilon_();
+    this->nut_ = boundEpsilon()/epsilon_;
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }

@@ -305,7 +305,7 @@ Foam::heatTransferSystem::heatTransfer() const
 
             eqns[phase.name()] +=
                 Hstabilised*(otherPhase.thermo().T()() - phase.thermo().T()())
-              + Hstabilised/Cpv*he - fvm::Sp(Hstabilised/Cpv, he);
+              + Hstabilised/Cpv*he() - fvm::Sp(Hstabilised/Cpv, he);
         }
     }
 
@@ -336,7 +336,7 @@ Foam::heatTransferSystem::heatTransfer() const
 
             eqns[phase.name()] +=
                 HEff*(otherPhase.thermo().T()() - phase.thermo().T()())
-              + H/Cpv*he - fvm::Sp(H/Cpv, he);
+              + H/Cpv*he() - fvm::Sp(H/Cpv, he);
         }
     }
 

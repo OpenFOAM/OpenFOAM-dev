@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
             {
                 if (rotating)
                 {
-                    solve(hUEqn + (F ^ hU) == -magg*h()*fvi::grad(h + h0));
+                    solve(hUEqn + (F ^ hU()) == -magg*h()*fvi::grad(h + h0));
                 }
                 else
                 {

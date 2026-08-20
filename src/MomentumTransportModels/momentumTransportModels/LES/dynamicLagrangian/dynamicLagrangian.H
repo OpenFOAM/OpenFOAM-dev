@@ -81,7 +81,7 @@ protected:
     // Protected Member Functions
 
         //- Update sub-grid eddy-viscosity
-        void correctNut(const volInternalTensorField& gradU);
+        void correctNut(const volTensorField& gradU);
 
         virtual void correctNut();
 

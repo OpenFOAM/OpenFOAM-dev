@@ -225,8 +225,8 @@ void LienLeschziner::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
      ==
-        Ceps1_*G*epsilon_/k_
-      - fvm::Sp(Ceps2_*f2*epsilon_/k_, epsilon_)
+        Ceps1_*G*epsilon_()/k_()
+      - fvm::Sp(Ceps2_*f2()*epsilon_()/k_(), epsilon_)
       + E(f2)
     );
 

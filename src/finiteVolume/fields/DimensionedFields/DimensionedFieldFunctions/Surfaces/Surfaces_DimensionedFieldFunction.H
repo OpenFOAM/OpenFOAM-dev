@@ -73,7 +73,7 @@ SourceFiles
 #ifndef Surfaces_DimensionedFieldFunction_H
 #define Surfaces_DimensionedFieldFunction_H
 
-#include "DimensionedFieldFunctions.H"
+#include "DimensionedFieldFunction.H"
 #include "searchableSurfaceList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

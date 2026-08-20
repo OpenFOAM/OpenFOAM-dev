@@ -52,7 +52,7 @@ Foam::CarrierEqn<Type>::residual
     // Build the residual
     if (Su.valid() && Sp.valid())
     {
-        return (Su.S() + Sp.S()*psi)/mesh_.time().deltaT()/mesh_.V();
+        return (Su.S() + Sp.S()*psi())/mesh_.time().deltaT()/mesh_.V();
     }
     else if (Su.valid())
     {
@@ -60,7 +60,7 @@ Foam::CarrierEqn<Type>::residual
     }
     else if (Sp.valid())
     {
-        return Sp.S()*psi/mesh_.time().deltaT()/mesh_.V();
+        return Sp.S()*psi()/mesh_.time().deltaT()/mesh_.V();
     }
     else
     {

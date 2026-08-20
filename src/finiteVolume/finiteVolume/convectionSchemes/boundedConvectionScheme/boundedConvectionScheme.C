@@ -75,7 +75,7 @@ boundedConvectionScheme<Type>::fviDiv
 {
     return
         scheme_().fviDiv(faceFlux, vf)
-      - fvi::surfaceIntegrate(faceFlux)*vf;
+      - fvi::surfaceIntegrate(faceFlux)*vf();
 }
 
 

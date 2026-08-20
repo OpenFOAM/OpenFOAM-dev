@@ -162,6 +162,7 @@ inline Foam::tmp<T>::tmp(const Expression& e)
 :
     type_(REUSABLE_TMP),
     ptr_(new T(e))
+    // ptr_(eval(e).ptr())
 {}
 
 

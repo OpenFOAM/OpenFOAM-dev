@@ -30,7 +30,7 @@ License
 #include "zeroGradientFvPatchFields.H"
 #include "alphaOneFvPatchScalarField.H"
 #include "constantSurfaceTension.H"
-#include "fvcVolumeIntegrate.H"
+#include "fviVolumeIntegrate.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcFlux.H"
@@ -135,7 +135,8 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
 
     nHat_.correctBoundaryConditions();
 
-    VbyA_.primitiveFieldRef() = mesh.V()/magSf_;
+    VbyA_.primitiveFieldRef() =
+        mesh.V().primitiveField()/magSf_.primitiveField();
     VbyA_.correctBoundaryConditions();
 
     return true;
@@ -186,7 +187,7 @@ void Foam::solvers::isothermalFilm::correctCoNum()
 
 void Foam::solvers::isothermalFilm::continuityErrors()
 {
-    const dimensionedScalar mass = fvc::domainIntegrate(rho()*delta()*magSf);
+    const dimensionedScalar mass = fvi::domainIntegrate(rho()*delta()*magSf);
 
     correctContinuityError();
 
@@ -198,10 +199,10 @@ void Foam::solvers::isothermalFilm::continuityErrors()
         );
 
         const scalar sumLocalContErr =
-            (fvc::domainIntegrate(mag(massContErr))/mass).value();
+            (fvi::domainIntegrate(mag(massContErr))/mass).value();
 
         const scalar globalContErr =
-            (fvc::domainIntegrate(massContErr)/mass).value();
+            (fvi::domainIntegrate(massContErr)/mass).value();
 
         Info<< "time step continuity errors : sum local = " << sumLocalContErr
             << ", global = " << globalContErr;

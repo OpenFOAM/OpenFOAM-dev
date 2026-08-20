@@ -25,7 +25,7 @@ License
 
 #include "reactionRates.H"
 #include "chemistryModel.H"
-#include "fvcVolumeIntegrate.H"
+#include "fviVolumeIntegrate.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
 #include "polyDistributionMap.H"
@@ -151,12 +151,13 @@ bool Foam::functionObjects::reactionRates::write()
         // Compute the average rate and write it into the log file
         const scalar sumVRR =
             zone_.all()
-          ? fvc::domainIntegrate(RR).value()
+          ? fvi::domainIntegrate(RR).value()
           : gSum
             (
                 scalarField
                 (
-                    fvMeshFunctionObject::mesh_.V()*RR,
+                    fvMeshFunctionObject::mesh_.V().primitiveField()
+                   *RR.primitiveField(),
                     zone_.zone()
                 )
             );

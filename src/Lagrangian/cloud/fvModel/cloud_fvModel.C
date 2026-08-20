@@ -87,12 +87,14 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
     // Volume source
     if (!isPhase && !isMultiphase && dims == dimless && notNull(ctcdfCloud))
     {
-        return
+        return eval
+        (
             ctcdfCloud.rhoByRhoc
            *coupledCloud_.carrierEqn<scalar>("1").residual
             (
                 inv(dimensions::time)
-            );
+            )
+        );
     }
     if (!isPhase && isMultiphase && dims == dimless && notNull(ctcdfCloud))
     {

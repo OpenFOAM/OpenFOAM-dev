@@ -63,8 +63,8 @@ void Foam::solvers::XiFluid::burn()
     (
         "dMgb",
         mgbCoeff_*
-        (b*c*mgb)().weightedAverage(mesh.V())
-       /((b*c)().weightedAverage(mesh.V()) + small)
+        sum(b()*c()*mgb()*mesh.V())
+       /(sum(b()*c()*mesh.V()) + dimensionedScalar(dimVolume, rootVSmall))
       + dimensionedScalar(mgb.dimensions(), small)
     );
 
@@ -159,7 +159,7 @@ void Foam::solvers::XiFluid::burn()
             tbLaplacianPhiCorr = -*bLaplacian.faceFluxCorrectionPtr();
         }
 
-        tSu = bSource.Su() + divPhiSt*b;
+        tSu = bSource.Su() + divPhiSt*b();
         tSp = bSource.Sp();
     }
 

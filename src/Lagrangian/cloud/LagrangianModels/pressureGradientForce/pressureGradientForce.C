@@ -64,11 +64,11 @@ void Foam::Lagrangian::pressureGradientForce::addUSup
     const LagrangianSubScalarField mcByMOrMc
     (
         isCloud<clouds::coupledToConstantDensityFluid>()
-      ? v/cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
-      : v*cloud<clouds::coupledToFluid>().rhoc(subMesh)
+      ? eval(v/cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc)
+      : eval(v*cloud<clouds::coupledToFluid>().rhoc(subMesh))
     );
 
-    eqn.Su += mcByMOrMc*cCloud.DUDtc(subMesh);
+    eqn.Su += eval(mcByMOrMc*cCloud.DUDtc(subMesh));
 }
 
 

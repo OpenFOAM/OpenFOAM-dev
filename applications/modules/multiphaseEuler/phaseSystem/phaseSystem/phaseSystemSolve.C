@@ -366,7 +366,7 @@ void Foam::phaseSystem::solve
                 );
 
                 Info<< phase.name() << " predicted fraction, min, max = "
-                    << phase.weightedAverage(mesh_.Vsc()).value()
+                    << weightedAverage(phase, mesh_.Vsc()()).value()
                     << ' ' << min(phase).value()
                     << ' ' << max(phase).value()
                     << endl;
@@ -782,7 +782,7 @@ void Foam::phaseSystem::solve
                 const phaseModel& phase = solvePhases[solvePhasei];
 
                 Info<< phase.name() << " fraction, min, max = "
-                    << phase.weightedAverage(mesh_.Vsc()).value()
+                    << weightedAverage(phase, mesh_.Vsc()()).value()
                     << ' ' << min(phase).value()
                     << ' ' << max(phase).value()
                     << endl;
@@ -820,8 +820,11 @@ void Foam::phaseSystem::solve
                 }
 
                 Info<< "Phase-sum volume fraction, min, max = "
-                    << (sumAlphaMoving + 1 - alphaVoid())()
-                      .weightedAverage(mesh_.Vsc()).value()
+                    << weightedAverage
+                       (
+                           eval(sumAlphaMoving + 1 - alphaVoid())(),
+                           mesh_.Vsc()()
+                       ).value()
                     << ' ' << min(sumAlphaMoving + 1 - alphaVoid()).value()
                     << ' ' << max(sumAlphaMoving + 1 - alphaVoid()).value()
                     << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Description
 #include "removeFaces.H"
 #include "polyTopoChangeMap.H"
 #include "polyTopoChange.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "zeroGradientFvPatchFields.H"
 #include "randomGenerator.H"
 
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 
     // Force allocation of V. Important for any mesh changes since otherwise
     // old time volumes are not stored
-    const scalar totalVol = gSum(mesh.V());
+    const scalar totalVol = gSum(mesh.V().primitiveField());
 
     // Face removal engine. No checking for not merging boundary faces.
     removeFaces faceRemover(mesh, great);
@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
                     << exit(FatalError);
             }
 
-            const scalar newVol = gSum(mesh.V());
+            const scalar newVol = gSum(mesh.V().primitiveField());
             Info<< "Initial volume = " << totalVol
                 << "  New volume = " << newVol
                 << endl;

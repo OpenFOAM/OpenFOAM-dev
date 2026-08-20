@@ -58,6 +58,18 @@ namespace fvi
             const VolField<Type>&
         );
 
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<VolInternalField<Type>> Su
+        (
+            const Expression& e,
+            const VolField<Type>&
+        );
+
         template<class Type>
         tmp<VolInternalField<Type>> Su
         (
@@ -72,6 +84,18 @@ namespace fvi
         tmp<VolInternalField<Type>> Sp
         (
             const VolInternalField<scalar>&,
+            const VolField<Type>&
+        );
+
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<VolInternalField<Type>> Sp
+        (
+            const Expression& e,
             const VolField<Type>&
         );
 
@@ -97,6 +121,18 @@ namespace fvi
         tmp<VolInternalField<Type>> SuSp
         (
             const VolInternalField<scalar>&,
+            const VolField<Type>&
+        );
+
+        template
+        <
+            class Type,
+            class Expression,
+            class = EnableIfExpressionable<Expression>
+        >
+        tmp<VolInternalField<Type>> SuSp
+        (
+            const Expression& e,
             const VolField<Type>&
         );
 

@@ -41,6 +41,7 @@ SourceFiles
 #include "GeometricFieldFwd.H"
 #include "GeometricBoundaryField.H"
 #include "GeometricFieldSources.H"
+#include "expressionExpressionable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -371,6 +372,10 @@ public:
             const HashTable<word>& fieldSourceTypes = HashTable<word>(),
             const IOerrorLocation& fieldSourceErrorLocation = IOerrorLocation()
         );
+
+        //- Construct from an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        GeometricField(const Expression& e) = delete;
 
         //- Clone
         tmp<GeometricField<Type, GeoMesh, PrimitiveField>> clone() const;

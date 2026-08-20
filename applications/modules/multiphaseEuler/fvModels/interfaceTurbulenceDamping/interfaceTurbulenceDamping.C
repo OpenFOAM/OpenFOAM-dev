@@ -146,19 +146,19 @@ void Foam::fv::interfaceTurbulenceDamping::addRhoSup
 
     volScalarField::Internal aSqrnu
     (
-        movingPhases[0]*sqr(movingPhases[0].fluidThermo().nu()()())
+        movingPhases[0]()*sqr(movingPhases[0].fluidThermo().nu()()())
     );
 
     for (label phasei=1; phasei<movingPhases.size(); phasei++)
     {
         aSqrnu +=
-            movingPhases[phasei]
+            movingPhases[phasei]()
            *sqr(movingPhases[phasei].fluidThermo().nu()()());
     }
 
     if (field.name() == "epsilon")
     {
-        eqn += rho*interfaceFraction(phase_)*C2_*aSqrnu*turbulence_.k()()
+        eqn += rho*interfaceFraction(phase_)*C2_*aSqrnu*turbulence_.k()()()
             /pow4(delta_);
     }
     else if (field.name() == "omega")
@@ -264,13 +264,13 @@ void Foam::fv::interfaceTurbulenceDamping::addSup
 
     const volScalarField::Internal aSqrnu
     (
-        alpha*sqr(phase_.fluidThermo().nu()()())
+        alpha()*sqr(phase_.fluidThermo().nu()()())
     );
 
     if (field.name() == IOobject::groupName("epsilon", phaseName_))
     {
         eqn += rho()*interfaceFraction(alpha)
-            *C2_*aSqrnu*turbulence_.k()()/pow4(delta_);
+          *C2_*aSqrnu*turbulence_.k()()()/pow4(delta_);
     }
     else if (field.name() == IOobject::groupName("omega", phaseName_))
     {

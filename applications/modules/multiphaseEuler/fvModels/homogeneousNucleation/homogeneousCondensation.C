@@ -107,7 +107,8 @@ Foam::fv::homogeneousCondensation::dAndMDotByAlphaSolution() const
     // Mole fraction of nucleating specie
     const volScalarField::Internal Xi
     (
-        thermoGas.Y()[specieis().first()]*WGas/thermoGas.Wi(specieis().first())
+        thermoGas.Y()[specieis().first()]()
+       *WGas/thermoGas.Wi(specieis().first())
     );
 
     // Saturation pressure and concentration

@@ -81,7 +81,7 @@
             // discretisation of the b equation.
             const volInternalScalarField mgb
             (
-                fvi::div(nf, b, "div(phiSt,b)") - b*fvi::div(nf) + dMgb
+                fvi::div(nf, b, "div(phiSt,b)") - b()*fvi::div(nf) + dMgb
             );
             const scalar AkEst =
                 gSum(mgb.primitiveField()*mesh.V().primitiveField());

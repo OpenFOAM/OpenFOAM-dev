@@ -146,8 +146,10 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
     const volScalarField::Internal L(this->L(Tsat));
 
     // Wetted fraction
-    wetFraction_ =
-        partitioningModel_->wetFraction(liquid_()/max(1 - solid_(), small));
+    wetFraction_ = partitioningModel_->wetFraction
+    (
+        eval(liquid_()/max(1 - solid_(), small))
+    );
 
     // Bubble departure diameter
     dDeparture_ =
@@ -222,7 +224,7 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
     // Volumetric mass source in due to the wall boiling and bulk nucleation
     mDot_ =
         (1 - f)*mDot_
-      + f*(1.0/6.0)*A2E*dDeparture_*vapourRho*fDeparture_*Av;
+      + f*(1.0/6.0)*A2E*dDeparture_*vapourRho*fDeparture_*Av();
 
     // Evaporative heat flux
     qEvaporative_ = mDot_*L;
@@ -244,7 +246,7 @@ void Foam::fv::phaseSurfaceBoiling::correctMDot() const
     // Quenching heat flux
     qQuenching_ =
         (1 - f)*qQuenching_
-      + f*A2*hQuenching*max(Tsurface - liquidThermo.T(), rooVSmallT)*Av;
+      + f*A2*hQuenching*max(Tsurface - liquidThermo.T()(), rooVSmallT)*Av();
 }
 
 

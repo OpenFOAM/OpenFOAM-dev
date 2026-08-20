@@ -55,6 +55,11 @@ Description
     Macro(symmTensor, __VA_ARGS__)                                             \
     Macro(tensor, __VA_ARGS__)
 
+#define FOR_ALL_TENSOR_FIELD_TYPES(Macro, ...)                                 \
+    Macro(sphericalTensor, __VA_ARGS__)                                        \
+    Macro(symmTensor, __VA_ARGS__)                                             \
+    Macro(tensor, __VA_ARGS__)
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif

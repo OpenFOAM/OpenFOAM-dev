@@ -392,7 +392,7 @@ void Foam::Lagrangian::turbulentDispersion::addSup
 {
     assertCloud<clouds::coupledToConstantDensityFluid>();
 
-    eqn.Su += dragPtr_->D(deltaT.mesh())*avgUturbPtr_();
+    eqn.Su += eval(dragPtr_->D(deltaT.mesh())*avgUturbPtr_());
 }
 
 
@@ -410,7 +410,7 @@ void Foam::Lagrangian::turbulentDispersion::addSup
         clouds::coupledToFluid
     >();
 
-    eqn.Su += dragPtr_->D(deltaT.mesh())*avgUturbPtr_();
+    eqn.Su += eval(dragPtr_->D(deltaT.mesh())*avgUturbPtr_());
 }
 
 

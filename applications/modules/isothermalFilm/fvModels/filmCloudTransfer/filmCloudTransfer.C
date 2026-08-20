@@ -299,11 +299,9 @@ Foam::fv::filmCloudTransfer::ejectedMassToCloud() const
 {
     return filmToCloudTransfer<scalar>
     (
-        (
-            mesh().V()
-           *mesh().time().deltaTValue()
-           *film_.alpha()*film_.rho()*ejection_->rate()
-        )()
+        mesh().V()
+       *mesh().time().deltaTValue()
+       *film_.alpha()*film_.rho()*ejection_->rate()
     );
 }
 

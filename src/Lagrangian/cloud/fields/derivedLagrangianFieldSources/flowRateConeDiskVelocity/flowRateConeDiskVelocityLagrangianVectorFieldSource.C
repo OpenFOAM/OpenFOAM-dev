@@ -91,7 +91,7 @@ Foam::flowRateConeDiskVelocityLagrangianVectorFieldSource::value
         flowRateNumber.Q(injection, subMesh)
        /diskInjection.area()
        *direction
-       /average(direction & diskInjection.axis());
+       /average(eval(direction & diskInjection.axis())());
 }
 
 

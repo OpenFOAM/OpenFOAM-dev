@@ -46,7 +46,7 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::rd
         typedName("rd"),
         min
         (
-            this->nuEff()()
+            this->nuEff()()()
            /(
                 max
                 (
@@ -92,7 +92,7 @@ SpalartAllmarasDDES<BasicMomentumTransportModel>::dTilda
         typedName("dTilda"),
         max
         (
-            this->y()
+            this->y()()
           - fd(mag(gradU))
            *max
             (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ void Foam::LagrangianSp<Foam::vector>::makeTensor()
 
     if (!scalarCoeff_.valid()) return;
 
-    tensorCoeff_ += tensor::I*scalarCoeff_.S();
+    tensorCoeff_ += eval(tensor::I*scalarCoeff_.S());
 
     scalarCoeff_ *= Zero;
 }
@@ -114,7 +114,7 @@ Foam::LagrangianSp<Foam::vector>::A() const
             new LagrangianCoeff<scalar, true>
             (
                 eqn(),
-                (1.0/3.0)*tr(tensorCoeff_.S())
+                eval((1.0/3.0)*tr(tensorCoeff_.S()))
             )
         )
       : tmp<LagrangianCoeff<scalar, true>>(scalarCoeff_);
@@ -134,7 +134,7 @@ Foam::LagrangianSp<Foam::vector>::H() const
           ? new LagrangianCoeff<vector, false>
             (
                 eqn,
-                dev2(tensorCoeff_.S()) & eqn.psi()
+                eval(dev2(tensorCoeff_.S()) & eqn.psi())
             )
           : new LagrangianCoeff<vector, false>(eqn)
         );
@@ -159,8 +159,8 @@ Foam::LagrangianSp<Foam::vector>::Su(const LagrangianEqn<vector>& eqn) const
             (
                 eqn,
                 tensorCoeff_.valid()
-              ? tensorCoeff_.S() & eqn.psi()
-              : scalarCoeff_.S()*eqn.psi()
+              ? eval(tensorCoeff_.S() & eqn.psi())
+              : eval(scalarCoeff_.S()*eqn.psi())
             )
           : new LagrangianCoeff<vector, false>(eqn)
         );

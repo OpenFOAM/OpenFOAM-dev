@@ -36,7 +36,7 @@ SourceFiles
 #define GeometricScalarField_H
 
 #include "GeometricField.H"
-#include "DimensionedScalarField.H"
+#include "scalarField.H"
 
 #define TEMPLATE                                                               \
     template                                                                   \

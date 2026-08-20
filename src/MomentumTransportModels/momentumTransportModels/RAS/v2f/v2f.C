@@ -48,9 +48,9 @@ tmp<volScalarField> v2f<BasicMomentumTransportModel>::boundEpsilon()
 
 
 template<class BasicMomentumTransportModel>
-tmp<volInternalScalarField> v2f<BasicMomentumTransportModel>::Ts() const
+tmp<volScalarField> v2f<BasicMomentumTransportModel>::Ts() const
 {
-    return max(k_()/epsilon_(), 6.0*sqrt(this->nu()()/epsilon_()));
+    return max(k_/epsilon_, 6.0*sqrt(this->nu()/epsilon_));
 }
 
 
@@ -70,8 +70,7 @@ tmp<volInternalScalarField> v2f<BasicMomentumTransportModel>::Ls() const
 template<class BasicMomentumTransportModel>
 void v2f<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_.internalFieldRef() =
-        min(boundEpsilon()()/epsilon_(), this->Cmu_*v2_()*Ts());
+    this->nut_ = min(boundEpsilon()/epsilon_, this->Cmu_*v2_*Ts());
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -258,7 +257,7 @@ void v2f<BasicMomentumTransportModel>::correct()
       + fvm::div(alphaRhoPhi, epsilon_)
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
-        Ceps1*alpha*rho*G/Ts
+        Ceps1*alpha()*rho()*G/Ts
       - fvm::SuSp(((2.0/3.0)*Ceps1 + Ceps3_)*alpha()*rho()*divU, epsilon_)
       - fvm::Sp(Ceps2_*alpha()*rho()/Ts, epsilon_)
       + fvModels.source(alpha, rho, epsilon_)
@@ -298,7 +297,7 @@ void v2f<BasicMomentumTransportModel>::correct()
       - fvm::laplacian(f_)
      ==
       - fvm::Sp(1.0/L2, f_)
-      - 1.0/L2/k_*(v2fAlpha - C2_*G)
+      - 1.0/L2/k_()*(v2fAlpha - C2_*G)
     );
 
     fEqn.ref().relax();

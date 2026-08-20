@@ -447,8 +447,14 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const volScalarField& fi = popBal.f(i);
                 const dimensionedScalar& vi = popBal.v(i);
 
-                resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*alpha/vi))/zone_.V();
+                resultValues[i] = gSum
+                (
+                    filterField
+                    (
+                        mesh_.V().primitiveField()
+                       *fi.primitiveField()*alpha.primitiveField()/vi.value()
+                    )
+                )/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -466,8 +472,14 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const volScalarField& fi = popBal.f(i);
                 const dimensionedScalar& vi = popBal.v(i);
 
-                resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*alpha/vi))/zone_.V();
+                resultValues[i] = gSum
+                (
+                    filterField
+                    (
+                        mesh_.V().primitiveField()*fi.primitiveField()
+                       *alpha.primitiveField()/vi.value()
+                    )
+                )/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -489,8 +501,14 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const volScalarField& alpha = popBal.phases()[i];
                 const volScalarField& fi = popBal.f(i);
 
-                resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*alpha))/zone_.V();
+                resultValues[i] = gSum
+                (
+                    filterField
+                    (
+                        mesh_.V().primitiveField()
+                       *fi.primitiveField()*alpha.primitiveField()
+                    )
+                )/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -507,8 +525,14 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const volScalarField& alpha = popBal.phases()[i];
                 const volScalarField& fi = popBal.f(i);
 
-                resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*alpha))/zone_.V();
+                resultValues[i] = gSum
+                (
+                    filterField
+                    (
+                        mesh_.V().primitiveField()
+                       *fi.primitiveField()*alpha.primitiveField()
+                    )
+                )/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -531,12 +555,15 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const volScalarField& fi = popBal.f(i);
                 const dimensionedScalar& vi = popBal.v(i);
 
-                resultValues[i] =
-                    gSum
+                resultValues[i] = gSum
+                (
+                    filterField
                     (
-                        filterField(mesh_.V()*popBal.a(i)()*fi*alpha/vi)
+                         mesh_.V().primitiveField()
+                        *popBal.a(i)().primitiveField()*fi.primitiveField()
+                        *alpha.primitiveField()/vi.value()
                     )
-                   /zone_.V();
+                )/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -557,9 +584,13 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 resultValues[i] =
                     gSum
                     (
-                        filterField(mesh_.V()*popBal.a(i)()*fi*alpha/vi)
-                    )
-                   /zone_.V();
+                        filterField
+                        (
+                            mesh_.V().primitiveField()
+                           *popBal.a(i)().primitiveField()*fi.primitiveField()
+                           *alpha.primitiveField()/vi.value()
+                        )
+                    )/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)

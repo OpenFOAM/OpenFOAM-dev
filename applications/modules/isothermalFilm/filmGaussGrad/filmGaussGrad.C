@@ -91,7 +91,7 @@ void Foam::fv::filmGaussGrad<Type>::calcGrad
         }
     }
 
-    ifGrad /= mesh.V();
+    ifGrad /= mesh.V().primitiveField();
 }
 
 

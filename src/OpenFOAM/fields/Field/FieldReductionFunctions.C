@@ -328,6 +328,8 @@ Type average(const UList<Type>& f)
     }
 }
 
+TMP_REDUCTION_FUNCTION(Type, average)
+
 template<class Type>
 Type gAverage
 (
@@ -354,7 +356,6 @@ Type gAverage
     }
 }
 
-TMP_REDUCTION_FUNCTION(Type, average)
 TMP_REDUCTION_FUNCTION(Type, gAverage)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

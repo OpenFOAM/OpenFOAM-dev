@@ -113,7 +113,7 @@ void Foam::solvers::incompressibleFluid::correctPressure()
     // Explicitly relax pressure for momentum corrector
     p.relax();
 
-    U.internalFieldRef() = HbyA() - rAtU()*fvi::grad(p);
+    U.internalFieldRef() = HbyA() - rAtU()()*fvi::grad(p);
     U.correctBoundaryConditions();
     fvConstraints().constrain(U);
 

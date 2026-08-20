@@ -55,55 +55,17 @@ namespace Foam
 namespace fvc
 {
     template<class Type>
-    tmp<Field<Type>> volumeIntegrate
-    (
-        const VolField<Type>&
-    );
+    tmp<Field<Type>> volumeIntegrate(const VolField<Type>&);
 
     template<class Type>
-    tmp<Field<Type>> volumeIntegrate
-    (
-        const tmp<VolField<Type>>&
-    );
+    tmp<Field<Type>> volumeIntegrate(const tmp<VolField<Type>>&);
 
 
     template<class Type>
-    tmp<Field<Type>> volumeIntegrate
-    (
-        const DimensionedField<Type, fvMesh>&
-    );
+    dimensioned<Type> domainIntegrate(const VolField<Type>&);
 
     template<class Type>
-    tmp<Field<Type>> volumeIntegrate
-    (
-        const tmp<DimensionedField<Type, fvMesh>>&
-    );
-
-
-    template<class Type>
-    dimensioned<Type> domainIntegrate
-    (
-        const VolField<Type>&
-    );
-
-    template<class Type>
-    dimensioned<Type> domainIntegrate
-    (
-        const tmp<VolField<Type>>&
-    );
-
-
-    template<class Type>
-    dimensioned<Type> domainIntegrate
-    (
-        const DimensionedField<Type, fvMesh>&
-    );
-
-    template<class Type>
-    dimensioned<Type> domainIntegrate
-    (
-        const tmp<DimensionedField<Type, fvMesh>>&
-    );
+    dimensioned<Type> domainIntegrate(const tmp<VolField<Type>>&);
 }
 
 

@@ -157,7 +157,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
         alpha1Eqn.solve();
 
         Info<< "Phase-1 volume fraction = "
-            << alpha1.weightedAverage(mesh.Vsc()).value()
+            << weightedAverage(alpha1, mesh.Vsc()()).value()
             << "  Min(" << alpha1.name() << ") = " << min(alpha1).value()
             << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
             << endl;
@@ -220,7 +220,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
                     alpha1,
                     talphaPhi1Un(),
                     talphaPhi1Corr.ref(),
-                    (Sp() + divU())(),
+                    eval(Sp() + divU())(),
                     oneField(),
                     zeroField()
                 );
@@ -264,7 +264,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
                     phiCN,
                     alphaPhi1,
                     Sp(),
-                    (Su() + divU()*min(alpha1(), scalar(1)))(),
+                    eval(Su() + divU()*min(alpha1(), scalar(1)))(),
                     oneField(),
                     zeroField()
                 );
@@ -325,7 +325,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
     }
 
     Info<< "Phase-1 volume fraction = "
-        << alpha1.weightedAverage(mesh.Vsc()).value()
+        << weightedAverage(alpha1, mesh.Vsc()()).value()
         << "  Min(" << alpha1.name() << ") = " << min(alpha1).value()
         << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
         << endl;

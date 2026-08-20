@@ -122,7 +122,7 @@ void Foam::fv::VoFTurbulenceDamping::addSup
 
     if (field.name() == "epsilon")
     {
-        eqn += mixture_.interfaceFraction()*C2_*aSqrnu*turbulence_.k()()
+        eqn += mixture_.interfaceFraction()()*C2_*aSqrnu*turbulence_.k()()()
            /pow4(delta_);
     }
     else if (field.name() == "omega")
@@ -171,7 +171,7 @@ void Foam::fv::VoFTurbulenceDamping::addSup
 
     if (field.name() == IOobject::groupName("epsilon", phaseName_))
     {
-        eqn += mixture_.interfaceFraction()*C2_*taSqrnu*turbulence_.k()()
+        eqn += mixture_.interfaceFraction()*C2_*taSqrnu*turbulence_.k()()()
            /pow4(delta_);
     }
     else if (field.name() == IOobject::groupName("omega", phaseName_))

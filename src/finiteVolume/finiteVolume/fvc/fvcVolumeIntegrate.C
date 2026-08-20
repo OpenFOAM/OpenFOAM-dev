@@ -67,26 +67,6 @@ volumeIntegrate
 
 
 template<class Type>
-tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, fvMesh>& df)
-{
-    return df.mesh().V().primitiveField()*df.primitiveField();
-}
-
-
-template<class Type>
-tmp<Field<Type>>
-volumeIntegrate(const tmp<DimensionedField<Type, fvMesh>>& tdf)
-{
-    tmp<Field<Type>> tdidf
-    (
-        tdf().mesh().V().primitiveField()*tdf().primitiveField()
-    );
-    tdf.clear();
-    return tdidf;
-}
-
-
-template<class Type>
 dimensioned<Type>
 domainIntegrate
 (
@@ -110,33 +90,6 @@ dimensioned<Type> domainIntegrate
 {
     dimensioned<Type> integral = domainIntegrate(tvf());
     tvf.clear();
-    return integral;
-}
-
-
-template<class Type>
-dimensioned<Type> domainIntegrate
-(
-    const DimensionedField<Type, fvMesh>& df
-)
-{
-    return dimensioned<Type>
-    (
-        "domainIntegrate(" + df.name() + ')',
-        dimensions::volume*df.dimensions(),
-        gSum(fvc::volumeIntegrate(df))
-    );
-}
-
-
-template<class Type>
-dimensioned<Type> domainIntegrate
-(
-    const tmp<DimensionedField<Type, fvMesh>>& tdf
-)
-{
-    dimensioned<Type> integral = domainIntegrate(tdf());
-    tdf.clear();
     return integral;
 }
 

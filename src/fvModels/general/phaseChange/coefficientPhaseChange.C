@@ -65,7 +65,7 @@ Foam::fv::coefficientPhaseChange::timesY1
 
     if (species().size() == 1)
     {
-        return mcThermos.first().Y()[specieis().first()]*mDot;
+        return mcThermos.first().Y()[specieis().first()]()*mDot;
     }
 
     tmp<volScalarField::Internal> tY1 =
@@ -121,7 +121,7 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::fv::coefficientPhaseChange::mDot() const
 {
-    return timesY1(alpha1_*mDotByAlpha1Y1());
+    return timesY1(alpha1_()*mDotByAlpha1Y1());
 }
 
 
@@ -131,7 +131,7 @@ Foam::fv::coefficientPhaseChange::mDot(const label mDoti) const
     const ThermoRefPair<multicomponentThermo> mcThermos =
         thermos().thermos<multicomponentThermo>();
 
-    tmp<volScalarField::Internal> tmDot = alpha1_*mDotByAlpha1Y1();
+    tmp<volScalarField::Internal> tmDot = alpha1_()*mDotByAlpha1Y1();
 
     if (mcThermos.valid().first())
     {
@@ -164,7 +164,7 @@ void Foam::fv::coefficientPhaseChange::addSup
         else
         {
             eqn +=
-                mDotByAlpha1*alpha1_
+                mDotByAlpha1*alpha1_()
               - correction(fvm::Sp(mDotByAlpha1, eqn.psi()));
         }
     }
@@ -196,7 +196,7 @@ void Foam::fv::coefficientPhaseChange::addSup
      && species().found(Yi.member())
     )
     {
-        eqn -= fvm::Sp(alpha1_*mDotByAlpha1Y1(), Yi);
+        eqn -= fvm::Sp(alpha1_()*mDotByAlpha1Y1(), Yi);
     }
     else
     {

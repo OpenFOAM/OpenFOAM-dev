@@ -168,7 +168,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 )
 :
     regIOobject(df),
-    PrimitiveField<Type>(df),
+    PrimitiveField<Type>(df.primitiveField()),
     OldTimeField<DimensionedField>(df),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
@@ -182,7 +182,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 )
 :
     regIOobject(move(df)),
-    PrimitiveField<Type>(move(df)),
+    PrimitiveField<Type>(move(df.primitiveFieldRef())),
     OldTimeField<DimensionedField>(move(df)),
     mesh_(df.mesh_),
     dimensions_(move(df.dimensions_))
@@ -197,7 +197,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 )
 :
     regIOobject(df),
-    PrimitiveField<Type>(df),
+    PrimitiveField<Type>(df.primitiveField()),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh()),
     dimensions_(df.dimensions())
@@ -213,7 +213,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 )
 :
     regIOobject(df, reuse),
-    PrimitiveField<Type>(df, reuse),
+    PrimitiveField<Type>(df.primitiveFieldRef(), reuse),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh()),
     dimensions_(df.dimensions())
@@ -250,7 +250,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 )
 :
     regIOobject(io),
-    PrimitiveField<Type>(df),
+    PrimitiveField<Type>(df.primitiveField()),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
@@ -321,7 +321,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 )
 :
     regIOobject(newName, df, newName != df.name()),
-    PrimitiveField<Type>(df),
+    PrimitiveField<Type>(df.primitiveField()),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
@@ -365,6 +365,39 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
     dimensions_(tdf().dimensions_)
 {
     tdf.clear();
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<class Expression, class>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
+(
+    const Expression& e
+)
+:
+    regIOobject
+    (
+        expression::name(e),
+        expression::getAll<expression::IO>(e),
+        false // <-- do not register as not explicitly named
+    ),
+    PrimitiveField<Type>
+    (
+        expression::access
+        (
+            e,
+            expression::Value(),
+            expression::Base()
+        )
+    ),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
+    mesh_(expression::getAll<expression::Mesh<GeoMesh>>(e)),
+    dimensions_(expression::access(e, dimensions::invalid))
+{
+    expression::assertSameAllContainerProperty
+    <
+        expression::MeshPointer<GeoMesh>
+    >(e);
 }
 
 
@@ -687,56 +720,6 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::T() const
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-dimensioned<Type>
-DimensionedField<Type, GeoMesh, PrimitiveField>::average() const
-{
-    dimensioned<Type> Average
-    (
-        this->name() + ".average()",
-        this->dimensions(),
-        gAverage(primitiveField())
-    );
-
-    return Average;
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-template<template<class> class PrimitiveField2>
-dimensioned<Type>
-DimensionedField<Type, GeoMesh, PrimitiveField>::weightedAverage
-(
-    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& weightField
-) const
-{
-    return
-    (
-        dimensioned<Type>
-        (
-            this->name() + ".weightedAverage(weights)",
-            this->dimensions(),
-            gSum(weightField.primitiveField()*primitiveField())
-           /gSum(weightField.primitiveField())
-        )
-    );
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-template<template<class> class PrimitiveField2>
-dimensioned<Type>
-DimensionedField<Type, GeoMesh, PrimitiveField>::weightedAverage
-(
-    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>& tweightField
-) const
-{
-    dimensioned<Type> wa = weightedAverage(tweightField());
-    tweightField.clear();
-    return wa;
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
 template<template<class> class PrimitiveField2>
 void DimensionedField<Type, GeoMesh, PrimitiveField>::reset
 (
@@ -832,7 +815,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
     checkFieldOperation(*this, df, "=");
 
     dimensions_ = df.dimensions();
-    PrimitiveField<Type>::operator=(df);
+    PrimitiveField<Type>::operator=(df.primitiveField());
 }
 
 
@@ -846,7 +829,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
     checkFieldOperation(*this, df, "=");
 
     dimensions_ = move(df.dimensions());
-    PrimitiveField<Type>::operator=(move(df));
+    PrimitiveField<Type>::operator=(move(df.primitiveFieldRef()));
 }
 
 
@@ -886,7 +869,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
     checkFieldOperation(*this, df, "=");
 
     dimensions_ = df.dimensions();
-    PrimitiveField<Type>::operator=(df);
+    PrimitiveField<Type>::operator=(df.primitiveField());
 }
 
 
@@ -902,8 +885,32 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
     checkFieldOperation(*this, df, "=");
 
     dimensions_ = df.dimensions();
-    PrimitiveField<Type>::operator=(df);
+    PrimitiveField<Type>::operator=(df.primitiveField());
     tdf.clear();
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<class Expression, class>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
+(
+    const Expression& e
+)
+{
+    expression::assertSameAllContainerProperty
+    <
+        expression::MeshPointer<GeoMesh>
+    >(e);
+
+    dimensions_ = expression::access(e, dimensions::invalid);
+
+    primitiveFieldRef() =
+        expression::access
+        (
+            e,
+            expression::Value(),
+            expression::Base()
+        );
 }
 
 
@@ -976,7 +983,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
     checkFieldOperation(*this, df, #op);                                       \
                                                                                \
     dimensions_ op df.dimensions();                                            \
-    PrimitiveField<Type>::operator op(df);                                     \
+    PrimitiveField<Type>::operator op(df.primitiveField());                    \
 }                                                                              \
                                                                                \
 template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
@@ -998,6 +1005,29 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
 {                                                                              \
     dimensions_ op dt.dimensions();                                            \
     PrimitiveField<Type>::operator op(dt.value());                             \
+}                                                                              \
+                                                                               \
+template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
+template<class Expression, class>                                              \
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
+(                                                                              \
+    const Expression& e                                                        \
+)                                                                              \
+{                                                                              \
+    expression::assertSameAllContainerProperty                                 \
+    <                                                                          \
+        expression::MeshPointer<GeoMesh>                                       \
+    >(e);                                                                      \
+                                                                               \
+    dimensions_ = expression::access(e, dimensions::invalid);                  \
+                                                                               \
+    primitiveFieldRef() op                                                     \
+        expression::access                                                     \
+        (                                                                      \
+            e,                                                                 \
+            expression::Value(),                                               \
+            expression::Base()                                                 \
+        );                                                                     \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

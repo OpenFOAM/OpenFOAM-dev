@@ -385,7 +385,7 @@ public:
             virtual tmp<volInternalScalarField> continuityError() const = 0;
 
             //- Return the phase kinetic energy
-            virtual tmp<volScalarField> K() const = 0;
+            virtual const volScalarField& K() const = 0;
 
 
         // Transport

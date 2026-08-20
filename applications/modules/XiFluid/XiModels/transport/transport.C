@@ -109,7 +109,7 @@ void Foam::XiModels::transport::correct()
     const volScalarField::Internal XiEqStar(R/(R - GEta));
     const volScalarField::Internal XiEq
     (
-        1 + XiProfile_->profile()()*(XiEqStar - 1)
+        1 + XiProfile_->profile()()()*(XiEqStar - 1)
     );
     const volScalarField::Internal G(R*(XiEq - 1)/XiEq);
 
@@ -150,10 +150,10 @@ void Foam::XiModels::transport::correct()
 
         const volScalarField::Internal rhoSigma
         (
-            rho_
+            rho_()
            *max
             (
-                (n() & n())*tr(gradU) - (n & gradU & n),
+                (n() & n())*tr(gradU) - (n() & gradU & n()),
                 dimensionedScalar(dimless/dimensions::time, 0)
             )
         );
@@ -168,10 +168,10 @@ void Foam::XiModels::transport::correct()
 
         const volScalarField::Internal rhoSigmaSt
         (
-            rho_
+            rho_()
            *max
             (
-                (n() & n())*tr(gradSt) - (n & gradSt & n),
+                (n() & n())*tr(gradSt) - (n() & gradSt & n()),
                 dimensionedScalar(dimless/dimensions::time, 0)
             )
         );

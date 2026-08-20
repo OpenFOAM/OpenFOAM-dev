@@ -146,6 +146,8 @@ protected:
 
     // Protected Member Functions
 
+        using kOmegaSST<BasicMomentumTransportModel>::correctNut;
+
         virtual void correctNut
         (
             const volScalarField& S2,

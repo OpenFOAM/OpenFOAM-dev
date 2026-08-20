@@ -129,7 +129,7 @@ void Foam::functionObjects::layerAverage::calcLayers()
     layerVolume_ = sum<scalar>(mesh_.V());
 
     // Average the cell centres
-    layerCentre_ = sum<vector>(mesh_.V()*mesh_.C())/layerVolume_;
+    layerCentre_ = sum<vector>(mesh_.V()*mesh_.C()())/layerVolume_;
 
     // If symmetric, keep only half of the coordinates
     if (symmetric_)

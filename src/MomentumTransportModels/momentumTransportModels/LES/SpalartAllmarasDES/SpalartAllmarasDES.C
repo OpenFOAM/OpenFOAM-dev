@@ -176,7 +176,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::dTilda
     return volInternalScalarField::New
     (
         typedName("dTilda"),
-        min(CDES_*this->delta()(), this->y())
+        min(CDES_*this->delta()(), this->y()())
     );
 }
 
