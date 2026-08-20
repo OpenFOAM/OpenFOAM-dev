@@ -267,6 +267,7 @@ void readCells
     IFstream& is,
     DynamicList<cellShape>& cellVerts,
     DynamicList<label>& cellMaterial,
+    labelHashSet& edgesIndices,
     DynamicList<label>& boundaryFaceIndices,
     DynamicList<face>& boundaryFaces,
     DynamicList<label>& cellCorrespondence,
@@ -321,11 +322,13 @@ void readCells
             // Rod. Skip.
             is.getLine(line);
             is.getLine(line);
+            edgesIndices.insert(celli);
         }
         else if (feID == 171)
         {
             // Rod. Skip.
             is.getLine(line);
+            edgesIndices.insert(celli);
         }
         else if (feID == 41 || feID == 91)
         {
@@ -497,6 +500,7 @@ void readCells
     cellVerts.shrink();
     cellMaterial.shrink();
     boundaryFaces.shrink();
+    edgesIndices.shrink();
     boundaryFaceIndices.shrink();
     cellCorrespondence.shrink();
 
@@ -516,7 +520,8 @@ void readSets
 (
     IFstream& is,
     DynamicList<word>& patchNames,
-    DynamicList<labelList>& patchFaceIndices
+    DynamicList<labelList>& patchFaceIndices,
+    labelHashSet& edgesIndices
 )
 {
     Info<< "Starting reading patches at line " << is.lineNumber() << '.'
@@ -577,8 +582,20 @@ void readSets
         // Store
         if (groupType == 8)
         {
-            patchNames.append(groupName);
-            patchFaceIndices.append(groupIndices);
+             // if first element is an edge, it is a group of edges
+             if (edgesIndices.found(groupIndices[0]))
+             {
+                 // => skip it
+                 Info<< "Group " << groupName
+                     << " is a group of edges => Skipping it."
+                     << endl;
+                 continue;
+             }
+             else // group of faces => add it
+             {
+                 patchNames.append(groupName);
+                 patchFaceIndices.append(groupIndices);
+             }
         }
         else
         {
@@ -731,6 +748,9 @@ int main(int argc, char *argv[])
     DynamicList<label> cellMat;
     DynamicList<label> cellCorrespondence;
 
+    // Edges (to be skipped from groups reading)
+    labelHashSet edgesIndices;
+
     // Boundary faces
     DynamicList<label> boundaryFaceIndices;
     DynamicList<face> boundaryFaces;
@@ -779,6 +799,7 @@ int main(int argc, char *argv[])
                     inFile,
                     cellVerts,
                     cellMat,
+                    edgesIndices,
                     boundaryFaceIndices,
                     boundaryFaces,
                     cellCorrespondence,
@@ -792,7 +813,8 @@ int main(int argc, char *argv[])
                 (
                     inFile,
                     patchNames,
-                    patchFaceIndices
+                    patchFaceIndices,
+                    edgesIndices
                 );
             break;
 
