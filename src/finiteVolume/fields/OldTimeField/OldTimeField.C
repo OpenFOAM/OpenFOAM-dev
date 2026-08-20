@@ -110,10 +110,15 @@ void Foam::OldTimeField<FieldType>::nullOldestTimeInner()
 
 template<class FieldType>
 template<class OldTimeBaseField>
-void Foam::OldTimeField<FieldType>::setBase(const OldTimeBaseField& otbf) const
+void Foam::OldTimeField<FieldType>::setBase
+(
+    const OldTimeBaseField& otbf,
+    const bool clear
+) const
 {
     #ifdef FULLDEBUG
-    if (otbf.tfield0_.valid() && otbf.tfield0_.isTmp())
+    const bool baseHasOldTime = otbf.tfield0_.valid() && otbf.tfield0_.isTmp();
+    if ((clear || tfield0_.valid()) && baseHasOldTime)
     {
         WarningInFunction
             << otbf.field().typeName << " old-time for field "
@@ -122,38 +127,36 @@ void Foam::OldTimeField<FieldType>::setBase(const OldTimeBaseField& otbf) const
     }
     #endif
 
-    if (!tfield0_.valid())
+    if (clear && !tfield0_.valid())
     {
         otbf.tfield0_ = tmp<typename Field0Type::Base>();
     }
-    else if (isNull(tfield0_()))
+    else if (tfield0_.valid())
     {
         otbf.tfield0_ =
             tmp<typename Field0Type::Base>
             (
-                NullObjectRef<typename Field0Type::Base>()
+                isNull(tfield0_())
+              ? NullObjectRef<typename Field0Type::Base>()
+              : tfield0_()
             );
-    }
-    else
-    {
-        otbf.tfield0_ = tmp<typename Field0Type::Base>(tfield0_());
     }
 
     otbf.timeIndex_ = timeIndex_;
 
-    otbf.setBase();
+    otbf.template setBase(clear);
 }
 
 
 template<class FieldType>
-void Foam::OldTimeField<FieldType>::setBase(const nil&) const
+void Foam::OldTimeField<FieldType>::setBase(const nil&, const bool clear) const
 {}
 
 
 template<class FieldType>
-void Foam::OldTimeField<FieldType>::setBase() const
+void Foam::OldTimeField<FieldType>::setBase(const bool clear) const
 {
-    setBase(OldTimeBaseFieldType<FieldType>()(*this));
+    setBase(OldTimeBaseFieldType<FieldType>()(*this), clear);
 }
 
 
@@ -336,7 +339,7 @@ void Foam::OldTimeField<FieldType>::storeOldTimes() const
 
         // Update the time index
         timeIndex_ = field().time().timeIndex();
-        setBase();
+        setBase(false);
     }
 }
 

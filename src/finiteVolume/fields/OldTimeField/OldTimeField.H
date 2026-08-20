@@ -161,15 +161,15 @@ private:
 
         //- Set the field reference in the base class. Overload for when the
         //  base class is not an old-time field.
-        void setBase(const nil&) const;
+        void setBase(const nil&, const bool clear) const;
 
         //- Set the field reference in the base class. Overload for when the
         //  base class is an old-time field.
         template<class OldTimeBaseField>
-        void setBase(const OldTimeBaseField& otbf) const;
+        void setBase(const OldTimeBaseField& otbf, const bool clear) const;
 
         //- Set the field reference in the base class
-        void setBase() const;
+        void setBase(const bool clear = true) const;
 
 
 protected:
