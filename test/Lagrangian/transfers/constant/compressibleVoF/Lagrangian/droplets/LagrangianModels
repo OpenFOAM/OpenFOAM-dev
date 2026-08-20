@@ -16,8 +16,6 @@ FoamFile
 
 x 0.06;
 
-volumeFlux 40 [ml/m^2/s];
-
 #include "../../../Lagrangian/droplets/LagrangianModels"
 
 collisionPhaseTransfer
@@ -25,6 +23,12 @@ collisionPhaseTransfer
     type        collisionPhaseTransfer;
 
     minFraction 10 [%];
+}
+
+constantFluxCarrierTransfer
+{
+    type        constantFluxCarrierTransfer;
+    massFlux    40 [g/m^2/s];
 }
 
 // ************************************************************************* //

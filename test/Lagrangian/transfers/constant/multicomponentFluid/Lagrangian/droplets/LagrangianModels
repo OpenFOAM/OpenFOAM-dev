@@ -16,8 +16,12 @@ FoamFile
 
 x -0.02;
 
-volumeFlux 120 [ml/m^2/s];
-
 #include "../../../Lagrangian/droplets/LagrangianModels"
+
+constantFluxCarrierTransfer
+{
+    type        constantFluxCarrierTransfer;
+    massFlux    120 [g/m^2/s];
+}
 
 // ************************************************************************* //

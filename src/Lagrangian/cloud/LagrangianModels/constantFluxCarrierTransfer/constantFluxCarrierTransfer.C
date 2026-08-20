@@ -288,7 +288,6 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::calculate
     if (!final) return;
 
     const LagrangianSubMesh& subMesh = deltaT.mesh();
-    SubList<LagrangianState> subStates = subMesh.sub(mesh().states());
 
     // Surface area divided by volume to the power of two-thirds. Could/should
     // be made a virtual function of the shaped cloud if non-spherical
@@ -301,30 +300,23 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::calculate
        *cbrt(cloud<clouds::shaped>().v(subMesh))
        /aByVPowTwoThirds
        /flux_;
-    if
-    (
-        flux_.dimensions() == dimensions::massFluxDensity
-    )
+    if (flux_.dimensions() == dimensions::massFluxDensity)
     {
-        assertCloud
-        <
-            clouds::coupledToConstantDensityFluid,
-            clouds::massive
-        >();
+        assertCloud<clouds::coupledToConstantDensityFluid, clouds::massive>();
 
         if (isCloud<clouds::coupledToConstantDensityFluid>())
         {
-            tlifetime =
-                tlifetime/cloud<clouds::coupledToConstantDensityFluid>().rho();
+            tlifetime.ref() *=
+                cloud<clouds::coupledToConstantDensityFluid>().rho();
         }
         else
         {
-            tlifetime =
-                tlifetime/cloud<clouds::massive>().rho(subMesh);
+            tlifetime.ref() *= cloud<clouds::massive>().rho(subMesh);
         }
     }
 
     // Remove any particles with a lifetime shorter than the time-step
+    SubList<LagrangianState> subStates = subMesh.sub(mesh().states());
     forAll(subMesh, subi)
     {
         if (tlifetime()[subi] < deltaT[subi])
