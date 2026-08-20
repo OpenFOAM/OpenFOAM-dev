@@ -138,13 +138,13 @@ void Foam::OldTimeField<FieldType>::setBase
             (
                 isNull(tfield0_())
               ? NullObjectRef<typename Field0Type::Base>()
-              : tfield0_()
+              : static_cast<const typename Field0Type::Base&>(tfield0_())
             );
     }
 
     otbf.timeIndex_ = timeIndex_;
 
-    otbf.template setBase(clear);
+    otbf.setBase(clear);
 }
 
 
