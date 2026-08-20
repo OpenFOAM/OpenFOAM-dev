@@ -128,7 +128,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
         (
             mesh,
             pointNormals,
-            plusEqOp(),
+            addEqOp(),
             vector::zero
         );
 
@@ -136,7 +136,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
         (
             mesh,
             pointCount,
-            plusEqOp(),
+            addEqOp(),
             scalar(0)
         );
 

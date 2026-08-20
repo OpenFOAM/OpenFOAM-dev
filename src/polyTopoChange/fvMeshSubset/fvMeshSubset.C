@@ -1374,7 +1374,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
         // Get patch sizes (up to nextPatchID).
         // Note that up to nextPatchID the globalPatchMap is an identity so
         // no need to index through that.
-        Pstream::listCombineGather(globalPatchSizes, plusEqOp());
+        Pstream::listCombineGather(globalPatchSizes, addEqOp());
         Pstream::listCombineScatter(globalPatchSizes);
 
         // Now all processors have all the patchnames.

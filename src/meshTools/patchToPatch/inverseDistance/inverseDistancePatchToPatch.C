@@ -292,7 +292,7 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
 
             result.resize(returnReduce(result.size(), maxOp()), 0);
 
-            Pstream::listCombineGather(result, plusEqOp());
+            Pstream::listCombineGather(result, addEqOp());
             Pstream::listCombineScatter(result);
 
             return result;

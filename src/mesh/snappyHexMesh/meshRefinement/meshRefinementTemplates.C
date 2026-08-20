@@ -269,7 +269,7 @@ void Foam::meshRefinement::weightedSum
         mesh,
         meshPoints,
         sum,
-        plusEqOp(),
+        addEqOp(),
         Type(Zero)     // null value
     );
 }

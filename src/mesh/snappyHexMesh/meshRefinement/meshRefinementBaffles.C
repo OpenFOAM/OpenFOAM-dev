@@ -629,7 +629,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
     (
         mesh_,
         nBafflesPerEdge,
-        plusEqOp(),  // in-place add
+        addEqOp(),  // in-place add
         label(0)            // initial value
     );
 
@@ -1727,7 +1727,7 @@ void Foam::meshRefinement::calcPatchNumMasterFaces
         mesh_,
         patch.meshEdges(mesh_.edges(), mesh_.pointEdges()),
         nMasterFacesPerEdge,
-        plusEqOp(),
+        addEqOp(),
         label(0)
     );
 }
@@ -3096,7 +3096,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
                     nPosOrientation.find(faceToConnectedZone[facei])() += n;
                 }
             }
-            Pstream::mapCombineGather(nPosOrientation, plusEqOp());
+            Pstream::mapCombineGather(nPosOrientation, addEqOp());
             Pstream::mapCombineScatter(nPosOrientation);
 
 

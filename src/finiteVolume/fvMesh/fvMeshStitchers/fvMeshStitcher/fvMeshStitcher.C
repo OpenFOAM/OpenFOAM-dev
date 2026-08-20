@@ -1086,7 +1086,7 @@ Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
         mesh_,
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeNParts,
-        plusEqOp(),
+        addEqOp(),
         label(0)
     );
     syncTools::syncEdgeList
@@ -1094,7 +1094,7 @@ Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
         mesh_,
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeParts,
-        plusEqOp(),
+        addEqOp(),
         part(),
         []
         (
@@ -1208,7 +1208,7 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
         mesh_,
         ownerOrigBoundaryEdgeMeshEdge,
         ownerOrigBoundaryEdgeNOrigFaces,
-        plusEqOp(),
+        addEqOp(),
         label(0)
     );
 

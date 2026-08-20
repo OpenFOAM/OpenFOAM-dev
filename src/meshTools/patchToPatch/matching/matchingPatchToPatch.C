@@ -119,7 +119,7 @@ Foam::label Foam::patchToPatches::matching::finalise
                 mapPtr->subMap(),
                 false,
                 count,
-                plusEqOp(),
+                addEqOp(),
                 flipOp(),
                 label(0)
             );

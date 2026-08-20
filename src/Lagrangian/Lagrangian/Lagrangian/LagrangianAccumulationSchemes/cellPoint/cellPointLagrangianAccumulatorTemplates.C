@@ -106,7 +106,7 @@ void Foam::cellPointLagrangianAccumulator::accumulate
         mesh(),
         accumulatingPointPoint_,
         accumulatingPointValues,
-        plusEqOp(),
+        addEqOp(),
         pTraits<Type>::zero
     );
 

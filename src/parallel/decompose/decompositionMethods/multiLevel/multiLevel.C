@@ -199,7 +199,7 @@ void Foam::decompositionMethods::multiLevel::decompose
             );
 
             label nPoints = returnReduce(domainPoints.size(), addOp());
-            Pstream::listCombineGather(nOutsideConnections, plusEqOp());
+            Pstream::listCombineGather(nOutsideConnections, addEqOp());
             Pstream::listCombineScatter(nOutsideConnections);
             label nPatches = 0;
             label nFaces = 0;

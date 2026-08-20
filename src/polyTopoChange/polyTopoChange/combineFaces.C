@@ -692,7 +692,7 @@ void Foam::combineFaces::setRefinement
     (
         mesh_,
         nPointFaces,
-        plusEqOp(),
+        addEqOp(),
         label(0)            // null value
     );
 

@@ -82,7 +82,7 @@ void Foam::snappyLayerDriver::sumWeights
         meshRefiner_.mesh(),
         meshPoints,
         invSumWeight,
-        plusEqOp<scalar>(),
+        addEqOp<scalar>(),
         scalar(0)         // null value
     );
 
@@ -794,7 +794,7 @@ void Foam::snappyLayerDriver::findIsolatedRegions
         mesh,
         pp.meshPoints(),
         isolatedPoint,
-        plusEqOp<label>(),
+        addEqOp<label>(),
         label(0)        // null value
     );
 

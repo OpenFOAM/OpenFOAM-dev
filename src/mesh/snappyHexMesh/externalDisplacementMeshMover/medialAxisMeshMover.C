@@ -1358,7 +1358,7 @@ void Foam::medialAxisMeshMover::findIsolatedRegions
         mesh(),
         meshPoints,
         isolatedPoint,
-        plusEqOp(),
+        addEqOp(),
         label(0)        // null value
     );
 

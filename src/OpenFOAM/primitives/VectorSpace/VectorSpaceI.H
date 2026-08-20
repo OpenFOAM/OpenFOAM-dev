@@ -281,7 +281,7 @@ inline void VectorSpace<Form, Cmpt, Ncmpts>::operator+=
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
-    VectorSpaceOps<Ncmpts,0>::eqOp(*this, vs, plusEqOp());
+    VectorSpaceOps<Ncmpts,0>::eqOp(*this, vs, addEqOp());
 }
 
 
@@ -291,7 +291,7 @@ inline void VectorSpace<Form, Cmpt, Ncmpts>::operator-=
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
-    VectorSpaceOps<Ncmpts,0>::eqOp(*this, vs, minusEqOp());
+    VectorSpaceOps<Ncmpts,0>::eqOp(*this, vs, subtractEqOp());
 }
 
 
@@ -399,7 +399,7 @@ inline auto magSqr
     (
         ms,
         vs,
-        plusEqMagSqrOp()
+        addEqMagSqrOp()
     );
     return ms;
 }
@@ -509,7 +509,7 @@ inline Cmpt cmptSum
 )
 {
     Cmpt sum = vs.v_[0];
-    VectorSpaceOps<Ncmpts,1>::SeqOp(sum, vs, plusEqOp());
+    VectorSpaceOps<Ncmpts,1>::SeqOp(sum, vs, addEqOp());
     return sum;
 }
 

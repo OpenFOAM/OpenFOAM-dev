@@ -823,7 +823,7 @@ int main(int argc, char *argv[])
 
     reduce(sumViewFactorPatch, sumOp());
 
-    Pstream::listCombineGather(patchArea, plusEqOp());
+    Pstream::listCombineGather(patchArea, addEqOp());
     Pstream::listCombineScatter(patchArea);
 
 

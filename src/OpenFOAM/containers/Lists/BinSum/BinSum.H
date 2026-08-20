@@ -51,7 +51,7 @@ template
 <
     class IndexType,
     class List,
-    class CombineOp = plusEqOp
+    class CombineOp = addEqOp
 >
 class BinSum
 :
@@ -93,7 +93,7 @@ public:
             const IndexType delta,
             const UList<IndexType>& indexVals,
             const List& vals,
-            const CombineOp& cop = plusEqOp()
+            const CombineOp& cop = addEqOp()
         );
 
 
@@ -121,14 +121,14 @@ public:
             (
                 const IndexType& indexVal,
                 const typename List::const_reference val,
-                const CombineOp& cop = plusEqOp()
+                const CombineOp& cop = addEqOp()
             );
 
             void add
             (
                 const UList<IndexType>& indexVals,
                 const List& vals,
-                const CombineOp& cop = plusEqOp()
+                const CombineOp& cop = addEqOp()
             );
 };
 

@@ -63,7 +63,7 @@ void Foam::cellPointLagrangianAccumulator::calcPointCellWeights()
     (
         mesh(),
         pointWeights,
-        plusEqOp(),
+        addEqOp(),
         scalar(0)
     );
 

@@ -523,7 +523,7 @@ List<weight> calcNonInterpolatingWeights
             cutWeightSums[weights[weighti].cuti] += weights[weighti].value;
         }
 
-        Pstream::listCombineGather(cutWeightSums, plusEqOp());
+        Pstream::listCombineGather(cutWeightSums, addEqOp());
         Pstream::listCombineScatter(cutWeightSums);
 
         forAll(weights, weighti)
@@ -816,7 +816,7 @@ List<weight> calcInterpolatingWeights
             cutWeightSums[weights[weighti].cuti] += weights[weighti].value;
         }
 
-        Pstream::listCombineGather(cutWeightSums, plusEqOp());
+        Pstream::listCombineGather(cutWeightSums, addEqOp());
         Pstream::listCombineScatter(cutWeightSums);
 
         forAll(weights, weighti)

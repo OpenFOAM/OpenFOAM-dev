@@ -157,7 +157,7 @@ Foam::boolList Foam::zoneGenerators::orient::pointOrientation
             mesh_,
             patch.meshEdges(mesh_.edges(), mesh_.pointEdges()),
             nMasterFaces,
-            plusEqOp(),
+            addEqOp(),
             label(0)
         );
 

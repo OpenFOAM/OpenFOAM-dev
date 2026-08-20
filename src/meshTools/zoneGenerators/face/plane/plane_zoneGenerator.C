@@ -231,7 +231,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
                     }
                 }
             }
-            Pstream::listCombineGather(regionRegions, plusEqOp());
+            Pstream::listCombineGather(regionRegions, addEqOp());
             Pstream::listCombineScatter(regionRegions);
 
             // Collapse the region connections into a map between each region
@@ -273,7 +273,7 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
             {
                 regionNFaces[newSetFaceRegions[fi]] ++;
             }
-            Pstream::listCombineGather(regionNFaces, plusEqOp());
+            Pstream::listCombineGather(regionNFaces, addEqOp());
             Pstream::listCombineScatter(regionNFaces);
             Info<< "    Found " << nRegions << " contiguous regions with "
                 << regionNFaces << " faces" << endl;
@@ -296,8 +296,8 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
                 regionMagAreas[regioni] += mag(a);
                 regionCentres[regioni] += mag(a)*c;
             }
-            Pstream::listCombineGather(regionMagAreas, plusEqOp());
-            Pstream::listCombineGather(regionCentres, plusEqOp());
+            Pstream::listCombineGather(regionMagAreas, addEqOp());
+            Pstream::listCombineGather(regionCentres, addEqOp());
             Pstream::listCombineScatter(regionMagAreas);
             Pstream::listCombineScatter(regionCentres);
             regionCentres /= regionMagAreas;

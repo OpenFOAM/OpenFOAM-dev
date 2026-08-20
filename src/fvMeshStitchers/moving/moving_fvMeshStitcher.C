@@ -257,7 +257,7 @@ Foam::labelHashSet Foam::fvMeshStitchers::moving::ownerCoupledCellSet()
         mesh(),
         ncb.ownerOrigBoundaryEdgeMeshEdge(),
         ownerOrigBoundaryEdgeNSet,
-        plusEqOp(),
+        addEqOp(),
         label(0)
     );
 

@@ -1509,7 +1509,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
             //    );
             //
             //    labelList nProcCells(distributor.countCells(distribution));
-            //    Pstream::listCombineGather(nProcCells, plusEqOp());
+            //    Pstream::listCombineGather(nProcCells, addEqOp());
             //    Pstream::listCombineScatter(nProcCells);
             //
             //    Info<< "Calculated decomposition:" << endl;
@@ -1565,7 +1565,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::meshRefinement::balance
             labelList nProcCells(distributor.countCells(distribution));
             Pout<< "Wanted distribution:" << nProcCells << endl;
 
-            Pstream::listCombineGather(nProcCells, plusEqOp());
+            Pstream::listCombineGather(nProcCells, addEqOp());
             Pstream::listCombineScatter(nProcCells);
 
             Pout<< "Wanted resulting decomposition:" << endl;
@@ -2536,7 +2536,7 @@ const
             nCells[cellLevel[celli]]++;
         }
 
-        Pstream::listCombineGather(nCells, plusEqOp());
+        Pstream::listCombineGather(nCells, addEqOp());
         Pstream::listCombineScatter(nCells);
 
         Info<< "Cells per refinement level:" << endl;

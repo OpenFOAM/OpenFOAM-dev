@@ -420,7 +420,7 @@ void testPointSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             nMasters,
-            plusEqOp(),
+            addEqOp(),
             0
         );
 
@@ -496,7 +496,7 @@ void testEdgeSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             nMasters,
-            plusEqOp(),
+            addEqOp(),
             0
         );
 
@@ -565,7 +565,7 @@ void testFaceSync(const polyMesh& mesh, randomGenerator& rndGen)
         (
             mesh,
             nMasters,
-            plusEqOp()
+            addEqOp()
         );
 
         forAll(nMasters, facei)

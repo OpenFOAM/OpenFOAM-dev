@@ -185,7 +185,7 @@ void Foam::snappySnapDriver::smoothAndConstrain
             mesh,
             pp.meshPoints(),
             dispSum,
-            plusEqOp(),
+            addEqOp(),
             vector::zero,
             distributionMap::transform()
         );
@@ -194,7 +194,7 @@ void Foam::snappySnapDriver::smoothAndConstrain
             mesh,
             pp.meshPoints(),
             dispCount,
-            plusEqOp(),
+            addEqOp(),
             label(0),
             distributionMap::transform()
         );

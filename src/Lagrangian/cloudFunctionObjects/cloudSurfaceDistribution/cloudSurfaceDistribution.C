@@ -693,7 +693,7 @@ bool Foam::functionObjects::cloudSurfaceDistribution::write()
             // correcting the ends (which have half the sample space of the
             // interior points)
             scalarField PDF(sum);
-            Pstream::listCombineGather(PDF, plusEqOp());
+            Pstream::listCombineGather(PDF, addEqOp());
             Pstream::listCombineScatter(PDF);
             PDF /= Foam::sum(PDF)*(range.second() - range.first())/nBins_;
             PDF.first() *= 2;

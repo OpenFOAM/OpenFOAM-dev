@@ -158,10 +158,10 @@ protected:
     // Protected Member Functions
 
         //- Plus-equals op for a tmp field. Will initialise the tmp if empty.
-        void plusEqOp(tmp<scalarField>& tf, const scalar d) const;
+        void addEqOp(tmp<scalarField>& tf, const scalar d) const;
 
         //- Plus-equals op for a tmp field. Will initialise the tmp if empty.
-        void plusEqOp(tmp<scalarField>& tf, const tmp<scalarField>& tdf) const;
+        void addEqOp(tmp<scalarField>& tf, const tmp<scalarField>& tdf) const;
 
         //- Get the patch kappa, kappa*Tc/delta, kappa/delta,
         //  reference T, current wall T and also the

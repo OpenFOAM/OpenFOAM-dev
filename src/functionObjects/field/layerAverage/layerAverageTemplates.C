@@ -52,7 +52,7 @@ Foam::tmp<Foam::Field<T>> Foam::functionObjects::layerAverage::sum
         }
     }
 
-    Pstream::listCombineGather(layerField, plusEqOp());
+    Pstream::listCombineGather(layerField, addEqOp());
     Pstream::listCombineScatter(layerField);
 
     return tlayerField;

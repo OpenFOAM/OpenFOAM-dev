@@ -75,7 +75,7 @@ Foam::AveragingMethods::Dual<Type>::Dual
     mesh.globalData().syncPointData
     (
         volumeDual_,
-        plusEqOp(),
+        addEqOp(),
         distributionMap::transform()
     );
 }
@@ -110,7 +110,7 @@ void Foam::AveragingMethods::Dual<Type>::syncDualData()
     this->mesh_.globalData().syncPointData
     (
         dataDual_,
-        plusEqOp(),
+        addEqOp(),
         distributionMap::transform()
     );
 }

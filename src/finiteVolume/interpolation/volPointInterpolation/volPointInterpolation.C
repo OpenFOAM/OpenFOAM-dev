@@ -289,7 +289,7 @@ Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
     (
         mesh(),
         sumWeights,
-        plusEqOp(),
+        addEqOp(),
         scalar(0)
     );
 

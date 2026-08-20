@@ -1021,7 +1021,7 @@ void matchRegions
                 nCellsInZone[cellRegion[celli]]++;
             }
         }
-        Pstream::listCombineGather(nCellsInZone, plusEqOp());
+        Pstream::listCombineGather(nCellsInZone, addEqOp());
         Pstream::listCombineScatter(nCellsInZone);
 
         // Pick the region with largest overlap of the zone

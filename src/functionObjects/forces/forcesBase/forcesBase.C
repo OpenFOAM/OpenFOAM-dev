@@ -901,8 +901,8 @@ void Foam::functionObjects::forcesBase::calcForcesMoments(const vector& CofR)
         }
     }
 
-    Pstream::listCombineGather(force_, plusEqOp());
-    Pstream::listCombineGather(moment_, plusEqOp());
+    Pstream::listCombineGather(force_, addEqOp());
+    Pstream::listCombineGather(moment_, addEqOp());
     Pstream::listCombineScatter(force_);
     Pstream::listCombineScatter(moment_);
 }

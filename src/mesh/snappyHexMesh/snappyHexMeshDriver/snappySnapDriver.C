@@ -208,7 +208,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
         mesh,
         pp.meshPoints(),
         avgBoundary,
-        plusEqOp(),  // combine op
+        addEqOp(),  // combine op
         vector::zero        // null value
     );
     syncTools::syncPointList
@@ -216,7 +216,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
         mesh,
         pp.meshPoints(),
         nBoundary,
-        plusEqOp(),  // combine op
+        addEqOp(),  // combine op
         label(0)            // null value
     );
 
@@ -284,14 +284,14 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
         (
             mesh,
             globalSum,
-            plusEqOp(), // combine op
+            addEqOp(), // combine op
             vector::zero        // null value
         );
         syncTools::syncPointList
         (
             mesh,
             globalNum,
-            plusEqOp(),  // combine op
+            addEqOp(),  // combine op
             label(0)            // null value
         );
 
@@ -792,7 +792,7 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
         mesh,
         pp.meshPoints(),
         avgBoundary,
-        plusEqOp(),  // combine op
+        addEqOp(),  // combine op
         vector::zero        // null value
     );
     syncTools::syncPointList
@@ -800,7 +800,7 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
         mesh,
         pp.meshPoints(),
         nBoundary,
-        plusEqOp(),  // combine op
+        addEqOp(),  // combine op
         label(0)            // null value
     );
 

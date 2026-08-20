@@ -175,8 +175,8 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
     }
 
     // Synchronise across the processor and cyclic patches
-    syncTools::syncFaceList(mesh, alphaf, plusEqOp());
-    syncTools::syncFaceList(mesh, correctedFaces, plusEqOp());
+    syncTools::syncFaceList(mesh, alphaf, addEqOp());
+    syncTools::syncFaceList(mesh, correctedFaces, addEqOp());
 
     // Correct selected faces
     forAll(correctedFaces, facei)

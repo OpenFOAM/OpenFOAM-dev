@@ -203,8 +203,8 @@ int main(int argc, char *argv[])
         }
 
 
-        Pstream::mapCombineGather(patchSize, plusEqOp());
-        Pstream::mapCombineGather(zoneSize, plusEqOp());
+        Pstream::mapCombineGather(patchSize, addEqOp());
+        Pstream::mapCombineGather(zoneSize, addEqOp());
 
 
         // Allocate compact numbering for all patches/faceZones

@@ -243,7 +243,7 @@ Foam::tmp<Foam::pointField> Foam::PatchTools::edgeNormals
         globalData.globalEdgeTransformedSlaves(),
         map,
         globalData.globalTransforms(),
-        plusEqOp(),              // add since normalised later on
+        addEqOp(),              // add since normalised later on
         distributionMap::transform()
     );
     cppEdgeData /= mag(cppEdgeData)+vSmall;

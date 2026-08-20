@@ -202,7 +202,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals() const
             mesh(),
             ownerOrigBoundary_.meshPoints(),
             pointNormals,
-            plusEqOp(),
+            addEqOp(),
             vector::zero
         );
 
@@ -239,7 +239,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals0() const
             mesh(),
             ownerOrigBoundary_.meshPoints(),
             pointNormals,
-            plusEqOp(),
+            addEqOp(),
             vector::zero
         );
 

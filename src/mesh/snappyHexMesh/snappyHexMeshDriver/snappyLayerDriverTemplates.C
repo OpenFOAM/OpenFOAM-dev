@@ -76,7 +76,7 @@ void Foam::snappyLayerDriver::averageNeighbours
         mesh,
         meshPoints,
         average,
-        plusEqOp(),
+        addEqOp(),
         Zero     // null value
     );
 

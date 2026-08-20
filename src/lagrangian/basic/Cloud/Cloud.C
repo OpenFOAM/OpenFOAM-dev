@@ -446,7 +446,7 @@ void Foam::lagrangian::Cloud<ParticleType>::move
     }
 
     // Warn about any approximate locates
-    Pstream::listCombineGather(td.patchNLocateBoundaryHits, plusEqOp());
+    Pstream::listCombineGather(td.patchNLocateBoundaryHits, addEqOp());
     if (Pstream::master())
     {
         forAll(td.patchNLocateBoundaryHits, patchi)

@@ -31,7 +31,7 @@ License
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::externalTemperatureFvPatchScalarField::plusEqOp
+void Foam::externalTemperatureFvPatchScalarField::addEqOp
 (
     tmp<scalarField>& tf,
     const scalar d
@@ -48,7 +48,7 @@ void Foam::externalTemperatureFvPatchScalarField::plusEqOp
 }
 
 
-void Foam::externalTemperatureFvPatchScalarField::plusEqOp
+void Foam::externalTemperatureFvPatchScalarField::addEqOp
 (
     tmp<scalarField>& tf,
     const tmp<scalarField>& tdf
@@ -87,7 +87,7 @@ void Foam::externalTemperatureFvPatchScalarField::getKappa
 
     T = tmp<scalarField>(*this);
 
-    plusEqOp(sumq, ttm.qCorr(patch().index()));
+    addEqOp(sumq, ttm.qCorr(patch().index()));
 }
 
 
@@ -368,11 +368,11 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
     // Add any user specified heat fluxes
     if (haveQ_)
     {
-        plusEqOp(sumq, Q_->value(t)/gSum(patch().magSf()));
+        addEqOp(sumq, Q_->value(t)/gSum(patch().magSf()));
     }
     if (haveq_)
     {
-        plusEqOp(sumq, q_->value(t));
+        addEqOp(sumq, q_->value(t));
     }
 
     // Add the (relaxed) radiative heat flux
@@ -385,7 +385,7 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
 
         qrPrevious_ = qr;
 
-        plusEqOp(sumq, qr);
+        addEqOp(sumq, qr);
     }
 
     // Evaluate the ambient temperature
@@ -396,11 +396,11 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
     if (h_.valid())
     {
         h_->update();
-        plusEqOp(hEff, h_());
+        addEqOp(hEff, h_());
     }
     if (haveEmissivity_)
     {
-        plusEqOp
+        addEqOp
         (
             hEff,
             emissivity_
@@ -413,8 +413,8 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
     // If we have a heat transfer coefficient then add it to the kappa sums
     if (hEff.valid())
     {
-        plusEqOp(sumKappaByDelta, hEff());
-        plusEqOp(sumKappaTcByDelta, hEff*Ta);
+        addEqOp(sumKappaByDelta, hEff());
+        addEqOp(sumKappaTcByDelta, hEff*Ta);
     }
 
     // Set the mixed parameters
@@ -440,7 +440,7 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
     tmp<scalarField> trefValue;
     if (sumKappaByDelta.valid())
     {
-        plusEqOp
+        addEqOp
         (
             trefValue,
             max(sumKappaTcByDelta, small*kappaByDelta*patchInternalField())
@@ -449,7 +449,7 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
     }
     if (sumq.valid())
     {
-        plusEqOp(trefValue, sumq()/kappaPlusSumKappaByDelta());
+        addEqOp(trefValue, sumq()/kappaPlusSumKappaByDelta());
     }
     if (trefValue.valid())
     {

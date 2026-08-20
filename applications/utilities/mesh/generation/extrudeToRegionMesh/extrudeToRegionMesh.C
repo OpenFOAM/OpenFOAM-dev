@@ -793,7 +793,7 @@ labelList countExtrudePatches
         }
     }
 
-    Pstream::listCombineGather(zoneSideNFaces, plusEqOp());
+    Pstream::listCombineGather(zoneSideNFaces, addEqOp());
     Pstream::listCombineScatter(zoneSideNFaces);
 
     return zoneSideNFaces;
@@ -1756,7 +1756,7 @@ int main(int argc, char *argv[])
         }
 
         // Reduce
-        Pstream::mapCombineGather(globalSum, plusEqOp());
+        Pstream::mapCombineGather(globalSum, addEqOp());
         Pstream::mapCombineScatter(globalSum);
 
         forAll(localToGlobalRegion, localRegionI)

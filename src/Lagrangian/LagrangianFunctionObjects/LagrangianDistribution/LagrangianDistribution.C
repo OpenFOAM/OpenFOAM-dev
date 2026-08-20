@@ -214,7 +214,7 @@ void Foam::functionObjects::LagrangianDistribution::writeDistribution
     }
 
     // Synchronise
-    Pstream::listCombineGather(PDF, plusEqOp());
+    Pstream::listCombineGather(PDF, addEqOp());
     Pstream::listCombineScatter(PDF);
 
     // Normalise and correct the ends, as they have half as many samples as the

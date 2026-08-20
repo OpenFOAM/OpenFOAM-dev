@@ -194,7 +194,7 @@ void setPatchField
         Pstream::listCombineGather
         (
             nonProcPatchNChangedFaces,
-            plusEqOp()
+            addEqOp()
         );
         Pstream::listCombineScatter
         (

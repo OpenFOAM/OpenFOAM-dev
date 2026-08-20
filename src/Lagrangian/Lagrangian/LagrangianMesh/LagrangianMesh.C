@@ -220,7 +220,7 @@ void Foam::LagrangianMesh::printGroups(const bool header) const
               - offsets[onPatchZeroi + patchi];
         }
     }
-    Pstream::listCombineGather(columnNumbers, plusEqOp());
+    Pstream::listCombineGather(columnNumbers, addEqOp());
     Pstream::listCombineScatter(columnNumbers);
 
     // Print the numbers
@@ -1287,7 +1287,7 @@ Foam::labelList Foam::LagrangianMesh::subMeshGlobalSizes() const
         size() - boundary()[nGlobalGroups - 2 - onPatchZeroi].mesh().start();
 
     // Sum over all processes
-    Pstream::listCombineGather(sizes, plusEqOp());
+    Pstream::listCombineGather(sizes, addEqOp());
     Pstream::listCombineScatter(sizes);
 
     // Construct the result. This includes processor patch groups, on which a

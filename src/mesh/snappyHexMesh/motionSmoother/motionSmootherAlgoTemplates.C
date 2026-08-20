@@ -186,14 +186,14 @@ Foam::motionSmootherAlgo::avg
     (
         mesh,
         res,
-        plusEqOp(),
+        addEqOp(),
         Type(Zero)     // null value
     );
     syncTools::syncPointList
     (
         mesh,
         sumWeight,
-        plusEqOp(),
+        addEqOp(),
         scalar(0)               // null value
     );
 

@@ -77,10 +77,10 @@ void Foam::SizeDistribution<CloudType>::write()
         parcelPDF[i + 1] += g;
     }
 
-    Pstream::listCombineGather(particlePDF, plusEqOp());
+    Pstream::listCombineGather(particlePDF, addEqOp());
     Pstream::listCombineScatter(particlePDF);
 
-    Pstream::listCombineGather(parcelPDF, plusEqOp());
+    Pstream::listCombineGather(parcelPDF, addEqOp());
     Pstream::listCombineScatter(parcelPDF);
 
     particlePDF.first() *= 2;

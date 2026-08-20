@@ -189,7 +189,7 @@ void Foam::meshCheck::printMeshStats
 
     if (nUnknown > 0)
     {
-        Pstream::mapCombineGather(polyhedralFaces, plusEqOp());
+        Pstream::mapCombineGather(polyhedralFaces, addEqOp());
 
         Info<< "    Breakdown of polyhedra by number of faces:" << nl
             << "        faces" << "   number of cells" << endl;
