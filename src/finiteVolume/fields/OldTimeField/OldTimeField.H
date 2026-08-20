@@ -153,6 +153,15 @@ private:
         //- Get a non-const reference to the field
         FieldType& fieldRef();
 
+        //- Store the old-time fields. Inner recursion. Overload for when the
+        //  base class is not an old-time field.
+        void storeOldTimesInner(const nil&) const;
+
+        //- Store the old-time fields. Inner recursion. Overload for when the
+        //  base class is an old-time field.
+        template<class OldTimeBaseField>
+        void storeOldTimesInner(const OldTimeBaseField& otbf) const;
+
         //- Store the old-time fields. Inner recursion.
         void storeOldTimesInner() const;
 

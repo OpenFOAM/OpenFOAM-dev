@@ -42,6 +42,22 @@ FieldType& Foam::OldTimeField<FieldType>::fieldRef()
 
 
 template<class FieldType>
+void Foam::OldTimeField<FieldType>::storeOldTimesInner(const nil&) const
+{}
+
+
+template<class FieldType>
+template<class OldTimeBaseField>
+void Foam::OldTimeField<FieldType>::storeOldTimesInner
+(
+    const OldTimeBaseField& otbf
+) const
+{
+    otbf.storeOldTimesInner();
+}
+
+
+template<class FieldType>
 void Foam::OldTimeField<FieldType>::storeOldTimesInner() const
 {
     if (tfield0_.valid())
@@ -79,6 +95,10 @@ void Foam::OldTimeField<FieldType>::storeOldTimesInner() const
 
             resetOldTime();
         }
+    }
+    else
+    {
+        storeOldTimesInner(OldTimeBaseFieldType<FieldType>()(*this));
     }
 }
 
