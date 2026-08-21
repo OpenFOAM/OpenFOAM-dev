@@ -155,17 +155,15 @@ inline SymmTensor<Cmpt> transform(const tensor& tt, const SymmTensor<Cmpt>& st)
 }
 
 
-/*---------------------------------------------------------------------------*\
-                        Class transformOp Declaration
-\*---------------------------------------------------------------------------*/
-
-// Return the argument; transformations do not change the dimensions
+//- Transformations do not change the dimensions
 inline dimensionSet transform(const dimensionSet& ds)
 {
     return ds;
 }
 
 
+//- Check the transformation tensor is dimensionless
+//  and return the dimensions of the argument
 inline dimensionSet transform
 (
     const dimensionSet& t,
@@ -183,6 +181,10 @@ inline dimensionSet transform
     return ds;
 }
 
+
+/*---------------------------------------------------------------------------*\
+                        Class transformOp Declaration
+\*---------------------------------------------------------------------------*/
 
 struct transformOp
 {
@@ -209,9 +211,8 @@ struct transformOp
 };
 
 
-/*---------------------------------------------------------------------------*\
-                      Class transformMaskOp Declaration
-\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Transformation mask functions
 
 template<class MaskType, class Type>
 inline MaskType transformMask(const Type& t)
@@ -237,18 +238,10 @@ inline symmTensor transformMask<symmTensor>(const tensor& t)
     return symm(t);
 }
 
-// template<>
-// inline symmTensor transformMask<symmTensor>(const symmTensor& st)
-// {
-//     return st;
-// }
 
-// template<>
-// inline tensor transformMask<tensor>(const symmTensor& st)
-// {
-//     return st;
-// }
-
+/*---------------------------------------------------------------------------*\
+                      Class transformMaskOp Declaration
+\*---------------------------------------------------------------------------*/
 
 struct transformMaskOp
 {
