@@ -118,9 +118,6 @@ int main(int argc, char *argv[])
         << "Detailed SolverPerformance<symmTensor>: " << nl
         << "  " << sP << endl;
 
-    tmp<volScalarField> hmm(p() + p());
-    Info << hmm << endl;
-
     return 0;
 }
 
