@@ -239,7 +239,7 @@ struct AllContainers<Expression, EnableIfExpressionable<Expression>>
 
 //- Get a property from the first container in an expression
 template<class Property, class Expression>
-typename Property::type getAll(const Expression& e)
+typename Property::type getFirst(const Expression& e)
 {
     typedef AllContainers<Expression> allContainers;
 
@@ -249,7 +249,7 @@ typename Property::type getAll(const Expression& e)
 //- Get a list of the properties from all the containers in an expression
 template<class Property, class Expression>
 FixedList<typename Property::type, AllContainers<Expression>::n>
-getAlls(const Expression& e)
+getAll(const Expression& e)
 {
     typedef AllContainers<Expression> allContainers;
 

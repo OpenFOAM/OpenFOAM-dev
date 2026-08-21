@@ -88,7 +88,7 @@ void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::operator=
     #endif
 
     // Get size of the first field in the expression
-    const label size = expression::getAll<expression::Size>(e);
+    const label size = expression::getFirst<expression::Size>(e);
 
     if (capacity_ >= size)
     {

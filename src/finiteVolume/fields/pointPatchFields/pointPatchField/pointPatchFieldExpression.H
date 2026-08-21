@@ -115,7 +115,7 @@ struct Select
             pointPatchField<Type>::New
             (
                 pointPatchField<Type>::calculatedType(),
-                getAll<Patch<pointPatch>>(e),
+                getFirst<Patch<pointPatch>>(e),
                 iF
             );
 

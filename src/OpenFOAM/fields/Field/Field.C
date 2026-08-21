@@ -265,7 +265,7 @@ template<class Type>
 template<class Expression, class>
 Foam::Field<Type>::Field(const Expression& e)
 :
-    List<Type>(expression::getAll<expression::Size>(e))
+    List<Type>(expression::getFirst<expression::Size>(e))
 {
     #ifdef FULLDEBUG
     expression::assertSameAllContainerProperty<expression::Size>(e);
@@ -608,7 +608,7 @@ void Foam::Field<Type>::append(const Expression& e)
     //     const label s = this->size();
 
     //     // Resize the field to that of the first field in the expression
-    //     List<Type>::resize(s + expression::getAll<expression::Size>(e));
+    //     List<Type>::resize(s + expression::getFirst<expression::Size>(e));
 
     //     std::copy(expression::begin(e), expression::end(e), this->begin()+s);
     // }
@@ -705,7 +705,7 @@ void Foam::Field<Type>::operator=(const Expression& e)
     #endif
 
     // Resize the field to that of the first field in the expression
-    List<Type>::resize(expression::getAll<expression::Size>(e));
+    List<Type>::resize(expression::getFirst<expression::Size>(e));
 
     std::copy(expression::begin(e), expression::end(e), this->begin());
 }

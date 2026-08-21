@@ -52,7 +52,7 @@ void assertSameAllContainerProperty(const Expression& e)
     typedef AllContainers<Expression> allContainers;
 
     FixedList<typename Property::type, allContainers::n> ps =
-        getAlls<Property>(e);
+        getAll<Property>(e);
 
     for (unsigned i = 1; i < allContainers::n; ++ i)
     {
@@ -81,7 +81,7 @@ void assertSameAllContainerProperty
     typedef AllContainers<Expression> allContainers;
 
     FixedList<typename Property::type, allContainers::n> ps =
-        getAlls<Property>(e);
+        getAll<Property>(e);
 
     if (allContainers::n)
     {

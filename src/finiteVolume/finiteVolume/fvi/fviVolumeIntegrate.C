@@ -74,7 +74,7 @@ dimensioned<Type> domainIntegrate(const DimensionedField<Type, fvMesh>& df)
 template<class Expression, class>
 ElementType<Expression> domainIntegrate(const Expression& e)
 {
-    const fvMesh& mesh = expression::getAll<expression::Mesh<fvMesh>>(e);
+    const fvMesh& mesh = expression::getFirst<expression::Mesh<fvMesh>>(e);
 
     return ElementType<Expression>
     (

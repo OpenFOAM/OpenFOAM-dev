@@ -159,7 +159,7 @@ struct Select
             fvPatchField<Type>::New
             (
                 fvPatchField<Type>::calculatedType(),
-                getAll<Patch<fvPatch>>(e),
+                getFirst<Patch<fvPatch>>(e),
                 iF
             );
 

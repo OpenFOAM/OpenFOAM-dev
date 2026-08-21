@@ -378,7 +378,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
     regIOobject
     (
         expression::name(e),
-        expression::getAll<expression::IO>(e),
+        expression::getFirst<expression::IO>(e),
         false // <-- do not register as not explicitly named
     ),
     PrimitiveField<Type>
@@ -391,7 +391,7 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
         )
     ),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
-    mesh_(expression::getAll<expression::Mesh<GeoMesh>>(e)),
+    mesh_(expression::getFirst<expression::Mesh<GeoMesh>>(e)),
     dimensions_(expression::access(e, dimensions::invalid))
 {
     expression::assertSameAllContainerProperty
