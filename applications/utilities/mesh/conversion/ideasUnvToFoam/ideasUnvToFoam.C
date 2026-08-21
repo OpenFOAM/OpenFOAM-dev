@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -267,6 +267,7 @@ void readCells
     IFstream& is,
     DynamicList<cellShape>& cellVerts,
     DynamicList<label>& cellMaterial,
+    labelHashSet& edgesIndices,
     DynamicList<label>& boundaryFaceIndices,
     DynamicList<face>& boundaryFaces,
     DynamicList<label>& cellCorrespondence,
@@ -287,6 +288,7 @@ void readCells
     const cellModel& hex = *(cellModeller::lookup("hex"));
     const cellModel& prism = *(cellModeller::lookup("prism"));
     const cellModel& tet = *(cellModeller::lookup("tet"));
+    const cellModel& pyr = *(cellModeller::lookup("pyr"));
 
     labelHashSet skippedElements;
 
@@ -320,11 +322,13 @@ void readCells
             // Rod. Skip.
             is.getLine(line);
             is.getLine(line);
+            edgesIndices.insert(celli);
         }
         else if (feID == 171)
         {
             // Rod. Skip.
             is.getLine(line);
+            edgesIndices.insert(celli);
         }
         else if (feID == 41 || feID == 91)
         {
@@ -386,6 +390,31 @@ void readCells
                 >> cVerts[3] >> cVerts[4] >> cVerts[5];
 
             cellVerts.append(cellShape(prism, cVerts, true));
+            cellMaterial.append(physProp);
+            addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
+
+            if (cellVerts.last().size() != cVerts.size())
+            {
+                Info<< "Line:" << is.lineNumber()
+                    << " element:" << celli
+                    << " type:" << feID
+                    << " collapsed from " << cVerts << nl
+                    << " to:" << cellVerts.last()
+                    << endl;
+            }
+        }
+        else if (feID == 119 || feID == 312)
+        {
+            // Pyramid.
+            is.getLine(line);
+
+            labelList cVerts(5);
+            IStringStream lineStr(line);
+            lineStr
+                >> cVerts[0] >> cVerts[1] >> cVerts[2]
+                >> cVerts[3] >> cVerts[4] ;
+
+            cellVerts.append(cellShape(pyr, cVerts, true));
             cellMaterial.append(physProp);
             addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
 
@@ -471,6 +500,7 @@ void readCells
     cellVerts.shrink();
     cellMaterial.shrink();
     boundaryFaces.shrink();
+    edgesIndices.shrink();
     boundaryFaceIndices.shrink();
     cellCorrespondence.shrink();
 
@@ -490,7 +520,8 @@ void readSets
 (
     IFstream& is,
     DynamicList<word>& patchNames,
-    DynamicList<labelList>& patchFaceIndices
+    DynamicList<labelList>& patchFaceIndices,
+    labelHashSet& edgesIndices
 )
 {
     Info<< "Starting reading patches at line " << is.lineNumber() << '.'
@@ -551,8 +582,20 @@ void readSets
         // Store
         if (groupType == 8)
         {
-            patchNames.append(groupName);
-            patchFaceIndices.append(groupIndices);
+             // if first element is an edge, it is a group of edges
+             if (edgesIndices.found(groupIndices[0]))
+             {
+                 // => skip it
+                 Info<< "Group " << groupName
+                     << " is a group of edges => Skipping it."
+                     << endl;
+                 continue;
+             }
+             else // group of faces => add it
+             {
+                 patchNames.append(groupName);
+                 patchFaceIndices.append(groupIndices);
+             }
         }
         else
         {
@@ -705,6 +748,9 @@ int main(int argc, char *argv[])
     DynamicList<label> cellMat;
     DynamicList<label> cellCorrespondence;
 
+    // Edges (to be skipped from groups reading)
+    labelHashSet edgesIndices;
+
     // Boundary faces
     DynamicList<label> boundaryFaceIndices;
     DynamicList<face> boundaryFaces;
@@ -753,6 +799,7 @@ int main(int argc, char *argv[])
                     inFile,
                     cellVerts,
                     cellMat,
+                    edgesIndices,
                     boundaryFaceIndices,
                     boundaryFaces,
                     cellCorrespondence,
@@ -766,7 +813,8 @@ int main(int argc, char *argv[])
                 (
                     inFile,
                     patchNames,
-                    patchFaceIndices
+                    patchFaceIndices,
+                    edgesIndices
                 );
             break;
 
