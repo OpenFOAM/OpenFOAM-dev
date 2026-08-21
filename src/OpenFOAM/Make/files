@@ -659,7 +659,6 @@ fields/tensorField/tensorIOField.C
 fields/tensorField/tensorFieldIOField.C
 fields/quaternionField/quaternionIOField.C
 fields/triadField/triadIOField.C
-fields/transformField/transformField.C
 
 meshes/bandCompression/bandCompression.C
 meshes/preservePatchTypes/preservePatchTypes.C

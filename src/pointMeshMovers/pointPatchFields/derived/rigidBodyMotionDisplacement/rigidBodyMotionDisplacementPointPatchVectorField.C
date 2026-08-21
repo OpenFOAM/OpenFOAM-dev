@@ -51,7 +51,7 @@ rigidBodyMotionDisplacementPointPatchVectorField
         // Determine current local points and offset
         fixedValuePointPatchVectorField::operator==
         (
-            transformPoints(SBMFPtr_().transformation(), localPoints0())
+            pointTransform(SBMFPtr_().spatialTransformation(), localPoints0())
            -localPoints0()
         );
     }
@@ -74,7 +74,7 @@ rigidBodyMotionDisplacementPointPatchVectorField
 
     fixedValuePointPatchVectorField::operator==
     (
-        transformPoints(SBMFPtr_().transformation(), localPoints0())
+        pointTransform(SBMFPtr_().spatialTransformation(), localPoints0())
        -localPoints0()
     );
 }
@@ -94,7 +94,7 @@ rigidBodyMotionDisplacementPointPatchVectorField
 
     fixedValuePointPatchVectorField::operator==
     (
-        transformPoints(SBMFPtr_().transformation(), localPoints0())
+        pointTransform(SBMFPtr_().spatialTransformation(), localPoints0())
        -localPoints0()
     );
 }
@@ -137,7 +137,7 @@ void rigidBodyMotionDisplacementPointPatchVectorField::updateCoeffs()
     // Determine current local points and offset
     fixedValuePointPatchVectorField::operator==
     (
-        transformPoints(SBMFPtr_().transformation(), localPoints0())
+        pointTransform(SBMFPtr_().spatialTransformation(), localPoints0())
        -localPoints0()
     );
 

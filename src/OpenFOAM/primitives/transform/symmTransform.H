@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,27 +155,6 @@ inline SymmTensor<Cmpt> transform
       + (stt.xz()*st.xy() + stt.yz()*st.yy() + stt.zz()*st.yz())*stt.yz()
       + (stt.xz()*st.xz() + stt.yz()*st.yz() + stt.zz()*st.zz())*stt.zz()
     );
-}
-
-
-template<>
-inline sphericalTensor transformMask<sphericalTensor>(const symmTensor& st)
-{
-    return sph(st);
-}
-
-
-template<>
-inline symmTensor transformMask<symmTensor>(const symmTensor& st)
-{
-    return st;
-}
-
-
-template<>
-inline tensor transformMask<tensor>(const symmTensor& st)
-{
-    return st;
 }
 
 

@@ -36,10 +36,7 @@ SourceFiles
 #define transformField_H
 
 #include "transform.H"
-#include "spatialTransform.H"
-#include "quaternion.H"
-#include "septernion.H"
-#include "vectorField.H"
+#include "pointTransform.H"
 #include "tensorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,84 +47,14 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 BinaryFunction(transform);
-
-template<class Type>
-List<Type> transform(const tensor&, const UList<Type>&);
+BinaryFunction(pointTransform);
+BinaryFunction(transformMask);
 
 template<class Type>
 void transform(Field<Type>&, const tensorField&, const Field<Type>&);
 
 template<class Type>
 void transform(Field<Type>&, const tensor&, const Field<Type>&);
-
-
-template<class Type1, class Type2>
-tmp<Field<Type1>> transformFieldMask(const Field<Type2>&);
-
-template<class Type1, class Type2>
-tmp<Field<Type1>> transformFieldMask(const tmp<Field<Type2>>&);
-
-
-template<>
-tmp<Field<symmTensor>> transformFieldMask<symmTensor>
-(
-    const tensorField&
-);
-
-template<>
-tmp<Field<symmTensor>> transformFieldMask<symmTensor>
-(
-    const tmp<tensorField>&
-);
-
-
-template<>
-tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
-(
-    const tensorField&
-);
-
-template<>
-tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
-(
-    const tmp<tensorField>&
-);
-
-
-//- Transform given vectorField of coordinates with the given spatialTransform
-void transformPoints(vectorField&, const spatialTransform&, const vectorField&);
-
-//- Transform given vectorField of coordinates with the given spatialTransform
-tmp<vectorField> transformPoints(const spatialTransform&, const vectorField&);
-
-//- Transform given tmp<vectorField> of coordinates
-//  with the given spatialTransform
-tmp<vectorField> transformPoints
-(
-    const spatialTransform&,
-    const tmp<vectorField>&
-);
-
-
-//- Rotate given vectorField with the given quaternion
-void transform(vectorField&, const quaternion&, const vectorField&);
-
-//- Rotate given vectorField with the given quaternion
-tmp<vectorField> transform(const quaternion&, const vectorField&);
-
-//- Rotate given tmp<vectorField> with the given quaternion
-tmp<vectorField> transform(const quaternion&, const tmp<vectorField>&);
-
-
-//- Transform given vectorField of coordinates with the given septernion
-void transformPoints(vectorField&, const septernion&, const vectorField&);
-
-//- Transform given vectorField of coordinates with the given septernion
-tmp<vectorField> transformPoints(const septernion&, const vectorField&);
-
-//- Transform given tmp<vectorField> of coordinates with the given septernion
-tmp<vectorField> transformPoints(const septernion&, const tmp<vectorField>&);
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

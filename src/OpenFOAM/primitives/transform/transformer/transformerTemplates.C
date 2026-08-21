@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ void Foam::transformer::transform
 {
     if (transforms())
     {
-        return Foam::transform(res, T(), fld);
+        res = Foam::transform(T(), fld);
     }
 }
 
@@ -123,7 +123,8 @@ void Foam::transformer::invTransform
 {
     if (transforms())
     {
-        Foam::transform(res, invT(), fld);
+        const tensor invT = this->invT();
+        res = Foam::transform(invT, fld);
     }
 }
 
@@ -167,7 +168,7 @@ void Foam::transformer::invTransformList(Container<Type>& l) const
 {
     if (transforms())
     {
-        tensor invT = this->invT();
+        const tensor invT = this->invT();
 
         forAllIter(typename Container<Type>, l, iter)
         {

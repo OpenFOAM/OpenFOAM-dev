@@ -143,30 +143,6 @@ UNARY_FUNCTION(vector, symmTensor, eigenValues)
 UNARY_FUNCTION(tensor, symmTensor, eigenVectors)
 
 
-template<>
-tmp<Field<tensor>> transformFieldMask<tensor>
-(
-    const symmTensorField& stf
-)
-{
-    tmp<tensorField> tRes(new tensorField(stf.size()));
-    tensorField& res = tRes.ref();
-    TFOR_ALL_F_OP_F(tensor, res, =, symmTensor, stf)
-    return tRes;
-}
-
-template<>
-tmp<Field<tensor>> transformFieldMask<tensor>
-(
-    const tmp<symmTensorField>& tstf
-)
-{
-    tmp<Field<tensor>> ret = transformFieldMask<tensor>(tstf());
-    tstf.clear();
-    return ret;
-}
-
-
 // * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
 
 UNARY_OPERATOR(vector, tensor, *, hdual)

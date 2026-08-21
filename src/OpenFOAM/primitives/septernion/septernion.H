@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,6 @@ SourceFiles
 
 #include "vector.H"
 #include "quaternion.H"
-#include "spatialTransform.H"
 #include "word.H"
 #include "contiguous.H"
 
@@ -58,6 +57,7 @@ class septernion;
 Istream& operator>>(Istream& is, septernion&);
 Ostream& operator<<(Ostream& os, const septernion& C);
 
+class spatialTransform;
 
 /*---------------------------------------------------------------------------*\
                          Class septernion Declaration
@@ -122,7 +122,7 @@ public:
            // Transform
 
                //- Transform the given coordinate point
-               inline vector transformPoint(const vector& v) const;
+               inline vector pointTransform(const vector& v) const;
 
                //- Inverse Transform the given coordinate point
                inline vector invTransformPoint(const vector& v) const;

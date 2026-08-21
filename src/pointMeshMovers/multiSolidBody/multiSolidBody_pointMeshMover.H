@@ -66,7 +66,7 @@ class multiSolidBody
         labelListList zonePoints_;
 
         //- Cache the current transforms for topoChange
-        mutable List<septernion> transforms_;
+        mutable List<spatialTransform> transforms_;
 
 
     // Private Member Functions

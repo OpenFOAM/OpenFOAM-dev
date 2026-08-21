@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "transform.H"
+#include "septernion.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -50,6 +51,13 @@ inline Foam::spatialTransform::spatialTransform
 :
     E_(E),
     r_(r)
+{}
+
+
+inline Foam::spatialTransform::spatialTransform(const septernion& s)
+:
+    E_(s.r().R()),
+    r_(s.t())
 {}
 
 
@@ -167,12 +175,21 @@ inline Foam::spatialVector Foam::spatialTransform::operator&&
 }
 
 
-inline Foam::vector Foam::spatialTransform::transformPoint
+inline Foam::vector Foam::spatialTransform::pointTransform
 (
     const vector& p
 ) const
 {
     return E_ & (p - r_);
+}
+
+
+inline Foam::vector Foam::spatialTransform::invTransformPoint
+(
+    const vector& p
+) const
+{
+    return (E_.T() & p) + r_;
 }
 
 

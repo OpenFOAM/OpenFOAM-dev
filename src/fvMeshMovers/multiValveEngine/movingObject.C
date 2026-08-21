@@ -113,7 +113,7 @@ void Foam::fvMeshMovers::multiValveEngine::movingObject::calcScale
 }
 
 
-void Foam::fvMeshMovers::multiValveEngine::movingObject::transformPoints
+void Foam::fvMeshMovers::multiValveEngine::movingObject::pointTransform
 (
     pointField& newPoints,
     const vector& translationVector

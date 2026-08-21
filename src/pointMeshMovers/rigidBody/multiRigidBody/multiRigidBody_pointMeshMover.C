@@ -321,7 +321,7 @@ Foam::pointMeshMovers::multiRigidBody::newPoints()
     {
         points[pointi] =
             average(transforms0, weights(pointi, w))
-           .transformPoint(points0[pointi]);
+           .pointTransform(points0[pointi]);
     }
 
     return tpoints;

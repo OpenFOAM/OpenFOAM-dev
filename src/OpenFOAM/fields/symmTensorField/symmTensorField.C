@@ -138,46 +138,6 @@ tmp<symmTensorField> inv
 }
 
 
-template<>
-tmp<Field<symmTensor>> transformFieldMask<symmTensor>
-(
-    const tensorField& tf
-)
-{
-    return symm(tf);
-}
-
-template<>
-tmp<Field<symmTensor>> transformFieldMask<symmTensor>
-(
-    const tmp<tensorField>& ttf
-)
-{
-    tmp<Field<symmTensor>> ret = transformFieldMask<symmTensor>(ttf());
-    ttf.clear();
-    return ret;
-}
-
-
-template<>
-tmp<Field<symmTensor>> transformFieldMask<symmTensor>
-(
-    const symmTensorField& stf
-)
-{
-    return stf;
-}
-
-template<>
-tmp<Field<symmTensor>> transformFieldMask<symmTensor>
-(
-    const tmp<symmTensorField>& tstf
-)
-{
-    return tstf;
-}
-
-
 // * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
 
 UNARY_OPERATOR(vector, symmTensor, *, hdual)

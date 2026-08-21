@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidBody_pointMeshMover.H"
+#include "transformField.H"
 #include "syncTools.H"
 #include "polyTopoChangeMap.H"
 #include "addToRunTimeSelectionTable.H"
@@ -99,7 +100,7 @@ Foam::pointMeshMovers::solidBody::solidBody
     SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time())),
     zone_(mesh, dict),
     zonePoints_(),
-    transform_(SBMFPtr_().transformation())
+    transform_(SBMFPtr_().spatialTransformation())
 {
     if (zone_.all())
     {
@@ -120,21 +121,24 @@ Foam::pointMeshMovers::solidBody::~solidBody()
 
 Foam::tmp<Foam::pointField> Foam::pointMeshMovers::solidBody::newPoints()
 {
-    transform_ = SBMFPtr_().transformation();
+    transform_ = SBMFPtr_().spatialTransformation();
 
     if (zone_.all())
     {
-        return transformPoints(transform_, points0_);
+        return pointTransform(transform_, points0_.primitiveField());
     }
     else
     {
         tmp<pointField> ttransformedPts(new pointField(poly().points()));
         pointField& transformedPts = ttransformedPts.ref();
 
-        UIndirectList<point>(transformedPts, zonePoints_) = transformPoints
+        UIndirectList<point>(transformedPts, zonePoints_) = eval
         (
-            transform_,
-            pointField(points0_, zonePoints_)
+            pointTransform
+            (
+                transform_,
+                pointField(points0_, zonePoints_)
+            )
         );
 
         return ttransformedPts;

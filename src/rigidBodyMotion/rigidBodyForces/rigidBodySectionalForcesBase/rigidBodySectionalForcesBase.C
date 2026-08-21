@@ -138,7 +138,7 @@ Foam::vector Foam::functionObjects::rigidBodySectionalForcesBase::normal() const
 
 Foam::point Foam::functionObjects::rigidBodySectionalForcesBase::origin() const
 {
-    return motion().X0(bodyIndex()).inv().transformPoint(localOrigin_);
+    return motion().X0(bodyIndex()).inv().pointTransform(localOrigin_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,16 +63,16 @@ int main(int argc, char *argv[])
 
     Info<< "inv(tr)*tr " << inv(tr)*tr << endl;
 
-    Info<< "tr.transform(v) " << tr.transformPoint(v) << endl;
+    Info<< "tr.transform(v) " << tr.pointTransform(v) << endl;
 
     vector origin(1, 2, 4);
 
     Info<< "(septernion(-origin)*q*septernion(origin))"
         << ".transform(v) "
-        << (septernion(-origin)*q*septernion(origin)).transformPoint(v)
+        << (septernion(-origin)*q*septernion(origin)).pointTransform(v)
         <<  " "
         << septernion(-origin)
-          .transformPoint(q.transform(septernion(origin).transformPoint(v)))
+          .pointTransform(q.transform(septernion(origin).pointTransform(v)))
         << endl;
 
     Info<< "Test conversion from and to Euler-angles" << endl;

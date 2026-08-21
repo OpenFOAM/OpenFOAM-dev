@@ -163,7 +163,11 @@ Foam::fixedNormalSlipFvPatchField<Type>::snGradTransformDiag() const
     diag.replace(vector::Y, mag(nHat.component(vector::Y)));
     diag.replace(vector::Z, mag(nHat.component(vector::Z)));
 
-    return transformFieldMask<Type>(pow<vector, pTraits<Type>::rank>(diag));
+    return transformMask
+    (
+        pTraits<Type>::zero,
+        pow<vector, pTraits<Type>::rank>(diag)
+    );
 }
 
 

@@ -332,7 +332,7 @@ public:
                 scalar dStatic
             );
 
-            void transformPoints
+            void pointTransform
             (
                 pointField& newPoints,
                 const vector& translationVector

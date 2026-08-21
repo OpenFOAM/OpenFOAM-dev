@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,42 +25,53 @@ InNamespace
     Foam
 
 Description
-    Spatial transformation functions for symmTensor fields.
-
-SourceFiles
-    symmTransformField.C
+    3D coordinate transformation operator.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef symmTransformField_H
-#define symmTransformField_H
+#ifndef pointTransform_H
+#define pointTransform_H
 
-#include "symmTransform.H"
-#include "symmTensorField.H"
-#include "sphericalTensor.H"
+#include "transform.H"
+#include "spatialTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                    Class pointTransformOp Declaration
+\*---------------------------------------------------------------------------*/
 
-template<class Type>
-void transform(Field<Type>&, const symmTensorField&, const Field<Type>&);
+struct pointTransformOp
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
 
-template<class Type>
-void transform(Field<Type>&, const symmTensor&, const Field<Type>&);
+    static const bool associative = false;
+
+    static word name(const word& st, const word& v)
+    {
+        return "pointTransform(" + st + ',' + v + ')';
+    }
+
+    template<class Type>
+    static Type value(const spatialTransform& st, const Type& v)
+    {
+        return st.pointTransform(v);
+    }
+
+    static dimensionSet value(const dimensionSet& st, const dimensionSet& v)
+    {
+        return transform(st, v);
+    }
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "symmTransformField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

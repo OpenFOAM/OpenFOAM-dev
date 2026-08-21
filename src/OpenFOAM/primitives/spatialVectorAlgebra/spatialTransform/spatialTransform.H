@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,7 @@ class spatialTransform;
 Istream& operator>>(Istream&, spatialTransform&);
 Ostream& operator<<(Ostream&, const spatialTransform&);
 
+class septernion;
 
 /*---------------------------------------------------------------------------*\
                       Class spatialTransform Declaration
@@ -132,6 +133,9 @@ public:
         //- Construct from components
         inline spatialTransform(const tensor& E, const vector& r);
 
+        //- Construct from septernion
+        inline explicit spatialTransform(const septernion& s);
+
         //- Construct from Istream
         inline spatialTransform(Istream&);
 
@@ -180,7 +184,11 @@ public:
 
         //- Transform position p
         //  X:p = E . (pl - r)
-        inline vector transformPoint(const vector& p) const;
+        inline vector pointTransform(const vector& p) const;
+
+        //- Transform position p
+        //  X:p = E^T . pl + r
+        inline vector invTransformPoint(const vector& p) const;
 
         //- Transform position p
         //  X:p = (E . pw, E . (vl - r))

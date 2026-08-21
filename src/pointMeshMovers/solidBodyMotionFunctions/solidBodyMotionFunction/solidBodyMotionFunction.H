@@ -132,6 +132,12 @@ public:
         //- Return the solid-body motion transformation septernion
         virtual septernion transformation() const = 0;
 
+        //- Return the septernion transformation as a spatialTranform
+        spatialTransform spatialTransformation() const
+        {
+            return spatialTransform(transformation());
+        }
+
         //- Update properties from given dictionary
         virtual bool read(const dictionary& dict) = 0;
 

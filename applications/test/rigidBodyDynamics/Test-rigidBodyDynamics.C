@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
             const spatialTransform& invX0 = motion.X0(bodyID).inv();
             forAll(outlines[outlineI], i)
             {
-                const vector p = invX0.transformPoint(outlines[outlineI][i]);
+                const vector p = invX0.pointTransform(outlines[outlineI][i]);
                 animationFile<< t << ' ' << p.x() << ' ' << p.y() << endl;
                 animationBox.min() = min(animationBox.min(), p);
                 animationBox.max() = max(animationBox.max(), p);

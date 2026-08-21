@@ -189,7 +189,11 @@ Foam::directionMixedFvPatchField<Type>::snGradTransformDiag() const
         sqrt(mag(valueFraction_.component(symmTensor::ZZ)))
     );
 
-    return transformFieldMask<Type>(pow<vector, pTraits<Type>::rank>(diag));
+    return transformMask
+    (
+        pTraits<Type>::zero,
+        pow<vector, pTraits<Type>::rank>(diag)
+    );
 }
 
 

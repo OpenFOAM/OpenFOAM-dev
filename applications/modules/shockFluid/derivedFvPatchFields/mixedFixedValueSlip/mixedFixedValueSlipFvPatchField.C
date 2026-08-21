@@ -172,7 +172,11 @@ Foam::mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
     return
         valueFraction_*Type(pTraits<Type>::one)
       + (1.0 - valueFraction_)
-       *transformFieldMask<Type>(pow<vector, pTraits<Type>::rank>(diag));
+       *transformMask
+        (
+            pTraits<Type>::zero,
+            pow<vector, pTraits<Type>::rank>(diag)
+        );
 }
 
 

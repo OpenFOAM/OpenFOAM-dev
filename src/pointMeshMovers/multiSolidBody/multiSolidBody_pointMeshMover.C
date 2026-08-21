@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multiSolidBody_pointMeshMover.H"
+#include "transformField.H"
 #include "syncTools.H"
 #include "polyTopoChangeMap.H"
 #include "addToRunTimeSelectionTable.H"
@@ -158,7 +159,7 @@ Foam::pointMeshMovers::multiSolidBody::multiSolidBody
     transforms_.setSize(zonei);
     forAll(zoneIndices_, zonei)
     {
-        transforms_[zonei] = SBMFs_[zonei].transformation();
+        transforms_[zonei] = SBMFs_[zonei].spatialTransformation();
     }
 
     forAll(zoneIndices_, zonei)
@@ -185,14 +186,16 @@ Foam::tmp<Foam::pointField> Foam::pointMeshMovers::multiSolidBody::newPoints()
 
     forAll(zoneIndices_, zonei)
     {
-        transforms_[zonei] = SBMFs_[zonei].transformation();
+        transforms_[zonei] = SBMFs_[zonei].spatialTransformation();
 
-        UIndirectList<point>(transformedPts, zonePoints_[zonei]) =
-            transformPoints
+        UIndirectList<point>(transformedPts, zonePoints_[zonei]) = eval
+        (
+            pointTransform
             (
                 transforms_[zonei],
                 pointField(points0_, zonePoints_[zonei])
-            );
+            )
+        );
     }
 
     return ttransformedPts;

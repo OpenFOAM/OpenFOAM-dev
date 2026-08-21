@@ -284,7 +284,7 @@ Foam::pointMeshMovers::rigidBodyDisplacement::newPoints()
 
             meshSolver_.pointDisplacement().boundaryFieldRef()[patchi] == eval
             (
-                Foam::transformPoints
+                Foam::pointTransform
                 (
                     transform0(bodyMeshes_[bi].bodyIndex_),
                     patchPoints0

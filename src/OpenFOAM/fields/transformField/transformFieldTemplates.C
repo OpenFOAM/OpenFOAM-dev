@@ -34,20 +34,6 @@ namespace Foam
 // * * * * * * * * * * * * * * * global functions  * * * * * * * * * * * * * //
 
 template<class Type>
-List<Type> transform(const tensor& t, const UList<Type>& list)
-{
-    List<Type> newList(list.size());
-
-    forAll(list, i)
-    {
-        newList[i] = transform(t, list[i]);
-    }
-
-    return newList;
-}
-
-
-template<class Type>
 void transform
 (
     Field<Type>& rtf,
@@ -71,19 +57,6 @@ void transform
 )
 {
     TFOR_ALL_F_OP_FUNC_S_F(Type, rtf, =, transform, tensor, t, Type, tf)
-}
-
-
-template<class Type1, class Type2>
-tmp<Field<Type1>> transformFieldMask(const Field<Type2>& f)
-{
-    return f;
-}
-
-template<class Type1, class Type2>
-tmp<Field<Type1>> transformFieldMask(const tmp<Field<Type2>>& tf)
-{
-    return tmp<Field<Type1>>(tf.ptr());
 }
 
 

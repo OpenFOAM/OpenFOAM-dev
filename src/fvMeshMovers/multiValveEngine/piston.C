@@ -228,7 +228,7 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::updatePoints
     }
 
     const vector translationVector(displacement()*axis);
-    transformPoints(newPoints, translationVector);
+    pointTransform(newPoints, translationVector);
 }
 
 
