@@ -60,12 +60,12 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                 Class CloudDerivedField::Function Declaration
+                 Class CloudDerivedField::Lambda Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 template<class F>
-class Foam::CloudDerivedField<Type>::Function
+class Foam::CloudDerivedField<Type>::Lambda
 :
     public Functor
 {
@@ -80,7 +80,7 @@ public:
     // Constructors
 
         //- Construct from a function
-        Function(const F& f)
+        Lambda(const F& f)
         :
             Functor(),
             f_(f)
@@ -88,7 +88,7 @@ public:
 
 
     //- Destructor
-    virtual ~Function()
+    virtual ~Lambda()
     {}
 
 
@@ -220,7 +220,14 @@ template<class F>
 Foam::CloudDerivedField<Type>::CloudDerivedField(const word& name, const F& f)
 :
     name_(name),
-    functorPtr_(new Function<F>(f))
+    functorPtr_(new Lambda<F>(f)),
+    psiAllPtr_(nullptr),
+    psiSubPtr_(nullptr),
+    psiSubUpToDate_(false),
+    psiSubMeshIndex_(pTraits<uint64_t>::max),
+    psiSubSubPtr_(nullptr),
+    psiSubSubUpToDate_(false),
+    psiSubSubMeshIndex_(pTraits<uint64_t>::max)
 {}
 
 
@@ -229,7 +236,14 @@ template<class F>
 Foam::CloudDerivedField<Type>::CloudDerivedField(const F& f)
 :
     name_(word::null),
-    functorPtr_(new Function<F>(f))
+    functorPtr_(new Lambda<F>(f)),
+    psiAllPtr_(nullptr),
+    psiSubPtr_(nullptr),
+    psiSubUpToDate_(false),
+    psiSubMeshIndex_(pTraits<uint64_t>::max),
+    psiSubSubPtr_(nullptr),
+    psiSubSubUpToDate_(false),
+    psiSubSubMeshIndex_(pTraits<uint64_t>::max)
 {}
 
 
@@ -247,7 +261,14 @@ Foam::CloudDerivedField<Type>::CloudDerivedField
 )
 :
     name_(name),
-    functorPtr_(new Method<C>(c, m))
+    functorPtr_(new Method<C>(c, m)),
+    psiAllPtr_(nullptr),
+    psiSubPtr_(nullptr),
+    psiSubUpToDate_(false),
+    psiSubMeshIndex_(pTraits<uint64_t>::max),
+    psiSubSubPtr_(nullptr),
+    psiSubSubUpToDate_(false),
+    psiSubSubMeshIndex_(pTraits<uint64_t>::max)
 {}
 
 
@@ -264,7 +285,14 @@ Foam::CloudDerivedField<Type>::CloudDerivedField
 )
 :
     name_(word::null),
-    functorPtr_(new Method<C>(c, m))
+    functorPtr_(new Method<C>(c, m)),
+    psiAllPtr_(nullptr),
+    psiSubPtr_(nullptr),
+    psiSubUpToDate_(false),
+    psiSubMeshIndex_(pTraits<uint64_t>::max),
+    psiSubSubPtr_(nullptr),
+    psiSubSubUpToDate_(false),
+    psiSubSubMeshIndex_(pTraits<uint64_t>::max)
 {}
 
 

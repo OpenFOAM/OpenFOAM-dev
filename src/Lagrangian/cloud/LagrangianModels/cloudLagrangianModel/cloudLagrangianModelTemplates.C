@@ -55,7 +55,17 @@ template<class Cloud>
 const Cloud& Foam::cloudLagrangianModel::cloud() const
 {
     assertCloud<Cloud>();
+
     return refCast<const Cloud>(cloud_);
+}
+
+
+template<class Cloud>
+Cloud& Foam::cloudLagrangianModel::cloudRef() const
+{
+    assertCloud<Cloud>();
+
+    return refCast<Cloud>(cloud_);
 }
 
 

@@ -115,7 +115,8 @@ void Foam::Lagrangian::heatTransfer::addSup
     else
     {
         const LagrangianSubScalarField& hec = cctfCloud.hec(subMesh);
-        const LagrangianSubScalarField& Cpvc = cctfCloud.Cpvc(subMesh);
+        const LagrangianSubScalarField& Cpvc =
+            cctfCloud.thermoc().Cpv()(subMesh);
         const LagrangianSubScalarField HbyCpvc(H/Cpvc);
 
         eqn.Su += eval(H*(Tc - T) - HbyCpvc*hec);

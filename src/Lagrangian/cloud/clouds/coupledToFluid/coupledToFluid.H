@@ -36,6 +36,7 @@ SourceFiles
 #define coupledToFluid_H
 
 #include "coupled.H"
+#include "carrierDynamicViscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,43 +51,21 @@ namespace clouds
 
 class coupledToFluid
 :
+    private autoPtr<carrierDynamicViscosity>,
     public coupled
 {
 private:
 
     // Private Data
 
-        //- Reference to the mesh
-        const LagrangianMesh& mesh_;
+        //- Reference to the carrier viscosity
+        const carrierDynamicViscosity& muc_;
 
-        //- Reference to the carried cloud
-        const carried& carriedCloud_;
+        //- Optional reference to the fluid surface thermo
+        const fluidSurfaceThermo& thermocsOrNull_;
 
-        //- Cached carrier density field
-        tmp<volScalarField> trhocVf_;
-
-        //- Cached corresponding Eulerian phase density field
-        tmp<volScalarField> trhocPhaseVf_;
-
-        //- Reference to the carrier dynamic viscosity field. Might be null.
-        const volScalarField& mucVf_;
-
-
-    // Private Member Functions
-
-        //- Get the carrier density field
-        tmp<volScalarField> getRhocVf(const word& phaseName) const;
-
-        //- Get a reference to the carrier dynamic viscosity field. Might
-        //  return null.
-        const volScalarField& getMucVf(const word& phaseName) const;
-
-        //- Calculate the carrier kinematic viscosity
-        virtual tmp<LagrangianSubScalarField> calcNuc
-        (
-            const LagrangianModelRef& model,
-            const LagrangianSubMesh& subMesh
-        ) const;
+        //- Corresponding Eulerian density
+        autoPtr<carrierDensity> rhocPhasePtr_;
 
 
 protected:
@@ -113,18 +92,31 @@ public:
         //- Corresponding Eulerian density
         const CarrierField<scalar>& rhocPhase;
 
-        //- Carrier dynamic viscosity
-        const CloudDerivedField<scalar>& muc;
-
 
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupledToFluid(const cloud& c, const carried&);
+        coupledToFluid
+        (
+            const cloud& c,
+            const carried&,
+            const carrierDynamicViscosity& mucOrNull =
+                NullObjectRef<carrierDynamicViscosity>(),
+            const fluidSurfaceThermo& thermocsOrNull =
+                NullObjectRef<fluidSurfaceThermo>(),
+            const carrierDensity& rhocPhaseOrNull =
+                NullObjectRef<carrierDensity>()
+        );
 
 
     //- Destructor
     virtual ~coupledToFluid();
+
+
+    // Member Functions
+
+        //- Return the carrier dynamic viscosity
+        tmp<LagrangianSubScalarSubField> muc(const LagrangianSubMesh&) const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

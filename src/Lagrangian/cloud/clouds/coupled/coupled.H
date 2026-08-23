@@ -36,6 +36,8 @@ SourceFiles
 #define coupled_H
 
 #include "carried.H"
+#include "carrierViscosity.H"
+#include "fluidSurfaceThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,11 +66,17 @@ private:
         //- Reference to the carried cloud
         const carried& carriedCloud_;
 
+        //- Carrier viscosity
+        autoPtr<carrierViscosity> nucPtr_;
+
+        //- Reference to the carrier viscosity
+        const carrierViscosity& nuc_;
+
+        //- Optional reference to the fluid surface thermo
+        const fluidSurfaceThermo& thermocsOrNull_;
+
         //- Are any carrier equations cached?
         mutable bool hasCarrierEqns_;
-
-        //- Cached carrier kinematic viscosity field
-        tmp<volScalarField> tnucVf_;
 
         //- Carrier equations
         #define DECLARE_CARRIER_EQNS(Type, nullArg)    \
@@ -77,21 +85,8 @@ private:
         FOR_ALL_FIELD_TYPES(DECLARE_CARRIER_EQNS);
         #undef DECLARE_CARRIER_EQNS
 
-        //- Carrier velocity time derivative
-        mutable autoPtr<volVectorField> dUdtcPtr_;
-
 
     // Private Member Functions
-
-        //- Get the carrier kinematic viscosity field
-        tmp<volScalarField> getNucVf() const;
-
-        //- Calculate the carrier kinematic viscosity
-        virtual tmp<LagrangianSubScalarField> calcNuc
-        (
-            const LagrangianModelRef& model,
-            const LagrangianSubMesh& subMesh
-        ) const;
 
         //- Access the carrier equations. Only specialisations are defined.
         template<class Type>
@@ -151,16 +146,18 @@ public:
         TypeName("coupled");
 
 
-    // Public Data
-
-        //- Carrier kinematic viscosity
-        const CloudDerivedField<scalar>& nuc;
-
-
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupled(const cloud& c, const carried&);
+        coupled
+        (
+            const cloud& c,
+            const carried& carriedCloud,
+            const carrierViscosity& nucOrNull =
+                NullObjectRef<carrierViscosity>(),
+            const fluidSurfaceThermo& thermocsOrNull =
+                NullObjectRef<fluidSurfaceThermo>()
+        );
 
 
     //- Destructor
@@ -168,6 +165,10 @@ public:
 
 
     // Member Functions
+
+        //- Return the carrier kinematic viscosity
+        tmp<LagrangianSubScalarField> nuc(const LagrangianSubMesh&) const;
+
 
         // Equations
 

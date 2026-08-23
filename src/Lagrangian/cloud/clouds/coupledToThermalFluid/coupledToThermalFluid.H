@@ -38,46 +38,46 @@ SourceFiles
 
 #include "thermal.H"
 #include "coupledToFluid.H"
+#include "fluidCarrierThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class basicThermo;
-class multicomponentThermo;
-class fluidThermo;
-class fluidMulticomponentThermo;
-
 namespace clouds
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class coupledToThermalFluid Declaration
+                     Class coupledToThermalFluid Declaration
 \*---------------------------------------------------------------------------*/
 
 class coupledToThermalFluid
 :
+    private autoPtr<fluidCarrierThermo>,
+    private autoPtr<fluidSurfaceThermo>,
+    private autoPtr<carrierThermo>,
     public coupledToFluid
 {
 private:
 
+    // Private Static Data
+
+        //- Null/empty set of mass fractions
+        static const UPtrList<const CarrierField<scalar>> nullY_;
+
+
     // Private Data
 
-        //- Reference to the mesh
-        const LagrangianMesh& mesh_;
+        //- Reference to the cloud
+        const cloud& cloud_;
 
-        //- Carrier thermo
-        const fluidThermo& thermoc_;
 
-        //- Carrier multicomponent thermo (may be null)
-        const fluidMulticomponentThermo& multicomponentThermoc_;
+protected:
 
-        //- Corresponding Eulerian thermo (may be null)
-        const basicThermo& thermocPhase_;
+    // Protected Member Functions
 
-        //- Corresponding multicomponent Eulerian thermo (may be null)
-        const multicomponentThermo& multicomponentThermocPhase_;
+        //- Update the cached carrier fields
+        void updateCarrier();
 
 
 public:
@@ -99,36 +99,21 @@ public:
         //- Carrier enthalpy/energy
         const CarrierField<scalar>& hec;
 
-        //- Corresponding Eulerian enthalpy/energy
+        //- Corresponding Eulerian phase enthalpy/energy
         const CarrierField<scalar>& hecPhase;
 
-        //- Carrier heat capacity
-        const CarrierField<scalar>& Cpvc;
+        //- Carrier mass fractions (indexed with the carrier specie index)
+        const UPtrList<const CarrierField<scalar>>& Yc;
 
-        //- Carrier heat capacity at constant pressure
-        const CarrierField<scalar>& Cpc;
-
-        //- Carrier heat capacity at constant volume
-        const CarrierField<scalar>& Cvc;
-
-        //- Carrier thermal conductivity
-        const CarrierField<scalar>& kappac;
-
-        //- Carrier Prandtl number
-        const CloudDerivedField<scalar>& Prc;
+        //- Corresponding Eulerian phase mass fractions
+        //  (indexed with the Eulerian phase specie index)
+        const UPtrList<const CarrierField<scalar>>& YcPhase;
 
         //- Map from cloud to carrier specie indices
         labelList iToic;
 
-        //- Map from cloud to corresponding Eulerian specie indices
+        //- Map from cloud to corresponding Eulerian phase specie indices
         labelList iToicPhase;
-
-        //- Carrier mass fractions (indexed with the carrier specie index)
-        UPtrList<const CarrierField<scalar>> Yc;
-
-        //- Corresponding Eulerian mass fractions (indexed with the Eulerian
-        //  phase specie index)
-        UPtrList<const CarrierField<scalar>> YcPhase;
 
 
     // Constructors
@@ -146,14 +131,94 @@ public:
         //- Return whether this cloud has a carrier thermo
         bool hasThermoc() const;
 
+        //- Return whether this cloud has a carrier surface thermo
+        bool hasThermocs() const;
+
         //- Return whether this cloud has a corresponding Eulerian phase thermo
         bool hasThermocPhase() const;
+
+        //- Determine whether the carrier thermo model is one of the given types
+        template<class Thermo, class ... Thermos>
+        bool isThermoc() const;
+
+        //- Determine whether the carrier surface thermo model is one of the
+        //  given types
+        template<class Thermo, class ... Thermos>
+        bool isThermocs() const;
+
+        //- Determine whether the corresponding Eulerian phase thermo model is
+        //  one of the given types
+        template<class Thermo, class ... Thermos>
+        bool isThermocPhase() const;
+
+        //- Generate an error if the carrier thermo model is not one of the
+        //  given types
+        template<class Thermo, class ... Thermos>
+        void assertThermoc() const;
+
+        //- Generate an error if the carrier surface thermo model is not one of
+        //  the given types
+        template<class Thermo, class ... Thermos>
+        void assertThermocs() const;
+
+        //- Generate an error if the corresponding Eulerian phase thermo model
+        //  is not one of the given types
+        template<class Thermo, class ... Thermos>
+        void assertThermocPhase() const;
+
+        //- Generate an error if the carrier thermo model is not one of the
+        //  given types. A model is provided to give the error message some
+        //  context.
+        template<class Thermo, class ... Thermos>
+        void assertThermoc(const LagrangianModel& model) const;
+
+        //- Generate an error if the carrier surface thermo model is not one of
+        //  the given types. A model is provided to give the error message some
+        //  context.
+        template<class Thermo, class ... Thermos>
+        void assertThermocs(const LagrangianModel& model) const;
+
+        //- Generate an error if the corresponding Eulerian phase thermo model
+        //  is not one of the given types. A model is provided to give the
+        //  error message some context.
+        template<class Thermo, class ... Thermos>
+        void assertThermocPhase(const LagrangianModel& model) const;
+
+        //- Get a reference to the carrier thermo model of a given type
+        template<class Thermo = fluidCarrierThermo, class ... Args>
+        const Thermo& thermoc(const Args& ... args) const;
+
+        //- Get a reference to the carrier surface thermo model of a given type
+        template<class Thermo = fluidSurfaceThermo, class ... Args>
+        const Thermo& thermocs(const Args& ... args) const;
+
+        //- Get a non-const reference to the carrier surface thermo model of a
+        //  given type
+        template<class Thermo = fluidSurfaceThermo, class ... Args>
+        Thermo& thermocsRef(const Args& ... args);
+
+        //- Get a reference to the corresponding Eulerian phase thermo model of
+        //  a given type
+        template<class Thermo = carrierThermo, class ... Args>
+        const Thermo& thermocPhase(const Args& ... args) const;
+
+        //- Return the carrier thermal conductivity
+        tmp<LagrangianSubScalarSubField> kappac(const LagrangianSubMesh&) const;
+
+        //- Return the carrier Prandtl number
+        tmp<LagrangianSubScalarField> Prc(const LagrangianSubMesh&) const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace clouds
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "coupledToThermalFluidTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

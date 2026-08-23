@@ -62,24 +62,23 @@ Foam::Lagrangian::SchillerNaumannDrag::calcD
     const LagrangianSubScalarSubField& d = td();
     const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);
 
+    auto DbyMu = CdRe(Re)*(constant::mathematical::pi/8)*d;
+
     assertCloud
     <
         clouds::coupledToConstantDensityFluid,
         clouds::coupledToFluid
     >();
 
-    tmp<LagrangianSubScalarField> tmucByRhoOrMuc =
+    return
         isCloud<clouds::coupledToConstantDensityFluid>()
-      ? (
-            cloud<clouds::coupledToConstantDensityFluid>().nuc(model, subMesh)
+      ? eval
+        (
+            DbyMu
+           *cloud<clouds::coupledToConstantDensityFluid>().nuc(subMesh)
            /cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
         )
-      : tmp<LagrangianSubScalarField>
-        (
-            cloud<clouds::coupledToFluid>().muc(model, subMesh)
-        );
-
-    return CdRe(Re)*(constant::mathematical::pi/8)*d*tmucByRhoOrMuc;
+      : eval(DbyMu*cloud<clouds::coupledToFluid>().muc(subMesh));
 }
 
 

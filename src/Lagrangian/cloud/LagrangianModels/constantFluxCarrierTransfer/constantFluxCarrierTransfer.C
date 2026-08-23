@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "LagrangianSubFieldsFwd.H"
 #include "constantFluxCarrierTransfer.H"
 #include "addToRunTimeSelectionTable.H"
 #include "coupledToConstantDensityFluid.H"
@@ -144,11 +143,14 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::addSupType
         tmp<LagrangianSubScalarField> Su = Sp*vOrM;
 
         // Modify the rate of consumption to fully consume removed particles
-        forAll(subMesh, subi)
+        if (sumDeltaTSp_.valid())
         {
-            if (subStates[subi] == LagrangianState::toBeRemoved)
+            forAll(subMesh, subi)
             {
-                Su.ref()[subi] *= 1 + 1/max(sumDeltaTSp_()[subi], small);
+                if (subStates[subi] == LagrangianState::toBeRemoved)
+                {
+                    Su.ref()[subi] *= 1 + 1/max(sumDeltaTSp_()[subi], small);
+                }
             }
         }
 
@@ -199,11 +201,14 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::addSupType
         tmp<LagrangianSubField<Type>> Su = Sp*vOrM*field;
 
         // Modify the rate of consumption to fully consume removed particles
-        forAll(subMesh, subi)
+        if (sumDeltaTSp_.valid())
         {
-            if (subStates[subi] == LagrangianState::toBeRemoved)
+            forAll(subMesh, subi)
             {
-                Su.ref()[subi] *= 1 + 1/max(sumDeltaTSp_()[subi], small);
+                if (subStates[subi] == LagrangianState::toBeRemoved)
+                {
+                    Su.ref()[subi] *= 1 + 1/max(sumDeltaTSp_()[subi], small);
+                }
             }
         }
 
@@ -364,7 +369,7 @@ void Foam::Lagrangian::constantFluxCarrierTransfer::preAddSup
         (
             IOobject
             (
-                "sumDeltaTSpvOrM",
+                "sumDeltaTSp",
                 mesh().time().name(),
                 mesh()
             ),

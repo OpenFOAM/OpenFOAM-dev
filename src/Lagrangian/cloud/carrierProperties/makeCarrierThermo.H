@@ -1,0 +1,63 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "makeThermo.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define addCarrierThermo(SelectThermo, BaseThermo, Mixture, ThermoPhysics)     \
+                                                                               \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        SelectThermo,                                                          \
+        BaseThermo##Mixture##ThermoPhysics,                                    \
+        cloud                                                                  \
+    )
+
+#define makeCarrierThermo(BaseThermo, Mixture, ThermoPhysics)                  \
+                                                                               \
+    defineThermo(BaseThermo, Mixture, ThermoPhysics);                          \
+                                                                               \
+    addCarrierThermo                                                           \
+    (                                                                          \
+        carrierThermo,                                                         \
+        BaseThermo,                                                            \
+        Mixture,                                                               \
+        ThermoPhysics                                                          \
+    )
+
+#define makeCarrierThermos(SelectThermo, BaseThermo, Mixture, ThermoPhysics)   \
+                                                                               \
+    makeCarrierThermo(BaseThermo, Mixture, ThermoPhysics);                     \
+                                                                               \
+    addCarrierThermo                                                           \
+    (                                                                          \
+        SelectThermo,                                                          \
+        BaseThermo,                                                            \
+        Mixture,                                                               \
+        ThermoPhysics                                                          \
+    )
+
+// ************************************************************************* //

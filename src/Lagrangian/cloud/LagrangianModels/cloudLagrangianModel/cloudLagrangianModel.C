@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ namespace Foam
 Foam::cloudLagrangianModel::cloudLagrangianModel(const LagrangianModel& model)
 :
     name_(model.name()),
-    cloud_(model.mesh().lookupType<Foam::cloud>())
+    cloud_(model.mesh().lookupTypeRef<Foam::cloud>())
 {}
 
 

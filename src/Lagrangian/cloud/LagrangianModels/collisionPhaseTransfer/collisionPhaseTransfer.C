@@ -74,11 +74,15 @@ void Foam::Lagrangian::collisionPhaseTransfer::addSupType
         tmp<LagrangianSubScalarField> deltaTSu = PhitPtr_()*vOrM;
 
         // Modify the rate of consumption to fully consume removed particles
-        forAll(subMesh, subi)
+        if (sumDeltaTSp_.valid())
         {
-            if (subStates[subi] == LagrangianState::toBeRemoved)
+            forAll(subMesh, subi)
             {
-                deltaTSu.ref()[subi] *= 1 + 1/max(sumDeltaTSp_()[subi], small);
+                if (subStates[subi] == LagrangianState::toBeRemoved)
+                {
+                    deltaTSu.ref()[subi] *=
+                        1 + 1/max(sumDeltaTSp_()[subi], small);
+                }
             }
         }
 
@@ -127,11 +131,15 @@ void Foam::Lagrangian::collisionPhaseTransfer::addSupType
         tmp<LagrangianSubField<Type>> deltaTSu = PhitPtr_()*vOrM*field;
 
         // Modify the rate of consumption to fully consume removed particles
-        forAll(subMesh, subi)
+        if (sumDeltaTSp_.valid())
         {
-            if (subStates[subi] == LagrangianState::toBeRemoved)
+            forAll(subMesh, subi)
             {
-                deltaTSu.ref()[subi] *= 1 + 1/max(sumDeltaTSp_()[subi], small);
+                if (subStates[subi] == LagrangianState::toBeRemoved)
+                {
+                    deltaTSu.ref()[subi] *=
+                        1 + 1/max(sumDeltaTSp_()[subi], small);
+                }
             }
         }
 
@@ -181,8 +189,7 @@ Foam::Lagrangian::collisionPhaseTransfer::collisionPhaseTransfer
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::wordList
-Foam::Lagrangian::collisionPhaseTransfer::addSupFields() const
+Foam::wordList Foam::Lagrangian::collisionPhaseTransfer::addSupFields() const
 {
     const bool isGrouped = isCloud<clouds::grouped>();
 
@@ -362,7 +369,7 @@ void Foam::Lagrangian::collisionPhaseTransfer::preAddSup
         (
             IOobject
             (
-                "sumDeltaTSpvOrM",
+                "sumDeltaTSp",
                 mesh().time().name(),
                 mesh()
             ),

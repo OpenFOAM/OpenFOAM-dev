@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coupled.H"
-#include "physicalProperties.H"
-#include "viscosity.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -39,46 +37,6 @@ namespace clouds
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::clouds::coupled::getNucVf() const
-{
-    const word nucName =
-        IOobject::groupName("nu", carriedCloud_.carrierPhaseName());
-
-    if (cloud_.mesh().poly().foundObject<volScalarField>(nucName))
-    {
-        return cloud_.mesh().poly().lookupObject<volScalarField>(nucName);
-    }
-
-    const word viscosityName =
-        IOobject::groupName
-        (
-            physicalProperties::typeName,
-            carriedCloud_.carrierPhaseName()
-        );
-
-    if (cloud_.mesh().poly().foundObject<viscosity>(viscosityName))
-    {
-        return cloud_.mesh().poly().lookupObject<viscosity>(viscosityName).nu();
-    }
-
-    return tmp<volScalarField>(nullptr);
-}
-
-
-Foam::tmp<Foam::LagrangianSubScalarField> Foam::clouds::coupled::calcNuc
-(
-    const LagrangianModelRef& model,
-    const LagrangianSubMesh& subMesh
-) const
-{
-    FatalErrorInFunction
-        << "Could not determine the carrier viscosity"
-        << exit(FatalError);
-
-    return tmp<LagrangianSubScalarField>(nullptr);
-}
-
 
 #define ACCESS_CARRIER_EQNS(Type, nullArg)                                     \
 namespace Foam                                                                 \
@@ -100,9 +58,9 @@ FOR_ALL_FIELD_TYPES(ACCESS_CARRIER_EQNS)
 
 void Foam::clouds::coupled::updateCarrier()
 {
-    if (tnucVf_.isTmp())
+    if (nucPtr_.valid())
     {
-        tnucVf_.ref() = getNucVf();
+        nucPtr_.operator()().correct();
     }
 }
 
@@ -145,18 +103,30 @@ Foam::tmp<Foam::LagrangianEqn<Foam::scalar>> Foam::clouds::coupled::psicEqn
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::clouds::coupled::coupled(const cloud& c, const carried& carriedCloud)
+Foam::clouds::coupled::coupled
+(
+    const cloud& c,
+    const carried& carriedCloud,
+    const carrierViscosity& nucOrNull,
+    const fluidSurfaceThermo& thermocsOrNull
+)
 :
     cloud_(c),
     carriedCloud_(carriedCloud),
-    hasCarrierEqns_(false),
-    tnucVf_(getNucVf()),
-    nuc
+    nucPtr_
     (
-        tnucVf_.valid()
-      ? carriedCloud_.carrierField<scalar>(tnucVf_())
-      : c.derivedField<scalar>(*this, &coupled::calcNuc)
-    )
+        notNull(nucOrNull)
+      ? nullptr
+      : carrierViscosity::New
+        (
+            c,
+            carriedCloud,
+            carriedCloud.carrierPhaseName()
+        ).ptr()
+    ),
+    nuc_(notNull(nucOrNull) ? nucOrNull : nucPtr_()),
+    thermocsOrNull_(thermocsOrNull),
+    hasCarrierEqns_(false)
 {}
 
 
@@ -167,6 +137,18 @@ Foam::clouds::coupled::~coupled()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::LagrangianSubScalarField> Foam::clouds::coupled::nuc
+(
+    const LagrangianSubMesh& subMesh
+) const
+{
+    return
+        notNull(thermocsOrNull_)
+      ? thermocsOrNull_.nuNear(subMesh)
+      : tmp<LagrangianSubScalarField>(nuc_.nu()(subMesh));
+}
+
 
 bool Foam::clouds::coupled::hasCarrierEqns() const
 {

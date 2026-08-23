@@ -63,8 +63,10 @@ Foam::Lagrangian::RanzMarshallHeatTransfer::calcH
     const LagrangianSubScalarSubField& d = td();
     const LagrangianSubScalarField& a = sCloud.a(model, subMesh);
     const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);
-    const LagrangianSubScalarField& kappac = cctfCloud.kappac(model, subMesh);
-    const LagrangianSubScalarField& Prc = cctfCloud.Prc(model, subMesh);
+    tmp<LagrangianSubScalarSubField> tkappac = cctfCloud.kappac(subMesh);
+    const LagrangianSubScalarSubField& kappac = tkappac;
+    tmp<LagrangianSubScalarField> tPrc = cctfCloud.Prc(subMesh);
+    const LagrangianSubScalarField& Prc = tPrc;
 
     tmp<LagrangianSubScalarField> tNu(2 + 0.6*sqrt(Re)*cbrt(Prc));
 

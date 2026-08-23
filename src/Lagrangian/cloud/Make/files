@@ -28,6 +28,19 @@ clouds/parcel/parcel.C
 clouds/multicomponentParticle/multicomponentParticle.C
 clouds/multicomponentParcel/multicomponentParcel.C
 
+# Carrier Properties
+carrierProperties/carrierViscosity/carrierViscosity.C
+carrierProperties/carrierDensity/carrierDensity.C
+carrierProperties/carrierDynamicViscosity/carrierDynamicViscosity.C
+carrierProperties/carrierThermo/carrierThermo.C
+carrierProperties/solidCarrierThermo/solidCarrierThermo.C
+carrierProperties/solidCarrierThermo/solidCarrierThermos.C
+carrierProperties/fluidCarrierThermo/fluidCarrierThermo.C
+carrierProperties/fluidCarrierThermo/fluidCarrierThermos.C
+carrierProperties/multicomponentCarrierThermo/multicomponentCarrierThermo.C
+carrierProperties/fluidMulticomponentCarrierThermo/fluidMulticomponentCarrierThermo.C
+carrierProperties/fluidMulticomponentCarrierThermo/fluidMulticomponentCarrierThermos.C
+
 # Patches
 derivedLagrangianPatches/cloudVelocity/cloudVelocityLagrangianPatch.C
 
@@ -67,6 +80,7 @@ LagrangianModels/gravity/gravity.C
 LagrangianModels/pressureGradientForce/pressureGradientForce.C
 LagrangianModels/SaffmanMeiLift/SaffmanMeiLift.C
 LagrangianModels/SchillerNaumannDrag/SchillerNaumannDrag.C
+LagrangianModels/particleSurfaceTemperature/particleSurfaceTemperature.C
 LagrangianModels/heatTransfer/heatTransfer.C
 LagrangianModels/RanzMarshallHeatTransfer/RanzMarshallHeatTransfer.C
 LagrangianModels/pressureWork/pressureWork.C

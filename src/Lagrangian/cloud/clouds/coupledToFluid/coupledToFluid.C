@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coupledToFluid.H"
-#include "fluidThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,81 +36,20 @@ namespace clouds
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::clouds::coupledToFluid::getRhocVf(const word& phaseName) const
-{
-    const word rhocName = IOobject::groupName("rho", phaseName);
-
-    if (mesh_.poly().foundObject<volScalarField>(rhocName))
-    {
-        return mesh_.poly().lookupObject<volScalarField>(rhocName);
-    }
-
-    const word thermocName =
-        IOobject::groupName(physicalProperties::typeName, phaseName);
-
-    if (mesh_.poly().foundObject<basicThermo>(thermocName))
-    {
-        return mesh_.poly().lookupObject<basicThermo>(thermocName).rho();
-    }
-
-    FatalErrorInFunction
-        << "Could not determine the carrier density"
-        << exit(FatalError);
-
-    return tmp<volScalarField>(nullptr);
-}
-
-
-const Foam::volScalarField&
-Foam::clouds::coupledToFluid::getMucVf(const word& phaseName) const
-{
-    const word mucName = IOobject::groupName("mu", phaseName);
-
-    if (mesh_.poly().foundObject<volScalarField>(mucName))
-    {
-        return mesh_.poly().lookupObject<volScalarField>(mucName);
-    }
-
-    const word thermocName =
-        IOobject::groupName(physicalProperties::typeName, phaseName);
-
-    if (mesh_.poly().foundObject<fluidThermo>(thermocName))
-    {
-        return mesh_.poly().lookupObject<fluidThermo>(thermocName).mu();
-    }
-
-    return NullObjectRef<volScalarField>();
-}
-
-
-Foam::tmp<Foam::LagrangianSubScalarField>
-Foam::clouds::coupledToFluid::calcNuc
-(
-    const LagrangianModelRef& model,
-    const LagrangianSubMesh& subMesh
-) const
-{
-    return muc(model, subMesh)/rhoc(model, subMesh);
-}
-
-
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
 void Foam::clouds::coupledToFluid::updateCarrier()
 {
     coupled::updateCarrier();
 
-    if (trhocVf_.isTmp())
+    if (autoPtr<carrierDynamicViscosity>::valid())
     {
-        trhocVf_.ref() = getRhocVf(carriedCloud_.carrierPhaseName());
+        autoPtr<carrierDynamicViscosity>::operator()().correct();
     }
 
-    if (trhocPhaseVf_.isTmp())
+    if (rhocPhasePtr_.valid())
     {
-        trhocPhaseVf_.ref() = getRhocVf(carriedCloud_.phaseName());
+        rhocPhasePtr_.operator()().correct();
     }
 }
 
@@ -121,42 +59,60 @@ void Foam::clouds::coupledToFluid::updateCarrier()
 Foam::clouds::coupledToFluid::coupledToFluid
 (
     const cloud& c,
-    const carried& carriedCloud
+    const carried& carriedCloud,
+    const carrierDynamicViscosity& mucOrNull,
+    const fluidSurfaceThermo& thermocsOrNull,
+    const carrierDensity& rhocPhaseOrNull
 )
 :
-    coupled(c, carriedCloud),
-    mesh_(c.mesh()),
-    carriedCloud_(carriedCloud),
-    trhocVf_(getRhocVf(carriedCloud.carrierPhaseName())),
-    trhocPhaseVf_
+    autoPtr<carrierDynamicViscosity>
     (
-        carriedCloud.hasPhase()
-      ? getRhocVf(carriedCloud.phaseName())
-      : tmp<volScalarField>(NullObjectRef<volScalarField>())
+        notNull(mucOrNull)
+      ? nullptr
+      : carrierDynamicViscosity::New
+        (
+            c,
+            carriedCloud,
+            carriedCloud.carrierPhaseName()
+        ).ptr()
     ),
-    mucVf_(getMucVf(carriedCloud.carrierPhaseName())),
-    rhoc(carriedCloud.carrierField<scalar>(trhocVf_())),
+    coupled
+    (
+        c,
+        carriedCloud,
+        notNull(mucOrNull)
+      ? mucOrNull
+      : autoPtr<carrierDynamicViscosity>::operator()(),
+        thermocsOrNull
+    ),
+    muc_
+    (
+        notNull(mucOrNull)
+      ? mucOrNull
+      : autoPtr<carrierDynamicViscosity>::operator()()
+    ),
+    thermocsOrNull_(thermocsOrNull),
+    rhocPhasePtr_
+    (
+        !carriedCloud.hasPhase()
+      ? nullptr
+      : notNull(rhocPhaseOrNull)
+      ? nullptr
+      : carrierDensity::New
+        (
+            c,
+            carriedCloud,
+            carriedCloud.phaseName()
+        ).ptr()
+    ),
+    rhoc(muc_.rho()),
     rhocPhase
     (
-        carriedCloud.hasPhase()
-      ? carriedCloud.carrierField<scalar>(trhocPhaseVf_())
-      : carriedCloud.noCarrierField<scalar>("rho", "density", true)
-    ),
-    muc
-    (
-        isNull(mucVf_)
-      ? c.derivedField<scalar>
-        (
-            [&]
-            (
-                const LagrangianModelRef& model,
-                const LagrangianSubMesh& subMesh
-            )
-            {
-                return rhoc(model, subMesh)*nuc(model, subMesh);
-            }
-        )
-      : carriedCloud.carrierField<scalar>(mucVf_)
+        !carriedCloud.hasPhase()
+      ? carriedCloud.noCarrierField<scalar>("rho", "density", true)
+      : notNull(rhocPhaseOrNull)
+      ? rhocPhaseOrNull.rho()
+      : rhocPhasePtr_->rho()
     )
 {}
 
@@ -165,6 +121,20 @@ Foam::clouds::coupledToFluid::coupledToFluid
 
 Foam::clouds::coupledToFluid::~coupledToFluid()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::LagrangianSubScalarSubField> Foam::clouds::coupledToFluid::muc
+(
+    const LagrangianSubMesh& subMesh
+) const
+{
+    return
+        notNull(thermocsOrNull_)
+      ? thermocsOrNull_.muNear(subMesh)
+      : tmp<LagrangianSubScalarSubField>(muc_.mu().ref(subMesh));
+}
 
 
 // ************************************************************************* //

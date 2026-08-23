@@ -58,7 +58,7 @@ Foam::clouds::sphericalCoupled::sphericalCoupled
                 return
                     mag(carriedCloud.Uc(model, subMesh) - c.U(model, subMesh))
                    *sphericalCloud.d(model, subMesh)
-                   /coupledCloud.nuc(model, subMesh);
+                   /coupledCloud.nuc(subMesh);
             }
         )
     )

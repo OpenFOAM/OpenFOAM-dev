@@ -63,9 +63,9 @@ protected:
         //- Class to virtualise an evaluation procedure
         class Functor;
 
-        //- Class to store an evaluation function
+        //- Class to store an evaluation lambda
         template<class F>
-        class Function;
+        class Lambda;
 
         //- Class to store an evaluation method
         template<class C>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,6 +124,31 @@ Foam::tmp<Foam::DimensionedField<Type, GeoMesh, Foam::SubField>>
 Foam::toSubField(const DimensionedField<Type, GeoMesh, SubField>& f)
 {
     return tmp<DimensionedField<Type, GeoMesh, SubField>>(f);
+}
+
+
+template<class Type, class GeoMesh>
+Foam::PtrList<Foam::DimensionedField<Type, GeoMesh, Foam::SubField>>
+Foam::toSubField(PtrList<DimensionedField<Type, GeoMesh, Field>>&& fPtrs)
+{
+    PtrList<DimensionedField<Type, GeoMesh, SubField>> fSubPtrs(fPtrs.size());
+
+    forAll(fPtrs, i)
+    {
+        fSubPtrs.set
+        (
+            i,
+            new DimensionedFieldToDimensionedSubField<Type, GeoMesh>
+            (
+                tmp<DimensionedField<Type, GeoMesh, Field>>
+                (
+                    fPtrs.set(i, nullptr).ptr()
+                )
+            )
+        );
+    }
+
+    return fSubPtrs;
 }
 
 

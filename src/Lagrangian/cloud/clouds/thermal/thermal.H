@@ -123,11 +123,11 @@ public:
         template<class Thermo, class ... Thermos>
         void assertThermo(const LagrangianModel& model) const;
 
-        //- Get a reference to the thermodynamic model of a given type
+        //- Get a reference to the thermo model of a given type
         template<class Thermo = basicLagrangianThermo, class ... Args>
         const Thermo& thermo(const Args& ... args) const;
 
-        //- Non-const override of the above
+        //- Get a non-const reference to the thermo model of a given type
         template<class Thermo = basicLagrangianThermo, class ... Args>
         Thermo& thermo(const Args& ... args);
 };

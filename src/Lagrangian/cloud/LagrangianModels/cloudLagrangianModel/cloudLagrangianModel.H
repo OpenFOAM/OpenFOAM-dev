@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ private:
         const word& name_;
 
         //- Reference to the cloud
-        const Foam::cloud& cloud_;
+        Foam::cloud& cloud_;
 
 
 protected:
@@ -76,6 +76,10 @@ protected:
         //- Get a reference to the cloud
         template<class Cloud = Foam::cloud>
         const Cloud& cloud() const;
+
+        //- Get a non-const reference to the cloud
+        template<class Cloud = Foam::cloud>
+        Cloud& cloudRef() const;
 
 
 public:
@@ -102,7 +106,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "cloudLagrangianModelTemplates.C"
+   #include "cloudLagrangianModelTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

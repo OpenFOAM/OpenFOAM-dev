@@ -63,19 +63,18 @@ Foam::Lagrangian::GidaspowErgunWenYuDrag::calcD
     const LagrangianSubScalarSubField& d = td();
     const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);
 
-    const LagrangianSubScalarField alpha(min(sCloud.alpha(subMesh), alphaMax_));
-    const LagrangianSubScalarField alphac(1 - alpha);
+    auto alpha = min(sCloud.alpha(subMesh), alphaMax_);
+    auto alphac = 1 - alpha;
 
-    const LagrangianSubScalarField CdRe
-    (
+    auto CdRe =
         // Use Wen-Yu at low particulate fractions (< 20%) ...
         pos0(alphac - 0.8)
        *SchillerNaumannDrag::CdRe(alphac*Re)
        *pow(alphac, -2.65)
-
         // ... and Ergun at high particulate fractions (> 20%)
-      + neg(alphac - 0.8)*(4.0/3.0)*(150*alpha/alphac + 1.75*Re)
-    );
+      + neg(alphac - 0.8)*(4.0/3.0)*(150*alpha/alphac + 1.75*Re);
+
+    auto DbyMu = CdRe*(constant::mathematical::pi/8)*d;
 
     assertCloud
     <
@@ -83,19 +82,15 @@ Foam::Lagrangian::GidaspowErgunWenYuDrag::calcD
         clouds::coupledToFluid
     >();
 
-    tmp<LagrangianSubScalarField> tmucByRhoOrMuc =
+    return
         isCloud<clouds::coupledToConstantDensityFluid>()
       ? eval
         (
-            cloud<clouds::coupledToConstantDensityFluid>().nuc(model, subMesh)
+            DbyMu
+           *cloud<clouds::coupledToConstantDensityFluid>().nuc(subMesh)
            /cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
         )
-      : tmp<LagrangianSubScalarField>
-        (
-            cloud<clouds::coupledToFluid>().muc(model, subMesh)
-        );
-
-    return CdRe*(constant::mathematical::pi/8)*d*tmucByRhoOrMuc;
+      : eval(DbyMu*cloud<clouds::coupledToFluid>().muc(subMesh));
 }
 
 

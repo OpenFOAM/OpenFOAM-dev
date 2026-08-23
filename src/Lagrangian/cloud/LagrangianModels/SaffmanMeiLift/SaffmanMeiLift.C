@@ -66,7 +66,8 @@ Foam::Lagrangian::SaffmanMeiLift::calcL
     tmp<LagrangianSubScalarSubField> td = sCloud.d(model, subMesh);
     const LagrangianSubScalarSubField& d = td();
     const LagrangianSubScalarField& v = sCloud.v(model, subMesh);
-    const LagrangianSubScalarField& nuc = cplCloud.nuc(model, subMesh);
+    tmp<LagrangianSubScalarField> tnuc = cplCloud.nuc(subMesh);
+    const LagrangianSubScalarField& nuc = tnuc();
     const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);
     const LagrangianSubVectorField& curlUc = cCloud.curlUc(model, subMesh);
 
