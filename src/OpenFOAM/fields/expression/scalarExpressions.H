@@ -54,7 +54,12 @@ struct powOp
         return "pow(" + a + ',' + b + ')';
     }
 
-    static scalar value(const scalar a, const scalar b)
+    static scalar value(const scalar a, const float b)
+    {
+        return pow(a, b);
+    }
+
+    static scalar value(const scalar a, const double b)
     {
         return pow(a, b);
     }

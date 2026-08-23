@@ -114,7 +114,7 @@ Foam::LagrangianSp<Foam::vector>::A() const
             new LagrangianCoeff<scalar, true>
             (
                 eqn(),
-                eval((1.0/3.0)*tr(tensorCoeff_.S()))
+                eval(scalar(1.0/3.0)*tr(tensorCoeff_.S()))
             )
         )
       : tmp<LagrangianCoeff<scalar, true>>(scalarCoeff_);

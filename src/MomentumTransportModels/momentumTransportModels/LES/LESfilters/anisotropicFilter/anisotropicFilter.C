@@ -98,7 +98,7 @@ Foam::anisotropicFilter::anisotropicFilter
             (1/widthCoeff_)*
             sqr
             (
-                2.0*mesh.V().primitiveField()
+                2*mesh.V().primitiveField()
                /fvi::surfaceSum(mag(mesh.Sf().component(d)))().primitiveField()
             )
         );
@@ -139,7 +139,7 @@ Foam::anisotropicFilter::anisotropicFilter
                 (1/widthCoeff_)
                *sqr
                 (
-                    2.0*mesh.V()
+                    2*mesh.V()
                    /fvi::surfaceSum(mag(mesh.Sf().component(d)))
                 )
             )

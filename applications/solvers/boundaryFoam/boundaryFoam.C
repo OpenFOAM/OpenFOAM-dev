@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
         );
 
         U += (Ubar - UbarStar);
-        gradP += (Ubar - UbarStar)/weightedAverage(1.0/UEqn.A()()(), mesh.V());
+        gradP += (Ubar - UbarStar)/weightedAverage(1/UEqn.A()()(), mesh.V());
 
         viscosity->correct();
         turbulence->correct();

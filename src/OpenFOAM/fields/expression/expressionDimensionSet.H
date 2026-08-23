@@ -136,14 +136,30 @@ struct Operate
 template<>
 struct Operate
 <
-    scalar,
+    float,
     Arguments<dimensionSet>,
-    EnableIfNotExpressionable<scalar>
+    EnableIfNotExpressionable<float>
 >
 {
-    using type = DimensionsOrExponent<scalar>;
+    using type = DimensionsOrExponent<float>;
 
-    static type access(const scalar s, const dimensionSet&)
+    static type access(const float s, const dimensionSet&)
+    {
+        return type(s);
+    }
+};
+
+template<>
+struct Operate
+<
+    double,
+    Arguments<dimensionSet>,
+    EnableIfNotExpressionable<double>
+>
+{
+    using type = DimensionsOrExponent<double>;
+
+    static type access(const double s, const dimensionSet&)
     {
         return type(s);
     }
