@@ -8,16 +8,34 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      fvModels;
+    class       LagrangianScalarField;
+    location    "0/Lagrangian/bubbles";
+    object      N2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-bubbles
+dimensions      [];
+
+internalField   uniform 0.77;
+
+boundaryField
 {
-    type        multicomponentParcelCloud;
-    libs        ("libLagrangianCloud.so");
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    ".*"
+    {
+        type            calculated;
+    }
 }
+
+sources
+{
+    injection
+    {
+        type            uniformFixedValue;
+        uniformValue    0.77;
+    }
+}
+
 
 // ************************************************************************* //

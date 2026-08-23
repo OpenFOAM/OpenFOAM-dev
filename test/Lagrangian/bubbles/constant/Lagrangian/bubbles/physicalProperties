@@ -17,7 +17,7 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         pureMixture;
+    mixture         multicomponentMixture;
     transport       const;
     thermo          eConst;
     equationOfState perfectGas;
@@ -25,15 +25,49 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
+species (O2 N2);
+
+defaultSpecie N2;
+
 mixture
 {
     specie
     {
-        molWeight   28.9;
+        molWeight   28.828828828828826;
     }
     thermodynamics
     {
-        Cv          718;
+        Cv          721.00561;
+    }
+}
+
+O2
+{
+    specie
+    {
+        molWeight   32;
+    }
+    thermodynamics
+    {
+        Cv          649.555;
+        hf          0;
+    }
+    transport
+    {
+        mu          1.84e-05;
+        Pr          0.7;
+    }
+}
+
+N2
+{
+    specie
+    {
+        molWeight   28;
+    }
+    thermodynamics
+    {
+        Cv          742.348;
         hf          0;
     }
     transport
