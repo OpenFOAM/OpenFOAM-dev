@@ -1,0 +1,122 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "MRFstaticNoSlipFvPatchVectorField.H"
+#include "volFields.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::MRFstaticNoSlipFvPatchVectorField::MRFstaticNoSlipFvPatchVectorField
+(
+    const fvPatch& p,
+    const DimensionedField<vector, fvMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict, false),
+    MRFPatchField(dict)
+{
+    if (dict.found("value"))
+    {
+        fvPatchField<vector>::operator=
+        (
+            vectorField("value", iF.dimensions(), dict, p.size())
+        );
+    }
+    else
+    {
+        fvPatchField<vector>::operator=(Zero);
+    }
+}
+
+
+Foam::MRFstaticNoSlipFvPatchVectorField::MRFstaticNoSlipFvPatchVectorField
+(
+    const MRFstaticNoSlipFvPatchVectorField& pvf,
+    const fvPatch& p,
+    const DimensionedField<vector, fvMesh>& iF,
+    const fieldMapper& mapper
+)
+:
+    fixedValueFvPatchVectorField(pvf, p, iF, mapper),
+    MRFPatchField(pvf)
+{}
+
+
+Foam::MRFstaticNoSlipFvPatchVectorField::MRFstaticNoSlipFvPatchVectorField
+(
+    const MRFstaticNoSlipFvPatchVectorField& pvf,
+    const DimensionedField<vector, fvMesh>& iF
+)
+:
+    fixedValueFvPatchVectorField(pvf, iF),
+    MRFPatchField(pvf)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::MRFstaticNoSlipFvPatchVectorField::updateCoeffs()
+{
+    if (updated())
+    {
+        return;
+    }
+
+    fvPatchField<vector>::operator=(Zero);
+    makeRelative(*this);
+
+    // Remove the component of Up normal to the wall
+    // just in case it is not exactly circular
+    const vectorField n(patch().nf());
+    vectorField::operator=(field() - n*(n & field()));
+
+    makeAbsolute(*this);
+
+    fixedValueFvPatchVectorField::updateCoeffs();
+}
+
+
+void Foam::MRFstaticNoSlipFvPatchVectorField::write(Ostream& os) const
+{
+    fvPatchVectorField::write(os);
+    MRFPatchField::write(os);
+    writeEntry(os, "value", *this);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    makePatchTypeField
+    (
+        fvPatchVectorField,
+        MRFstaticNoSlipFvPatchVectorField
+    );
+}
+
+// ************************************************************************* //

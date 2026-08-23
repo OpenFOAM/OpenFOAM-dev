@@ -38,7 +38,7 @@ boundaryField
 
     outerWall
     {
-        type            noSlip;
+        type            MRFstaticNoSlip;
     }
 
     cyclic_half0

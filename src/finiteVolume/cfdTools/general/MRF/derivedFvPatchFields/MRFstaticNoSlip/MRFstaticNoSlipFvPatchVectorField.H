@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::MRFnoSlipFvPatchVectorField
+    Foam::MRFstaticNoSlipFvPatchVectorField
 
 Description
-    Rotating wall-velocity condition to be used for a wall rotating with the
+    Wall-velocity condition to be used on walls that are stationary within the
     moving frame in an MRF (multi-reference frame) or SRF (single reference
     frame) case.
 
@@ -38,7 +38,7 @@ Usage
     \verbatim
     <patchName>
     {
-        type            MRFnoSlip;
+        type            MRFstaticNoSlip;
     }
     \endverbatim
     or if the case has several MRF zones the particular zone this patch is in
@@ -46,23 +46,23 @@ Usage
     \verbatim
     <patchName>
     {
-        type            MRFnoSlip;
+        type            MRFstaticNoSlip;
         MRFZoneName     rotor;
     }
     \endverbatim
 
 See also
-    Foam::MRFstaticNoSlip
+    Foam::MRFnoSlip
     Foam::MRFZone
     Foam::noSlip
 
 SourceFiles
-    MRFnoSlipFvPatchVectorField.C
+    MRFstaticNoSlipFvPatchVectorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MRFnoSlipFvPatchVectorField_H
-#define MRFnoSlipFvPatchVectorField_H
+#ifndef MRFstaticNoSlipFvPatchVectorField_H
+#define MRFstaticNoSlipFvPatchVectorField_H
 
 #include "MRFPatchField.H"
 #include "fixedValueFvPatchFields.H"
@@ -73,10 +73,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class MRFnoSlipFvPatchVectorField Declaration
+              Class MRFstaticNoSlipFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-class MRFnoSlipFvPatchVectorField
+class MRFstaticNoSlipFvPatchVectorField
 :
     public fixedValueFvPatchVectorField,
     public MRFPatchField
@@ -85,39 +85,39 @@ class MRFnoSlipFvPatchVectorField
 public:
 
     //- Runtime type information
-    TypeName("MRFnoSlip");
+    TypeName("MRFstaticNoSlip");
 
 
     // Constructors
 
         //- Construct from patch, internal field and dictionary
-        MRFnoSlipFvPatchVectorField
+        MRFstaticNoSlipFvPatchVectorField
         (
             const fvPatch&,
             const DimensionedField<vector, fvMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given MRFnoSlipFvPatchVectorField
+        //- Construct by mapping given MRFstaticNoSlipFvPatchVectorField
         //  onto a new patch
-        MRFnoSlipFvPatchVectorField
+        MRFstaticNoSlipFvPatchVectorField
         (
-            const MRFnoSlipFvPatchVectorField&,
+            const MRFstaticNoSlipFvPatchVectorField&,
             const fvPatch&,
             const DimensionedField<vector, fvMesh>&,
             const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        MRFnoSlipFvPatchVectorField
+        MRFstaticNoSlipFvPatchVectorField
         (
-            const MRFnoSlipFvPatchVectorField&
+            const MRFstaticNoSlipFvPatchVectorField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        MRFnoSlipFvPatchVectorField
+        MRFstaticNoSlipFvPatchVectorField
         (
-            const MRFnoSlipFvPatchVectorField&,
+            const MRFstaticNoSlipFvPatchVectorField&,
             const DimensionedField<vector, fvMesh>&
         );
 
@@ -129,7 +129,7 @@ public:
         {
             return tmp<fvPatchVectorField>
             (
-                new MRFnoSlipFvPatchVectorField(*this, iF)
+                new MRFstaticNoSlipFvPatchVectorField(*this, iF)
             );
         }
 
