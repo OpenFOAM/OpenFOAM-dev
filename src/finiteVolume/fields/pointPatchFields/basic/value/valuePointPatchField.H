@@ -128,6 +128,11 @@ public:
                 return Field<Type>::size();
             }
 
+            const Field<Type>& field()
+            {
+                return *this;
+            }
+
 
         // Mapping functions
 

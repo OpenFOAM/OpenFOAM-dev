@@ -378,7 +378,7 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
         sEqn.solve(controls.subDict("diffusivity"));
 
         Info<< fieldName_ << " volume fraction = "
-            << weightedAverage(s_, mesh_.V()).value()
+            << weightedAverage(s_(), mesh_.V()).value()
             << "  Min(" << fieldName_ << ") = " << min(s_).value()
             << "  Max(" << fieldName_ << ") = " << max(s_).value()
             << endl;

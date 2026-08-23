@@ -67,8 +67,8 @@ Foam::SuModels::transport::transport
 :
     unstrained(dict, thermo, turbulence),
     sigmaExt_("sigmaExt", dimless/dimensions::time, dict),
-    SuMin_(0.01*average(Su_)),
-    SuMax_(4*average(Su_))
+    SuMin_(0.01*average(Su_())),
+    SuMax_(4*average(Su_()))
 {
     Su_.writeOpt() = IOobject::AUTO_WRITE;
 }

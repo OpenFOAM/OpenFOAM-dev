@@ -485,28 +485,6 @@ Type sum(const FieldField<Field, Type>& f)
 
 TMP_UNARY_FUNCTION(Type, sum)
 
-template<template<class> class Field, class Type>
-scalar sumMag(const FieldField<Field, Type>& f)
-{
-    if (f.size())
-    {
-        scalar SumMag = 0.0;
-
-        forAll(f, i)
-        {
-            SumMag += sumMag(f[i]);
-        }
-
-        return SumMag;
-    }
-    else
-    {
-        return 0.0;
-    }
-}
-
-TMP_UNARY_FUNCTION(scalar, sumMag)
-
 #define G_UNARY_FUNCTION(returnType, gFunc, func, rFunc)                       \
                                                                                \
 template<template<class> class Field, class Type>                              \
@@ -521,7 +499,6 @@ TMP_UNARY_FUNCTION(returnType, gFunc)
 G_UNARY_FUNCTION(Type, gMax, max, max)
 G_UNARY_FUNCTION(Type, gMin, min, min)
 G_UNARY_FUNCTION(Type, gSum, sum, sum)
-G_UNARY_FUNCTION(scalar, gSumMag, sumMag, sum)
 
 #undef G_UNARY_FUNCTION
 #undef TMP_UNARY_FUNCTION

@@ -223,6 +223,21 @@ ListType createWithValues
     typename ListType::const_reference setValue
 );
 
+//- Return the largest element of the list
+// or pTraits<ListType::value_type>::min if the list is empty
+template<class Type>
+Type max(const UList<Type>&);
+
+//- Return the smallest element of the list
+// or pTraits<ListType::value_type>::max if the list is empty
+template<class Type>
+Type min(const UList<Type>&);
+
+//- Return the sum of the element of the list
+// or zero if the list is empty
+template<class Type>
+Type sum(const UList<Type>&);
+
 //- Find index of max element (and larger than given element).
 //  return -1 if not found. Linear search.
 template<class ListType>

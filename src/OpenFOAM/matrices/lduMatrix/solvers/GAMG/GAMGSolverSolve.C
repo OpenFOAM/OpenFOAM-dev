@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,9 +58,9 @@ Foam::solverPerformance Foam::GAMGSolver::solve
     scalarField finestResidual(source - Apsi);
 
     // Calculate normalised residual for convergence test
-    solverPerf.initialResidual() = gSumMag
+    solverPerf.initialResidual() = gSum
     (
-        finestResidual,
+        mag(finestResidual),
         matrix().mesh().comm()
     )/normFactor;
     solverPerf.finalResidual() = solverPerf.initialResidual();
@@ -121,9 +121,9 @@ Foam::solverPerformance Foam::GAMGSolver::solve
             finestResidual = source;
             finestResidual -= Apsi;
 
-            solverPerf.finalResidual() = gSumMag
+            solverPerf.finalResidual() = gSum
             (
-                finestResidual,
+                mag(finestResidual),
                 matrix().mesh().comm()
             )/normFactor;
 

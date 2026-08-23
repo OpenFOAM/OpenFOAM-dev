@@ -602,6 +602,63 @@ ListType Foam::createWithValues
 }
 
 
+template<class Type>
+Type Foam::max(const UList<Type>& l)
+{
+    if (l.size())
+    {
+        Type m = pTraits<Type>::min;
+        forAll(l, i)
+        {
+            m = max(l[i], m);
+        }
+        return m;
+    }
+    else
+    {
+        return pTraits<Type>::min;
+    }
+}
+
+
+template<class Type>
+Type Foam::min(const UList<Type>& l)
+{
+    if (l.size())
+    {
+        Type m = pTraits<Type>::max;
+        forAll(l, i)
+        {
+            m = min(l[i], m);
+        }
+        return m;
+    }
+    else
+    {
+        return pTraits<Type>::max;
+    }
+}
+
+
+template<class Type>
+Type Foam::sum(const UList<Type>& l)
+{
+    if (l.size())
+    {
+        Type s = Zero;
+        forAll(l, i)
+        {
+            s += l[i];
+        }
+        return s;
+    }
+    else
+    {
+        return Zero;
+    }
+}
+
+
 template<class ListType>
 Foam::label Foam::findMax(const ListType& l, const label start)
 {

@@ -31,7 +31,7 @@ Description
 
 {
     scalar sumLocalContErr = runTime.deltaTValue()*
-        weightedAverage(eval(mag(fvi::div(phia)))(), mesh.V()).value();
+        weightedAverage(mag(fvi::div(phia)), mesh.V()).value();
 
     scalar globalContErr = runTime.deltaTValue()*
         weightedAverage(fvi::div(phia)(), mesh.V()).value();

@@ -154,7 +154,7 @@ void Foam::solvers::basicFluidSolver::continuityErrors
 
     const scalar sumLocalContErr =
         runTime.deltaTValue()
-       *weightedAverage(eval(mag(contErr))(), mesh.V()).value();
+       *weightedAverage(mag(contErr), mesh.V()).value();
 
     const scalar globalContErr =
         runTime.deltaTValue()

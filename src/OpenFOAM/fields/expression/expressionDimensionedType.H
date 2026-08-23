@@ -97,8 +97,22 @@ struct Name
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+template<class Type>
+inline Type getPrimitiveValue(const dimensioned<Type>& ds)
+{
+    return ds.value();
+}
+
+template<class Type>
+inline void setPrimitiveValue(dimensioned<Type>& ds, const Type& ps)
+{
+    ds.value() = ps;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 } // End namespace expression
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -106,8 +106,7 @@ Foam::solverPerformance Foam::PBiCGStab::solve
 
     // --- Calculate normalised residual norm
     solverPerf.initialResidual() =
-        gSumMag(rA, matrix().mesh().comm())
-       /normFactor;
+        gSum(mag(rA), matrix().mesh().comm())/normFactor;
     solverPerf.finalResidual() = solverPerf.initialResidual();
 
     // --- Check convergence, solve if not converged
@@ -151,7 +150,7 @@ Foam::solverPerformance Foam::PBiCGStab::solve
             // --- Store previous rA0rA
             const scalar rA0rAold = rA0rA;
 
-            rA0rA = gSumProd(rA0, rA, matrix().mesh().comm());
+            rA0rA = gSum(rA0*rA, matrix().mesh().comm());
 
             // --- Test for singularity
             if (solverPerf.checkSingularity(mag(rA0rA)))
@@ -190,7 +189,7 @@ Foam::solverPerformance Foam::PBiCGStab::solve
             // --- Calculate AyA
             matrix_.Amul(AyA, yA, interfaceBouCoeffs_, interfaces_, cmpt);
 
-            const scalar rA0AyA = gSumProd(rA0, AyA, matrix().mesh().comm());
+            const scalar rA0AyA = gSum(rA0*AyA, matrix().mesh().comm());
 
             alpha = rA0rA/rA0AyA;
 
@@ -202,7 +201,7 @@ Foam::solverPerformance Foam::PBiCGStab::solve
 
             // --- Test sA for convergence
             solverPerf.finalResidual() =
-                gSumMag(sA, matrix().mesh().comm())/normFactor;
+                gSum(mag(sA), matrix().mesh().comm())/normFactor;
 
             if
             (
@@ -224,11 +223,11 @@ Foam::solverPerformance Foam::PBiCGStab::solve
             // --- Calculate tA
             matrix_.Amul(tA, zA, interfaceBouCoeffs_, interfaces_, cmpt);
 
-            const scalar tAtA = gSumSqr(tA, matrix().mesh().comm());
+            const scalar tAtA = gSum(sqr(tA), matrix().mesh().comm());
 
             // --- Calculate omega from tA and sA
             //     (cheaper than using zA with preconditioned tA)
-            omega = gSumProd(tA, sA, matrix().mesh().comm())/tAtA;
+            omega = gSum(tA*sA, matrix().mesh().comm())/tAtA;
 
             // --- Update solution and residual
             for (label cell=0; cell<nCells; cell++)
@@ -238,8 +237,7 @@ Foam::solverPerformance Foam::PBiCGStab::solve
             }
 
             solverPerf.finalResidual() =
-                gSumMag(rA, matrix().mesh().comm())
-               /normFactor;
+                gSum(mag(rA), matrix().mesh().comm())/normFactor;
         } while
         (
             (

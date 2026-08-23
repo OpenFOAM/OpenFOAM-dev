@@ -515,7 +515,6 @@ dimensioned<returnType> func                                                   \
 }
 
 UNARY_REDUCTION_FUNCTION(Type, sum, gSum)
-UNARY_REDUCTION_FUNCTION(scalar, sumMag, gSumMag)
 
 #undef UNARY_REDUCTION_FUNCTION
 

@@ -154,6 +154,9 @@ public:
 
     // Member Functions
 
+         using fixedValuePointPatchField<Type>::field;
+
+
         // Utility functions
 
             //- Find boundary data in between current time and interpolate

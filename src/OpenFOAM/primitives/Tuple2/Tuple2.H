@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -235,6 +235,43 @@ void writeEntry(Ostream& os, const Tuple2<Type1, Type2>& t2)
 {
     os << t2;
 }
+
+
+/*---------------------------------------------------------------------------*\
+                            Class add2Op Declaration
+\*---------------------------------------------------------------------------*/
+
+struct add2Op
+{
+    static const signed char precedence = 0;
+
+    static const bool associative = true;
+
+    static word name(const word& a, const word& b)
+    {
+        return a + '+' + b;
+    }
+
+    template<class A, class B>
+    static Tuple2<A, B> value(const Tuple2<A, B>& a, const Tuple2<A, B>& b)
+    {
+        return Tuple2<A, B>(a.first() + b.first(), a.second() + b.second());
+    }
+
+    template<class A, class B>
+    Tuple2<A, B> operator()(const Tuple2<A, B>& a, const Tuple2<A, B>& b) const
+    {
+        return Tuple2<A, B>(a.first() + b.first(), a.second() + b.second());
+    }
+
+    static word name(const word& x)
+    {
+        return "sum(" + x + ')';
+    }
+};
+
+// Alias for add2Op for readability of summation reduction operations
+using sum2Op = add2Op;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -73,7 +73,7 @@ tmp<VolField<Type>> singleCellFvMesh::interpolate
             ),
             *this,
             vf.dimensions(),
-            Field<Type>(1, gAverage(vf)),
+            Field<Type>(1, gAverage(vf.primitiveField())),
             patchFields
         )
     );

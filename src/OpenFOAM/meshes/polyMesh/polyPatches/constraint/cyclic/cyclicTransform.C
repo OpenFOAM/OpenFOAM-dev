@@ -38,12 +38,6 @@ label sum(const label& x, const bool global)
     return global ? returnReduce(x, sumOp()) : x;
 }
 
-template<class Expression, class = EnableIfExpressionable<Expression>>
-auto sum(const Expression& x, const bool global)
-{
-    return global ? gSum(x) : sum(x);
-}
-
 }
 
 

@@ -106,8 +106,7 @@ Foam::solverPerformance Foam::PCG::solve
 
     // --- Calculate normalised residual norm
     solverPerf.initialResidual() =
-        gSumMag(rA, matrix().mesh().comm())
-       /normFactor;
+        gSum(mag(rA), matrix().mesh().comm())/normFactor;
     solverPerf.finalResidual() = solverPerf.initialResidual();
 
     // --- Check convergence, solve if not converged
@@ -135,7 +134,7 @@ Foam::solverPerformance Foam::PCG::solve
             preconPtr->precondition(wA, rA, cmpt);
 
             // --- Update search directions:
-            wArA = gSumProd(wA, rA, matrix().mesh().comm());
+            wArA = gSum(wA*rA, matrix().mesh().comm());
 
             if (solverPerf.nIterations() == 0)
             {
@@ -158,7 +157,7 @@ Foam::solverPerformance Foam::PCG::solve
             // --- Update preconditioned residual
             matrix_.Amul(wA, pA, interfaceBouCoeffs_, interfaces_, cmpt);
 
-            scalar wApA = gSumProd(wA, pA, matrix().mesh().comm());
+            scalar wApA = gSum(wA*pA, matrix().mesh().comm());
 
 
             // --- Test for singularity
@@ -176,8 +175,7 @@ Foam::solverPerformance Foam::PCG::solve
             }
 
             solverPerf.finalResidual() =
-                gSumMag(rA, matrix().mesh().comm())
-               /normFactor;
+                gSum(mag(rA), matrix().mesh().comm())/normFactor;
 
         } while
         (

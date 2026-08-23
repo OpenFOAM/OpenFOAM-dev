@@ -59,7 +59,12 @@ struct powOp
         return pow(a, b);
     }
 
-    static scalar value(const scalar a, const label b)
+    static scalar value(const scalar a, const int32_t b)
+    {
+        return integerPow(a, b);
+    }
+
+    static scalar value(const scalar a, const int64_t b)
     {
         return integerPow(a, b);
     }

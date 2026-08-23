@@ -200,7 +200,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve()
         rhoPhi += fvc::interpolate(alpha.thermo().rho())*alphaPhi;
 
         Info<< alpha.name() << " volume fraction, min, max = "
-            << weightedAverage(alpha, mesh.V()).value()
+            << weightedAverage(alpha(), mesh.V()).value()
             << ' ' << min(alpha).value()
             << ' ' << max(alpha).value()
             << endl;

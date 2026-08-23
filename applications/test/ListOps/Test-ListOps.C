@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,6 +110,10 @@ int main(int argc, char *argv[])
     Info<< "List                            : " << test5 << endl;
     inplaceReverseList(test5SubList);
     Info<< "Reverse Sublist between 3 and 6 : " << test5 << endl;
+
+    Info<< "Sum " << test1 << " = " << sum(test1) << endl;
+    Info<< "Max " << test1 << " = " << max(test1) << endl;
+    Info<< "Min " << test1 << " = " << min(test1) << endl;
 
     Info<< "\nEnd\n" << endl;
 

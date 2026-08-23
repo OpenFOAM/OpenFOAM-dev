@@ -52,7 +52,7 @@ Foam::XiEqModels::SCOPEXiEq::SCOPEXiEq
     XiEqCoef_(XiEqModelCoeffs_.lookup<scalar>("XiEqCoef")),
     XiEqExp_(XiEqModelCoeffs_.lookup<scalar>("XiEqExp")),
     lCoef_(XiEqModelCoeffs_.lookup<scalar>("lCoef")),
-    SuMin_(0.01*average(Su)),
+    SuMin_(0.01*average(Su())),
     uPrimeCoef_(XiEqModelCoeffs_.lookup<scalar>("uPrimeCoef")),
     subGridSchelkin_
     (

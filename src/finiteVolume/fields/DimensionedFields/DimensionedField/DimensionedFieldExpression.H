@@ -134,20 +134,15 @@ struct Result<DimensionedField<Type, GeoMesh, PrimitiveField>>
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
 {
+    // Global (parallel) reductions should be applied to the result by default
+    static const bool globalReduce = true;
+
     template<class Op, class Expression>
     static typename Result
     <
         DimensionedField<Type, GeoMesh, PrimitiveField>
     >::template elementType<Expression> value(const Expression& e)
     {
-        auto x =
-            Reduce<PrimitiveField<Type>>::template value<Op>
-            (
-                access(e, Value(), Base())
-            );
-
-        Foam::reduce(x, Functor<Op>());
-
         return
             typename Result
             <
@@ -156,7 +151,10 @@ struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
             (
                 Op::name(name(e)),
                 access(e, NullObjectRef<dimensionSet>()),
-                x
+                Reduce<PrimitiveField<Type>>::template value<Op>
+                (
+                    access(e, Value(), Base())
+                )
             );
     }
 };

@@ -118,17 +118,15 @@ int main(int argc, char *argv[])
     }
 
     Info<< "Continuity error = "
-        << weightedAverage(eval(mag(fvi::div(phi)))(), mesh.V()).value()
+        << weightedAverage(mag(fvi::div(phi)), mesh.V()).value()
         << endl;
 
     U = fvc::reconstruct(MRF.absolute(phi));
     U.correctBoundaryConditions();
 
     Info<< "Interpolated velocity error = "
-        << (
-                sqrt(sum(sqr(fvc::flux(U) - MRF.absolute(phi))))
-               /sum(mesh.magSf())
-           ).value()
+        <<  (sqrt(sum(sqr(fvc::flux(U) - MRF.absolute(phi))))/sum(mesh.magSf()))
+           .value()
         << endl;
 
     // Write U and phi
@@ -158,7 +156,7 @@ int main(int argc, char *argv[])
 
         // Calculate the flow-direction filter tensor
         volScalarField magSqrU(magSqr(U));
-        volSymmTensorField F(sqr(U)/(magSqrU + small*average(magSqrU)));
+        volSymmTensorField F(sqr(U)/(magSqrU + small*average(magSqrU())));
 
         // Calculate the divergence of the flow-direction filtered div(U*U)
         // Filtering with the flow-direction generates a more reasonable

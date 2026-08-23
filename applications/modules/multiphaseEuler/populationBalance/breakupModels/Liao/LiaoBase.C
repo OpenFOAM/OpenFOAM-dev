@@ -117,28 +117,31 @@ void Foam::populationBalance::LiaoBase::precompute()
         (
             "nuc",
             dimensions::kinematicViscosity,
-            gAverage(popBal_.continuousPhase().fluidThermo().nu()())
+            gAverage
+            (
+                popBal_.continuousPhase().fluidThermo().nu()().primitiveField()
+            )
         );
 
         const dimensionedScalar rhoc
         (
             "rhoc",
             dimensions::density,
-            gAverage(popBal_.continuousPhase().rho())
+            gAverage(popBal_.continuousPhase().rho().primitiveField())
         );
 
         const dimensionedScalar rhod
         (
             "rhod",
             dimensions::density,
-            gAverage(popBal_.phases().first().rho())
+            gAverage(popBal_.phases().first().rho().primitiveField())
         );
 
         const dimensionedScalar sigma
         (
             "sigma",
             dimensions::force/dimensions::length,
-            gAverage(popBal_.sigmaWithContinuousPhase(0)())
+            gAverage(popBal_.sigmaWithContinuousPhase(0)().primitiveField())
         );
 
         forAll(popBal_.phases(), i)

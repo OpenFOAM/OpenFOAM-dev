@@ -1523,8 +1523,8 @@ void Foam::populationBalanceModel::solve()
     const volScalarField alphaFNm1(phases_.last()*fs_.last());
 
     Info<< "populationBalance " << this->name() << ": Group fraction "
-        << "first/last = " << weightedAverage(alphaF0, mesh().V()).value()
-        << '/' << weightedAverage(alphaFNm1, mesh().V()).value() << endl;
+        << "first/last = " << weightedAverage(alphaF0(), mesh().V()).value()
+        << '/' << weightedAverage(alphaFNm1(), mesh().V()).value() << endl;
 
     if (solverDict().lookupOrDefault<Switch>("scale", true))
     {

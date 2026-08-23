@@ -166,16 +166,19 @@ Foam::solverPerformance Foam::smoothSolver::solve
                 );
 
                 // Calculate the residual to check convergence
-                solverPerf.finalResidual() = gSumMag
+                solverPerf.finalResidual() = gSum
                 (
-                    matrix_.residual
+                    mag
                     (
-                        psi,
-                        source,
-                        interfaceBouCoeffs_,
-                        interfaces_,
-                        cmpt
-                    )(),
+                        matrix_.residual
+                        (
+                            psi,
+                            source,
+                            interfaceBouCoeffs_,
+                            interfaces_,
+                            cmpt
+                        )
+                    ),
                     matrix().mesh().comm()
                 )/normFactor;
             } while

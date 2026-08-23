@@ -3215,9 +3215,9 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurfaceFeature
         );
 
         Info<< "Attraction:" << endl
-            << "     linear   : max:" << gMaxMagSqr(patchDisp)
+            << "     linear   : max:" << gMax(magSqr(patchDisp))
             << " avg:" << avgPatchDisp << endl
-            << "     feature  : max:" << gMaxMagSqr(patchAttraction)
+            << "     feature  : max:" << gMax(magSqr(patchAttraction))
             << " avg:" << avgPatchAttr << endl;
     }
 

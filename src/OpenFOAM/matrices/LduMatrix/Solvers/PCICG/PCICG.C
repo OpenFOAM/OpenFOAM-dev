@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ Foam::PCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
     }
 
     // --- Calculate normalised residual norm
-    solverPerf.initialResidual() = cmptDivide(gSumCmptMag(rA), normFactor);
+    solverPerf.initialResidual() = cmptDivide(gSum(cmptMag(rA)), normFactor);
     solverPerf.finalResidual() = solverPerf.initialResidual();
 
     // --- Check convergence, solve if not converged
@@ -118,7 +118,7 @@ Foam::PCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
             preconPtr->precondition(wA, rA);
 
             // --- Update search directions:
-            wArA = gSumCmptProd(wA, rA);
+            wArA = gSum(cmptMultiply(wA, rA));
 
             if (nIter == 0)
             {
@@ -145,7 +145,7 @@ Foam::PCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
             // --- Update preconditioned residual
             this->matrix_.Amul(wA, pA);
 
-            Type wApA = gSumCmptProd(wA, pA);
+            Type wApA = gSum(cmptMultiply(wA, pA));
 
 
             // --- Test for singularity
@@ -176,7 +176,7 @@ Foam::PCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
             }
 
             solverPerf.finalResidual() =
-                cmptDivide(gSumCmptMag(rA), normFactor);
+                cmptDivide(gSum(cmptMag(rA)), normFactor);
 
         } while
         (

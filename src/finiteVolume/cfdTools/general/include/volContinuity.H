@@ -6,7 +6,7 @@
     conserve += (1.0 - mesh.V0()/mesh.V())/runTime.deltaTValue();
 
     scalar sumLocalContErr = runTime.deltaTValue()*
-        weightedAverage(eval(mag(conserve))(), mesh.V()).value();
+        weightedAverage(mag(conserve), mesh.V()).value();
 
     scalar globalContErr = runTime.deltaTValue()*
         weightedAverage(conserve, mesh.V()).value();

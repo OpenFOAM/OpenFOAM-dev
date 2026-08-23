@@ -50,7 +50,7 @@ Foam::XiEqModels::Gulder::Gulder
 :
     XiEqModel(XiEqProperties, thermo, turbulence, Su),
     XiEqCoef_(XiEqModelCoeffs_.lookup<scalar>("XiEqCoef")),
-    SuMin_(0.01*average(Su)),
+    SuMin_(0.01*average(Su())),
     uPrimeCoef_(XiEqModelCoeffs_.lookup<scalar>("uPrimeCoef")),
     subGridSchelkin_
     (

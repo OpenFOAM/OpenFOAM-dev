@@ -431,7 +431,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "FieldFunctions.H"
-#include "FieldReductionFunctions.H"
 #include "FieldExpression.H"
 #include "scalarField.H"
 

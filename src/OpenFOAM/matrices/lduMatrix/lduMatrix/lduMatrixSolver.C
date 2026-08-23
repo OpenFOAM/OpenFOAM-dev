@@ -193,7 +193,7 @@ Foam::scalar Foam::lduMatrix::solver::normFactor
       + solverPerformance::small_;
 
     // At convergence this simpler method is equivalent to the above
-    // return 2*gSumMag(source) + solverPerformance::small_;
+    // return 2*gSum(mag(source)) + solverPerformance::small_;
 }
 
 

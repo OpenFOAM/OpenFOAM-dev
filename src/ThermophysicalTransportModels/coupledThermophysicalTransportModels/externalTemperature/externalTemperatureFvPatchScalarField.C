@@ -489,9 +489,9 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
             << this->internalField().name() << " :"
             << " heat transfer rate:" << Q
             << " walltemperature "
-            << " min:" << gMin(*this)
-            << " max:" << gMax(*this)
-            << " avg:" << gAverage(*this)
+            << " min:" << gMin(field())
+            << " max:" << gMax(field())
+            << " avg:" << gAverage(field())
             << endl;
     }
 }

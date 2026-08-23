@@ -103,8 +103,7 @@ Foam::solverPerformance Foam::PBiCG::solve
 
     // --- Calculate normalised residual norm
     solverPerf.initialResidual() =
-        gSumMag(rA, matrix().mesh().comm())
-       /normFactor;
+        gSum(mag(rA), matrix().mesh().comm())/normFactor;
     solverPerf.finalResidual() = solverPerf.initialResidual();
 
     // --- Check convergence, solve if not converged
@@ -149,7 +148,7 @@ Foam::solverPerformance Foam::PBiCG::solve
             preconPtr->preconditionT(wT, rT, cmpt);
 
             // --- Update search directions:
-            wArT = gSumProd(wA, rT, matrix().mesh().comm());
+            wArT = gSum(wA*rT, matrix().mesh().comm());
 
             if (solverPerf.nIterations() == 0)
             {
@@ -175,7 +174,7 @@ Foam::solverPerformance Foam::PBiCG::solve
             matrix_.Amul(wA, pA, interfaceBouCoeffs_, interfaces_, cmpt);
             matrix_.Tmul(wT, pT, interfaceIntCoeffs_, interfaces_, cmpt);
 
-            const scalar wApT = gSumProd(wA, pT, matrix().mesh().comm());
+            const scalar wApT = gSum(wA*pT, matrix().mesh().comm());
 
             // --- Test for singularity
             if (solverPerf.checkSingularity(mag(wApT)/normFactor))
@@ -196,8 +195,7 @@ Foam::solverPerformance Foam::PBiCG::solve
             }
 
             solverPerf.finalResidual() =
-                gSumMag(rA, matrix().mesh().comm())
-               /normFactor;
+                gSum(mag(rA), matrix().mesh().comm())/normFactor;
         } while
         (
             (

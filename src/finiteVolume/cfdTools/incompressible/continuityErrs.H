@@ -34,7 +34,7 @@ Description
 
     scalar sumLocalContErr =
         runTime.deltaTValue()
-       *weightedAverage(eval(mag(contErr))(), mesh.V()).value();
+       *weightedAverage(mag(contErr), mesh.V()).value();
 
     scalar globalContErr =
         runTime.deltaTValue()*weightedAverage(contErr, mesh.V()).value();

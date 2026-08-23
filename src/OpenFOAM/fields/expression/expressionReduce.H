@@ -62,6 +62,8 @@ namespace expression
 template<class Type>
 struct Reduce
 {
+    static const bool globalReduce = false;
+
     template<class Op, class Value>
     static const Value& value(const Value& x)
     {
@@ -79,6 +81,8 @@ struct ReduceIterable;
 template<template<class ...> class Container, class Type, class ... Args>
 struct ReduceIterable<Container<Type, Args ...>>
 {
+    static const bool globalReduce = false;
+
     template<class Op, class Expression>
     static typename ResultIterable<Container<Type, Args ...>>::
     template elementType<Expression> value(const Expression& e)
@@ -103,9 +107,36 @@ struct ReduceIterable<Container<Type, Args ...>>
     }
 };
 
+/*---------------------------------------------------------------------------*\
+                    Helper functions for primitive reductions
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+inline Type getPrimitiveValue(const Type& s)
+{
+    return s;
+}
+
+template<class Type>
+inline void setPrimitiveValue(Type& s, const Type& ps)
+{
+    s = ps;
+}
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace expression
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Expression>
+using ReduceType = typename expression::Reduce
+<
+    typename expression::AllContainers<Expression>::type
+>;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

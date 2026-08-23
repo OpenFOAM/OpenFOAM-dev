@@ -47,8 +47,9 @@ int main(int argc, char *argv[])
     #include "createSpecifiedPolyMesh.H"
 
     pointIOField& points = mesh.lookupObjectRef<pointIOField>("points");
+    pointField& pts = points;
 
-    const point midPoint = gAverage(points);
+    const point midPoint = gAverage(pts);
 
     const twoDPointCorrector& twoDCorr = twoDPointCorrector::New(mesh);
 
@@ -58,19 +59,19 @@ int main(int argc, char *argv[])
     const scalar minCmptVal = mesh.bounds().min()[planeNormalCmpt];
     const scalar maxCmptVal = mesh.bounds().max()[planeNormalCmpt];
 
-    forAll(points, pointi)
+    forAll(pts, pointi)
     {
-        if (points[pointi][planeNormalCmpt] < midCmptVal)
+        if (pts[pointi][planeNormalCmpt] < midCmptVal)
         {
-            points[pointi][planeNormalCmpt] = minCmptVal;
+            pts[pointi][planeNormalCmpt] = minCmptVal;
         }
         else
         {
-            points[pointi][planeNormalCmpt] = maxCmptVal;
+            pts[pointi][planeNormalCmpt] = maxCmptVal;
         }
     }
 
-    twoDCorr.correctPoints(points);
+    twoDCorr.correctPoints(pts);
 
     // Ensure the points are written to a sufficient precision
     IOstream::defaultPrecision(IOstream::highPrecision());

@@ -126,21 +126,6 @@ T returnReduce
 }
 
 
-// Reduce with sum of both value and count (for averaging)
-template<class T>
-void sumReduce
-(
-    T& Value,
-    label& Count,
-    const int tag = Pstream::msgType(),
-    const label comm = UPstream::worldComm
-)
-{
-    reduce(Value, sumOp(), tag, comm);
-    reduce(Count, sumOp(), tag, comm);
-}
-
-
 // Non-blocking version of reduce. Sets request.
 template<class T, class BinaryOp>
 void reduce
@@ -197,6 +182,39 @@ void reduce
     const label comm,
     label& request
 );
+
+
+//- Return the largest element of the global list
+// or pTraits<ListType::value_type>::min if the list is empty
+template<class Type>
+Type gMax(const UList<Type>& l, const label comm = UPstream::worldComm)
+{
+    Type m = max(l);
+    reduce(m, maxOp(), Pstream::msgType(), comm);
+    return m;
+}
+
+
+//- Return the smallest element of the global list
+// or pTraits<ListType::value_type>::max if the list is empty
+template<class Type>
+Type gMin(const UList<Type>& l, const label comm = UPstream::worldComm)
+{
+    Type m = min(l);
+    reduce(m, minOp(), Pstream::msgType(), comm);
+    return m;
+}
+
+
+//- Return the sum of the element of the global list
+// or zero if the list is empty
+template<class Type>
+Type gSum(const UList<Type>& l, const label comm = UPstream::worldComm)
+{
+    Type s = sum(l);
+    reduce(s, sumOp(), Pstream::msgType(), comm);
+    return s;
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

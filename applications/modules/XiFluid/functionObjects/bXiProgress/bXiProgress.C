@@ -109,7 +109,7 @@ bool Foam::functionObjects::bXiProgress::write()
 
     const scalar progress
     (
-        weightedAverage(eval(scalar(1) - b)(), mesh_.V()).value()
+        weightedAverage(scalar(1) - b, mesh_.V()).value()
     );
 
     logFiles::write();

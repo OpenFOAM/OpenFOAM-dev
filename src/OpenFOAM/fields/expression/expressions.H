@@ -113,29 +113,42 @@ UnaryFunction(cmptAv)
 UnaryFunction(cmptMag)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Define a unary reduction function given the global function name and the
-// (binary) operator class that it uses
+// Define unary reduction functions
 
 #define UnaryReduction_(Func, gFunc, Op)                                       \
                                                                                \
     template<class Expression, class = EnableIfExpressionable<Expression>>     \
-    typename expression::Result                                                \
-    <                                                                          \
-        typename expression::AllContainers<Expression>::type                   \
-    >::template elementType<Expression> Func(const Expression& e)              \
+    ElementType<Expression> Func                                               \
+    (                                                                          \
+        const Expression& e,                                                   \
+        const bool globalReduce = ReduceType<Expression>::globalReduce,        \
+        const label comm = UPstream::worldComm                                 \
+    )                                                                          \
     {                                                                          \
-        return                                                                 \
-            expression::Reduce                                                 \
-            <                                                                  \
-                typename expression::AllContainers<Expression>::type           \
-            >::template value<Op>(e);                                          \
+        if (globalReduce)                                                      \
+        {                                                                      \
+            ElementType<Expression> s                                          \
+            (                                                                  \
+                ReduceType<Expression>::template value<Op>(e)                  \
+            );                                                                 \
+                                                                               \
+            /* Get the primitive value from the reduced expression */          \
+            auto ps = expression::getPrimitiveValue(s);                        \
+            /* Reduce the primitive value */                                   \
+            reduce(ps, Op(), Pstream::msgType(), comm);                        \
+            /* Set the reduced expression value to the global primitive value*/\
+            expression::setPrimitiveValue(s, ps);                              \
+                                                                               \
+            return s;                                                          \
+        }                                                                      \
+        else                                                                   \
+        {                                                                      \
+            return ReduceType<Expression>::template value<Op>(e);              \
+        }                                                                      \
     }                                                                          \
                                                                                \
     template<class Expression, class = EnableIfExpressionable<Expression>>     \
-    typename expression::Result                                                \
-    <                                                                          \
-        typename expression::AllContainers<Expression>::type                   \
-    >::template elementType<Expression> Func(const tmp<Expression>& te)        \
+    ElementType<Expression> Func(const tmp<Expression>& te)                    \
     {                                                                          \
         auto x = Func(te());                                                   \
         te.clear();                                                            \
@@ -143,33 +156,17 @@ UnaryFunction(cmptMag)
     }                                                                          \
                                                                                \
     template<class Expression, class = EnableIfExpressionable<Expression>>     \
-    typename expression::Result                                                \
-    <                                                                          \
-        typename expression::AllContainers<Expression>::type                   \
-    >::template elementType<Expression> gFunc                                  \
+    ElementType<Expression> gFunc                                              \
     (                                                                          \
         const Expression& e,                                                   \
         const label comm = UPstream::worldComm                                 \
     )                                                                          \
     {                                                                          \
-        /* local reduction */                                                  \
-        auto x =                                                               \
-            expression::Reduce                                                 \
-            <                                                                  \
-                typename expression::AllContainers<Expression>::type           \
-            >::template value<Op>(e);                                          \
-                                                                               \
-        /* global reduction */                                                 \
-        reduce(x, expression::Functor<Op>(), Pstream::msgType(), comm);        \
-                                                                               \
-        return x;                                                              \
+        return Func(e, true, comm);                                            \
     }                                                                          \
                                                                                \
     template<class Expression, class = EnableIfExpressionable<Expression>>     \
-    typename expression::Result                                                \
-    <                                                                          \
-        typename expression::AllContainers<Expression>::type                   \
-    >::template elementType<Expression> gFunc(const tmp<Expression>& te)       \
+    ElementType<Expression> gFunc(const tmp<Expression>& te)                   \
     {                                                                          \
         auto x = gFunc(te());                                                  \
         te.clear();                                                            \
@@ -182,6 +179,200 @@ UnaryFunction(cmptMag)
 UnaryReduction(sum, gSum);
 UnaryReduction(max, gMax);
 UnaryReduction(min, gMin);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Define unary average and gAverage functions
+
+template<class Expression, class = EnableIfExpressionable<Expression>>
+ElementType<Expression> average
+(
+    const Expression& e,
+    const bool globalReduce = ReduceType<Expression>::globalReduce,
+    const label comm = UPstream::worldComm
+)
+{
+    if (globalReduce)
+    {
+        ElementType<Expression> s
+        (
+            ReduceType<Expression>::template value<sumOp>(e)
+        );
+
+        // Get the primitive value from the reduced expression
+        auto ps = expression::getPrimitiveValue(s);
+        // Construct a Tuple2 containing the size and the primitive value
+        Tuple2<label, decltype(ps)> ns
+        (
+            expression::getFirst<expression::Size>(e),
+            ps
+        );
+        // Reduce the Tuple2
+        reduce(ns, sum2Op(), Pstream::msgType(), comm);
+        // Set the reduced expression value to the global primitive value
+        expression::setPrimitiveValue(s, ns.second());
+
+        if (ns.first() > 0)
+        {
+            return s/ns.first();
+        }
+        else
+        {
+            WarningInFunction
+                << "empty field, returning zero" << endl;
+
+            return ElementType<Expression>(Zero);
+        }
+    }
+    else
+    {
+        const label n = expression::getFirst<expression::Size>(e);
+
+        if (n)
+        {
+            return ReduceType<Expression>::template value<sumOp>(e)/n;
+        }
+        else
+        {
+            WarningInFunction
+                << "empty field, returning zero" << endl;
+
+            return ElementType<Expression>(Zero);
+        }
+    }
+}
+
+template<class Expression, class = EnableIfExpressionable<Expression>>
+ElementType<Expression> average(const tmp<Expression>& te)
+{
+    auto x = average(te());
+    te.clear();
+    return x;
+}
+
+template<class Expression, class = EnableIfExpressionable<Expression>>
+ElementType<Expression> gAverage
+(
+    const Expression& e,
+    const label comm = UPstream::worldComm
+)
+{
+    return average(e, true, comm);
+}
+
+template<class Expression, class = EnableIfExpressionable<Expression>>
+ElementType<Expression> gAverage
+(
+    const tmp<Expression>& te,
+    const label comm = UPstream::worldComm
+)
+{
+    auto x = gAverage(te());
+    te.clear();
+    return x;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Weighted average
+
+template
+<
+    class Expression,
+    class WeightExpression,
+    class = EnableIfExpressionable<Expression>
+>
+ElementType<Expression> weightedAverage
+(
+    const Expression& e,
+    const WeightExpression& we,
+    const bool globalReduce = ReduceType<Expression>::globalReduce,
+    const label comm = UPstream::worldComm
+)
+{
+    if (globalReduce)
+    {
+        ElementType<Expression> ws
+        (
+            ReduceType<Expression>::template value<sumOp>(we*e)
+        );
+
+        ElementType<WeightExpression> w
+        (
+            ReduceType<Expression>::template value<sumOp>(we)
+        );
+
+        // Get the primitive value from the reduced weighted expression
+        auto pws = expression::getPrimitiveValue(ws);
+        // Get the primitive value from the reduced weight
+        auto pw = expression::getPrimitiveValue(w);
+        // Construct a Tuple2 containing the size and the primitive value
+        Tuple2<decltype(pws), decltype(pw)> wsw(pws, pw);
+        // Reduce the Tuple2
+        reduce(wsw, sum2Op(), Pstream::msgType(), comm);
+        // Set the reduced ws and w values to the global primitive values
+        expression::setPrimitiveValue(ws, wsw.first());
+        expression::setPrimitiveValue(w, wsw.second());
+
+        return ws/w;
+    }
+    else
+    {
+        return
+            ReduceType<Expression>::template value<sumOp>(we*e)
+           /ReduceType<Expression>::template value<sumOp>(we);
+    }
+}
+
+template
+<
+    class Expression,
+    class WeightExpression,
+    class = EnableIfExpressionable<Expression>
+>
+ElementType<Expression> weightedAverage
+(
+    const tmp<Expression>& te,
+    const WeightExpression& we
+)
+{
+    auto x = weightedAverage(te(), we);
+    te.clear();
+    return x;
+}
+
+template
+<
+    class Expression,
+    class WeightExpression,
+    class = EnableIfExpressionable<Expression>
+>
+ElementType<Expression> gWeightedAverage
+(
+    const Expression& e,
+    const WeightExpression& we,
+    const label comm = UPstream::worldComm
+)
+{
+    return weightedAverage(e, we, true, comm);
+}
+
+template
+<
+    class Expression,
+    class WeightExpression,
+    class = EnableIfExpressionable<Expression>
+>
+ElementType<Expression> gWeightedAverage
+(
+    const tmp<Expression>& te,
+    const WeightExpression& we,
+    const label comm = UPstream::worldComm
+)
+{
+    auto x = gWeightedAverage(te(), we);
+    te.clear();
+    return x;
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Define a binary function or operator given the global function or operator

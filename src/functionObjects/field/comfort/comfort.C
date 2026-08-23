@@ -49,7 +49,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::comfort::magU() const
     // Consistent with EN ISO 7730 but does not make physical sense
     if (meanVelocity_)
     {
-        tmagU.ref() = weightedAverage(tmagU(), mesh_.V());
+        tmagU.ref() = weightedAverage(tmagU()(), mesh_.V());
     }
 
     return tmagU;

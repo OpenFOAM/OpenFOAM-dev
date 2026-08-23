@@ -62,7 +62,7 @@ Foam::XiEqModels::Gulder::Gulder
 :
     XiEqModel(thermo, turbulence, Su),
     XiEqCoeff_("XiEqCoeff", dimless, 0.62),
-    SuMin_("SuMin", 0.01*average(Su))
+    SuMin_("SuMin", 0.01*average(Su()))
 {
     readCoeffs(dict);
 }

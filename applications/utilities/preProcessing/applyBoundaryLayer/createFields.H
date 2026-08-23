@@ -51,7 +51,7 @@ if (args.optionFound("ybl"))
 else if (args.optionFound("Cbl"))
 {
     // Calculate boundary layer thickness as Cbl*mean distance to wall
-    ybl.value() = gAverage(y)*args.optionRead<scalar>("Cbl");
+    ybl.value() = gAverage(y.primitiveField())*args.optionRead<scalar>("Cbl");
 }
 
 Info<< "\nCreating boundary-layer for U of thickness "

@@ -84,12 +84,6 @@ tmp<scalarField> linearSequence01(const label n);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<>
-scalar sumProd(const UList<scalar>& f1, const UList<scalar>& f2);
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 BINARY_TYPE_OPERATOR(scalar, scalar, scalar, +, add)
 BINARY_TYPE_OPERATOR(scalar, scalar, scalar, -, subtract)
 
