@@ -165,6 +165,22 @@ struct Operate
     }
 };
 
+template<>
+struct Operate
+<
+    long double,
+    Arguments<dimensionSet>,
+    EnableIfNotExpressionable<double>
+>
+{
+    using type = DimensionsOrExponent<long double>;
+
+    static type access(const long double s, const dimensionSet&)
+    {
+        return type(s);
+    }
+};
+
 template<class Type>
 struct Operate
 <
