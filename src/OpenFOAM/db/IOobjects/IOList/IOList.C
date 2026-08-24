@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,6 +249,52 @@ Foam::IOListBase<Container, IOContainer, Type>::IOListBase
 
         readStream(IOContainer<Type>::typeName) >> *this;
         close();
+    }
+}
+
+
+template
+<
+    template<class> class Container,
+    template<class> class IOContainer,
+    class Type
+>
+template<class Expression, class>
+Foam::IOListBase<Container, IOContainer, Type>::IOListBase
+(
+    const IOobject& io,
+    const Expression& e
+)
+:
+    regIOobject(io)
+{
+    // Check for MUST_READ_IF_MODIFIED
+    if (!IOContainer<Type>::rereading)
+    {
+        warnNoRereading<IOContainer<Type>>();
+    }
+
+    if
+    (
+        (
+            io.readOpt() == IOobject::MUST_READ
+         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
+        )
+     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
+    )
+    {
+        // For if MUST_READ_IF_MODIFIED
+        if (IOContainer<Type>::rereading)
+        {
+            addWatch();
+        }
+
+        readStream(IOContainer<Type>::typeName) >> *this;
+        close();
+    }
+    else
+    {
+        Container<Type>::operator=(e);
     }
 }
 

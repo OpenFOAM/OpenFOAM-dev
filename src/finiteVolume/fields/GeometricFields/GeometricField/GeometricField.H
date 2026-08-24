@@ -470,6 +470,16 @@ public:
             const word& patchFieldType
         );
 
+        //- Return a temporary field constructed from name,
+        //  internal field expression and patch field type
+        template<class Expression, class = EnableIfExpression<Expression>>
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const Expression& e,
+            const word& patchFieldType
+        );
+
         //- Rename and reset patch fields types of field and return
         template<template<class> class PrimitiveField2>
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New

@@ -115,6 +115,33 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<class Expression, class>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
+(
+    const IOobject& io,
+    const GeoMesh& mesh,
+    const dimensionSet& dims,
+    const Expression& e
+)
+:
+    regIOobject(io),
+    PrimitiveField<Type>(e),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
+    mesh_(mesh),
+    dimensions_(dims)
+{
+    if (this->size() && this->size() != mesh.size())
+    {
+        FatalErrorInFunction
+            << "size of field = " << this->size()
+            << " is not the same as the size of mesh = "
+            << mesh.size()
+            << abort(FatalError);
+    }
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
@@ -477,6 +504,21 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::New
         ),
         cacheTmp
     );
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<class Expression, class>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::New
+(
+    const word& name,
+    const GeoMesh& mesh,
+    const dimensionSet& ds,
+    const Expression& e
+)
+{
+    return New(name, mesh, ds, eval(e));
 }
 
 

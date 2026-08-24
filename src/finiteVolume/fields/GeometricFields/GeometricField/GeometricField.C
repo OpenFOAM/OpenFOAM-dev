@@ -1219,6 +1219,20 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<class Expression, class>
+Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
+(
+    const word& newName,
+    const Expression& e,
+    const word& patchFieldType
+)
+{
+    return New(newName, eval(e), patchFieldType);
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 template<template<class> class PrimitiveField2>
 Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New

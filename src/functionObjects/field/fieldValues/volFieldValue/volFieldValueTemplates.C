@@ -307,7 +307,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                eval(weights*values).ref()
+                weights*values
             ).write();
         }
 

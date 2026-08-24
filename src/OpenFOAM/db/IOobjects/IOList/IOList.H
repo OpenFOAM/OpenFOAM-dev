@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,6 +83,10 @@ public:
 
         //- Move construct by transferring the Container contents
         IOListBase(const IOobject&, Container<Type>&&);
+
+        //- Construct from IOobject and a Container Expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        IOListBase(const IOobject&, const Expression& e);
 
         //- Copy constructor
         IOListBase(const IOListBase<Container, IOContainer, Type>&);

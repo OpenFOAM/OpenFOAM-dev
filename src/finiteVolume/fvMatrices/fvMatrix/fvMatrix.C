@@ -826,7 +826,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMatrix<Type>::Su() const
             "Su(" +psi_.name() + ')',
             mesh(),
             dimensions_/dimensions::volume,
-            eval(-source()/mesh().V().primitiveField())
+            -source()/mesh().V().primitiveField()
         )
     );
 

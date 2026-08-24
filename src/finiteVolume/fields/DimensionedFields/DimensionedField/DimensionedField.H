@@ -161,6 +161,16 @@ public:
         );
 
         //- Construct from components
+        template<class Expression, class = EnableIfExpression<Expression>>
+        DimensionedField
+        (
+            const IOobject&,
+            const GeoMesh& mesh,
+            const dimensionSet&,
+            const Expression& e
+        );
+
+        //- Construct from components
         //  Used for temporary fields which are initialised after construction
         DimensionedField
         (
@@ -309,6 +319,17 @@ public:
             const tmp<PrimitiveField<Type>>&
         );
 
+        //- Return a temporary field constructed from name, mesh,
+        //  dimensionSet and field expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const GeoMesh& mesh,
+            const dimensionSet&,
+            const Expression& e
+        );
+
         //- Return a temporary field constructed from name, mesh
         //  and dimensionSet
         static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
@@ -340,6 +361,16 @@ public:
         (
             const word& newName,
             const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>&
+        );
+
+        //- Return a temporary field constructed from name, mesh
+        //  and DimensionedField expression
+        template<class Expression, class = EnableIfExpression<Expression>>
+        static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const GeoMesh& mesh,
+            const Expression& e
         );
 
 

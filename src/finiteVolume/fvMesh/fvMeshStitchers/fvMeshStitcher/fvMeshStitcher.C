@@ -384,7 +384,7 @@ void Foam::fvMeshStitcher::getOrigNbrBfs
             nonConformalMappedFvPatchBase::map
             (
                 nbrPolyFacesPf,
-                eval(nbrPolyFacesPf - nbrPatch.origPatch().start()),
+                labelField(nbrPolyFacesPf - nbrPatch.origPatch().start()),
                 polyFacesBf[patchi]
             );
         origSf.boundaryFieldRef()[patchi] =
@@ -1568,17 +1568,19 @@ void Foam::fvMeshStitcher::intersect
         const polyPatch& origPp =
             refCast<const nonConformalFvPatch>(fvp).origPatch().poly();
 
+        const labelField polyFacesPf(polyFacesBf[patchi] - origPp.start());
+
         SfBf[patchi] ==
             vectorField
             (
                 small*origPp.faceAreas(),
-                eval(polyFacesBf[patchi] - origPp.start())
+                polyFacesPf
             );
         CfBf[patchi] ==
             vectorField
             (
                 origPp.faceCentres(),
-                eval(polyFacesBf[patchi] - origPp.start())
+                polyFacesPf
             );
     }
 
@@ -2184,10 +2186,15 @@ bool Foam::fvMeshStitcher::geometric() const
         const polyPatch& origPp =
             refCast<const nonConformalFvPatch>(fvp).origPatch().poly();
 
+        const labelField polyFacesPf
+        (
+            mesh_.polyFacesBf()[patchi] - origPp.start()
+        );
+
         const scalarField origMagSfp
         (
             origPp.magFaceAreas(),
-            eval(mesh_.polyFacesBf()[patchi] - origPp.start())
+            polyFacesPf
         );
 
         if (max(magSfp/origMagSfp) > rootSmall)
