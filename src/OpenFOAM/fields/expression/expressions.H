@@ -125,26 +125,10 @@ UnaryFunction(cmptMag)
         const label comm = UPstream::worldComm                                 \
     )                                                                          \
     {                                                                          \
-        if (globalReduce)                                                      \
-        {                                                                      \
-            ElementType<Expression> s                                          \
-            (                                                                  \
-                ReduceType<Expression>::template value<Op>(e)                  \
-            );                                                                 \
-                                                                               \
-            /* Get the primitive value from the reduced expression */          \
-            auto ps = expression::getPrimitiveValue(s);                        \
-            /* Reduce the primitive value */                                   \
-            reduce(ps, Op(), Pstream::msgType(), comm);                        \
-            /* Set the reduced expression value to the global primitive value*/\
-            expression::setPrimitiveValue(s, ps);                              \
-                                                                               \
-            return s;                                                          \
-        }                                                                      \
-        else                                                                   \
-        {                                                                      \
-            return ReduceType<Expression>::template value<Op>(e);              \
-        }                                                                      \
+        return ReduceType<Expression>::template value<Op>                      \
+        (                                                                      \
+            e, globalReduce, comm                                              \
+        );                                                                     \
     }                                                                          \
                                                                                \
     template<class Expression, class = EnableIfExpressionable<Expression>>     \
@@ -191,54 +175,7 @@ ElementType<Expression> average
     const label comm = UPstream::worldComm
 )
 {
-    if (globalReduce)
-    {
-        ElementType<Expression> s
-        (
-            ReduceType<Expression>::template value<sumOp>(e)
-        );
-
-        // Get the primitive value from the reduced expression
-        auto ps = expression::getPrimitiveValue(s);
-        // Construct a Tuple2 containing the size and the primitive value
-        Tuple2<label, decltype(ps)> ns
-        (
-            expression::getFirst<expression::Size>(e),
-            ps
-        );
-        // Reduce the Tuple2
-        reduce(ns, sum2Op(), Pstream::msgType(), comm);
-        // Set the reduced expression value to the global primitive value
-        expression::setPrimitiveValue(s, ns.second());
-
-        if (ns.first() > 0)
-        {
-            return s/ns.first();
-        }
-        else
-        {
-            WarningInFunction
-                << "empty field, returning zero" << endl;
-
-            return ElementType<Expression>(Zero);
-        }
-    }
-    else
-    {
-        const label n = expression::getFirst<expression::Size>(e);
-
-        if (n)
-        {
-            return ReduceType<Expression>::template value<sumOp>(e)/n;
-        }
-        else
-        {
-            WarningInFunction
-                << "empty field, returning zero" << endl;
-
-            return ElementType<Expression>(Zero);
-        }
-    }
+    return ReduceType<Expression>::template average(e, globalReduce, comm);
 }
 
 template<class Expression, class = EnableIfExpressionable<Expression>>
@@ -289,38 +226,13 @@ ElementType<Expression> weightedAverage
     const label comm = UPstream::worldComm
 )
 {
-    if (globalReduce)
-    {
-        ElementType<Expression> ws
-        (
-            ReduceType<Expression>::template value<sumOp>(we*e)
-        );
-
-        ElementType<WeightExpression> w
-        (
-            ReduceType<Expression>::template value<sumOp>(we)
-        );
-
-        // Get the primitive value from the reduced weighted expression
-        auto pws = expression::getPrimitiveValue(ws);
-        // Get the primitive value from the reduced weight
-        auto pw = expression::getPrimitiveValue(w);
-        // Construct a Tuple2 containing the size and the primitive value
-        Tuple2<decltype(pws), decltype(pw)> wsw(pws, pw);
-        // Reduce the Tuple2
-        reduce(wsw, sum2Op(), Pstream::msgType(), comm);
-        // Set the reduced ws and w values to the global primitive values
-        expression::setPrimitiveValue(ws, wsw.first());
-        expression::setPrimitiveValue(w, wsw.second());
-
-        return ws/w;
-    }
-    else
-    {
-        return
-            ReduceType<Expression>::template value<sumOp>(we*e)
-           /ReduceType<Expression>::template value<sumOp>(we);
-    }
+    return ReduceType<Expression>::template weightedAverage
+    (
+        e,
+        we,
+        globalReduce,
+        comm
+    );
 }
 
 template

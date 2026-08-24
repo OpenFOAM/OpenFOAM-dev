@@ -141,7 +141,12 @@ struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
     static typename Result
     <
         DimensionedField<Type, GeoMesh, PrimitiveField>
-    >::template elementType<Expression> value(const Expression& e)
+    >::template elementType<Expression> value
+    (
+        const Expression& e,
+        const bool globalReduce,
+        const label comm
+    )
     {
         return
             typename Result
@@ -153,7 +158,67 @@ struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
                 access(e, NullObjectRef<dimensionSet>()),
                 Reduce<PrimitiveField<Type>>::template value<Op>
                 (
-                    access(e, Value(), Base())
+                    access(e, Value(), Base()),
+                    globalReduce,
+                    comm
+                )
+            );
+    }
+
+    template<class Expression>
+    static typename Result
+    <
+        DimensionedField<Type, GeoMesh, PrimitiveField>
+    >::template elementType<Expression> average
+    (
+        const Expression& e,
+        const bool globalReduce,
+        const label comm
+    )
+    {
+        return
+            typename Result
+            <
+                DimensionedField<Type, GeoMesh, PrimitiveField>
+            >::template elementType<Expression>
+            (
+                "average(" + name(e) + ')',
+                access(e, NullObjectRef<dimensionSet>()),
+                Reduce<PrimitiveField<Type>>::template average
+                (
+                    access(e, Value(), Base()),
+                    globalReduce,
+                    comm
+                )
+            );
+    }
+
+    template<class Expression, class WeightExpression>
+    static typename Result
+    <
+        DimensionedField<Type, GeoMesh, PrimitiveField>
+    >::template elementType<Expression> weightedAverage
+    (
+        const Expression& e,
+        const WeightExpression& we,
+        const bool globalReduce,
+        const label comm
+    )
+    {
+        return
+            typename Result
+            <
+                DimensionedField<Type, GeoMesh, PrimitiveField>
+            >::template elementType<Expression>
+            (
+                "weightedAverage(" + name(e) + ',' + name(we) + ')',
+                access(e, NullObjectRef<dimensionSet>()),
+                Reduce<PrimitiveField<Type>>::template weightedAverage
+                (
+                    access(e, Value(), Base()),
+                    access(we, Value(), Base()),
+                    globalReduce,
+                    comm
                 )
             );
     }

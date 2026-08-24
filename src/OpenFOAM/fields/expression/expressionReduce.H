@@ -46,6 +46,7 @@ Description
 #define expressionReduce_H
 
 #include "expressionResult.H"
+#include "Pstream.H"
 #include <numeric>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -85,7 +86,12 @@ struct ReduceIterable<Container<Type, Args ...>>
 
     template<class Op, class Expression>
     static typename ResultIterable<Container<Type, Args ...>>::
-    template elementType<Expression> value(const Expression& e)
+    template elementType<Expression> value
+    (
+        const Expression& e,
+        const bool globalReduce,
+        const label comm = UPstream::worldComm
+    )
     {
         typedef typename ResultIterable<Container<Type, Args ...>>::template
             operateType<Expression> operateType;
@@ -93,7 +99,7 @@ struct ReduceIterable<Container<Type, Args ...>>
         typedef typename ResultIterable<Container<Type, Args ...>>::template
             elementType<Expression> elementType;
 
-        return
+        auto x =
             std::accumulate
             (
                 begin(e),
@@ -104,24 +110,87 @@ struct ReduceIterable<Container<Type, Args ...>>
                     return Op::value(x, Reduce<Type>::template value<Op>(y));
                 }
             );
+
+        if (globalReduce)
+        {
+            reduce(x, Op(), Pstream::msgType(), comm);
+        }
+
+        return x;
+    }
+
+
+    template<class Expression>
+    static typename ResultIterable<Container<Type, Args ...>>::
+    template elementType<Expression> average
+    (
+        const Expression& e,
+        const bool globalReduce,
+        const label comm = UPstream::worldComm
+    )
+    {
+        const Size::type n = getFirst<Size>(e);
+
+        if (globalReduce)
+        {
+            auto s = value<sumOp>(e, false);
+            Tuple2<decltype(s), Size::type> sn(s, n);
+            reduce(sn, sum2Op(), Pstream::msgType(), comm);
+
+            if (sn.second() > 0)
+            {
+                return sn.first()/sn.second();
+            }
+            else
+            {
+                WarningInFunction
+                    << "empty field, returning zero" << endl;
+
+                return ElementType<Expression>(Zero);
+            }
+        }
+        else
+        {
+            if (n)
+            {
+                return value<sumOp>(e, false)/n;
+            }
+            else
+            {
+                WarningInFunction
+                    << "empty field, returning zero" << endl;
+
+                return ElementType<Expression>(Zero);
+            }
+        }
+    }
+
+    template<class Expression, class WeightExpression>
+    static typename ResultIterable<Container<Type, Args ...>>::
+    template elementType<Expression> weightedAverage
+    (
+        const Expression& e,
+        const WeightExpression& we,
+        const bool globalReduce,
+        const label comm = UPstream::worldComm
+    )
+    {
+        auto ws = value<sumOp>(we*e, false);
+        auto w = value<sumOp>(we, false);
+
+        if (globalReduce)
+        {
+            Tuple2<decltype(ws), decltype(w)> wsw(ws, w);
+            reduce(wsw, sum2Op(), Pstream::msgType(), comm);
+
+            return wsw.first()/wsw.second();
+        }
+        else
+        {
+            return ws/w;
+        }
     }
 };
-
-/*---------------------------------------------------------------------------*\
-                    Helper functions for primitive reductions
-\*---------------------------------------------------------------------------*/
-
-template<class Type>
-inline Type getPrimitiveValue(const Type& s)
-{
-    return s;
-}
-
-template<class Type>
-inline void setPrimitiveValue(Type& s, const Type& ps)
-{
-    s = ps;
-}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
