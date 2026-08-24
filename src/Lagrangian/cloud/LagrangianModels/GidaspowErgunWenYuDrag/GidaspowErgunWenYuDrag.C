@@ -72,7 +72,7 @@ Foam::Lagrangian::GidaspowErgunWenYuDrag::calcD
        *SchillerNaumannDrag::CdRe(alphac*Re)
        *pow(alphac, -2.65)
         // ... and Ergun at high particulate fractions (> 20%)
-      + neg(alphac - 0.8)*(4.0/3.0)*(150*alpha/alphac + 1.75*Re);
+      + neg(alphac - 0.8)*scalar(4.0/3.0)*(150*alpha/alphac + scalar(1.75)*Re);
 
     auto DbyMu = CdRe*(constant::mathematical::pi/8)*d;
 
