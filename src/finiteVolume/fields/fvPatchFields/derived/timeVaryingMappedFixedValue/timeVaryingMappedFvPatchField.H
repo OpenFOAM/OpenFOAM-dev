@@ -50,13 +50,6 @@ Description
     dataDir/\<time\>/\<sample\>/\<points name\>. Points files found in the
     time directories take precedence over the static points file.
 
-    Note: unfortunately if the points files exist in any of the time directories
-    they MUST exist in ALL of the time directories and read from each.  It would
-    be much better if this functionality were changed for consistency with
-    polyMesh and on restart the time directories are scanned backwards for the
-    most recent points file, that way the points files are only read for times
-    at which they change.
-
     The default mode of operation (mapMethod planarInterpolation) is to project
     the points onto a plane (constructed from the first three points) and
     construct a 2D triangulation and finds for the face centres the triangle it
@@ -96,7 +89,7 @@ SourceFiles
 #define timeVaryingMappedFvPatchField_H
 
 #include "fvPatchField.H"
-#include "instantList.H"
+#include "timeVaryingMappedPoints.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -104,8 +97,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of classes
-class pointToPointPlanarInterpolation;
 TemplateName(timeVaryingMappedFvPatchField);
 
 /*---------------------------------------------------------------------------*\
@@ -128,36 +119,13 @@ class timeVaryingMappedFvPatchField
         //- Name of the field data table, defaults to the name of the field
         word fieldTableName_;
 
-        //- Optional name of the data directory,
-        //  defaults to "constant/boundaryData/<patch name>"
-        fileName dataDir_;
-
-        //- Optional name of the points file, defaults to "points"
-        fileName pointsName_;
-
-        //- Optional name of the sample sub-directory from which the field are
-        //  read, defaults to ""
-        fileName sampleName_;
-
         //- If true adjust the mapped field to maintain average value
         Switch setAverage_;
 
-        //- Fraction of perturbation (fraction of bounding box) to add
-        scalar perturb_;
+        //- Sample points, times, field files and mapper construction
+        timeVaryingMappedPoints points_;
 
-        //- Interpolation scheme to use
-        word mapMethod_;
-
-        //- 2D interpolation (for 'planarInterpolation' mapMethod)
-        autoPtr<pointToPointPlanarInterpolation> mapperPtr_;
-
-        //- Path of the points file from which the mapper was constructed
-        fileName mapperPointsFile_;
-
-        //- List of boundaryData time directories
-        instantList sampleTimes_;
-
-        //- Current starting index in sampleTimes
+        //- Current starting index in the sample times
         label startSampleTime_;
 
         //- Interpolated values from startSampleTime
@@ -166,7 +134,7 @@ class timeVaryingMappedFvPatchField
         //- If setAverage: starting average value
         Type startAverage_;
 
-        //- Current end index in sampleTimes
+        //- Current end index in the sample times
         label endSampleTime_;
 
         //- Interpolated values from endSampleTime
@@ -178,17 +146,9 @@ class timeVaryingMappedFvPatchField
         //- Time varying offset values to interpolated data
         autoPtr<Function1<Type>> offset_;
 
-        //- Helper function to find the field files
-        fileName findFieldFile(const word& timeName) const;
-
-        //- Helper function to find the points file for the given sample
-        //  time. Returns the points file in the time directory if present,
-        //  otherwise the static points file.
-        fileName findPointsFile(const word& timeName) const;
-
-        //- Return the mapper for the given sample time, updating it if the
-        //  points file differs from that from which it was constructed
-        const pointToPointPlanarInterpolation& mapper(const word& timeName);
+        //- Read and map the field values for the given sample time index,
+        //  setting the average if setAverage is true
+        tmp<Field<Type>> sampledValues(const label sampleIndex, Type& average);
 
         //- Find boundary data in between current time and interpolate
         void checkTable();

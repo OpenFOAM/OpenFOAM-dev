@@ -311,6 +311,7 @@ $(derivedFvPatchFields)/surfaceNormalUniformFixedValue/surfaceNormalUniformFixed
 $(derivedFvPatchFields)/swirlFlowRateInletVelocity/swirlFlowRateInletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/swirlInletVelocity/swirlInletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/syringePressure/syringePressureFvPatchScalarField.C
+$(derivedFvPatchFields)/timeVaryingMappedFixedValue/timeVaryingMappedPoints.C
 $(derivedFvPatchFields)/timeVaryingMappedFixedValue/timeVaryingMappedFvPatchFieldName.C
 $(derivedFvPatchFields)/timeVaryingMappedFixedValue/timeVaryingMappedFixedValueFvPatchFields.C
 $(derivedFvPatchFields)/dynamicPressure/dynamicPressureFvPatchScalarField.C

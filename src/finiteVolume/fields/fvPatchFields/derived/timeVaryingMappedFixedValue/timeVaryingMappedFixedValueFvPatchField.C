@@ -25,7 +25,6 @@ License
 
 #include "timeVaryingMappedFixedValueFvPatchField.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
