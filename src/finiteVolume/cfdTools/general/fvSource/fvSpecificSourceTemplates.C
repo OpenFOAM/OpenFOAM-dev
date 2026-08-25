@@ -44,41 +44,19 @@ void Foam::fvSpecificSource::addSupType
 
     if (&field == &eqn.psi())
     {
-        // Get the field source coefficients
-        tmp<typename VolField<Type>::Internal> sourceCoeff =
-            VolField<Type>::Internal::New
+        // Apply the linearised source
+        eqn +=
+            field.sources()[name()].sourceTerm(*this, tS())
+          + fvm::Sp
             (
-                "sourceCoeff",
-                mesh(),
-                field.dimensions(),
-                field.sources()[name()].sourceCoeff(*this, tS())
+                tS()*field.sources()[name()].internalCoeff(*this, tS()),
+                eqn.psi()
             );
-        tmp<volInternalScalarField> internalCoeff =
-            volInternalScalarField::New
-            (
-                "internalCoeff",
-                mesh(),
-                dimless,
-                field.sources()[name()].internalCoeff(*this, tS())
-            );
-
-        // Apply the source
-        eqn += tS()*sourceCoeff + fvm::Sp(tS()*internalCoeff, eqn.psi());
     }
     else
     {
-        // Get the field source value
-        tmp<typename VolField<Type>::Internal> value =
-            VolField<Type>::Internal::New
-            (
-                "value",
-                mesh(),
-                field.dimensions(),
-                field.sources()[name()].value(*this, tS())
-            );
-
         // Apply the source
-        eqn += tS*value;
+        eqn += field.sources()[name()].term(*this, tS());
     }
 }
 

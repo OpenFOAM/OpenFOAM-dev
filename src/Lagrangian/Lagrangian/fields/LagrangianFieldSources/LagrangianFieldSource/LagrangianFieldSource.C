@@ -244,18 +244,6 @@ Foam::LagrangianFieldSource<Type>::internalCoeff
 
 template<class Type>
 Foam::tmp<Foam::LagrangianSubField<Type>>
-Foam::LagrangianFieldSource<Type>::sourceCoeff
-(
-    const LagrangianSource& source,
-    const LagrangianSubMesh& subMesh
-) const
-{
-    return (1 - internalCoeff(source, subMesh))*sourceValue(source, subMesh);
-}
-
-
-template<class Type>
-Foam::tmp<Foam::LagrangianSubField<Type>>
 Foam::LagrangianFieldSource<Type>::value
 (
     const LagrangianSource& source,
@@ -263,7 +251,7 @@ Foam::LagrangianFieldSource<Type>::value
 ) const
 {
     return
-        sourceCoeff(source, subMesh)
+        (1 - internalCoeff(source, subMesh))*sourceValue(source, subMesh)
       + internalCoeff(source, subMesh)*subMesh.sub(internalField());
 }
 

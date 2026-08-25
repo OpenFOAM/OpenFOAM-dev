@@ -189,13 +189,6 @@ public:
                 const LagrangianSubMesh&
             ) const;
 
-            //- Return the source coefficient
-            tmp<LagrangianSubField<Type>> sourceCoeff
-            (
-                const LagrangianSource&,
-                const LagrangianSubMesh&
-            ) const;
-
             //- Return the value for a continuous source
             tmp<LagrangianSubField<Type>> value
             (

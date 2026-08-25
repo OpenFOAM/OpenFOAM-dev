@@ -84,13 +84,13 @@ Foam::interfacialGrowthInterfacialCurvatureFvScalarFieldSource::internalCoeff
 
 
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
-Foam::interfacialGrowthInterfacialCurvatureFvScalarFieldSource::sourceCoeff
+Foam::interfacialGrowthInterfacialCurvatureFvScalarFieldSource::sourceTerm
 (
     const fvSource& model,
     const DimensionedField<scalar, fvMesh>& source
 ) const
 {
-    return - neg(source)*this->internalField()/3;
+    return - negPart(source)*this->internalField()/3;
 }
 
 

@@ -198,20 +198,21 @@ Foam::tmp<Foam::scalarField> Foam::fvFieldSource<Type>::internalCoeff
 
 template<class Type>
 Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
-Foam::fvFieldSource<Type>::sourceCoeff
+Foam::fvFieldSource<Type>::sourceTerm
 (
     const fvSource& model,
     const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     return
-        (1 - internalCoeff(model, source))
+        source
+       *(1 - internalCoeff(model, source))
        *sourceValue(model, source);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::sourceCoeff
+Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::sourceTerm
 (
     const fvSource& model,
     const scalarField& source,
@@ -219,8 +220,41 @@ Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::sourceCoeff
 ) const
 {
     return
-        (1 - internalCoeff(model, source, cells))
+        source
+       *(1 - internalCoeff(model, source, cells))
        *sourceValue(model, source, cells);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
+Foam::fvFieldSource<Type>::term
+(
+    const fvSource& model,
+    const DimensionedField<scalar, fvMesh>& source
+) const
+{
+    return
+        sourceTerm(model, source)
+      + source
+       *internalCoeff(model, source)
+       *internalField();
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::term
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    return
+        sourceTerm(model, source, cells)
+      + source
+       *internalCoeff(model, source, cells)
+       *Field<Type>(internalField(), cells);
 }
 
 
@@ -233,8 +267,10 @@ Foam::fvFieldSource<Type>::value
 ) const
 {
     return
-        sourceCoeff(model, source)
-      + internalCoeff(model, source)*internalField();
+        (1 - internalCoeff(model, source))
+       *sourceValue(model, source);
+      + internalCoeff(model, source)
+       *internalField();
 }
 
 
@@ -247,8 +283,10 @@ Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::value
 ) const
 {
     return
-        sourceCoeff(model, source, cells)
-      + internalCoeff(model, source, cells)*Field<Type>(internalField(), cells);
+        (1 - internalCoeff(model, source, cells))
+       *sourceValue(model, source, cells);
+      + internalCoeff(model, source, cells)
+       *Field<Type>(internalField(), cells);
 }
 
 

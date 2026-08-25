@@ -196,12 +196,13 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::cloud::Sfield
 {
     const volInternalScalarField S(this->S(field.group(), dims));
 
-    tmp<typename VolField<Type>::Internal> sourceCoeff =
-        field.sources()[name()].sourceCoeff(*this, S);
-    tmp<volInternalScalarField> internalCoeff =
-        field.sources()[name()].internalCoeff(*this, S);
-
-    return S*sourceCoeff + fvm::Sp(S*internalCoeff, field);
+    return
+        field.sources()[name()].sourceTerm(*this, S)
+      + fvm::Sp
+        (
+            S*field.sources()[name()].internalCoeff(*this, S),
+            field
+        );
 }
 
 

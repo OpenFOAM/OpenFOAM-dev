@@ -95,8 +95,8 @@ public:
             const fvSource& model
         ) const;
 
-        //- Return the combined source coefficient
-        virtual tmp<DimensionedField<scalar, fvMesh>> sourceCoeff
+        //- Return the combined source term
+        virtual tmp<DimensionedField<scalar, fvMesh>> sourceTerm
         (
             const fvSource& model,
             const DimensionedField<scalar, fvMesh>& source

@@ -92,13 +92,13 @@ Foam::nucleationInterfacialCurvatureFvScalarFieldSource::internalCoeff
 
 
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
-Foam::nucleationInterfacialCurvatureFvScalarFieldSource::sourceCoeff
+Foam::nucleationInterfacialCurvatureFvScalarFieldSource::sourceTerm
 (
     const fvSource& model,
     const DimensionedField<scalar, fvMesh>& source
 ) const
 {
-    return 6/refCast<const fv::nucleation>(model).d();
+    return source*6/refCast<const fv::nucleation>(model).d();
 }
 
 

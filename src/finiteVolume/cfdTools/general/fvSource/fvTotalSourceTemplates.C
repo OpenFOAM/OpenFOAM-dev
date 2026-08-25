@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ void Foam::fvTotalSource::addSupType
     if (&field == &eqn.psi())
     {
         // Get the field source coefficients
-        const Field<Type> sourceCoeff
+        const Field<Type> sourceTerm
         (
-            field.sources()[name()].sourceCoeff(*this, S, cells)
+            field.sources()[name()].sourceTerm(*this, S, cells)
         );
         const scalarField internalCoeff
         (
@@ -66,23 +66,23 @@ void Foam::fvTotalSource::addSupType
         scalarField& eqnDiag = eqn.diag();
         forAll(cells, i)
         {
-            eqnSource[cells[i]] -= S[i]*sourceCoeff[i];
+            eqnSource[cells[i]] -= sourceTerm[i];
             eqnDiag[cells[i]] += S[i]*internalCoeff[i];
         }
     }
     else
     {
-        // Get the field source value
-        const Field<Type> value
+        // Get the field term
+        const Field<Type> term
         (
-            field.sources()[name()].value(*this, S, cells)
+            field.sources()[name()].term(*this, S, cells)
         );
 
         // Apply the source
         Field<Type>& eqnSource = eqn.source();
         forAll(cells, i)
         {
-            eqnSource[cells[i]] -= S[i]*value[i];
+            eqnSource[cells[i]] -= term[i];
         }
     }
 }

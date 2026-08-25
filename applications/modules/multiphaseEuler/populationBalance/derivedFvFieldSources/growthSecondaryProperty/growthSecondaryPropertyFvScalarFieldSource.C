@@ -102,7 +102,7 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeffs
 
 
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
-Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeff
+Foam::growthSecondaryPropertyFvScalarFieldSource::sourceTerm
 (
     const fvSource& model,
     const DimensionedField<scalar, fvMesh>& source
@@ -116,13 +116,13 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeff
 
     return
         i ==  popBal.diameters()[i].iFirst()
-      ? eval(neg(source)*tsourceCoeffs.second())
+      ? eval(negPart(source)*tsourceCoeffs.second())
       : i == popBal.diameters()[i].iLast()
-      ? eval(pos(source)*tsourceCoeffs.first())
+      ? eval(posPart(source)*tsourceCoeffs.first())
       : eval
         (
-            pos(source)*tsourceCoeffs.first()
-          + neg(source)*tsourceCoeffs.second()
+            posPart(source)*tsourceCoeffs.first()
+          + negPart(source)*tsourceCoeffs.second()
         );
 }
 

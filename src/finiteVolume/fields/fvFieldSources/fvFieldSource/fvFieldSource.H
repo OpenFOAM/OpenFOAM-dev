@@ -203,15 +203,32 @@ public:
             const labelUList& cells
         ) const;
 
-        //- Return the source coefficient
-        virtual tmp<DimensionedField<Type, fvMesh>> sourceCoeff
+        //- Return the source term. A default implementation is provided here,
+        //  which is just one-minus the internal coefficient multiplied by the
+        //  source and the value. Derivations may override this if needed.
+        virtual tmp<DimensionedField<Type, fvMesh>> sourceTerm
         (
             const fvSource& model,
             const DimensionedField<scalar, fvMesh>& source
         ) const;
 
-        //- Return the source coefficient
-        virtual tmp<Field<Type>> sourceCoeff
+        //- Return the source term. As above, for a subset of cells.
+        virtual tmp<Field<Type>> sourceTerm
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
+
+        //- Return the term
+        tmp<DimensionedField<Type, fvMesh>> term
+        (
+            const fvSource& model,
+            const DimensionedField<scalar, fvMesh>& source
+        ) const;
+
+        //- Return the term
+        tmp<Field<Type>> term
         (
             const fvSource& model,
             const scalarField& source,
