@@ -25,8 +25,9 @@ internalField
 
     evaluate
     #{
-        const scalarField x(C.component(vector::X));
-        const scalarField y(C.component(vector::Y));
+        const vectorField& Ci(C);
+        const scalarField x(Ci.component(vector::X));
+        const scalarField y(Ci.component(vector::Y));
 
         const scalar x0 = 0.032;
         const scalar x1 = 0.064;

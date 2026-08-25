@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -331,12 +331,20 @@ operator/(const scalar s, const DiagTensor<Cmpt>& dt)
 }
 
 
-//- Division of a vector by a diagonalTensor
+//- Division of a vector by a diagonal tensor
 template<class Cmpt>
 inline Vector<Cmpt>
 operator/(const Vector<Cmpt> v, const DiagTensor<Cmpt>& dt)
 {
     return Vector<Cmpt>(v.x()/dt.xx(), v.y()/dt.yy(), v.z()/dt.zz());
+}
+
+
+//- Return the transpose of a diagonal tensor
+template<class Cmpt>
+inline const DiagTensor<Cmpt>& T(const DiagTensor<Cmpt>& dt)
+{
+    return dt;
 }
 
 

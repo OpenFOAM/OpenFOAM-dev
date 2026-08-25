@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     while (runTime.loop())
     {
-        delta == fvi::grad(V)().component(Foam::vector::X);
+        delta = fvi::grad(V)().component(Foam::vector::X);
 
         solve
         (

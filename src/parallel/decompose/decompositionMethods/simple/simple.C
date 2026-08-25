@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,7 +165,7 @@ Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
     sort
     (
         pointIndices,
-        UList<scalar>::less(rotatedPoints.component(vector::X))
+        UList<scalar>::less(eval(rotatedPoints.component(vector::X)))
     );
 
     assignToProcessorGroup(processorGroups, n_.x());
@@ -181,7 +181,7 @@ Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
     sort
     (
         pointIndices,
-        UList<scalar>::less(rotatedPoints.component(vector::Y))
+        UList<scalar>::less(eval(rotatedPoints.component(vector::Y)))
     );
 
     assignToProcessorGroup(processorGroups, n_.y());
@@ -197,7 +197,7 @@ Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
     sort
     (
         pointIndices,
-        UList<scalar>::less(rotatedPoints.component(vector::Z))
+        UList<scalar>::less(eval(rotatedPoints.component(vector::Z)))
     );
 
     assignToProcessorGroup(processorGroups, n_.z());
@@ -238,7 +238,7 @@ Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
     sort
     (
         pointIndices,
-        UList<scalar>::less(rotatedPoints.component(vector::X))
+        UList<scalar>::less(eval(rotatedPoints.component(vector::X)))
     );
 
     const scalar summedWeights = sum(weights);
@@ -262,7 +262,7 @@ Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
     sort
     (
         pointIndices,
-        UList<scalar>::less(rotatedPoints.component(vector::Y))
+        UList<scalar>::less(eval(rotatedPoints.component(vector::Y)))
     );
 
     assignToProcessorGroup
@@ -285,7 +285,7 @@ Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
     sort
     (
         pointIndices,
-        UList<scalar>::less(rotatedPoints.component(vector::Z))
+        UList<scalar>::less(eval(rotatedPoints.component(vector::Z)))
     );
 
     assignToProcessorGroup

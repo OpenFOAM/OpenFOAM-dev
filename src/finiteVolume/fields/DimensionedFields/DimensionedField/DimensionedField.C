@@ -673,33 +673,12 @@ Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::primitiveFieldRef()
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-tmp
-<
-    DimensionedField
-    <
-        typename DimensionedField<Type, GeoMesh, PrimitiveField>::cmptType,
-        GeoMesh,
-        Field
-    >
->
-DimensionedField<Type, GeoMesh, PrimitiveField>::component
+auto DimensionedField<Type, GeoMesh, PrimitiveField>::component
 (
-    const direction d
+    const direction& d
 ) const
 {
-    tmp<DimensionedField<cmptType, GeoMesh, Field>> result
-    (
-        DimensionedField<cmptType, GeoMesh, Field>::New
-        (
-            name() + ".component(" + ::Foam::name(d) + ')',
-            mesh_,
-            dimensions_
-        )
-    );
-
-    Foam::component(result.ref(), *this, d);
-
-    return result;
+    return Foam::component(*this, d);
 }
 
 
@@ -742,22 +721,9 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-tmp<DimensionedField<Type, GeoMesh, Field>>
-DimensionedField<Type, GeoMesh, PrimitiveField>::T() const
+auto DimensionedField<Type, GeoMesh, PrimitiveField>::T() const
 {
-    tmp<DimensionedField<Type, GeoMesh, Field>> result
-    (
-        DimensionedField<Type, GeoMesh, Field>::New
-        (
-            name() + ".T()",
-            mesh_,
-            dimensions_
-        )
-    );
-
-    Foam::T(result.ref(), *this);
-
-    return result;
+    return Foam::T(*this);
 }
 
 

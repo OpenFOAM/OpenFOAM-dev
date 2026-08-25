@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -300,6 +300,14 @@ inline Cmpt magSqr(const SymmTensor<Cmpt>& st)
                         +   magSqr(st.yy()) + 2*magSqr(st.yz())
                                             +   magSqr(st.zz())
     );
+}
+
+
+//- Return the transpose of a symmetric tensor
+template<class Cmpt>
+inline const SymmTensor<Cmpt>& T(const SymmTensor<Cmpt>& st)
+{
+    return st;
 }
 
 

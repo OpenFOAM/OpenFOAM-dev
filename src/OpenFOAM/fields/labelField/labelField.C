@@ -42,13 +42,6 @@ UNARY_FUNCTION(label, label, mag)
 BINARY_TYPE_OPERATOR(label, label, label, +, add)
 BINARY_TYPE_OPERATOR(label, label, label, -, subtract)
 
-
-template<>
-tmp<labelField> labelField::component(const direction) const
-{
-    return *this;
-}
-
 template<>
 void component(labelField& lf, const labelUList& f, const direction)
 {

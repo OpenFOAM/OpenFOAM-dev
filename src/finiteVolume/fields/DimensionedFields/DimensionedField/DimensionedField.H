@@ -413,11 +413,8 @@ public:
         //- Use old-time methods from the base class
         USING_OLD_TIME_FIELD(DimensionedField);
 
-        //- Return a component field of the field
-        tmp<DimensionedField<cmptType, GeoMesh, Field>> component
-        (
-            const direction
-        ) const;
+        //- Return a component field expression of the field
+        auto component(const direction&) const;
 
         //- Replace a component field of the field
         template<template<class> class PrimitiveField2>
@@ -435,8 +432,9 @@ public:
             const tmp<DimensionedField<cmptType, GeoMesh, PrimitiveField2>>&
         );
 
-        //- Return the field transpose (only defined for second rank tensors)
-        tmp<DimensionedField<Type, GeoMesh, Field>> T() const;
+        //- Return the field transpose expression
+        //  (only defined for second rank tensors)
+        auto T() const;
 
         //- Reset the field values to the given field
         //  Used for mesh to mesh mapping

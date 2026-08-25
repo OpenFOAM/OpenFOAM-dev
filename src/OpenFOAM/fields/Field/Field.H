@@ -328,8 +328,8 @@ public:
         //- Negate this field
         void negate();
 
-        //- Return a component field of the field
-        tmp<Field<cmptType>> component(const direction) const;
+        //- Return a component field expression of the field
+        auto component(const direction& d) const;
 
         //- Replace a component field of the field
         void replace(const direction, const UList<cmptType>&);
@@ -343,8 +343,9 @@ public:
         template<class VSForm>
         VSForm block(const label start) const;
 
-        //- Return the field transpose (only defined for second rank tensors)
-        tmp<Field<Type>> T() const;
+        //- Return the field transpose expression
+        //  (only defined for second rank tensors)
+        auto T() const;
 
         //- Append an element at the end of the Field
         void append(const Type& t);
@@ -416,11 +417,8 @@ public:
 
     // IOstream Operators
 
-        friend Ostream& operator<< <Type>
-        (Ostream&, const Field<Type>&);
-
-        friend Ostream& operator<< <Type>
-        (Ostream&, const tmp<Field<Type>>&);
+        friend Ostream& operator<< <Type>(Ostream&, const Field<Type>&);
+        friend Ostream& operator<< <Type>(Ostream&, const tmp<Field<Type>>&);
 };
 
 

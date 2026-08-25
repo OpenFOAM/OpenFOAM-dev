@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,6 +154,14 @@ template<class Cmpt>
 inline Cmpt magSqr(const SphericalTensor<Cmpt>& st)
 {
     return 3*magSqr(st.ii());
+}
+
+
+//- Return the transpose of a spherical tensor
+template<class Cmpt>
+inline const SphericalTensor<Cmpt>& T(const SphericalTensor<Cmpt>& st)
+{
+    return st;
 }
 
 

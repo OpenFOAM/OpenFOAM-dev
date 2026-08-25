@@ -120,7 +120,7 @@ inline bool dimensionSet::operator/=(const dimensionSet& ds)
 
 // * * * * * * * * * * * * * * * Friend functions * * * * * * * * * * * * * * //
 
-inline dimensionSet max(const dimensionSet& ds1, const dimensionSet& ds2)
+inline const dimensionSet& max(const dimensionSet& ds1, const dimensionSet& ds2)
 {
     if (dimensionSet::debug && ds1 != ds2)
     {
@@ -134,7 +134,7 @@ inline dimensionSet max(const dimensionSet& ds1, const dimensionSet& ds2)
 }
 
 
-inline dimensionSet min(const dimensionSet& ds1, const dimensionSet& ds2)
+inline const dimensionSet& min(const dimensionSet& ds1, const dimensionSet& ds2)
 {
     if (dimensionSet::debug && ds1 != ds2)
     {
@@ -168,7 +168,14 @@ inline dimensionSet cmptDivide
 }
 
 
-inline dimensionSet cmptMag(const dimensionSet& ds)
+inline const dimensionSet& cmptMag(const dimensionSet& ds)
+{
+    return ds;
+}
+
+
+template<class Dtype>
+inline const dimensionSet& component(const dimensionSet& ds, const Dtype&)
 {
     return ds;
 }
@@ -251,56 +258,56 @@ inline dimensionSet magSqr(const dimensionSet& ds)
 }
 
 
-inline dimensionSet mag(const dimensionSet& ds)
+inline const dimensionSet& mag(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet sign(const dimensionSet&)
+inline const dimensionSet& sign(const dimensionSet&)
 {
     return dimless;
 }
 
 
-inline dimensionSet pos(const dimensionSet&)
+inline const dimensionSet& pos(const dimensionSet&)
 {
     return dimless;
 }
 
 
-inline dimensionSet pos0(const dimensionSet&)
+inline const dimensionSet& pos0(const dimensionSet&)
 {
     return dimless;
 }
 
 
-inline dimensionSet neg(const dimensionSet&)
+inline const dimensionSet& neg(const dimensionSet&)
 {
     return dimless;
 }
 
 
-inline dimensionSet neg0(const dimensionSet&)
+inline const dimensionSet& neg0(const dimensionSet&)
 {
     return dimless;
 }
 
 
-inline dimensionSet posPart(const dimensionSet& ds)
+inline const dimensionSet& posPart(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet negPart(const dimensionSet& ds)
+inline const dimensionSet& negPart(const dimensionSet& ds)
 {
     return ds;
 }
 
 
 #define transFunc(Func)                                                        \
-    inline dimensionSet Func(const dimensionSet& ds)                           \
+    inline const dimensionSet& Func(const dimensionSet& ds)                    \
     {                                                                          \
         if (dimensionSet::debug && !ds.dimensionless())                        \
         {                                                                      \
@@ -339,7 +346,11 @@ transFunc(y1)
 #undef transFunc
 
 
-inline dimensionSet atan2(const dimensionSet& ds1, const dimensionSet& ds2)
+inline const dimensionSet& atan2
+(
+    const dimensionSet& ds1,
+    const dimensionSet& ds2
+)
 {
     if (dimensionSet::debug && ds1 != ds2)
     {
@@ -353,7 +364,7 @@ inline dimensionSet atan2(const dimensionSet& ds1, const dimensionSet& ds2)
 }
 
 
-inline dimensionSet jn(const dimensionSet& dn, const dimensionSet& ds)
+inline const dimensionSet& jn(const dimensionSet& dn, const dimensionSet& ds)
 {
     if (dimensionSet::debug && !dn.dimensionless() && !ds.dimensionless())
     {
@@ -367,7 +378,7 @@ inline dimensionSet jn(const dimensionSet& dn, const dimensionSet& ds)
 }
 
 
-inline dimensionSet yn(const dimensionSet& dn, const dimensionSet& ds)
+inline const dimensionSet& yn(const dimensionSet& dn, const dimensionSet& ds)
 {
     if (dimensionSet::debug && !dn.dimensionless() && !ds.dimensionless())
     {
@@ -381,67 +392,73 @@ inline dimensionSet yn(const dimensionSet& dn, const dimensionSet& ds)
 }
 
 
-inline dimensionSet tr(const dimensionSet& ds)
+inline const dimensionSet& T(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet sph(const dimensionSet& ds)
+inline const dimensionSet& tr(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet diag(const dimensionSet& ds)
+inline const dimensionSet& sph(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet symm(const dimensionSet& ds)
+inline const dimensionSet& diag(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet twoSymm(const dimensionSet& ds)
+inline const dimensionSet& symm(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet dev(const dimensionSet& ds)
+inline const dimensionSet& twoSymm(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet dev2(const dimensionSet& ds)
+inline const dimensionSet& dev(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet skew(const dimensionSet& ds)
+inline const dimensionSet& dev2(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet hdual(const dimensionSet& ds)
+inline const dimensionSet& skew(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet eigenValues(const dimensionSet& ds)
+inline const dimensionSet& hdual(const dimensionSet& ds)
 {
     return ds;
 }
 
 
-inline dimensionSet eigenVectors(const dimensionSet& ds)
+inline const dimensionSet& eigenValues(const dimensionSet& ds)
+{
+    return ds;
+}
+
+
+inline const dimensionSet& eigenVectors(const dimensionSet& ds)
 {
     return dimless;
 }
@@ -465,13 +482,13 @@ inline dimensionSet inv(const dimensionSet& ds)
 }
 
 
-inline dimensionSet normalised(const dimensionSet& ds)
+inline const dimensionSet& normalised(const dimensionSet& ds)
 {
     return dimless;
 }
 
 
-inline dimensionSet perpendicular(const dimensionSet& ds)
+inline const dimensionSet& perpendicular(const dimensionSet& ds)
 {
     return dimless;
 }
@@ -479,7 +496,7 @@ inline dimensionSet perpendicular(const dimensionSet& ds)
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-inline dimensionSet operator-(const dimensionSet& ds)
+inline const dimensionSet& operator-(const dimensionSet& ds)
 {
     return ds;
 }

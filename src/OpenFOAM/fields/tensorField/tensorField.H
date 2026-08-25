@@ -35,9 +35,9 @@ SourceFiles
 #ifndef tensorField_H
 #define tensorField_H
 
-#include "Field.H"
 #include "tensor.H"
 #include "tensorExpressions.H"
+#include "Field.H"
 
 #define TEMPLATE
 #include "FieldFunctionsM.H"

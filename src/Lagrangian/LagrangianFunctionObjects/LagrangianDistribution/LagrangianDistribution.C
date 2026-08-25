@@ -254,7 +254,7 @@ bool Foam::functionObjects::LagrangianDistribution::writeDistribution
             weight,
             fieldName,
             pTraits<Type>::componentNames[d],
-            field.component(d)()
+            eval(field.component(d))()
         );
     }
 

@@ -250,7 +250,7 @@ tmp<complexVectorField> fft::forwardTransform
         tfftVectorField.ref().replace
         (
             cmpt,
-            forwardTransform(field.component(cmpt), nn)
+            forwardTransform(eval(field.component(cmpt)), nn)
         );
     }
 
@@ -286,7 +286,7 @@ tmp<complexVectorField> fft::reverseTransform
         tifftVectorField.ref().replace
         (
             cmpt,
-            reverseTransform(field.component(cmpt), nn)
+            reverseTransform(eval(field.component(cmpt)), nn)
         );
     }
 

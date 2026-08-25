@@ -38,12 +38,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<>
-tmp<scalarField> scalarField::component(const direction) const
-{
-    return *this;
-}
-
 void component(scalarField& sf, const UList<scalar>& f, const direction)
 {
     sf = f;

@@ -501,15 +501,9 @@ void Foam::Field<Type>::negate()
 
 
 template<class Type>
-Foam::tmp<Foam::Field<typename Foam::Field<Type>::cmptType>>
-Foam::Field<Type>::component
-(
-    const direction d
-) const
+auto Foam::Field<Type>::component(const direction& d) const
 {
-    tmp<Field<cmptType>> Component(new Field<cmptType>(this->size()));
-    ::Foam::component(Component.ref(), *this, d);
-    return Component;
+    return Foam::component(*this, d);
 }
 
 
@@ -563,11 +557,9 @@ VSForm Foam::Field<Type>::block(const label start) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Field<Type>::T() const
+auto Foam::Field<Type>::T() const
 {
-    tmp<Field<Type>> transpose(new Field<Type>(this->size()));
-    ::Foam::T(transpose.ref(), *this);
-    return transpose;
+    return Foam::T(*this);
 }
 
 

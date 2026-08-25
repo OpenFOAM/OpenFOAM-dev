@@ -52,7 +52,11 @@ typedef Field<scalar> scalarField;
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-tmp<scalarField> scalarField::component(const direction) const;
+inline auto scalarField::component(const direction&) const
+{
+    return *this;
+}
+
 
 void component
 (

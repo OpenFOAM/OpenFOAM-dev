@@ -517,6 +517,18 @@ operator/(const Vector<Cmpt>& v, const Tensor<Cmpt>& t)
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
+//- Return the transpose of a tensor
+template<class Cmpt>
+inline Tensor<Cmpt> T(const Tensor<Cmpt>& t)
+{
+    return Tensor<Cmpt>
+    (
+        t.xx(), t.yx(), t.zx(),
+        t.xy(), t.yy(), t.zy(),
+        t.xz(), t.yz(), t.zz()
+    );
+}
+
 //- Return the trace of a tensor
 template<class Cmpt>
 inline Cmpt tr(const Tensor<Cmpt>& t)

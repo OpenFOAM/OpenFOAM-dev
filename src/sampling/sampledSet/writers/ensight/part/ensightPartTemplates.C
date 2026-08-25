@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,12 @@ void Foam::ensightPart::writeField
                 ++cmpt
             )
             {
-                writeFieldList(os, field.component(cmpt), labelUList::null());
+                writeFieldList
+                (
+                    os,
+                    eval(field.component(cmpt)),
+                    labelUList::null()
+                );
             }
         }
         else
@@ -72,7 +77,7 @@ void Foam::ensightPart::writeField
                         ++cmpt
                     )
                     {
-                        writeFieldList(os, field.component(cmpt), idList);
+                        writeFieldList(os, eval(field.component(cmpt)), idList);
                     }
                 }
             }

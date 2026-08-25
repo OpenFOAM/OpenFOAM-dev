@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "expressions.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "calculatedFvPatchFields.H"
@@ -120,7 +121,7 @@ void Foam::fvMatrix<Type>::addBoundaryDiag
         addToInternalField
         (
             lduAddr().patchAddr(patchi),
-            internalCoeffs_[patchi].component(solveCmpt),
+            eval(internalCoeffs_[patchi].component(solveCmpt)),
             diag
         );
     }
@@ -936,7 +937,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::H1() const
             addToInternalField
             (
                 lduAddr().patchAddr(patchi),
-                boundaryCoeffs_[patchi].component(0),
+                eval(boundaryCoeffs_[patchi].component(0)),
                 H1_
             );
         }
@@ -981,7 +982,7 @@ flux() const
         fieldFlux.primitiveFieldRef().replace
         (
             cmpt,
-            lduMatrix::faceH(psi_.primitiveField().component(cmpt))
+            lduMatrix::faceH(eval(psi_.primitiveField().component(cmpt)))
         );
     }
 

@@ -192,6 +192,7 @@ UnaryAllTensorOpFunction(scalar, det)
 
 UnaryOpFunction(diagTensor, tensor, diag)
 
+UnaryTensorInvOpFunction(T)
 UnaryTensorInvOpFunction(inv)
 
 UnarySymmTensorOpFunction(symmTensor, symm)

@@ -286,9 +286,11 @@ Foam::fvc::interpolate
         fvspffPtr->set
         (
             patchi,
-            surfaceMesh::PatchField<Type>::NewCalculatedType
+            surfaceMesh::PatchField<Type>::New
             (
-                fvpff[patchi].patch()
+                surfaceMesh::PatchField<Type>::calculatedType(),
+                fvpff[patchi].patch(),
+                DimensionedField<Type, surfaceMesh>::null()
             ).ptr()
         );
         (*fvspffPtr)[patchi] = fvpff[patchi];
