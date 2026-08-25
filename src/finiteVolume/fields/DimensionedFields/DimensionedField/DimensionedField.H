@@ -50,19 +50,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-class DimensionedField;
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Ostream& operator<<
-(
-    Ostream&,
-    const DimensionedField<Type, GeoMesh, PrimitiveField>&
-);
-
-
 /*---------------------------------------------------------------------------*\
                       Class DimensionedField Declaration
 \*---------------------------------------------------------------------------*/
@@ -569,16 +556,15 @@ public:
         void operator/=(const Expression& e);
 
         void operator/=(const dimensioned<scalar>&);
-
-
-    // Ostream Operators
-
-        friend Ostream& operator<< <Type, GeoMesh, PrimitiveField>
-        (
-            Ostream&,
-            const DimensionedField<Type, GeoMesh, PrimitiveField>&
-        );
 };
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Ostream& operator<<
+(
+    Ostream&,
+    const DimensionedField<Type, GeoMesh, PrimitiveField>&
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

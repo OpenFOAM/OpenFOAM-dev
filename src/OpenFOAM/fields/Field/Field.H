@@ -64,9 +64,6 @@ class SubField;
 template<class Type>
 void writeEntry(Ostream& os, const Field<Type>&);
 
-template<class Type>
-Ostream& operator<<(Ostream&, const Field<Type>&);
-
 class unitSet;
 class dictionary;
 
@@ -410,12 +407,11 @@ public:
         //- Assign-divide to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
         void operator/=(const Expression& e);
-
-
-    // IOstream Operators
-
-        friend Ostream& operator<< <Type>(Ostream&, const Field<Type>&);
 };
+
+
+template<class Type>
+Ostream& operator<<(Ostream&, const Field<Type>&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
