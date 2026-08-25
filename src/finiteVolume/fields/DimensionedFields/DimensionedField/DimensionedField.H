@@ -517,11 +517,11 @@ public:
             const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>&
         );
 
-        void operator+=(const dimensioned<Type>&);
-
         //- Assign-add to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
         void operator+=(const Expression& e);
+
+        void operator+=(const dimensioned<Type>&);
 
         template<template<class> class PrimitiveField2>
         void operator-=
@@ -535,11 +535,11 @@ public:
             const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>&
         );
 
-        void operator-=(const dimensioned<Type>&);
-
         //- Assign-subtract to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
         void operator-=(const Expression& e);
+
+        void operator-=(const dimensioned<Type>&);
 
         template<template<class> class PrimitiveField2>
         void operator*=
@@ -552,13 +552,13 @@ public:
         (
             const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>&
         );
-
-        void operator*=(const dimensioned<scalar>&);
 
         //- Assign-multiply to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
         void operator*=(const Expression& e);
 
+        void operator*=(const dimensioned<scalar>&);
+
         template<template<class> class PrimitiveField2>
         void operator/=
         (
@@ -571,11 +571,11 @@ public:
             const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>&
         );
 
-        void operator/=(const dimensioned<scalar>&);
-
         //- Assign-divide to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
         void operator/=(const Expression& e);
+
+        void operator/=(const dimensioned<scalar>&);
 
 
     // Ostream Operators

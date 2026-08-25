@@ -725,12 +725,6 @@ void Foam::Field<Type>::operator op(const tmp<Field<TYPE>>& tf)                \
 }                                                                              \
                                                                                \
 template<class Type>                                                           \
-void Foam::Field<Type>::operator op(const PTYPE& t)                            \
-{                                                                              \
-    TFOR_ALL_F_OP_S(Type, *this, op, PTYPE, t)                                 \
-}                                                                              \
-                                                                               \
-template<class Type>                                                           \
 template<class Expression, class>                                              \
 void Foam::Field<Type>::operator op(const Expression& e)                       \
 {                                                                              \
@@ -745,6 +739,12 @@ void Foam::Field<Type>::operator op(const Expression& e)                       \
     {                                                                          \
         this->operator[](i) op expression::access(e, i);                       \
     }                                                                          \
+}                                                                              \
+                                                                               \
+template<class Type>                                                           \
+void Foam::Field<Type>::operator op(const PTYPE& t)                            \
+{                                                                              \
+    TFOR_ALL_F_OP_S(Type, *this, op, PTYPE, t)                                 \
 }
 
 #define pType_ typename Foam::Field<Type>::pType

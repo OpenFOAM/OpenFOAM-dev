@@ -38,8 +38,6 @@ SourceFiles
 #include "tmp.H"
 #include "PtrList.H"
 #include "scalar.H"
-#include "direction.H"
-#include "VectorSpace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -104,28 +102,14 @@ public:
         //  Used for temporary fields which are initialised after construction
         explicit FieldField(const label);
 
-        //- Construct using the Field sizes from the given FieldField
-        //  and the given Field type.
-        //  Used for temporary fields which are initialised after construction
-        FieldField(const word&, const FieldField<Field, Type>&);
-
         //- Copy constructor
         FieldField(const FieldField<Field, Type>&);
 
         //- Move constructor
         FieldField(FieldField<Field, Type>&&);
 
-        //- Construct as copy or reuse as specified.
-        FieldField(FieldField<Field, Type>&, bool reuse);
-
-        //- Construct as copy of a PtrList<Field, Type>
-        FieldField(const PtrList<Field<Type>>&);
-
         //- Construct as copy of tmp<FieldField>
         FieldField(const tmp<FieldField<Field, Type>>&);
-
-        //- Construct from Istream
-        FieldField(Istream&);
 
         //- Clone
         tmp<FieldField<Field, Type>> clone() const;
