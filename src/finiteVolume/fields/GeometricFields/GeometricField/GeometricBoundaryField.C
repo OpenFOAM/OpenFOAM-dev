@@ -792,31 +792,6 @@ operator=(GeometricBoundaryField<Type, GeoMesh, PrimitiveField>&& bf)
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 void Foam::GeometricBoundaryField<Type, GeoMesh, PrimitiveField>::
-operator=(const FieldField<GeoMesh::template PatchField, Type>& ptff)
-{
-    FieldField<GeoMesh::template PatchField, Type>::operator=(ptff);
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-template<template<class> class OtherPatchField>
-void Foam::GeometricBoundaryField<Type, GeoMesh, PrimitiveField>::
-operator=(const FieldField<OtherPatchField, Type>& ptff)
-{
-    FieldField<GeoMesh::template PatchField, Type>::operator=(ptff);
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-void Foam::GeometricBoundaryField<Type, GeoMesh, PrimitiveField>::
-operator=(const Type& t)
-{
-    FieldField<GeoMesh::template PatchField, Type>::operator=(t);
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-void Foam::GeometricBoundaryField<Type, GeoMesh, PrimitiveField>::
 operator==(const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>& bf)
 {
     forAll(*this, patchi)
@@ -857,21 +832,6 @@ operator==(const Type& t)
     {
         this->operator[](patchi) == t;
     }
-}
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>& bf
-)
-{
-    os <<
-        static_cast<const FieldField<GeoMesh::template PatchField, Type>&>(bf);
-    return os;
 }
 
 

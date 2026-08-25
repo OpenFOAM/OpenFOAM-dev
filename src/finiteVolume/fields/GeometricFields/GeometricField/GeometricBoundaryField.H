@@ -193,21 +193,20 @@ public:
 
     // Member Operators
 
+        //- Inherit FieldField assignment operators
+        using FieldField<GeoMesh::template PatchField, Type>::operator=;
+
+        //- Inherit FieldField assignment addition operators
+        using FieldField<GeoMesh::template PatchField, Type>::operator+=;
+
+        //- Inherit FieldField assignment subtractions operators
+        using FieldField<GeoMesh::template PatchField, Type>::operator-=;
+
         //- Assignment operator
         void operator=(const GeometricBoundaryField&);
 
         //- Move assignment operator
         void operator=(GeometricBoundaryField&&);
-
-        //- Assignment to FieldField<GeoMesh::template PatchField, Type>
-        void operator=(const FieldField<GeoMesh::template PatchField, Type>&);
-
-        //- Assignment to FieldField<OtherPatchField, Type>
-        template<template<class> class OtherPatchField>
-        void operator=(const FieldField<OtherPatchField, Type>&);
-
-        //- Assignment to Type
-        void operator=(const Type&);
 
         //- Forced assignment to
         //  BoundaryField<Type, GeoMesh::template PatchField, BoundaryMesh>
@@ -223,14 +222,6 @@ public:
         //- Forced assignment to Type
         void operator==(const Type&);
 };
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Ostream& operator<<
-(
-    Ostream&,
-    const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>&
-);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
