@@ -940,45 +940,6 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=(const zero&)
 }
 
 
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-template<template<class> class PrimitiveField2>
-void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==
-(
-    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
-)
-{
-    this->operator=(df);
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-template<template<class> class PrimitiveField2>
-void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==
-(
-    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>& tdf
-)
-{
-    this->operator=(tdf);
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==
-(
-    const dimensioned<Type>& dt
-)
-{
-    this->operator=(dt);
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==(const zero&)
-{
-    this->operator=(Zero);
-}
-
-
 #define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
                                                                                \
 template<class Type, class GeoMesh, template<class> class PrimitiveField>      \

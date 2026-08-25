@@ -506,22 +506,6 @@ public:
         void operator=(const zero&);
 
         template<template<class> class PrimitiveField2>
-        void operator==
-        (
-            const DimensionedField<Type, GeoMesh, PrimitiveField2>&
-        );
-
-        template<template<class> class PrimitiveField2>
-        void operator==
-        (
-            const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>&
-        );
-
-        void operator==(const dimensioned<Type>&);
-
-        void operator==(const zero&);
-
-        template<template<class> class PrimitiveField2>
         void operator+=
         (
             const DimensionedField<Type, GeoMesh, PrimitiveField2>&

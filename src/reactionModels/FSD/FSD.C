@@ -317,7 +317,7 @@ void Foam::reactionModels::FSD::calculateSourceNorm()
 
 void Foam::reactionModels::FSD::correct()
 {
-    this->wFuel_ == dimensionedScalar(dimensions::density/dimensions::time, 0);
+    this->wFuel_ = dimensionedScalar(dimensions::density/dimensions::time, 0);
 
     calculateSourceNorm();
 }
