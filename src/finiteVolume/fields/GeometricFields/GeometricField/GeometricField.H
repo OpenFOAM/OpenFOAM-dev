@@ -59,13 +59,6 @@ Ostream& operator<<
     const GeometricField<Type, GeoMesh, PrimitiveField>&
 );
 
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Ostream& operator<<
-(
-    Ostream&,
-    const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
-);
-
 
 /*---------------------------------------------------------------------------*\
                        Class GeometricField Declaration
@@ -789,12 +782,6 @@ public:
         (
             Ostream&,
             const GeometricField<Type, GeoMesh, PrimitiveField>&
-        );
-
-        friend Ostream& operator<< <Type, GeoMesh, PrimitiveField>
-        (
-            Ostream&,
-            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
 };
 

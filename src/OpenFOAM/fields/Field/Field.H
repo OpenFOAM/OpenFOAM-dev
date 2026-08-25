@@ -67,9 +67,6 @@ void writeEntry(Ostream& os, const Field<Type>&);
 template<class Type>
 Ostream& operator<<(Ostream&, const Field<Type>&);
 
-template<class Type>
-Ostream& operator<<(Ostream&, const tmp<Field<Type>>&);
-
 class unitSet;
 class dictionary;
 
@@ -418,7 +415,6 @@ public:
     // IOstream Operators
 
         friend Ostream& operator<< <Type>(Ostream&, const Field<Type>&);
-        friend Ostream& operator<< <Type>(Ostream&, const tmp<Field<Type>>&);
 };
 
 

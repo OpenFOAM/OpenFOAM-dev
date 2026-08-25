@@ -2143,19 +2143,6 @@ Foam::Ostream& Foam::operator<<
 }
 
 
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf
-)
-{
-    os << tgf();
-    tgf.clear();
-    return os;
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #undef checkFieldAssignment

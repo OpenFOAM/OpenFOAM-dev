@@ -56,13 +56,6 @@ Ostream& operator<<
     const FieldField<Field, Type>&
 );
 
-template<template<class> class Field, class Type>
-Ostream& operator<<
-(
-    Ostream&,
-    const tmp<FieldField<Field, Type>>&
-);
-
 
 /*---------------------------------------------------------------------------*\
                          Class FieldField Declaration
@@ -171,12 +164,6 @@ public:
         (
             Ostream&,
             const FieldField<Field, Type>&
-        );
-
-        friend Ostream& operator<< <Field, Type>
-        (
-            Ostream&,
-            const tmp<FieldField<Field, Type>>&
         );
 };
 

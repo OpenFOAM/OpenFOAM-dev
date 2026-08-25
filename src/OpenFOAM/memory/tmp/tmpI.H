@@ -447,4 +447,13 @@ inline void Foam::tmp<T>::operator=(const tmp<T>&& t)
 }
 
 
+template<class T>
+Foam::Ostream& Foam::operator<<(Ostream& os, const tmp<T>& t)
+{
+    os << t();
+    t.clear();
+    return os;
+}
+
+
 // ************************************************************************* //

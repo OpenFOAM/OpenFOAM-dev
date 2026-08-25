@@ -805,15 +805,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const Field<Type>& f)
 }
 
 
-template<class Type>
-Foam::Ostream& Foam::operator<<(Ostream& os, const tmp<Field<Type>>& tf)
-{
-    os  << tf();
-    tf.clear();
-    return os;
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "FieldFunctions.C"

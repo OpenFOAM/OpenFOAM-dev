@@ -203,6 +203,10 @@ namespace expression
 }
 
 
+template<class T>
+Ostream& operator<<(Ostream& os, const tmp<T>& t);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

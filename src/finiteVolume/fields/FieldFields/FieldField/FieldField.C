@@ -366,21 +366,12 @@ Ostream& operator<<(Ostream& os, const FieldField<Field, Type>& f)
 }
 
 
-template<template<class> class Field, class Type>
-Ostream& operator<<(Ostream& os, const tmp<FieldField<Field, Type>>& tf)
-{
-    os << tf();
-    tf.clear();
-    return os;
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "FieldFieldFunctions.C"
+#include "FieldFieldFunctions.C"
 
 // ************************************************************************* //

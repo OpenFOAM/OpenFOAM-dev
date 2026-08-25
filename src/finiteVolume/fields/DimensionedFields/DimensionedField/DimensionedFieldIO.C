@@ -213,18 +213,4 @@ Foam::Ostream& Foam::operator<<
 }
 
 
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
-)
-{
-    tdf().writeData(os);
-    tdf.clear();
-
-    return os;
-}
-
-
 // ************************************************************************* //
