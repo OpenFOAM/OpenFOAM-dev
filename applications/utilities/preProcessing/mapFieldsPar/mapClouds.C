@@ -181,13 +181,19 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
 
     const meshSearch& tgtSearchEngine = meshSearch::New(tgtMesh);
 
+    word baseDir(srcMesh.time().timePath());
+    if (srcMesh.name() != fvMesh::defaultRegion)
+    {
+        baseDir = baseDir/srcMesh.name();
+    }
+
     // Determine the clouds present in this mesh
     const fileNameList cloudDirs =
         gatherAndFlatten
         (
             readDir
             (
-                srcMesh.time().timePath()/lagrangian::cloud::prefix,
+                baseDir/lagrangian::cloud::prefix,
                 fileType::directory
             )
         );
