@@ -184,7 +184,7 @@ struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
             (
                 "average(" + name(e) + ')',
                 access(e, NullObjectRef<dimensionSet>()),
-                Reduce<PrimitiveField<Type>>::template average
+                Reduce<PrimitiveField<Type>>::average
                 (
                     access(e, Value(), Base()),
                     globalReduce,
@@ -213,7 +213,7 @@ struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
             (
                 "weightedAverage(" + name(e) + ',' + name(we) + ')',
                 access(e, NullObjectRef<dimensionSet>()),
-                Reduce<PrimitiveField<Type>>::template weightedAverage
+                Reduce<PrimitiveField<Type>>::weightedAverage
                 (
                     access(e, Value(), Base()),
                     access(we, Value(), Base()),

@@ -171,7 +171,7 @@ ElementType<Expression> average
     const label comm = UPstream::worldComm
 )
 {
-    return ReduceType<Expression>::template average(e, globalReduce, comm);
+    return ReduceType<Expression>::average(e, globalReduce, comm);
 }
 
 template<class Expression, class = EnableIfExpressionable<Expression>>
@@ -222,7 +222,7 @@ ElementType<Expression> weightedAverage
     const label comm = UPstream::worldComm
 )
 {
-    return ReduceType<Expression>::template weightedAverage
+    return ReduceType<Expression>::weightedAverage
     (
         e,
         we,
