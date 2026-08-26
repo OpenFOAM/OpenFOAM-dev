@@ -35,7 +35,7 @@ SourceFiles
 #ifndef DimensionedTensorField_H
 #define DimensionedTensorField_H
 
-#include "DimensionedField.H"
+#include "DimensionedVectorField.H"
 #include "tensorExpressions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
