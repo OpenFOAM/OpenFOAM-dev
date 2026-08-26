@@ -100,7 +100,7 @@ void Foam::fvMeshDistribute::mapBoundaryFields
     {
         SurfaceField<Type>& field = fields[i];
 
-        typename SurfaceField<Type>::Boundary& bfield =
+        typename SurfaceField<Type>::BoundaryField& bfield =
             field.boundaryFieldRef();
 
         const FieldField<surfaceMesh::PatchField, Type>& oldBfield =
@@ -235,7 +235,7 @@ void Foam::fvMeshDistribute::correctProcessorPatchFields()
     {
         GeoField& field = fields[i];
 
-        typename GeoField::Boundary& bfield = field.boundaryFieldRef();
+        typename GeoField::BoundaryField& bfield = field.boundaryFieldRef();
 
         if
         (

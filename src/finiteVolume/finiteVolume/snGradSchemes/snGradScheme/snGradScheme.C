@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,8 +131,7 @@ snGradScheme<Type>::snGrad
             deltaCoeffs[facei]*(vf[neighbour[facei]] - vf[owner[facei]]);
     }
 
-    typename SurfaceField<Type>::
-        Boundary& ssfbf = ssf.boundaryFieldRef();
+    typename SurfaceField<Type>::BoundaryField& ssfbf = ssf.boundaryFieldRef();
 
     forAll(vf.boundaryField(), patchi)
     {

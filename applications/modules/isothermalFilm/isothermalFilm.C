@@ -145,7 +145,7 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
 
 Foam::wordList Foam::solvers::isothermalFilm::alphaTypes() const
 {
-    wordList alphaTypes(delta_.boundaryField().types());
+    wordList alphaTypes(delta_.boundary().types());
 
     forAll(delta_.boundaryField(), patchi)
     {

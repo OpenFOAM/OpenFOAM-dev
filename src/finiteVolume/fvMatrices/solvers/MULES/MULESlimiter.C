@@ -54,7 +54,7 @@ void Foam::MULES::limiter
 )
 {
     const scalarField& psiIf = psi;
-    const volScalarField::Boundary& psiBf = psi.boundaryField();
+    const volScalarField::BoundaryField& psiBf = psi.boundaryField();
 
     const fvMesh& mesh = psi.mesh();
 
@@ -68,13 +68,14 @@ void Foam::MULES::limiter
     tmp<volInternalScalarField> tVsc = mesh.Vsc();
     const scalarField& V = tVsc();
 
-    const surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryField();
+    const surfaceScalarField::BoundaryField& phiBDBf = phiBD.boundaryField();
 
     const scalarField& phiCorrIf = phiCorr;
-    const surfaceScalarField::Boundary& phiCorrBf = phiCorr.boundaryField();
+    const surfaceScalarField::BoundaryField& phiCorrBf =
+        phiCorr.boundaryField();
 
     scalarField& lambdaIf = lambda;
-    surfaceScalarField::Boundary& lambdaBf = lambda.boundaryFieldRef();
+    surfaceScalarField::Boundary& lambdaBf = lambda.boundaryRef();
 
     scalarField psiMaxn(psiIf.size());
     scalarField psiMinn(psiIf.size());
@@ -279,7 +280,7 @@ void Foam::MULES::limiter
 
     // Allocate storage for lambda0 on coupled patches
     // for optional convergence test
-    surfaceScalarField::Boundary lambdaBf0(mesh.boundary());
+    surfaceScalarField::BoundaryField lambdaBf0(mesh.boundary().size());
     if (controls.tol != 0)
     {
         forAll(lambdaBf, patchi)

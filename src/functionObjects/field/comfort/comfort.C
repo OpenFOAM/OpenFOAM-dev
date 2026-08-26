@@ -67,7 +67,7 @@ Foam::dimensionedScalar Foam::functionObjects::comfort::Trad() const
     // not provide any information about the calculation of this quantity.
     if (!TradSet_)
     {
-        const volScalarField::Boundary& TBf =
+        const volScalarField::BoundaryField& TBf =
             lookupObject<volScalarField>("T").boundaryField();
 
         scalar areaIntegral = 0;

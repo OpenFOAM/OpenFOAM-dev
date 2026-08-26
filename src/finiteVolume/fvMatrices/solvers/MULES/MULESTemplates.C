@@ -233,8 +233,8 @@ void Foam::MULES::limit
 {
     surfaceScalarField phiBD(upwind<scalar>(psi.mesh(), phi).flux(psi));
 
-    surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryFieldRef();
-    const surfaceScalarField::Boundary& psiPhiBf = psiPhi.boundaryField();
+    surfaceScalarField::BoundaryField& phiBDBf = phiBD.boundaryFieldRef();
+    const surfaceScalarField::BoundaryField& psiPhiBf = psiPhi.boundaryField();
 
     forAll(phiBDBf, patchi)
     {
@@ -294,7 +294,7 @@ void Foam::MULES::limit
     const labelUList& neighb = mesh.neighbour();
 
     const scalarField& phiBDIf = phiBD;
-    const surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryField();
+    const surfaceScalarField::BoundaryField& phiBDBf = phiBD.boundaryField();
 
     surfaceScalarField& phiCorr = psiPhi;
     phiCorr -= phiBD;

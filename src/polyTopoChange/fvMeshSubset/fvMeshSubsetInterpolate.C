@@ -104,8 +104,7 @@ Foam::fvMeshSubset::interpolate
     // 2. Change the fvPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
-    typename VolField<Type>::
-        Boundary& bf = resF.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& bf = resF.boundaryFieldRef();
 
     forAll(bf, patchi)
     {
@@ -252,8 +251,7 @@ Foam::fvMeshSubset::interpolate
     // 2. Change the fvsPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
-    typename SurfaceField<Type>::
-        Boundary& bf = resF.boundaryFieldRef();
+    typename SurfaceField<Type>::BoundaryField& bf = resF.boundaryFieldRef();
 
     forAll(bf, patchi)
     {
@@ -425,8 +423,7 @@ Foam::fvMeshSubset::interpolate
     // 2. Change the pointPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
-    typename PointField<Type>::
-        Boundary& bf = resF.boundaryFieldRef();
+    typename PointField<Type>::BoundaryField& bf = resF.boundaryFieldRef();
 
     forAll(bf, patchi)
     {

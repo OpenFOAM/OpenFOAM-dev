@@ -55,7 +55,7 @@ void Foam::motionSmootherAlgo::checkConstraints
     }
 
 
-    typename PointField<Type>::Boundary& bFld = pf.boundaryField();
+    typename PointField<Type>::BoundaryField& bFld = pf.boundaryField();
 
 
     // Evaluate in reverse order

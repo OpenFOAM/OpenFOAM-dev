@@ -61,7 +61,7 @@ void Foam::fv::limitPressure::readCoeffs(const dictionary& dict)
     else
     {
         const volScalarField& p = mesh().lookupObject<volScalarField>(pName_);
-        const volScalarField::Boundary& pbf = p.boundaryField();
+        const volScalarField::BoundaryField& pbf = p.boundaryField();
 
         bool pLimits = false;
         scalar pMin = vGreat;

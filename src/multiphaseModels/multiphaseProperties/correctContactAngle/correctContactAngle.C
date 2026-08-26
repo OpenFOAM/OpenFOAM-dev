@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,13 @@ void Foam::correctContactAngle
 (
     const volScalarField& a1,
     const volScalarField& a2,
-    const volVectorField::Boundary& Ubf,
+    const volVectorField::BoundaryField& Ubf,
     const dimensionedScalar& deltaN,
-    surfaceVectorField::Boundary& nHatbf
+    surfaceVectorField::BoundaryField& nHatbf
 )
 {
-    const volScalarField::Boundary& a1bf = a1.boundaryField();
-    const volScalarField::Boundary& a2bf = a2.boundaryField();
+    const volScalarField::BoundaryField& a1bf = a1.boundaryField();
+    const volScalarField::BoundaryField& a2bf = a2.boundaryField();
 
     const fvBoundaryMesh& boundary = a1.mesh().boundary();
 

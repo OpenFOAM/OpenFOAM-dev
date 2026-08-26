@@ -255,7 +255,7 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
 
     const fvBoundaryMesh& fvbm = origFieldb[0].patch().boundaryMesh();
 
-    const surfaceScalarField::Boundary& magSfb =
+    const surfaceScalarField::BoundaryField& magSfb =
         fvbm.mesh().magSf().boundaryField();
 
     // Initialise the result and copy the original fields

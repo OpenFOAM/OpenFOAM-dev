@@ -85,13 +85,15 @@ void Foam::DimensionedFunction2<Type>::value
 {
     value(result.internalFieldRef(), x.internalField(), y.internalField());
 
-    typename GeometricField<Type, GeoMesh>::Boundary&
+    typename GeometricField<Type, GeoMesh>::BoundaryField&
         bresult = result.boundaryFieldRef();
 
-    const typename GeometricField<scalar, GeoMesh, XPrimitiveField>::Boundary&
+    const typename
+        GeometricField<scalar, GeoMesh, XPrimitiveField>::BoundaryField&
         bx = x.boundaryField();
 
-    const typename GeometricField<scalar, GeoMesh, YPrimitiveField>::Boundary&
+    const typename
+        GeometricField<scalar, GeoMesh, YPrimitiveField>::BoundaryField&
         by = y.boundaryField();
 
     forAll(bresult, patchi)

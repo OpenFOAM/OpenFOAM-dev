@@ -160,7 +160,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
         );
 
         lduInterfaceFieldPtrsList interfaces =
-            psi.boundaryField().scalarInterfaces();
+            psi.boundary().scalarInterfaces();
 
         // Use the initMatrixInterfaces and updateMatrixInterfaces to correct
         // bouCoeffsCmpt for the explicit part of the coupled boundary
@@ -242,7 +242,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
     addBoundaryDiag(coupledMatrix.diag(), 0);
     addBoundarySource(coupledMatrix.source(), false);
 
-    coupledMatrix.interfaces() = psi.boundaryFieldRef().interfaces();
+    coupledMatrix.interfaces() = psi.boundaryRef().interfaces();
     coupledMatrix.interfacesUpper() = boundaryCoeffs().component(0);
     coupledMatrix.interfacesLower() = internalCoeffs().component(0);
 

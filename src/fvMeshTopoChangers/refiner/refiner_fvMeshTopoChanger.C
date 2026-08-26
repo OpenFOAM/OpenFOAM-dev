@@ -736,7 +736,7 @@ void Foam::fvMeshTopoChangers::refiner::refineUfs
             }
 
             // Recalculate new boundary faces.
-            surfaceVectorField::Boundary& UfBf = Uf.boundaryFieldRef();
+            surfaceVectorField::BoundaryField& UfBf = Uf.boundaryFieldRef();
             forAll(UfBf, patchi)
             {
                 fvsPatchVectorField& patchUf = UfBf[patchi];
@@ -813,7 +813,7 @@ void Foam::fvMeshTopoChangers::refiner::unrefineUfs
 
         if (Uname != word::null)
         {
-            surfaceVectorField::Boundary& UfBf = Uf.boundaryFieldRef();
+            surfaceVectorField::BoundaryField& UfBf = Uf.boundaryFieldRef();
 
             const surfaceVectorField UfU
             (

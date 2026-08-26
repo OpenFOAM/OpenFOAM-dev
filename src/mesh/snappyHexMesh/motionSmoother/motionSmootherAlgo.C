@@ -429,7 +429,7 @@ void Foam::motionSmootherAlgo::setDisplacementPatchFields
     pointVectorField& displacement
 )
 {
-    pointVectorField::Boundary& displacementBf =
+    pointVectorField::BoundaryField& displacementBf =
         displacement.boundaryFieldRef();
 
     // Adapt the fixedValue bc's (i.e. copy internal point data to
@@ -585,7 +585,7 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
 
     const lduSchedule& patchSchedule = mesh_.globalData().patchSchedule();
 
-    pointVectorField::Boundary& displacementBf =
+    pointVectorField::BoundaryField& displacementBf =
         displacement.boundaryFieldRef();
 
     // 1. evaluate on adaptPatches
@@ -772,7 +772,7 @@ Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
 
     wordList actualPatchFieldTypes;
     {
-        const pointVectorField::Boundary& pfld =
+        const pointVectorField::BoundaryField& pfld =
             displacement_.boundaryField();
         actualPatchFieldTypes.setSize(pfld.size());
         forAll(pfld, patchi)

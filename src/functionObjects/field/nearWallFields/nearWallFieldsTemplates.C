@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,8 +106,7 @@ void Foam::functionObjects::nearWallFields::sampleBoundaryField
         sampledValues
     );
 
-    typename VolField<Type>::
-        Boundary& fieldBf = field.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& fieldBf = field.boundaryFieldRef();
 
     // Pick up data
     label nPatchFaces = 0;

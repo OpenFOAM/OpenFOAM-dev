@@ -74,10 +74,10 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
         )
     );
 
-    volScalarField::Boundary& wallHeatFluxBf =
+    volScalarField::BoundaryField& wallHeatFluxBf =
         twallHeatFlux.ref().boundaryFieldRef();
 
-    const surfaceScalarField::Boundary& qBf = q.boundaryField();
+    const surfaceScalarField::BoundaryField& qBf = q.boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
@@ -90,7 +90,7 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
     {
         const volScalarField& qr = lookupObject<volScalarField>("qr");
 
-        const volScalarField::Boundary& radHeatFluxBf = qr.boundaryField();
+        const volScalarField::BoundaryField& radHeatFluxBf = qr.boundaryField();
 
         forAllConstIter(labelHashSet, patchSet_, iter)
         {
@@ -243,7 +243,8 @@ bool Foam::functionObjects::wallHeatFlux::write()
 
     const fvPatchList& patches = mesh_.boundary();
 
-    const surfaceScalarField::Boundary& magSf = mesh_.magSf().boundaryField();
+    const surfaceScalarField::BoundaryField& magSf =
+        mesh_.magSf().boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {

@@ -93,7 +93,7 @@ Foam::pointMeshMovers::externalDisplacement::newPoints()
     movePoints(poly().points());
 
     // Update any point motion bcs (e.g. timevarying)
-    pointDisplacement().boundaryFieldRef().updateCoeffs();
+    pointDisplacement().boundaryRef().updateCoeffs();
 
     label nAllowableErrors = 0;
     labelList checkFaces(identityMap(poly().nFaces()));

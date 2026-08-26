@@ -322,7 +322,7 @@ Foam::fvMatrix<Type>::fvMatrix
     VolField<Type>& psiRef = const_cast<VolField<Type>&>(psi_);
 
     const uint64_t currentStatePsi = psiRef.eventNo();
-    psiRef.boundaryFieldRef().updateCoeffs();
+    psiRef.boundaryRef().updateCoeffs();
     psiRef.eventNo() = currentStatePsi;
 }
 
@@ -752,8 +752,7 @@ void Foam::fvMatrix<Type>::relax()
 template<class Type>
 void Foam::fvMatrix<Type>::boundaryManipulate
 (
-    typename VolField<Type>::
-        Boundary& bFields
+    typename VolField<Type>::Boundary& bFields
 )
 {
     forAll(bFields, patchi)
@@ -1013,8 +1012,8 @@ flux() const
         }
     }
 
-    typename SurfaceField<Type>::
-        Boundary& ffbf = fieldFlux.boundaryFieldRef();
+    typename SurfaceField<Type>::BoundaryField& ffbf =
+        fieldFlux.boundaryFieldRef();
 
     forAll(ffbf, patchi)
     {

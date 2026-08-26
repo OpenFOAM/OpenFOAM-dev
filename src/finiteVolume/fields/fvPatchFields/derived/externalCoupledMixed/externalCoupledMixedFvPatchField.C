@@ -69,7 +69,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::setMaster
 
     VolField<Type>& vf = const_cast<VolField<Type>&>(cvf);
 
-    typename VolField<Type>::Boundary& bf = vf.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& bf = vf.boundaryFieldRef();
 
     // number of patches can be different in parallel...
     label nPatch = bf.size();
@@ -246,7 +246,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::startWait() const
     const VolField<Type>& cvf =
         static_cast<const VolField<Type>&>(internalField());
 
-    const typename VolField<Type>::Boundary& bf =
+    const typename VolField<Type>::BoundaryField& bf =
         cvf.boundaryField();
 
     forAll(coupledPatchIndices_, i)
@@ -411,7 +411,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeData
     const VolField<Type>& cvf =
         static_cast<const VolField<Type>&>(internalField());
 
-    const typename VolField<Type>::Boundary& bf =
+    const typename VolField<Type>::BoundaryField& bf =
         cvf.boundaryField();
 
     forAll(coupledPatchIndices_, i)
@@ -567,7 +567,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialise
 
     VolField<Type>& vf = const_cast<VolField<Type>&>(cvf);
 
-    typename VolField<Type>::Boundary& bf = vf.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& bf = vf.boundaryFieldRef();
 
     // identify all coupled patches
     DynamicList<label> coupledPatchIDs(bf.size());
@@ -736,7 +736,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeGeometry() const
     const VolField<Type>& cvf =
         static_cast<const VolField<Type>&>(internalField());
 
-    const typename VolField<Type>::Boundary& bf =
+    const typename VolField<Type>::BoundaryField& bf =
         cvf.boundaryField();
 
     OFstream osPoints(baseDir()/"patchPoints");

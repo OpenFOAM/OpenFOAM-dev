@@ -71,11 +71,8 @@ void Foam::LimitedScheme<Type, Limiter, LimitFunc>::calcLimiter
         );
     }
 
-    const typename VolField<Type>::Boundary&
-        bPhi = phi.boundaryField();
-
-    surfaceScalarField::Boundary& bLim =
-        limiterField.boundaryFieldRef();
+    const typename VolField<Type>::BoundaryField& bPhi = phi.boundaryField();
+    surfaceScalarField::BoundaryField& bLim = limiterField.boundaryFieldRef();
 
     forAll(bLim, patchi)
     {

@@ -50,16 +50,6 @@ namespace Foam
 
 class dictionary;
 
-// Forward declaration of friend functions and operators
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Ostream& operator<<
-(
-    Ostream&,
-    const GeometricField<Type, GeoMesh, PrimitiveField>&
-);
-
-
 /*---------------------------------------------------------------------------*\
                        Class GeometricField Declaration
 \*---------------------------------------------------------------------------*/
@@ -92,6 +82,9 @@ public:
 
         //- Type of the patch field of which the Boundary is composed
         using PatchField = typename GeoMesh::template PatchField<Type>;
+
+        //- Type of the boundary field
+        using BoundaryField = FieldField<GeoMesh::template PatchField, Type>;
 
         //- Type of the boundary field
         using Boundary = GeometricBoundaryField<Type, GeoMesh, PrimitiveField>;
@@ -547,14 +540,26 @@ public:
         //- Return a reference to the boundary field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
-        Boundary& boundaryFieldRef();
+        Boundary& boundaryRef();
 
         //- Return a reference to the boundary field without storing old times
         //  Note: this increments the event counter; avoid in loops.
-        Boundary& boundaryFieldRefNoStoreOldTimes();
+        Boundary& boundaryRefNoStoreOldTimes();
 
         //- Return const-reference to the boundary field
-        inline const Boundary& boundaryField() const;
+        inline const Boundary& boundary() const;
+
+        //- Return a reference to the boundary field
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
+        BoundaryField& boundaryFieldRef();
+
+        //- Return a reference to the boundary field without storing old times
+        //  Note: this increments the event counter; avoid in loops.
+        BoundaryField& boundaryFieldRefNoStoreOldTimes();
+
+        //- Return const-reference to the boundary field
+        inline const BoundaryField& boundaryField() const;
 
         //- Return a reference to the sources
         //  Note: this increments the event counter and checks the
@@ -774,15 +779,6 @@ public:
             const tmp<GeometricField<scalar, GeoMesh, PrimitiveField2>>&
         );
         void operator/=(const dimensioned<scalar>&);
-
-
-    // Ostream operators
-
-        friend Ostream& operator<< <Type, GeoMesh, PrimitiveField>
-        (
-            Ostream&,
-            const GeometricField<Type, GeoMesh, PrimitiveField>&
-        );
 };
 
 
@@ -790,7 +786,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Ostream& operator<<
 (
     Ostream&,
-    const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>&
+    const GeometricField<Type, GeoMesh, PrimitiveField>&
 );
 
 

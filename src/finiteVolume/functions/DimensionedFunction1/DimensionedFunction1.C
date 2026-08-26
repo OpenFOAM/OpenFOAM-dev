@@ -100,10 +100,11 @@ void Foam::DimensionedFunction1<Type>::value
 {
     value(result.internalFieldRef(), x.internalField());
 
-    typename GeometricField<Type, GeoMesh, ResultPrimitiveField>::Boundary&
+    typename GeometricField<Type, GeoMesh, ResultPrimitiveField>::BoundaryField&
         bresult = result.boundaryFieldRef();
 
-    const typename GeometricField<scalar, GeoMesh, XPrimitiveField>::Boundary&
+    const typename
+        GeometricField<scalar, GeoMesh, XPrimitiveField>::BoundaryField&
         bx = x.boundaryField();
 
     forAll(bresult, patchi)
@@ -128,10 +129,11 @@ void Foam::DimensionedFunction1<Type>::derivative
 {
     derivative(result.internalFieldRef(), x.internalField());
 
-    typename GeometricField<Type, GeoMesh, ResultPrimitiveField>::Boundary&
+    typename GeometricField<Type, GeoMesh, ResultPrimitiveField>::BoundaryField&
         bresult = result.boundaryFieldRef();
 
-    const typename GeometricField<scalar, GeoMesh, XPrimitiveField>::Boundary&
+    const typename
+        GeometricField<scalar, GeoMesh, XPrimitiveField>::BoundaryField&
         bx = x.boundaryField();
 
     forAll(bresult, patchi)

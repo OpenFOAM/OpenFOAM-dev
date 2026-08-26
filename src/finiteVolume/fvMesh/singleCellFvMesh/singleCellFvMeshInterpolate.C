@@ -83,8 +83,7 @@ tmp<VolField<Type>> singleCellFvMesh::interpolate
     // 2. Change the fvPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
-    typename VolField<Type>::
-        Boundary& bf = resF.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& bf = resF.boundaryFieldRef();
 
     if (agglomerate())
     {

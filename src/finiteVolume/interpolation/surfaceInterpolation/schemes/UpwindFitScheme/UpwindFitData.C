@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ void Foam::UpwindFitData<Polynomial>::calcFit()
     const fvMesh& mesh = this->mesh();
 
     const surfaceScalarField& w = mesh.surfaceInterpolation::weights();
-    const surfaceScalarField::Boundary& bw = w.boundaryField();
+    const surfaceScalarField::BoundaryField& bw = w.boundaryField();
 
     // Owner stencil weights
     // ~~~~~~~~~~~~~~~~~~~~~

@@ -172,7 +172,7 @@ public:
         const volScalarField& y() const;
 
         //- Return the near wall distance
-        const volScalarField::Boundary& yb() const;
+        const volScalarField::BoundaryField& yb() const;
 
         //- Return the laminar viscosity
         virtual tmp<volScalarField> nu() const

@@ -159,7 +159,7 @@ Foam::pointMeshMovers::layeredDisplacement::newPoints()
     movePoints(poly().points());
 
     // Update the displacement boundary conditions
-    pointDisplacement_.boundaryFieldRef().updateCoeffs();
+    pointDisplacement_.boundaryRef().updateCoeffs();
 
     // Walk the layers from patch0 to patch1
     const polyPatch& patch0 = poly().boundary()[oppositePatches_.first()];

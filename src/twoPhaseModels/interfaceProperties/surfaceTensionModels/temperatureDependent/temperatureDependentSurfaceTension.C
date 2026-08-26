@@ -88,8 +88,8 @@ Foam::surfaceTensionModels::temperatureDependent::sigma() const
 
     sigma.primitiveFieldRef() = sigma_->value(T.primitiveField());
 
-    volScalarField::Boundary& sigmaBf = sigma.boundaryFieldRef();
-    const volScalarField::Boundary& TBf = T.boundaryField();
+    volScalarField::BoundaryField& sigmaBf = sigma.boundaryFieldRef();
+    const volScalarField::BoundaryField& TBf = T.boundaryField();
 
     forAll(sigmaBf, patchi)
     {

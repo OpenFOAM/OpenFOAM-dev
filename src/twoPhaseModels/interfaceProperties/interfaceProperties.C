@@ -40,13 +40,13 @@ License
 
 void Foam::interfaceProperties::correctContactAngle
 (
-    surfaceVectorField::Boundary& nHatb,
-    const surfaceVectorField::Boundary& gradAlphaf
+    surfaceVectorField::BoundaryField& nHatb,
+    const surfaceVectorField::BoundaryField& gradAlphaf
 )
 {
     const fvMesh& mesh = alpha1_.mesh();
-    volScalarField::Boundary& a1bf = alpha1_.boundaryFieldRef();
-    volScalarField::Boundary& a2bf = alpha2_.boundaryFieldRef();
+    volScalarField::BoundaryField& a1bf = alpha1_.boundaryFieldRef();
+    volScalarField::BoundaryField& a2bf = alpha2_.boundaryFieldRef();
 
     const fvBoundaryMesh& boundary = mesh.boundary();
 

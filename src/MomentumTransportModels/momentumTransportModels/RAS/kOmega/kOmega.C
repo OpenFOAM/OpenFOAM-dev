@@ -202,7 +202,7 @@ void kOmega<BasicMomentumTransportModel>::correct()
     tgradU.clear();
 
     // Update omega and G at the wall
-    omega_.boundaryFieldRef().updateCoeffs();
+    omega_.boundaryRef().updateCoeffs();
 
     // Turbulence specific dissipation rate equation
     tmp<fvScalarMatrix> omegaEqn
@@ -220,7 +220,7 @@ void kOmega<BasicMomentumTransportModel>::correct()
 
     omegaEqn.ref().relax();
     fvConstraints.constrain(omegaEqn.ref());
-    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryRef());
     solve(omegaEqn);
     fvConstraints.constrain(omega_);
     boundOmega();

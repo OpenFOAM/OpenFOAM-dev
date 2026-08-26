@@ -34,7 +34,7 @@ License
 template<class Type>
 void Foam::fvMeshToFvMesh::evaluateConstraintTypes(VolField<Type>& fld)
 {
-    typename VolField<Type>::Boundary& fldBf = fld.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& fldBf = fld.boundaryFieldRef();
 
     if
     (
@@ -176,7 +176,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
             srcToTgt<Type>(srcFld.internalField())(),
             tgtPatchFields
         );
-    typename VolField<Type>::Boundary& tgtBfld =
+    typename VolField<Type>::BoundaryField& tgtBfld =
         ttgtFld.ref().boundaryFieldRef();
 
     // Mapped patches
@@ -229,7 +229,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
             srcToTgt<Type>(srcFld(), leftOverTgtFld())(),
             leftOverTgtFld.boundaryField()
         );
-    typename VolField<Type>::Boundary& tgtBfld =
+    typename VolField<Type>::BoundaryField& tgtBfld =
         ttgtFld.ref().boundaryFieldRef();
 
     // Mapped patches

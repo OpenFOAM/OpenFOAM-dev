@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,7 @@ namespace Foam
 
 Foam::wordList Foam::psiuMulticomponentThermo::heuBoundaryTypes()
 {
-    const volScalarField::Boundary& tbf =
-        this->Tu().boundaryField();
+    const volScalarField::Boundary& tbf = this->Tu().boundary();
 
     wordList hbt = tbf.types();
 
@@ -72,7 +71,7 @@ Foam::wordList Foam::psiuMulticomponentThermo::heuBoundaryTypes()
 
 void Foam::psiuMulticomponentThermo::heuBoundaryCorrection(volScalarField& heu)
 {
-    volScalarField::Boundary& hbf = heu.boundaryFieldRef();
+    volScalarField::BoundaryField& hbf = heu.boundaryFieldRef();
 
     forAll(hbf, patchi)
     {

@@ -76,7 +76,7 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
     {
         conformedFvsPatchField<Type>::conform
         (
-            fields[i].boundaryFieldRefNoStoreOldTimes()
+            fields[i].boundaryRefNoStoreOldTimes()
         );
     }
 }
@@ -91,7 +91,7 @@ void Foam::fvMeshStitcher::preConformVolFields()
     {
         conformedFvPatchField<Type>::conform
         (
-            fields[i].boundaryFieldRefNoStoreOldTimes()
+            fields[i].boundaryRefNoStoreOldTimes()
         );
     }
 }
@@ -119,7 +119,7 @@ void Foam::fvMeshStitcher::postUnconformSurfaceFields()
     {
         conformedFvsPatchField<Type>::unconform
         (
-            fields[i].boundaryFieldRefNoStoreOldTimes()
+            fields[i].boundaryRefNoStoreOldTimes()
         );
     }
 }
@@ -134,7 +134,7 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
     {
         conformedFvPatchField<Type>::unconform
         (
-            fields[i].boundaryFieldRefNoStoreOldTimes()
+            fields[i].boundaryRefNoStoreOldTimes()
         );
     }
 }

@@ -79,27 +79,27 @@ void Foam::SolidThermo<BaseThermo>::calculate()
     }
 
 
-    volScalarField::Boundary& heBf =
+    volScalarField::BoundaryField& heBf =
         this->he().boundaryFieldRef();
 
     const auto& pBf = this->p_.boundaryField();
 
-    volScalarField::Boundary& TBf =
+    volScalarField::BoundaryField& TBf =
         this->T_.boundaryFieldRef();
 
-    volScalarField::Boundary& CpBf =
+    volScalarField::BoundaryField& CpBf =
         this->Cp_.boundaryFieldRef();
 
-    volScalarField::Boundary& CvBf =
+    volScalarField::BoundaryField& CvBf =
         this->Cv_.boundaryFieldRef();
 
-    volScalarField::Boundary& rhoBf =
+    volScalarField::BoundaryField& rhoBf =
         this->rho_.boundaryFieldRef();
 
-    volScalarField::Boundary& kappaBf =
+    volScalarField::BoundaryField& kappaBf =
         this->kappa_.boundaryFieldRef();
 
-    volVectorField::Boundary& KappaBf =
+    volVectorField::BoundaryField& KappaBf =
         this->Kappa_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)

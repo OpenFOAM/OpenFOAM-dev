@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,16 +44,16 @@ void Foam::constrainPressure
 {
     const fvMesh& mesh = p.mesh();
 
-    volScalarField::Boundary& pBf = p.boundaryFieldRef();
+    volScalarField::BoundaryField& pBf = p.boundaryFieldRef();
 
-    const volVectorField::Boundary& UBf = U.boundaryField();
-    const surfaceScalarField::Boundary& phiHbyABf =
+    const volVectorField::BoundaryField& UBf = U.boundaryField();
+    const surfaceScalarField::BoundaryField& phiHbyABf =
         phiHbyA.boundaryField();
-    const typename RAUType::Boundary& rhorAUBf =
+    const typename RAUType::BoundaryField& rhorAUBf =
         rhorAU.boundaryField();
-    const surfaceVectorField::Boundary& SfBf =
+    const surfaceVectorField::BoundaryField& SfBf =
         mesh.Sf().boundaryField();
-    const surfaceScalarField::Boundary& magSfBf =
+    const surfaceScalarField::BoundaryField& magSfBf =
         mesh.magSf().boundaryField();
 
     forAll(pBf, patchi)

@@ -137,7 +137,7 @@ void Foam::MRFZone::checkMRFBCs(const volVectorField& U) const
 
     if (!checked && U.nOldTimes())
     {
-        const volVectorField::Boundary& Ubf = U.boundaryField();
+        const volVectorField::BoundaryField& Ubf = U.boundaryField();
 
         forAll(Ubf, patchi)
         {
@@ -227,7 +227,8 @@ void Foam::MRFZone::addCentrifugalAcceleration
         cac[celli] -= Omega ^ (Omega ^ (C[celli] - origin_));
     }
 
-    volVectorField::Boundary& caf = centrifugalAcceleration.boundaryFieldRef();
+    volVectorField::BoundaryField& caf =
+        centrifugalAcceleration.boundaryFieldRef();
 
     forAll(patchFaces_, patchi)
     {
@@ -255,7 +256,7 @@ void Foam::MRFZone::makeRelative(volVectorField& U) const
         U[celli] -= (Omega ^ (C[celli] - origin_));
     }
 
-    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
+    volVectorField::BoundaryField& Ubf = U.boundaryFieldRef();
 
     forAll(patchFaces_, patchi)
     {
@@ -322,7 +323,7 @@ void Foam::MRFZone::makeAbsolute(volVectorField& U) const
         U[celli] += (Omega ^ (C[celli] - origin_));
     }
 
-    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
+    volVectorField::BoundaryField& Ubf = U.boundaryFieldRef();
 
     forAll(patchFaces_, patchi)
     {

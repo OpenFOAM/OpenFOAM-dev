@@ -256,7 +256,7 @@ void LaunderSharmaKE<BasicMomentumTransportModel>::correct()
 
     epsEqn.ref().relax();
     fvConstraints.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
     boundEpsilon();

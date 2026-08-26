@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::fvMeshStitcherTools::origNcMagSfb(const fvMesh& mesh)
 {
     const fvBoundaryMesh& fvbm = mesh.boundary();
 
-    const surfaceScalarField::Boundary& magSfb =
+    const surfaceScalarField::BoundaryField& magSfb =
         fvbm.mesh().magSf().boundaryField();
 
     tmp<surfaceScalarField::Boundary> tresult

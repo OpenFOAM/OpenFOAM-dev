@@ -34,7 +34,7 @@ void Foam::solvers::isothermalFilm::continuityPredictor()
 {
     // Update delta and alpha BCs for time-varying inlets etc.
     delta_.correctBoundaryConditions();
-    alpha_.boundaryFieldRef() == delta.boundaryField()/VbyA.boundaryField();
+    alpha_.boundaryRef() == delta.boundaryField()/VbyA.boundaryField();
 
     fvScalarMatrix alphaEqn
     (

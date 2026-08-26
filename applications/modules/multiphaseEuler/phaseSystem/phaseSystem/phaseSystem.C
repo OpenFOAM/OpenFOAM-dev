@@ -769,14 +769,15 @@ void Foam::phaseSystem::correctBoundaryFlux()
         phaseModel& phase = movingPhaseModels_[movingPhasei];
 
         tmp<volVectorField> tU(phase.U());
-        const volVectorField::Boundary& UBf = tU().boundaryField();
+        const volVectorField::BoundaryField& UBf = tU().boundaryField();
 
         FieldField<surfaceMesh::PatchField, scalar> phiRelBf
         (
             MRF_.relative(mesh_.Sf().boundaryField() & UBf)
         );
 
-        surfaceScalarField::Boundary& phiBf = phase.phiRef().boundaryFieldRef();
+        surfaceScalarField::BoundaryField& phiBf =
+            phase.phiRef().boundaryFieldRef();
 
         forAll(mesh_.boundary(), patchi)
         {
@@ -815,8 +816,9 @@ void Foam::phaseSystem::correctPhi
     {
         phaseModel& phase = movingPhaseModels_[movingPhasei];
 
-        volVectorField::Boundary& Ubf = phase.URef().boundaryFieldRef();
-        surfaceVectorField::Boundary& UfBf = phase.UfRef().boundaryFieldRef();
+        volVectorField::Boundary& Ubf = phase.URef().boundaryRef();
+        surfaceVectorField::BoundaryField& UfBf =
+            phase.UfRef().boundaryFieldRef();
 
         forAll(Ubf, patchi)
         {

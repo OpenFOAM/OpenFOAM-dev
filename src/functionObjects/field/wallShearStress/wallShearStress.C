@@ -73,7 +73,7 @@ Foam::functionObjects::wallShearStress::calcShearStress
         )
     );
 
-    volVectorField::Boundary& wallShearStressBf =
+    volVectorField::BoundaryField& wallShearStressBf =
         twallShearStress.ref().boundaryFieldRef();
 
     forAllConstIter(labelHashSet, patchSet_, iter)

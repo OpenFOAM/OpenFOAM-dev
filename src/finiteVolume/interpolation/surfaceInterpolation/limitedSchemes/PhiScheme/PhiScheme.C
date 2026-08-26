@@ -94,7 +94,7 @@ Foam::PhiScheme<Type, PhiLimiter>::limiter
     }
 
 
-    surfaceScalarField::Boundary& bLimiter =
+    surfaceScalarField::BoundaryField& bLimiter =
         Limiter.boundaryFieldRef();
 
     forAll(bLimiter, patchi)

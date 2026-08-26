@@ -231,7 +231,7 @@ void LRR<BasicMomentumTransportModel>::correct()
     volInternalScalarField G(this->GName(), 0.5*mag(tr(P)));
 
     // Update epsilon and G at the wall
-    epsilon_.boundaryFieldRef().updateCoeffs();
+    epsilon_.boundaryRef().updateCoeffs();
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -248,7 +248,7 @@ void LRR<BasicMomentumTransportModel>::correct()
 
     epsEqn.ref().relax();
     fvConstraints.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
     boundEpsilon();

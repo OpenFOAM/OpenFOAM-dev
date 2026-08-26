@@ -81,7 +81,7 @@ inline bool Foam::fv::limitMag::constrainType
     // handle boundaries in the case of 'all'
     if (zone_.all())
     {
-        typename VolField<Type>::Boundary& psibf =
+        typename VolField<Type>::BoundaryField& psibf =
             psi.boundaryFieldRef();
 
         forAll(psibf, patchi)

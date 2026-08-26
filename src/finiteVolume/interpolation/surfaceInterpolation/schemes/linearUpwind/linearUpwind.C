@@ -77,7 +77,8 @@ Foam::linearUpwind<Foam::vector>::correction
     }
 
 
-    typename surfaceVectorField::Boundary& bSfCorr = sfCorr.boundaryFieldRef();
+    typename surfaceVectorField::BoundaryField& bSfCorr =
+        sfCorr.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {

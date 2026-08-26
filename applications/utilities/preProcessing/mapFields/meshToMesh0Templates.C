@@ -236,8 +236,7 @@ void Foam::meshToMesh0::interpolate
 {
     interpolateInternalField(toVf, fromVf, ord);
 
-    typename VolField<Type>::
-        Boundary& toVfBf = toVf.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& toVfBf = toVf.boundaryFieldRef();
 
     forAll(toMesh_.poly().boundary(), patchi)
     {

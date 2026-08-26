@@ -1427,7 +1427,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::primitiveFieldRef()
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 typename
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Boundary&
-Foam::GeometricField<Type, GeoMesh, PrimitiveField>::boundaryFieldRef()
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::boundaryRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -1438,6 +1438,28 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::boundaryFieldRef()
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 typename
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Boundary&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::
+boundaryRefNoStoreOldTimes()
+{
+    this->setUpToDate();
+    return boundaryField_;
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+typename
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::BoundaryField&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::boundaryFieldRef()
+{
+    this->setUpToDate();
+    storeOldTimes();
+    return boundaryField_;
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+typename
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::BoundaryField&
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::
 boundaryFieldRefNoStoreOldTimes()
 {
@@ -1526,7 +1548,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::reset
 {
     Internal::reset(gf);
 
-    boundaryField_.reset(gf.boundaryField());
+    boundaryField_.reset(gf.boundary());
     sources_.reset(*this, gf.sources());
 }
 
@@ -1552,7 +1574,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::reset
         PrimitiveField<Type>::operator=(gf.primitiveField());
     }
 
-    boundaryField_.reset(gf.boundaryField());
+    boundaryField_.reset(gf.boundary());
     sources_.reset(*this, gf.sources());
 
     tgf.clear();
@@ -1998,7 +2020,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator==
     checkFieldOperation(*this, gf, "==");
 
     internalFieldRef() = gf.internalField();
-    boundaryFieldRef() == gf.boundaryField();
+    boundaryRef() == gf.boundary();
 }
 
 
@@ -2023,7 +2045,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator==
         primitiveFieldRef() = gf.primitiveField();
     }
 
-    boundaryFieldRef() == gf.boundaryField();
+    boundaryRef() == gf.boundary();
 
     tgf.clear();
 }
@@ -2041,7 +2063,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator==
     checkFieldOperation(*this, gf, "=");
 
     internalFieldRef() = gf.internalField();
-    boundaryFieldRef() == gf.boundaryField();
+    boundaryRef() == gf.boundary();
 
     tgf.clear();
 }
@@ -2054,7 +2076,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator==
 )
 {
     internalFieldRef() = dt;
-    boundaryFieldRef() == dt.value();
+    boundaryRef() == dt.value();
 }
 
 
@@ -2065,7 +2087,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator==
 )
 {
     internalFieldRef() = Zero;
-    boundaryFieldRef() == Zero;
+    boundaryRef() == Zero;
 }
 
 
@@ -2081,7 +2103,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator op          \
     checkFieldOperation(*this, gf, #op);                                       \
                                                                                \
     internalFieldRef() op gf.internalField();                                  \
-    boundaryFieldRef() op gf.boundaryField();                                  \
+    boundaryRef() op gf.boundary();                                            \
 }                                                                              \
                                                                                \
 template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
@@ -2102,7 +2124,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator op          \
 )                                                                              \
 {                                                                              \
     internalFieldRef() op dt;                                                  \
-    boundaryFieldRef() op dt.value();                                          \
+    boundaryRef() op dt.value();                                               \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)
@@ -2124,9 +2146,9 @@ Foam::Ostream& Foam::operator<<
 {
     gf().writeData(os, "internalField");
     os  << nl;
-    gf.boundaryField().writeEntry("boundaryField", os);
+    gf.boundary().writeEntry("boundaryField", os);
 
-    if (!gf.sources_.empty())
+    if (!gf.sources().empty())
     {
         os  << nl;
         gf.sources().writeEntry("sources", os);

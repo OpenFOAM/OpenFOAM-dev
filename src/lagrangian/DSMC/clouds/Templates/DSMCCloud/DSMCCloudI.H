@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ Foam::DSMCCloud<ParcelType>::stdNormal()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::Boundary&
+inline Foam::volScalarField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::qBF()
 {
     return q_.boundaryFieldRef();
@@ -141,7 +141,7 @@ Foam::DSMCCloud<ParcelType>::qBF()
 
 
 template<class ParcelType>
-inline Foam::volVectorField::Boundary&
+inline Foam::volVectorField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::fDBF()
 {
     return fD_.boundaryFieldRef();
@@ -149,7 +149,7 @@ Foam::DSMCCloud<ParcelType>::fDBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::Boundary&
+inline Foam::volScalarField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::rhoNBF()
 {
     return rhoN_.boundaryFieldRef();
@@ -157,7 +157,7 @@ Foam::DSMCCloud<ParcelType>::rhoNBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::Boundary&
+inline Foam::volScalarField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::rhoMBF()
 {
     return rhoM_.boundaryFieldRef();
@@ -165,7 +165,7 @@ Foam::DSMCCloud<ParcelType>::rhoMBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::Boundary&
+inline Foam::volScalarField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::linearKEBF()
 {
     return linearKE_.boundaryFieldRef();
@@ -173,7 +173,7 @@ Foam::DSMCCloud<ParcelType>::linearKEBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::Boundary&
+inline Foam::volScalarField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::internalEBF()
 {
     return internalE_.boundaryFieldRef();
@@ -181,7 +181,7 @@ Foam::DSMCCloud<ParcelType>::internalEBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::Boundary&
+inline Foam::volScalarField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::iDofBF()
 {
     return iDof_.boundaryFieldRef();
@@ -189,7 +189,7 @@ Foam::DSMCCloud<ParcelType>::iDofBF()
 
 
 template<class ParcelType>
-inline Foam::volVectorField::Boundary&
+inline Foam::volVectorField::BoundaryField&
 Foam::DSMCCloud<ParcelType>::momentumBF()
 {
     return momentum_.boundaryFieldRef();

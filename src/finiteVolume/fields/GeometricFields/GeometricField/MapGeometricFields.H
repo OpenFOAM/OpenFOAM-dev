@@ -102,7 +102,7 @@ void MapGeometricFields
             );
 
             // Map the patch fields
-            typename GeometricField<Type, GeoMesh>::Boundary& bfield =
+            typename GeometricField<Type, GeoMesh>::BoundaryField& bfield =
                 field.boundaryFieldRef();
             forAll(bfield, patchi)
             {
@@ -146,7 +146,7 @@ void AddPatchFields
     {
         GeoField& fld = *flds[fldNames[i]];
 
-        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
+        typename GeoField::BoundaryField& bfld = fld.boundaryFieldRef();
 
         if (bfld.size() != fld.mesh().boundary().size())
         {
@@ -184,7 +184,7 @@ void ReorderPatchFields
     {
         GeoField& fld = *flds[fldNames[i]];
 
-        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
+        typename GeoField::BoundaryField& bfld = fld.boundaryFieldRef();
 
         bfld.shuffle(newToOld);
     }

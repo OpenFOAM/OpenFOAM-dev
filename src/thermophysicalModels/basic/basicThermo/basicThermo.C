@@ -174,7 +174,7 @@ Foam::List<Foam::Pair<Foam::word>> Foam::basicThermo::thermoNameComponents
 
 Foam::wordList Foam::basicThermo::heBoundaryBaseTypes()
 {
-    const volScalarField::Boundary& tbf = T().boundaryField();
+    const volScalarField::BoundaryField& tbf = T().boundaryField();
 
     wordList hbt(tbf.size(), word::null);
 
@@ -192,7 +192,7 @@ Foam::wordList Foam::basicThermo::heBoundaryBaseTypes()
 
 Foam::wordList Foam::basicThermo::heBoundaryTypes()
 {
-    const volScalarField::Boundary& tbf = T().boundaryField();
+    const volScalarField::Boundary& tbf = T().boundary();
 
     wordList hbt = tbf.types();
 

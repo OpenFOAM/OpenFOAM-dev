@@ -156,12 +156,12 @@ void Foam::FreeStream<CloudType>::inflow()
 
     label particlesInserted = 0;
 
-    const volScalarField::Boundary& boundaryT
+    const volScalarField::BoundaryField& boundaryT
     (
         cloud.boundaryT().boundaryField()
     );
 
-    const volVectorField::Boundary& boundaryU
+    const volVectorField::BoundaryField& boundaryU
     (
         cloud.boundaryU().boundaryField()
     );

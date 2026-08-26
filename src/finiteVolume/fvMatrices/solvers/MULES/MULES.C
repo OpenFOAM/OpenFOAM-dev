@@ -202,7 +202,7 @@ void Foam::MULES::limitSumCorr
         limitSumCorr(psiPhiCorrsInternal);
     }
 
-    const surfaceScalarField::Boundary& phibf = phi.boundaryField();
+    const surfaceScalarField::BoundaryField& phibf = phi.boundaryField();
 
     forAll(phibf, patchi)
     {

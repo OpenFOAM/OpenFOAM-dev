@@ -150,7 +150,7 @@ void Foam::omegaWallFunctionFvPatchScalarField::updateCoeffsMaster()
             )
         );
 
-    const volScalarField::Boundary& omegaBf = omega.boundaryField();
+    const volScalarField::BoundaryField& omegaBf = omega.boundaryField();
 
     // Make all processors build the near wall distances
     mtm.yb();

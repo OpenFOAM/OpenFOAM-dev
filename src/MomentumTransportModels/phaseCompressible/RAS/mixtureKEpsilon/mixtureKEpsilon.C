@@ -572,8 +572,8 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         tgradUl.clear();
 
         // Update k, epsilon and G at the wall
-        kl.boundaryFieldRef().updateCoeffs();
-        epsilonl.boundaryFieldRef().updateCoeffs();
+        kl.boundaryRef().updateCoeffs();
+        epsilonl.boundaryRef().updateCoeffs();
 
         Gc.ref().checkOut();
     }
@@ -592,8 +592,8 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         tgradUg.clear();
 
         // Update k, epsilon and G at the wall
-        kg.boundaryFieldRef().updateCoeffs();
-        epsilong.boundaryFieldRef().updateCoeffs();
+        kg.boundaryRef().updateCoeffs();
+        epsilong.boundaryRef().updateCoeffs();
 
         Gd.ref().checkOut();
     }
@@ -625,7 +625,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
 
     epsEqn.ref().relax();
     fvConstraints.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilonm.boundaryFieldRef());
+    epsEqn.ref().boundaryManipulate(epsilonm.boundaryRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilonm);
 

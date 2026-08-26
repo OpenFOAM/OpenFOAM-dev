@@ -45,7 +45,7 @@ void Foam::wallCellWallFunctionFvPatchScalarField::initMaster()
             )
         );
 
-    volScalarField::Boundary& bf = vf.boundaryFieldRef();
+    volScalarField::BoundaryField& bf = vf.boundaryFieldRef();
 
     // Choose a master patch if one has not previously been chosen
     if (masterPatchi_ == -1)
@@ -177,7 +177,7 @@ Foam::wallCellWallFunctionFvPatchScalarField::patchFieldsToWallCellField
     const volScalarField& vf =
         static_cast<const volScalarField&>(internalField());
 
-    const volScalarField::Boundary& bf = vf.boundaryField();
+    const volScalarField::BoundaryField& bf = vf.boundaryField();
 
     scalarField cellMagSw(vf.mesh().nCells(), scalar(0));
     scalarField cellMagSwValue(vf.mesh().nCells(), scalar(0));

@@ -70,8 +70,8 @@ void setVolField
             }
         }
 
-        typename VolField<Type>::
-            Boundary& fieldBf = field.boundaryFieldRef();
+        typename VolField<Type>::BoundaryField& fieldBf =
+            field.boundaryFieldRef();
 
         forAll(field.boundaryField(), patchi)
         {
@@ -118,7 +118,7 @@ void setPatchField
 
         // Read the field
         VolField<Type> field(fieldHeader, mesh);
-        typename VolField<Type>::Boundary& fieldBf = field.boundaryFieldRef();
+        typename VolField<Type>::Boundary& fieldBf = field.boundaryRef();
 
         // Read the value
         const dimensioned<Type> value

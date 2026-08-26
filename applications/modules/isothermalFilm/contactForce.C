@@ -75,7 +75,7 @@ Foam::solvers::isothermalFilm::contactForce(const volScalarField& sigma) const
     labelHashSet wallAndSurfacePatches(wallPatchIDs);
     wallAndSurfacePatches.insert(surfacePatchID);
 
-    const volScalarField::Boundary& deltaBf = delta.boundaryField();
+    const volScalarField::BoundaryField& deltaBf = delta.boundaryField();
 
     forAll(mesh.boundary(), patchi)
     {

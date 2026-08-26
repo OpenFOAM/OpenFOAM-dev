@@ -126,7 +126,7 @@ void Foam::fv::gradScheme<Type>::correctBoundaryConditions
     VolField<typename outerProduct<vector, Type>::type>& gGrad
 )
 {
-    typename VolField<typename outerProduct<vector, Type>::type>::Boundary&
+    typename VolField<typename outerProduct<vector, Type>::type>::BoundaryField&
         gGradbf = gGrad.boundaryFieldRef();
 
     forAll(vf.boundaryField(), patchi)

@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
             dimensionedScalar(dimless, 0)
         );
 
-        volScalarField::Boundary& facesAgglomerationBf =
+        volScalarField::BoundaryField& facesAgglomerationBf =
             facesAgglomeration.boundaryFieldRef();
 
         label coarsePatchIndex = 0;

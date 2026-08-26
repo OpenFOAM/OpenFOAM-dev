@@ -116,8 +116,8 @@ nu
 
     tnu.ref().primitiveFieldRef() = strainRateFunction_->value(strainRate);
 
-    volScalarField::Boundary& nuBf = tnu.ref().boundaryFieldRef();
-    const volScalarField::Boundary& sigmaBf = strainRate.boundaryField();
+    volScalarField::BoundaryField& nuBf = tnu.ref().boundaryFieldRef();
+    const volScalarField::BoundaryField& sigmaBf = strainRate.boundaryField();
 
     forAll(nuBf, patchi)
     {

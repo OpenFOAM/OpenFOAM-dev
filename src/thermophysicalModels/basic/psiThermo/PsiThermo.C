@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,28 +69,28 @@ void Foam::PsiThermo<BaseThermo>::calculate()
             transportMixture.kappa(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::Boundary& pBf =
+    volScalarField::BoundaryField& pBf =
         this->p_.boundaryFieldRef();
 
-    volScalarField::Boundary& TBf =
+    volScalarField::BoundaryField& TBf =
         this->T_.boundaryFieldRef();
 
-    volScalarField::Boundary& CpBf =
+    volScalarField::BoundaryField& CpBf =
         this->Cp_.boundaryFieldRef();
 
-    volScalarField::Boundary& CvBf =
+    volScalarField::BoundaryField& CvBf =
         this->Cv_.boundaryFieldRef();
 
-    volScalarField::Boundary& psiBf =
+    volScalarField::BoundaryField& psiBf =
         this->psi_.boundaryFieldRef();
 
-    volScalarField::Boundary& heBf =
+    volScalarField::BoundaryField& heBf =
         this->he().boundaryFieldRef();
 
-    volScalarField::Boundary& muBf =
+    volScalarField::BoundaryField& muBf =
         this->mu_.boundaryFieldRef();
 
-    volScalarField::Boundary& kappaBf =
+    volScalarField::BoundaryField& kappaBf =
         this->kappa_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)

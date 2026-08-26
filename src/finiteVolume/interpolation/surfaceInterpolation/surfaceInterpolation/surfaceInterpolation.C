@@ -193,7 +193,7 @@ void Foam::surfaceInterpolation::makeWeights() const
         }
     }
 
-    surfaceScalarField::Boundary& wBf =
+    surfaceScalarField::BoundaryField& wBf =
         weights.boundaryFieldRef();
 
     forAll(mesh_.boundary(), patchi)
@@ -251,7 +251,7 @@ void Foam::surfaceInterpolation::makeDeltaCoeffs() const
         deltaCoeffs[facei] = 1.0/mag(C[neighbour[facei]] - C[owner[facei]]);
     }
 
-    surfaceScalarField::Boundary& deltaCoeffsBf =
+    surfaceScalarField::BoundaryField& deltaCoeffsBf =
         deltaCoeffs.boundaryFieldRef();
 
     forAll(deltaCoeffsBf, patchi)
@@ -317,7 +317,7 @@ void Foam::surfaceInterpolation::makeNonOrthDeltaCoeffs() const
         nonOrthDeltaCoeffs[facei] = 1.0/max(unitArea & delta, 0.05*mag(delta));
     }
 
-    surfaceScalarField::Boundary& nonOrthDeltaCoeffsBf =
+    surfaceScalarField::BoundaryField& nonOrthDeltaCoeffsBf =
         nonOrthDeltaCoeffs.boundaryFieldRef();
 
     forAll(nonOrthDeltaCoeffsBf, patchi)
@@ -376,7 +376,7 @@ void Foam::surfaceInterpolation::makeNonOrthCorrectionVectors() const
     // and calculated consistently with internal corrections for
     // coupled patches
 
-    surfaceVectorField::Boundary& corrVecsBf =
+    surfaceVectorField::BoundaryField& corrVecsBf =
         corrVecs.boundaryFieldRef();
 
     forAll(corrVecsBf, patchi)

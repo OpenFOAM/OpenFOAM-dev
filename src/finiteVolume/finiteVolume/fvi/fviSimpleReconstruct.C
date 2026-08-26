@@ -81,8 +81,8 @@ reconstruct
         rf[nei] -= (Cf[facei] - C[nei])*ssf[facei];
     }
 
-    const typename SurfaceField<Type>::
-    Boundary& bsf = ssf.boundaryField();
+    const typename SurfaceField<Type>::BoundaryField& bsf =
+        ssf.boundaryField();
 
     forAll(bsf, patchi)
     {

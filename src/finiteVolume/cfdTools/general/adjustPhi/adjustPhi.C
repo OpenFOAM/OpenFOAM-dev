@@ -44,7 +44,7 @@ bool Foam::adjustPhi
         scalar fixedMassOut = 0.0;
         scalar adjustableMassOut = 0.0;
 
-        surfaceScalarField::Boundary& bphi = phi.boundaryFieldRef();
+        surfaceScalarField::BoundaryField& bphi = phi.boundaryFieldRef();
 
         forAll(bphi, patchi)
         {

@@ -60,7 +60,7 @@ Foam::MulticomponentThermo<BaseThermo>::volScalarFieldPropertyi
         psi[celli] = (thermo.*psiMethod)(args[celli] ...);
     }
 
-    volScalarField::Boundary& psiBf = psi.boundaryFieldRef();
+    volScalarField::BoundaryField& psiBf = psi.boundaryFieldRef();
 
     forAll(psiBf, patchi)
     {

@@ -211,7 +211,7 @@ void LamBremhorstKE::correct()
     tgradU.clear();
 
     // Update epsilon and G at the wall
-    epsilon_.boundaryFieldRef().updateCoeffs();
+    epsilon_.boundaryRef().updateCoeffs();
 
     const volScalarField Rt(this->Rt());
     const volScalarField fMu(this->fMu(Rt));
@@ -228,7 +228,7 @@ void LamBremhorstKE::correct()
     );
 
     epsEqn.ref().relax();
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryRef());
     solve(epsEqn);
     boundEpsilon();
 

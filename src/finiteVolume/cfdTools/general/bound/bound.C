@@ -53,7 +53,7 @@ bool Foam::bound(volScalarField& vsf, const dimensionedScalar& min)
             min.value()
         );
 
-        volScalarField::Boundary& bsf = vsf.boundaryFieldRef();
+        volScalarField::BoundaryField& bsf = vsf.boundaryFieldRef();
         forAll(bsf, patchi)
         {
             bsf[patchi] == max

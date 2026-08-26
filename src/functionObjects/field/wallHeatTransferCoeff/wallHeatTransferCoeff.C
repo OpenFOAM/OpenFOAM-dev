@@ -194,7 +194,7 @@ bool Foam::functionObjects::wallHeatTransferCoeff::write()
 
     const fvPatchList& patches = mesh_.boundary();
 
-    const surfaceScalarField::Boundary& magSf =
+    const surfaceScalarField::BoundaryField& magSf =
         mesh_.magSf().boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)

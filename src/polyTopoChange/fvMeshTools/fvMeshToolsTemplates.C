@@ -47,7 +47,7 @@ void Foam::fvMeshTools::setPatchFields
 
         if (GeoField::Mesh::geometryFields.found(field.name())) continue;
 
-        typename GeoField::Boundary& bfield = field.boundaryFieldRef();
+        typename GeoField::BoundaryField& bfield = field.boundaryFieldRef();
 
         if
         (

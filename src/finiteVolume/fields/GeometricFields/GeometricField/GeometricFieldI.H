@@ -56,6 +56,15 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::primitiveField() const
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 inline const typename
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Boundary&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::boundary() const
+{
+    return boundaryField_;
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+inline const typename
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::BoundaryField&
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::boundaryField() const
 {
     return boundaryField_;

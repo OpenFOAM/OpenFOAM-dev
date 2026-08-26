@@ -315,7 +315,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             surfaceScalarField::Boundary phib
             (
                 surfaceScalarField::Internal::null(),
-                phi.boundaryField()
+                phi.boundary()
             );
             phib = 0;
 
@@ -330,7 +330,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
             setSnGrad<fixedFluxPressureFvPatchScalarField>
             (
-                p_rgh.boundaryFieldRef(),
+                p_rgh.boundaryRef(),
                 (
                     phiHbyA.boundaryField() - phib
                 )/(mesh.magSf().boundaryField()*rAf.boundaryField())

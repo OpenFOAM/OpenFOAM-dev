@@ -80,16 +80,16 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
         );
     }
 
-    volScalarField::Boundary& pBf = this->p_.boundaryFieldRef();
-    volScalarField::Boundary& TBf = this->T_.boundaryFieldRef();
-    volScalarField::Boundary& TuBf = this->Tu_.boundaryFieldRef();
-    volScalarField::Boundary& CpBf = this->Cp_.boundaryFieldRef();
-    volScalarField::Boundary& CvBf = this->Cv_.boundaryFieldRef();
-    volScalarField::Boundary& psiBf = this->psi_.boundaryFieldRef();
-    volScalarField::Boundary& heBf = this->he().boundaryFieldRef();
-    volScalarField::Boundary& heuBf = this->heu().boundaryFieldRef();
-    volScalarField::Boundary& muBf = this->mu_.boundaryFieldRef();
-    volScalarField::Boundary& kappaBf = this->kappa_.boundaryFieldRef();
+    volScalarField::BoundaryField& pBf = this->p_.boundaryFieldRef();
+    volScalarField::BoundaryField& TBf = this->T_.boundaryFieldRef();
+    volScalarField::BoundaryField& TuBf = this->Tu_.boundaryFieldRef();
+    volScalarField::BoundaryField& CpBf = this->Cp_.boundaryFieldRef();
+    volScalarField::BoundaryField& CvBf = this->Cv_.boundaryFieldRef();
+    volScalarField::BoundaryField& psiBf = this->psi_.boundaryFieldRef();
+    volScalarField::BoundaryField& heBf = this->he().boundaryFieldRef();
+    volScalarField::BoundaryField& heuBf = this->heu().boundaryFieldRef();
+    volScalarField::BoundaryField& muBf = this->mu_.boundaryFieldRef();
+    volScalarField::BoundaryField& kappaBf = this->kappa_.boundaryFieldRef();
 
     forAll(TBf, patchi)
     {

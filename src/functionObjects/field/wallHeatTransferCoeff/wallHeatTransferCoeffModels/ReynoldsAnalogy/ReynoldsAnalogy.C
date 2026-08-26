@@ -88,7 +88,7 @@ Foam::wallHeatTransferCoeffModels::ReynoldsAnalogy::htcByRhoCp
 ) const
 {
     tmp<surfaceVectorField> ttau(this->tau(mmtm, mesh_));
-    const surfaceVectorField::Boundary& tauBf = ttau.ref().boundaryField();
+    const surfaceVectorField::BoundaryField& tauBf = ttau.ref().boundaryField();
 
     // Create temporary field for heat transfer coefficient
     tmp<volScalarField> thtcByRhoCp
@@ -101,7 +101,7 @@ Foam::wallHeatTransferCoeffModels::ReynoldsAnalogy::htcByRhoCp
         )
     );
 
-    volScalarField::Boundary& thtcByRhoCpBf =
+    volScalarField::BoundaryField& thtcByRhoCpBf =
         thtcByRhoCp.ref().boundaryFieldRef();
 
     forAll(thtcByRhoCpBf, patchi)

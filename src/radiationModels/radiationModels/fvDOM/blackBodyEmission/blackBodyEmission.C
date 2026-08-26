@@ -253,7 +253,7 @@ Foam::radiationModels::blackBodyEmission::EbDeltaLambdaT
             Ebif[i] *= fLambdaT(band[1]*T[i]) - fLambdaT(band[0]*T[i]);
         }
 
-        volScalarField::Boundary& EbBf = Eb.ref().boundaryFieldRef();
+        volScalarField::BoundaryField& EbBf = Eb.ref().boundaryFieldRef();
 
         forAll(EbBf, patchi)
         {

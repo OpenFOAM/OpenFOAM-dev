@@ -165,7 +165,7 @@ qZeta::qZeta
             IOobject::AUTO_WRITE
         ),
         sqrt(max(k_, kMin_)),
-        k_.boundaryField().types()
+        k_.boundary().types()
     ),
 
     zeta_
@@ -179,7 +179,7 @@ qZeta::qZeta
             IOobject::AUTO_WRITE
         ),
         epsilon_/(2.0*q_),
-        epsilon_.boundaryField().types()
+        epsilon_.boundary().types()
     )
 {
     boundZeta();

@@ -392,7 +392,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
     tgradU.clear();
 
     // Update epsilon and G at the wall
-    epsilon_.boundaryFieldRef().updateCoeffs();
+    epsilon_.boundaryRef().updateCoeffs();
 
     volInternalScalarField magU(mag(U));
     volInternalScalarField magU3(pow3(magU));
@@ -413,7 +413,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
 
     epsEqn.ref().relax();
     fvConstraints.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
     boundEpsilon();

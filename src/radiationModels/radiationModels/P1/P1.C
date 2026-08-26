@@ -242,7 +242,7 @@ void Foam::radiationModels::P1::calculate()
       - 4*e_*physicoChemical::sigma*pow4(T_) - E_
     );
 
-    volScalarField::Boundary& qrBf = qr_.boundaryFieldRef();
+    volScalarField::BoundaryField& qrBf = qr_.boundaryFieldRef();
 
     // Calculate radiative heat flux on boundaries.
     forAll(mesh_.boundary(), patchi)

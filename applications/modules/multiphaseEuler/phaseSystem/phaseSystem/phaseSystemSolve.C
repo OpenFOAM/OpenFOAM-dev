@@ -442,7 +442,7 @@ void Foam::phaseSystem::solve
                             alpha,
                             "div(phi," + alpha.name() + ')'
                         ),
-                        phase.alphaPhi()().boundaryField().types()
+                        phase.alphaPhi()().boundary().types()
                     )
                 );
 
@@ -517,14 +517,14 @@ void Foam::phaseSystem::solve
                         (
                             IOobject::groupName("alphaPhiBD", phase.name()),
                             upwind<scalar>(mesh_, phase.phi()()).flux(alpha),
-                            phase.alphaPhi()().boundaryField().types()
+                            phase.alphaPhi()().boundary().types()
                         )
                     );
 
-                    const surfaceScalarField::Boundary& alphaPhiBf =
+                    const surfaceScalarField::BoundaryField& alphaPhiBf =
                         alphaPhi.boundaryField();
 
-                    surfaceScalarField::Boundary& alphaPhiBDBf =
+                    surfaceScalarField::BoundaryField& alphaPhiBDBf =
                         alphaPhiBDs[movingPhasei].boundaryFieldRef();
 
                     // For non-coupled boundaries

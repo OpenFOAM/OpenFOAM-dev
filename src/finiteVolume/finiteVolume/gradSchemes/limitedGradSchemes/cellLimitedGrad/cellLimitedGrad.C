@@ -99,7 +99,7 @@ void Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     }
 
 
-    const typename VolField<Type>::Boundary& bsf =
+    const typename VolField<Type>::BoundaryField& bsf =
         vf.boundaryField();
 
     forAll(bsf, patchi)

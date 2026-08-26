@@ -76,7 +76,7 @@ Foam::fvMotionSolvers::velocityComponentLaplacian::velocityComponentLaplacian
         ),
         fvMotionSolver::mesh(),
         dimensionedScalar(pointMotionU_.dimensions(), 0),
-        cellMotionBoundaryTypes<scalar>(pointMotionU_.boundaryField())
+        cellMotionBoundaryTypes<scalar>(pointMotionU_.boundary())
     ),
     diffusivityType_(dict.lookup("diffusivity")),
     diffusivityPtr_
@@ -112,7 +112,7 @@ Foam::fvMotionSolvers::velocityComponentLaplacian::newPoints()
     movePoints(mesh().points());
 
     diffusivityPtr_->correct();
-    pointMotionU_.boundaryFieldRef().updateCoeffs();
+    pointMotionU_.boundaryRef().updateCoeffs();
 
     Foam::solve
     (

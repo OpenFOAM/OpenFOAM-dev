@@ -173,7 +173,7 @@ void Foam::pointMeshMovers::displacementPoints0::mapMesh(const polyMeshMap& map)
     // The processor boundaries may have changed, so we need to update the
     // boundary field. There is no data in this field, so we don't need to map
     // anything. We can just reset it to a freshly created calculated field.
-    points0_.boundaryFieldRef().reset
+    points0_.boundaryRef().reset
     (
         pointVectorField::Boundary
         (
@@ -193,7 +193,7 @@ void Foam::pointMeshMovers::displacementPoints0::distribute
     map.distributePointData(points0_.primitiveFieldRef());
 
     // See above
-    points0_.boundaryFieldRef().reset
+    points0_.boundaryRef().reset
     (
         pointVectorField::Boundary
         (

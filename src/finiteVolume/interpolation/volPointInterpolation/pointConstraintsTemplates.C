@@ -92,7 +92,7 @@ void Foam::pointConstraints::setPatchFields
 )
 {
     typename PointField<Type>::
-        Boundary& pfbf = pf.boundaryFieldRef();
+        BoundaryField& pfbf = pf.boundaryFieldRef();
 
     forAll(pfbf, patchi)
     {

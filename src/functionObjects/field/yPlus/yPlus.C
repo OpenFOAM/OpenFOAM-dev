@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,18 +78,18 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
         )
     );
 
-    volScalarField::Boundary& yPlusBf = tyPlus.ref().boundaryFieldRef();
+    volScalarField::BoundaryField& yPlusBf = tyPlus.ref().boundaryFieldRef();
 
-    const volScalarField::Boundary& d = nearWallDist::New(mesh_).y();
+    const volScalarField::BoundaryField& d = nearWallDist::New(mesh_).y();
 
     const tmp<volScalarField> tnut = turbModel.nut();
-    const volScalarField::Boundary& nutBf = tnut().boundaryField();
+    const volScalarField::BoundaryField& nutBf = tnut().boundaryField();
 
     const tmp<volScalarField> tnuEff = turbModel.nuEff();
-    const volScalarField::Boundary& nuEffBf = tnuEff().boundaryField();
+    const volScalarField::BoundaryField& nuEffBf = tnuEff().boundaryField();
 
     const tmp<volScalarField> tnu = turbModel.nu();
-    const volScalarField::Boundary& nuBf = tnu().boundaryField();
+    const volScalarField::BoundaryField& nuBf = tnu().boundaryField();
 
         const fvPatchList& patches = mesh_.boundary();
 
@@ -200,7 +200,7 @@ bool Foam::functionObjects::yPlus::write()
             IOobject::groupName(type(), phaseName_)
         );
 
-    const volScalarField::Boundary& yPlusBf = yPlus.boundaryField();
+    const volScalarField::BoundaryField& yPlusBf = yPlus.boundaryField();
     const fvPatchList& patches = mesh_.boundary();
 
     forAll(patches, patchi)

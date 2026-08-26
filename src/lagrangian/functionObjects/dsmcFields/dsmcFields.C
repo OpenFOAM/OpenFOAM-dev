@@ -217,7 +217,7 @@ bool Foam::functionObjects::dsmcFields::write()
             physicoChemical::k.value()*rhoNMean*translationalT
         );
 
-        volScalarField::Boundary& pBf = p.boundaryFieldRef();
+        volScalarField::BoundaryField& pBf = p.boundaryFieldRef();
 
         forAll(mesh_.poly().boundary(), i)
         {

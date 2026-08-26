@@ -76,7 +76,7 @@ void Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
     }
 
 
-    const volScalarField::Boundary& bsf = vsf.boundaryField();
+    const volScalarField::BoundaryField& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -211,7 +211,7 @@ void Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
     }
 
 
-    const volVectorField::Boundary& bsf = vvf.boundaryField();
+    const volVectorField::BoundaryField& bsf = vvf.boundaryField();
 
     forAll(bsf, patchi)
     {

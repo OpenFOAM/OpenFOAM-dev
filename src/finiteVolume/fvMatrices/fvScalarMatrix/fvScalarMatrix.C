@@ -82,7 +82,7 @@ Foam::fvMatrix<Foam::scalar>::solver
                 *this,
                 boundaryCoeffs_,
                 internalCoeffs_,
-                psi_.boundaryField().scalarInterfaces(),
+                psi_.boundary().scalarInterfaces(),
                 solverControls
             )
         )
@@ -165,7 +165,7 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::solveSegregated
         *this,
         boundaryCoeffs_,
         internalCoeffs_,
-        psi_.boundaryField().scalarInterfaces(),
+        psi_.boundary().scalarInterfaces(),
         solverControls
     )->solve(psi.primitiveFieldRef(), totalSource);
 
@@ -197,7 +197,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMatrix<Foam::scalar>::residual() const
             psi_.primitiveField(),
             source_ - boundaryDiag*psi_.primitiveField(),
             boundaryCoeffs_,
-            psi_.boundaryField().scalarInterfaces(),
+            psi_.boundary().scalarInterfaces(),
             0
         )
     );

@@ -32,8 +32,7 @@ License
 template<class Type>
 Foam::wordList Foam::fvMotionSolver::cellMotionBoundaryTypes
 (
-    const typename PointField<Type>::
-    Boundary& pmUbf
+    const typename PointField<Type>::Boundary& pmUbf
 ) const
 {
     wordList cmUbf = pmUbf.types();

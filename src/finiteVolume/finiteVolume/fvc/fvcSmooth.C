@@ -252,7 +252,7 @@ void Foam::fvc::sweep
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
     const surfaceVectorField& Cf = mesh.Cf();
-    const surfaceVectorField::Boundary& CfBf = mesh.Cf().boundaryField();
+    const surfaceVectorField::BoundaryField& CfBf = mesh.Cf().boundaryField();
 
     forAll(owner, facei)
     {

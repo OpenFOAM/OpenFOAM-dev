@@ -281,31 +281,31 @@ public:
             // References to the boundary fields for surface data collection
 
                 //- Return non-const heat flux boundary field reference
-                inline volScalarField::Boundary& qBF();
+                inline volScalarField::BoundaryField& qBF();
 
                 //- Return non-const force density at boundary field reference
-                inline volVectorField::Boundary& fDBF();
+                inline volVectorField::BoundaryField& fDBF();
 
                 //- Return non-const number density boundary field reference
-                inline volScalarField::Boundary& rhoNBF();
+                inline volScalarField::BoundaryField& rhoNBF();
 
                 //- Return non-const mass density boundary field reference
-                inline volScalarField::Boundary& rhoMBF();
+                inline volScalarField::BoundaryField& rhoMBF();
 
                 //- Return non-const linear kinetic energy density boundary
                 //  field reference
-                inline volScalarField::Boundary& linearKEBF();
+                inline volScalarField::BoundaryField& linearKEBF();
 
                 //- Return non-const internal energy density boundary field
                 // reference
-                inline volScalarField::Boundary& internalEBF();
+                inline volScalarField::BoundaryField& internalEBF();
 
                 //- Return non-const internal degree of freedom density boundary
                 //  field reference
-                inline volScalarField::Boundary& iDofBF();
+                inline volScalarField::BoundaryField& iDofBF();
 
                 //- Return non-const momentum density boundary field reference
-                inline volVectorField::Boundary& momentumBF();
+                inline volVectorField::BoundaryField& momentumBF();
 
 
             // References to the macroscopic fields

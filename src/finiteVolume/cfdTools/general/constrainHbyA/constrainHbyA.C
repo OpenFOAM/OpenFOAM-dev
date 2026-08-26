@@ -37,7 +37,7 @@ void Foam::constrainHbyA
     const volScalarField& p
 )
 {
-    volVectorField::Boundary& HbyAbf = HbyA.boundaryFieldRef();
+    volVectorField::BoundaryField& HbyAbf = HbyA.boundaryFieldRef();
 
     forAll(HbyAbf, patchi)
     {
@@ -63,7 +63,7 @@ void Foam::constrainPhiHbyA
     const volScalarField& p
 )
 {
-    surfaceScalarField::Boundary& phiHbyAbf = phiHbyA.boundaryFieldRef();
+    surfaceScalarField::BoundaryField& phiHbyAbf = phiHbyA.boundaryFieldRef();
 
     forAll(phiHbyAbf, patchi)
     {
@@ -152,9 +152,9 @@ Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhid
 )
 {
     surfaceScalarField& phid = tphid.ref();
-    surfaceScalarField::Boundary& phidBf = phid.boundaryFieldRef();
+    surfaceScalarField::BoundaryField& phidBf = phid.boundaryFieldRef();
 
-    const volScalarField::Boundary& pBf = p.boundaryField();
+    const volScalarField::BoundaryField& pBf = p.boundaryField();
 
     forAll(phidBf, patchi)
     {

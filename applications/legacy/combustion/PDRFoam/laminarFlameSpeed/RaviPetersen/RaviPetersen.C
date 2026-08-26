@@ -322,7 +322,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
         Su0[celli] = Su0pTphi(p[celli], Tu[celli], Phi[celli]);
     }
 
-    volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
+    volScalarField::BoundaryField& Su0Bf = Su0.boundaryFieldRef();
 
     forAll(Su0Bf, patchi)
     {

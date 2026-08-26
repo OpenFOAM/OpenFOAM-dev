@@ -111,7 +111,7 @@ Foam::wallHeatTransferCoeffModels::kappaEff::htcByRhoCp
         )
     );
 
-    volScalarField::Boundary& thtcByRhoCpBf =
+    volScalarField::BoundaryField& thtcByRhoCpBf =
         thtcByRhoCp.ref().boundaryFieldRef();
 
     forAllConstIter(labelHashSet, patches, iter)

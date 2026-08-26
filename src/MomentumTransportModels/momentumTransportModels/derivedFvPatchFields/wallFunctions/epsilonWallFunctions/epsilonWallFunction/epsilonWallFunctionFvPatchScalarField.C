@@ -119,7 +119,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffsMaster()
             )
         );
 
-    const volScalarField::Boundary& epsilonBf = epsilon.boundaryField();
+    const volScalarField::BoundaryField& epsilonBf = epsilon.boundaryField();
 
     // Make all processors build the near wall distances
     mtm.yb();

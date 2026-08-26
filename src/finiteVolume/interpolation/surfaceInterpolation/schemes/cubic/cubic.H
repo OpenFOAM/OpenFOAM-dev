@@ -168,8 +168,8 @@ public:
                 );
             }
 
-            typename SurfaceField<Type>::
-                Boundary& sfCorrbf = sfCorr.boundaryFieldRef();
+            typename SurfaceField<Type>::BoundaryField& sfCorrbf =
+                sfCorr.boundaryFieldRef();
 
             forAll(sfCorrbf, pi)
             {

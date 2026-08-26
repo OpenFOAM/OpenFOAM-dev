@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    volScalarField::Boundary& postRefLevelBf =
+    volScalarField::BoundaryField& postRefLevelBf =
         postRefLevel.boundaryFieldRef();
 
     // For volScalarField: set boundary values to same as cell.

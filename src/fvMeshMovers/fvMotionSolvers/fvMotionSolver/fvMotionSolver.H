@@ -59,8 +59,7 @@ protected:
         template<class Type>
         wordList cellMotionBoundaryTypes
         (
-            const typename PointField<Type>::
-            Boundary& pmUbf
+            const typename PointField<Type>::Boundary& pmUbf
         ) const;
 
 

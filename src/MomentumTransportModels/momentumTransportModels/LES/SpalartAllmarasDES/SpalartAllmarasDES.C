@@ -340,7 +340,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicMomentumTransportModel>::k() const
     );
 
     const fvPatchList& patches = this->mesh_.boundary();
-    volScalarField::Boundary& kBf = tk.ref().boundaryFieldRef();
+    volScalarField::BoundaryField& kBf = tk.ref().boundaryFieldRef();
 
     forAll(patches, patchi)
     {

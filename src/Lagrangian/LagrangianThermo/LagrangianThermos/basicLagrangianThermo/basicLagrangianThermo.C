@@ -42,7 +42,7 @@ namespace Foam
 
 Foam::wordList Foam::basicLagrangianThermo::eBoundaryTypes() const
 {
-    const LagrangianScalarDynamicField::Boundary& Tbf = T().boundaryField();
+    const LagrangianScalarDynamicField::Boundary& Tbf = T().boundary();
 
     wordList eBt = Tbf.types();
 
@@ -59,7 +59,8 @@ Foam::wordList Foam::basicLagrangianThermo::eBoundaryTypes() const
 
 Foam::wordList Foam::basicLagrangianThermo::eBoundaryBaseTypes() const
 {
-    const LagrangianScalarDynamicField::Boundary& Tbf = T().boundaryField();
+    const LagrangianScalarDynamicField::BoundaryField& Tbf =
+        T().boundaryField();
 
     wordList eBbt(Tbf.size(), word::null);
 

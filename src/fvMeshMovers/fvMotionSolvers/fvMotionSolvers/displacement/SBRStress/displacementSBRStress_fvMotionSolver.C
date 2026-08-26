@@ -86,7 +86,7 @@ Foam::fvMotionSolvers::displacementSBRStress::displacementSBRStress
             pointDisplacement().dimensions(),
             Zero
         ),
-        cellMotionBoundaryTypes<vector>(pointDisplacement().boundaryField())
+        cellMotionBoundaryTypes<vector>(pointDisplacement().boundary())
     ),
     diffusivityType_(dict.lookup("diffusivity")),
     diffusivityPtr_
@@ -122,7 +122,7 @@ Foam::fvMotionSolvers::displacementSBRStress::newPoints()
     movePoints(mesh().points());
 
     diffusivityPtr_->correct();
-    pointDisplacement_.boundaryFieldRef().updateCoeffs();
+    pointDisplacement_.boundaryRef().updateCoeffs();
 
     surfaceScalarField Df(diffusivityPtr_->operator()());
 

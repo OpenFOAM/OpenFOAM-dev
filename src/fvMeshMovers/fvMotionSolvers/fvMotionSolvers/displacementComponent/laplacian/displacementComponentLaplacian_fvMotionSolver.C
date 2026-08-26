@@ -78,7 +78,7 @@ displacementComponentLaplacian
         ),
         fvMotionSolver::mesh(),
         dimensionedScalar(pointDisplacement_.dimensions(), 0),
-        cellMotionBoundaryTypes<scalar>(pointDisplacement_.boundaryField())
+        cellMotionBoundaryTypes<scalar>(pointDisplacement_.boundary())
     ),
     pointLocation_(nullptr),
     diffusivityType_(dict.lookup("diffusivity")),
@@ -139,7 +139,7 @@ displacementComponentLaplacian
                 << " to be used for boundary conditions on points."
                 << nl
                 << "Boundary conditions:"
-                << pointLocation_().boundaryField().types() << endl;
+                << pointLocation_().boundary().types() << endl;
         }
     }
 }
@@ -173,7 +173,7 @@ Foam::fvMotionSolvers::displacementComponentLaplacian::newPoints()
     movePoints(mesh().points());
 
     diffusivityPtr_->correct();
-    pointDisplacement_.boundaryFieldRef().updateCoeffs();
+    pointDisplacement_.boundaryRef().updateCoeffs();
 
     Foam::solve
     (

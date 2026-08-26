@@ -229,7 +229,7 @@ bool Foam::fvMeshStitcher::loadPolyFacesBf
 
             polyFacesBf.reset
             (
-                surfaceLabelField(polyFacesBfIO, mesh_).boundaryField()
+                surfaceLabelField(polyFacesBfIO, mesh_).boundary()
             );
 
             loaded = true;
@@ -268,7 +268,7 @@ bool Foam::fvMeshStitcher::loadPolyFacesBf
             new surfaceLabelField::Boundary
             (
                 surfaceLabelField::null(),
-                surfaceLabelField(io, ncmwFvp.nbrMesh()).boundaryField()
+                surfaceLabelField(io, ncmwFvp.nbrMesh()).boundary()
             )
         );
     }
@@ -356,11 +356,9 @@ void Foam::fvMeshStitcher::getOrigNbrBfs
         }
     }
     origFaces.boundaryFieldRef() =
-        origFaces.boundaryField().boundaryNeighbourField();
-    origSf.boundaryFieldRef() =
-        origSf.boundaryField().boundaryNeighbourField();
-    origCf.boundaryFieldRef() =
-        origCf.boundaryField().boundaryNeighbourField();
+        origFaces.boundary().boundaryNeighbourField();
+    origSf.boundaryFieldRef() = origSf.boundary().boundaryNeighbourField();
+    origCf.boundaryFieldRef() = origCf.boundary().boundaryNeighbourField();
 
     // Communicate orig properties across mapped walls
     forAll(mesh_.boundary(), patchi)
@@ -438,19 +436,19 @@ void Foam::fvMeshStitcher::getOrigNbrBfs
         new surfaceLabelField::Boundary
         (
             surfaceLabelField::null(),
-            origFaces.boundaryField()
+            origFaces.boundary()
         );
     tOrigSfNbrBf =
         new surfaceVectorField::Boundary
         (
             surfaceVectorField::null(),
-            origSf.boundaryField()
+            origSf.boundary()
         );
     tOrigCfNbrBf =
         new surfaceVectorField::Boundary
         (
             surfaceVectorField::null(),
-            origCf.boundaryField()
+            origCf.boundary()
         );
 }
 
@@ -1357,7 +1355,7 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
     if (debug)
     {
         const surfaceLabelField::Boundary& changedBf =
-            tChanged->boundaryField();
+            tChanged->boundary();
 
         const surfaceLabelField::Boundary changedNbrBf
         (
@@ -1469,8 +1467,8 @@ void Foam::fvMeshStitcher::intersect
         ncb.ownerOrigBoundaryMeshEdges();
 
     // Alias the boundary geometry fields
-    surfaceVectorField::Boundary& SfBf = SfSf.boundaryFieldRef();
-    surfaceVectorField::Boundary& CfBf = CfSf.boundaryFieldRef();
+    surfaceVectorField::Boundary& SfBf = SfSf.boundaryRef();
+    surfaceVectorField::Boundary& CfBf = CfSf.boundaryRef();
 
     // Create storage for and initialise the edge parts of source patches
     List<List<part>> patchEdgeParts(mesh_.boundary().size());
@@ -1870,9 +1868,9 @@ bool Foam::fvMeshStitcher::connectThis
             surfaceScalarField::Boundary mfe
             (
                 surfaceScalarField::Internal::null(),
-                mesh_.phi().boundaryField()
+                mesh_.phi().boundary()
             );
-            mfe += mesh_.phi().boundaryField().boundaryNeighbourField();
+            mfe += mesh_.phi().boundary().boundaryNeighbourField();
 
             // Determine the number of non-processor patches
             label nNonProcPatches = 0;
@@ -2025,7 +2023,7 @@ void Foam::fvMeshStitcher::postUnconformSurfaceFields<Foam::vector>()
     {
         conformedFvsPatchField<vector>::unconform
         (
-            fields[i].boundaryFieldRefNoStoreOldTimes()
+            fields[i].boundaryRefNoStoreOldTimes()
         );
     }
 }

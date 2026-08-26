@@ -215,7 +215,8 @@ void Foam::functionObjects::cloudBoundaryCollisionFlux::postCrossFaces
     LagrangianSubScalarSubField q(subMesh.sub(qPtr_()));
     q += this->q(fraction, -1);
 
-    const surfaceScalarField::Boundary& magSfb = mesh().magSf().boundaryField();
+    const surfaceScalarField::BoundaryField& magSfb =
+        mesh().magSf().boundaryField();
 
     forAll(subMesh, subi)
     {

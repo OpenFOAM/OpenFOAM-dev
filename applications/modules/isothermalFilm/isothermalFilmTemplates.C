@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ void Foam::solvers::isothermalFilm::constrainField
     FieldType& field
 ) const
 {
-    typename FieldType::Boundary& fieldBf = field.boundaryFieldRef();
+    typename FieldType::BoundaryField& fieldBf = field.boundaryFieldRef();
 
     forAll(wallPatchIDs, i)
     {

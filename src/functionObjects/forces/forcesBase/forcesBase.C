@@ -794,7 +794,7 @@ void Foam::functionObjects::forcesBase::calcForcesMoments(const vector& CofR)
     {
         const volVectorField& fD = obr_.lookupObject<volVectorField>(fDName_);
 
-        const surfaceVectorField::Boundary& Sfb =
+        const surfaceVectorField::BoundaryField& Sfb =
             mesh_.Sf().boundaryField();
 
         forAllConstIter(labelHashSet, patchSet_, iter)
@@ -830,14 +830,15 @@ void Foam::functionObjects::forcesBase::calcForcesMoments(const vector& CofR)
     {
         const volScalarField& p = obr_.lookupObject<volScalarField>(pName_);
 
-        const surfaceVectorField::Boundary& Sfb =
+        const surfaceVectorField::BoundaryField& Sfb =
             mesh_.Sf().boundaryField();
 
-        const surfaceScalarField::Boundary& magSfb =
+        const surfaceScalarField::BoundaryField& magSfb =
             mesh_.magSf().boundaryField();
 
         tmp<surfaceVectorField> tdevTau = devTau();
-        const surfaceVectorField::Boundary& devTaub = tdevTau().boundaryField();
+        const surfaceVectorField::BoundaryField& devTaub =
+            tdevTau().boundaryField();
 
         // Scale pRef by density for incompressible simulations
         const scalar pRef = pRef_/rho(p);

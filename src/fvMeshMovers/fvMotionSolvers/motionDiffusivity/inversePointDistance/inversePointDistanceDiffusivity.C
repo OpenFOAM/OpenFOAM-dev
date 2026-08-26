@@ -175,7 +175,7 @@ Foam::inversePointDistanceDiffusivity::operator()() const
     }
 
 
-    surfaceScalarField::Boundary& faceDiffusivityBf =
+    surfaceScalarField::BoundaryField& faceDiffusivityBf =
         faceDiffusivity.boundaryFieldRef();
 
     forAll(faceDiffusivityBf, patchi)

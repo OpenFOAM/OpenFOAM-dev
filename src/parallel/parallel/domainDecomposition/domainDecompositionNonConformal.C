@@ -486,7 +486,7 @@ Foam::domainDecomposition::nonConformalMappedWallProcOffsets
 {
     PtrList<labelListList> result(completeMesh().boundary().size());
 
-    const surfaceLabelField::Boundary& polyFacesBf =
+    const surfaceLabelField::BoundaryField& polyFacesBf =
         completeMesh().polyFacesBf();
 
     forAll(completeMesh().boundary(), ncmwPatchi)
@@ -506,7 +506,7 @@ Foam::domainDecomposition::nonConformalMappedWallProcOffsets
         const label nbrNcmwPatchi =
             nbrCompleteMesh.boundary()[ncmwFvp.nbrPatchName()].index();
 
-        const surfaceLabelField::Boundary& nbrPolyFacesBf =
+        const surfaceLabelField::BoundaryField& nbrPolyFacesBf =
             nbrCompleteMesh.polyFacesBf();
 
         result.set
@@ -563,7 +563,7 @@ void Foam::domainDecomposition::decomposeNonConformalCyclicAddressing
     List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
 ) const
 {
-    const surfaceLabelField::Boundary& polyFacesBf =
+    const surfaceLabelField::BoundaryField& polyFacesBf =
         completeMesh().polyFacesBf();
 
     const nonConformalCyclicFvPatch& nccFvp =
@@ -608,7 +608,7 @@ void Foam::domainDecomposition::decomposeNonConformalMappedWallAddressing
     List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
 ) const
 {
-    const surfaceLabelField::Boundary& polyFacesBf =
+    const surfaceLabelField::BoundaryField& polyFacesBf =
         completeMesh().polyFacesBf();
 
     const nonConformalMappedWallFvPatch& ncmwFvp =
@@ -622,7 +622,7 @@ void Foam::domainDecomposition::decomposeNonConformalMappedWallAddressing
 
     const fvMesh& nbrCompleteMesh = nbrDecomposition.completeMesh();
 
-    const surfaceLabelField::Boundary& nbrPolyFacesBf =
+    const surfaceLabelField::BoundaryField& nbrPolyFacesBf =
         nbrCompleteMesh.polyFacesBf();
 
     const label nbrNcmwPatchi =
@@ -662,7 +662,7 @@ void Foam::domainDecomposition::decomposeNonConformalErrorAddressing
     List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
 ) const
 {
-    const surfaceLabelField::Boundary& polyFacesBf =
+    const surfaceLabelField::BoundaryField& polyFacesBf =
         completeMesh().polyFacesBf();
 
     forAll(polyFacesBf[ncePatchi], ncePatchFacei)
@@ -1223,7 +1223,7 @@ void Foam::domainDecomposition::unconformComplete()
     {
         const fvMesh& procMesh = procMeshes_[proci];
 
-        const surfaceLabelField::Boundary& faceAddressingBf =
+        const surfaceLabelField::BoundaryField& faceAddressingBf =
             procFaceAddressingBf()[proci];
 
         forAll(procMesh.boundary(), procNcPatchi)
@@ -1300,7 +1300,7 @@ void Foam::domainDecomposition::unconformProcs()
     {
         fvMesh& procMesh = procMeshes_[proci];
 
-        const surfaceLabelField::Boundary& faceAddressingBf =
+        const surfaceLabelField::BoundaryField& faceAddressingBf =
             procFaceAddressingBf()[proci];
 
         surfaceLabelField::Boundary polyFacesBf

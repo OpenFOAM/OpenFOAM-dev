@@ -1307,7 +1307,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 
     const fvPatchList& patches = boundary();
 
-    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
+    surfaceScalarField::BoundaryField& phibf = phi.boundaryFieldRef();
 
     forAll(patches, patchi)
     {
@@ -1539,7 +1539,7 @@ void Foam::fvMesh::unconform
     // Set the face geometry
     SfRef() == Sf;
     magSfRef() == max(mag(Sf), dimensionedScalar(dimensions::area, rootVSmall));
-    CRef().boundaryFieldRef() == Cf.boundaryField();
+    CRef().boundaryRef() == Cf.boundary();
     CfRef() == Cf;
 
     // Communicate processor-coupled cell geometry. Cell-centre processor patch
@@ -1562,7 +1562,7 @@ void Foam::fvMesh::unconform
     // sufficient for now.
     if (sync && time().completeCase())
     {
-        volVectorField::Boundary& CBf = CRef().boundaryFieldRef();
+        volVectorField::BoundaryField& CBf = CRef().boundaryFieldRef();
 
         const label nReq = Pstream::nRequests();
 

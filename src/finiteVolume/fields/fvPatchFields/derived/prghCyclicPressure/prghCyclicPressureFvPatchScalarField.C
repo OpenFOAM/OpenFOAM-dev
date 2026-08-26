@@ -148,14 +148,14 @@ void Foam::prghCyclicPressureFvPatchScalarField::updateCoeffs()
     const volScalarField& rhoVf =
         db().lookupObject<volScalarField>
         (cyclicPatch().owner() ? rhoName_ : nbrPf.rhoName_);
-    const volScalarField::Boundary& rhoBf = rhoVf.boundaryField();
-    const surfaceScalarField::Boundary& ghfBf =
+    const volScalarField::BoundaryField& rhoBf = rhoVf.boundaryField();
+    const surfaceScalarField::BoundaryField& ghfBf =
         db().lookupObject<surfaceScalarField>("ghf").boundaryField();
 
     // Pressure solution fields
-    const surfaceScalarField::Boundary& rAUfBf =
+    const surfaceScalarField::BoundaryField& rAUfBf =
         db().lookupObject<surfaceScalarField>("rAUf").boundaryField();
-    const surfaceScalarField::Boundary& phiHbyABf =
+    const surfaceScalarField::BoundaryField& phiHbyABf =
         db().lookupObject<surfaceScalarField>("phiHbyA").boundaryField();
 
     // Delta coefficients for this field

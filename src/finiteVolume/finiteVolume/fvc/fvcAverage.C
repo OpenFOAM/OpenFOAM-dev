@@ -72,8 +72,7 @@ average
        /fvi::surfaceSum(mesh.magSf())().primitiveField()
     );
 
-    typename VolField<Type>::
-    Boundary& bav = av.boundaryFieldRef();
+    typename VolField<Type>::BoundaryField& bav = av.boundaryFieldRef();
 
     forAll(bav, patchi)
     {

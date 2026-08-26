@@ -247,7 +247,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
         Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi);
     }
 
-    volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
+    volScalarField::BoundaryField& Su0Bf = Su0.boundaryFieldRef();
 
     forAll(Su0Bf, patchi)
     {
@@ -289,7 +289,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Su0pTphi
         Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli]);
     }
 
-    volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
+    volScalarField::BoundaryField& Su0Bf = Su0.boundaryFieldRef();
 
     forAll(Su0Bf, patchi)
     {
@@ -336,7 +336,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Ma
         ma[celli] = Ma(phi[celli]);
     }
 
-    volScalarField::Boundary& maBf = ma.boundaryFieldRef();
+    volScalarField::BoundaryField& maBf = ma.boundaryFieldRef();
 
     forAll(maBf, patchi)
     {

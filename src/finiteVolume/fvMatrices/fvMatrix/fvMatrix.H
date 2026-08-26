@@ -398,8 +398,7 @@ public:
             //- Manipulate based on a boundary field
             void boundaryManipulate
             (
-                typename VolField<Type>::
-                    Boundary& values
+                typename VolField<Type>::Boundary& values
             );
 
             //- Construct and return the solver

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,8 +126,7 @@ Foam::extendedCellToFaceStencil::weightedSum
 
     // Boundaries. Either constrained or calculated so assign value
     // directly (instead of nicely using operator==)
-    typename SurfaceField<Type>::
-        Boundary& bSfCorr = sf.boundaryFieldRef();
+    typename SurfaceField<Type>::BoundaryField& bSfCorr = sf.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {

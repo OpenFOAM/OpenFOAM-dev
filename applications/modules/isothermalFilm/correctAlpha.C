@@ -41,14 +41,15 @@ void Foam::solvers::isothermalFilm::constrainFixedFlux
     surfaceScalarField& phip
 )
 {
-    surfaceScalarField::Boundary& pbByAlphaBf = pbByAlphaf.boundaryFieldRef();
+    surfaceScalarField::BoundaryField& pbByAlphaBf =
+        pbByAlphaf.boundaryFieldRef();
 
-    surfaceScalarField::Boundary& pbByAlphaGradRhoBf =
+    surfaceScalarField::BoundaryField& pbByAlphaGradRhoBf =
         pbByAlphaGradRhof.boundaryFieldRef();
 
-    surfaceScalarField::Boundary& phipBf = phip.boundaryFieldRef();
+    surfaceScalarField::BoundaryField& phipBf = phip.boundaryFieldRef();
 
-    const volVectorField::Boundary& UBf = U.boundaryField();
+    const volVectorField::BoundaryField& UBf = U.boundaryField();
 
     forAll(mesh.boundary(), patchi)
     {
