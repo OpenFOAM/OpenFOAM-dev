@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,11 +92,17 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
     const meshBoundarySearch& targetBoundarySearchEngine =
         meshBoundarySearch::New(meshTarget);
 
+    word baseDir(meshSource.time().timePath());
+    if (meshSource.name() != fvMesh::defaultRegion)
+    {
+        baseDir = baseDir/meshSource.name();
+    }
+
     fileNameList cloudDirs
     (
         readDir
         (
-            meshSource.time().timePath()/lagrangian::cloud::prefix,
+            baseDir/lagrangian::cloud::prefix,
             fileType::directory
         )
     );
