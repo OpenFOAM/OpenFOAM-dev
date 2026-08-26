@@ -157,7 +157,7 @@ public:
         //- Lookup and return the patchField of the named field from the
         //  local objectRegistry.
         template<class GeometricField, class Type>
-        const typename GeometricField::Patch& lookupPatchField
+        const typename GeometricField::PatchField& lookupPatchField
         (
             const word& name
         );

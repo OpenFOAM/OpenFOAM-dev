@@ -68,7 +68,7 @@ void Foam::fvPatch::patchInternalField
 
 
 template<class GeometricField, class Type>
-const typename GeometricField::Patch& Foam::fvPatch::patchField
+const typename GeometricField::PatchField& Foam::fvPatch::patchField
 (
     const GeometricField& gf
 ) const
@@ -78,7 +78,7 @@ const typename GeometricField::Patch& Foam::fvPatch::patchField
 
 
 template<class GeometricField, class Type>
-typename GeometricField::Patch& Foam::fvPatch::patchField
+typename GeometricField::PatchField& Foam::fvPatch::patchField
 (
     GeometricField& gf
 ) const
@@ -88,7 +88,7 @@ typename GeometricField::Patch& Foam::fvPatch::patchField
 
 
 template<class GeometricField, class Type>
-const typename GeometricField::Patch& Foam::fvPatch::lookupPatchField
+const typename GeometricField::PatchField& Foam::fvPatch::lookupPatchField
 (
     const word& name
 ) const

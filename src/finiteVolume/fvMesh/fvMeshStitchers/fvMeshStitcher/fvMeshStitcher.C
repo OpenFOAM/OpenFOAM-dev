@@ -2064,7 +2064,7 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
             const label errorPatchi = errorPatchIndices[i];
             const label origPatchi = origPatchIndices[i];
 
-            typename volVectorField::Patch& origUp =
+            typename volVectorField::PatchField& origUp =
                 U.boundaryFieldRefNoStoreOldTimes()[origPatchi];
 
             if

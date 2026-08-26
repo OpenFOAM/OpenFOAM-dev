@@ -293,7 +293,7 @@ void evaluateNonConformalProcessorCyclics(const fvMesh& mesh)
 
         forAll(mesh.boundary(), patchi)
         {
-            typename VolField<Type>::Patch& pf =
+            typename VolField<Type>::PatchField& pf =
                 fields[i].boundaryFieldRef()[patchi];
 
             if (isA<nonConformalProcessorCyclicPolyPatch>(pf.patch().poly()))
@@ -313,7 +313,7 @@ void evaluateNonConformalProcessorCyclics(const fvMesh& mesh)
 
         forAll(mesh.boundary(), patchi)
         {
-            typename VolField<Type>::Patch& pf =
+            typename VolField<Type>::PatchField& pf =
                 fields[i].boundaryFieldRef()[patchi];
 
             if (isA<nonConformalProcessorCyclicPolyPatch>(pf.patch().poly()))

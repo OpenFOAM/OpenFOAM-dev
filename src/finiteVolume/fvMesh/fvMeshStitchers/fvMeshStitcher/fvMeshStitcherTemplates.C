@@ -45,7 +45,7 @@ void Foam::fvMeshStitcher::resizePatchFields()
     {
         forAll(mesh_.boundary(), patchi)
         {
-            typename GeoField<Type>::Patch& pf =
+            typename GeoField<Type>::PatchField& pf =
                 fields[i].boundaryFieldRefNoStoreOldTimes()[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
@@ -143,7 +143,7 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
 template<class Type>
 void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
 {
-    auto evaluate = [](const typename VolField<Type>::Patch& pf)
+    auto evaluate = [](const typename VolField<Type>::PatchField& pf)
     {
         return
             (
@@ -162,7 +162,7 @@ void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
 
         forAll(mesh_.boundary(), patchi)
         {
-            typename VolField<Type>::Patch& pf =
+            typename VolField<Type>::PatchField& pf =
                 fields[i].boundaryFieldRefNoStoreOldTimes()[patchi];
 
             if (evaluate(pf))
@@ -182,7 +182,7 @@ void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
 
         forAll(mesh_.boundary(), patchi)
         {
-            typename VolField<Type>::Patch& pf =
+            typename VolField<Type>::PatchField& pf =
                 fields[i].boundaryFieldRefNoStoreOldTimes()[patchi];
 
             if (evaluate(pf))

@@ -64,25 +64,25 @@ class DimensionedField
 
 public:
 
-    // Public Typedefs
+    // Public Types
 
         //- Value type
-        typedef Type Type_;
+        using Type_ = Type;
 
         //- Geometric mesh type
-        typedef GeoMesh GeoMesh_;
+        using GeoMesh_ = GeoMesh;
 
         //- Base mesh type from which GeoMesh is constructed
-        typedef typename GeoMesh::Mesh Mesh;
+        using Mesh = typename GeoMesh::Mesh;
 
         //- Type of the field from which this DimensionedField is derived
-        typedef PrimitiveField<Type> FieldType;
+        using FieldType = PrimitiveField<Type>;
 
         //- Type of the field from which this DimensionedField is derived
-        typedef PrimitiveField<Type> Base;
+        using Base = PrimitiveField<Type>;
 
         //- Component type of the elements of the field
-        typedef typename PrimitiveField<Type>::cmptType cmptType;
+        using cmptType = typename PrimitiveField<Type>::cmptType;
 
 
 private:

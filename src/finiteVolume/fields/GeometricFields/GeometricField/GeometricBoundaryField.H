@@ -59,16 +59,16 @@ class GeometricBoundaryField
 {
 public:
 
-    // Public Typedefs
+    // Public Types
 
         //- Type of boundary mesh on which this boundary is instantiated
-        typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
+        using BoundaryMesh = typename GeoMesh::BoundaryMesh;
 
         //- Type of the internal field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh, PrimitiveField> Internal;
+        using Internal = DimensionedField<Type, GeoMesh, PrimitiveField>;
 
         //- Type of the patch field of which the Boundary is composed
-        typedef typename GeoMesh::template PatchField<Type> Patch;
+        using PatchField = typename GeoMesh::template PatchField<Type>;
 
 
 private:
@@ -115,12 +115,12 @@ public:
 
         //- Construct from a BoundaryMesh,
         //  reference to the internal field
-        //  and a PtrList<Patch>
+        //  and a PtrList<PatchField>
         GeometricBoundaryField
         (
             const BoundaryMesh&,
             const Internal&,
-            const PtrList<Patch>&
+            const PtrList<PatchField>&
         );
 
         //- Construct as copy setting the reference to the internal field
@@ -222,6 +222,14 @@ public:
         //- Forced assignment to Type
         void operator==(const Type&);
 };
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Ostream& operator<<
+(
+    Ostream&,
+    const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>&
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

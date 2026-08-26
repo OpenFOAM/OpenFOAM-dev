@@ -137,7 +137,7 @@ void NaNGeometricFields(const fvMesh& mesh)
                 field.boundaryFieldRef().set
                 (
                     patchi,
-                    GField::Patch::New
+                    GField::PatchField::New
                     (
                         calculatedFvPatchField<Type>::typeName,
                         mesh.boundary()[patchi],
@@ -147,7 +147,8 @@ void NaNGeometricFields(const fvMesh& mesh)
             }
             else
             {
-                typename GField::Patch& pf = field.boundaryFieldRef()[patchi];
+                typename GField::PatchField& pf =
+                    field.boundaryFieldRef()[patchi];
                 pf.map(pf, setSizeFieldMapper(pf.patch().size()));
             }
 

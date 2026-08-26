@@ -158,7 +158,7 @@ void AddPatchFields
         bfld.set
         (
             insertPatchi,
-            GeoField::Patch::New
+            GeoField::PatchField::New
             (
                 defaultPatchFieldType,
                 fld.mesh().boundary()[insertPatchi],

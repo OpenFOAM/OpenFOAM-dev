@@ -52,7 +52,7 @@ bool reusable(const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf)
                 if
                 (
                     !gbf[patchi].patch().constraint()
-                 && !isA<typename geoField::Patch::Calculated>(gbf[patchi])
+                 && !isA<typename geoField::PatchField::Calculated>(gbf[patchi])
                 )
                 {
                     WarningInFunction

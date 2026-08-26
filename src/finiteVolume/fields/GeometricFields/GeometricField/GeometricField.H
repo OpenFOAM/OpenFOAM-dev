@@ -73,37 +73,37 @@ class GeometricField
 
 public:
 
-    // Public Typedefs
+    // Public Types
 
         //- Value type
-        typedef Type Type_;
+        using Type_ = Type;
 
         //- Geometric mesh type
-        typedef GeoMesh GeoMesh_;
+        using GeoMesh_ = GeoMesh;
 
         //- Base mesh type from which GeoMesh is constructed
-        typedef typename GeoMesh::Mesh Mesh;
+        using Mesh = typename GeoMesh::Mesh;
 
         //- Type of the internal field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh, PrimitiveField> Internal;
+        using Internal = DimensionedField<Type, GeoMesh, PrimitiveField>;
 
         //- Type of the field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh, PrimitiveField> Base;
+        using Base = DimensionedField<Type, GeoMesh, PrimitiveField>;
 
         //- Type of the patch field of which the Boundary is composed
-        typedef typename GeoMesh::template PatchField<Type> Patch;
+        using PatchField = typename GeoMesh::template PatchField<Type>;
 
         //- Type of the boundary field
-        typedef GeometricBoundaryField<Type, GeoMesh, PrimitiveField> Boundary;
+        using Boundary = GeometricBoundaryField<Type, GeoMesh, PrimitiveField>;
 
         //- Type of the field source of which the Sources is composed
-        typedef typename GeoMesh::template FieldSource<Type> Source;
+        using Source = typename GeoMesh::template FieldSource<Type>;
 
         //- Type of the field sources
-        typedef GeometricFieldSources<Type, GeoMesh, PrimitiveField> Sources;
+        using Sources = GeometricFieldSources<Type, GeoMesh, PrimitiveField>;
 
         //- Component type of the elements of the field
-        typedef typename PrimitiveField<Type>::cmptType cmptType;
+        using cmptType = typename PrimitiveField<Type>::cmptType;
 
 
 private:
@@ -182,7 +182,7 @@ public:
             const IOobject&,
             const GeoMesh&,
             const dimensioned<Type>&,
-            const word& patchFieldType = Patch::calculatedType()
+            const word& patchFieldType = PatchField::calculatedType()
         );
 
         //- Constructor given IOobject, mesh, dimensioned<Type>
@@ -203,7 +203,7 @@ public:
         (
             const IOobject&,
             const Internal&,
-            const PtrList<Patch>&,
+            const PtrList<PatchField>&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
@@ -214,7 +214,7 @@ public:
             const GeoMesh&,
             const dimensionSet&,
             const PrimitiveField<Type>&,
-            const PtrList<Patch>&,
+            const PtrList<PatchField>&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
@@ -383,7 +383,7 @@ public:
         (
             const word& name,
             const Internal&,
-            const PtrList<Patch>&,
+            const PtrList<PatchField>&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
@@ -394,7 +394,7 @@ public:
             const word& name,
             const GeoMesh&,
             const dimensionSet&,
-            const word& patchFieldType = Patch::calculatedType()
+            const word& patchFieldType = PatchField::calculatedType()
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
@@ -404,7 +404,7 @@ public:
             const word& name,
             const GeoMesh&,
             const dimensioned<Type>&,
-            const word& patchFieldType = Patch::calculatedType()
+            const word& patchFieldType = PatchField::calculatedType()
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
@@ -797,11 +797,11 @@ Ostream& operator<<
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 struct OldTimeFieldCopy<GeometricField<Type, GeoMesh, PrimitiveField>>
 {
-    typedef GeometricField<Type, GeoMesh, PrimitiveField> FieldType;
+    using FieldType = GeometricField<Type, GeoMesh, PrimitiveField>;
 
-    typedef typename OldTimeField0Type<FieldType>::type Field0Type;
+    using Field0Type = typename OldTimeField0Type<FieldType>::type;
 
-    typedef typename FieldType::Patch::Calculated Calculated;
+    using Calculated = typename FieldType::PatchField::Calculated;
 
     tmp<Field0Type> operator()(const IOobject& io, const FieldType& field)
     {

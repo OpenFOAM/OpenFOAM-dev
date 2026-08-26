@@ -157,7 +157,7 @@ Foam::FunctionalGeometricField<Type, GeoMesh>::FunctionalGeometricField
         ),
         mesh,
         dimensions,
-        GeometricField<Type, GeoMesh>::Patch::calculatedType()
+        GeometricField<Type, GeoMesh>::PatchField::calculatedType()
     ),
     funcName_(funcName),
     internalFuncPtr_(),

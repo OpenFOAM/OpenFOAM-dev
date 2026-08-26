@@ -269,7 +269,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
     const Internal& diField,
-    const PtrList<Patch>& ptfl,
+    const PtrList<PatchField>& ptfl,
     const HashPtrTable<Source>& stft
 )
 :
@@ -297,7 +297,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const GeoMesh& mesh,
     const dimensionSet& ds,
     const PrimitiveField<Type>& iField,
-    const PtrList<Patch>& ptfl,
+    const PtrList<PatchField>& ptfl,
     const HashPtrTable<Source>& stft
 )
 :
@@ -904,7 +904,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::cloneUnSliced() const
                 false
             ),
             *this,
-            Patch::calculatedType()
+            PatchField::calculatedType()
         )
     );
 }
@@ -916,7 +916,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& name,
     const Internal& diField,
-    const PtrList<Patch>& ptfl,
+    const PtrList<PatchField>& ptfl,
     const HashPtrTable<Source>& stft
 )
 {

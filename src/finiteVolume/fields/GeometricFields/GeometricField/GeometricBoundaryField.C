@@ -135,7 +135,7 @@ void Foam::GeometricBoundaryField<Type, GeoMesh, PrimitiveField>::readField
             this->set
             (
                 patchi,
-                Patch::New
+                PatchField::New
                 (
                     bmesh_[patchi],
                     field,
@@ -148,7 +148,7 @@ void Foam::GeometricBoundaryField<Type, GeoMesh, PrimitiveField>::readField
             this->set
             (
                 patchi,
-                Patch::New
+                PatchField::New
                 (
                     emptyPolyPatch::typeName,
                     bmesh_[patchi],
@@ -202,7 +202,7 @@ GeometricBoundaryField
         this->set
         (
             patchi,
-            Patch::New
+            PatchField::New
             (
                 patchFieldType,
                 bmesh_[patchi],
@@ -252,7 +252,7 @@ GeometricBoundaryField
             this->set
             (
                 patchi,
-                Patch::New
+                PatchField::New
                 (
                     patchFieldTypes[patchi],
                     constraintTypes[patchi],
@@ -269,7 +269,7 @@ GeometricBoundaryField
             this->set
             (
                 patchi,
-                Patch::New
+                PatchField::New
                 (
                     patchFieldTypes[patchi],
                     bmesh_[patchi],
@@ -287,7 +287,7 @@ GeometricBoundaryField
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh, PrimitiveField>& field,
-    const PtrList<Patch>& ptfl
+    const PtrList<PatchField>& ptfl
 )
 :
     FieldField<GeoMesh::template PatchField, Type>(bmesh.size()),
@@ -832,6 +832,19 @@ operator==(const Type& t)
     {
         this->operator[](patchi) == t;
     }
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>& bf
+)
+{
+    os <<
+        static_cast<const FieldField<GeoMesh::template PatchField, Type>&>(bf);
+    return os;
 }
 
 

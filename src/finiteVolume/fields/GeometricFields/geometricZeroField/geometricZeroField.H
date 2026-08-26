@@ -60,7 +60,7 @@ public:
     // Public Typedefs
 
         typedef zeroField Internal;
-        typedef zeroField Patch;
+        typedef zeroField PatchField;
         typedef zeroFieldField Boundary;
         typedef zero cmptType;
 

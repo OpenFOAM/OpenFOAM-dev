@@ -60,7 +60,7 @@ public:
     // Public Typedefs
 
         typedef oneField Internal;
-        typedef oneField Patch;
+        typedef oneField PatchField;
         typedef oneFieldField Boundary;
         typedef one cmptType;
 

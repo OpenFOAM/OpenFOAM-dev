@@ -58,7 +58,7 @@ void Foam::fvMeshTools::setPatchFields
             bfield.set
             (
                 patchi,
-                GeoField::Patch::New
+                GeoField::PatchField::New
                 (
                     mesh.boundary()[patchi],
                     field(),
