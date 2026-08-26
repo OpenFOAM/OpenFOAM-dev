@@ -560,15 +560,15 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
     // is currently not supported by topoChange.
 
     // Store boundary fields (we only do this for surfaceFields)
-    PtrList<FieldField<surfaceMesh::PatchField, scalar>> sFields;
+    PtrList<SurfaceBoundaryField<scalar>> sFields;
     saveBoundaryFields<scalar, surfaceMesh>(sFields);
-    PtrList<FieldField<surfaceMesh::PatchField, vector>> vFields;
+    PtrList<SurfaceBoundaryField<vector>> vFields;
     saveBoundaryFields<vector, surfaceMesh>(vFields);
-    PtrList<FieldField<surfaceMesh::PatchField, sphericalTensor>> sptFields;
+    PtrList<SurfaceBoundaryField<sphericalTensor>> sptFields;
     saveBoundaryFields<sphericalTensor, surfaceMesh>(sptFields);
-    PtrList<FieldField<surfaceMesh::PatchField, symmTensor>> sytFields;
+    PtrList<SurfaceBoundaryField<symmTensor>> sytFields;
     saveBoundaryFields<symmTensor, surfaceMesh>(sytFields);
-    PtrList<FieldField<surfaceMesh::PatchField, tensor>> tFields;
+    PtrList<SurfaceBoundaryField<tensor>> tFields;
     saveBoundaryFields<tensor, surfaceMesh>(tFields);
 
     // Change the mesh (without keeping old points).

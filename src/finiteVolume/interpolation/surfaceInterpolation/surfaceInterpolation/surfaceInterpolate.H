@@ -174,16 +174,16 @@ namespace fvc
 
     //- Interpolate boundary field onto faces (simply a type conversion)
     template<class Type>
-    static tmp<FieldField<surfaceMesh::PatchField, Type>> interpolate
+    static tmp<SurfaceBoundaryField<Type>> interpolate
     (
-        const FieldField<fvMesh::PatchField, Type>& fvpff
+        const VolBoundaryField<Type>& fvpff
     );
 
     //- Interpolate boundary field onto faces (simply a type conversion)
     template<class Type>
-    static tmp<FieldField<surfaceMesh::PatchField, Type>> interpolate
+    static tmp<SurfaceBoundaryField<Type>> interpolate
     (
-        const tmp<FieldField<fvMesh::PatchField, Type>>& tfvpff
+        const tmp<VolBoundaryField<Type>>& tfvpff
     );
 
     //- Interpolate 'one' returning 'one'

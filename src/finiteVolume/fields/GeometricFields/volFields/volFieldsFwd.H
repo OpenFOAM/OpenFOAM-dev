@@ -59,6 +59,12 @@ using VolField = GeometricField<Type, fvMesh, Field>;
 template<class Type>
 using VolInternalField = DimensionedField<Type, fvMesh>;
 
+template<template<class> class Field, class Type>
+class FieldField;
+
+template<class Type>
+using VolBoundaryField = FieldField<fvPatchField, Type>;
+
 using volLabelField = VolField<label>;
 using volScalarField = VolField<scalar>;
 using volVectorField = VolField<vector>;

@@ -156,9 +156,9 @@ public:
 
         //- Return the given absolute boundary flux relative within
         //  the MRF region
-        tmp<FieldField<surfaceMesh::PatchField, scalar>> relative
+        tmp<SurfaceBoundaryField<scalar>> relative
         (
-            const tmp<FieldField<surfaceMesh::PatchField, scalar>>&
+            const tmp<SurfaceBoundaryField<scalar>>&
         ) const;
 
         //- Return the given absolute patch flux relative within

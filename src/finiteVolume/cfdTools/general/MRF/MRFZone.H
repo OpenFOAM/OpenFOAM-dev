@@ -106,7 +106,7 @@ class MRFZone
         void makeRelativeRhoFlux
         (
             const RhoFieldType& rho,
-            FieldField<surfaceMesh::PatchField, scalar>& phi
+            SurfaceBoundaryField<scalar>& phi
         ) const;
 
         //- Make the given absolute mass/vol flux relative within the MRF region
@@ -185,7 +185,7 @@ public:
         //  within the MRF region
         void makeRelative
         (
-            FieldField<surfaceMesh::PatchField, scalar>& phi
+            SurfaceBoundaryField<scalar>& phi
         ) const;
 
         //- Make the given absolute patch flux relative

@@ -60,10 +60,10 @@ Foam::UniformGeometricField<Type>::primitiveField() const
 
 
 template<class Type>
-inline typename Foam::UniformGeometricField<Type>::Boundary
+inline typename Foam::UniformGeometricField<Type>::BoundaryField
 Foam::UniformGeometricField<Type>::boundaryField() const
 {
-    return Boundary(this->value());
+    return BoundaryField(this->value());
 }
 
 

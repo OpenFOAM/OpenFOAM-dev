@@ -268,16 +268,6 @@ tmp<GeoField> CrankNicolsonDdtScheme<Type>::offCentre_
 }
 
 
-template<class Type>
-const FieldField<fvMesh::PatchField, Type>& ff
-(
-    const FieldField<fvMesh::PatchField, Type>& bf
-)
-{
-    return bf;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -729,7 +719,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 (
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ddt0.boundaryField())
             );
         }
 
@@ -746,7 +736,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             rDtCoef.value()*
             (
                 vf.boundaryField() - vf.oldTime().boundaryField()
-            ) - offCentre_(ff(ddt0.boundaryField()))
+            ) - offCentre_(ddt0.boundaryField())
         );
     }
     else
@@ -808,7 +798,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 (
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ddt0.boundaryField())
             );
         }
 
@@ -825,7 +815,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             rDtCoef.value()*rho.value()*
             (
                 vf.boundaryField() - vf.oldTime().boundaryField()
-            ) - offCentre_(ff(ddt0.boundaryField()))
+            ) - offCentre_(ddt0.boundaryField())
         );
     }
     else
@@ -891,7 +881,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                    *vf.oldTime().boundaryField()
                   - rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ddt0.boundaryField())
             );
         }
 
@@ -910,7 +900,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             (
                 rho.boundaryField()*vf.boundaryField()
               - rho.oldTime().boundaryField()*vf.oldTime().boundaryField()
-            ) - offCentre_(ff(ddt0.boundaryField()))
+            ) - offCentre_(ddt0.boundaryField())
         );
     }
     else
@@ -990,7 +980,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                   - alpha.oldTime().oldTime().boundaryField()
                    *rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
-                ) - offCentre_(ff(ddt0.boundaryField()))
+                ) - offCentre_(ddt0.boundaryField())
             );
         }
 
@@ -1013,7 +1003,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
               - alpha.oldTime().boundaryField()
                *rho.oldTime().boundaryField()
                *vf.oldTime().boundaryField()
-            ) - offCentre_(ff(ddt0.boundaryField()))
+            ) - offCentre_(ddt0.boundaryField())
         );
     }
     else
@@ -1100,7 +1090,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ddt0.boundaryField())
             );
         }
 
@@ -1183,7 +1173,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
                     vf.oldTime().boundaryField()
                   - vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ddt0.boundaryField())
             );
         }
 
@@ -1271,7 +1261,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
                   - rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ddt0.boundaryField())
             );
         }
 
@@ -1377,7 +1367,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
                    *rho.oldTime().oldTime().boundaryField()
                    *vf.oldTime().oldTime().boundaryField()
                 )
-              - offCentre_(ff(ddt0.boundaryField()))
+              - offCentre_(ddt0.boundaryField())
             );
         }
 

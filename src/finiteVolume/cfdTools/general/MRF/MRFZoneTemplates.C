@@ -62,7 +62,7 @@ template<class RhoFieldType>
 void Foam::MRFZone::makeRelativeRhoFlux
 (
     const RhoFieldType& rho,
-    FieldField<surfaceMesh::PatchField, scalar>& phiBf
+    SurfaceBoundaryField<scalar>& phiBf
 ) const
 {
     const surfaceVectorField& Cf = mesh_.Cf();

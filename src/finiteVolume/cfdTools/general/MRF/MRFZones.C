@@ -235,15 +235,15 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZones::relative
 }
 
 
-Foam::tmp<Foam::FieldField<Foam::surfaceMesh::PatchField, Foam::scalar>>
+Foam::tmp<Foam::SurfaceBoundaryField<Foam::scalar>>
 Foam::MRFZones::relative
 (
-    const tmp<FieldField<surfaceMesh::PatchField, scalar>>& tphi
+    const tmp<SurfaceBoundaryField<scalar>>& tphi
 ) const
 {
     if (size())
     {
-        tmp<FieldField<surfaceMesh::PatchField, scalar>> rphi
+        tmp<SurfaceBoundaryField<scalar>> rphi
         (
             Foam::New(tphi, true)
         );
@@ -259,7 +259,7 @@ Foam::MRFZones::relative
     }
     else
     {
-        return tmp<FieldField<surfaceMesh::PatchField, scalar>>(tphi, true);
+        return tmp<SurfaceBoundaryField<scalar>>(tphi, true);
     }
 }
 

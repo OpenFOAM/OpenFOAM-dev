@@ -53,7 +53,6 @@ SourceFiles
 #define fvMeshDistribute_H
 
 #include "fvMeshSubset.H"
-#include "FieldField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -118,7 +117,7 @@ class fvMeshDistribute
             template<class Type, class Mesh>
             void saveBoundaryFields
             (
-                PtrList<FieldField<surfaceMesh::PatchField, Type>>&
+                PtrList<SurfaceBoundaryField<Type>>&
             ) const;
 
             //- Map boundary fields
@@ -126,7 +125,7 @@ class fvMeshDistribute
             void mapBoundaryFields
             (
                 const polyTopoChangeMap& map,
-                const PtrList<FieldField<surfaceMesh::PatchField, Type>>&
+                const PtrList<SurfaceBoundaryField<Type>>&
             );
 
             //- Set value of exposed patch faces
