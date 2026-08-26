@@ -36,7 +36,15 @@ SourceFiles
 #define DimensionedTensorField_H
 
 #include "DimensionedField.H"
-#include "tensorField.H"
+#include "tensorExpressions.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+inline auto Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::T() const
+{
+    return Foam::T(*this);
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,7 +66,6 @@ tmp<DimensionedField<tensor, GeoMesh, Field>> inv
     const tmp<DimensionedField<tensor, GeoMesh, PrimitiveField>>& tdtf,
     const Vector<label>& solutionD
 );
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

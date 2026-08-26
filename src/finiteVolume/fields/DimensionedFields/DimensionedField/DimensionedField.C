@@ -673,16 +673,6 @@ Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::primitiveFieldRef()
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-auto DimensionedField<Type, GeoMesh, PrimitiveField>::component
-(
-    const direction& d
-) const
-{
-    return Foam::component(*this, d);
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
 template<template<class> class PrimitiveField2>
 void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
 (
@@ -717,13 +707,6 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
 {
     replace(d, tdf());
     tdf.clear();
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-auto DimensionedField<Type, GeoMesh, PrimitiveField>::T() const
-{
-    return Foam::T(*this);
 }
 
 

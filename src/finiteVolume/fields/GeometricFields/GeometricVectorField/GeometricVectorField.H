@@ -36,7 +36,7 @@ SourceFiles
 #define GeometricVectorField_H
 
 #include "GeometricField.H"
-#include "vector.H"
+#include "DimensionedVectorField.H"
 
 #define TEMPLATE                                                               \
     template                                                                   \

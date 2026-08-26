@@ -21,61 +21,33 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::vectorField
+InClass
+    Foam::DimensionedVectorField
 
 Description
-    Specialisation of Field\<T\> for vector.
+    Vector specific part of the implementation of DimensionedField.
 
 SourceFiles
-    vectorField.C
+    DimensionedVectorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef vectorField_H
-#define vectorField_H
+#ifndef DimensionedVectorField_H
+#define DimensionedVectorField_H
 
-#include "scalarField.H"
+#include "DimensionedField.H"
 #include "vectorExpressions.H"
-
-#define TEMPLATE
-#include "FieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-inline auto Foam::Field<Type>::component(const direction& d) const
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+inline auto Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::component
+(
+    const direction& d
+) const
 {
     return Foam::component(*this, d);
 }
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-typedef Field<vector> vectorField;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(vector, vector, normalised)
-UNARY_FUNCTION(vector, vector, perpendicular)
-
-
-tmp<vectorField> zip
-(
-    const tmp<scalarField>& x,
-    const tmp<scalarField>& y,
-    const tmp<scalarField>& z
-);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

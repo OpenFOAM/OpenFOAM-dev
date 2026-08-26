@@ -43,16 +43,20 @@ SourceFiles
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-typedef Field<tensor> tensorField;
-
 template<class Type>
-auto Foam::Field<Type>::T() const
+inline auto Foam::Field<Type>::T() const
 {
     return Foam::T(*this);
 }
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+typedef Field<tensor> tensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -105,7 +109,6 @@ UNARY_OPERATOR(tensor, vector, *, hdual)
 
 BINARY_OPERATOR(vector, vector, tensor, /, divide)
 BINARY_TYPE_OPERATOR(vector, vector, tensor, /, divide)
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

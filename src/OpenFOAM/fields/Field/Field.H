@@ -323,7 +323,7 @@ public:
         void negate();
 
         //- Return a component field expression of the field
-        auto component(const direction& d) const;
+        inline auto component(const direction& d) const;
 
         //- Replace a component field of the field
         void replace(const direction, const UList<cmptType>&);
@@ -339,7 +339,7 @@ public:
 
         //- Return the field transpose expression
         //  (only defined for second rank tensors)
-        auto T() const;
+        inline auto T() const;
 
         //- Append an element at the end of the Field
         void append(const Type& t);
