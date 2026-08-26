@@ -68,6 +68,19 @@ Foam::PtrField<Type>::PtrField(const tmp<PtrField<Type>>& tf)
 
 
 template<class Type>
+Foam::PtrField<Type>::PtrField(const PtrList<Type>& f)
+:
+    PtrList<Type>(f.size())
+{
+    forAll(*this, i)
+    {
+        // ***HGW Temporary clone of fv?PatchField for testing
+        this->set(i, f[i].clone(f[i].internalField()));
+    }
+}
+
+
+template<class Type>
 template< class Expression, class ... Args, class>
 Foam::PtrField<Type>::PtrField(const Expression& e, const Args& ... args)
 :

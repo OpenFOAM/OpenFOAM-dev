@@ -91,6 +91,9 @@ public:
         //- Construct as copy of tmp<PtrField>
         PtrField(const tmp<PtrField<Type>>&);
 
+        //- Construct as copy of a PtrList<Type>
+        PtrField(const PtrList<Type>&);
+
         //- Construct from an expression and potentially any additional
         //  arguments to the selector
         template
