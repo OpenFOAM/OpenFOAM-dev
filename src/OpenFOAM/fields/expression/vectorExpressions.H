@@ -31,7 +31,6 @@ Description
 #define vectorExpressions_H
 
 #include "expressions.H"
-#include "dimensionSet.H"
 #include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -42,6 +41,11 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Unary vector functions
 
+UnaryFunction(cmptMax)
+UnaryFunction(cmptMin)
+UnaryFunction(cmptAv)
+UnaryFunction(cmptMag)
+
 #define UnaryVectorOpFunction(func)                                            \
     UnaryOpFunction(vector, vector, func)
 
@@ -49,6 +53,37 @@ UnaryVectorOpFunction(normalised)
 UnaryVectorOpFunction(perpendicular)
 
 #undef UnaryVectorOpFunction
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Binary vector functions
+
+BinaryFunction(cmptMultiply);
+BinaryFunction(cmptDivide);
+
+/*---------------------------------------------------------------------------*\
+                         Class componentOp Declaration
+\*---------------------------------------------------------------------------*/
+
+struct componentOp
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& vs, const word& d)
+    {
+        return "component(" + vs + ',' + d + ')';
+    }
+
+    template<class VSType, class Dtype>
+    static auto value(const VSType& vs, const Dtype& d)
+    {
+        return component(vs, d);
+    }
+};
+
+BinaryFunction(component);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

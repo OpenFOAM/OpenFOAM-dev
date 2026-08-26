@@ -501,13 +501,6 @@ void Foam::Field<Type>::negate()
 
 
 template<class Type>
-auto Foam::Field<Type>::component(const direction& d) const
-{
-    return Foam::component(*this, d);
-}
-
-
-template<class Type>
 void Foam::Field<Type>::replace
 (
     const direction d,
@@ -553,13 +546,6 @@ VSForm Foam::Field<Type>::block(const label start) const
         vs[i] = this->operator[](start + i);
     }
     return vs;
-}
-
-
-template<class Type>
-auto Foam::Field<Type>::T() const
-{
-    return Foam::T(*this);
 }
 
 

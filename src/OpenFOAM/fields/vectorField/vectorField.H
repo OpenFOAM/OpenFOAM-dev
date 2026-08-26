@@ -36,7 +36,6 @@ SourceFiles
 #define vectorField_H
 
 #include "scalarField.H"
-#include "vector.H"
 #include "vectorExpressions.H"
 
 #define TEMPLATE
@@ -48,6 +47,12 @@ namespace Foam
 {
 
 typedef Field<vector> vectorField;
+
+template<class Type>
+auto Foam::Field<Type>::component(const direction& d) const
+{
+    return Foam::component(*this, d);
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

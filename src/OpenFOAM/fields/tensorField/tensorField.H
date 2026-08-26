@@ -35,9 +35,8 @@ SourceFiles
 #ifndef tensorField_H
 #define tensorField_H
 
-#include "tensor.H"
+#include "vectorField.H"
 #include "tensorExpressions.H"
-#include "Field.H"
 
 #define TEMPLATE
 #include "FieldFunctionsM.H"
@@ -48,6 +47,12 @@ namespace Foam
 {
 
 typedef Field<tensor> tensorField;
+
+template<class Type>
+auto Foam::Field<Type>::T() const
+{
+    return Foam::T(*this);
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
