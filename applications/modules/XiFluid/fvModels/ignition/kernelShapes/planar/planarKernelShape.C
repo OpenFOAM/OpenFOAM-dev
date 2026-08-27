@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,8 @@ Foam::kernelShapes::planar::planar
     const dictionary& dict
 )
 :
-    kernelShape(mesh, dict)
+    kernelShape(mesh, dict),
+    area_("area", dimensions::area, 0)
 {
     readCoeffs(dict);
 }
