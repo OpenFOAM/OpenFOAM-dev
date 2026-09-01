@@ -26,6 +26,14 @@ License
 #include "groupPropertyFvScalarField.H"
 #include "populationBalanceModel.H"
 
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(groupPropertyFvScalarField, 0);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::groupPropertyFvScalarField::groupPropertyFvScalarField
@@ -36,6 +44,12 @@ Foam::groupPropertyFvScalarField::groupPropertyFvScalarField
     internalField_(iF),
     popBalPtr_(nullptr),
     i_(-1)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::groupPropertyFvScalarField::~groupPropertyFvScalarField()
 {}
 
 

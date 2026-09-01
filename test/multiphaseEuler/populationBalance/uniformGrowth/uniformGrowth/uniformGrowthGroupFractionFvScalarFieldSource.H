@@ -67,7 +67,7 @@ private:
     // Private Member Functions
 
         //- Return the moment of the diameter with which the source term scales
-        virtual label q() const
+        virtual label q(const fvSource&) const
         {
             return 0;
         }

@@ -25,8 +25,31 @@ License
 
 #include "growthGroupFractionFvScalarFieldSource.H"
 #include "populationBalanceModel.H"
+#include "sizeSpecificMassTransfer.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    makeTypeFieldSource
+    (
+        fvScalarFieldSource,
+        growthGroupFractionFvScalarFieldSource
+    );
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::label Foam::growthGroupFractionFvScalarFieldSource::q
+(
+    const fvSource& model
+) const
+{
+    return -labelMax;
+}
+
 
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::growthGroupFractionFvScalarFieldSource::w
@@ -38,7 +61,7 @@ Foam::growthGroupFractionFvScalarFieldSource::w
     const populationBalanceModel& popBal = this->popBal();
 
     // Get the moment
-    const label q = this->q();
+    const label q = this->q(model);
 
     // Name of the weight normalisation field
     const word wName = popBal.phases()[i].name() + ":" + model.name() + ":w";
@@ -97,7 +120,30 @@ Foam::growthGroupFractionFvScalarFieldSource::w
     }
 
     // Return the normalised weight for this group
-    return pow(popBal.v(i), scalar(q)/3)/w;
+    return pow(popBal.v(i), scalar(q)/3)/w/popBal.v(i);
+}
+
+
+void Foam::growthGroupFractionFvScalarFieldSource::check
+(
+    const fvSource& model
+) const
+{
+    const bool isSizeSpecific = isA<const fv::sizeSpecificMassTransfer>(model);
+
+    const label q = this->q(model);
+
+    if (isSizeSpecific == (q != -labelMax))
+    {
+        FatalErrorInFunction
+            << "Condition of type " << type() << " cannot be used for source "
+            << model.name() << " of field " << internalField().name()
+            << " in file " << internalField().objectPath() << " as "
+            << (isSizeSpecific ? "both" : "neither") << " the model "
+            << (isSizeSpecific ? "and" : "nor") << " the condition define how "
+            << "the source is distributed across the groups"
+            << exit(FatalError);
+    }
 }
 
 
@@ -136,32 +182,38 @@ Foam::growthGroupFractionFvScalarFieldSource::internalCoeff
     const DimensionedField<scalar, fvMesh>& source
 ) const
 {
+    check(model);
+
     const populationBalanceModel& popBal = this->popBal();
     const label i = this->i();
 
     const dimensionedScalar& xi = popBal.v(i);
-    const DimensionedField<scalar, fvMesh> wi(w(model, i));
 
     tmp<DimensionedField<scalar, fvMesh>> tinternalCoeff;
 
     if (i == 0)
     {
-        tinternalCoeff = neg(source)*wi/xi;
+        tinternalCoeff = neg(source);
     }
     else
     {
         const dimensionedScalar& xiMinus1 = popBal.v(i - 1);
-        tinternalCoeff = neg(source)*wi/(xi - xiMinus1);
+        tinternalCoeff = neg(source)*xi/(xi - xiMinus1);
     }
 
     if (i != popBal.nGroups() - 1)
     {
         const dimensionedScalar& xiPlus1 = popBal.v(i + 1);
-        tinternalCoeff.ref() -= pos(source)*wi/(xiPlus1 - xi);
+        tinternalCoeff.ref() -= pos(source)*xi/(xiPlus1 - xi);
     }
     else
     {
-        tinternalCoeff.ref() += pos(source)*wi/xi;
+        tinternalCoeff.ref() += pos(source);
+    }
+
+    if (!isA<const fv::sizeSpecificMassTransfer>(model))
+    {
+        tinternalCoeff.ref() *= w(model, i);
     }
 
     return tinternalCoeff;
@@ -174,6 +226,8 @@ Foam::growthGroupFractionFvScalarFieldSource::sourceCoeffs
     const fvSource& model
 ) const
 {
+    check(model);
+
     const populationBalanceModel& popBal = this->popBal();
     const label i = this->i();
 
@@ -185,16 +239,24 @@ Foam::growthGroupFractionFvScalarFieldSource::sourceCoeffs
     {
         const DimensionedField<scalar, fvMesh>& fiMinus1 = popBal.f(i - 1);
         const dimensionedScalar& xiMinus1 = popBal.v(i - 1);
-        tsourceCoeffs.first() =
-            fiMinus1*w(model, i - 1)*(xi/xiMinus1)/(xi - xiMinus1);
+        tsourceCoeffs.first() = fiMinus1*xi/(xi - xiMinus1);
+
+        if (!isA<const fv::sizeSpecificMassTransfer>(model))
+        {
+            tsourceCoeffs.first().ref() *= w(model, i - 1);
+        }
     }
 
     if (i != popBal.nGroups() - 1)
     {
         const DimensionedField<scalar, fvMesh>& fiPlus1 = popBal.f(i + 1);
         const dimensionedScalar& xiPlus1 = popBal.v(i + 1);
-        tsourceCoeffs.second() =
-            -fiPlus1*w(model, i + 1)*(xi/xiPlus1)/(xiPlus1 - xi);
+        tsourceCoeffs.second() = -fiPlus1*xi/(xiPlus1 - xi);
+
+        if (!isA<const fv::sizeSpecificMassTransfer>(model))
+        {
+            tsourceCoeffs.second().ref() *= w(model, i + 1);
+        }
     }
 
     return tsourceCoeffs;
@@ -214,16 +276,35 @@ Foam::growthGroupFractionFvScalarFieldSource::sourceTerm
     Pair<tmp<DimensionedField<scalar, fvMesh>>> tsourceCoeffs =
         sourceCoeffs(model);
 
-    return
-        i == popBal.diameters()[i].iFirst()
-      ? eval(negPart(source)*tsourceCoeffs.second())
-      : i == popBal.diameters()[i].iLast()
-      ? eval(posPart(source)*tsourceCoeffs.first())
-      : eval
-        (
-            posPart(source)*tsourceCoeffs.first()
-          + negPart(source)*tsourceCoeffs.second()
-        );
+    if (isA<const fv::sizeSpecificMassTransfer>(model))
+    {
+        const fv::sizeSpecificMassTransfer& ssmtModel =
+            refCast<const fv::sizeSpecificMassTransfer>(model);
+
+        return
+            i == popBal.diameters()[i].iFirst()
+          ? eval(negPart(ssmtModel.groupMDotByF(i + 1))*tsourceCoeffs.second())
+          : i == popBal.diameters()[i].iLast()
+          ? eval(posPart(ssmtModel.groupMDotByF(i - 1))*tsourceCoeffs.first())
+          : eval
+            (
+                posPart(ssmtModel.groupMDotByF(i - 1))*tsourceCoeffs.first()
+              + negPart(ssmtModel.groupMDotByF(i + 1))*tsourceCoeffs.second()
+            );
+    }
+    else
+    {
+        return
+            i == popBal.diameters()[i].iFirst()
+          ? eval(negPart(source)*tsourceCoeffs.second())
+          : i == popBal.diameters()[i].iLast()
+          ? eval(posPart(source)*tsourceCoeffs.first())
+          : eval
+            (
+                posPart(source)*tsourceCoeffs.first()
+              + negPart(source)*tsourceCoeffs.second()
+            );
+    }
 }
 
 

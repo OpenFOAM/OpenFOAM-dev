@@ -69,16 +69,19 @@ private:
 
 public:
 
+    //- Runtime type information
+    TypeName("groupPropertyFvScalarField");
+
+
     // Constructors
 
         //- Construct from internal field
-        groupPropertyFvScalarField
-        (
-            const DimensionedField<scalar, fvMesh>&
-        );
+        groupPropertyFvScalarField(const DimensionedField<scalar, fvMesh>&);
 
 
-public:
+    //- Destructor
+    virtual ~groupPropertyFvScalarField();
+
 
     // Member Functions
 

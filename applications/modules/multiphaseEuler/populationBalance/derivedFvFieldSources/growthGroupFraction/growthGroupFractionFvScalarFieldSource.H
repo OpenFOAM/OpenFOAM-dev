@@ -58,7 +58,7 @@ private:
     // Private Member Functions
 
         //- Return the moment of the diameter with which the source term scales
-        virtual label q() const = 0;
+        virtual label q(const fvSource&) const;
 
         //- Compute and return the weight for the given group
         tmp<DimensionedField<scalar, fvMesh>> w
@@ -67,8 +67,15 @@ private:
             const label i
         ) const;
 
+        //- Check the condition and the model are compatible
+        void check(const fvSource&) const;
+
 
 public:
+
+    //- Runtime type information
+    TypeName("growthGroupFraction");
+
 
     // Constructors
 
@@ -85,6 +92,22 @@ public:
             const growthGroupFractionFvScalarFieldSource&,
             const DimensionedField<scalar, fvMesh>&
         );
+
+        //- Construct and return a clone setting internal field reference
+        virtual autoPtr<fvScalarFieldSource> clone
+        (
+            const DimensionedField<scalar, fvMesh>& iF
+        ) const
+        {
+            return autoPtr<fvScalarFieldSource>
+            (
+                new growthGroupFractionFvScalarFieldSource
+                (
+                    *this,
+                    iF
+                )
+            );
+        }
 
 
     // Member Functions
