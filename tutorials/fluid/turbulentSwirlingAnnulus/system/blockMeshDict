@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+nAzim   42;
+nRad    84;
+nAxial  28;
+
+r_i      0.004;
+r_o      0.009;
+r_i_Sq2  #calc "$r_i / sqrt(2.0)"; //r_i/sqrt(2)
+r_o_Sq2  #calc "$r_o / sqrt(2.0)";; //r_o/sqrt(2)
+
+r_i_neg      #calc "- $r_i";
+r_o_neg      #calc "- $r_o";
+r_i_Sq2_neg  #calc "- $r_i / sqrt(2.0)";; //-r_i/sqrt(2)
+r_o_Sq2_neg  #calc "- $r_o / sqrt(2.0)";; //-r_o/sqrt(2)
+
+xMin    0.0;
+xMax    0.014;
+
+vertices
+(
+    ($xMin   $r_i_Sq2_neg   $r_i_Sq2) // vertex number 0
+    ($xMin   $r_i_Sq2       $r_i_Sq2) // vertex number 1
+    ($xMin   $r_o_Sq2       $r_o_Sq2) // vertex number 2
+    ($xMin   $r_o_Sq2_neg   $r_o_Sq2) // vertex number 3
+
+    ($xMax   $r_i_Sq2_neg   $r_i_Sq2) // vertex number 4
+    ($xMax   $r_i_Sq2       $r_i_Sq2) // vertex number 5
+    ($xMax   $r_o_Sq2       $r_o_Sq2) // vertex number 6
+    ($xMax   $r_o_Sq2_neg   $r_o_Sq2) // vertex number 7
+
+    ($xMin   $r_o_Sq2_neg   $r_o_Sq2_neg) // vertex number 8
+    ($xMin   $r_o_Sq2       $r_o_Sq2_neg) // vertex number 9
+    ($xMin   $r_i_Sq2       $r_i_Sq2_neg) // vertex number 10
+    ($xMin   $r_i_Sq2_neg   $r_i_Sq2_neg) // vertex number 11
+                                    
+    ($xMax   $r_o_Sq2_neg   $r_o_Sq2_neg) // vertex number 12
+    ($xMax   $r_o_Sq2       $r_o_Sq2_neg) // vertex number 13
+    ($xMax   $r_i_Sq2       $r_i_Sq2_neg) // vertex number 14
+    ($xMax   $r_i_Sq2_neg   $r_i_Sq2_neg) // vertex number 15
+);
+
+blocks
+(
+    hex (0  1  2  3  4  5  6  7 ) ($nAzim $nRad  $nAxial) simpleGrading (1 1 1)
+    hex (8  9  10 11 12 13 14 15) ($nAzim $nRad  $nAxial) simpleGrading (1 1 1)
+    hex (8  11 0  3  12 15 4  7)  ($nRad  $nAzim $nAxial) simpleGrading (1 1 1)
+    hex (10 9  2  1  14 13 6  5)  ($nRad  $nAzim $nAxial) simpleGrading (1 1 1)
+);
+
+edges
+(
+    arc 0 1 ($xMin 0.0 $r_i)
+    arc 2 3 ($xMin 0.0 $r_o)
+    arc 4 5 ($xMax 0.0 $r_i)
+    arc 6 7 ($xMax 0.0 $r_o)
+
+    arc 8 9   ($xMin 0.0 $r_o_neg)
+    arc 10 11 ($xMin 0.0 $r_i_neg)
+    arc 12 13 ($xMax 0.0 $r_o_neg)
+    arc 14 15 ($xMax 0.0 $r_i_neg)
+
+    arc 0  11 ($xMin $r_i_neg 0.0)
+    arc 3  8  ($xMin $r_o_neg 0.0)
+    arc 4  15 ($xMax $r_i_neg 0.0)
+    arc 7  12 ($xMax $r_o_neg 0.0)
+
+    arc 1  10 ($xMin $r_i 0.0)
+    arc 2  9  ($xMin $r_o 0.0)
+    arc 5  14 ($xMax $r_i 0.0)
+    arc 6  13 ($xMax $r_o 0.0)
+);
+
+defaultPatch
+{
+    name    walls;
+    type    wall;
+    faces   ();
+}
+
+boundary               
+(
+    inlet              
+    {
+        type patch;    
+        faces
+        (
+            (0 1 2 3)  
+            (8 9 10 11)  
+            (10 9 2 1)
+            (8 11 0 3)
+        );
+    }                  
+
+    outlet             
+    {
+        type patch;    
+        faces
+        (
+            (4 5 6 7)  
+            (12 13 14 15)  
+            (14 13 6 5)
+            (12 15 4 7)
+        );
+    }
+
+); 
+
+
+
