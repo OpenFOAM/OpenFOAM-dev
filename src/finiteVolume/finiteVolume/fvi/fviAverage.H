@@ -66,6 +66,12 @@ namespace fvi
     //- Area-weighted average a surfaceField creating a volField
     template<class Type>
     tmp<VolInternalField<Type>> average(const tmp<VolField<Type>>&);
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto average(const Expression& e)
+    {
+        return average(eval(e));
+    }
 }
 
 

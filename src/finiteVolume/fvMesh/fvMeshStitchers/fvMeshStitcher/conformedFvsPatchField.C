@@ -140,8 +140,8 @@ void Foam::conformedFvsPatchField<Type>::unconform
 
     // Extract the conformed orig and non-conformal boundary fields from
     // the stored conformed patch fields
-    PtrList<fvsPatchField<Type>> origPFs(fvbm.size());
-    PtrList<fvsPatchField<Type>> ncPFs(fvbm.size());
+    PtrField<fvsPatchField<Type>> origPFs(fvbm.size());
+    PtrField<fvsPatchField<Type>> ncPFs(fvbm.size());
     forAll(origPatchIndices, i)
     {
         const label origPatchi = origPatchIndices[i];

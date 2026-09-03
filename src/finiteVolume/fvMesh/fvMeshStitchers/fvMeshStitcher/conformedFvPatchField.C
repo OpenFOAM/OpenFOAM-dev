@@ -86,8 +86,8 @@ Foam::conformedFvPatchField<Type>::conformedFvPatchField
     const fvPatch& p,
     const DimensionedField<Type, fvMesh>& iF,
     autoPtr<fvPatchField<Type>>&& origFieldPtr,
-    PtrList<fvPatchField<Type>>&& ncFieldPtrs,
-    PtrList<scalarField>&& ncCoverages
+    PtrField<fvPatchField<Type>>&& ncFieldPtrs,
+    PtrField<scalarField>&& ncCoverages
 )
 :
     fvPatchField<Type>(p, iF),
@@ -175,8 +175,8 @@ void Foam::conformedFvPatchField<Type>::conform
                 origFvp,
                 iF,
                 bF.set(origPatchi, nullptr),
-                PtrList<fvPatchField<Type>>(),
-                PtrList<scalarField>()
+                PtrField<fvPatchField<Type>>(),
+                PtrField<scalarField>()
             )
         );
 

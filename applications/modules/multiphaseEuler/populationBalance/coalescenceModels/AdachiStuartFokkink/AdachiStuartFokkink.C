@@ -80,7 +80,7 @@ Foam::populationBalance::coalescenceModels::AdachiStuartFokkink::rate
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
     const volInternalScalarField& epsilonc = tepsilonc();
     tmp<volScalarField> tnuc(popBal_.continuousPhase().fluidThermo().nu());
-    const volInternalScalarField nuc = tnuc();
+    const volInternalScalarField& nuc = tnuc();
 
     return (4.0/3.0)*sqrt(0.3*pi*epsilonc/nuc)*pow3(di + dj);
 }

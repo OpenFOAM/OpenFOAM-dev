@@ -76,8 +76,11 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
             (
                 byDt
                 (
-                    max(alpha.oldTime(), phase.residualAlpha())
-                   *phase.rho().oldTime()
+                    eval
+                    (
+                        max(alpha.oldTime(), phase.residualAlpha())
+                       *phase.rho().oldTime()
+                    )
                 )
               + UEqns[phase.index()].A()
             );
@@ -254,11 +257,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
         // Update the fixedFluxPressure BCs to ensure flux consistency
         {
-            surfaceScalarField::Boundary phib
-            (
-                surfaceScalarField::Internal::null(),
-                phi.boundary()
-            );
+            SurfaceBoundaryField<scalar> phib(phi.boundaryField());
             phib = 0;
 
             forAll(movingPhases, movingPhasei)
@@ -335,7 +334,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
                       + alphaByADfs[movingPhasei]*mSfGradp;
 
                     // Set the phase dilatation rate
-                    phase.divU(-pEqnComps[phasei] & p_rgh);
+                    phase.divU(-pEqnComps[phasei] & p_rgh());
                 }
 
                 forAll(movingPhases, movingPhasei)

@@ -24,24 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvcVolumeIntegrate.H"
-#include "fvMesh.H"
-#include "Field.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvc
-{
+#include "fviVolumeIntegrate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type>>
-volumeIntegrate
+Foam::tmp<Foam::Field<Type>> Foam::fvc::volumeIntegrate
 (
     const VolField<Type>& vf
 )
@@ -51,55 +39,44 @@ volumeIntegrate
 
 
 template<class Type>
-tmp<Field<Type>>
-volumeIntegrate
+Foam::tmp<Foam::Field<Type>> Foam::fvc::volumeIntegrate
 (
     const tmp<VolField<Type>>& tvf
 )
 {
-    tmp<Field<Type>> tvivf
-    (
-        tvf().mesh().V().primitiveField()*tvf().primitiveField()
-    );
+    tmp<Field<Type>> tvivf(volumeIntegrate(tvf()));
     tvf.clear();
     return tvivf;
 }
 
 
 template<class Type>
-dimensioned<Type>
-domainIntegrate
-(
-    const VolField<Type>& vf
-)
+Foam::dimensioned<Type> Foam::fvc::domainIntegrate(const VolField<Type>& vf)
 {
-    return dimensioned<Type>
-    (
-        "domainIntegrate(" + vf.name() + ')',
-        dimensions::volume*vf.dimensions(),
-        gSum(fvc::volumeIntegrate(vf))
-    );
+    return fvi::domainIntegrate(vf.internalField());
 }
 
 
 template<class Type>
-dimensioned<Type> domainIntegrate
+Foam::dimensioned<Type> Foam::fvc::domainIntegrate
 (
     const tmp<VolField<Type>>& tvf
 )
 {
-    dimensioned<Type> integral = domainIntegrate(tvf());
+    dimensioned<Type> integral(domainIntegrate(tvf()));
     tvf.clear();
     return integral;
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Expression, class>
+Foam::ElementType<Expression> Foam::fvc::domainIntegrate(const Expression& e)
+{
+    return fvi::domainIntegrate
+    (
+        expression::access(e, GeometricField_InternalField())
+    );
+}
 
-} // End namespace fvc
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

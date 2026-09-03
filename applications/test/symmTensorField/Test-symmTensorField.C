@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     vectorField vf1(1, vector::one);
     Info<< sqr(vf1) << endl;
-    Info<< pow<vector, 2>(vf1) << endl;
+    Info<< pow<2>(vf1) << endl;
 
     Info<< symm(tf1) << endl;
 

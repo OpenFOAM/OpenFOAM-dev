@@ -83,7 +83,7 @@ void Foam::solvers::compressibleVoF::thermophysicalPredictor()
             (
                 fvi::div(fvc::absolute(phi, U), p)
               + (fvi::ddt(rho, K) + fvi::div(rhoPhi, K))
-              - (U() & (fvModels().source(rho, U) & U)()())
+              - (U() & (fvModels().source(rho, U) & U()))
               - (contErr1() + contErr2())*K()
             )
           :
@@ -93,8 +93,8 @@ void Foam::solvers::compressibleVoF::thermophysicalPredictor()
             )
         )
      ==
-        (e1Source&e1)
-      + (e2Source&e2)
+        (e1Source&e1())
+      + (e2Source&e2())
     );
 
     TEqn.relax();

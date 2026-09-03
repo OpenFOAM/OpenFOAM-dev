@@ -262,7 +262,7 @@ void lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::correct()
     solve(lambdaEqn);
     fvConstraints.constrain(lambda_);
 
-    lambda_.maxMin(scalar(0), scalar(1));
+    lambda_.bound(0, 1);
 
     nu_ = calcNu(strainRate);
 

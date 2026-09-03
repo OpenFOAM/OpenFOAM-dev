@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::heatTransferModels::constantNuHeatTransfer::K
 {
     return
         6.0
-       *max(interface_.dispersed(), residualAlpha)
+       *max(interface_.dispersed().alpha(), residualAlpha)
        *interface_.continuous().thermo().kappa()
        *Nu_
        /sqr(interface_.dispersed().d());

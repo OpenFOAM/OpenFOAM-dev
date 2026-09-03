@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ Foam::LagrangianFieldDecomposer::decomposeLagrangianField
         // complete field as the internal field reference. This is a
         // placeholder and will get replaced with the processor field when this
         // set of patch fields is cloned to produce the final field.
-        PtrList<LagrangianPatchField<Type>> procPatchFields
+        PtrField<LagrangianPatchField<Type>> procPatchFields
         (
             procMeshes_[proci].boundary().size()
         );

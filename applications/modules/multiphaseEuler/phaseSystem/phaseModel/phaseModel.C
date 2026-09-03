@@ -149,7 +149,10 @@ void Foam::phaseModel::correct()
 }
 
 
-void Foam::phaseModel::correctContinuityError(const volScalarField& source)
+void Foam::phaseModel::correctContinuityError
+(
+    const volInternalScalarField& source
+)
 {}
 
 

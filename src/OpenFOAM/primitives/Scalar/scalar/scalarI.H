@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,13 @@ inline Foam::scalar Foam::integerRoot(const scalar x, const label e)
     }
 
     return pow(x, scalar(1)/e);
+}
+
+
+template<typename T, typename Tlim>
+inline auto maxMin(const T& t, const Tlim& mint, const Tlim& maxt)
+{
+    return Foam::min(Foam::max(t, mint), maxt);
 }
 
 

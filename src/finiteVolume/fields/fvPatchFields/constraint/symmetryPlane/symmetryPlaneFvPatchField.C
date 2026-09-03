@@ -143,7 +143,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::symmetryPlaneFvPatchField<Type>::snGradTransformDiag() const
 {
-    vector nHat(symmetryPlanePatch_.n());
+    const vector nHat(symmetryPlanePatch_.n());
 
     const vector diag
     (
@@ -157,16 +157,7 @@ Foam::symmetryPlaneFvPatchField<Type>::snGradTransformDiag() const
         new Field<Type>
         (
             this->size(),
-            transformMask<Type>
-            (
-                // pow<vector, pTraits<Type>::rank>(diag)
-                pow
-                (
-                    diag,
-                    pTraits<typename powProduct<vector, pTraits<Type>::rank>
-                    ::type>::zero
-                )
-            )
+            transformMask<Type>(pow<pTraits<Type>::rank>(diag))
         )
     );
 }

@@ -109,49 +109,6 @@ Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 {}
 
 
-template<class Type>
-Foam::tmp<Foam::fvPatchField<Type>>
-Foam::fvPatchField<Type>::NewCalculatedType
-(
-    const fvPatch& p
-)
-{
-    typename patchConstructorTable::iterator patchTypeCstrIter =
-        patchConstructorTablePtr_->find(p.type());
-
-    if (patchTypeCstrIter != patchConstructorTablePtr_->end())
-    {
-        return patchTypeCstrIter()
-        (
-            p,
-            DimensionedField<Type, fvMesh>::null()
-        );
-    }
-    else
-    {
-        return tmp<fvPatchField<Type>>
-        (
-            new calculatedFvPatchField<Type>
-            (
-                p,
-                DimensionedField<Type, fvMesh>::null()
-            )
-        );
-    }
-}
-
-
-template<class Type>
-template<class Type2>
-Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::NewCalculatedType
-(
-    const fvPatchField<Type2>& pf
-)
-{
-    return NewCalculatedType(pf.patch());
-}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>

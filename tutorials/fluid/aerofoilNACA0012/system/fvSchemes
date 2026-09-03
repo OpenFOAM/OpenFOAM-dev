@@ -44,11 +44,11 @@ divSchemes
     div(phi,e)          $energy;
     div(phi,K)          $energy;
     div(phi,Ekp)        $energy;
-    div(phi,(p|rho))    $energy;
+    div(phi,p|rho)     $energy;
 
-    div((phi|interpolate(rho)),p) Gauss upwind;
+    div(phi|interpolate(rho),p) Gauss upwind;
 
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

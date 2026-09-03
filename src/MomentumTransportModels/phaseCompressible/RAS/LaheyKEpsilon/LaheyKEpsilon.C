@@ -166,7 +166,7 @@ tmp<volScalarField> LaheyKEpsilon<BasicMomentumTransportModel>::bubbleG() const
           + pow(drag.CdRe()*liquid.fluidThermo().nu()/gas.d(), 4.0/3.0)
            *pow(magUr, 5.0/3.0)
         )
-       *gas
+       *gas.alpha()
        /gas.d()
     );
 
@@ -205,9 +205,9 @@ tmp<fvScalarMatrix> LaheyKEpsilon<BasicMomentumTransportModel>::kSource() const
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
     return
-        alpha*rho*bubbleG()
-      + phaseTransferCoeff*gasTurbulence.k()
-      - fvm::Sp(phaseTransferCoeff, this->k_);
+        alpha()*rho()*bubbleG()()()
+      + phaseTransferCoeff()*gasTurbulence.k()()()
+      - fvm::Sp(phaseTransferCoeff(), this->k_);
 }
 
 
@@ -224,9 +224,9 @@ LaheyKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
     return
-        alpha*rho*this->C4_*this->epsilon_*bubbleG()/this->k_
-      + phaseTransferCoeff*gasTurbulence.epsilon()
-      - fvm::Sp(phaseTransferCoeff, this->epsilon_);
+        alpha()*rho()*this->C4_*this->epsilon_()*bubbleG()()()/this->k_()
+      + phaseTransferCoeff()*gasTurbulence.epsilon()()()
+      - fvm::Sp(phaseTransferCoeff(), this->epsilon_);
 }
 
 

@@ -35,10 +35,10 @@ divSchemes
     div(phi,k)          $turbulence;
     div(phi,epsilon)    $turbulence;
 
-    div(phi,(p|rho))    Gauss limitedLinear 1;
+    div(phi,p|rho)     Gauss limitedLinear 1;
     div(phi,K)          Gauss linear;
 
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

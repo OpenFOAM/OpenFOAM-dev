@@ -72,25 +72,28 @@ tmp<volScalarField> LienCubicKE::fMu() const
 }
 
 
-tmp<volScalarField> LienCubicKE::f2() const
+tmp<volInternalScalarField> LienCubicKE::f2() const
 {
-    tmp<volScalarField> Rt = sqr(k_)/(nu()*epsilon_);
+    tmp<volInternalScalarField> Rt = sqr(k_())/(nu()()()*epsilon_());
 
     return scalar(1) - 0.3*exp(-sqr(Rt));
 }
 
 
-tmp<volScalarField> LienCubicKE::E(const volScalarField& f2) const
+tmp<volInternalScalarField> LienCubicKE::E
+(
+    const volInternalScalarField& f2
+) const
 {
-    const volScalarField yStar(sqrt(k_)*y()/nu());
-    const volScalarField le
+    const volInternalScalarField yStar(sqrt(k_())*y()()/nu()()());
+    const volInternalScalarField le
     (
-        kappa_*y()/(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + small)))
+        kappa_*y()()/(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + small)))
     );
 
     return
         (Ceps2_*pow(Cmu_, 0.75))
-       *(f2*sqrt(k_)*epsilon_/le)*exp(-AE_*sqr(yStar));
+       *(f2*sqrt(k_())*epsilon_()/le)*exp(-AE_*sqr(yStar));
 }
 
 
@@ -102,14 +105,14 @@ void LienCubicKE::correctNut()
 
 void LienCubicKE::correctNonlinearStress(const volTensorField& gradU)
 {
-    volSymmTensorField S(symm(gradU));
-    volTensorField W(skew(gradU));
+    const volSymmTensorField S(symm(gradU));
+    const volTensorField W(skew(gradU));
 
-    volScalarField sBar((k_/epsilon_)*sqrt(2.0)*mag(S));
-    volScalarField wBar((k_/epsilon_)*sqrt(2.0)*mag(W));
+    const volScalarField sBar((k_/epsilon_)*sqrt(2.0)*mag(S));
+    const volScalarField wBar((k_/epsilon_)*sqrt(2.0)*mag(W));
 
-    volScalarField Cmu((2.0/3.0)/(Cmu1_ + sBar + Cmu2_*wBar));
-    volScalarField fMu(this->fMu());
+    const volScalarField Cmu((2.0/3.0)/(Cmu1_ + sBar + Cmu2_*wBar));
+    const volScalarField fMu(this->fMu());
 
     boundEpsilon();
     nut_ = fMu*Cmu*sqr(k_)/epsilon_;
@@ -256,17 +259,17 @@ void LienCubicKE::correct()
     tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
 
-    volScalarField G
+    volInternalScalarField G
     (
         GName(),
-        (nut_*twoSymm(gradU) - nonlinearStress_) && gradU
+        (nut_()*twoSymm(gradU()) - nonlinearStress_()) && gradU()
     );
 
 
     // Update epsilon and G at the wall
     epsilon_.boundaryRef().updateCoeffs();
 
-    const volScalarField f2(this->f2());
+    const volInternalScalarField f2(this->f2());
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -275,8 +278,8 @@ void LienCubicKE::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(DepsilonEff(), epsilon_)
       ==
-        Ceps1_*G*epsilon_/k_
-      - fvm::Sp(Ceps2_*f2*epsilon_/k_, epsilon_)
+        Ceps1_*G*epsilon_()/k_()
+      - fvm::Sp(Ceps2_*f2*epsilon_()/k_(), epsilon_)
       + E(f2)
     );
 
@@ -294,7 +297,7 @@ void LienCubicKE::correct()
       - fvm::laplacian(DkEff(), k_)
       ==
         G
-      - fvm::Sp(epsilon_/k_, k_)
+      - fvm::Sp(epsilon_()/k_(), k_)
     );
 
     kEqn.ref().relax();

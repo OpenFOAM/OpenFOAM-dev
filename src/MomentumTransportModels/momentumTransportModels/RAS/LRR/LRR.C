@@ -282,7 +282,7 @@ void LRR<BasicMomentumTransportModel>::correct()
         fvm::ddt(alpha, rho, R)
       + fvm::div(alphaRhoPhi, R)
       - fvm::laplacian(alpha*rho*DREff(), R)
-      + fvm::Sp(C1_*alpha*rho*epsilon_/k_, R)
+        + fvm::Sp(C1_*alpha()*rho()*epsilon_()/k_(), R)
       ==
         alpha()*rho()*P
       - (2.0/3.0*(1 - C1_)*I)*alpha()*rho()*epsilon_()

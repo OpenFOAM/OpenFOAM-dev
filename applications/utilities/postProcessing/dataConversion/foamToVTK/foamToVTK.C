@@ -848,7 +848,7 @@ int main(int argc, char *argv[])
 
                 forAll(ssf, i)
                 {
-                    surfaceVectorField* ssfiPtr = (ssf[i]*n).ptr();
+                    surfaceVectorField* ssfiPtr = eval(ssf[i]*n).ptr();
                     ssfiPtr->rename(ssf[i].name());
                     svf.set(sz+i, ssfiPtr);
                 }

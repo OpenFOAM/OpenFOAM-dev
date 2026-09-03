@@ -82,12 +82,17 @@ void Foam::fv::heatTransfer::add
             IOobject::groupName(TName_, phaseName_)
         );
 
-    tmp<volScalarField> mask =
-        volScalarField::New("mask", mesh(), dimensionedScalar(dimless, 0));
-    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), zone_.zone()) = 1;
-    const volScalarField htcAv
+    tmp<volInternalScalarField> mask = volInternalScalarField::New
     (
-        alpha*mask*heatTransferCoefficientModel_->htc()*heatTransferAv_->Av()
+        "mask",
+        mesh(),
+        dimensionedScalar(dimless, 0)
+    );
+    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), zone_.zone()) = 1;
+    const volInternalScalarField htcAv
+    (
+        alpha()*mask
+       *heatTransferCoefficientModel_->htc()()()*heatTransferAv_->Av()()()
     );
 
     if (semiImplicit_)
@@ -100,9 +105,10 @@ void Foam::fv::heatTransfer::add
                    IOobject::groupName(physicalProperties::typeName, phaseName_)
                );
 
-            const volScalarField htcAvByCpv(htcAv/thermo.Cpv());
+            const volInternalScalarField htcAvByCpv(htcAv/thermo.Cpv()());
 
-            eqn += htcAv*(Ta_ - T) + htcAvByCpv*he - fvm::Sp(htcAvByCpv, he);
+            eqn += htcAv*(Ta_ - T()) + htcAvByCpv*he()
+                - fvm::Sp(htcAvByCpv, he);
         }
         else if (he.dimensions() == dimensions::temperature)
         {
@@ -111,7 +117,7 @@ void Foam::fv::heatTransfer::add
     }
     else
     {
-        eqn += htcAv*(Ta_ - T);
+        eqn += htcAv*(Ta_ - T());
     }
 }
 

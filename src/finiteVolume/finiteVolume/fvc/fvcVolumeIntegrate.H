@@ -66,6 +66,9 @@ namespace fvc
 
     template<class Type>
     dimensioned<Type> domainIntegrate(const tmp<VolField<Type>>&);
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    ElementType<Expression> domainIntegrate(const Expression&);
 }
 
 

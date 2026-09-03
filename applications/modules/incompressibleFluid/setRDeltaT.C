@@ -61,14 +61,14 @@ void Foam::solvers::incompressibleFluid::setRDeltaT()
     if (pimpleDict.found("maxDeltaT") || minRDeltaT < rootVSmall)
     {
         const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("maxDeltaT");
-        rDeltaT.max(clipRDeltaT);
+        rDeltaT.primitiveFieldRef().boundLower(clipRDeltaT);
         minRDeltaT = max(minRDeltaT, clipRDeltaT);
         maxRDeltaT = max(maxRDeltaT, clipRDeltaT);
     }
     if (pimpleDict.found("minDeltaT") || maxRDeltaT > rootVGreat)
     {
         const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("minDeltaT");
-        rDeltaT.min(clipRDeltaT);
+        rDeltaT.primitiveFieldRef().boundUpper(clipRDeltaT);
         minRDeltaT = min(minRDeltaT, clipRDeltaT);
         maxRDeltaT = min(maxRDeltaT, clipRDeltaT);
     }

@@ -445,7 +445,7 @@ bool Foam::functionObjects::comfort::execute()
 
     // Limit the velocity field to the values given in EN ISO 7733
     volScalarField Umag(mag(lookupObject<volVectorField>("U")));
-    Umag.maxMin(Umin, Umax);
+    Umag.bound(Umin, Umax);
 
     // Calculate the turbulent intensity if turbulent kinetic energy field k
     // exists

@@ -302,21 +302,6 @@ public:
             const dictionary&
         );
 
-        //- Return a pointer to a new calculatedFvsPatchField created on
-        //  freestore without setting patchField values
-        static tmp<fvsPatchField<Type>> NewCalculatedType
-        (
-            const fvPatch&
-        );
-
-        //- Return a pointer to a new calculatedFvsPatchField created on
-        //  freestore without setting patchField values
-        template<class Type2>
-        static tmp<fvsPatchField<Type>> NewCalculatedType
-        (
-            const fvsPatchField<Type2>&
-        );
-
 
     //- Destructor
     virtual ~fvsPatchField()

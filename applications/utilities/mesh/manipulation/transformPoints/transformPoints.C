@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ void readAndRotateFields
     {
         Info<< "Transforming " << flds[i].name() << endl;
         dimensionedTensor dimT("t", flds[i].dimensions(), T);
-        transform(flds[i], dimT, flds[i]);
+        flds[i] = transform(dimT, flds[i]);
     }
 }
 

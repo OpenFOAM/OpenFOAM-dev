@@ -117,7 +117,7 @@ Foam::fv::homogeneousLiquidPhaseSeparation::dAndMDotByAlphaSolution() const
     infoFieldVariable(sigma, debug);
 
     // Mass fraction of nucleating specie
-    const volInternalScalarField Yi = thermoSolution.Y()[specieis().first()];
+    const volInternalScalarField& Yi = thermoSolution.Y()[specieis().first()];
 
     // Saturation mass fraction and concentration
     const volInternalScalarField solubility

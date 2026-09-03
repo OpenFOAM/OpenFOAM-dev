@@ -83,8 +83,11 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 UEqns[phase.index()].A()
               + byDt
                 (
-                    max(phase.residualAlpha() - alpha, scalar(0))
-                   *phase.rho()
+                    eval
+                    (
+                        max(phase.residualAlpha() - alpha, scalar(0))
+                       *phase.rho()
+                    )
                 )
             );
 
@@ -135,7 +138,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                    ghSnGradRho
                  - fluid.surfaceTension(phase)*mesh.magSf()
                 )
-              - fvc::interpolate(max(phase, phase.residualAlpha()))
+              - fvc::interpolate(max(phase.alpha(), phase.residualAlpha()))
                *fvc::interpolate(phase.rho() - rho)*(buoyancy.g & mesh.Sf())
             );
         }
@@ -165,8 +168,11 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                     UEqns[phase.index()].H()
                   + byDt
                     (
-                        max(phase.residualAlpha() - alpha, scalar(0))
-                       *phase.rho()
+                        eval
+                        (
+                            max(phase.residualAlpha() - alpha, scalar(0))
+                           *phase.rho()
+                        )
                     )
                    *phase.U()().oldTime()
                 );
@@ -235,8 +241,11 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                     UEqns[phase.index()].H()
                   + byDt
                     (
-                        max(phase.residualAlpha() - alpha, scalar(0))
-                       *phase.rho()
+                        eval
+                        (
+                            max(phase.residualAlpha() - alpha, scalar(0))
+                           *phase.rho()
+                        )
                     )
                    *phase.U()().oldTime()
                 );
@@ -312,11 +321,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
         // Update the fixedFluxPressure BCs to ensure flux consistency
         {
-            surfaceScalarField::Boundary phib
-            (
-                surfaceScalarField::Internal::null(),
-                phi.boundary()
-            );
+            SurfaceBoundaryField<scalar> phib(phi.boundaryField());
             phib = 0;
 
             forAll(movingPhases, movingPhasei)

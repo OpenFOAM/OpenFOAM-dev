@@ -133,8 +133,8 @@ continuousGasKEqn<BasicMomentumTransportModel>::kSource() const
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
     return
-        phaseTransferCoeff*liquidTurbulence.k()
-      - fvm::Sp(phaseTransferCoeff, this->k_);
+        phaseTransferCoeff()*liquidTurbulence.k()()()
+      - fvm::Sp(phaseTransferCoeff(), this->k_);
 }
 
 

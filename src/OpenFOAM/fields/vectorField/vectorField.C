@@ -25,19 +25,12 @@ License
 
 #include "vectorField.H"
 
-#define TEMPLATE
-#include "FieldFunctionsM.C"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(vector, vector, normalised)
-UNARY_FUNCTION(vector, vector, perpendicular)
-
 
 tmp<vectorField> zip
 (
@@ -54,13 +47,8 @@ tmp<vectorField> zip
     return txyz;
 }
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // ************************************************************************* //

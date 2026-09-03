@@ -25,7 +25,7 @@ License
 
 #include "Fourier.H"
 #include "fvmLaplacian.H"
-#include "fvcLaplacian.H"
+#include "fviLaplacian.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -172,7 +172,7 @@ Fourier<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
-        -fvc::laplacian(this->alpha()*thermo.kappa(), thermo.T())
+        -fvi::laplacian(this->alpha()*thermo.kappa(), thermo.T())
         -fvm::laplacianCorrection
          (
              this->alpha()*thermo.kappa()/thermo.Cpv(),

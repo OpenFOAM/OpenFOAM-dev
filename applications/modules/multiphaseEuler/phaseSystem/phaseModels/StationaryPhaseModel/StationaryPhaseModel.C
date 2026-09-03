@@ -310,14 +310,14 @@ Foam::StationaryPhaseModel<BasePhaseModel>::K() const
 
 
 template<class BasePhaseModel>
-const Foam::autoPtr<Foam::volScalarField>&
+const Foam::autoPtr<Foam::volInternalScalarField>&
 Foam::StationaryPhaseModel<BasePhaseModel>::divU() const
 {
     FatalErrorInFunction
         << "Cannot access the dilatation rate of a stationary phase"
         << abort(FatalError);
 
-    static autoPtr<volScalarField> divU_;
+    static autoPtr<volInternalScalarField> divU_;
     return divU_;
 }
 
@@ -325,7 +325,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::divU() const
 template<class BasePhaseModel>
 void Foam::StationaryPhaseModel<BasePhaseModel>::divU
 (
-    tmp<volScalarField> divU
+    tmp<volInternalScalarField> divU
 )
 {
     FatalErrorInFunction

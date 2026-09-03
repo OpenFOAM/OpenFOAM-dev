@@ -123,6 +123,11 @@ public:
             const volTensorField&
         ) const;
 
+        template<class Expression, class = EnableIfExpression<Expression>>
+        auto operator[](const Expression& e) const
+        {
+            return operator[](eval(e));
+        }
 
         //- Disallow default bitwise assignment
         void operator=(const anisotropicFilter&) = delete;

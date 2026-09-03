@@ -319,7 +319,7 @@ void Foam::fvMeshAdder::MapSurfaceField
 
     // Store old internal field
     {
-        Field<Type> oldField(fld);
+        Field<Type> oldField(fld.primitiveField());
 
         // Modify internal field
         Field<Type>& intFld = fld.primitiveFieldRef();
@@ -607,7 +607,7 @@ void Foam::fvMeshAdder::MapPointField
 
     // Store old internal field
     {
-        Field<Type> oldField(fld);
+        Field<Type> oldField(fld.primitiveField());
 
         // Modify internal field
         Field<Type>& intFld = fld.primitiveFieldRef();

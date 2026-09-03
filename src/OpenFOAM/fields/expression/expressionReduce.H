@@ -67,7 +67,12 @@ struct Reduce
     static const bool globalReduce = false;
 
     template<class Op, class Value>
-    static const Value& value(const Value& x)
+    static const Value& value
+    (
+        const Value& x,
+        const bool globalReduce = false,
+        const label comm = UPstream::worldComm
+    )
     {
         return x;
     }
@@ -90,7 +95,7 @@ struct ReduceIterable<Container<Type, Args ...>>
     template elementType<Expression> value
     (
         const Expression& e,
-        const bool globalReduce,
+        const bool globalReduce = false,
         const label comm = UPstream::worldComm
     )
     {
@@ -108,7 +113,16 @@ struct ReduceIterable<Container<Type, Args ...>>
                 Op::template identity<elementType>(),
                 [](const elementType& x, const operateType& y)
                 {
-                    return Op::value(x, Reduce<Type>::template value<Op>(y));
+                    return Op::value
+                    (
+                        x,
+                        Reduce<Type>::template value<Op>
+                        (
+                            y,
+                            false,
+                            UPstream::worldComm
+                        )
+                    );
                 }
             );
 

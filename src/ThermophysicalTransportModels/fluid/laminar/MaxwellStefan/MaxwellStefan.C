@@ -25,7 +25,7 @@ License
 
 #include "MaxwellStefan.H"
 #include "fviDiv.H"
-#include "fvcLaplacian.H"
+#include "fviLaplacian.H"
 #include "fvcSnGrad.H"
 #include "fvmSup.H"
 #include "fvmLaplacian.H"
@@ -735,7 +735,7 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divq
     (
         fvm::Su
         (
-            -fvc::laplacian(this->alpha()*this->kappaEff(), this->thermo().T()),
+            -fvi::laplacian(this->alpha()*this->kappaEff(), this->thermo().T()),
             he
         )
     );

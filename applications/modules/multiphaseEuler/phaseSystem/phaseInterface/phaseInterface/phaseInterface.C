@@ -516,7 +516,7 @@ Foam::word Foam::phaseInterface::name() const
 
 Foam::tmp<Foam::volScalarField> Foam::phaseInterface::rho() const
 {
-    return phase1()*phase1().rho() + phase2()*phase2().rho();
+    return phase1().alpha()*phase1().rho() + phase2().alpha()*phase2().rho();
 }
 
 
@@ -555,20 +555,32 @@ Foam::tmp<Foam::volVectorField> Foam::phaseInterface::DUDtr
 {
     const phaseModel& otherPhase = this->otherPhase(phase);
 
+    tmp<volVectorField> tDUDtr
+    (
+        volVectorField::New
+        (
+            IOobject::groupName("DUDtr", phase.group()),
+            phase.mesh(),
+            dimensionedVector(dimensions::acceleration, Zero)
+        )
+    );
+
     if (otherPhase.stationary())
     {
-        return phase.DUDt() & phase.U();
+        tDUDtr.ref().internalFieldRef() = phase.DUDt() & phase.U()();
     }
     else if (phase.stationary())
     {
-        return - (otherPhase.DUDt() & phase.U());
+        tDUDtr.ref().internalFieldRef() = -(otherPhase.DUDt() & phase.U()());
     }
     else
     {
-        return
-            (phase.DUDt() & phase.U())
-          - (otherPhase.DUDt() & otherPhase.U());
+        tDUDtr.ref().internalFieldRef() =
+            (phase.DUDt() & phase.U()())
+          - (otherPhase.DUDt() & otherPhase.U()());
     }
+
+    return tDUDtr;
 }
 
 

@@ -75,6 +75,16 @@ public:
 };
 
 
+namespace expression
+{
+    template<>
+    struct Expressionable<oneField>
+    :
+        public notExpressionable
+    {};
+}
+
+
 inline const oneField& operator*(const oneField&, const oneField&);
 
 inline const oneField& operator/(const oneField&, const oneField&);

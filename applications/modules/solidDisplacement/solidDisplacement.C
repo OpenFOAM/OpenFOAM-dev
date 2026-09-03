@@ -101,15 +101,15 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
     lambda
     (
         thermo_.planeStress()
-      ? nu*E/((1 + nu)*(1 - nu))
-      : nu*E/((1 + nu)*(1 - 2*nu))
+      ? eval(nu*E/((1 + nu)*(1 - nu)))
+      : eval(nu*E/((1 + nu)*(1 - 2*nu)))
     ),
 
     threeK
     (
         thermo_.planeStress()
-      ? E/(1 - nu)
-      : E/(1 - 2*nu)
+      ? eval(E/(1 - nu))
+      : eval(E/(1 - 2*nu))
     ),
 
     threeKalpha("threeKalpha", threeK*thermo_.alphav()),

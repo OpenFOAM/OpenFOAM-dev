@@ -124,7 +124,7 @@ inline Foam::fv::filmCloudTransfer::CloudToFilmTransferRate
                 eval(prop/cloudMesh.boundary()[cloudPatchi].magSf())
             );
 
-        tSu.ref().primitiveFieldRef() /= film_.VbyA;
+        tSu.ref().primitiveFieldRef() /= film_.VbyA.primitiveField();
         tSu.ref().primitiveFieldRef() /= mesh().time().deltaTValue();
     }
 

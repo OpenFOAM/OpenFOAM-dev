@@ -27,9 +27,6 @@ Typedef
 Description
     Specialisation of Field\<T\> for label.
 
-SourceFiles
-    labelField.C
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef labelField_H
@@ -38,42 +35,18 @@ SourceFiles
 #include "label.H"
 #include "Field.H"
 
-#define TEMPLATE
-#include "FieldFunctionsM.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 typedef Field<label> labelField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-UNARY_FUNCTION(label, label, mag)
-BINARY_TYPE_OPERATOR(label, label, label, +, add)
-BINARY_TYPE_OPERATOR(label, label, label, -, subtract)
-
-template<>
-inline auto labelField::component(const direction&) const
-{
-    return *this;
-}
-
-template<>
-void component(labelField& lf, const labelUList& f, const direction);
-
-template<>
-void labelField::replace(const direction, const labelUList& lf);
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

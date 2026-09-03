@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,8 @@ Foam::dragModels::IshiiZuber::CdRe() const
 
     const volScalarField muMix
     (
-        muc*pow(max(1 - interface_.dispersed(), scalar(1e-3)), -2.5*muStar)
+        muc
+       *pow(max(1 - interface_.dispersed().alpha(), 1e-3), -2.5*muStar)
     );
 
     const volScalarField ReM(Re*muc/muMix);
@@ -82,8 +83,8 @@ Foam::dragModels::IshiiZuber::CdRe() const
       + neg(1000 - ReM)*0.44*ReM
     );
 
-    volScalarField F((muc/muMix)*sqrt(1 - interface_.dispersed()));
-    F.max(1e-3);
+    volScalarField F((muc/muMix)*sqrt(1 - interface_.dispersed().alpha()));
+    F.boundLower(1e-3);
 
     const volScalarField Ealpha((1 + 17.67*pow(F, 0.8571428))/(18.67*F));
 
@@ -91,7 +92,7 @@ Foam::dragModels::IshiiZuber::CdRe() const
 
     return
         pos0(CdReEllipse - CdRe)
-       *min(CdReEllipse, Re*sqr(1 - interface_.dispersed())*2.66667)
+       *min(CdReEllipse, Re*sqr(1 - interface_.dispersed().alpha())*2.66667)
       + neg(CdReEllipse - CdRe)*CdRe;
 }
 

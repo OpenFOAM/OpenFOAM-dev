@@ -93,7 +93,7 @@ Foam::heatTransferModels::timeScaleFilteredHeatTransfer::K
 {
     const volScalarField limit
     (
-        max(interface_.dispersed(), residualAlpha)
+        max(interface_.dispersed().alpha(), residualAlpha)
        *interface_.dispersed().thermo().Cp()
        *interface_.dispersed().rho()
        /minRelaxTime_

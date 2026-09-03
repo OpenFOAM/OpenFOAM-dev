@@ -114,7 +114,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::d() const
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::Av() const
 {
-    return phase()*kappai_;
+    return phase().alpha()*kappai_;
 }
 
 

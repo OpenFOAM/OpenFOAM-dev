@@ -28,12 +28,8 @@ Description
     Generic templated field type.
 
 SourceFiles
-    FieldFunctions.H
-    FieldFunctionsM.H
-    FieldM.H
     Field.C
-    FieldFunctions.C
-    FieldFunctionsM.C
+    FieldExpression.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -240,13 +236,11 @@ public:
         //- Clone
         tmp<Field<Type>> clone() const;
 
-        //- Return a pointer to a new calculatedFvPatchFieldField created on
-        //  freestore without setting patchField values
-        template<class Type2>
-        static tmp<Field<Type>> NewCalculatedType(const Field<Type2>& f)
-        {
-            return tmp<Field<Type>>(new Field<Type>(f.size()));
-        }
+        static tmp<Field<Type>> New
+        (
+            const tmp<Field<Type>>& tf1,
+            const bool initRet = true
+        );
 
 
     // Member Functions
@@ -331,6 +325,10 @@ public:
         //- Replace a component field of the field
         void replace(const direction, const tmp<Field<cmptType>>&);
 
+        //- Replace a component field of the field from an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void replace(const direction, const Expression&);
+
         //- Replace a component field of the field
         void replace(const direction, const cmptType&);
 
@@ -340,6 +338,15 @@ public:
         //- Return the field transpose expression
         //  (only defined for second rank tensors)
         inline auto T() const;
+
+        //- Bound the field to the given lower bound
+        void boundLower(const Type& lower);
+
+        //- Bound the field to the given upper bound
+        void boundUpper(const Type& upper);
+
+        //- Bound the field within the given lower and upper bounds
+        void bound(const Type& lower, const Type& upper);
 
         //- Append an element at the end of the Field
         void append(const Type& t);
@@ -420,7 +427,6 @@ Ostream& operator<<(Ostream&, const Field<Type>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "FieldFunctions.H"
 #include "FieldExpression.H"
 #include "scalarField.H"
 

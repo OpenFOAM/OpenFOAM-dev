@@ -25,6 +25,7 @@ License
 
 #include "Maxwell.H"
 #include "fviDiv.H"
+#include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "uniformDimensionedFields.H"
@@ -131,7 +132,7 @@ tmp<fvSymmTensorMatrix> Maxwell<BasicMomentumTransportModel>::sigmaSource
     volSymmTensorField& sigma
 ) const
 {
-    return -fvm::Sp(this->alpha_*this->rho_/lambdas_[modei], sigma);
+    return -fvm::Sp(this->alpha_()*this->rho_()/lambdas_[modei], sigma);
 }
 
 
@@ -377,8 +378,8 @@ void Maxwell<BasicMomentumTransportModel>::correct()
 
     laminarModel<BasicMomentumTransportModel>::correct();
 
-    tmp<volTensorField> tgradU(fvc::grad(U));
-    const volTensorField& gradU = tgradU();
+    tmp<volInternalTensorField> tgradU(fvi::grad(U));
+    const volInternalTensorField& gradU = tgradU();
 
     forAll(lambdas_, modei)
     {
@@ -400,9 +401,9 @@ void Maxwell<BasicMomentumTransportModel>::correct()
         );
 
         // Note sigma is positive on lhs of momentum eqn
-        const volSymmTensorField P
+        const volInternalSymmTensorField P
         (
-            twoSymm(sigma & gradU)
+            twoSymm(sigma() & gradU)
           - nuM_[modei]*rLambda*twoSymm(gradU)
         );
 
@@ -417,7 +418,7 @@ void Maxwell<BasicMomentumTransportModel>::correct()
                 "div(" + alphaRhoPhi.name() + ',' + sigma_.name() + ')'
             )
          ==
-            alpha*rho*P
+            alpha()*rho()*P
           + sigmaSource(modei, sigma)
           + fvModels.source(alpha, rho, sigma)
         );

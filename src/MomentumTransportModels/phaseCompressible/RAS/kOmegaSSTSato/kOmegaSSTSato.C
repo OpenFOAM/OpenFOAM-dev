@@ -162,7 +162,7 @@ void kOmegaSSTSato<BasicMomentumTransportModel>::correctNut
     {
         this->nut_ +=
             sqr(1 - exp(-yPlus/16.0))
-           *Cmub_*phaseIter().d()*phaseIter()
+           *Cmub_*phaseIter().d()*phaseIter().alpha()
            *(mag(this->U_ - phaseIter().U()));
     }
 

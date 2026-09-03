@@ -168,7 +168,7 @@ Foam::reactionModels::zoneReaction::R(volScalarField& Y) const
 }
 
 
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::zoneReaction::Qdot() const
 {
     return filter(reactionModelPtr_->Qdot());

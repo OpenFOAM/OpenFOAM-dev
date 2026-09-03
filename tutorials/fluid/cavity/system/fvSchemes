@@ -35,10 +35,10 @@ divSchemes
     div(phi,epsilon) Gauss limitedLinear 1;
     div(phi,R)      Gauss limitedLinear 1;
     div(phi,omega)  Gauss limitedLinear 1;
-    div((rho*R))    Gauss linear;
+    div(rho*R)      Gauss linear;
     div(R)          Gauss linear;
     div(U)          Gauss linear;
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

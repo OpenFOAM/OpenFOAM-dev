@@ -188,7 +188,7 @@ void Foam::XiModels::transport::correct()
     fvConstraints.constrain(Xi_);
 
     // Limit range of Xi for realisability and stability
-    Xi_.max(1);
+    Xi_.boundLower(1);
     Xi_ = min(Xi_, 2*XiEqEta);
 }
 

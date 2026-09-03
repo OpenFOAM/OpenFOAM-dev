@@ -589,7 +589,7 @@ void Foam::populationBalanceModel::computeDilatationErrors()
         (
             phase.index(),
             fvi::ddt(alpha) + fvi::div(phase.alphaPhi())
-          - (fluid_.fvModels().source(alpha, rho) & rho)()()/rho()
+          - (fluid_.fvModels().source(alpha, rho) & rho())/rho()
         );
 
         for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
@@ -1498,7 +1498,7 @@ void Foam::populationBalanceModel::solve()
                 (
                     fvm::Sp
                     (
-                        max(phase.residualAlpha() - alpha, scalar(0))
+                        max(phase.residualAlpha() - alpha(), scalar(0))
                        /mesh().time().deltaT(),
                         fi
                     )
@@ -1519,8 +1519,8 @@ void Foam::populationBalanceModel::solve()
         }
     }
 
-    const volScalarField alphaF0(phases_.first()*fs_.first());
-    const volScalarField alphaFNm1(phases_.last()*fs_.last());
+    const volScalarField alphaF0(phases_.first().alpha()*fs_.first());
+    const volScalarField alphaFNm1(phases_.last().alpha()*fs_.last());
 
     Info<< "populationBalance " << this->name() << ": Group fraction "
         << "first/last = " << weightedAverage(alphaF0(), mesh().V()).value()
@@ -1533,7 +1533,7 @@ void Foam::populationBalanceModel::solve()
 
         forAll(fs_, i)
         {
-            fs_[i].max(0);
+            fs_[i].boundLower(0);
         }
 
         forAll(uniquePhases_, uniquePhasei)
@@ -1608,7 +1608,7 @@ void Foam::populationBalanceModel::correct()
         alphas_() +=
             max
             (
-                uniquePhases_[uniquePhasei],
+                uniquePhases_[uniquePhasei].alpha(),
                 uniquePhases_[uniquePhasei].residualAlpha()
             );
     }
@@ -1630,7 +1630,7 @@ void Foam::populationBalanceModel::correct()
         invDsm +=
             max
             (
-                uniquePhases_[uniquePhasei],
+                uniquePhases_[uniquePhasei].alpha(),
                 uniquePhases_[uniquePhasei].residualAlpha()
             )
            /alphas_()
@@ -1690,7 +1690,7 @@ void Foam::populationBalanceModel::correct()
         U_() +=
             max
             (
-                uniquePhases_[uniquePhasei],
+                uniquePhases_[uniquePhasei].alpha(),
                 uniquePhases_[uniquePhasei].residualAlpha()
             )
            /alphas_()

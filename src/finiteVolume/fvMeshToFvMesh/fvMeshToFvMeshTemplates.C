@@ -122,7 +122,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
 {
     // Construct target patch fields as copies of source patch fields, but do
     // not map values yet
-    PtrList<fvPatchField<Type>> tgtPatchFields(tgtMesh_.boundary().size());
+    PtrField<fvPatchField<Type>> tgtPatchFields(tgtMesh_.boundary().size());
     forAll(patchIndices(), i)
     {
         const label srcPatchi = patchIndices()[i].first();
@@ -312,7 +312,7 @@ Foam::fvMeshToFvMesh::srcToTgt
 ) const
 {
     // Map all patch fields
-    PtrList<fvsPatchField<Type>> tgtPatchFields(tgtMesh_.boundary().size());
+    PtrField<fvsPatchField<Type>> tgtPatchFields(tgtMesh_.boundary().size());
     forAll(patchIndices(), i)
     {
         const label srcPatchi = patchIndices()[i].first();

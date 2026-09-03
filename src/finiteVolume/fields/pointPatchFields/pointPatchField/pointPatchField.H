@@ -271,15 +271,6 @@ public:
             const dictionary&
         );
 
-        //- Return a pointer to a new calculatedPointPatchField created on
-        //  freestore without setting patchField values
-        template<class Type2>
-        static autoPtr<pointPatchField<Type>>
-        NewCalculatedType
-        (
-            const pointPatchField<Type2>&
-        );
-
 
     //- Destructor
     virtual ~pointPatchField()
@@ -468,31 +459,43 @@ public:
         virtual void operator=(const Field<Type>&) {}
         virtual void operator=(const pointPatchField<Type>&) {}
         virtual void operator=(pointPatchField<Type>&&) {}
+        virtual void operator=(const Type&) {}
 
         //- Assign to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
-        pointPatchField<Type>& operator=(const Expression& e)
-        {
-            return *this;
-        }
+        void operator=(const Expression& e) {}
 
-        virtual void operator+=(const pointPatchField<Type>&) {}
-        virtual void operator-=(const pointPatchField<Type>&) {}
-        virtual void operator*=(const pointPatchField<scalar>&) {}
-        virtual void operator/=(const pointPatchField<scalar>&) {}
+        void operator+=(const pointPatchField<Type>&) {}
+        void operator+=(const Field<Type>&) {}
+        void operator+=(const Type&) {}
 
-        virtual void operator+=(const Field<Type>&) {}
-        virtual void operator-=(const Field<Type>&) {}
+        //- Assign-add to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator+=(const Expression& e) {}
 
-        virtual void operator*=(const Field<scalar>&) {}
-        virtual void operator/=(const Field<scalar>&) {}
+        void operator-=(const pointPatchField<Type>&) {}
+        void operator-=(const Field<Type>&) {}
+        void operator-=(const Type&) {}
 
-        virtual void operator=(const Type&) {}
-        virtual void operator+=(const Type&) {}
-        virtual void operator-=(const Type&) {}
-        virtual void operator*=(const scalar) {}
-        virtual void operator/=(const scalar) {}
+        //- Assign-subtract to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator-=(const Expression& e) {}
 
+        void operator*=(const pointPatchField<scalar>&) {}
+        void operator*=(const Field<scalar>&) {}
+        void operator*=(const scalar) {}
+
+        //- Assign-multiply to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator*=(const Expression& e) {}
+
+        void operator/=(const pointPatchField<scalar>&) {}
+        void operator/=(const Field<scalar>&) {}
+        void operator/=(const scalar) {}
+
+        //- Assign-divide to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator/=(const Expression& e) {}
 
         // Force an assignment irrespective of form of patch. These do nothing
         // unless the patch actually has boundary values.
@@ -503,10 +506,7 @@ public:
 
         //- Assign to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
-        pointPatchField<Type>& operator==(const Expression& e)
-        {
-            return *this;
-        }
+        void operator==(const Expression& e) {}
 
 
     // Ostream operator
@@ -538,7 +538,6 @@ const pointPatchField<Type>& operator+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "pointPatchFieldFunctions.H"
 #include "pointPatchFieldExpression.H"
 
 #ifdef NoRepository

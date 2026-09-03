@@ -49,7 +49,6 @@ SourceFiles
 #include "fvPatchFieldMapperFwd.H"
 #include "fileNameList.H"
 #include "fieldTypes.H"
-
 #include "expressionAssignment.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -305,21 +304,6 @@ public:
             const fvPatch&,
             const DimensionedField<Type, fvMesh>&,
             const dictionary&
-        );
-
-        //- Return a pointer to a new calculatedFvPatchField created on
-        //  freestore without setting patchField values
-        static tmp<fvPatchField<Type>> NewCalculatedType
-        (
-            const fvPatch&
-        );
-
-        //- Return a pointer to a new calculatedFvPatchField created on
-        //  freestore without setting patchField values
-        template<class Type2>
-        static tmp<fvPatchField<Type>> NewCalculatedType
-        (
-            const fvPatchField<Type2>&
         );
 
 
@@ -608,10 +592,7 @@ public:
         virtual void operator==(const Type&);
 
         //- Virtual force-assign to an expression
-        virtual void operator==
-        (
-            const expression::Assignment<Field<Type>>& a
-        );
+        virtual void operator==(const expression::Assignment<Field<Type>>&);
 
         //- Templated force-assign
         template<class Expression, class = EnableIfExpressionable<Expression>>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ void Foam::multiphaseVoFMixture::calcAlphas()
 
     forAll(phases_, phasei)
     {
-        alphas_ += level*phases_[phasei];
+        alphas_ += level*phases_[phasei].alpha();
         level += 1.0;
     }
 }
@@ -233,7 +233,8 @@ Foam::multiphaseVoFMixture::nearInterface() const
         tnearInt.ref() = max
         (
             tnearInt(),
-            pos0(phases_[phasei] - 0.01)*pos0(0.99 - phases_[phasei])
+            pos0(phases_[phasei].alpha() - 0.01)
+           *pos0(0.99 - phases_[phasei].alpha())
         );
     }
 

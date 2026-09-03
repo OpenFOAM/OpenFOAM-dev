@@ -182,7 +182,7 @@ Foam::fvFieldReconstructor::reconstructVolField
     Field<Type> internalField(completeMesh_.nCells());
 
     // Create the patch fields
-    PtrList<fvPatchField<Type>> patchFields(completeMesh_.boundary().size());
+    PtrField<fvPatchField<Type>> patchFields(completeMesh_.boundary().size());
 
     forAll(procFields, proci)
     {
@@ -336,7 +336,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
     Field<Type> internalField(completeMesh_.nInternalFaces());
 
     // Create the patch fields
-    PtrList<fvsPatchField<Type>> patchFields(completeMesh_.boundary().size());
+    PtrField<fvsPatchField<Type>> patchFields(completeMesh_.boundary().size());
 
     forAll(procMeshes_, proci)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,10 +226,13 @@ public:
         //- Return the face-interpolate of the given tmp cell field
         //  with explicit correction
         tmp<SurfaceField<Type>>
-        interpolate
-        (
-            const tmp<VolField<Type>>&
-        ) const;
+        interpolate(const tmp<VolField<Type>>&) const;
+
+        template<class Expression, class = EnableIfExpression<Expression>>
+        inline auto interpolate(const Expression& e) const
+        {
+            return interpolate(eval(e));
+        }
 
 
     // Member Operators

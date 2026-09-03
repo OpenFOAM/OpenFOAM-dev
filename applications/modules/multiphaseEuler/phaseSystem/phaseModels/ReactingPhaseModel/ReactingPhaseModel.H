@@ -94,7 +94,7 @@ public:
         virtual tmp<fvScalarMatrix> R(volScalarField& Yi) const;
 
         //- Return heat release rate
-        virtual tmp<volScalarField> Qdot() const;
+        virtual tmp<volInternalScalarField> Qdot() const;
 };
 
 

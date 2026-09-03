@@ -106,7 +106,7 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
                 (
                     (fvi::ddt(alpha1, rho1) + fvi::div(alphaPhi1*rho1f))/rho1()
                   - fvi::ddt(alpha1) - fvi::div(alphaPhi1)
-                  + (alpha1/rho1)
+                  + (alpha1()/rho1())
                    *correction
                     (
                         psi1*fvm::ddt(p_rgh)
@@ -118,7 +118,7 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
                 (
                    (fvi::ddt(alpha2, rho2) + fvi::div(alphaPhi2*rho2f))/rho2()
                  - fvi::ddt(alpha2) - fvi::div(alphaPhi2)
-                 + (alpha2/rho2)
+                 + (alpha2()/rho2())
                   *correction
                    (
                        psi2*fvm::ddt(p_rgh)
@@ -135,14 +135,14 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
                 (
                     (fvi::ddt(alpha1, rho1) + fvi::div(alphaPhi1*rho1f))/rho1()
                   - fvi::ddt(alpha1) - fvi::div(alphaPhi1)
-                  + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh))
+                  + (alpha1()*psi1()/rho1())*correction(fvm::ddt(p_rgh))
                 );
 
             p_rghEqnComp2 =
                 (
                    (fvi::ddt(alpha2, rho2) + fvi::div(alphaPhi2*rho2f))/rho2()
                  - fvi::ddt(alpha2) - fvi::div(alphaPhi2)
-                 + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh))
+                 + (alpha2()*psi2()/rho2())*correction(fvm::ddt(p_rgh))
                 );
         }
 
@@ -152,8 +152,8 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
             p_rghEqnComp2.ref() += fvi::div(mesh.phi())*alpha2();
         }
 
-        p_rghEqnComp1.ref() *= pos(alpha1);
-        p_rghEqnComp2.ref() *= pos(alpha2);
+        p_rghEqnComp1.ref() *= pos(alpha1());
+        p_rghEqnComp2.ref() *= pos(alpha2());
 
         if (pimple.transonic())
         {
@@ -187,8 +187,8 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
             {
                 vDot =
                 (
-                    alpha1*(p_rghEqnComp2 & p_rgh)
-                  - alpha2*(p_rghEqnComp1 & p_rgh)
+                    alpha1()*(p_rghEqnComp2 & p_rgh)
+                  - alpha2()*(p_rghEqnComp1 & p_rgh)
                 );
 
                 phi = phiHbyA + p_rghEqnIncomp.flux();

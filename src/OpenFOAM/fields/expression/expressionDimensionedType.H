@@ -80,8 +80,6 @@ struct Operate
     }
 };
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
 struct Name
 <

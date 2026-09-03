@@ -151,15 +151,7 @@ Foam::wedgeFvPatchField<Type>::snGradTransformDiag() const
         new Field<Type>
         (
             this->size(),
-            transformMask<Type>
-            (
-                pow
-                (
-                    diagV,
-                    pTraits<typename powProduct<vector, pTraits<Type>::rank>
-                    ::type>::zero
-                )
-            )
+            transformMask<Type>(pow<pTraits<Type>::rank>(diagV))
         )
     );
 }

@@ -84,7 +84,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Ur() const
            *(otherPhase().rho() - phase().rho())
            /sqr(otherPhase().rho())
         )
-       *pow(max(1 - phase(), scalar(0)), 1.75);
+       *pow(max(1 - phase().alpha(), scalar(0)), 1.75);
 }
 
 

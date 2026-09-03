@@ -878,7 +878,8 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
                 phi.oldTime(i).boundary()
             )
         );
-        phiErrorbs[i] = phi.oldTime(i).boundaryField() - tphib();
+        phiErrorbs[i] =
+            phi.oldTime(i).boundaryField() - tphib().boundaryField();
 
         phi.oldTimeRef(i).boundaryFieldRef() = tphib;
     }
@@ -966,8 +967,8 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
     tnccMeshMagUfb =
         max
         (
-            tnccMeshMagUfb,
-            tnccMeshMagUfb.boundaryNeighbourField()()
+            tnccMeshMagUfb.boundaryField(),
+            tnccMeshMagUfb.boundaryNeighbourField()().boundaryField()
         );
     surfaceScalarField::Boundary meshMagUfb
     (

@@ -129,11 +129,14 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
             vapour_.name()
         );
 
-    const volInternalScalarField freeSurf(vapour_/(1 - solid_));
+    const volInternalScalarField freeSurf
+    (
+        vapour_.alpha()()/(1 - solid_.alpha()())
+    );
 
     const volInternalScalarField xc
     (
-        vapour_.Y(species()[0])/vapourThermo.Wi(speciei)*vapourThermo.W()
+        vapour_.Y(species()[0])()/vapourThermo.Wi(speciei)*vapourThermo.W()()()
     );
 
     const volInternalScalarField xw(pSat/vapourThermo.p()());
@@ -147,7 +150,7 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
        *diffusiveMassTransferModel_->KinThe(vapour_)()()
        *ttmVapour.D(vapour_.Y(species()[0]))()()
        *log(max(1 - xc, scalar(0.001))/max(1 - xw, scalar(0.001)));
-    mDot_.max(scalar(0));
+    mDot_.primitiveFieldRef().boundLower(0);
 
     infoField("mDot", mDot_);
 

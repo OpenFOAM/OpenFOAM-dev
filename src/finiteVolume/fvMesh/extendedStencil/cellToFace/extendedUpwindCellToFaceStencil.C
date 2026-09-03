@@ -28,6 +28,7 @@ License
 #include "syncTools.H"
 #include "SortableList.H"
 #include "dummyTransform.H"
+#include "emptyPolyPatch.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

@@ -629,16 +629,11 @@ fields/fieldMappers/reverseFieldMapper/reverseFieldMapper.C
 fields/fieldMappers/reverseInterpolativeFieldMapper/reverseInterpolativeFieldMapper.C
 fields/fieldMappers/setSizeFieldMapper/setSizeFieldMapper.C
 fields/fieldMappers/setSizeAndZeroFieldMapper/setSizeAndZeroFieldMapper.C
-fields/labelField/labelField.C
 fields/scalarField/scalarField.C
 fields/vectorField/vectorField.C
 fields/vector2DField/vector2DField.C
-fields/sphericalTensorField/sphericalTensorField.C
-fields/diagTensorField/diagTensorField.C
 fields/symmTensorField/symmTensorField.C
 fields/tensorField/tensorField.C
-fields/quaternionField/quaternionField.C
-fields/triadField/triadField.C
 fields/complexFields/complexFields.C
 
 fields/labelField/labelIOField.C

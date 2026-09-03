@@ -107,6 +107,17 @@ protected:
             bool cacheable = false
         );
 
+        template<class Expression, class = EnableIfExpression<Expression>>
+        auto store
+        (
+                const word& fieldName,
+                const Expression& e,
+                bool cacheable = false
+        )
+        {
+            return store(fieldName, eval(e), cacheable);
+        }
+
         //- Write field if present in objectRegistry
         bool writeObject(const word& fieldName);
 

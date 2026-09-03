@@ -39,7 +39,7 @@ divSchemes
     div(phi,k)      Gauss limitedLinear 1;
     div(phi,nuTilda) Gauss limitedLinear 1;
 
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

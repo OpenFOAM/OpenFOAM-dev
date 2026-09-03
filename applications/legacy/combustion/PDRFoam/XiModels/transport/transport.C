@@ -82,22 +82,23 @@ void Foam::XiModels::transport::correct
     const fv::convectionScheme<scalar>& mvConvection
 )
 {
-    volScalarField XiEqEta(XiEqModel_->XiEq());
-    volScalarField GEta(XiGModel_->G());
+    volInternalScalarField XiEqEta(XiEqModel_->XiEq());
+    volInternalScalarField GEta(XiGModel_->G());
 
-    volScalarField R(GEta*XiEqEta/(XiEqEta - 0.999));
+    volInternalScalarField R(GEta*XiEqEta/(XiEqEta - 0.999));
 
-    volScalarField XiEqStar(R/(R - GEta));
+    volInternalScalarField XiEqStar(R/(R - GEta));
 
-    volScalarField XiEq
+    volInternalScalarField XiEq
     (
-        1.0 + (1.0 + (2*XiShapeCoef)*(0.5 - b_))*(XiEqStar - 1.0)
+        1 + (1 + (2*XiShapeCoef)*(scalar(0.5) - b_()))*(XiEqStar - 1)
     );
 
-    volScalarField G(R*(XiEq - 1.0)/XiEq);
+    volInternalScalarField G(R*(XiEq - 1)/XiEq);
 
     const objectRegistry& db = b_.db();
-    const volScalarField& betav = db.lookupObject<volScalarField>("betav");
+    const volInternalScalarField& betav =
+       db.lookupObject<volScalarField>("betav");
     const volScalarField& mgb = db.lookupObject<volScalarField>("mgb");
     const surfaceScalarField& phiSt =
         db.lookupObject<surfaceScalarField>("phiSt");
@@ -110,7 +111,7 @@ void Foam::XiModels::transport::correct
         phiSt
       + (
           - fvc::interpolate(fvc::laplacian(Db, b_)/mgb)*nf
-          + fvc::interpolate(rho_)*fvc::interpolate(Su_*(1.0/Xi_ - Xi_))*nf
+          + fvc::interpolate(rho_)*fvc::interpolate(Su_*(1/Xi_ - Xi_))*nf
         )
     );
 
@@ -121,14 +122,14 @@ void Foam::XiModels::transport::correct
       + fvm::div(phiXi, Xi_)
       - fvm::Sp(fvi::div(phiXi), Xi_)
      ==
-        betav*rho_*R
-      - fvm::Sp(betav*rho_*(R - G), Xi_)
+        betav*rho_()*R
+      - fvm::Sp(betav*rho_()*(R - G), Xi_)
     );
 
     // Correct boundedness of Xi
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
-    Xi_.max(1.0);
-    Xi_ = min(Xi_, 2.0*XiEq);
+    Xi_.boundLower(1);
+    Xi_.internalFieldRef() = min(Xi_(), 2*XiEq);
 }
 
 

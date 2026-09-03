@@ -30,6 +30,7 @@ Description
 #ifndef scalarExpressions_H
 #define scalarExpressions_H
 
+#include "scalar.H"
 #include "expressions.H"
 #include "dimensionSet.H"
 

@@ -58,8 +58,21 @@ namespace fvi
     tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
     reconstruct(const tmp<SurfaceField<Type>>&);
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto reconstruct(const Expression& e)
+    {
+        return reconstruct(eval(e));
+    }
+
     tmp<volScalarField> reconstructMag(const surfaceScalarField&);
+
     tmp<volScalarField> reconstructMag(const tmp<surfaceScalarField>&);
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto reconstructMag(const Expression& e)
+    {
+        return reconstructMag(eval(e));
+    }
 }
 
 

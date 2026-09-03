@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ Foam::heatTransferModels::RanzMarshall::K(const scalar residualAlpha) const
 
     return
         6
-       *max(interface_.dispersed(), residualAlpha)
+       *max(interface_.dispersed().alpha(), residualAlpha)
        *interface_.continuous().thermo().kappa()
        *Nu
        /sqr(interface_.dispersed().d());

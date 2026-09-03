@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ void Foam::fv::buoyancyEnergy::addSup
 
     const volVectorField& U = mesh().lookupObject<volVectorField>(UName_);
 
-    eqn += rho*(U&g);
+    eqn += rho()*(U()&g);
 }
 
 
@@ -122,7 +122,7 @@ void Foam::fv::buoyancyEnergy::addSup
 
     const volVectorField& U = mesh().lookupObject<volVectorField>(UName_);
 
-    eqn += alpha*rho*(U&g);
+    eqn += alpha()*rho()*(U()&g);
 }
 
 

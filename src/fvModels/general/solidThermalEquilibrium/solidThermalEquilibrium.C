@@ -159,10 +159,10 @@ void Foam::fv::solidThermalEquilibrium::addSup
     );
 
     const volScalarField& A = solidAlpha();
-    const volScalarField B(1 - A);
+    const volInternalScalarField B(1 - A());
 
     eqn -=
-        A/B*fvm::ddt(solidThermo().rho(), eqn.psi());
+        A()/B*fvm::ddt(solidThermo().rho()(), eqn.psi());
       - 1/B*fvm::laplacian
         (
             A*alphahe,
@@ -187,10 +187,10 @@ void Foam::fv::solidThermalEquilibrium::addSup
     );
 
     const volScalarField& A = solidAlpha();
-    const volScalarField B(1 - A);
+    const volInternalScalarField B(1 - A());
 
     eqn -=
-        A/B*fvm::ddt(alpha, solidThermo().rho(), eqn.psi());
+        A()/B*fvm::ddt(alpha, solidThermo().rho(), eqn.psi());
       - 1/B*fvm::laplacian
         (
             A*alphahe,

@@ -43,7 +43,7 @@ dynamicKEqn<BasicMomentumTransportModel>::KK() const
 {
     return max
     (
-        0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_))),
+        scalar(0.5)*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_))),
         dimensionedScalar(sqr(dimensions::velocity), small)
     );
 }
@@ -63,19 +63,19 @@ tmp<volScalarField> dynamicKEqn<BasicMomentumTransportModel>::Ck
 
     const volSymmTensorField MM
     (
-        simpleFilter_(-2.0*this->delta()*sqrt(KK)*filter_(D))
+        simpleFilter_(-2*this->delta()*sqrt(KK)*filter_(D))
     );
 
     const volScalarField Ck
     (
-        simpleFilter_(0.5*(LL && MM))
+        simpleFilter_(scalar(0.5)*(LL && MM))
        /(
             simpleFilter_(magSqr(MM))
           + dimensionedScalar(sqr(MM.dimensions()), vSmall)
         )
     );
 
-    return 0.5*(mag(Ck) + Ck);
+    return scalar(0.5)*(mag(Ck) + Ck);
 }
 
 
@@ -89,10 +89,10 @@ volScalarField dynamicKEqn<BasicMomentumTransportModel>::Ce
     const volScalarField Ce
     (
         simpleFilter_(this->nuEff()*(filter_(magSqr(D)) - magSqr(filter_(D))))
-       /simpleFilter_(pow(KK, 1.5)/(2.0*this->delta()))
+       /simpleFilter_(pow(KK, 1.5)/(2*this->delta()))
     );
 
-    tmp<volScalarField> tfld = 0.5*(mag(Ce) + Ce);
+    tmp<volScalarField> tfld = scalar(0.5)*(mag(Ce) + Ce);
     return tfld();
 }
 
@@ -245,7 +245,7 @@ void dynamicKEqn<BasicMomentumTransportModel>::correct()
     const volInternalScalarField G
     (
         this->GName(),
-        2.0*nut()*(tgradU()() && D())
+        2*nut()*(tgradU()() && D())
     );
     tgradU.clear();
 
@@ -258,7 +258,7 @@ void dynamicKEqn<BasicMomentumTransportModel>::correct()
       - fvm::laplacian(alpha*rho*DkEff(), k_)
     ==
         alpha()*rho()*G
-      - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
+      - fvm::SuSp(scalar(2.0/3.0)*alpha()*rho()*divU, k_)
       - fvm::Sp(Ce(D, KK)()*alpha()*rho()*sqrt(k_())/this->delta()(), k_)
       + kSource()
       + fvModels.source(alpha, rho, k_)

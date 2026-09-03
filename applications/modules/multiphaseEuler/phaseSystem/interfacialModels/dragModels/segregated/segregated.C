@@ -115,12 +115,12 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
 
     const volInternalScalarField limitedAlpha1
     (
-        max(alpha1, interface_.phase1().residualAlpha())
+        max(alpha1(), interface_.phase1().residualAlpha())
     );
 
     const volInternalScalarField limitedAlpha2
     (
-        max(alpha2, interface_.phase2().residualAlpha())
+        max(alpha2(), interface_.phase2().residualAlpha())
     );
 
     const volInternalScalarField muAlphaI

@@ -200,6 +200,12 @@ public:
             const tmp<VolField<Type>>&
         ) const;
 
+        template<class Expression, class = EnableIfExpression<Expression>>
+        inline auto fvcGrad(const Expression& e) const
+        {
+            return fvcGrad(eval(e));
+        }
+
 
     // Member Operators
 

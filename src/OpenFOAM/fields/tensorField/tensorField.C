@@ -24,11 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tensorField.H"
-#include "symmTensorField.H"
-#include "transformField.H"
-
-#define TEMPLATE
-#include "FieldFunctionsM.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,17 +31,6 @@ namespace Foam
 {
 
 // * * * * * * * * * * * * * * * global functions  * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(scalar, tensor, tr)
-UNARY_FUNCTION(sphericalTensor, tensor, sph)
-UNARY_FUNCTION(symmTensor, tensor, symm)
-UNARY_FUNCTION(symmTensor, tensor, twoSymm)
-UNARY_FUNCTION(tensor, tensor, skew)
-UNARY_FUNCTION(tensor, tensor, dev)
-UNARY_FUNCTION(tensor, tensor, dev2)
-UNARY_FUNCTION(scalar, tensor, det)
-UNARY_FUNCTION(tensor, tensor, cof)
-UNARY_FUNCTION(tensor, tensor, inv)
 
 void inv
 (
@@ -79,7 +63,10 @@ void inv
             tf1Plus += tensor(0,0,0,0,0,0,0,0,1);
         }
 
-        TFOR_ALL_F_OP_FUNC_F(tensor, tf, =, inv, tensor, tf1Plus)
+        forAll(tf, i)
+        {
+            tf[i] = inv(tf1Plus[i]);
+        }
 
         if (solutionD.x() == -1)
         {
@@ -98,7 +85,10 @@ void inv
     }
     else
     {
-        TFOR_ALL_F_OP_FUNC_F(tensor, tf, =, inv, tensor, tf1)
+        forAll(tf, i)
+        {
+            tf[i] = inv(tf1[i]);
+        }
     }
 }
 
@@ -109,7 +99,7 @@ tmp<tensorField> inv
 )
 {
     tmp<tensorField> result(new tensorField(tf.size()));
-    inv(result.ref(), tf);
+    inv(result.ref(), tf, solutionD);
     return result;
 }
 
@@ -120,7 +110,7 @@ tmp<tensorField> inv
 )
 {
     tmp<tensorField> result(new tensorField(tf.size()));
-    inv(result.ref(), tf);
+    inv(result.ref(), tf, solutionD);
     return result;
 }
 
@@ -130,34 +120,14 @@ tmp<tensorField> inv
     const Vector<label>& solutionD
 )
 {
-    tmp<tensorField> tRes = New(tf);
-    inv(tRes.ref(), tf());
+    tmp<tensorField> tRes = tensorField::New(tf, false);
+    inv(tRes.ref(), tf(), solutionD);
     tf.clear();
     return tRes;
 }
 
-UNARY_FUNCTION(vector, tensor, eigenValues)
-UNARY_FUNCTION(tensor, tensor, eigenVectors)
-
-UNARY_FUNCTION(vector, symmTensor, eigenValues)
-UNARY_FUNCTION(tensor, symmTensor, eigenVectors)
-
-
-// * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
-
-UNARY_OPERATOR(vector, tensor, *, hdual)
-UNARY_OPERATOR(tensor, vector, *, hdual)
-
-BINARY_OPERATOR(vector, vector, tensor, /, divide)
-BINARY_TYPE_OPERATOR(vector, vector, tensor, /, divide)
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // ************************************************************************* //

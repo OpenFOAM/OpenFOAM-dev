@@ -200,7 +200,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
             // Preserve the BCs of alpha1 in alpha1CN for interpolation
             talpha1CN = alpha1.clone();
             talpha1CN.ref() ==
-                (cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime())();
+                (cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime());
         }
 
         // Split operator

@@ -24,10 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "symmTensorField.H"
-#include "transformField.H"
-
-#define TEMPLATE
-#include "FieldFunctionsM.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -35,19 +31,6 @@ namespace Foam
 {
 
 // * * * * * * * * * * * * * * * global functions  * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(symmTensor, vector, sqr)
-UNARY_FUNCTION(symmTensor, symmTensor, innerSqr)
-
-UNARY_FUNCTION(scalar, symmTensor, tr)
-UNARY_FUNCTION(sphericalTensor, symmTensor, sph)
-UNARY_FUNCTION(symmTensor, symmTensor, symm)
-UNARY_FUNCTION(symmTensor, symmTensor, twoSymm)
-UNARY_FUNCTION(symmTensor, symmTensor, dev)
-UNARY_FUNCTION(symmTensor, symmTensor, dev2)
-UNARY_FUNCTION(scalar, symmTensor, det)
-UNARY_FUNCTION(symmTensor, symmTensor, cof)
-UNARY_FUNCTION(symmTensor, symmTensor, inv)
 
 void inv
 (
@@ -80,7 +63,10 @@ void inv
             tf1Plus += symmTensor(0,0,0,0,0,1);
         }
 
-        TFOR_ALL_F_OP_FUNC_F(symmTensor, tf, =, inv, symmTensor, tf1Plus)
+        forAll(tf, i)
+        {
+            tf[i] = inv(tf1Plus[i]);
+        }
 
         if (solutionD.x() == -1)
         {
@@ -99,7 +85,10 @@ void inv
     }
     else
     {
-        TFOR_ALL_F_OP_FUNC_F(symmTensor, tf, =, inv, symmTensor, tf1)
+        forAll(tf, i)
+        {
+            tf[i] = inv(tf1[i]);
+        }
     }
 }
 
@@ -131,27 +120,14 @@ tmp<symmTensorField> inv
     const Vector<label>& solutionD
 )
 {
-    tmp<symmTensorField> tRes = New(tf);
+    tmp<symmTensorField> tRes = symmTensorField::New(tf, false);
     inv(tRes.ref(), tf(), solutionD);
     tf.clear();
     return tRes;
 }
 
-
-// * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
-
-UNARY_OPERATOR(vector, symmTensor, *, hdual)
-
-BINARY_OPERATOR(tensor, symmTensor, symmTensor, &, dot)
-BINARY_TYPE_OPERATOR(tensor, symmTensor, symmTensor, &, dot)
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // ************************************************************************* //

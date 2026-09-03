@@ -26,7 +26,7 @@ License
 #include "volumeBlockage.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
-#include "fvcDiv.H"
+#include "fviDiv.H"
 #include "surfaceInterpolate.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
@@ -113,12 +113,23 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeBlockage::D
         const fluidThermophysicalTransportModel& ttm =
             mesh().lookupType<fluidThermophysicalTransportModel>();
 
-        return
-            fieldName == ttm.thermo().T().name()
-          ? ttm.kappaEff()
-          : fieldName == ttm.thermo().he().name()
-          ? ttm.kappaEff()/ttm.thermo().Cpv()
-          : ttm.momentumTransport().rho()*ttm.momentumTransport().nuEff();
+        if (fieldName == ttm.thermo().T().name())
+        {
+            return ttm.kappaEff();
+        }
+        else
+        {
+            if (fieldName == ttm.thermo().he().name())
+            {
+                return ttm.kappaEff()/ttm.thermo().Cpv();
+            }
+            else
+            {
+                return
+                    ttm.momentumTransport().rho()
+                   *ttm.momentumTransport().nuEff();
+            }
+        }
     }
     else
     {
@@ -144,7 +155,7 @@ void Foam::fv::volumeBlockage::addGeneralSupType
         mesh().lookupObject<surfaceScalarField>(phiName);
 
     const volScalarField B(1 - volumeAlpha());
-    const volScalarField AByB(volumeAlpha()/B);
+    const volInternalScalarField AByB(volumeAlpha()()/B());
     const volScalarField D(this->D(eqn.psi().name()));
 
     // Divergence term
@@ -156,7 +167,7 @@ void Foam::fv::volumeBlockage::addGeneralSupType
         "laplacian(" + D.name() + "," + eqn.psi().name() + ")";
     eqn +=
         fvm::laplacian(D, eqn.psi())
-      - 1/B*fvm::laplacian(B*D, eqn.psi(), laplacianScheme);
+      - 1/B()*fvm::laplacian(B*D, eqn.psi(), laplacianScheme);
 }
 
 
@@ -217,7 +228,7 @@ void Foam::fv::volumeBlockage::addAlphaSupType
 
         const word scheme("div(" + phiName + "," + eqn.psi().name() + ")");
 
-        eqn -= fvm::div(fvc::interpolate(AByB)*phi, eqn.psi(), scheme);
+        eqn -= fvi::div(fvc::interpolate(AByB)*phi, eqn.psi(), scheme);
     }
     else
     {

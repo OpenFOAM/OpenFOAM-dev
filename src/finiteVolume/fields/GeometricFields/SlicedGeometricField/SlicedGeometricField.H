@@ -84,7 +84,8 @@ private:
 
         //- Slice the given field and a create a PtrList of sliced patch fields
         //  from which the boundary field is built
-        tmp<FieldField<GeoMesh::template PatchField, Type>> slicedBoundaryField
+        tmp<PtrField<typename GeoMesh::template PatchField<Type>>>
+        slicedBoundaryField
         (
             const GeoMesh& mesh,
             const Field<Type>& completeField,
@@ -94,10 +95,11 @@ private:
 
         //- Slice the given field and a create a PtrList of sliced patch fields
         //  from which the boundary field is built
-        tmp<FieldField<GeoMesh::template PatchField, Type>> slicedBoundaryField
+        tmp<PtrField<typename GeoMesh::template PatchField<Type>>>
+        slicedBoundaryField
         (
             const GeoMesh& mesh,
-            const FieldField<GeoMesh::template PatchField, Type>& bField,
+            const PtrField<typename GeoMesh::template PatchField<Type>>& bField,
             const bool preserveCouples
         );
 
@@ -150,6 +152,12 @@ public:
 
 
     // Member Functions
+
+        //- Return the base GeometricField
+        const GeometricField<Type, GeoMesh>& field() const
+        {
+            return *this;
+        }
 
         //- Splice the sliced field and return the complete field
         tmp<Field<Type>> splice() const;

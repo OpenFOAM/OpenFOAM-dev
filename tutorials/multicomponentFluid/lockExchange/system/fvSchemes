@@ -36,8 +36,8 @@ divSchemes
         ".*"            upwind;
     };
     div(phi,K)      Gauss upwind;
-    div(phi,(p|rho))    Gauss upwind;
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(phi,p|rho)     Gauss upwind;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

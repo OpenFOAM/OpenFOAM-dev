@@ -67,11 +67,17 @@ namespace fvi
     tmp<VolInternalField<Type>>
     surfaceIntegrate(const tmp<SurfaceField<Type>>&);
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    auto surfaceIntegrate(const Expression&);
+
     template<class Type>
     tmp<VolInternalField<Type>> surfaceSum(const SurfaceField<Type>&);
 
     template<class Type>
     tmp<VolInternalField<Type>> surfaceSum(const tmp<SurfaceField<Type>>&);
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    auto surfaceSum(const Expression&);
 }
 
 

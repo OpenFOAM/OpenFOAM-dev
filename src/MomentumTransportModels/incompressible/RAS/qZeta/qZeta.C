@@ -256,7 +256,7 @@ void qZeta::correct()
       + fvm::div(phi_, q_)
       - fvm::laplacian(DqEff(), q_)
      ==
-        G - fvm::Sp(zeta_/q_, q_)
+        G - fvm::Sp(zeta_()/q_(), q_)
     );
 
     qEqn.ref().relax();

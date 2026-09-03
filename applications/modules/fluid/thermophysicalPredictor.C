@@ -45,12 +45,13 @@ void Foam::solvers::fluid::thermophysicalPredictor()
         )
       + thermophysicalTransport->divq(he)
      ==
-        (
-            buoyancy.valid()
-          ? fvModels().source(rho, he) + rho*(U & buoyancy->g)
-          : fvModels().source(rho, he)
-        )
+        fvModels().source(rho, he)
     );
+
+    if (buoyancy.valid())
+    {
+        EEqn -= rho()*(U() & buoyancy->g);
+    }
 
     EEqn.relax();
 

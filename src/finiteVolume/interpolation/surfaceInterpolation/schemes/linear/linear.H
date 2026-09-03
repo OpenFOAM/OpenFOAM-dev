@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,6 +124,13 @@ linearInterpolate(const tmp<VolField<Type>>& tvf)
         linearInterpolate(tvf());
     tvf.clear();
     return tinterp;
+}
+
+
+template<class Expression, class = EnableIfExpression<Expression>>
+inline auto linearInterpolate(const Expression& e)
+{
+    return linearInterpolate(eval(e));
 }
 
 

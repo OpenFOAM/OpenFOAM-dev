@@ -798,9 +798,8 @@ Foam::fv::wallBoiling::d() const
     (
         neg
         (
-            mag(mDot_) - dimensionedScalar(dimensions::density/dimensions::time,
-            rootVSmall
-            )
+            mag(mDot_())
+          - dimensionedScalar(dimensions::density/dimensions::time, rootVSmall)
         )
     );
 

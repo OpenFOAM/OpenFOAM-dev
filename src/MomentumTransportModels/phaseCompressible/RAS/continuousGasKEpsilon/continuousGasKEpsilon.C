@@ -235,8 +235,8 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::kSource() const
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
     return
-        phaseTransferCoeff*liquidTurbulence.k()
-      - fvm::Sp(phaseTransferCoeff, this->k_);
+        phaseTransferCoeff()*liquidTurbulence.k()()()
+      - fvm::Sp(phaseTransferCoeff(), this->k_);
 }
 
 
@@ -248,8 +248,8 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
     return
-        phaseTransferCoeff*liquidTurbulence.epsilon()
-      - fvm::Sp(phaseTransferCoeff, this->epsilon_);
+        phaseTransferCoeff()*liquidTurbulence.epsilon()()()
+      - fvm::Sp(phaseTransferCoeff(), this->epsilon_);
 }
 
 

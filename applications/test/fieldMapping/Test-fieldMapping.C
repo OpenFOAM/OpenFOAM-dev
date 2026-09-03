@@ -230,8 +230,8 @@ int main(int argc, char *argv[])
 
         // Check constant profile
         {
-            const scalar max = gMax(one);
-            const scalar min = gMin(one);
+            const scalar max = gMax(one).value();
+            const scalar min = gMin(one).value();
 
             Info<< "Uniform one field min = " << min
                 << "  max = " << max << endl;
@@ -252,10 +252,10 @@ int main(int argc, char *argv[])
 
         // Check linear profile
         {
-            const scalarField diff = ccX-mesh.C().component(0);
+            const volInternalScalarField diff(ccX() - mesh.C()().component(0));
 
-            const scalar max = gMax(diff);
-            const scalar min = gMin(diff);
+            const scalar max = gMax(diff).value();
+            const scalar min = gMin(diff).value();
 
             Info<< "Linear profile field min = " << min
                 << "  max = " << max << endl;

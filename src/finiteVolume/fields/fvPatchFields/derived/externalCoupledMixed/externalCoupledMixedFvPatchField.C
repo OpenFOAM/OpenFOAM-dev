@@ -26,6 +26,7 @@ License
 #include "externalCoupledMixedFvPatchField.H"
 #include "fieldMapper.H"
 #include "volFields.H"
+#include "globalMeshData.H"
 #include "IFstream.H"
 #include "globalIndex.H"
 #include "OSspecific.H"

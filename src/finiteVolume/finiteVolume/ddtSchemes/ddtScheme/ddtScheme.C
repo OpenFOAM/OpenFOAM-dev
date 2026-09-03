@@ -222,7 +222,12 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
     const fluxFieldType& phi
 )
 {
-    return fvcDdtPhiCoeff(U, phi, phi - fvc::dotInterpolate(mesh().Sf(), U));
+    return fvcDdtPhiCoeff
+    (
+        U,
+        phi,
+        eval(phi - fvc::dotInterpolate(mesh().Sf(), U))
+    );
 }
 
 
@@ -238,7 +243,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
     (
         U,
         phi,
-        (phi - fvc::dotInterpolate(mesh().Sf(), U))
+        eval(phi - fvc::dotInterpolate(mesh().Sf(), U))
     );
 }
 

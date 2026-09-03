@@ -135,7 +135,7 @@ bool Foam::patchDistMethods::advectionDiffusion::correct
         (
             fvm::div(yPhi, y)
           - fvm::Sp(fvi::div(yPhi), y)
-          - epsilon_*y*fvm::laplacian(y)
+          - epsilon_*y()*fvm::laplacian(y)
          ==
             dimensionedScalar(dimless, 1.0)
         );

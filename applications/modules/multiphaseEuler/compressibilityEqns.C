@@ -86,7 +86,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
                 pEqnComp +=
                     correction
                     (
-                        (alpha/rho)*
+                        (alpha()/rho())*
                         (
                             phase.fluidThermo().psi()*fvm::ddt(p_rgh)
                           + fvm::div(phid, p_rgh)
@@ -99,7 +99,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
             else
             {
                 pEqnComp +=
-                    (alpha*phase.fluidThermo().psi()/rho)
+                    (alpha()*phase.fluidThermo().psi()()/rho())
                    *correction(fvm::ddt(p_rgh));
             }
         }
@@ -107,7 +107,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
         // Option sources
         if (fvModels().addsSupToField(rho.name()))
         {
-            pEqnComp -= fvModels().sourceProxy(alpha, rho, p_rgh)/rho;
+            pEqnComp -= fvModels().sourceProxy(alpha, rho, p_rgh)/rho();
         }
 
         // Mass transfer

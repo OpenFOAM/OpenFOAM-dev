@@ -143,7 +143,7 @@ void PDRkEpsilon::correct()
 
     // Add the blockage generation term so that it is included consistently
     // in both the k and epsilon equations
-    const volScalarField& betav =
+    const volInternalScalarField& betav =
         U_.db().lookupObject<volScalarField>("betav");
 
     const volScalarField& Lobs =
@@ -166,10 +166,10 @@ void PDRkEpsilon::correct()
       + fvm::div(phi_, epsilon_)
       - fvm::laplacian(rho_*DepsilonEff(), epsilon_)
      ==
-        C1_*betav()*G*epsilon_()/k_()
+        C1_*betav*G*epsilon_()/k_()
       + 1.5*pow(Cmu_, 3.0/4.0)*GR*sqrt(k_())/LI
-      - fvm::SuSp(((2.0/3.0)*C1_)*betav()*rho_()*divU, epsilon_)
-      - fvm::Sp(C2_*betav()*rho_()*epsilon_()/k_(), epsilon_)
+      - fvm::SuSp(((2.0/3.0)*C1_)*betav*rho_()*divU, epsilon_)
+      - fvm::Sp(C2_*betav*rho_()*epsilon_()/k_(), epsilon_)
     );
 
     epsEqn.ref().relax();
@@ -188,9 +188,9 @@ void PDRkEpsilon::correct()
       + fvm::div(phi_, k_)
       - fvm::laplacian(rho_*DkEff(), k_)
      ==
-        betav()*G + GR
-      - fvm::SuSp((2.0/3.0)*betav()*rho_()*divU, k_)
-      - fvm::Sp(betav*rho_*epsilon_/k_, k_)
+        betav*G + GR
+      - fvm::SuSp((2.0/3.0)*betav*rho_()*divU, k_)
+      - fvm::Sp(betav*rho_()*epsilon_()/k_(), k_)
     );
 
     kEqn.ref().relax();

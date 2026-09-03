@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,11 @@ Foam::heatTransferModels::Gunn::K(const scalar residualAlpha) const
 {
     const volScalarField alpha2
     (
-        max(interface_.continuous(), interface_.continuous().residualAlpha())
+        max
+        (
+            interface_.continuous().alpha(),
+            interface_.continuous().residualAlpha()
+        )
     );
 
     const volScalarField sqrAlpha2(sqr(alpha2));
@@ -82,7 +86,7 @@ Foam::heatTransferModels::Gunn::K(const scalar residualAlpha) const
     );
 
     return
-        6*max(interface_.dispersed(), residualAlpha)
+        6*max(interface_.dispersed().alpha(), residualAlpha)
        *interface_.continuous().thermo().kappa()
        *Nu/sqr(interface_.dispersed().d());
 }

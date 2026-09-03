@@ -128,7 +128,7 @@ void Foam::solvers::XiFluid::burn()
         fvScalarMatrix bSource
         (
             fvModels().source(rho, b)
-          - fvm::Sp(rhou*Su*Xi*mgbStab*max(bMin_ - b, scalar(0)), b)
+          - fvm::Sp(rhou()*Su()*Xi()*mgbStab*max(bMin_ - b(), 0), b)
         );
 
         // Assemble the bounded b matrix
@@ -236,8 +236,8 @@ void Foam::solvers::XiFluid::burn()
     );
 
     // Set the unburnt and burnt gas stabilisation coefficients
-    const volInternalScalarField bStab(max(bMin_ - b, scalar(0)));
-    const volInternalScalarField cStab(max(bMin_ - c, scalar(0)));
+    const volInternalScalarField bStab(max(bMin_ - b(), 0));
+    const volInternalScalarField cStab(max(bMin_ - c(), 0));
 
     // Solve for the unburnt gas energy and species
     uSolve(bStab, bSource);
@@ -452,7 +452,7 @@ void Foam::solvers::XiFluid::HuSolve
 {
     volScalarField& hu = thermo_.uThermo().he();
 
-    const volInternalScalarField rhoByRhou(thermo_.rho()/uThermo.rho()());
+    const volInternalScalarField rhoByRhou(thermo_.rho()()/uThermo.rho()()());
 
     const volScalarField Du("Du", rho*(momentumTransport.nut() + uThermo.nu()));
 
@@ -474,12 +474,13 @@ void Foam::solvers::XiFluid::HuSolve
         fvm::Sp(bSource, hu)
 
         // Other sources
-      + (
-            buoyancy.valid()
-          ? fvModels().source(b, rho, hu) + b*rho*(U & buoyancy->g)
-          : fvModels().source(b, rho, hu)
-        )
+      + fvModels().source(b, rho, hu)
     );
+
+    if (buoyancy.valid())
+    {
+        HuEqn -= b()*rho()*(U() & buoyancy->g);
+    }
 
     HuEqn.relax();
     fvConstraints().constrain(HuEqn);
@@ -496,7 +497,7 @@ void Foam::solvers::XiFluid::HbSolve
 {
     volScalarField& hb = thermo_.bThermo().he();
 
-    const volInternalScalarField rhoByRhob(thermo_.rho()/bThermo.rho()());
+    const volInternalScalarField rhoByRhob(thermo_.rho()()/bThermo.rho()()());
 
     const volScalarField Db("Db", rho*(momentumTransport.nut() + bThermo.nu()));
 
@@ -518,12 +519,13 @@ void Foam::solvers::XiFluid::HbSolve
       - bSource*(uThermo.he()() + uThermo.hf()()() - bThermo.hf()()())
 
         // Other sources
-      + (
-            buoyancy.valid()
-          ? fvModels().source(c, rho, hb) + c*rho*(U & buoyancy->g)
-          : fvModels().source(c, rho, hb)
-        )
+      + fvModels().source(c, rho, hb)
     );
+
+    if (buoyancy.valid())
+    {
+        HbEqn -= c()*rho()*(U() & buoyancy->g);
+    }
 
     HbEqn.relax();
     fvConstraints().constrain(HbEqn);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,12 @@ namespace fvc
         const tmp<VolField<Type>>& tvf
     );
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto flux(const Expression& e)
+    {
+        return flux(eval(e));
+    }
+
     template<class Type>
     tmp<SurfaceField<Type>> flux
     (
@@ -94,6 +100,22 @@ namespace fvc
         const VolField<Type>&,
         const word& name
     );
+
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto flux
+    (
+        const Expression& e,
+        const VolField<Type>& vf,
+        const word& name
+    )
+    {
+        return flux(eval(e), vf, name);
+    }
 
     template<class Type>
     tmp<SurfaceField<Type>> flux

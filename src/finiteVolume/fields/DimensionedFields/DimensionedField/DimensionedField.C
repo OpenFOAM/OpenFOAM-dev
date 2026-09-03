@@ -340,6 +340,41 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<class Expression, class>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
+(
+    const IOobject& io,
+    const Expression& e,
+    const bool checkIOFlags
+)
+:
+    regIOobject(io),
+    PrimitiveField<Type>
+    (
+        expression::access
+        (
+            e,
+            expression::Value(),
+            expression::Base()
+        )
+    ),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
+    mesh_(expression::getFirst<expression::Mesh<GeoMesh>>(e)),
+    dimensions_(expression::access(e, dimensions::invalid))
+{
+    expression::assertSameAllContainerProperty
+    <
+        expression::MeshPointer<GeoMesh>
+    >(e);
+
+    if (checkIOFlags)
+    {
+        readIfPresent();
+    }
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 template<template<class> class PrimitiveField2>
 DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
@@ -685,7 +720,8 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
     >& df
 )
 {
-    PrimitiveField<Type>::replace(d, df);
+    dimensions_ = df.dimensions();
+    PrimitiveField<Type>::replace(d, df.primitiveField());
 }
 
 
@@ -705,8 +741,49 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
     >& tdf
 )
 {
-    replace(d, tdf());
+    dimensions_ = tdf().dimensions();
+    PrimitiveField<Type>::replace(d, tdf().primitiveField());
     tdf.clear();
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<class Expression, class>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
+(
+    const direction d,
+    const Expression& e
+)
+{
+    expression::assertSameAllContainerProperty
+    <
+        expression::MeshPointer<GeoMesh>
+    >(e);
+
+    dimensions_ = expression::access(e, dimensions::invalid);
+
+    PrimitiveField<Type>::replace
+    (
+        d,
+        expression::access
+        (
+            e,
+            expression::Value(),
+            expression::Base()
+        )
+    );
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
+(
+    const direction d,
+    const dimensioned<cmptType>& df
+)
+{
+    dimensions_ = df.dimensions();
+    PrimitiveField<Type>::replace(d, df.value());
 }
 
 
@@ -763,34 +840,37 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::reset
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-void DimensionedField<Type, GeoMesh, PrimitiveField>::max
+void DimensionedField<Type, GeoMesh, PrimitiveField>::boundLower
 (
-    const dimensioned<Type>& dt
+    const dimensioned<Type>& lower
 )
 {
-    Foam::max(primitiveFieldRef(), primitiveField(), dt.value());
+    dimensions_ = lower.dimensions();
+    PrimitiveField<Type>::boundLower(lower.value());
 }
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-void DimensionedField<Type, GeoMesh, PrimitiveField>::min
+void DimensionedField<Type, GeoMesh, PrimitiveField>::boundUpper
 (
-    const dimensioned<Type>& dt
+    const dimensioned<Type>& upper
 )
 {
-    Foam::min(primitiveFieldRef(), primitiveField(), dt.value());
+    dimensions_ = upper.dimensions();
+    PrimitiveField<Type>::boundUpper(upper.value());
 }
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-void DimensionedField<Type, GeoMesh, PrimitiveField>::maxMin
+void DimensionedField<Type, GeoMesh, PrimitiveField>::bound
 (
-    const dimensioned<Type>& minDt,
-    const dimensioned<Type>& maxDt
+    const dimensioned<Type>& lower,
+    const dimensioned<Type>& upper
 )
 {
-    Foam::max(primitiveFieldRef(), primitiveField(), minDt.value());
-    Foam::min(primitiveFieldRef(), primitiveField(), maxDt.value());
+    dimensions_ = lower.dimensions();
+    dimensions_ = upper.dimensions();
+    PrimitiveField<Type>::bound(lower.value(), upper.value());
 }
 
 
@@ -971,7 +1051,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
         expression::MeshPointer<GeoMesh>                                       \
     >(e);                                                                      \
                                                                                \
-    dimensions_ = expression::access(e, dimensions::invalid);                  \
+    dimensions_ op expression::access(e, dimensions::invalid);                 \
                                                                                \
     primitiveFieldRef() op                                                     \
         expression::access                                                     \

@@ -156,18 +156,10 @@ public:
             return result;
         }
 
-        template<class FieldType>
-        tmp<FieldType> operator()(const FieldType& f) const
+        template<class Expression, class = EnableIfExpression<Expression>>
+        auto operator[](const Expression& e) const
         {
-            return FieldType::New
-            (
-                "filtered(" + f.name() + ')',
-                operator[](f),
-                extrapolatedCalculatedFvPatchField
-                <
-                    typename FieldType::Type_
-                >::typeName
-            );
+            return operator[](eval(e));
         }
 
         template<class FieldType>
@@ -186,6 +178,12 @@ public:
             tf.clear();
 
             return result;
+        }
+
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        auto operator()(const Expression& e) const
+        {
+            return operator()(eval(e));
         }
 };
 

@@ -166,10 +166,10 @@ public:
         virtual scalar solve(const scalarField& deltaT) = 0;
 
         //- Return the chemical time scale
-        virtual tmp<volScalarField> tc() const = 0;
+        virtual tmp<volInternalScalarField> tc() const = 0;
 
         //- Return the heat release rate [kg/m/s^3]
-        virtual tmp<volScalarField> Qdot() const = 0;
+        virtual tmp<volInternalScalarField> Qdot() const = 0;
 
 
     // Member Operators

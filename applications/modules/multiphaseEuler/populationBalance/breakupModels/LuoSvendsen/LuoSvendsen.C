@@ -149,9 +149,9 @@ void Foam::populationBalance::breakupModels::LuoSvendsen::precompute()
         (
             pow3
             (
-                popBal_.continuousPhase().fluidThermo().nu()
+                popBal_.continuousPhase().fluidThermo().nu()()()
             )
-           /popBal_.continuousTurbulence().epsilon()
+           /popBal_.continuousTurbulence().epsilon()()()
         );
 }
 

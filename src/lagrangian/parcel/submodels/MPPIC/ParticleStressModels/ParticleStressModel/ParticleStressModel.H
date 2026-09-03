@@ -36,7 +36,6 @@ SourceFiles
 #define ParticleStressModel_H
 
 #include "Field.H"
-#include "FieldField.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
 
@@ -125,7 +124,7 @@ public:
             const Field<scalar>& uRms
         ) const = 0;
 
-        //- Collision stress using FieldFields
+        //- Collision stress using Field<Field>
         tmp<Field<Field<scalar>>> tau
         (
             const Field<Field<scalar>>& alpha,

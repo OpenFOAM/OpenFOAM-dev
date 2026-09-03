@@ -48,8 +48,8 @@ divSchemes
     div(phi,e)      $turbulence;
     div(phi,K)      $turbulence;
 
-    div(phi,(p|rho))    Gauss linear;
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(phi,p|rho)     Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

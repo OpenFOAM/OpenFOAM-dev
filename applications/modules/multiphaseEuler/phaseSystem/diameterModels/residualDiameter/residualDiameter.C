@@ -70,8 +70,8 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::residualDiameter::
 d() const
 {
     return
-        pos0(phase()-phase().residualAlpha())*d_
-      + neg(phase()-phase().residualAlpha())*dResidual_;
+        pos0(phase().alpha() - phase().residualAlpha())*d_
+      + neg(phase().alpha() - phase().residualAlpha())*dResidual_;
 }
 
 

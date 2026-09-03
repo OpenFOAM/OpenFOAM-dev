@@ -226,12 +226,12 @@ void Foam::phaseSystem::solve
                 {
                     if (!phase.stationary() && phase.divU().valid())
                     {
-                        vDot += alpha2()*phase.divU()()();
+                        vDot += alpha2()*phase.divU()();
                     }
 
                     if (!phase2.stationary() && phase2.divU().valid())
                     {
-                        vDot -= alpha()*phase2.divU()()();
+                        vDot -= alpha()*phase2.divU()();
                     }
                 }
             }
@@ -367,8 +367,8 @@ void Foam::phaseSystem::solve
 
                 Info<< phase.name() << " predicted fraction, min, max = "
                     << weightedAverage(phase(), mesh_.Vsc()()).value()
-                    << ' ' << min(phase).value()
-                    << ' ' << max(phase).value()
+                    << ' ' << min(phase.alpha()).value()
+                    << ' ' << max(phase.alpha()).value()
                     << endl;
             }
 
@@ -783,8 +783,8 @@ void Foam::phaseSystem::solve
 
                 Info<< phase.name() << " fraction, min, max = "
                     << weightedAverage(phase(), mesh_.Vsc()()).value()
-                    << ' ' << min(phase).value()
-                    << ' ' << max(phase).value()
+                    << ' ' << min(phase.alpha()).value()
+                    << ' ' << max(phase.alpha()).value()
                     << endl;
             }
 
@@ -951,7 +951,7 @@ void Foam::phaseSystem::solve
         if (alphaControls.clip)
         {
             // Clip the phase-fractions between 0 and alphaMax
-            alpha.maxMin(0, phase.alphaMax());
+            alpha.bound(0, phase.alphaMax());
 
             if (stationaryPhases().size())
             {

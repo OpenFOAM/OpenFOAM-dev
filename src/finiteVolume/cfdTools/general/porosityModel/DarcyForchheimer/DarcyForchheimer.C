@@ -211,7 +211,7 @@ void Foam::porosityModels::DarcyForchheimer::correct
             const volScalarField& nu =
                 mesh_.lookupObject<volScalarField>(nuName);
 
-            apply(Udiag, Usource, V, rho, rho*nu, U);
+            apply(Udiag, Usource, V, rho, eval(rho*nu), U);
         }
     }
     else
@@ -230,7 +230,7 @@ void Foam::porosityModels::DarcyForchheimer::correct
             const volScalarField& mu =
                 mesh_.lookupObject<volScalarField>(muName);
 
-            apply(Udiag, Usource, V, geometricOneField(), mu/rho, U);
+            apply(Udiag, Usource, V, geometricOneField(), eval(mu/rho), U);
         }
     }
 }
@@ -271,7 +271,7 @@ void Foam::porosityModels::DarcyForchheimer::correct
             const volScalarField& mu =
                 mesh_.lookupObject<volScalarField>(muName);
 
-            apply(AU, geometricOneField(), mu/rho, U);
+            apply(AU, geometricOneField(), eval(mu/rho), U);
         }
     }
 }

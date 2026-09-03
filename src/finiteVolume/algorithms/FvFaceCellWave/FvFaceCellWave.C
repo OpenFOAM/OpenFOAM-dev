@@ -27,6 +27,7 @@ License
 #include "processorFvPatch.H"
 #include "cyclicFvPatch.H"
 #include "CompactListList.H"
+#include "globalMeshData.H"
 #include "OPstream.H"
 #include "IPstream.H"
 #include "PstreamReduceOps.H"

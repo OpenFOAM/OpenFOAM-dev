@@ -25,7 +25,7 @@ License
 
 #include "isotropic.H"
 #include "fvmLaplacian.H"
-#include "fvcLaplacian.H"
+#include "fviLaplacian.H"
 #include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -115,7 +115,7 @@ isotropic<SolidThermophysicalTransportModel>::divq
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
-       -fvc::laplacian(this->alpha()*this->kappa(), thermo.T())
+       -fvi::laplacian(this->alpha()*this->kappa(), thermo.T())
        -fvm::laplacianCorrection(this->alpha()*this->kappa()/thermo.Cv(), e);
 }
 

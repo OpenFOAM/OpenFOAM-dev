@@ -35,7 +35,7 @@ divSchemes
     div(phi,age)    Gauss upwind;
 
     div(phi,K)      Gauss linear;
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 
     div(phaseScalarTransport:alphaPhi.dummy,h) Gauss upwind;
 }

@@ -38,10 +38,10 @@ divSchemes
     div(alphaRhoPhi,Yi) Gauss linearUpwind limited;
     "div\(alphaRhoPhi,(h|e)\)" Gauss linearUpwind limited;
     div(alphaRhoPhi,K) Gauss linearUpwind limited;
-    div(alphaRhoPhi,(p|rho)) Gauss linearUpwind limited;
+    div(alphaRhoPhi,p|rho)  Gauss linearUpwind limited;
     "div\(alphaRhoPhi,(k|omega)\)" Gauss linearUpwind limited;
 
-    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(alpha*rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

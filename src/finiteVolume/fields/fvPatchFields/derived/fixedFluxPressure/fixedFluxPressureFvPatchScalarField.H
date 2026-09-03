@@ -193,6 +193,21 @@ namespace Foam
     {
         setSnGrad<GradBC>(bf, tsnGrad());
     }
+
+    template
+    <
+        class GradBC,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline void setSnGrad
+    (
+        volScalarField::Boundary& bf,
+        const Expression& snGrad
+    )
+    {
+        setSnGrad<GradBC>(bf, SurfaceBoundaryField<scalar>(snGrad));
+    }
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

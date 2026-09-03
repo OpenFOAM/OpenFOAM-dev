@@ -84,10 +84,10 @@ Foam::InertPhaseModel<BasePhaseModel>::R(volScalarField& Yi) const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::InertPhaseModel<BasePhaseModel>::Qdot() const
 {
-    return volScalarField::New
+    return volInternalScalarField::New
     (
         IOobject::groupName("Qdot", this->name()),
         this->mesh(),

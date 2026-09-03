@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,8 +64,21 @@ namespace fvc
         const tmp<SurfaceField<Type>>&
     );
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto reconstruct(const Expression& e)
+    {
+        return reconstruct(eval(e));
+    }
+
     tmp<volScalarField> reconstructMag(const surfaceScalarField&);
+
     tmp<volScalarField> reconstructMag(const tmp<surfaceScalarField>&);
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto reconstructMag(const Expression& e)
+    {
+        return reconstructMag(eval(e));
+    }
 }
 
 

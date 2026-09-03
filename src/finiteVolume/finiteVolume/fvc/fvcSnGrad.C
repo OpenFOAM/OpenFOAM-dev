@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,19 +29,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvc
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
-tmp<SurfaceField<Type>>
-snGrad
+Foam::tmp<Foam::SurfaceField<Type>>
+Foam::fvc::snGrad
 (
     const VolField<Type>& vf,
     const word& name
@@ -56,8 +46,8 @@ snGrad
 
 
 template<class Type>
-tmp<SurfaceField<Type>>
-snGrad
+Foam::tmp<Foam::SurfaceField<Type>>
+Foam::fvc::snGrad
 (
     const tmp<VolField<Type>>& tvf,
     const word& name
@@ -65,7 +55,7 @@ snGrad
 {
     tmp<SurfaceField<Type>> SnGrad
     (
-        fvc::snGrad(tvf(), name)
+        snGrad(tvf(), name)
     );
     tvf.clear();
     return SnGrad;
@@ -73,38 +63,30 @@ snGrad
 
 
 template<class Type>
-tmp<SurfaceField<Type>>
-snGrad
+Foam::tmp<Foam::SurfaceField<Type>>
+Foam::fvc::snGrad
 (
     const VolField<Type>& vf
 )
 {
-    return fvc::snGrad(vf, "snGrad(" + vf.name() + ')');
+    return snGrad(vf, "snGrad(" + vf.name() + ')');
 }
 
 
 template<class Type>
-tmp<SurfaceField<Type>>
-snGrad
+Foam::tmp<Foam::SurfaceField<Type>>
+Foam::fvc::snGrad
 (
     const tmp<VolField<Type>>& tvf
 )
 {
     tmp<SurfaceField<Type>> SnGrad
     (
-        fvc::snGrad(tvf())
+        snGrad(tvf())
     );
     tvf.clear();
     return SnGrad;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace fvc
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

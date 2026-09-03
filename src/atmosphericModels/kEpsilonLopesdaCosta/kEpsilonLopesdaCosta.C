@@ -394,7 +394,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
     // Update epsilon and G at the wall
     epsilon_.boundaryRef().updateCoeffs();
 
-    volInternalScalarField magU(mag(U));
+    volInternalScalarField magU(mag(U()));
     volInternalScalarField magU3(pow3(magU));
 
     // Dissipation equation

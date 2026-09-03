@@ -35,7 +35,7 @@ divSchemes
     div(phi,gammaInt)   bounded Gauss linearUpwind grad;
     div(phi,ReThetat)   bounded Gauss linearUpwind grad;
 
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

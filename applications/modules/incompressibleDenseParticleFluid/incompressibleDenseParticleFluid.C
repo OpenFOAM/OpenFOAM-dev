@@ -339,7 +339,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::prePredictor()
 
         Dcf = fvc::interpolate(Dc()).ptr();
 
-        phid =
+        phid = eval
         (
             fvc::flux(Fd())
            /(Dcf() + dimensionedScalar(Dc().dimensions(), small))

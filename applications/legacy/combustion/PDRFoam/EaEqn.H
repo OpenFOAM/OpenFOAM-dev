@@ -7,7 +7,7 @@
       + betav()*fvi::ddt(rho, K) + fvi::div(phi, K)
       + (
             hea.name() == "ea"
-          ? fvi::div(fvc::absolute(phi, rho, U), p/rho)
+          ? fvi::div(fvc::absolute(phi, rho, U)(), p/rho)
           : -betav()*dpdt
         )
       - fvm::laplacian(Db, hea)

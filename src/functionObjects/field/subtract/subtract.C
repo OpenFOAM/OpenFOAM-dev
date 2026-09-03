@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,12 +43,11 @@ namespace functionObjects
 template
 <
     class A,
-    class B,
-    class R = decltype(std::declval<A>() - std::declval<B>())
+    class B
 >
 struct minusOpAuto
 {
-    R operator()(const A& a, const B& b)
+    auto operator()(const A& a, const B& b)
     {
         return a - b;
     }

@@ -30,14 +30,14 @@ divSchemes
 
     div(phi,U)      Gauss limitedLinearV 1;
 
-    div(phi,(p|rho)) Gauss limitedLinear 1;
+    div(phi,p|rho)  Gauss limitedLinear 1;
     div(phid,p)     Gauss limitedLinear 1;
     div(meshPhi,p)  Gauss limitedLinear 1;
 
     div(phi,K)      Gauss limitedLinear 1;
     div(phi,h)      Gauss limitedLinear 1;
 
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

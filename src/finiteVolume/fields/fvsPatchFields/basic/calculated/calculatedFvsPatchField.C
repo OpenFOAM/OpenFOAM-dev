@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,50 +87,6 @@ Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 :
     fvsPatchField<Type>(ptf, iF)
 {}
-
-
-template<class Type>
-Foam::tmp<Foam::fvsPatchField<Type>>
-Foam::fvsPatchField<Type>::NewCalculatedType
-(
-    const fvPatch& p
-)
-{
-    typename patchConstructorTable::iterator patchTypeCstrIter =
-        patchConstructorTablePtr_->find(p.type());
-
-    if (patchTypeCstrIter != patchConstructorTablePtr_->end())
-    {
-        return patchTypeCstrIter()
-        (
-            p,
-            DimensionedField<Type, surfaceMesh>::null()
-        );
-    }
-    else
-    {
-        return tmp<fvsPatchField<Type>>
-        (
-            new calculatedFvsPatchField<Type>
-            (
-                p,
-                DimensionedField<Type, surfaceMesh>::null()
-            )
-        );
-    }
-}
-
-
-template<class Type>
-template<class Type2>
-Foam::tmp<Foam::fvsPatchField<Type>>
-Foam::fvsPatchField<Type>::NewCalculatedType
-(
-    const fvsPatchField<Type2>& pf
-)
-{
-    return NewCalculatedType(pf.patch());
-}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

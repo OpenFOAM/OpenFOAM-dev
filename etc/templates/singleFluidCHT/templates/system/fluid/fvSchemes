@@ -52,9 +52,9 @@ divSchemes
     div(phid,p)     Gauss upwind;
 
     // for transient, remove "bounded"
-    div((phi|interpolate(rho)),p)  bounded Gauss upwind;
+    div(phi|interpolate(rho),p)  bounded Gauss upwind;
 
-    div(((rho*nuEff)*dev2(T(grad(U)))))    Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U))))    Gauss linear;
 }
 
 laplacianSchemes

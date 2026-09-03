@@ -118,7 +118,7 @@ void Foam::phaseHydrostaticPressureFvPatchScalarField::updateCoeffs()
     // scalar rhor = 1000;
     // scalarField alphap1 = max(min(alphap, 1.0), 0.0);
     // valueFraction() = alphap1/(alphap1 + rhor*(1.0 - alphap1));
-    valueFraction() = max(min(alphap, scalar(1)), scalar(0));
+    valueFraction() = max(min(alphap, 1), 0);
 
     refValue() =
         pRefValue_

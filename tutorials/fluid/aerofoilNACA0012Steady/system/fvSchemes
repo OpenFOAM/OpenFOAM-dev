@@ -43,7 +43,7 @@ divSchemes
     div(phi,k)      $turbulence;
     div(phi,omega)  $turbulence;
 
-    div(((rho*nuEff)*dev2(T(grad(U)))))    Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U))))    Gauss linear;
 }
 
 laplacianSchemes

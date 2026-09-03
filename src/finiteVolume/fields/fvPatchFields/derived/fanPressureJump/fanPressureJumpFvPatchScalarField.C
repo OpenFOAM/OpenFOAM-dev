@@ -168,7 +168,7 @@ void Foam::fanPressureJumpFvPatchScalarField::updateCoeffs()
         {
             // Backwards compatibility fallback
 
-            scalarField Un(max(sign*phip/patch().magSf(), scalar(0)));
+            scalarField Un(max(sign*phip/patch().magSf(), 0));
 
             if (phip.internalField().dimensions() == dimensions::volumetricFlux)
             {
@@ -194,7 +194,7 @@ void Foam::fanPressureJumpFvPatchScalarField::updateCoeffs()
                     << exit(FatalError);
             }
 
-            jumpRef() = sign*max(jumpTable_->value(Un), scalar(0));
+            jumpRef() = sign*max(jumpTable_->value(Un), 0);
         }
     }
 

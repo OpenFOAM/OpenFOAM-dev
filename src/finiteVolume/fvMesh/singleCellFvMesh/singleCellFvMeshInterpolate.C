@@ -42,7 +42,7 @@ tmp<VolField<Type>> singleCellFvMesh::interpolate
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type>> patchFields(vf.boundaryField().size());
+    PtrField<fvPatchField<Type>> patchFields(vf.boundaryField().size());
 
     forAll(patchFields, patchi)
     {

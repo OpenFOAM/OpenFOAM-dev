@@ -127,14 +127,6 @@ public:
 };
 
 
-template<template<class> class Field, class Type>
-class FieldField;
-
-// This should be in surfaceFieldsFwd.H but is here to work around bug in clang
-template<class Type>
-using SurfaceBoundaryField = FieldField<surfaceMesh::template PatchField, Type>;
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

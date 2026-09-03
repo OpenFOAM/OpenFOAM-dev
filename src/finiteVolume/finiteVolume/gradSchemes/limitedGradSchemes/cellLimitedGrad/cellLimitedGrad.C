@@ -133,8 +133,8 @@ void Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
         }
     }
 
-    maxVf -= vf;
-    minVf -= vf;
+    maxVf -= vf.primitiveField();
+    minVf -= vf.primitiveField();
 
     if (k_ < 1.0)
     {

@@ -26,6 +26,7 @@ License
 #include "pointConstraints.H"
 #include "pointFields.H"
 #include "valuePointPatchFields.H"
+#include "globalMeshData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

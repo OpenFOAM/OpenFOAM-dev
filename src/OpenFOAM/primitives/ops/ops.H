@@ -577,6 +577,7 @@ struct cmptPowOp
     }
 };
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define EqOp(opName, op)                                                       \

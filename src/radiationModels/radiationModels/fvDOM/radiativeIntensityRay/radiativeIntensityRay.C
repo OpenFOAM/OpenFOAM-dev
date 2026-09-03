@@ -250,15 +250,14 @@ Foam::scalar Foam::radiationModels::radiativeIntensityRay::correct()
         fvScalarMatrix IiEq
         (
             fvm::div(Ji, ILambda_[lambdaI], "div(Ji,Ii_h)")
-          + fvm::Sp(k*omega_, ILambda_[lambdaI])
+          + fvm::Sp(k()*omega_, ILambda_[lambdaI])
         ==
             1.0/constant::mathematical::pi*omega_
            *(
-                // Remove aDisp from k
-                (k - absorptionEmission_.aDisp(lambdaI))
-               *blackBody_.bLambda(lambdaI)
-
-              + absorptionEmission_.E(lambdaI)/4
+               // Remove aDisp from k
+               (k() - absorptionEmission_.aDisp(lambdaI)()())
+              *blackBody_.bLambda(lambdaI)()
+             + absorptionEmission_.E(lambdaI)()()/4
             )
         );
 

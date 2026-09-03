@@ -313,8 +313,12 @@ bool Foam::functionObjects::phaseForces::execute()
                 >(interface).D()
                *fvc::grad
                 (
-                    otherPhase
-                   /max(phase + otherPhase, otherPhase.residualAlpha())
+                    otherPhase.alpha()
+                   /max
+                    (
+                        phase.alpha() + otherPhase.alpha(),
+                        otherPhase.residualAlpha()
+                    )
                 );
         }
     }

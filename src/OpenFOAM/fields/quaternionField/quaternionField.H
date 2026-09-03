@@ -27,9 +27,6 @@ Typedef
 Description
     Specialisation of Field\<T\> for quaternion.
 
-SourceFiles
-    quaternionField.C
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef quaternionField_H
@@ -38,24 +35,18 @@ SourceFiles
 #include "Field.H"
 #include "quaternion.H"
 
-#define TEMPLATE
-#include "FieldFunctionsM.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-typedef Field<quaternion> quaternionField;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+typedef Field<quaternion> quaternionField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

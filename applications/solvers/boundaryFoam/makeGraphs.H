@@ -24,22 +24,22 @@ setWriter::New(runTime.controlDict().lookup("graphFormat"))->write
 
     coordSet(true, "y", y),
 
-    "Uf", (flowDirection & U)().primitiveField(),
+    "Uf", eval(flowDirection & U.primitiveField())(),
 
     "nu", turbulence->nu()().primitiveField(),
     "nuEff", turbulence->nuEff()().primitiveField(),
     "k", turbulence->k()().primitiveField(),
     "epsilon", turbulence->epsilon()().primitiveField(),
 
-    "Rff", (flowDirection & R & flowDirection)().primitiveField(),
-    "Rww", (wallNormal & R & wallNormal)().primitiveField(),
-    "Rfw", (flowDirection & R & wallNormal)().primitiveField(),
+    "Rff", eval(flowDirection & R.primitiveField() & flowDirection)(),
+    "Rww", eval(wallNormal & R.primitiveField() & wallNormal)(),
+    "Rfw", eval(flowDirection & R.primitiveField() & wallNormal)(),
 
-    "u", sqrt(mag(R.component(symmTensor::XX)))().primitiveField(),
-    "v", sqrt(mag(R.component(symmTensor::YY)))().primitiveField(),
-    "w", sqrt(mag(R.component(symmTensor::ZZ)))().primitiveField(),
+    "u", eval(sqrt(mag(R.primitiveField().component(symmTensor::XX))))(),
+    "v", eval(sqrt(mag(R.primitiveField().component(symmTensor::YY))))(),
+    "w", eval(sqrt(mag(R.primitiveField().component(symmTensor::ZZ))))(),
 
-    "uv", R.component(symmTensor::XY)().primitiveField(),
+    "uv", eval(R.primitiveField().component(symmTensor::XY))(),
 
     "gammaDot", eval(mag(fvi::grad(U)))().primitiveField()
 );

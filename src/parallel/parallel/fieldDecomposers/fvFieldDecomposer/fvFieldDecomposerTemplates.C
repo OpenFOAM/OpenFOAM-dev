@@ -163,7 +163,7 @@ Foam::fvFieldDecomposer::decomposeVolField
     forAll(procMeshes_, proci)
     {
         // Create dummy patch fields
-        PtrList<fvPatchField<Type>> patchFields
+        PtrField<fvPatchField<Type>> patchFields
         (
             procMeshes_[proci].boundary().size()
         );
@@ -344,7 +344,7 @@ Foam::fvFieldDecomposer::decomposeFvSurfaceField
         );
 
         // Create dummy patch fields
-        PtrList<fvsPatchField<Type>> patchFields
+        PtrField<fvsPatchField<Type>> patchFields
         (
             procMeshes_[proci].boundary().size()
         );

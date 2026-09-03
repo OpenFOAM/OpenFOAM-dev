@@ -52,7 +52,7 @@ adjustTimeStep  no;
 
 cacheTemporaryObjects
 (
-    div((I*interpolate(phi)))
+    div(I*interpolate(phi))
 );
 
 // ************************************************************************* //

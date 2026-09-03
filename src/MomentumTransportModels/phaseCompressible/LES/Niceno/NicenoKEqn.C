@@ -200,9 +200,9 @@ tmp<fvScalarMatrix> NicenoKEqn<BasicMomentumTransportModel>::kSource() const
     const volScalarField phaseTransferCoeff(this->phaseTransferCoeff());
 
     return
-        alpha*rho*bubbleG()
-      + phaseTransferCoeff*gasTurbulence.k()
-      - fvm::Sp(phaseTransferCoeff, this->k_);
+        alpha()*rho()*bubbleG()()()
+      + phaseTransferCoeff()*gasTurbulence.k()()()
+      - fvm::Sp(phaseTransferCoeff(), this->k_);
 }
 
 

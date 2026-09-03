@@ -50,21 +50,9 @@ BinaryFunction(transform);
 BinaryFunction(pointTransform);
 BinaryFunction(transformMask);
 
-template<class Type>
-void transform(Field<Type>&, const tensorField&, const Field<Type>&);
-
-template<class Type>
-void transform(Field<Type>&, const tensor&, const Field<Type>&);
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "transformFieldTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

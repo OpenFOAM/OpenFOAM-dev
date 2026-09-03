@@ -29,7 +29,7 @@ License
 #include "fviGrad.H"
 #include "fvcSnGrad.H"
 #include "fvcLaplacian.H"
-#include "fvcReconstruct.H"
+#include "fviReconstruct.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -132,7 +132,7 @@ void Foam::solvers::isothermalFilm::momentumPredictor()
         (
             UEqn
          ==
-            fvc::reconstruct
+            fvi::reconstruct
             (
                 constrainedField
                 (

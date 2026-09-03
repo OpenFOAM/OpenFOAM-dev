@@ -34,7 +34,7 @@ divSchemes
     default         none;
 
     div(alphaPhi.air,U.air)    Gauss linearUpwindV unlimited;
-    div(((alpha.air*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
+    div(alpha.air*nuEff.air*dev2(T(grad(U.air)))) Gauss linear;
 
     div(phiGByA,cloud:alpha) Gauss linear;
 }

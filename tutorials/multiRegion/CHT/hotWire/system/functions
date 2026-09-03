@@ -23,7 +23,7 @@ FoamFile
 #includeFunc patchFlowRate(region=solid, patch=positive, I)
 
 // Log the total heating power delivered into the solid volume
-#includeFunc volIntegrate(region=solid, div((I*interpolate(phi))))
+#includeFunc volIntegrate(region=solid, div(I*interpolate(phi)))
 
 #includeFunc residuals(region=fluid, p, U, h, k, omega)
 

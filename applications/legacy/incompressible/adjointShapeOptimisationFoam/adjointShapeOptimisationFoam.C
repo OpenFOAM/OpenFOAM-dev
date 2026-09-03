@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
             (
                 fvm::div(phi, U)
               + turbulence->divDevSigma(U)
-              + fvm::Sp(alpha, U)
+              + fvm::Sp(alpha(), U)
              ==
                 fvModels.source(U)
             );
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 
             volInternalVectorField adjointTransposeConvection
             (
-                (fvi::grad(Ua) & U())
+                fvi::grad(Ua) & U()
             );
             // volInternalVectorField adjointTransposeConvection
             //(
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
                 fvm::div(-phi, Ua)
               - adjointTransposeConvection
               + turbulence->divDevSigma(Ua)
-              + fvm::Sp(alpha, Ua)
+              + fvm::Sp(alpha(), Ua)
              ==
                 fvModels.source(Ua)
             );

@@ -40,6 +40,7 @@ SourceFiles
 #define conformedFvPatchField_H
 
 #include "fvPatchField.H"
+#include "PtrField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,10 +62,10 @@ class conformedFvPatchField
         autoPtr<fvPatchField<Type>> origFieldPtr_;
 
         //- The non-conformal patch fields
-        PtrList<fvPatchField<Type>> ncFieldPtrs_;
+        PtrField<fvPatchField<Type>> ncFieldPtrs_;
 
         //- The coverage for the non-conformal patch fields
-        PtrList<scalarField> ncCoverages_;
+        PtrField<scalarField> ncCoverages_;
 
 
     // Private Static Member Functions
@@ -82,8 +83,8 @@ class conformedFvPatchField
             const fvPatch&,
             const DimensionedField<Type, fvMesh>&,
             autoPtr<fvPatchField<Type>>&& origFieldPtr,
-            PtrList<fvPatchField<Type>>&& ncFieldPtrs,
-            PtrList<scalarField>&& ncCoverages
+            PtrField<fvPatchField<Type>>&& ncFieldPtrs,
+            PtrField<scalarField>&& ncCoverages
         );
 
 

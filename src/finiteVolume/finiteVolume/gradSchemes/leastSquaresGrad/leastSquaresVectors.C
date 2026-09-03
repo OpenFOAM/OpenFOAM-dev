@@ -25,6 +25,7 @@ License
 
 #include "leastSquaresVectors.H"
 #include "volFields.H"
+#include "symmTensorField.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

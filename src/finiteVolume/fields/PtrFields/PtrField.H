@@ -91,21 +91,34 @@ public:
         //- Construct as copy of tmp<PtrField>
         PtrField(const tmp<PtrField<Type>>&);
 
-        //- Construct as copy of a PtrList<Type>
-        PtrField(const PtrList<Type>&);
+        //- Construct as copy of a PtrField<Type> with optional clone arguments
+        template<class ... Args>
+        explicit PtrField(const PtrField<Type>&, const Args& ... args);
 
-        //- Construct from an expression and potentially any additional
-        //  arguments to the selector
+        //- Construct as copy of a PtrList<Type> with optional clone arguments
+        template<class ... Args>
+        explicit PtrField(const PtrList<Type>&, const Args& ... args);
+
+        //- Construct from an expression with optional New selector arguments
         template
         <
             class Expression,
             class ... Args,
             class = EnableIfExpressionable<Expression>
         >
-        PtrField(const Expression& e, const Args& ... args);
+        explicit PtrField(const Expression& e, const Args& ... args);
 
         //- Clone
         tmp<PtrField<Type>> clone() const;
+
+        //- If the argument is a temporary return
+        //  otherwise construct a copy by calling New for each element
+        template<class ... Args>
+        static tmp<PtrField<Type>> New
+        (
+            const tmp<PtrField<Type>>& tf,
+            const Args& ... args
+        );
 
 
     // Member Functions
@@ -119,12 +132,25 @@ public:
         //- Replace a component field of the field
         void replace(const direction, const PtrField<cmptField>&);
 
+        //- Replace a component field of the field from an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void replace(const direction, const Expression&);
+
         //- Replace a component field of the field
         void replace(const direction, const cmptType&);
 
         //- Return the field transpose expression
         //  (only defined for second rank tensors)
         inline auto T() const;
+
+        //- Bound the field to the given lower bound
+        void boundLower(const pType& lower);
+
+        //- Bound the field to the given upper bound
+        void boundUpper(const pType& upper);
+
+        //- Bound the field within the given lower and upper bounds
+        void bound(const pType& lower, const pType& upper);
 
 
     // Member Operators

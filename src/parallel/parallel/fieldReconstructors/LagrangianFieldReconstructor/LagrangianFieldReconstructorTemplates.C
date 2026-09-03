@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,7 +132,7 @@ Foam::LagrangianFieldReconstructor::reconstructLagrangianField
     // the internal field reference. This is a placeholder and will get
     // replaced by the complete field when this set of patch fields is cloned
     // to produce the final field.
-    PtrList<LagrangianPatchField<Type>> completePatchFields
+    PtrField<LagrangianPatchField<Type>> completePatchFields
     (
         completeMesh_.boundary().size()
     );

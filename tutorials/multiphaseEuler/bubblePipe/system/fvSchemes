@@ -37,7 +37,7 @@ divSchemes
     "div\(alphaRhoPhi,(k|epsilon|omega)\)"    Gauss limitedLinear 1;
     "div\(alphaPhi,f.*\)"         Gauss limitedLinear 1;
 
-    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(alpha*rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

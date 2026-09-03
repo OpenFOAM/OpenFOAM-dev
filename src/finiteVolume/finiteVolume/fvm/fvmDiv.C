@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,23 +28,14 @@ License
 #include "fvMatrix.H"
 #include "convectionScheme.H"
 #include "fvmSup.H"
+#include "fviDiv.H"
 #include "fvcDiv.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvm
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
-tmp<fvMatrix<Type>>
-div
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::div
 (
     const surfaceScalarField& flux,
     const VolField<Type>& vf,
@@ -60,8 +51,8 @@ div
 }
 
 template<class Type>
-tmp<fvMatrix<Type>>
-div
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::div
 (
     const tmp<surfaceScalarField>& tflux,
     const VolField<Type>& vf,
@@ -74,9 +65,22 @@ div
 }
 
 
+template<class Type, class Expression, class>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::div
+(
+    const Expression& e,
+    const VolField<Type>& vf,
+    const word& name
+)
+{
+    return div(eval(e), vf, name);
+}
+
+
 template<class Type>
-tmp<fvMatrix<Type>>
-div
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::div
 (
     const surfaceScalarField& flux,
     const VolField<Type>& vf
@@ -86,8 +90,8 @@ div
 }
 
 template<class Type>
-tmp<fvMatrix<Type>>
-div
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::div
 (
     const tmp<surfaceScalarField>& tflux,
     const VolField<Type>& vf
@@ -99,15 +103,27 @@ div
 }
 
 
+template<class Type, class Expression, class>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::div
+(
+    const Expression& e,
+    const VolField<Type>& vf
+)
+{
+    return div(eval(e), vf);
+}
+
+
 template<class Type>
-tmp<fvMatrix<Type>>
-divc
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::divc
 (
     const tmp<SurfaceField<Type>>& tflux,
     const VolField<Type>& vf
 )
 {
-    tmp<fvMatrix<Type>> tdivc(fvm::Su(fvc::div(tflux()), vf));
+    tmp<fvMatrix<Type>> tdivc(fvm::Su(fvi::div(tflux()), vf));
 
     if (vf.mesh().schemes().fluxRequired(vf.name()))
     {
@@ -122,12 +138,16 @@ divc
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type, class Expression, class>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::divc
+(
+    const Expression& e,
+    const VolField<Type>& vf
+)
+{
+    return divc(eval(e), vf);
+}
 
-} // End namespace fvm
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

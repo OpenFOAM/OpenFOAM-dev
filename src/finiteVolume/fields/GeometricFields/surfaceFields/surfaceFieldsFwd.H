@@ -52,12 +52,11 @@ class fvsPatchField;
 template<class Type>
 using SurfaceField = GeometricField<Type, surfaceMesh, Field>;
 
-// template<template<class> class Field, class Type>
-// class FieldField;
-//
-// Moved to surfaceFieldsFwd.H to work around bug in clang
-// template<class Type>
-// using SurfaceBoundaryField = FieldField<fvsPatchField, Type>;
+template<class Type>
+class PtrField;
+
+template<class Type>
+using SurfaceBoundaryField = PtrField<fvsPatchField<Type>>;
 
 typedef SurfaceField<label> surfaceLabelField;
 typedef SurfaceField<scalar> surfaceScalarField;

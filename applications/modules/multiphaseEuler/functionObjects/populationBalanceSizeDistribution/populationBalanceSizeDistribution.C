@@ -233,7 +233,7 @@ Foam::functionObjects::populationBalanceSizeDistribution::averageCoordinateValue
         case coordinateType::projectedAreaDiameter:
         {
             averageCoordinateValue =
-                weightedAverage(popBal, i, sqrt(popBal.a(i)/pi));
+                weightedAverage(popBal, i, eval(sqrt(popBal.a(i)/pi)));
 
             break;
         }
@@ -260,7 +260,14 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
     {
         case weightType::numberConcentration:
         {
-            scalarField Ni(filterField(fi*alpha/popBal.v(i).value()));
+            scalarField Ni
+            (
+                filterField
+                (
+                    fi.primitiveField()*alpha.primitiveField()
+                   /popBal.v(i).value()
+                )
+            );
 
             if (gSum(Ni) == 0)
             {
@@ -278,7 +285,10 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
         }
         case weightType::volumeConcentration:
         {
-            scalarField Vi(filterField(fi*alpha));
+            scalarField Vi
+            (
+                filterField(fi.primitiveField()*alpha.primitiveField())
+            );
 
             if (gSum(Vi) == 0)
             {
@@ -296,7 +306,13 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
         }
         case weightType::areaConcentration:
         {
-            scalarField Ai(filterField(popBal.a(i)()*alpha));
+            scalarField Ai
+            (
+                filterField
+                (
+                    popBal.a(i)().primitiveField()*alpha.primitiveField()
+                )
+            );
 
             if (gSum(Ai) == 0)
             {

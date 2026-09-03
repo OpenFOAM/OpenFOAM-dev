@@ -243,7 +243,7 @@ void Foam::populationBalance::shapeModels::fractal::solve()
             (
                 fvm::Sp
                 (
-                    max(phase.residualAlpha() - alpha*fi, scalar(0))
+                    max(phase.residualAlpha() - alpha()*fi(), scalar(0))
                    /kappas_[i].mesh().time().deltaT(),
                     kappas_[i]
                 )

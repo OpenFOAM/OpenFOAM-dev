@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ word itoa(const label n)
     for (label i=0; i<length; i++)
     {
         label j = label(leftOfN/pow(10, length-i-1));
-        leftOfN -= j*pow(10,length-i-1);
+        leftOfN -= j*pow(10, length-i-1);
         val[i] = offset + j;
     }
 

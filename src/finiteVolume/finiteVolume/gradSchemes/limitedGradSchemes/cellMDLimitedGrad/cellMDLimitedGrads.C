@@ -110,8 +110,8 @@ void Foam::fv::cellMDLimitedGrad<Foam::scalar>::calcGrad
         }
     }
 
-    maxVsf -= vsf;
-    minVsf -= vsf;
+    maxVsf -= vsf.primitiveField();
+    minVsf -= vsf.primitiveField();
 
     if (k_ < 1.0)
     {
@@ -244,8 +244,8 @@ void Foam::fv::cellMDLimitedGrad<Foam::vector>::calcGrad
         }
     }
 
-    maxVvf -= vvf;
-    minVvf -= vvf;
+    maxVvf -= vvf.primitiveField();
+    minVvf -= vvf.primitiveField();
 
     if (k_ < 1.0)
     {

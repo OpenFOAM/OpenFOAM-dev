@@ -25,7 +25,7 @@ License
 
 #include "nonUnityLewisEddyDiffusivity.H"
 #include "fviDiv.H"
-#include "fvcLaplacian.H"
+#include "fviLaplacian.H"
 #include "fvcSnGrad.H"
 #include "fvmSup.H"
 #include "surfaceInterpolate.H"
@@ -200,7 +200,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
     (
         fvm::Su
         (
-            -fvc::laplacian(this->alpha()*this->kappaEff(), this->thermo().T()),
+            -fvi::laplacian(this->alpha()*this->kappaEff(), this->thermo().T()),
             he
         )
     );

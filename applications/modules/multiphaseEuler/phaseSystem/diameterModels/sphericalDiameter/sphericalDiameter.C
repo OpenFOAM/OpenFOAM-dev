@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::diameterModels::spherical::spherical
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::spherical::Av() const
 {
-    return 6*phase()/d();
+    return 6*phase().alpha()/d();
 }
 
 

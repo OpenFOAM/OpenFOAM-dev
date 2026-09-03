@@ -351,41 +351,41 @@ inline const Cmpt& component
 // Powers of a Form
 // Equivalent to outer-products between the Form and itself
 // Form^0 = 1.0
-template<class Form, class Cmpt, direction Ncmpts>
-inline typename powProduct<Form, 0>::type pow
-(
-    const VectorSpace<Form, Cmpt, Ncmpts>&,
-    typename powProduct<Form, 0>::type =
-        pTraits<typename powProduct<Form, 0>::type>::zero
-)
-{
-    return 1.0;
-}
+// template<class Form, class Cmpt, direction Ncmpts>
+// inline typename powProduct<Form, 0>::type pow
+// (
+//     const VectorSpace<Form, Cmpt, Ncmpts>&,
+//     typename powProduct<Form, 0>::type =
+//         pTraits<typename powProduct<Form, 0>::type>::zero
+// )
+// {
+//     return 1.0;
+// }
 
-// Form^1 = Form
-template<class Form, class Cmpt, direction Ncmpts>
-inline typename powProduct<Form, 1>::type pow
-(
-    const VectorSpace<Form, Cmpt, Ncmpts>& v,
-    typename powProduct<Form, 1>::type =
-        pTraits<typename powProduct<Form, 1>::type>::zero
-)
-{
-    return static_cast<const Form&>(v);
-}
+// // Form^1 = Form
+// template<class Form, class Cmpt, direction Ncmpts>
+// inline typename powProduct<Form, 1>::type pow
+// (
+//     const VectorSpace<Form, Cmpt, Ncmpts>& v,
+//     typename powProduct<Form, 1>::type =
+//         pTraits<typename powProduct<Form, 1>::type>::zero
+// )
+// {
+//     return static_cast<const Form&>(v);
+// }
 
 
-// Form^2 = sqr(Form)
-template<class Form, class Cmpt, direction Ncmpts>
-inline typename powProduct<Form, 2>::type pow
-(
-    const VectorSpace<Form, Cmpt, Ncmpts>& v,
-    typename powProduct<Form, 2>::type =
-        pTraits<typename powProduct<Form, 2>::type>::zero
-)
-{
-    return sqr(static_cast<const Form&>(v));
-}
+// // Form^2 = sqr(Form)
+// template<class Form, class Cmpt, direction Ncmpts>
+// inline typename powProduct<Form, 2>::type pow
+// (
+//     const VectorSpace<Form, Cmpt, Ncmpts>& v,
+//     typename powProduct<Form, 2>::type =
+//         pTraits<typename powProduct<Form, 2>::type>::zero
+// )
+// {
+//     return sqr(static_cast<const Form&>(v));
+// }
 
 
 template<class Form, class Cmpt, direction Ncmpts>

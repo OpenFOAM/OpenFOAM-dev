@@ -140,8 +140,8 @@ Foam::ThermalPhaseModel<BasePhaseModel>::heEqn()
 
       + this->divq(he)
      ==
-        alpha*rho*(U&g_)
-      + alpha*this->Qdot()
+        alpha()*rho()*(U()&g_)
+      + alpha()*this->Qdot()
     );
 
     // Add the appropriate pressure-work term

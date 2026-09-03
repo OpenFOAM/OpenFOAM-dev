@@ -451,20 +451,20 @@ mixtureKEpsilon<BasicMomentumTransportModel>::bubbleG() const
     tmp<volScalarField> bubbleG
     (
         Cp_
-       *pos(alphap_ - gas)*liquid*liquid.rho()
+       *pos(alphap_ - gas.alpha())*liquid.alpha()*liquid.rho()
        *(
             pow3(magUr)
           + pow(drag.CdRe()*liquid.fluidThermo().nu()/gas.d(), 4.0/3.0)
            *pow(magUr, 5.0/3.0)
         )
-       *gas
+       *gas.alpha()
        /gas.d()
     );
 
     // Simple model
     // tmp<volScalarField> bubbleG
     // (
-    //     Cp_*liquid*drag.K()*sqr(magUr)
+    //     Cp_*liquid.alpha()*drag.K()*sqr(magUr)
     // );
 
     return bubbleG;
@@ -475,7 +475,7 @@ template<class BasicMomentumTransportModel>
 tmp<fvScalarMatrix>
 mixtureKEpsilon<BasicMomentumTransportModel>::kSource() const
 {
-    return fvm::Su(bubbleG()/rhom_(), km_());
+    return fvm::Su(bubbleG()()()/rhom_()(), km_());
 }
 
 
@@ -483,7 +483,11 @@ template<class BasicMomentumTransportModel>
 tmp<fvScalarMatrix>
 mixtureKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
 {
-    return fvm::Su(C3_*epsilonm_()*bubbleG()/(rhom_()*km_()), epsilonm_());
+    return fvm::Su
+    (
+        C3_*epsilonm_()()*bubbleG()()()/(rhom_()()*km_()()),
+        epsilonm_()
+    );
 }
 
 
@@ -618,7 +622,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
      ==
         C1_*Gm*epsilonm()/km()
       - fvm::SuSp(((2.0/3.0)*C1_)*divUm, epsilonm)
-      - fvm::Sp(C2_*epsilonm/km, epsilonm)
+      - fvm::Sp(C2_*epsilonm()/km(), epsilonm)
       + epsilonSource()
       + fvModels.source(rhom, epsilonm)/rhom
     );
@@ -642,7 +646,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
      ==
         Gm
       - fvm::SuSp((2.0/3.0)*divUm, km)
-      - fvm::Sp(epsilonm/km, km)
+      - fvm::Sp(epsilonm()/km(), km)
       + kSource()
       + fvModels.source(rhom, km)/rhom
     );

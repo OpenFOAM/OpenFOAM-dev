@@ -24,55 +24,60 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fviVolumeIntegrate.H"
-#include "fvMesh.H"
-#include "Field.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvi
-{
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, fvMesh>& df)
+Foam::tmp<Foam::Field<Type>> Foam::fvi::volumeIntegrate
+(
+    const VolInternalField<Type>& vf
+)
 {
-    return df.mesh().V().primitiveField()*df.primitiveField();
+    return vf.mesh().V().primitiveField()*vf.primitiveField();
 }
 
 
 template<class Type>
-tmp<Field<Type>>
-volumeIntegrate(const tmp<DimensionedField<Type, fvMesh>>& tdf)
+Foam::tmp<Foam::Field<Type>> Foam::fvi::volumeIntegrate
+(
+    const tmp<VolInternalField<Type>>& tvf
+)
 {
-    tmp<Field<Type>> tdidf
-    (
-        tdf().mesh().V().primitiveField()*tdf().primitiveField()
-    );
-    tdf.clear();
-    return tdidf;
+    tmp<Field<Type>> tvivf(volumeIntegrate(tvf()));
+    tvf.clear();
+    return tvivf;
 }
 
 
 template<class Type>
-dimensioned<Type> domainIntegrate(const DimensionedField<Type, fvMesh>& df)
+Foam::dimensioned<Type> Foam::fvi::domainIntegrate
+(
+    const VolInternalField<Type>& vf
+)
 {
     return dimensioned<Type>
     (
-        "domainIntegrate(" + df.name() + ')',
-        dimensions::volume*df.dimensions(),
-        gSum(fvi::volumeIntegrate(df))
+        "domainIntegrate(" + vf.name() + ')',
+        dimensions::volume*vf.dimensions(),
+        gSum(volumeIntegrate(vf))
     );
+}
+
+
+template<class Type>
+Foam::dimensioned<Type> Foam::fvi::domainIntegrate
+(
+    const tmp<VolInternalField<Type>>& tvf
+)
+{
+    dimensioned<Type> integral = domainIntegrate(tvf());
+    tvf.clear();
+    return integral;
 }
 
 
 template<class Expression, class>
-ElementType<Expression> domainIntegrate(const Expression& e)
+Foam::ElementType<Expression> Foam::fvi::domainIntegrate(const Expression& e)
 {
     const fvMesh& mesh = expression::getFirst<expression::Mesh<fvMesh>>(e);
 
@@ -93,25 +98,5 @@ ElementType<Expression> domainIntegrate(const Expression& e)
     );
 }
 
-
-template<class Type>
-dimensioned<Type> domainIntegrate
-(
-    const tmp<DimensionedField<Type, fvMesh>>& tdf
-)
-{
-    dimensioned<Type> integral = domainIntegrate(tdf());
-    tdf.clear();
-    return integral;
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace fvi
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

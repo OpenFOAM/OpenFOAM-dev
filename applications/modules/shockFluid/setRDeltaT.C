@@ -56,13 +56,13 @@ void Foam::solvers::shockFluid::setRDeltaT(const surfaceScalarField& amaxSf)
     if (pimpleDict.found("maxDeltaT") || minRDeltaT < rootVSmall)
     {
         const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("maxDeltaT");
-        rDeltaT.max(clipRDeltaT);
+        rDeltaT.primitiveFieldRef().boundLower(clipRDeltaT);
         minRDeltaT = max(minRDeltaT, clipRDeltaT);
     }
     if (pimpleDict.found("minDeltaT"))
     {
         const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("minDeltaT");
-        rDeltaT.min(clipRDeltaT);
+        rDeltaT.primitiveFieldRef().boundUpper(clipRDeltaT);
         minRDeltaT = min(minRDeltaT, clipRDeltaT);
     }
 

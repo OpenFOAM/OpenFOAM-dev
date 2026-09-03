@@ -38,51 +38,16 @@ SourceFiles
 #include "GeometricField.H"
 #include "DimensionedVectorField.H"
 
-#define TEMPLATE                                                               \
-    template                                                                   \
-    <                                                                          \
-        class GeoMesh,                                                         \
-        template<class> class PrimitiveField                                   \
-    >
-#define TEMPLATE2                                                              \
-    template                                                                   \
-    <                                                                          \
-        class GeoMesh,                                                         \
-        template<class> class PrimitiveField1,                                 \
-        template<class> class PrimitiveField2                                  \
-    >
-#define TEMPLATE3                                                              \
-    template                                                                   \
-    <                                                                          \
-        class GeoMesh,                                                         \
-        template<class> class PrimitiveField1,                                 \
-        template<class> class PrimitiveField2,                                 \
-        template<class> class PrimitiveField3                                  \
-    >
-#include "GeometricFieldFunctionsM.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+inline auto Foam::GeometricField<Type, GeoMesh, PrimitiveField>::component
+(
+    const direction& d
+) const
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(vector, vector, normalised, normalised)
-UNARY_FUNCTION(vector, vector, perpendicular, perpendicular)
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
-
-#ifdef NoRepository
-    #include "GeometricVectorField.C"
-#endif
+    return Foam::component(*this, d);
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

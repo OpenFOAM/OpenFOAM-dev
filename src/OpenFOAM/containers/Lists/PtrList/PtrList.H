@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,9 +97,9 @@ public:
         //- Copy constructor
         PtrList(const PtrList<T>&);
 
-        //- Copy constructor with additional argument for clone
-        template<class CloneArg>
-        PtrList(const PtrList<T>&, const CloneArg&);
+        //- Copy constructor with optional clone arguments
+        template<class ... Args>
+        PtrList(const PtrList<T>&, const Args& ... args);
 
         //- Move constructor
         PtrList(PtrList<T>&&);

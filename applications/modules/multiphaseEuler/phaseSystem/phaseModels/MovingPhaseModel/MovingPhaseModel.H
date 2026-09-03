@@ -82,7 +82,7 @@ protected:
         autoPtr<surfaceVectorField> Uf_;
 
         //- Dilatation rate
-        autoPtr<volScalarField> divU_;
+        autoPtr<volInternalScalarField> divU_;
 
         //- Turbulence model
         autoPtr<phaseCompressible::momentumTransportModel> momentumTransport_;
@@ -129,7 +129,10 @@ public:
         virtual void correct();
 
         //- Correct the continuity error
-        virtual void correctContinuityError(const volScalarField& source);
+        virtual void correctContinuityError
+        (
+            const volInternalScalarField& source
+        );
 
         //- Correct the kinematics
         virtual void correctKinematics();
@@ -219,10 +222,10 @@ public:
         // Compressibility (variable density)
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual const autoPtr<volScalarField>& divU() const;
+            virtual const autoPtr<volInternalScalarField>& divU() const;
 
             //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual void divU(tmp<volScalarField> divU);
+            virtual void divU(tmp<volInternalScalarField> divU);
 
 
         // Momentum transport

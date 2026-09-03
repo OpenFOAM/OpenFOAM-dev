@@ -100,26 +100,28 @@ void Foam::solvers::shockFluid::fluxPredictor()
         min(min(phiv_pos - cSf_pos, phiv_neg - cSf_neg), v_zero)
     );
 
-    a_pos = surfaceScalarField::New
-    (
-        "a_pos",
-        fluxScheme == "Tadmor"
-          ? surfaceScalarField::New("a_pos", mesh, 0.5)
-          : ap/(ap - am)
-    );
+    if (fluxScheme == "Tadmor")
+    {
+        a_pos = surfaceScalarField::New("a_pos", mesh, 0.5);
+    }
+    else
+    {
+        a_pos = surfaceScalarField::New("a_pos", ap/(ap - am));
+    }
 
     a_neg = surfaceScalarField::New("a_neg", 1.0 - a_pos());
 
     phiv_pos *= a_pos();
     phiv_neg *= a_neg();
 
-    aSf = surfaceScalarField::New
-    (
-        "aSf",
-        fluxScheme == "Tadmor"
-          ? -0.5*max(mag(am), mag(ap))
-          : am*a_pos()
-    );
+    if (fluxScheme == "Tadmor")
+    {
+        aSf = surfaceScalarField::New("aSf", -0.5*max(mag(am), mag(ap)));
+    }
+    else
+    {
+        aSf = surfaceScalarField::New("aSf", am*a_pos());
+    }
 
     aphiv_pos = surfaceScalarField::New("aphiv_pos", phiv_pos - aSf());
     aphiv_neg = surfaceScalarField::New("aphiv_neg", phiv_neg + aSf());

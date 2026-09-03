@@ -129,8 +129,8 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve()
 
         Info<< alpha.name() << " volume fraction, min, max = "
             << weightedAverage(alpha(), mesh.V()).value()
-            << ' ' << min(alpha).value()
-            << ' ' << max(alpha).value()
+            << ' ' << min(alpha.alpha()).value()
+            << ' ' << max(alpha.alpha()).value()
             << endl;
 
         sumAlpha += alpha;
@@ -146,7 +146,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve()
     volScalarField sumCorr(1.0 - sumAlpha);
     forAll(phases, phasei)
     {
-        incompressibleVoFphase& alpha = phases[phasei];
+        volScalarField& alpha = phases[phasei];
         alpha += alpha*sumCorr;
     }
 }

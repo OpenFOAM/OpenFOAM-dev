@@ -314,12 +314,15 @@ Foam::momentumTransferSystem::Fs() const
             fvc::interpolate(turbulentDispersionModelIter()->D())
         );
 
-        const volScalarField alpha12(interface.phase1() + interface.phase2());
+        const volScalarField alpha12
+        (
+            interface.phase1().alpha() + interface.phase2().alpha()
+        );
         const surfaceScalarField snGradAlpha1By12
         (
             fvc::snGrad
             (
-                interface.phase1()
+                interface.phase1().alpha()
                /max(alpha12, interface.phase1().residualAlpha())
             )*fluid_.mesh().magSf()
         );
@@ -327,7 +330,7 @@ Foam::momentumTransferSystem::Fs() const
         (
             fvc::snGrad
             (
-                interface.phase2()
+                interface.phase2().alpha()
                /max(alpha12, interface.phase2().residualAlpha())
             )*fluid_.mesh().magSf()
         );
@@ -432,12 +435,15 @@ Foam::momentumTransferSystem::Ffs() const
             fvc::interpolate(turbulentDispersionModelIter()->D())
         );
 
-        const volScalarField alpha12(interface.phase1() + interface.phase2());
+        const volScalarField alpha12
+        (
+            interface.phase1().alpha() + interface.phase2().alpha()
+        );
         const surfaceScalarField snGradAlpha1By12
         (
             fvc::snGrad
             (
-                interface.phase1()
+                interface.phase1().alpha()
                /max(alpha12, interface.phase1().residualAlpha())
             )*fluid_.mesh().magSf()
         );
@@ -445,7 +451,7 @@ Foam::momentumTransferSystem::Ffs() const
         (
             fvc::snGrad
             (
-                interface.phase2()
+                interface.phase2().alpha()
                /max(alpha12, interface.phase2().residualAlpha())
             )*fluid_.mesh().magSf()
         );
@@ -616,7 +622,10 @@ void Foam::momentumTransferSystem::invADVs
             {
                 const volScalarField Kdij
                 (
-                    (otherPhase/max(otherPhase, otherPhase.residualAlpha()))*Kd
+                    (
+                        otherPhase.alpha()
+                       /max(otherPhase.alpha(), otherPhase.residualAlpha())
+                    )*Kd
                 );
 
                 const surfaceScalarField Kdijf(fvc::interpolate(Kdij));
@@ -722,7 +731,10 @@ void Foam::momentumTransferSystem::invADVs
             {
                 const volScalarField VmPhase
                 (
-                    (otherPhase/max(otherPhase, otherPhase.residualAlpha()))*Vm
+                    (
+                        otherPhase.alpha()
+                       /max(otherPhase.alpha(), otherPhase.residualAlpha())
+                    )*Vm
                 );
 
                 {
@@ -900,8 +912,10 @@ Foam::momentumTransferSystem::invADVfs
             {
                 const volScalarField VmPhase
                 (
-                    (otherPhase/max(otherPhase, otherPhase.residualAlpha()))
-                   *Vm
+                    (
+                        otherPhase.alpha()
+                       /max(otherPhase.alpha(), otherPhase.residualAlpha())
+                    )*Vm
                 );
 
                 const surfaceScalarField VmPhasef(fvc::interpolate(VmPhase));
@@ -982,7 +996,7 @@ Foam::momentumTransferSystem::alphaDByAf
         addTmpField
         (
             alphaDByAf,
-            fvc::interpolate(max(phase, scalar(0)))
+            fvc::interpolate(max(phase.alpha(), scalar(0)))
            *fvc::interpolate(rAs[phase.index()])
            *phase.pPrimef()
         );
@@ -1001,12 +1015,12 @@ Foam::momentumTransferSystem::alphaDByAf
 
         const surfaceScalarField alpha1f
         (
-            fvc::interpolate(max(interface.phase1(), scalar(0)))
+            fvc::interpolate(max(interface.phase1().alpha(), scalar(0)))
         );
 
         const surfaceScalarField alpha2f
         (
-            fvc::interpolate(max(interface.phase2(), scalar(0)))
+            fvc::interpolate(max(interface.phase2().alpha(), scalar(0)))
         );
 
         addTmpField
@@ -1105,8 +1119,10 @@ Foam::momentumTransferSystem::ddtCorrs() const
 
                 const volScalarField VmPhase
                 (
-                    (otherPhase/max(otherPhase, otherPhase.residualAlpha()))
-                   *Vm
+                    (
+                        otherPhase.alpha()
+                       /max(otherPhase.alpha(), otherPhase.residualAlpha())
+                    )*Vm
                 );
 
                 addField
@@ -1165,14 +1181,17 @@ void Foam::momentumTransferSystem::dragCorrs
             {
                 const volScalarField K1
                 (
-                    (otherPhase/max(otherPhase, otherPhase.residualAlpha()))*K
+                    (
+                        otherPhase.alpha()
+                       /max(otherPhase.alpha(), otherPhase.residualAlpha())
+                    )*K
                 );
 
                 addField
                 (
                     i,
                     IOobject::groupName("dragCorr", phase.name()),
-                    K1*(j == -1 ? -Uphis[i] : (Uphis[j] - Uphis[i])),
+                    K1*(j == -1 ? eval(-Uphis[i]) : eval(Uphis[j] - Uphis[i])),
                     dragCorrs
                 );
 
@@ -1181,7 +1200,11 @@ void Foam::momentumTransferSystem::dragCorrs
                     i,
                     IOobject::groupName("dragCorrf", phase.name()),
                     fvc::interpolate(K1)
-                   *(j == -1 ? -phase.phi() : (otherPhase.phi() - phase.phi())),
+                   *(
+                       j == -1
+                     ? eval(-phase.phi())
+                     : eval(otherPhase.phi() - phase.phi())
+                    ),
                     dragCorrfs
                 );
             }

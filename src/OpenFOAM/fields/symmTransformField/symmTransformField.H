@@ -37,30 +37,6 @@ SourceFiles
 
 #include "symmTransform.H"
 #include "symmTensorField.H"
-#include "sphericalTensor.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-void transform(Field<Type>&, const symmTensorField&, const Field<Type>&);
-
-template<class Type>
-void transform(Field<Type>&, const symmTensor&, const Field<Type>&);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "symmTransformField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

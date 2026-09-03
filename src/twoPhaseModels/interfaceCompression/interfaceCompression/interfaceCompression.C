@@ -85,7 +85,7 @@ Foam::interfaceCompressionNew::interpolate
     }
 
     tmp<surfaceScalarField> tvff(tScheme_().interpolate(vf) + vfc);
-    tvff.ref().maxMin(0, 1);
+    tvff.ref().bound(0, 1);
 
     return tvff;
 }

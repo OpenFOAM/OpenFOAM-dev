@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     );
 
     Info<< C << endl;
-    Info<< (C & U) << endl;
+    Info<< (C.field() & U) << endl;
 
     SlicedGeometricField<vector, surfaceMesh> Sf
     (

@@ -53,13 +53,13 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
         if (pimpleDict.found("maxDeltaT") || minRDeltaT < rootVSmall)
         {
             const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("maxDeltaT");
-            rDeltaT.max(clipRDeltaT);
+            rDeltaT.primitiveFieldRef().boundLower(clipRDeltaT);
             minRDeltaT = max(minRDeltaT, clipRDeltaT);
         }
         if (pimpleDict.found("minDeltaT"))
         {
             const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("minDeltaT");
-            rDeltaT.min(clipRDeltaT);
+            rDeltaT.primitiveFieldRef().boundUpper(clipRDeltaT);
             minRDeltaT = min(minRDeltaT, clipRDeltaT);
         }
 
@@ -74,9 +74,10 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
     // Heat release rate time scale
     if (alphaTemp < 1)
     {
-        volInternalScalarField rDeltaTT
+        const volInternalScalarField rDeltaTT
         (
-            mag(reaction->Qdot())/(alphaTemp*rho*thermo.Cp()*thermo.T())
+            mag(reaction->Qdot())
+           /(alphaTemp*rho()*thermo.Cp()()*thermo.T()())
         );
 
         Info<< "    Temperature = "

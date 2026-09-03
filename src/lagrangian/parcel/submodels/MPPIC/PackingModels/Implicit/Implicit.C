@@ -203,7 +203,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             phiGByA = surfaceScalarField::New
             (
                 "phiGByA",
-                (g & mesh.Sf())*fvc::interpolate(1.0 - rhoc/rho)
+                (g & mesh.Sf())*fvc::interpolate(1 - rhoc/rho)
             )
         );
 

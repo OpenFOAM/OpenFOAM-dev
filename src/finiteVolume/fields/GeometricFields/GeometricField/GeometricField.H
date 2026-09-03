@@ -30,8 +30,7 @@ Description
 SourceFiles
     GeometricFieldI.H
     GeometricField.C
-    GeometricFieldFunctions.H
-    GeometricFieldFunctions.C
+    GeometricFieldExpression.H
 
 \*---------------------------------------------------------------------------*/
 
@@ -84,7 +83,7 @@ public:
         using PatchField = typename GeoMesh::template PatchField<Type>;
 
         //- Type of the boundary field
-        using BoundaryField = FieldField<GeoMesh::template PatchField, Type>;
+        using BoundaryField = PtrField<PatchField>;
 
         //- Type of the boundary field
         using Boundary = GeometricBoundaryField<Type, GeoMesh, PrimitiveField>;
@@ -196,7 +195,22 @@ public:
         (
             const IOobject&,
             const Internal&,
-            const PtrList<PatchField>&,
+            const PtrField<PatchField>&,
+            const HashPtrTable<Source>& = HashPtrTable<Source>()
+        );
+
+        //- Constructor from component expressions
+        template
+        <
+            class InternalExpression,
+            class BoundaryExpression,
+            class = EnableIfExpressionable<InternalExpression>
+        >
+        GeometricField
+        (
+            const IOobject&,
+            const InternalExpression&,
+            const BoundaryExpression&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
@@ -207,7 +221,24 @@ public:
             const GeoMesh&,
             const dimensionSet&,
             const PrimitiveField<Type>&,
-            const PtrList<PatchField>&,
+            const PtrField<PatchField>&,
+            const HashPtrTable<Source>& = HashPtrTable<Source>()
+        );
+
+        //- Constructor from component expressions
+        template
+        <
+            class InternalExpression,
+            class BoundaryExpression,
+            class = EnableIfExpressionable<InternalExpression>
+        >
+        GeometricField
+        (
+            const IOobject&,
+            const GeoMesh&,
+            const dimensionSet&,
+            const InternalExpression&,
+            const BoundaryExpression&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
@@ -246,6 +277,10 @@ public:
         (
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
+
+        //- Construct from an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        GeometricField(const Expression& e);
 
         //- Construct as copy resetting IO parameters
         template<template<class> class PrimitiveField2>
@@ -295,6 +330,16 @@ public:
             const word& patchFieldType
         );
 
+        //- Construct as copy of expression setting IO parameters
+        //  and patch field type
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        GeometricField
+        (
+            const IOobject&,
+            const Expression& e,
+            const word& patchFieldType
+        );
+
         //- Constructor from internal field and patch field type
         template<template<class> class PrimitiveField2>
         GeometricField
@@ -336,6 +381,19 @@ public:
             const IOerrorLocation& fieldSourceErrorLocation = IOerrorLocation()
         );
 
+        //- Construct as copy of tmp resetting IO parameters
+        //  and patch field types
+        template <class Expression, class = EnableIfExpressionable<Expression>>
+        GeometricField
+        (
+            const IOobject&,
+            const Expression&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>(),
+            const IOerrorLocation& fieldSourceErrorLocation = IOerrorLocation()
+        );
+
         //- Construct from IOobject, internal field and patch field types
         template<template<class> class PrimitiveField2>
         GeometricField
@@ -359,10 +417,6 @@ public:
             const IOerrorLocation& fieldSourceErrorLocation = IOerrorLocation()
         );
 
-        //- Construct from an expression
-        template<class Expression, class = EnableIfExpressionable<Expression>>
-        GeometricField(const Expression& e) = delete;
-
         //- Clone
         tmp<GeometricField<Type, GeoMesh, PrimitiveField>> clone() const;
 
@@ -376,7 +430,23 @@ public:
         (
             const word& name,
             const Internal&,
-            const PtrList<PatchField>&,
+            const PtrField<PatchField>&,
+            const HashPtrTable<Source>& = HashPtrTable<Source>()
+        );
+
+        //- Return a temporary field constructed from name,
+        //  internal field and list of patch fields
+        template
+        <
+            class InternalExpression,
+            class BoundaryExpression,
+            class = EnableIfExpressionable<InternalExpression>
+        >
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const InternalExpression&,
+            const BoundaryExpression&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
@@ -601,17 +671,15 @@ public:
         //- Does the field need a reference level for solution
         bool needReference() const;
 
-        //- Return a component of the field
-        tmp<GeometricField<cmptType, GeoMesh, Field>> component
-        (
-            const direction
-        ) const;
+        //- Return a component field expression of the field
+        inline auto component(const direction&) const;
 
         //- WriteData member function required by regIOobject
         bool writeData(Ostream&) const;
 
-        //- Return transpose (only if it is a tensor field)
-        tmp<GeometricField<Type, GeoMesh, Field>> T() const;
+        //- Return transpose field expression
+        //  (only if it is a tensor field)
+        inline auto T() const;
 
         //- Relax field (for steady-state solution).
         //  alpha >= 1 : no relaxation
@@ -670,17 +738,24 @@ public:
             const tmp<GeometricField<cmptType, GeoMesh, PrimitiveField2>>&
         );
 
+        //- Replace a component field of the field from the given expression
+        template<class Expression, class = EnableIfExpression<Expression>>
+        void replace(const direction, const Expression&);
+
         //- Replace a component field of the field
         void replace(const direction, const dimensioned<cmptType>&);
 
-        void max(const dimensioned<Type>&);
+        //- Bound the field to the given lower bound
+        void boundLower(const dimensioned<Type>& lower);
 
-        void min(const dimensioned<Type>&);
+        //- Bound the field to the given upper bound
+        void boundUpper(const dimensioned<Type>& upper);
 
-        void maxMin
+        //- Bound the field within the given lower and upper bounds
+        void bound
         (
-            const dimensioned<Type>& minDt,
-            const dimensioned<Type>& maxDt
+            const dimensioned<Type>& lower,
+            const dimensioned<Type>& upper
         );
 
 
@@ -690,46 +765,52 @@ public:
         //  Useful in the formulation of source-terms for FV equations
         inline const Internal& operator()() const;
 
-        void operator=
-        (
-            const GeometricField<Type, GeoMesh, PrimitiveField>&
-        );
-        void operator=
-        (
-            GeometricField<Type, GeoMesh, PrimitiveField>&&
-        );
+        void operator=(const GeometricField<Type, GeoMesh, PrimitiveField>&);
+
+        void operator=(GeometricField<Type, GeoMesh, PrimitiveField>&&);
+
         template<template<class> class PrimitiveField2>
-        void operator=
-        (
-            const GeometricField<Type, GeoMesh, PrimitiveField2>&
-        );
+        void operator=(const GeometricField<Type, GeoMesh, PrimitiveField2>&);
+
         void operator=
         (
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
+
+        //- Assign to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator=(const Expression& e);
+
         template<template<class> class PrimitiveField2>
         void operator=
         (
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
         );
+
         void operator=(const dimensioned<Type>&);
+
         void operator=(const zero&);
+
+        template<template<class> class PrimitiveField2>
+        void operator==(const GeometricField<Type, GeoMesh, PrimitiveField2>&);
+
+        void operator==
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
+        );
 
         template<template<class> class PrimitiveField2>
         void operator==
         (
-            const GeometricField<Type, GeoMesh, PrimitiveField2>&
-        );
-        void operator==
-        (
-            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
-        );
-        template<template<class> class PrimitiveField2>
-        void operator==
-        (
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
         );
+
+        //- Assign to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator==(const Expression& e);
+
         void operator==(const dimensioned<Type>&);
+
         void operator==(const zero&);
 
         template<template<class> class PrimitiveField2>
@@ -737,11 +818,17 @@ public:
         (
             const GeometricField<Type, GeoMesh, PrimitiveField2>&
         );
+
         template<template<class> class PrimitiveField2>
         void operator+=
         (
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
         );
+
+        //- Assign-add to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator+=(const Expression& e);
+
         void operator+=(const dimensioned<Type>&);
 
         template<template<class> class PrimitiveField2>
@@ -749,11 +836,17 @@ public:
         (
             const GeometricField<Type, GeoMesh, PrimitiveField2>&
         );
+
         template<template<class> class PrimitiveField2>
         void operator-=
         (
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
         );
+
+        //- Assign-subtract to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator-=(const Expression& e);
+
         void operator-=(const dimensioned<Type>&);
 
         template<template<class> class PrimitiveField2>
@@ -761,11 +854,17 @@ public:
         (
             const GeometricField<scalar, GeoMesh, PrimitiveField2>&
         );
+
         template<template<class> class PrimitiveField2>
         void operator*=
         (
             const tmp<GeometricField<scalar, GeoMesh, PrimitiveField2>>&
         );
+
+        //- Assign-multiply to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator*=(const Expression& e);
+
         void operator*=(const dimensioned<scalar>&);
 
         template<template<class> class PrimitiveField2>
@@ -773,11 +872,17 @@ public:
         (
             const GeometricField<scalar, GeoMesh, PrimitiveField2>&
         );
+
         template<template<class> class PrimitiveField2>
         void operator/=
         (
             const tmp<GeometricField<scalar, GeoMesh, PrimitiveField2>>&
         );
+
+        //- Assign-divide to an expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator/=(const Expression& e);
+
         void operator/=(const dimensioned<scalar>&);
 };
 
@@ -815,10 +920,10 @@ struct OldTimeFieldCopy<GeometricField<Type, GeoMesh, PrimitiveField>>
 #include "GeometricFieldI.H"
 
 #ifdef NoRepository
+    #include "GeometricFieldExpression.H"
+    #include "GeometricFieldReuseFunctions.H"
     #include "GeometricField.C"
 #endif
-
-#include "GeometricFieldFunctions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -37,7 +37,7 @@ void Foam::ReynoldsStress<BasicMomentumTransportModel>::boundNormalStress
 {
     scalar kMin = this->kMin_.value();
 
-    R.max
+    R.boundLower
     (
         dimensionedSymmTensor
         (

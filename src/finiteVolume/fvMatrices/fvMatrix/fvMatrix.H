@@ -60,45 +60,31 @@ template<class Type>
 class fvMatrix;
 
 template<class Type>
-tmp<VolField<Type>> operator&
+tmp<VolInternalField<Type>> operator&
 (
     const fvMatrix<Type>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template<class Type>
-tmp<VolField<Type>> operator&
+tmp<VolInternalField<Type>> operator&
 (
     const fvMatrix<Type>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
-tmp<VolField<Type>> operator&
-(
-    const fvMatrix<Type>&,
-    const tmp<VolField<Type>>&
-);
-
-template<class Type>
-tmp<VolField<Type>> operator&
+tmp<VolInternalField<Type>> operator&
 (
     const tmp<fvMatrix<Type>>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template<class Type>
-tmp<VolField<Type>> operator&
+tmp<VolInternalField<Type>> operator&
 (
     const tmp<fvMatrix<Type>>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
-);
-
-template<class Type>
-tmp<VolField<Type>> operator&
-(
-    const tmp<fvMatrix<Type>>&,
-    const tmp<VolField<Type>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
@@ -473,7 +459,7 @@ public:
 
         void operator+=
         (
-            const DimensionedField<Type, fvMesh>&
+            const VolInternalField<Type>&
         );
 
         //- Assign-add an expression
@@ -482,7 +468,7 @@ public:
 
         void operator+=
         (
-            const tmp<DimensionedField<Type, fvMesh>>&
+            const tmp<VolInternalField<Type>>&
         );
 
         void operator+=
@@ -492,7 +478,7 @@ public:
 
         void operator-=
         (
-            const DimensionedField<Type, fvMesh>&
+            const VolInternalField<Type>&
         );
 
         //- Assign-subtract an expression
@@ -501,7 +487,7 @@ public:
 
         void operator-=
         (
-            const tmp<DimensionedField<Type, fvMesh>>&
+            const tmp<VolInternalField<Type>>&
         );
 
         void operator-=
@@ -538,32 +524,32 @@ public:
 
     // Friend operators
 
-        friend tmp<VolField<Type>>
+        friend tmp<VolInternalField<Type>>
         operator& <Type>
         (
             const fvMatrix<Type>&,
-            const DimensionedField<Type, fvMesh>&
+            const VolInternalField<Type>&
         );
 
-        friend tmp<VolField<Type>>
+        friend tmp<VolInternalField<Type>>
         operator& <Type>
         (
             const fvMatrix<Type>&,
-            const tmp<VolField<Type>>&
+            const tmp<VolInternalField<Type>>&
         );
 
-        friend tmp<VolField<Type>>
+        friend tmp<VolInternalField<Type>>
         operator& <Type>
         (
             const tmp<fvMatrix<Type>>&,
-            const DimensionedField<Type, fvMesh>&
+            const VolInternalField<Type>&
         );
 
-        friend tmp<VolField<Type>>
+        friend tmp<VolInternalField<Type>>
         operator& <Type>
         (
             const tmp<fvMatrix<Type>>&,
-            const tmp<VolField<Type>>&
+            const tmp<VolInternalField<Type>>&
         );
 
 
@@ -601,7 +587,7 @@ template<class Type>
 void checkMethod
 (
     const fvMatrix<Type>&,
-    const DimensionedField<Type, fvMesh>&,
+    const VolInternalField<Type>&,
     const char*
 );
 
@@ -694,7 +680,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator==
 (
     const fvMatrix<Type>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template
@@ -713,7 +699,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator==
 (
     const fvMatrix<Type>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
@@ -727,7 +713,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator==
 (
     const tmp<fvMatrix<Type>>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template
@@ -746,7 +732,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator==
 (
     const tmp<fvMatrix<Type>>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
@@ -832,7 +818,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
     const fvMatrix<Type>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template
@@ -851,7 +837,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
     const fvMatrix<Type>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
@@ -865,7 +851,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
     const tmp<fvMatrix<Type>>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template
@@ -884,7 +870,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
     const tmp<fvMatrix<Type>>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
@@ -897,7 +883,7 @@ tmp<fvMatrix<Type>> operator+
 template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
-    const DimensionedField<Type, fvMesh>&,
+    const VolInternalField<Type>&,
     const fvMatrix<Type>&
 );
 
@@ -916,7 +902,7 @@ tmp<fvMatrix<Type>> operator+
 template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
-    const tmp<DimensionedField<Type, fvMesh>>&,
+    const tmp<VolInternalField<Type>>&,
     const fvMatrix<Type>&
 );
 
@@ -930,7 +916,7 @@ tmp<fvMatrix<Type>> operator+
 template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
-    const DimensionedField<Type, fvMesh>&,
+    const VolInternalField<Type>&,
     const tmp<fvMatrix<Type>>&
 );
 
@@ -949,7 +935,7 @@ tmp<fvMatrix<Type>> operator+
 template<class Type>
 tmp<fvMatrix<Type>> operator+
 (
-    const tmp<DimensionedField<Type, fvMesh>>&,
+    const tmp<VolInternalField<Type>>&,
     const tmp<fvMatrix<Type>>&
 );
 
@@ -1022,7 +1008,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
     const fvMatrix<Type>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template
@@ -1041,7 +1027,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
     const fvMatrix<Type>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
@@ -1055,7 +1041,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
     const tmp<fvMatrix<Type>>&,
-    const DimensionedField<Type, fvMesh>&
+    const VolInternalField<Type>&
 );
 
 template
@@ -1074,7 +1060,7 @@ template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
     const tmp<fvMatrix<Type>>&,
-    const tmp<DimensionedField<Type, fvMesh>>&
+    const tmp<VolInternalField<Type>>&
 );
 
 template<class Type>
@@ -1087,7 +1073,7 @@ tmp<fvMatrix<Type>> operator-
 template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
-    const DimensionedField<Type, fvMesh>&,
+    const VolInternalField<Type>&,
     const fvMatrix<Type>&
 );
 
@@ -1106,7 +1092,7 @@ tmp<fvMatrix<Type>> operator-
 template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
-    const tmp<DimensionedField<Type, fvMesh>>&,
+    const tmp<VolInternalField<Type>>&,
     const fvMatrix<Type>&
 );
 
@@ -1120,7 +1106,7 @@ tmp<fvMatrix<Type>> operator-
 template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
-    const DimensionedField<Type, fvMesh>&,
+    const VolInternalField<Type>&,
     const tmp<fvMatrix<Type>>&
 );
 
@@ -1139,7 +1125,7 @@ tmp<fvMatrix<Type>> operator-
 template<class Type>
 tmp<fvMatrix<Type>> operator-
 (
-    const tmp<DimensionedField<Type, fvMesh>>&,
+    const tmp<VolInternalField<Type>>&,
     const tmp<fvMatrix<Type>>&
 );
 

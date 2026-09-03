@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ Foam::diffusiveMassTransferModels::Frossling::K() const
         2 + 0.552*sqrt(interface_.Re())*cbrt(Le_*interface_.Pr())
     );
 
-    return 6*interface_.dispersed()*Sh/sqr(interface_.dispersed().d());
+    return 6*interface_.dispersed().alpha()*Sh/sqr(interface_.dispersed().d());
 }
 
 

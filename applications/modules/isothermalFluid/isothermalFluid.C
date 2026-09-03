@@ -76,7 +76,7 @@ Foam::solvers::isothermalFluid::pressureWork
             (
                 fvc::interpolate(rho)*fvc::meshPhi(rho, U),
                 p/rho,
-                "div(phi,(p|rho))"
+                "div(phi,p|rho)"
             );
     }
     else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ bool Foam::functionObjects::totalEnthalpy::execute()
             IOobject::groupName("U", phaseName_)
         );
 
-        store(fieldName, thermo.ha() + 0.5*magSqr(U));
+        store(fieldName, thermo.ha() + scalar(0.5)*magSqr(U));
 
         return true;
     }

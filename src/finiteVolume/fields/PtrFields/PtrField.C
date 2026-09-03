@@ -68,20 +68,23 @@ Foam::PtrField<Type>::PtrField(const tmp<PtrField<Type>>& tf)
 
 
 template<class Type>
-Foam::PtrField<Type>::PtrField(const PtrList<Type>& f)
+template<class ... Args>
+Foam::PtrField<Type>::PtrField(const PtrField<Type>& f, const Args& ... args)
 :
-    PtrList<Type>(f.size())
-{
-    forAll(*this, i)
-    {
-        // ***HGW Temporary clone of fv?PatchField for testing
-        this->set(i, f[i].clone(f[i].internalField()));
-    }
-}
+    PtrList<Type>(f, args ...)
+{}
 
 
 template<class Type>
-template< class Expression, class ... Args, class>
+template<class ... Args>
+Foam::PtrField<Type>::PtrField(const PtrList<Type>& f, const Args& ... args)
+:
+    PtrList<Type>(f, args ...)
+{}
+
+
+template<class Type>
+template<class Expression, class ... Args, class>
 Foam::PtrField<Type>::PtrField(const Expression& e, const Args& ... args)
 :
     PtrList<Type>(expression::getFirst<expression::Size>(e))
@@ -107,6 +110,38 @@ template<class Type>
 Foam::tmp<Foam::PtrField<Type>> Foam::PtrField<Type>::clone() const
 {
     return tmp<PtrField<Type>>(new PtrField<Type>(*this));
+}
+
+
+template<class Type>
+template<class ... Args>
+Foam::tmp<Foam::PtrField<Type>> Foam::PtrField<Type>::New
+(
+    const tmp<PtrField<Type>>& tf,
+    const Args& ... args
+)
+{
+    if (tf.isTmp())
+    {
+        return tf;
+    }
+    else
+    {
+        const PtrField<Type>& f = tf();
+
+        tmp<PtrField<Type>> trf
+        (
+            new PtrField<Type>(f.size())
+        );
+        PtrField<Type>& rf = trf.ref();
+
+        forAll(f, i)
+        {
+            rf.set(i, expression::New<Type, true>(f[i], args ...).ptr());
+        }
+
+        return trf;
+    }
 }
 
 
@@ -137,6 +172,27 @@ void Foam::PtrField<Type>::replace
 
 
 template<class Type>
+template<class Expression, class>
+void Foam::PtrField<Type>::replace
+(
+    const direction d,
+    const Expression& e
+)
+{
+    expression::assertSameAllContainerProperty<expression::Size>
+    (
+        *this,
+        e
+    );
+
+    forAll(*this, i)
+    {
+        this->operator[](i).replace(d, expression::access(e, i));
+    }
+}
+
+
+template<class Type>
 void Foam::PtrField<Type>::replace
 (
     const direction d,
@@ -146,6 +202,44 @@ void Foam::PtrField<Type>::replace
     forAll(*this, i)
     {
         this->operator[](i).replace(d, s);
+    }
+}
+
+
+template<class Type>
+void Foam::PtrField<Type>::boundLower
+(
+    const typename PtrField<Type>::pType& lower
+)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).boundLower(lower);
+    }
+}
+
+template<class Type>
+void Foam::PtrField<Type>::boundUpper
+(
+    const typename PtrField<Type>::pType& upper
+)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).boundUpper(upper);
+    }
+}
+
+template<class Type>
+void Foam::PtrField<Type>::bound
+(
+    const typename PtrField<Type>::pType& lower,
+    const typename PtrField<Type>::pType& upper
+)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).bound(lower, upper);
     }
 }
 

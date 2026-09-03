@@ -44,9 +44,9 @@ divSchemes
     div(alphaRhoPhi,k) Gauss upwind;
     div(alphaRhoPhi,omega) Gauss upwind;
 
-    div(alphaRhoPhi,(p|rho)) Gauss linearUpwind limited;
+    div(alphaRhoPhi,p|rho)  Gauss linearUpwind limited;
 
-    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(alpha*rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

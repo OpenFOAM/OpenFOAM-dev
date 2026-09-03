@@ -127,7 +127,7 @@ void Foam::fv::sixDoFAcceleration::addForce
     // ... otherwise include explicitly in the momentum equation
     else
     {
-        eqn -= alpha*rho*a;
+        eqn -= alpha()*rho()*a;
     }
 
     const dimensionedVector Omega
@@ -146,9 +146,9 @@ void Foam::fv::sixDoFAcceleration::addForce
 
     eqn -=
     (
-        alpha*rho*(2*Omega ^ U)                  // Coriolis force
-      + alpha*rho*(Omega ^ (Omega ^ mesh().C())) // Centrifugal force
-      + alpha*rho*(dOmegaDT ^ mesh().C())        // Angular acceleration force
+        alpha()*rho()*(2*Omega ^ U())                  // Coriolis force
+      + alpha()*rho()*(Omega ^ (Omega ^ mesh().C()())) // Centrifugal force
+      + alpha()*rho()*(dOmegaDT ^ mesh().C()()) // Angular acceleration force
     );
 }
 

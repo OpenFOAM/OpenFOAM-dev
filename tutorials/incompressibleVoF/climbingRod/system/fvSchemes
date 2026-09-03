@@ -34,14 +34,14 @@ divSchemes
 
     div(alphaPhi.liquid,sigma.liquid)   Gauss linearUpwind limited;
 
-    div((alpha.liquid*sigma.liquid))    Gauss linear;
-    div(((alpha.liquid*nuM)*grad(U)))   Gauss linear;
+    div(alpha.liquid*sigma.liquid)    Gauss linear;
+    div(alpha.liquid*nuM*grad(U))   Gauss linear;
 
-    div(((alpha.air*nuEff.air)*dev2(T(grad(U))))) Gauss linear;
-    div(((alpha.liquid*nu.liquid)*dev2(T(grad(U))))) Gauss linear;
+    div(alpha.air*nuEff.air*dev2(T(grad(U)))) Gauss linear;
+    div(alpha.liquid*nu.liquid*dev2(T(grad(U))))  Gauss linear;
 
-    div(((alpha.liquid*nu.liquid)*dev(twoSymm(grad(U))))) Gauss linear;
-    div(((alpha.liquid*(nu.liquid+nuM))*grad(U))) Gauss linear;
+    div(alpha.liquid*nu.liquid*dev(twoSymm(grad(U)))) Gauss linear;
+    div(alpha.liquid*(nu.liquid+nuM)*grad(U)) Gauss linear;
 }
 
 laplacianSchemes

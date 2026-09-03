@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,17 +187,18 @@ void Foam::fv::twoResistanceHeatTransfer::addSup
 
         const phaseModel& otherPhase = interface.otherPhase(phase);
 
-        const volScalarField& T = phase.thermo().T();
-        const volScalarField& otherT = otherPhase.thermo().T();
+        const volInternalScalarField& T = phase.thermo().T();
+        const volInternalScalarField& otherT = otherPhase.thermo().T();
 
-        const volScalarField& K = KIter()[interface.index(phase)];
-        const volScalarField& otherK = KIter()[interface.index(otherPhase)];
+        const volInternalScalarField& K = KIter()[interface.index(phase)];
+        const volInternalScalarField& otherK =
+            KIter()[interface.index(otherPhase)];
 
-        const volScalarField KEff(K*otherK/(K + otherK));
+        const volInternalScalarField KEff(K*otherK/(K + otherK));
 
-        const volScalarField& Cpv = phase.thermo().Cpv();
+        const volInternalScalarField& Cpv = phase.thermo().Cpv();
 
-        eqn += KEff*(otherT - T) + K/Cpv*he - fvm::Sp(K/Cpv, he);
+        eqn += KEff*(otherT - T) + K/Cpv*he() - fvm::Sp(K/Cpv, he);
     }
 }
 

@@ -89,7 +89,7 @@ void Foam::phaseSystem::setMixtureU(const volVectorField& Um0)
     forAll(movingPhaseModels_, movingPhasei)
     {
         dUm -=
-            movingPhaseModels_[movingPhasei]
+            movingPhaseModels_[movingPhasei].alpha()
            *movingPhaseModels_[movingPhasei].U();
     }
 
@@ -457,7 +457,10 @@ void Foam::phaseSystem::alphaControl::correct(const scalar CoNum)
 
 Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 {
-    tmp<volScalarField> rho(movingPhaseModels_[0]*movingPhaseModels_[0].rho());
+    tmp<volScalarField> rho
+    (
+        movingPhaseModels_[0].alpha()*movingPhaseModels_[0].rho()
+    );
 
     for
     (
@@ -467,7 +470,7 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
     )
     {
         rho.ref() +=
-            movingPhaseModels_[movingPhasei]
+            movingPhaseModels_[movingPhasei].alpha()
            *movingPhaseModels_[movingPhasei].rho();
     }
 
@@ -484,7 +487,10 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 
 Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 {
-    tmp<volVectorField> U(movingPhaseModels_[0]*movingPhaseModels_[0].U());
+    tmp<volVectorField> U
+    (
+        movingPhaseModels_[0].alpha()*movingPhaseModels_[0].U()
+    );
 
     for
     (
@@ -494,7 +500,7 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
     )
     {
         U.ref() +=
-            movingPhaseModels_[movingPhasei]
+            movingPhaseModels_[movingPhasei].alpha()
            *movingPhaseModels_[movingPhasei].U();
     }
 
@@ -563,7 +569,8 @@ Foam::phaseSystem::nearInterface() const
         tnearInt.ref() = max
         (
             tnearInt(),
-            pos0(phases()[phasei] - 0.01)*pos0(0.99 - phases()[phasei])
+            pos0(phases()[phasei].alpha() - 0.01)
+           *pos0(0.99 - phases()[phasei].alpha())
         );
     }
 
@@ -644,7 +651,7 @@ void Foam::phaseSystem::correctContinuityError
         const volScalarField& alpha = phase;
         volScalarField& rho = phase.rho();
 
-        volScalarField source
+        volInternalScalarField source
         (
             volScalarField::New
             (
@@ -656,12 +663,12 @@ void Foam::phaseSystem::correctContinuityError
 
         if (fvModels().addsSupToField(rho.name()))
         {
-            source += fvModels().source(alpha, rho)&rho;
+            source += fvModels().source(alpha, rho)&rho();
         }
 
         if (dmdts.set(phase.index()))
         {
-            source.internalFieldRef() += dmdts[phase.index()];
+            source += dmdts[phase.index()];
         }
 
         phase.correctContinuityError(source);
@@ -771,9 +778,12 @@ void Foam::phaseSystem::correctBoundaryFlux()
         tmp<volVectorField> tU(phase.U());
         const volVectorField::BoundaryField& UBf = tU().boundaryField();
 
-        SurfaceBoundaryField<scalar> phiRelBf
+        const SurfaceBoundaryField<scalar> phiRelBf
         (
-            MRF_.relative(mesh_.Sf().boundaryField() & UBf)
+            MRF_.relative
+            (
+                SurfaceBoundaryField<scalar>(mesh_.Sf().boundaryField() & UBf)
+            )
         );
 
         surfaceScalarField::BoundaryField& phiBf =

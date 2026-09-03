@@ -84,12 +84,15 @@ void Foam::incompressibleMultiphaseVoFMixture::correct()
         phases_[phasei].correct();
     }
 
-    rho_ = phases_[0]*phases_[0].rho();
+    rho_ = phases_[0].alpha()*phases_[0].rho();
     volScalarField mu(rho_*phases_[0].nu());
 
     for (label phasei=1; phasei<phases_.size(); phasei++)
     {
-        const volScalarField alphaRho(phases_[phasei]*phases_[phasei].rho());
+        const volScalarField alphaRho
+        (
+            phases_[phasei].alpha()*phases_[phasei].rho()
+        );
         rho_ += alphaRho;
         mu += alphaRho*phases_[phasei].nu();
     }

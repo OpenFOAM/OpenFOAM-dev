@@ -35,37 +35,21 @@ SourceFiles
 #ifndef sphericalTensorField_H
 #define sphericalTensorField_H
 
-#include "scalarField.H"
-#include "sphericalTensor.H"
-
-#define TEMPLATE
-#include "FieldFunctionsM.H"
+#include "vectorField.H"
+#include "tensorExpressions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 typedef Field<sphericalTensor> sphericalTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-UNARY_FUNCTION(scalar, sphericalTensor, tr)
-UNARY_FUNCTION(sphericalTensor, sphericalTensor, sph)
-UNARY_FUNCTION(scalar, sphericalTensor, det)
-UNARY_FUNCTION(sphericalTensor, sphericalTensor, inv)
-
-BINARY_OPERATOR(sphericalTensor, scalar, sphericalTensor, /, divide)
-BINARY_TYPE_OPERATOR(sphericalTensor, scalar, sphericalTensor, /, divide)
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

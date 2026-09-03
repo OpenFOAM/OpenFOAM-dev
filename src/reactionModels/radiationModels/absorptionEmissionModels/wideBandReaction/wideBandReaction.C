@@ -89,7 +89,7 @@ Foam::radiationModels::absorptionEmissionModels::wideBandReaction::ECont
     tmp<volScalarField> E = wideBand::ECont(bandi);
 
     const word& name = reactionModel::reactionPropertiesName;
-    E.ref() +=
+    E.ref().internalFieldRef() +=
         iEhrrCoeffs_[bandi]
        *mesh_.lookupObject<reactionModel>(name).Qdot()
        *(iBands_[bandi][1] - iBands_[bandi][0])

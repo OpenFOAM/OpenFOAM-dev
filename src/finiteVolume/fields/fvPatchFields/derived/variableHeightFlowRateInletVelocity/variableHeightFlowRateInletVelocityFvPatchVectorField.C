@@ -93,8 +93,7 @@ updateCoeffs()
     scalarField alphap =
         patch().lookupPatchField<volScalarField, scalar>(alphaName_);
 
-    alphap = max(alphap, scalar(0));
-    alphap = min(alphap, scalar(1));
+    alphap.bound(0, 1);
 
     scalar flowRate = flowRate_->value(time().value());
 

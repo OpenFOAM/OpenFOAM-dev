@@ -86,10 +86,10 @@ Foam::diameterModels::fixedInterfacialArea::Av() const
     if (AvbyAlphaFieldPtr_.valid())
     {
         const volScalarField& AvbyAlpha = AvbyAlphaFieldPtr_;
-        return phase()*AvbyAlpha;
+        return phase().alpha()*AvbyAlpha;
     }
 
-    return phase()*AvbyAlpha_;
+    return phase().alpha()*AvbyAlpha_;
 }
 
 
@@ -125,7 +125,7 @@ bool Foam::diameterModels::fixedInterfacialArea::read
                 dimensions::area/dimensions::volume
             );
 
-        AvbyAlphaFieldPtr_->max
+        AvbyAlphaFieldPtr_->primitiveFieldRef().boundLower
         (
             diameterProperties.lookupOrDefault<scalar>
             (

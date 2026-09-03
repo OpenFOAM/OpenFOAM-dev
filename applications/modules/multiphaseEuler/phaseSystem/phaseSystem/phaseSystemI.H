@@ -265,7 +265,7 @@ inline void addField
 (
     const label phasei,
     const word& name,
-    tmp<GeoField> field,
+    const tmp<GeoField>& field,
     PtrList<GeoField>& fieldList
 )
 {
@@ -282,6 +282,38 @@ inline void addField
             (
                 name, // IOobject::groupName(name, group.name()),
                 field
+            )
+        );
+    }
+}
+
+template
+<
+    class GeoField,
+    class Expression,
+    class = EnableIfExpression<Expression>
+>
+inline void addField
+(
+    const label phasei,
+    const word& name,
+    const Expression& e,
+    PtrList<GeoField>& fieldList
+)
+{
+    if (fieldList.set(phasei))
+    {
+        fieldList[phasei] += e;
+    }
+    else
+    {
+        fieldList.set
+        (
+            phasei,
+            new GeoField
+            (
+                name, // IOobject::groupName(name, group.name()),
+                e
             )
         );
     }
@@ -310,6 +342,40 @@ inline void addField
             (
                 IOobject::groupName(name, group.name()),
                 field
+            )
+        );
+    }
+}
+
+
+template
+<
+    class GeoField,
+    class Group,
+    class Expression,
+    class = EnableIfExpression<Expression>
+>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const Expression& e,
+    PtrList<GeoField>& fieldList
+)
+{
+    if (fieldList.set(group.index()))
+    {
+        fieldList[group.index()] += e;
+    }
+    else
+    {
+        fieldList.set
+        (
+            group.index(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                e
             )
         );
     }
@@ -351,6 +417,40 @@ inline void addField
             (
                 IOobject::groupName(name, group.name()),
                 field
+            )
+        );
+    }
+}
+
+
+template
+<
+    class GeoField,
+    class Group,
+    class Expression,
+    class = EnableIfExpression<Expression>
+>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const Expression& e,
+    HashPtrTable<GeoField>& fieldTable
+)
+{
+    if (fieldTable.found(group.name()))
+    {
+        *fieldTable[group.name()] += e;
+    }
+    else
+    {
+        fieldTable.set
+        (
+            group.name(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                e
             )
         );
     }

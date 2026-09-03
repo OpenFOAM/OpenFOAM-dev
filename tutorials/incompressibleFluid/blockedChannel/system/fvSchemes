@@ -31,7 +31,7 @@ divSchemes
 
     div(phi,U)          Gauss linearUpwind limited;
     div(phi,tracer)     Gauss linearUpwind limited;
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

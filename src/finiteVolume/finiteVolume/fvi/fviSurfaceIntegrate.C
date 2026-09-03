@@ -114,6 +114,13 @@ surfaceIntegrate(const tmp<SurfaceField<Type>>& tssf)
 }
 
 
+template<class Expression, class>
+auto surfaceIntegrate(const Expression& e)
+{
+    return surfaceIntegrate(eval(e));
+}
+
+
 template<class Type>
 tmp<VolInternalField<Type>> surfaceSum(const SurfaceField<Type>& ssf)
 {
@@ -162,6 +169,13 @@ tmp<VolInternalField<Type>> surfaceSum(const tmp<SurfaceField<Type>>& tssf)
     tmp<VolInternalField<Type>> tvf = surfaceSum(tssf());
     tssf.clear();
     return tvf;
+}
+
+
+template<class Expression, class>
+auto surfaceSum(const Expression& e)
+{
+    return surfaceSum(eval(e));
 }
 
 

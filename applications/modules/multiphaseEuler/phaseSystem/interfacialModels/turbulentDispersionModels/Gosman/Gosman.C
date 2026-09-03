@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ Foam::turbulentDispersionModels::Gosman::D() const
         drag.Ki()
        *continuousTurbulence().nut()
        /sigma_
-       *interface_.dispersed();
+       *interface_.dispersed().alpha();
 }
 
 

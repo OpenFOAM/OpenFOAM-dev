@@ -27,7 +27,7 @@ License
 #include "fviDdt.H"
 #include "fviDiv.H"
 #include "fvcSnGrad.H"
-#include "fvcReconstruct.H"
+#include "fviReconstruct.H"
 #include "fvmDiv.H"
 #include "fvmDdt.H"
 
@@ -60,13 +60,13 @@ void Foam::solvers::incompressibleDenseParticleFluid::momentumPredictor()
         (
             UcEqn
          ==
-            fvc::reconstruct
+            fvi::reconstruct
             (
                 Fgf - fvc::snGrad(p)*mesh.magSf()
               - Dcf()*(phic - phid())
             )
-          + Dc()*fvc::reconstruct(phic - phid())
-          + Fd() - fvm::Sp(Dc(), Uc)
+          + Dc()()*fvi::reconstruct(phic - phid())
+          + Fd()() - fvm::Sp(Dc()(), Uc)
         );
 
         fvConstraints().constrain(Uc);

@@ -25,6 +25,7 @@ License
 
 #include "MRFZones.H"
 #include "volFields.H"
+#include "surfaceFields.H"
 #include "fixedValueFvsPatchFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -245,7 +246,7 @@ Foam::MRFZones::relative
     {
         tmp<SurfaceBoundaryField<scalar>> rphi
         (
-            Foam::New(tphi, true)
+            SurfaceBoundaryField<scalar>::New(tphi)
         );
 
         forAll(*this, i)
@@ -273,7 +274,7 @@ Foam::MRFZones::relative
 {
     if (size())
     {
-        tmp<Field<scalar>> rphi(Foam::New(tphi, true));
+        tmp<Field<scalar>> rphi(Field<scalar>::New(tphi));
 
         forAll(*this, i)
         {

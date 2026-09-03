@@ -232,14 +232,14 @@ Foam::reactionModels::singleStepReaction::R(volScalarField& Y) const
 }
 
 
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::singleStepReaction::Qdot() const
 {
     const label fuelI = fuelIndex();
     volScalarField& YFuel =
         const_cast<volScalarField&>(this->thermo().Y(fuelI));
 
-    return -qFuel()*(R(YFuel) & YFuel);
+    return -qFuel()*(R(YFuel) & YFuel());
 }
 
 

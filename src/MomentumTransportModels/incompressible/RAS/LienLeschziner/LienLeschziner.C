@@ -244,7 +244,7 @@ void LienLeschziner::correct()
       - fvm::laplacian(DkEff(), k_)
      ==
         G
-      - fvm::Sp(epsilon_/k_, k_)
+      - fvm::Sp(epsilon_()/k_(), k_)
     );
 
     kEqn.ref().relax();

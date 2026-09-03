@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,11 @@ Foam::diameterModels::IATEsources::wakeEntrainmentCoalescence::R
     volScalarField& kappai
 ) const
 {
-    return -fvm::SuSp(12*phi()*Cwe_*cbrt(CD())*iate_.Av()*Ur(), kappai);
+    return -fvm::SuSp
+    (
+        12*phi()*Cwe_*cbrt(CD()()())*iate_.Av()()()*Ur()()(),
+        kappai
+    );
 }
 
 

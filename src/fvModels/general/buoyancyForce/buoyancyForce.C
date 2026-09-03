@@ -115,7 +115,7 @@ void Foam::fv::buoyancyForce::addSup
     fvMatrix<vector>& eqn
 ) const
 {
-    eqn += rho*g_;
+    eqn += rho()*g_;
 }
 
 
@@ -127,7 +127,7 @@ void Foam::fv::buoyancyForce::addSup
     fvMatrix<vector>& eqn
 ) const
 {
-    eqn += alpha*rho*g_;
+    eqn += alpha()*rho()*g_;
 }
 
 

@@ -43,7 +43,7 @@ bool Foam::functionObjects::fieldsExpression::opAndStore
     const GeoField<TypeB>& b
 )
 {
-    store(resultName_, Op<GeoField<TypeA>, GeoField<TypeB>>()(a, b));
+    //***HGW store(resultName_, Op<GeoField<TypeA>, GeoField<TypeB>>()(a, b));
 
     return true;
 }

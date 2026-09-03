@@ -90,6 +90,16 @@ public:
 };
 
 
+namespace expression
+{
+    template<>
+    struct Expressionable<geometricZeroField>
+    :
+        public notExpressionable
+    {};
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

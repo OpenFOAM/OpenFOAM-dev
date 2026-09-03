@@ -59,7 +59,7 @@ Foam::NSRDS14Thermo<EquationOfState>::NSRDS14Thermo
     b_(subDict.lookup<scalar>("b", dimensions::specificHeatCapacity)),
     c_(subDict.lookup<scalar>("c", sqrt(dimensions::specificHeatCapacity))),
     d_(subDict.lookup<scalar>("d", sqrt(dimensions::specificHeatCapacity))),
-    p_({a_*a_, b_, -2*a_*c_, -a_*d_, -c_*c_/3, -0.5*c_*d_, -0.2*d_*d_}),
+    p_({a_*a_, b_, -2*a_*c_, -a_*d_, -c_*c_/3, -c_*d_/2, -d_*d_/5}),
     hsRef_(p_.integral(max(1 - constant::thermodynamic::Tstd/Tc_, small)))
 {
     if (subDict.found("type"))

@@ -45,7 +45,7 @@ Foam::fvMeshSubset::interpolate
 )
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type>> patchFields(patchMap.size());
+    PtrField<fvPatchField<Type>> patchFields(patchMap.size());
 
     forAll(patchFields, patchi)
     {
@@ -184,7 +184,7 @@ Foam::fvMeshSubset::interpolate
     const bool negateIfFlipped = isFlux(sf);
 
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvsPatchField<Type>> patchFields(patchMap.size());
+    PtrField<fvsPatchField<Type>> patchFields(patchMap.size());
 
     forAll(patchFields, patchi)
     {
@@ -363,7 +363,7 @@ Foam::fvMeshSubset::interpolate
 )
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<pointPatchField<Type>> patchFields(patchMap.size());
+    PtrField<pointPatchField<Type>> patchFields(patchMap.size());
 
     forAll(patchFields, patchi)
     {

@@ -44,25 +44,25 @@ void Foam::solvers::isothermalFilm::constrainField
 }
 
 
-template<class FieldType>
-Foam::tmp<FieldType> Foam::solvers::isothermalFilm::constrainedField
-(
-    const FieldType& field
-) const
-{
-    tmp<FieldType> tresult
-    (
-        FieldType::New
-        (
-            "constrained(" + field.name() + ')',
-            field
-        )
-    );
+// template<class FieldType>
+// Foam::tmp<FieldType> Foam::solvers::isothermalFilm::constrainedField
+// (
+//     const FieldType& field
+// ) const
+// {
+//     tmp<FieldType> tresult
+//     (
+//         FieldType::New
+//         (
+//             "constrained(" + field.name() + ')',
+//             field
+//         )
+//     );
 
-    constrainField(tresult.ref());
+//     constrainField(tresult.ref());
 
-    return tresult;
-}
+//     return tresult;
+// }
 
 
 template<class FieldType>

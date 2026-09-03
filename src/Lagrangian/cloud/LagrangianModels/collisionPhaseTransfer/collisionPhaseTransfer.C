@@ -310,9 +310,9 @@ void Foam::Lagrangian::collisionPhaseTransfer::calculate
         // successes to get the number is equivalent to sampling a normal
         // distribution for the number. So sample the normal distribution in
         // order to randomise the collisions for the entire parcel.
-        Phit.maxMin(scalar(0), scalar(1));
+        Phit.bound(scalar(0), scalar(1));
         Phit += sqrt(Phit*(1 - Phit)/number)*sampleStandardNormal();
-        Phit.maxMin(scalar(0), scalar(1));
+        Phit.bound(scalar(0), scalar(1));
 
         // Clamp the probability to zero if the fraction is below the minimum
         // permitted. This prevents small transfers and positive feedback in

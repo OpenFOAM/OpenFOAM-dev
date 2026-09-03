@@ -156,8 +156,7 @@ void Foam::SuModels::transport::correct()
     fvConstraints.constrain(Su_);
 
     // Limit the maximum and minimum Su
-    Su_.min(SuMax_);
-    Su_.max(SuMin_);
+    Su_.bound(SuMin_, SuMax_);
 }
 
 

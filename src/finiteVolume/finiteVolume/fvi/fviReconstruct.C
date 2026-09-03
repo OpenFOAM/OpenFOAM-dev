@@ -66,7 +66,7 @@ reconstruct(const SurfaceField<Type>& ssf)
         return treconField;
     }
 
-    treconField.ref().internalFieldRef() =
+    treconField.ref() =
         inv(surfaceSum(SfHat*mesh.Sf()), mesh.solutionD())
       & surfaceSum(SfHat*ssf);
 

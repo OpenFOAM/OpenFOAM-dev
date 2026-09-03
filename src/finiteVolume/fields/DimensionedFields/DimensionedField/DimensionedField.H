@@ -248,6 +248,15 @@ public:
             const bool checkIOFlags = true
         );
 
+        //- Copy constructor from expression resetting IO parameters
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        DimensionedField
+        (
+            const IOobject&,
+            const Expression& e,
+            const bool checkIOFlags = true
+        );
+
         //- Copy constructor resetting name
         template<template<class> class PrimitiveField2>
         DimensionedField
@@ -412,7 +421,14 @@ public:
             const tmp<DimensionedField<cmptType, GeoMesh, PrimitiveField2>>&
         );
 
-        //- Return the field transpose expression
+        //- Replace a component field of the field from an expression
+        template<class Expression, class = EnableIfExpression<Expression>>
+        void replace(const direction, const Expression&);
+
+        //- Replace a component field of the field with given value
+        void replace(const direction, const dimensioned<cmptType>&);
+
+        //- Return the field transpose field expression
         //  (only defined for second rank tensors)
         inline auto T() const;
 
@@ -433,17 +449,17 @@ public:
             const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>&
         );
 
-        //- Set the field to the maximum of its value and a given value
-        void max(const dimensioned<Type>&);
+        //- Bound the field to the given lower bound
+        void boundLower(const dimensioned<Type>& lower);
 
-        //- Set the field to the minimum of its value and a given value
-        void min(const dimensioned<Type>&);
+        //- Bound the field to the given upper bound
+        void boundUpper(const dimensioned<Type>& upper);
 
-        //- Clip the field to between two values
-        void maxMin
+        //- Bound the field within the given lower and upper bounds
+        void bound
         (
-            const dimensioned<Type>& minDt,
-            const dimensioned<Type>& maxDt
+            const dimensioned<Type>& lower,
+            const dimensioned<Type>& upper
         );
 
 

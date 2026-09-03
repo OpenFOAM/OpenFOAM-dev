@@ -114,7 +114,7 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
 
                 tmp<fvScalarMatrix> p_rghEqnCompi
                 (
-                    (max(phase, scalar(0))/phase.thermo().rho())
+                    (max(phase.alpha()(), scalar(0))/phase.thermo().rho()()())
                    *p_rghEqnComps[phasei]
                 );
 
@@ -143,8 +143,8 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
                     compressibleVoFphase& phase = phases[phasei];
 
                     phase.vDot() =
-                        pos0(phase)
-                       *(p_rghEqnComps[phasei] & p_rgh)/phase.thermo().rho();
+                        pos0(phase.alpha()())
+                       *(p_rghEqnComps[phasei] & p_rgh)/phase.thermo().rho()();
                 }
 
                 phi = phiHbyA + p_rghEqnIncomp.flux();

@@ -122,8 +122,8 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
             const dimensionedScalar Yismall(dimless, small);
 
             return
-                fvm::Sp(neg(sourceField)*sourceField/(Yi + Yismall), Yi)
-              + pos0(sourceField)*sourceField;
+                fvm::Sp(neg(sourceField())*sourceField()/(Yi() + Yismall), Yi)
+              + pos0(sourceField())*sourceField();
         }
         else
         {
@@ -206,8 +206,8 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
                 this->time().deltaTValue()*this->mesh().V().primitiveField();
 
             return
-                fvm::Sp(neg(trhoTrans())*trhoTrans()/rho, rho)
-              + pos0(trhoTrans())*trhoTrans();
+                fvm::Sp(neg(trhoTrans()())*trhoTrans()()/rho(), rho)
+              + pos0(trhoTrans()())*trhoTrans()();
         }
         else
         {
@@ -232,7 +232,7 @@ Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
             }
             sourceField /= this->time().deltaTValue();
 
-            fvm.source() = -trhoTransV();
+            fvm.source() = -trhoTransV().primitiveField();
 
             return tfvm;
         }

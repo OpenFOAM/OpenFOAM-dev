@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,19 +31,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvm
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const VolField<Type>& vf,
     const word& name
@@ -62,13 +52,13 @@ laplacian
         dimensionedScalar(dimless, 1.0)
     );
 
-    return fvm::laplacian(Gamma, vf, name);
+    return laplacian(Gamma, vf, name);
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const VolField<Type>& vf
 )
@@ -86,7 +76,7 @@ laplacian
         dimensionedScalar(dimless, 1.0)
     );
 
-    return fvm::laplacian
+    return laplacian
     (
         Gamma,
         vf,
@@ -96,8 +86,8 @@ laplacian
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const zero&,
     const VolField<Type>& vf,
@@ -112,8 +102,8 @@ laplacian
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const zero&,
     const VolField<Type>& vf
@@ -127,33 +117,33 @@ laplacian
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const one&,
     const VolField<Type>& vf,
     const word& name
 )
 {
-    return fvm::laplacian(vf, name);
+    return laplacian(vf, name);
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const one&,
     const VolField<Type>& vf
 )
 {
-    return fvm::laplacian(vf);
+    return laplacian(vf);
 }
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const dimensioned<GType>& gamma,
     const VolField<Type>& vf,
@@ -173,13 +163,13 @@ laplacian
         gamma
     );
 
-    return fvm::laplacian(Gamma, vf, name);
+    return laplacian(Gamma, vf, name);
 }
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const dimensioned<GType>& gamma,
     const VolField<Type>& vf
@@ -198,15 +188,15 @@ laplacian
         gamma
     );
 
-    return fvm::laplacian(Gamma, vf);
+    return laplacian(Gamma, vf);
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const VolField<GType>& gamma,
     const VolField<Type>& vf,
@@ -222,8 +212,51 @@ laplacian
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
+(
+    const VolField<GType>& gamma,
+    const VolField<Type>& vf
+)
+{
+    return laplacian
+    (
+        gamma,
+        vf,
+        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+    );
+}
+
+
+template<class Type, class GType>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
+(
+    const tmp<VolField<GType>>& tgamma,
+    const VolField<Type>& vf
+)
+{
+    tmp<fvMatrix<Type>> tLaplacian(fvm::laplacian(tgamma(), vf));
+    tgamma.clear();
+    return tLaplacian;
+}
+
+
+template<class Type, class Expression, class>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
+(
+    const Expression& e,
+    const VolField<Type>& vf
+)
+{
+    return laplacian(eval(e), vf);
+}
+
+
+template<class Type, class GType>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const tmp<VolField<GType>>& tgamma,
     const VolField<Type>& vf,
@@ -236,42 +269,24 @@ laplacian
 }
 
 
-template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+template<class Type, class Expression, class>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
-    const VolField<GType>& gamma,
-    const VolField<Type>& vf
+    const Expression& e,
+    const VolField<Type>& vf,
+    const word& name
 )
 {
-    return fvm::laplacian
-    (
-        gamma,
-        vf,
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
-    );
-}
-
-
-template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
-(
-    const tmp<VolField<GType>>& tgamma,
-    const VolField<Type>& vf
-)
-{
-    tmp<fvMatrix<Type>> tLaplacian(fvm::laplacian(tgamma(), vf));
-    tgamma.clear();
-    return tLaplacian;
+    return laplacian(eval(e), vf, name);
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const SurfaceField<GType>& gamma,
     const VolField<Type>& vf,
@@ -287,29 +302,29 @@ laplacian
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const tmp<SurfaceField<GType>>& tgamma,
     const VolField<Type>& vf,
     const word& name
 )
 {
-    tmp<fvMatrix<Type>> tLaplacian = fvm::laplacian(tgamma(), vf, name);
+    tmp<fvMatrix<Type>> tLaplacian = laplacian(tgamma(), vf, name);
     tgamma.clear();
     return tLaplacian;
 }
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const SurfaceField<GType>& gamma,
     const VolField<Type>& vf
 )
 {
-    return fvm::laplacian
+    return laplacian
     (
         gamma,
         vf,
@@ -319,8 +334,8 @@ laplacian
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type>>
-laplacian
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacian
 (
     const tmp<SurfaceField<GType>>& tGamma,
     const VolField<Type>& vf
@@ -335,28 +350,28 @@ laplacian
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacianCorrection
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacianCorrection
 (
     const VolField<scalar>& gamma,
     const VolField<Type>& vf
 )
 {
-    return fvm::laplacianCorrection(fvc::interpolate(gamma), vf);
+    return laplacianCorrection(fvc::interpolate(gamma), vf);
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacianCorrection
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacianCorrection
 (
     const tmp<VolField<scalar>>& tgamma,
     const VolField<Type>& vf
 )
 {
-    tmp<fvMatrix<Type>> tLaplacianCorrection
+    Foam::tmp<Foam::fvMatrix<Type>> tLaplacianCorrection
     (
-        fvm::laplacianCorrection(tgamma(), vf)
+        laplacianCorrection(tgamma(), vf)
     );
     tgamma.clear();
     return tLaplacianCorrection;
@@ -366,8 +381,8 @@ laplacianCorrection
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacianCorrection
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacianCorrection
 (
     const SurfaceField<scalar>& gamma,
     const VolField<Type>& vf
@@ -386,8 +401,8 @@ laplacianCorrection
 
 
 template<class Type>
-tmp<fvMatrix<Type>>
-laplacianCorrection
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacianCorrection
 (
     const tmp<SurfaceField<scalar>>& tGamma,
     const VolField<Type>& vf
@@ -395,19 +410,23 @@ laplacianCorrection
 {
     tmp<fvMatrix<Type>> tLaplacianCorrection
     (
-        fvm::laplacianCorrection(tGamma(), vf)
+        laplacianCorrection(tGamma(), vf)
     );
     tGamma.clear();
     return tLaplacianCorrection;
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type, class Expression, class>
+Foam::tmp<Foam::fvMatrix<Type>>
+Foam::fvm::laplacianCorrection
+(
+    const Expression& e,
+    const VolField<Type>& vf
+)
+{
+    return laplacianCorrection(eval(e), vf);
+}
 
-} // End namespace fvm
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

@@ -65,6 +65,16 @@ namespace fvi
         const word&
     );
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto laplacian
+    (
+        const Expression& e,
+        const word& name
+    )
+    {
+        return laplacian(eval(e), name);
+    }
+
     template<class Type>
     tmp<VolInternalField<Type>> laplacian
     (
@@ -77,6 +87,14 @@ namespace fvi
         const tmp<VolField<Type>>&
     );
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto laplacian
+    (
+        const Expression& e
+    )
+    {
+        return laplacian(eval(e));
+    }
 
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
@@ -94,6 +112,22 @@ namespace fvi
         const word&
     );
 
+    template
+    <
+        class GType,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const dimensioned<GType>& d,
+        const Expression& e,
+        const word& name
+    )
+    {
+        return laplacian(d, eval(e), name);
+    }
+
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
     (
@@ -107,6 +141,21 @@ namespace fvi
         const dimensioned<GType>&,
         const tmp<VolField<Type>>&
     );
+
+    template
+    <
+        class GType,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const dimensioned<GType>& dt,
+        const Expression& e
+    )
+    {
+        return laplacian(dt, eval(e));
+    }
 
 
     template<class Type, class GType>
@@ -133,6 +182,22 @@ namespace fvi
         const word&
     );
 
+    template
+    <
+        class GType,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const VolField<GType>& d,
+        const Expression& e,
+        const word& name
+    )
+    {
+        return laplacian(d, eval(e), name);
+    }
+
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
     (
@@ -162,6 +227,21 @@ namespace fvi
         const tmp<VolField<Type>>&
     );
 
+    template
+    <
+        class GType,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const VolField<GType>& d,
+        const Expression& e
+    )
+    {
+        return laplacian(d, eval(e));
+    }
+
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
     (
@@ -186,6 +266,22 @@ namespace fvi
         const word&
     );
 
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline tmp<VolInternalField<Type>> laplacian
+    (
+        const Expression& e,
+        const VolField<Type>& vf,
+        const word& name
+    )
+    {
+        return laplacian(eval(e), vf, name);
+    }
+
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
     (
@@ -194,6 +290,22 @@ namespace fvi
         const word&
     );
 
+    template
+    <
+        class GType,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const SurfaceField<GType>& d,
+        const Expression& e,
+        const word& name
+    )
+    {
+        return laplacian(d, eval(e), name);
+    }
+
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
     (
@@ -201,6 +313,22 @@ namespace fvi
         const tmp<VolField<Type>>&,
         const word&
     );
+
+    template
+    <
+        class DExpression,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const DExpression& d,
+        const Expression& e,
+        const word& name
+    )
+    {
+        return laplacian(eval(d), eval(e), name);
+    }
 
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
@@ -216,6 +344,21 @@ namespace fvi
         const VolField<Type>&
     );
 
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline tmp<VolInternalField<Type>> laplacian
+    (
+        const Expression& e,
+        const VolField<Type>& vf
+    )
+    {
+        return laplacian(eval(e), vf);
+    }
+
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
     (
@@ -223,12 +366,42 @@ namespace fvi
         const tmp<VolField<Type>>&
     );
 
+    template
+    <
+        class GType,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const SurfaceField<GType>& d,
+        const Expression& e
+    )
+    {
+        return laplacian(d, eval(e));
+    }
+
     template<class Type, class GType>
     tmp<VolInternalField<Type>> laplacian
     (
         const tmp<SurfaceField<GType>>&,
         const tmp<VolField<Type>>&
     );
+
+    template
+    <
+        class DExpression,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto laplacian
+    (
+        const DExpression& d,
+        const Expression& e
+    )
+    {
+        return laplacian(eval(d), eval(e));
+    }
 }
 
 

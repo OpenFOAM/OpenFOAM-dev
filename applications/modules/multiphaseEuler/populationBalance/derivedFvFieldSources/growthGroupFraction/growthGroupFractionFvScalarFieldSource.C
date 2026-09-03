@@ -91,7 +91,8 @@ Foam::growthGroupFractionFvScalarFieldSource::w
         )
         {
             w.primitiveFieldRef() +=
-                popBal.f(j)*pow(popBal.v(j), scalar(q)/3 - 1);
+                popBal.f(j).primitiveField()
+               *pow(popBal.v(j).value(), scalar(q)/3 - 1);
         }
     }
 

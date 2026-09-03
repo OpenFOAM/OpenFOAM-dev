@@ -54,9 +54,9 @@ divSchemes
     div(phi,Ekp)    $turbulence;
 
     div(phid,p)     Gauss upwind;
-    div(phi,(p|rho)) bounded Gauss upwind;
+    div(phi,p|rho)  bounded Gauss upwind;
 
-    div(((rho*nuEff)*dev2(T(grad(U)))))    Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U))))    Gauss linear;
 }
 
 laplacianSchemes

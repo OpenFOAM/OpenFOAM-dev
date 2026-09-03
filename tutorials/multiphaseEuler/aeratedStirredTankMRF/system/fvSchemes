@@ -39,13 +39,13 @@ divSchemes
 
     div(alphaRhoPhi,K)          Gauss limitedLinear 1;
 
-    div(alphaRhoPhi,(p|rho))    Gauss limitedLinear 1;
+    div(alphaRhoPhi,p|rho)     Gauss limitedLinear 1;
 
     turbulence                  Gauss limitedLinear 1;
     div(alphaRhoPhi,k)          $turbulence;
     div(alphaRhoPhi,omega)      $turbulence;
 
-    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(alpha*rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

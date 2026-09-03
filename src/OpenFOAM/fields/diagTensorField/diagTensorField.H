@@ -27,9 +27,6 @@ Typedef
 Description
     Specialisation of Field\<T\> for diagTensor.
 
-SourceFiles
-    diagTensorField.C
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef diagTensorField_H
@@ -38,42 +35,18 @@ SourceFiles
 #include "tensorField.H"
 #include "diagTensor.H"
 
-#define TEMPLATE
-#include "FieldFunctionsM.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 typedef Field<diagTensor> diagTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-UNARY_FUNCTION(diagTensor, tensor, diag)
-UNARY_FUNCTION(scalar, diagTensor, tr)
-UNARY_FUNCTION(sphericalTensor, diagTensor, sph)
-UNARY_FUNCTION(scalar, diagTensor, det)
-UNARY_FUNCTION(diagTensor, diagTensor, inv)
-
-
-BINARY_OPERATOR(tensor, diagTensor, tensor, +, add)
-BINARY_OPERATOR(tensor, diagTensor, tensor, -, subtract)
-
-BINARY_TYPE_OPERATOR(tensor, diagTensor, tensor, +, add)
-BINARY_TYPE_OPERATOR(tensor, diagTensor, tensor, -, subtract)
-
-BINARY_OPERATOR(vector, vector, diagTensor, /, divide)
-BINARY_TYPE_OPERATOR(vector, vector, diagTensor, /, divide)
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

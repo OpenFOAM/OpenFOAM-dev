@@ -54,6 +54,168 @@ UnaryVectorOpFunction(perpendicular)
 
 #undef UnaryVectorOpFunction
 
+/*---------------------------------------------------------------------------*\
+                         Class powProductOp Declaration
+\*---------------------------------------------------------------------------*/
+
+// Powers of a Form
+// Equivalent to outer-products between the Form and itself
+template<direction r>
+struct powProductOp;
+
+// Form^0 = 1.0
+template<>
+struct powProductOp<0>
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& f)
+    {
+        return "pow<0>(" + f + ')';
+    }
+
+    template<class Form, class Cmpt, direction Ncmpts>
+    static typename powProduct<Form, 0>::type value
+    (
+        const VectorSpace<Form, Cmpt, Ncmpts>& v
+    )
+    {
+        return 1.0;
+    }
+
+    static const dimensionSet& value(const dimensionSet&)
+    {
+        return dimless;
+    }
+};
+
+// Form^1 = Form
+template<>
+struct powProductOp<1>
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& f)
+    {
+        return "pow<1>(" + f + ')';
+    }
+
+    template<class Form, class Cmpt, direction Ncmpts>
+    static typename powProduct<Form, 1>::type value
+    (
+        const VectorSpace<Form, Cmpt, Ncmpts>& v
+    )
+    {
+        return static_cast<const Form&>(v);
+    }
+
+    static dimensionSet value(const dimensionSet& a)
+    {
+        return a;
+    }
+};
+
+// Form^2 = sqr(Form)
+template<>
+struct powProductOp<2>
+{
+    static const signed char precedence =
+        expression::Operation<void>::precedence;
+
+    static const bool associative = false;
+
+    static word name(const word& f)
+    {
+        return "pow<2>(" + f + ')';
+    }
+
+    template<class Form, class Cmpt, direction Ncmpts>
+    static typename powProduct<Form, 2>::type value
+    (
+        const VectorSpace<Form, Cmpt, Ncmpts>& v
+    )
+    {
+        return sqr(static_cast<const Form&>(v));
+    }
+
+    static dimensionSet value(const dimensionSet& a)
+    {
+        return sqr(a);
+    }
+};
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Pow product unary function
+
+template<direction r, class Form, class Cmpt, direction Ncmpts>
+typename powProduct<Form, r>::type pow
+(
+    const VectorSpace<Form, Cmpt, Ncmpts>& v
+)
+{
+    return powProductOp<r>::value(static_cast<const Form&>(v));
+}
+
+template<class Type, direction r>
+dimensioned<typename powProduct<Type, r>::type> pow
+(
+    const dimensioned<Type>& dt
+)
+{
+    return dimensioned<typename powProduct<Type, r>::type>
+    (
+        "pow(" + dt.name() + ',' + name(r) + ')',
+        pow(dt.dimensions(), r),
+        powProductOp<r>::value(dt.value())
+    );
+}
+
+
+// template
+// <
+//     direction r,
+//     class X,
+//     class = EnableIfExpressionable<UnaryExpression<X, powProductOp<r>>>
+// >
+// UnaryExpression<const X&, powProductOp<r>>
+// pow(const X& x)
+// {
+//     return UnaryExpression<const X&, powProductOp<r>>(x);
+// }
+
+#define UnaryPowProduct(XPar, XArg, XVar)                                      \
+    template                                                                   \
+    <                                                                          \
+        direction r,                                                           \
+        class X,                                                               \
+        class = EnableIfExpressionable<UnaryExpression<X, powProductOp<r>>>    \
+    >                                                                          \
+    UnaryExpression<XPar, powProductOp<r>> pow(XArg)                           \
+    {                                                                          \
+        return UnaryExpression<XPar, powProductOp<r>>(XVar);                   \
+    }                                                                          \
+
+UnaryPowProduct(const X&, const X& x, x)
+UnaryPowProduct(const X&, X& x, x)
+UnaryPowProduct(X, X&& x, std::move(x))
+UnaryPowProduct(const X&, const tmp<X>& x, x)
+UnaryPowProduct(const X&, tmp<X>& x, x)
+UnaryPowProduct(const X&, tmp<X>&& x, x)
+
+#undef UnaryPowProduct
+
+// void hmm()
+// {
+//     const Field<vector> f(1, vector::zero);
+//     Info << pow<2>(f);
+// }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Binary vector functions
 

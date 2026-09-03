@@ -113,12 +113,12 @@ void Foam::LESModels::IDDESDelta::calcDelta()
             (
                 max
                 (
-                    Cw_*wallDist::New(mesh).y(),
-                    Cw_*hmax
+                    Cw_*wallDist::New(mesh).y().primitiveField(),
+                    Cw_*hmax.primitiveField()
                 ),
-                tfaceToFacenMax
+                faceToFacenMax
             ),
-            hmax
+            hmax.primitiveField()
         );
 }
 

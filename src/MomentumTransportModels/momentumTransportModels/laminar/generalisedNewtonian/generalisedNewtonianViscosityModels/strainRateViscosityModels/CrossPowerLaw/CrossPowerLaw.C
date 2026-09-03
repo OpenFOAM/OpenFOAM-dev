@@ -106,19 +106,26 @@ nu
     const volScalarField& strainRate
 ) const
 {
-    return
-       nuInf_
-     + (nu0 - nuInf_)
-       /(
-           scalar(1)
-         + pow
-           (
-                tauStar_.value() > 0
-              ? nu0*strainRate/tauStar_
-              : m_*strainRate,
-                n_
-            )
-        );
+    if (tauStar_.value() > 0)
+    {
+        return
+           nuInf_
+         + (nu0 - nuInf_)
+           /(
+               scalar(1)
+             + pow(nu0*strainRate/tauStar_, n_)
+            );
+    }
+    else
+    {
+        return
+           nuInf_
+         + (nu0 - nuInf_)
+           /(
+               scalar(1)
+             + pow(m_*strainRate, n_)
+            );
+    }
 }
 
 

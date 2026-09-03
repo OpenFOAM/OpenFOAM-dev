@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,19 @@ namespace fvm
         const word& name
     );
 
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    tmp<fvMatrix<Type>> div
+    (
+        const Expression& e,
+        const VolField<Type>& vf,
+        const word& name
+    );
+
 
     template<class Type>
     tmp<fvMatrix<Type>> div
@@ -83,6 +96,18 @@ namespace fvm
         const VolField<Type>&
     );
 
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    tmp<fvMatrix<Type>> div
+    (
+        const Expression& e,
+        const VolField<Type>& vf
+    );
+
     //- Return the explicit div matrix
     //  containing the div(flux) source
     //  and the cached flux if fluxRequired
@@ -90,6 +115,18 @@ namespace fvm
     tmp<fvMatrix<Type>> divc
     (
         const tmp<SurfaceField<Type>>& flux,
+        const VolField<Type>& vf
+    );
+
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    tmp<fvMatrix<Type>> divc
+    (
+        const Expression& e,
         const VolField<Type>& vf
     );
 }

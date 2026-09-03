@@ -71,7 +71,7 @@ Foam::populationBalance::breakupModels::Kusters::rate(const label i) const
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
     const volInternalScalarField& epsilonc = tepsilonc();
     tmp<volScalarField> tnu(popBal_.continuousPhase().fluidThermo().nu());
-    const volInternalScalarField nuc = tnu();
+    const volInternalScalarField& nuc = tnu();
 
     return
         sqrt(4*epsilonc/(15*pi*nuc))

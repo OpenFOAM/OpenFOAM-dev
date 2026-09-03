@@ -77,7 +77,7 @@ Foam::fv::coefficientPhaseChange::timesY1
 
     for (label mDoti = 1; mDoti < species().size(); ++ mDoti)
     {
-        tY1.ref() += mcThermos.first().Y()[specieis(mDoti).first()];
+        tY1.ref() += mcThermos.first().Y()[specieis(mDoti).first()]();
     }
 
     return tY1*mDot;
@@ -137,7 +137,7 @@ Foam::fv::coefficientPhaseChange::mDot(const label mDoti) const
     {
         const labelPair specieis = this->specieis(mDoti);
 
-        tmDot.ref() *= mcThermos.first().Y()[specieis.first()];
+        tmDot.ref() *= mcThermos.first().Y()[specieis.first()]();
     }
 
     return tmDot;

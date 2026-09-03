@@ -108,10 +108,10 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
             {
                 const volInternalScalarField phaseTransferRate
                 (
-                    movingPhases[phasei]
+                    movingPhases[phasei].alpha()()
                    *min
                     (
-                        otherTurbulence.epsilon()/otherTurbulence.k(),
+                        otherTurbulence.epsilon()()()/otherTurbulence.k()()(),
                         1.0/phase_.time().deltaT()
                     )
                 );

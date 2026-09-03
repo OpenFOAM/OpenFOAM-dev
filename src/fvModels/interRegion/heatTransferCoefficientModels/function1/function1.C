@@ -112,7 +112,7 @@ Foam::fv::heatTransferCoefficientModels::function1::htc() const
             zeroGradientFvPatchScalarField::typeName
         );
 
-    tHtc->primitiveFieldRef() = htcFunc_->value(mag(U));
+    tHtc->primitiveFieldRef() = htcFunc_->value(mag(U.primitiveField()));
     tHtc->correctBoundaryConditions();
 
     return tHtc;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::heatTransferModels::sphericalHeatTransfer::K
 {
     return
         60.0
-       *max(interface_.dispersed(), residualAlpha)
+       *max(interface_.dispersed().alpha(), residualAlpha)
        *interface_.dispersed().thermo().kappa()
        /sqr(interface_.dispersed().d());
 }

@@ -25,6 +25,7 @@ License
 
 #include "kOmegaSSTSAS.H"
 #include "fvcLaplacian.H"
+#include "fviLaplacian.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,7 +55,7 @@ tmp<fvScalarMatrix> kOmegaSSTSAS<BasicMomentumTransportModel>::Qsas
         (
             kappa_*sqrt(S2)
            /(
-                mag(fvc::laplacian(this->U_))()()
+                mag(fvi::laplacian(this->U_))
               + dimensionedScalar
                 (
                     "rootVSmall",

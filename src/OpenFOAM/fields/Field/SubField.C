@@ -172,7 +172,10 @@ void Foam::SubField<Type>::operator=(const Expression& e)
 template<class Type>                                                           \
 void Foam::SubField<Type>::operator op(const UList<TYPE>& f)                   \
 {                                                                              \
-    TFOR_ALL_F_OP_F(Type, *this, op, TYPE, f)                                  \
+    forAll(*this, i)                                                           \
+    {                                                                          \
+        this->operator[](i) op f[i];                                           \
+    }                                                                          \
 }                                                                              \
                                                                                \
 template<class Type>                                                           \
@@ -185,7 +188,10 @@ void Foam::SubField<Type>::operator op(const tmp<Field<TYPE>>& tf)             \
 template<class Type>                                                           \
 void Foam::SubField<Type>::operator op(const TYPE& t)                          \
 {                                                                              \
-    TFOR_ALL_F_OP_S(Type, *this, op, TYPE, t)                                  \
+    forAll(*this, i)                                                           \
+    {                                                                          \
+        this->operator[](i) op t;                                              \
+    }                                                                          \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

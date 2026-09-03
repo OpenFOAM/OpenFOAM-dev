@@ -37,7 +37,7 @@ SourceFiles
 
 #include "dimensionedTypes.H"
 #include "DimensionedField.H"
-#include "FieldField.H"
+#include "PtrField.H"
 #include "lduInterfaceFieldPtrsList.H"
 #include "LduInterfaceFieldPtrsList.H"
 
@@ -55,7 +55,7 @@ class dictionary;
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 class GeometricBoundaryField
 :
-    public FieldField<GeoMesh::template PatchField, Type>
+    public PtrField<typename GeoMesh::template PatchField<Type>>
 {
 public:
 
@@ -69,6 +69,9 @@ public:
 
         //- Type of the patch field of which the Boundary is composed
         using PatchField = typename GeoMesh::template PatchField<Type>;
+
+        //- Type of the boundary field
+        using BoundaryField = PtrField<PatchField>;
 
 
 private:
@@ -115,12 +118,12 @@ public:
 
         //- Construct from a BoundaryMesh,
         //  reference to the internal field
-        //  and a PtrList<PatchField>
+        //  and a PtrField<PatchField>
         GeometricBoundaryField
         (
             const BoundaryMesh&,
             const Internal&,
-            const PtrList<PatchField>&
+            const PtrField<PatchField>&
         );
 
         //- Construct as copy setting the reference to the internal field
@@ -128,10 +131,21 @@ public:
 
         //- Construct as copy setting the reference to the internal field
         template<template<class> class PrimitiveField2>
-        explicit GeometricBoundaryField
+        GeometricBoundaryField
         (
             const Internal& field,
             const GeometricBoundaryField<Type, GeoMesh, PrimitiveField2>& btf
+        );
+
+        //- Construct from a BoundaryMesh,
+        //  reference to the internal field
+        //  and a boundary field expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        GeometricBoundaryField
+        (
+            const BoundaryMesh&,
+            const Internal&,
+            const Expression&
         );
 
         //- Copy constructor deleted
@@ -165,6 +179,12 @@ public:
         //- Return a list of the patch field types
         wordList types() const;
 
+        //- Return const-reference to the boundary field
+        const BoundaryField& boundaryField() const
+        {
+            return *this;
+        }
+
         //- Return BoundaryField of the cell values neighbouring
         //  the boundary
         tmp<GeometricBoundaryField> boundaryInternalField() const;
@@ -193,14 +213,14 @@ public:
 
     // Member Operators
 
-        //- Inherit FieldField assignment operators
-        using FieldField<GeoMesh::template PatchField, Type>::operator=;
+        //- Inherit PtrField assignment operators
+        using PtrField<PatchField>::operator=;
 
-        //- Inherit FieldField assignment addition operators
-        using FieldField<GeoMesh::template PatchField, Type>::operator+=;
+        //- Inherit PtrField assignment addition operators
+        using PtrField<PatchField>::operator+=;
 
-        //- Inherit FieldField assignment subtractions operators
-        using FieldField<GeoMesh::template PatchField, Type>::operator-=;
+        //- Inherit PtrField assignment subtractions operators
+        using PtrField<PatchField>::operator-=;
 
         //- Assignment operator
         void operator=(const GeometricBoundaryField&);
@@ -212,12 +232,16 @@ public:
         //  BoundaryField<Type, GeoMesh::template PatchField, BoundaryMesh>
         void operator==(const GeometricBoundaryField&);
 
-        //- Forced assignment to FieldField<GeoMesh::template PatchField, Type>
-        void operator==(const FieldField<GeoMesh::template PatchField, Type>&);
+        //- Forced assignment to PtrField<GeoMesh::template PatchField<Type>>
+        void operator==(const PtrField<PatchField>&);
 
-        //- Forced assignment to FieldField<OtherPatchField, Type>
+        //- Forced assignment to PtrField expression
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        void operator==(const Expression&);
+
+        //- Forced assignment to PtrField<OtherPatchField<Type>>
         template<template<class> class OtherPatchField>
-        void operator==(const FieldField<OtherPatchField, Type>&);
+        void operator==(const PtrField<OtherPatchField<Type>>&);
 
         //- Forced assignment to Type
         void operator==(const Type&);

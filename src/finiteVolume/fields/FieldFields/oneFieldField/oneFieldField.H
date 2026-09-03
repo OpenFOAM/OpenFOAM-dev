@@ -68,6 +68,16 @@ public:
 };
 
 
+namespace expression
+{
+    template<>
+    struct Expressionable<oneFieldField>
+    :
+        public notExpressionable
+    {};
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

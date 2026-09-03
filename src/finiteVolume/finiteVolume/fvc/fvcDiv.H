@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,6 +77,12 @@ namespace fvc
         const word& name
     );
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto div(const Expression& e, const word& name)
+    {
+        return div(eval(e), name);
+    }
+
 
     template<class Type>
     tmp<VolField<typename innerProduct<vector, Type>::type>> div
@@ -89,6 +95,12 @@ namespace fvc
     (
         const tmp<VolField<Type>>&
     );
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto div(const Expression& e)
+    {
+        return div(eval(e));
+    }
 
 
     template<class Type>
@@ -107,6 +119,22 @@ namespace fvc
         const word& name
     );
 
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline tmp<VolField<Type>> div
+    (
+        const Expression& e,
+        const VolField<Type>& vf,
+        const word& name
+    )
+    {
+        return div(eval(e), vf, name);
+    }
+
     template<class Type>
     tmp<VolField<Type>> div
     (
@@ -115,6 +143,17 @@ namespace fvc
         const word& name
     );
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto div
+    (
+        const surfaceScalarField& phi,
+        const Expression& e,
+        const word& name
+    )
+    {
+        return div(phi, eval(e), name);
+    }
+
     template<class Type>
     tmp<VolField<Type>> div
     (
@@ -122,6 +161,23 @@ namespace fvc
         const tmp<VolField<Type>>&,
         const word& name
     );
+
+    template
+    <
+        class Type,
+        class PhiExpression,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto div
+    (
+        const PhiExpression& phi,
+        const Expression& e,
+        const word& name
+    )
+    {
+        return div(eval(phi), eval(e), name);
+    }
 
 
     template<class Type>
@@ -138,6 +194,21 @@ namespace fvc
         const VolField<Type>&
     );
 
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline tmp<VolField<Type>> div
+    (
+        const Expression& e,
+        const VolField<Type>& vf
+    )
+    {
+        return div(eval(e), vf);
+    }
+
     template<class Type>
     tmp<VolField<Type>> div
     (
@@ -145,12 +216,37 @@ namespace fvc
         const tmp<VolField<Type>>&
     );
 
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto div
+    (
+        const surfaceScalarField& phi,
+        const Expression& e
+    )
+    {
+        return div(phi, eval(e));
+    }
+
     template<class Type>
     tmp<VolField<Type>> div
     (
         const tmp<surfaceScalarField>&,
         const tmp<VolField<Type>>&
     );
+
+    template
+    <
+        class PhiExpression,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto div
+    (
+        const PhiExpression& phi,
+        const Expression& e
+    )
+    {
+        return div(eval(phi), eval(e));
+    }
 }
 
 

@@ -96,7 +96,10 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
     const scalar magg(mag(film_.g.value()));
     const vector gHat(film_.g.value()/magg);
 
-    const vectorField nf(mesh.Sf()/mesh.magSf());
+    const vectorField nf
+    (
+        mesh.Sf().primitiveField()/mesh.magSf().primitiveField()
+    );
     const labelUList& own = mesh.owner();
     const labelUList& nbr = mesh.neighbour();
 

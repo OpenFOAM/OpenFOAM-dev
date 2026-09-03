@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,6 +130,24 @@ namespace fvm
         const VolField<Type>&
     );
 
+    template<class Type, class GType>
+    tmp<fvMatrix<Type>> laplacian
+    (
+        const tmp<VolField<GType>>&,
+        const VolField<Type>&
+    );
+
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    tmp<fvMatrix<Type>> laplacian
+    (
+        const Expression& e,
+        const VolField<Type>& vf
+    );
 
     template<class Type, class GType>
     tmp<fvMatrix<Type>> laplacian
@@ -139,13 +157,18 @@ namespace fvm
         const word&
     );
 
-    template<class Type, class GType>
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
     tmp<fvMatrix<Type>> laplacian
     (
-        const tmp<VolField<GType>>&,
-        const VolField<Type>&
+        const Expression& e,
+        const VolField<Type>& vf,
+        const word& name
     );
-
 
     template<class Type, class GType>
     tmp<fvMatrix<Type>> laplacian
@@ -176,7 +199,6 @@ namespace fvm
         const tmp<SurfaceField<GType>>&,
         const VolField<Type>&
     );
-
 
     template<class Type>
     tmp<fvMatrix<Type>> laplacianCorrection
@@ -205,6 +227,18 @@ namespace fvm
     (
         const tmp<SurfaceField<scalar>>&,
         const VolField<Type>&
+    );
+
+    template
+    <
+        class Type,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    tmp<fvMatrix<Type>> laplacianCorrection
+    (
+        const Expression& e,
+        const VolField<Type>& vf
     );
 }
 

@@ -241,11 +241,6 @@ public:
             const dictionary&
         );
 
-        //- Return a pointer to a new calculatedPointPatchField
-        template<class Type2>
-        static autoPtr<LagrangianPatchField<Type>>
-        NewCalculatedType(const LagrangianPatchField<Type2>&);
-
 
     //- Destructor
     virtual ~LagrangianPatchField();

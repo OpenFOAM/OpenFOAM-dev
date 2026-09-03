@@ -30,7 +30,7 @@ divSchemes
     div(phi,U)      Gauss linear;
     div(phiB,U)     Gauss linear;
     div(phi,B)      Gauss linear;
-    div(phiB,((2*DBU)*B)) Gauss linear;
+    div(phiB,(2*DBU)*B) Gauss linear;
 }
 
 laplacianSchemes

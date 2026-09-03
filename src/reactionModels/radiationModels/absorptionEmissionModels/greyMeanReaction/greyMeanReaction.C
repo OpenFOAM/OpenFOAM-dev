@@ -80,7 +80,8 @@ Foam::radiationModels::absorptionEmissionModels::greyMeanReaction::ECont
     tmp<volScalarField> E = greyMean::ECont(bandI);
 
     const word& name = reactionModel::reactionPropertiesName;
-    E.ref() += EhrrCoeff_*mesh_.lookupObject<reactionModel>(name).Qdot();
+    E.ref().internalFieldRef() +=
+        EhrrCoeff_*mesh_.lookupObject<reactionModel>(name).Qdot();
 
     return E;
 }

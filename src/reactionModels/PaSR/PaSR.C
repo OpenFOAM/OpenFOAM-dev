@@ -84,7 +84,7 @@ void Foam::reactionModels::PaSR::correct()
     tmp<volScalarField> tnuEff(this->turbulence().nuEff());
     const scalarField& nuEff = tnuEff();
 
-    tmp<volScalarField> ttc(this->chemistryPtr_->tc());
+    tmp<volInternalScalarField> ttc(this->chemistryPtr_->tc());
     const scalarField& tc = ttc();
 
     forAll(epsilon, i)
@@ -118,13 +118,13 @@ Foam::reactionModels::PaSR::R(volScalarField& Y) const
 }
 
 
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::PaSR::Qdot() const
 {
-    return volScalarField::New
+    return volInternalScalarField::New
     (
         this->thermo().phasePropertyName(typedName("Qdot")),
-        kappa_*laminar::Qdot()
+        kappa_()*laminar::Qdot()
     );
 }
 

@@ -181,6 +181,12 @@ public:
         //- Return the index of the phase
         label index() const;
 
+        //- Return the phase volume fraction
+        const volScalarField& alpha() const
+        {
+            return *this;
+        }
+
         //- Return the system to which this phase belongs
         const phaseSystem& fluid() const;
 
@@ -204,7 +210,10 @@ public:
         virtual void correct();
 
         //- Correct the continuity error
-        virtual void correctContinuityError(const volScalarField& source);
+        virtual void correctContinuityError
+        (
+            const volInternalScalarField& source
+        );
 
         //- Correct the kinematics
         virtual void correctKinematics();
@@ -249,10 +258,10 @@ public:
             virtual bool isochoric() const = 0;
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual const autoPtr<volScalarField>& divU() const = 0;
+            virtual const autoPtr<volInternalScalarField>& divU() const = 0;
 
             //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual void divU(tmp<volScalarField> divU) = 0;
+            virtual void divU(tmp<volInternalScalarField> divU) = 0;
 
 
         // Thermo

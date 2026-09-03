@@ -205,14 +205,14 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::radiationModel::Sh
     const volScalarField& he
 ) const
 {
-    const volScalarField Cpv(thermo.Cpv());
-    const volScalarField T3(pow3(T_));
+    const volInternalScalarField Cpv(thermo.Cpv()());
+    const volInternalScalarField T3(pow3(T_()));
 
     return
     (
-        Ru()
-      - fvm::Sp(4.0*Rp()*T3/Cpv, he)
-      - Rp()*T3*(T_ - 4.0*he/Cpv)
+        Ru()()
+      - fvm::Sp(4.0*Rp()()()*T3/Cpv, he)
+      - Rp()()()*T3*(T_() - 4.0*he()/Cpv)
     );
 }
 
@@ -225,8 +225,8 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::radiationModel::ST
 {
     return
     (
-        Ru()/rhoCp
-      - fvm::Sp(Rp()*pow3(T)/rhoCp, T)
+        Ru()()/rhoCp
+      - fvm::Sp(Rp()()()*pow3(T())/rhoCp, T)
     );
 }
 

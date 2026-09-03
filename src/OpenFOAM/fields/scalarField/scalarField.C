@@ -28,43 +28,12 @@ Description
 
 #include "scalarField.H"
 
-#define TEMPLATE
-#include "FieldFunctionsM.C"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-void component(scalarField& sf, const UList<scalar>& f, const direction)
-{
-    sf = f;
-}
-
-
-template<>
-void scalarField::replace(const direction, const UList<scalar>& sf)
-{
-    *this = sf;
-}
-
-template<>
-void scalarField::replace(const direction, const scalar& s)
-{
-    *this = s;
-}
-
-
-void stabilise(scalarField& res, const UList<scalar>& sf, const scalar s)
-{
-    TFOR_ALL_F_OP_FUNC_S_F
-    (
-        scalar, res, =, ::Foam::stabilise, scalar, s, scalar, sf
-    )
-}
-
 
 tmp<scalarField> linearSequence
 (
@@ -87,85 +56,8 @@ tmp<scalarField> linearSequence01(const label n)
     return tRes;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-BINARY_TYPE_OPERATOR(scalar, scalar, scalar, +, add)
-BINARY_TYPE_OPERATOR(scalar, scalar, scalar, -, subtract)
-
-BINARY_OPERATOR(scalar, scalar, scalar, *, multiply)
-BINARY_OPERATOR(scalar, scalar, scalar, /, divide)
-
-BINARY_TYPE_OPERATOR_SF(scalar, scalar, scalar, /, divide)
-
-BINARY_FUNCTION(scalar, scalar, scalar, pow)
-BINARY_TYPE_FUNCTION(scalar, scalar, scalar, pow)
-BINARY_FUNCTION(scalar, scalar, label, integerPow)
-BINARY_TYPE_FUNCTION_FS(scalar, scalar, label, integerPow)
-BINARY_FUNCTION(scalar, scalar, label, integerRoot)
-BINARY_TYPE_FUNCTION_FS(scalar, scalar, label, integerRoot)
-
-BINARY_FUNCTION(scalar, scalar, scalar, atan2)
-BINARY_TYPE_FUNCTION(scalar, scalar, scalar, atan2)
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(scalar, scalar, pow3)
-UNARY_FUNCTION(scalar, scalar, pow4)
-UNARY_FUNCTION(scalar, scalar, pow5)
-UNARY_FUNCTION(scalar, scalar, pow6)
-UNARY_FUNCTION(scalar, scalar, pow025)
-UNARY_FUNCTION(scalar, scalar, sqrt)
-UNARY_FUNCTION(scalar, scalar, cbrt)
-UNARY_FUNCTION(scalar, scalar, sign)
-UNARY_FUNCTION(scalar, scalar, pos)
-UNARY_FUNCTION(scalar, scalar, pos0)
-UNARY_FUNCTION(scalar, scalar, neg)
-UNARY_FUNCTION(scalar, scalar, neg0)
-UNARY_FUNCTION(scalar, scalar, posPart)
-UNARY_FUNCTION(scalar, scalar, negPart)
-UNARY_FUNCTION(scalar, scalar, exp)
-UNARY_FUNCTION(scalar, scalar, log)
-UNARY_FUNCTION(scalar, scalar, log10)
-UNARY_FUNCTION(scalar, scalar, sin)
-UNARY_FUNCTION(scalar, scalar, cos)
-UNARY_FUNCTION(scalar, scalar, tan)
-UNARY_FUNCTION(scalar, scalar, asin)
-UNARY_FUNCTION(scalar, scalar, acos)
-UNARY_FUNCTION(scalar, scalar, atan)
-UNARY_FUNCTION(scalar, scalar, sinh)
-UNARY_FUNCTION(scalar, scalar, cosh)
-UNARY_FUNCTION(scalar, scalar, tanh)
-UNARY_FUNCTION(scalar, scalar, asinh)
-UNARY_FUNCTION(scalar, scalar, acosh)
-UNARY_FUNCTION(scalar, scalar, atanh)
-UNARY_FUNCTION(scalar, scalar, erf)
-UNARY_FUNCTION(scalar, scalar, erfc)
-UNARY_FUNCTION(scalar, scalar, lgamma)
-UNARY_FUNCTION(scalar, scalar, j0)
-UNARY_FUNCTION(scalar, scalar, j1)
-UNARY_FUNCTION(scalar, scalar, y0)
-UNARY_FUNCTION(scalar, scalar, y1)
-
-#define BesselFunc(func)                                                       \
-void func(scalarField& res, const int n, const UList<scalar>& sf)              \
-{                                                                              \
-    TFOR_ALL_F_OP_FUNC_S_F(scalar, res, =, ::Foam::func, int, n, scalar, sf)   \
-}
-
-BesselFunc(jn)
-BesselFunc(yn)
-
-#undef BesselFunc
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // ************************************************************************* //

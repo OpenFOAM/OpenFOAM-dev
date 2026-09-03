@@ -48,7 +48,7 @@ void Foam::solvers::isothermalFilm::continuityPredictor()
     fvConstraints().constrain(alpha_);
 
     // Remove potential unboundedness in alpha caused by div(alphaRhoPhi)
-    alpha_.max(0);
+    alpha_.boundLower(0);
 
     // Calculate the continuity error caused by limiting alpha
     // Reset to ~0 following the alpha corrector
@@ -64,7 +64,7 @@ void Foam::solvers::isothermalFilm::correctContinuityError()
     contErr =
     (
         fvi::ddt(rho, alpha) + fvi::div(alphaRhoPhi)
-      - (fvModels().source(rho, alpha) & alpha)()()
+      - (fvModels().source(rho, alpha) & alpha())
     );
 }
 

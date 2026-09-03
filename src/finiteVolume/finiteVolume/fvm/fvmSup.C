@@ -211,7 +211,7 @@ Foam::fvm::Sp
     const VolField<Type>& vf
 )
 {
-    tmp<fvMatrix<Type>> tfvm = fvm::Sp(tsp(), vf);
+    tmp<fvMatrix<Type>> tfvm = fvm::Sp(tsp()(), vf);
     tsp.clear();
     return tfvm;
 }

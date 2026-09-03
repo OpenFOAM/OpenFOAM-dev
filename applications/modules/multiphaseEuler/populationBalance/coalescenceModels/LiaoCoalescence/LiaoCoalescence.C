@@ -161,7 +161,7 @@ void Foam::populationBalance::coalescenceModels::LiaoCoalescence::precompute()
 {
     LiaoBase::precompute();
 
-    CPack_ = min(PMax_/max(PMax_ - popBal_.alphas(), small), CPackMax_);
+    CPack_ = min(PMax_/max(PMax_ - popBal_.alphas()(), small), CPackMax_);
 
     const volInternalScalarField& rhoc = popBal_.continuousPhase().rho();
 

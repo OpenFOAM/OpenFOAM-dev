@@ -166,7 +166,7 @@ Foam::fixedNormalSlipFvPatchField<Type>::snGradTransformDiag() const
     return transformMask
     (
         pTraits<Type>::zero,
-        pow<vector, pTraits<Type>::rank>(diag)
+        pow<pTraits<Type>::rank>(diag)
     );
 }
 

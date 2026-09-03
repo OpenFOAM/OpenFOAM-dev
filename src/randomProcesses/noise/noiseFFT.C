@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -399,7 +399,7 @@ Foam::scalar Foam::noiseFFT::Lsum(const Pair<Foam::scalarField>& gLf) const
 
 Foam::scalar Foam::noiseFFT::dbToPa(const scalar db) const
 {
-    return p0*pow(10.0, db/20.0);
+    return p0*pow(10, db/20.0);
 }
 
 
@@ -408,7 +408,7 @@ Foam::tmp<Foam::scalarField> Foam::noiseFFT::dbToPa
     const tmp<scalarField>& db
 ) const
 {
-    return p0*pow(10.0, db/20.0);
+    return p0*pow(10, db/20.0);
 }
 
 

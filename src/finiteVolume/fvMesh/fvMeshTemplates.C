@@ -30,15 +30,7 @@ License
 template<class Type>
 typename Foam::pTraits<Type>::labelType Foam::fvMesh::validComponents() const
 {
-    return pow
-    (
-        this->solutionD(),
-        pTraits
-        <
-            typename powProduct<Vector<label>,
-            pTraits<Type>::rank>::type
-        >::zero
-    );
+    return pow<pTraits<Type>::rank>(this->solutionD());
 }
 
 

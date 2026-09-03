@@ -236,10 +236,10 @@ public:
             virtual scalar solve(const scalarField& deltaT);
 
             //- Return the chemical time scale
-            virtual tmp<volScalarField> tc() const;
+            virtual tmp<volInternalScalarField> tc() const;
 
             //- Return the heat release rate [kg/m/s^3]
-            virtual tmp<volScalarField> Qdot() const;
+            virtual tmp<volInternalScalarField> Qdot() const;
 
 
         // ODE solution functions

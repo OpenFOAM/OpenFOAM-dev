@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,14 +55,14 @@ Foam::PtrList<T>::PtrList(const PtrList<T>& a)
 
 
 template<class T>
-template<class CloneArg>
-Foam::PtrList<T>::PtrList(const PtrList<T>& a, const CloneArg& cloneArg)
+template<class ... Args>
+Foam::PtrList<T>::PtrList(const PtrList<T>& a, const Args& ... args)
 :
     UPtrList<T>(a.size())
 {
     forAll(*this, i)
     {
-        this->ptrs_[i] = (a[i]).clone(cloneArg).ptr();
+        this->ptrs_[i] = (a[i]).clone(args ...).ptr();
     }
 }
 

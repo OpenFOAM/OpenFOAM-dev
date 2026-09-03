@@ -8,7 +8,7 @@ if (ign.ignited())
       + (betav()*fvi::ddt(rho, K) + fvi::div(phi, K))*rho()/thermo.rhou()()()
       + (
             heau.name() == "eau"
-          ? eval(fvi::div(fvc::absolute(phi, rho, U), p/rho)
+          ? eval(fvi::div(fvc::absolute(phi, rho, U)(), p/rho)
            *rho()/thermo.rhou()()())
           : eval(-betav()*dpdt*rho()/thermo.rhou()()())
         )

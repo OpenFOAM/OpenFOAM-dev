@@ -93,6 +93,12 @@ namespace fvi
     (
         const tmp<VolField<Type>>&
     );
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto grad(const Expression& e)
+    {
+        return grad(eval(e));
+    }
 }
 
 

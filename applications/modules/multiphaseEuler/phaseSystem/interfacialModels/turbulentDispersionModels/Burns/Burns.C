@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,17 +82,17 @@ Foam::turbulentDispersionModels::Burns::D() const
         drag.Ki()
        *continuousTurbulence().nut()
        /sigma_
-       *interface_.dispersed()
-       *sqr(interface_.dispersed() + interface_.continuous())
+       *interface_.dispersed().alpha()
+       *sqr(interface_.dispersed().alpha() + interface_.continuous().alpha())
        /(
             max
             (
-                interface_.dispersed(),
+                interface_.dispersed().alpha(),
                 interface_.dispersed().residualAlpha()
             )
            *max
             (
-                interface_.continuous(),
+                interface_.continuous().alpha(),
                 interface_.continuous().residualAlpha()
             )
         );

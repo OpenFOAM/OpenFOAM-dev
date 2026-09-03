@@ -90,6 +90,16 @@ public:
 };
 
 
+namespace expression
+{
+    template<>
+    struct Expressionable<geometricOneField>
+    :
+        public notExpressionable
+    {};
+}
+
+
 inline const geometricOneField& operator*
 (
     const geometricOneField&,

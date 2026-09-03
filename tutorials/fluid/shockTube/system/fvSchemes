@@ -32,9 +32,9 @@ divSchemes
     div(phid,p)         Gauss vanAlbada;
     div(phi,e)          Gauss vanAlbada;
     div(phi,K)          Gauss vanAlbada;
-    div(phi,(p|rho))    Gauss vanAlbada;
+    div(phi,p|rho)     Gauss vanAlbada;
 
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(rho*nuEff*dev2(T(grad(U)))) Gauss linear;
 }
 
 laplacianSchemes

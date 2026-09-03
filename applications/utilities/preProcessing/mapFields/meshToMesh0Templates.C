@@ -355,7 +355,7 @@ Foam::meshToMesh0::interpolate
     }
 
     // Create and map the patch field values
-    PtrList<fvPatchField<Type>> patchFields
+    PtrField<fvPatchField<Type>> patchFields
     (
         boundaryAddressing_.size()
     );

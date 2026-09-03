@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,44 +78,6 @@ Foam::calculatedLagrangianPatchField<Type>::calculatedLagrangianPatchField
 :
     LagrangianPatchField<Type>(ptf, iIo)
 {}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-template<class Type2>
-Foam::autoPtr<Foam::LagrangianPatchField<Type>>
-Foam::LagrangianPatchField<Type>::NewCalculatedType
-(
-    const LagrangianPatchField<Type2>& pf
-)
-{
-    typename LagrangianPatchConstructorTable::iterator patchTypeCstrIter =
-        LagrangianPatchConstructorTablePtr_->find(pf.patch().type());
-
-    if (patchTypeCstrIter != LagrangianPatchConstructorTablePtr_->end())
-    {
-        return autoPtr<LagrangianPatchField<Type>>
-        (
-            patchTypeCstrIter()
-            (
-                pf.patch(),
-                Field<Type>::null()
-            )
-        );
-    }
-    else
-    {
-        return autoPtr<LagrangianPatchField<Type>>
-        (
-            new calculatedLagrangianPatchField<Type>
-            (
-                pf.patch(),
-                Field<Type>::null()
-            )
-        );
-    }
-}
 
 
 // ************************************************************************* //

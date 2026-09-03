@@ -46,6 +46,7 @@ Description
 #include "expressionExpressionable.H"
 #include "OStringStream.H"
 #include "typeName.H"
+#include <limits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

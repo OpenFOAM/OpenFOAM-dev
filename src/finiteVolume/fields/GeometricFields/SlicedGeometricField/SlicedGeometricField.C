@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>
-Foam::tmp<Foam::FieldField<GeoMesh::template PatchField, Type>>
+Foam::tmp<Foam::PtrField<typename GeoMesh::template PatchField<Type>>>
 Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
 (
     const GeoMesh& mesh,
@@ -38,14 +38,14 @@ Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
     const bool preserveProcessorOnly
 )
 {
-    tmp<FieldField<GeoMesh::template PatchField, Type>> tbf
+    tmp<PtrField<typename GeoMesh::template PatchField<Type>>> tbf
     (
-        new FieldField<GeoMesh::template PatchField, Type>
+        new PtrField<typename GeoMesh::template PatchField<Type>>
         (
             mesh.boundary().size()
         )
     );
-    FieldField<GeoMesh::template PatchField, Type>& bf = tbf.ref();
+    PtrField<typename GeoMesh::template PatchField<Type>>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -102,22 +102,22 @@ Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
 
 
 template<class Type, class GeoMesh>
-Foam::tmp<Foam::FieldField<GeoMesh::template PatchField, Type>>
+Foam::tmp<Foam::PtrField<typename GeoMesh::template PatchField<Type>>>
 Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
 (
     const GeoMesh& mesh,
-    const FieldField<GeoMesh::template PatchField, Type>& bField,
+    const PtrField<typename GeoMesh::template PatchField<Type>>& bField,
     const bool preserveCouples
 )
 {
-    tmp<FieldField<GeoMesh::template PatchField, Type>> tbf
+    tmp<PtrField<typename GeoMesh::template PatchField<Type>>> tbf
     (
-        new FieldField<GeoMesh::template PatchField, Type>
+        new PtrField<typename GeoMesh::template PatchField<Type>>
         (
             mesh.boundary().size()
         )
     );
-    FieldField<GeoMesh::template PatchField, Type>& bf = tbf.ref();
+    PtrField<typename GeoMesh::template PatchField<Type>>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {

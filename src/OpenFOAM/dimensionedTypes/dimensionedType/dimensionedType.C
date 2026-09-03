@@ -468,19 +468,6 @@ void Foam::dimensioned<Type>::operator/=(const scalar s)
 
 // * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
 
-template<class Type, Foam::direction r>
-Foam::dimensioned<typename Foam::powProduct<Type, r>::type>
-Foam::pow(const dimensioned<Type>& dt, typename powProduct<Type, r>::type)
-{
-    return dimensioned<typename powProduct<Type, r>::type>
-    (
-        "pow(" + dt.name() + ',' + name(r) + ')',
-        pow(dt.dimensions(), r),
-        pow(dt.value(), 2)
-    );
-}
-
-
 template<class Type>
 Foam::dimensioned<typename Foam::outerProduct<Type, Type>::type>
 Foam::sqr(const dimensioned<Type>& dt)

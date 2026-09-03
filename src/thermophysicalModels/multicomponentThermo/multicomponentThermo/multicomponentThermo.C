@@ -295,13 +295,13 @@ void Foam::multicomponentThermo::implementation::normaliseY()
             {
                 if (solveSpecie(i))
                 {
-                    Y()[i].max(scalar(0));
+                    Y()[i].boundLower(0);
                     Yt += Y()[i];
                 }
             }
 
             Y()[defaultSpeciei_] = scalar(1) - Yt;
-            Y()[defaultSpeciei_].max(scalar(0));
+            Y()[defaultSpeciei_].boundLower(0);
         }
 
         if (Ydefault_.valid() && Ydefault_->writeOpt() == IOobject::NO_WRITE)

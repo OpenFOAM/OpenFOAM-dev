@@ -152,7 +152,7 @@ struct Select
     static type New
     (
         const Expression& e,
-        const DimensionedField<Type, fvMesh, Field>& iF
+        const DimensionedField<Type, surfaceMesh, Field>& iF
     )
     {
         tmp<fvsPatchField<Type>> tResult =
@@ -175,7 +175,7 @@ struct Select
             New
             (
                 e,
-                NullObjectRef<DimensionedField<Type, fvMesh, Field>>()
+                NullObjectRef<DimensionedField<Type, surfaceMesh, Field>>()
             );
     }
 };

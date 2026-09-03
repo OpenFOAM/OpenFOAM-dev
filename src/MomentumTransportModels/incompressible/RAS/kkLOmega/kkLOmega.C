@@ -448,7 +448,7 @@ void kkLOmega::correct()
         )
     );
 
-    const volInternalScalarField Pkl(nutl*S2);
+    const volInternalScalarField Pkl(nutl()*S2());
 
     const volScalarField alphaTEff(alphaT(lambdaEff, fv, ktS));
 
@@ -462,7 +462,10 @@ void kkLOmega::correct()
        /(fw() + fwMin)
     );
 
-    const volInternalScalarField fNatCrit(1 - exp(-Cnc_*sqrt(kl_)*y/nu()));
+    const volInternalScalarField fNatCrit
+    (
+        1 - exp(-Cnc_*sqrt(kl_())*y()/nu()()())
+    );
 
     // Natural source term divided by kl_
     const volInternalScalarField Rnat

@@ -24,17 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 template<>
-inline Foam::tmp<Foam::GeometricField<Foam::scalar, Foam::fvMesh>>
-Foam::GeometricField<Foam::scalar, Foam::fvMesh>::component
-(
-    const direction
-) const
-{
-    return *this;
-}
-
-
-template<>
 template<template<class> class PrimitiveField>
 inline void Foam::GeometricField<Foam::scalar, Foam::fvMesh>::replace
 (

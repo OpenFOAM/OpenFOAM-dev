@@ -909,24 +909,22 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
 
 
 template<class ThermoType>
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::chemistryModels::Standard<ThermoType>::tc() const
 {
-    tmp<volScalarField> ttc
+    tmp<volInternalScalarField> ttc
     (
-        volScalarField::New
+        volInternalScalarField::New
         (
             "tc",
             this->mesh(),
-            dimensionedScalar(dimensions::time, small),
-            extrapolatedCalculatedFvPatchScalarField::typeName
+            dimensionedScalar(dimensions::time, small)
         )
     );
     scalarField& tc = ttc.ref();
 
     if (!this->chemistry_)
     {
-        ttc.ref().correctBoundaryConditions();
         return ttc;
     }
 
@@ -997,18 +995,17 @@ Foam::chemistryModels::Standard<ThermoType>::tc() const
             sumWRateByCTot == 0 ? vGreat : sumW/sumWRateByCTot*sum(c_);
     }
 
-    ttc.ref().correctBoundaryConditions();
     return ttc;
 }
 
 
 template<class ThermoType>
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::chemistryModels::Standard<ThermoType>::Qdot() const
 {
-    tmp<volScalarField> tQdot
+    tmp<volInternalScalarField> tQdot
     (
-        volScalarField::New
+        volInternalScalarField::New
         (
             "Qdot",
             this->mesh_,

@@ -50,7 +50,7 @@ interfacialModels/BlendedInterfacialModel/blendingMethods/segregatedBlendingMeth
 interfacialModels/dragModels/dragModel/dragModel.C
 interfacialModels/dragModels/dragModel/dragModelNew.C
 interfacialModels/dragModels/dispersedDragModel/dispersedDragModel.C
-interfacialModels/dragModels/Beetstra/Beetstra.C
+#***HGW interfacialModels/dragModels/Beetstra/Beetstra.C
 interfacialModels/dragModels/segregated/segregated.C
 interfacialModels/dragModels/Ergun/Ergun.C
 interfacialModels/dragModels/Gibilaro/Gibilaro.C
@@ -64,7 +64,7 @@ interfacialModels/dragModels/TomiyamaAnalytic/TomiyamaAnalytic.C
 interfacialModels/dragModels/Tenneti/Tenneti.C
 interfacialModels/dragModels/TomiyamaKataokaZunSakaguchi/TomiyamaKataokaZunSakaguchi.C
 interfacialModels/dragModels/WenYu/WenYu.C
-interfacialModels/dragModels/IshiiZuber/IshiiZuber.C
+#***HGW interfacialModels/dragModels/IshiiZuber/IshiiZuber.C
 interfacialModels/dragModels/AttouFerschneider/AttouFerschneider.C
 interfacialModels/dragModels/aerosolDrag/aerosolDrag.C
 interfacialModels/dragModels/timeScaleFilteredDrag/timeScaleFilteredDrag.C

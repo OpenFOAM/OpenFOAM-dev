@@ -74,7 +74,10 @@ bool Foam::fvMeshMovers::interpolator::update()
 {
     if (displacement_)
     {
-        mesh().movePoints(points0_() + pointInterpolator_.curPointField()());
+        mesh().movePoints
+        (
+            eval(points0_() + pointInterpolator_.curPointField()())
+        );
     }
     else
     {

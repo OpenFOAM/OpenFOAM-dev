@@ -153,7 +153,7 @@ void Foam::turbulentInletFvPatchField<Type>::updateCoeffs()
                 referenceField_
               + rmsCorr*cmptMultiply
                 (
-                    randomField - 0.5*pTraits<Type>::one,
+                    randomField - scalar(0.5)*pTraits<Type>::one,
                     fluctuationScale_
                 )*mag(referenceField_)
             );

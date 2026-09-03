@@ -758,68 +758,10 @@ bool Foam::motionSmootherAlgo::scaleMesh
 Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
 {
     // Set newPoints as old + scale*displacement
-
-    // Create overall displacement with same b.c.s as displacement_
-    wordList actualPatchTypes;
-    {
-        const pointBoundaryMesh& pbm = displacement_.mesh().boundary();
-        actualPatchTypes.setSize(pbm.size());
-        forAll(pbm, patchi)
-        {
-            actualPatchTypes[patchi] = pbm[patchi].type();
-        }
-    }
-
-    wordList actualPatchFieldTypes;
-    {
-        const pointVectorField::BoundaryField& pfld =
-            displacement_.boundaryField();
-        actualPatchFieldTypes.setSize(pfld.size());
-        forAll(pfld, patchi)
-        {
-            if (isA<fixedValuePointPatchField<vector>>(pfld[patchi]))
-            {
-                // Get rid of funny
-                actualPatchFieldTypes[patchi] =
-                    fixedValuePointPatchField<vector>::typeName;
-            }
-            else
-            {
-                actualPatchFieldTypes[patchi] = pfld[patchi].type();
-            }
-        }
-    }
-
-    pointVectorField totalDisplacement
+    tmp<pointField> tnewPoints
     (
-        IOobject
-        (
-            "totalDisplacement",
-            mesh_.time().name(),
-            mesh_,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        scale_*displacement_,
-        actualPatchFieldTypes,
-        actualPatchTypes
+        oldPoints_ + scale_.primitiveField()*displacement_.primitiveField()
     );
-    correctBoundaryConditions(totalDisplacement);
-
-    if (debug)
-    {
-        Pout<< "scaleMesh : testing sync of totalDisplacement" << endl;
-        testSyncField
-        (
-            totalDisplacement,
-            maxMagEqOp(),
-            vector::zero,   // null value
-            1e-6*mesh_.bounds().mag()
-        );
-    }
-
-    tmp<pointField> tnewPoints(oldPoints_ + totalDisplacement.primitiveField());
 
     // Correct for 2-D motion
     modifyMotionPoints(tnewPoints.ref());
@@ -1032,8 +974,8 @@ bool Foam::motionSmootherAlgo::scaleMesh
         if (debug)
         {
             Pout<< "scale_ after smoothing :"
-                << " min:" << Foam::gMin(scale_)
-                << " max:" << Foam::gMax(scale_)
+                << " min:" << Foam::gMin(scale_())
+                << " max:" << Foam::gMax(scale_())
                 << endl;
         }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,19 +156,22 @@ void Foam::fv::oneResistanceHeatTransfer::addSup
 
         const phaseModel& otherPhase = interface.otherPhase(phase);
 
-        const volScalarField& T = phase.thermo().T();
-        const volScalarField& otherT = otherPhase.thermo().T();
+        const volInternalScalarField& T = phase.thermo().T();
+        const volInternalScalarField& otherT = otherPhase.thermo().T();
 
-        const volScalarField& K = KIter();
+        const volInternalScalarField& K = KIter();
 
-        const volScalarField stabilisedK
+        const volInternalScalarField stabilisedK
         (
-            otherPhase/max(otherPhase, otherPhase.residualAlpha())*K
+            otherPhase.alpha()()
+           /max(otherPhase.alpha()(), otherPhase.residualAlpha())*K
         );
 
-        const volScalarField& Cpv = phase.thermo().Cpv();
+        const volInternalScalarField& Cpv = phase.thermo().Cpv();
 
-        eqn += stabilisedK*(otherT - T + he/Cpv) - fvm::Sp(stabilisedK/Cpv, he);
+        eqn +=
+            stabilisedK*(otherT - T + he()/Cpv)
+          - fvm::Sp(stabilisedK/Cpv, he);
     }
 }
 

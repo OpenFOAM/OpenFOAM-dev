@@ -113,8 +113,8 @@ void Foam::populationBalanceSystem::addDmdtHefs
         const volScalarField& he2 = thermo2.he();
         const volInternalScalarField hs1(thermo1.hs());
         const volInternalScalarField hs2(thermo2.hs());
-        const volInternalScalarField K1(phase1.K());
-        const volInternalScalarField K2(phase2.K());
+        const volInternalScalarField& K1(phase1.K());
+        const volInternalScalarField& K2(phase2.K());
 
         // Transfer of sensible enthalpy within the phases
         eqns[phase1.name()] +=

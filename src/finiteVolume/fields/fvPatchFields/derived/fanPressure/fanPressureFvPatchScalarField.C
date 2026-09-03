@@ -135,7 +135,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     }
 
     // Pressure drop for this flow rate
-    const scalar dp0 = fanCurve_->value(max(volFlowRate, scalar(0)));
+    const scalar dp0 = fanCurve_->value(max(volFlowRate, 0));
 
     dynamicPressureFvPatchScalarField::updateCoeffs
     (

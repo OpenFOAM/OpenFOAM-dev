@@ -237,9 +237,9 @@ void Foam::radiationModels::P1::calculate()
     solve
     (
         fvm::laplacian(gamma, G_)
-      - fvm::Sp(a_, G_)
+      - fvm::Sp(a_(), G_)
      ==
-      - 4*e_*physicoChemical::sigma*pow4(T_) - E_
+      - 4*e_()*physicoChemical::sigma*pow4(T_()) - E_()
     );
 
     volScalarField::BoundaryField& qrBf = qr_.boundaryFieldRef();

@@ -173,7 +173,7 @@ Type Foam::LduMatrix<Type, DType, LUType>::solver::normFactor
 {
     // --- Calculate A dot reference value of psi
     matrix_.sumA(tmpField);
-    cmptMultiply(tmpField, tmpField, gAverage(psi));
+    tmpField = cmptMultiply(tmpField, gAverage(psi));
 
     return stabilise
     (

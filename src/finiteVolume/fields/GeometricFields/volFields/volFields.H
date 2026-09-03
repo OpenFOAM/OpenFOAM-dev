@@ -39,7 +39,7 @@ SourceFiles
 #include "fvMesh.H"
 #include "fvPatchField.H"
 #include "fvFieldSource.H"
-#include "volFieldsFwd.H"
+#include "volFields.H"
 #include "calculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,13 +60,6 @@ class isVolMesh<fvMesh>
 :
     public std::true_type
 {};
-
-template<>
-inline tmp<VolField<scalar>>
-GeometricField<scalar, fvMesh>::component
-(
-    const direction
-) const;
 
 template<>
 template<template<class> class PrimitiveField>

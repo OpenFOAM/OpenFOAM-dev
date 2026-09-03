@@ -35,36 +35,19 @@ SourceFiles
 #ifndef symmTensorField_H
 #define symmTensorField_H
 
-#include "scalarField.H"
 #include "vectorField.H"
-#include "sphericalTensor.H"
-#include "symmTensor.H"
-#include "tensor.H"
-
-#define TEMPLATE
-#include "FieldFunctionsM.H"
+#include "tensorExpressions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 typedef Field<symmTensor> symmTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-UNARY_FUNCTION(symmTensor, vector, sqr)
-UNARY_FUNCTION(symmTensor, symmTensor, innerSqr)
-
-UNARY_FUNCTION(scalar, symmTensor, tr)
-UNARY_FUNCTION(sphericalTensor, symmTensor, sph)
-UNARY_FUNCTION(symmTensor, symmTensor, symm)
-UNARY_FUNCTION(symmTensor, symmTensor, twoSymm)
-UNARY_FUNCTION(symmTensor, symmTensor, dev)
-UNARY_FUNCTION(symmTensor, symmTensor, dev2)
-UNARY_FUNCTION(scalar, symmTensor, det)
-UNARY_FUNCTION(symmTensor, symmTensor, cof)
-UNARY_FUNCTION(symmTensor, symmTensor, inv)
 
 void inv
 (
@@ -91,22 +74,9 @@ tmp<symmTensorField> inv
     const Vector<label>& solutionD
 );
 
-
-// * * * * * * * * * * * * * * * global operators  * * * * * * * * * * * * * //
-
-UNARY_OPERATOR(vector, symmTensor, *, hdual)
-
-BINARY_OPERATOR(tensor, symmTensor, symmTensor, &, dot)
-BINARY_TYPE_OPERATOR(tensor, symmTensor, symmTensor, &, dot)
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "undefFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

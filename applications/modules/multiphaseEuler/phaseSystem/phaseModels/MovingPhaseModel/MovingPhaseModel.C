@@ -267,11 +267,11 @@ Foam::MovingPhaseModel<BasePhaseModel>::~MovingPhaseModel()
 template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correctContinuityError
 (
-    const volScalarField& source
+    const volInternalScalarField& source
 )
 {
     volScalarField& rho = this->rho();
-    continuityError_ = fvi::ddt(*this, rho) + fvi::div(alphaRhoPhi_) - source();
+    continuityError_ = fvi::ddt(*this, rho) + fvi::div(alphaRhoPhi_) - source;
 }
 
 
@@ -563,7 +563,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::K() const
 
 
 template<class BasePhaseModel>
-const Foam::autoPtr<Foam::volScalarField>&
+const Foam::autoPtr<Foam::volInternalScalarField>&
 Foam::MovingPhaseModel<BasePhaseModel>::divU() const
 {
     return divU_;
@@ -571,7 +571,10 @@ Foam::MovingPhaseModel<BasePhaseModel>::divU() const
 
 
 template<class BasePhaseModel>
-void Foam::MovingPhaseModel<BasePhaseModel>::divU(tmp<volScalarField> divU)
+void Foam::MovingPhaseModel<BasePhaseModel>::divU
+(
+    tmp<volInternalScalarField> divU
+)
 {
     if (!divU_.valid())
     {

@@ -220,7 +220,7 @@ bool Foam::functionObjects::scalarTransport::execute()
         );
 
     // Set under-relaxation coeff
-    scalar relaxCoeff = 0.0;
+    scalar relaxCoeff = 0;
     if (mesh_.solution().relaxEquation(solverField_))
     {
         relaxCoeff = mesh_.solution().equationRelaxationFactor(solverField_);
@@ -486,7 +486,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
     }
 
     // Set the time blending factor, 1 for Euler
-    scalar cnCoeff = 1.0/(1.0 + ocCoeff);
+    scalar cnCoeff = 1/(1 + ocCoeff);
 
     tmp<surfaceScalarField> tphiCN(phi);
 
@@ -496,7 +496,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         tphiCN = surfaceScalarField::New
         (
             "phiCN",
-            cnCoeff*phi + (1.0 - cnCoeff)*phi.oldTime()
+            cnCoeff*phi + (1 - cnCoeff)*phi.oldTime()
         );
     }
 
@@ -509,7 +509,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         {
             const volInternalScalarField Co
             (
-                (0.5*time_.deltaT())*fvi::surfaceSum(mag(phi))/mesh_.V()
+                (scalar(0.5)*time_.deltaT())*fvi::surfaceSum(mag(phi))/mesh_.V()
             );
 
             const surfaceScalarField cnBDCoeff
@@ -525,7 +525,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
                 )
             );
 
-            const surfaceScalarField phiCN0((1.0 - cnBDCoeff)*phi.oldTime());
+            const surfaceScalarField phiCN0((1 - cnBDCoeff)*phi.oldTime());
 
             tsPhiCN0 = fv::gaussConvectionScheme<scalar>
             (
@@ -603,7 +603,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             fvc::flux
             (
                 tphiCN(),
-                (cnCoeff*s_ + (1.0 - cnCoeff)*s_.oldTime())(),
+                eval(cnCoeff*s_ + (1 - cnCoeff)*s_.oldTime())(),
                 mesh_.schemes().div(divScheme)
             )
         );

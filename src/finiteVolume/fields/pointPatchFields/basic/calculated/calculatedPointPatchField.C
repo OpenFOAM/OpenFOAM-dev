@@ -83,40 +83,4 @@ Foam::calculatedPointPatchField<Type>::calculatedPointPatchField
 {}
 
 
-template<class Type>
-template<class Type2>
-Foam::autoPtr<Foam::pointPatchField<Type>>
-Foam::pointPatchField<Type>::NewCalculatedType
-(
-    const pointPatchField<Type2>& pf
-)
-{
-    typename pointPatchConstructorTable::iterator patchTypeCstrIter =
-        pointPatchConstructorTablePtr_->find(pf.patch().type());
-
-    if (patchTypeCstrIter != pointPatchConstructorTablePtr_->end())
-    {
-        return autoPtr<pointPatchField<Type>>
-        (
-            patchTypeCstrIter()
-            (
-                pf.patch(),
-                Field<Type>::null()
-            )
-        );
-    }
-    else
-    {
-        return autoPtr<pointPatchField<Type>>
-        (
-            new calculatedPointPatchField<Type>
-            (
-                pf.patch(),
-                Field<Type>::null()
-            )
-        );
-    }
-}
-
-
 // ************************************************************************* //

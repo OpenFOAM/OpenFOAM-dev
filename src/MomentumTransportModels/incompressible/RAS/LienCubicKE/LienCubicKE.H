@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,8 @@ protected:
     // Protected Member Functions
 
         tmp<volScalarField> fMu() const;
-        tmp<volScalarField> f2() const;
-        tmp<volScalarField> E(const volScalarField& f2) const;
+        tmp<volInternalScalarField> f2() const;
+        tmp<volInternalScalarField> E(const volInternalScalarField& f2) const;
 
         //- Bound epsilon
         void boundEpsilon();

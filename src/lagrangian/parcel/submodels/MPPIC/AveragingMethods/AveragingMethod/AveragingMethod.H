@@ -38,7 +38,6 @@ SourceFiles
 
 #include "barycentric.H"
 #include "tetIndices.H"
-#include "FieldField.H"
 #include "fvMesh.H"
 #include "runTimeSelectionTables.H"
 

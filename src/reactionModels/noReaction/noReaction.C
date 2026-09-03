@@ -88,10 +88,10 @@ Foam::reactionModels::noReaction::R(volScalarField& Y) const
 }
 
 
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::reactionModels::noReaction::Qdot() const
 {
-    return volScalarField::New
+    return volInternalScalarField::New
     (
         this->thermo().phasePropertyName(typedName("Qdot")),
         this->mesh(),

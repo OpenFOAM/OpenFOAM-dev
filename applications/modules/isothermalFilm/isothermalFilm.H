@@ -185,14 +185,20 @@ private:
         //- Constrain a field such that the flow
         //  is in the plane of the film.
         //  This involves setting the flux on the top and bottom patches to 0
-        template<class FieldType>
-        tmp<FieldType> constrainedField(const FieldType& field) const;
+        // template<class FieldType>
+        // tmp<FieldType> constrainedField(const FieldType& field) const;
 
         //- Constrain a field such that the flow
         //  is in the plane of the film.
         //  This involves setting the flux on the top and bottom patches to 0
         template<class FieldType>
         tmp<FieldType> constrainedField(const tmp<FieldType>& tfield) const;
+
+        template<class Expression, class = EnableIfExpressionable<Expression>>
+        inline auto constrainedField(const Expression& e) const
+        {
+            return constrainedField(eval(e));
+        }
 
         //- Constrain buoyancy and surface tension fluxes
         //  for fixed flux boundary conditions

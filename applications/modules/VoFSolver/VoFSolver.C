@@ -54,11 +54,11 @@ void Foam::solvers::VoFSolver::setrAU(const fvVectorMatrix& UEqn)
 {
     if (rAU.valid())
     {
-        rAU() = 1.0/UEqn.A();
+        rAU() = 1/UEqn.A();
     }
     else
     {
-        rAU = (1.0/UEqn.A()).ptr();
+        rAU = eval(1/UEqn.A()).ptr();
     }
 }
 

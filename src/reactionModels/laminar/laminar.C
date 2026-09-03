@@ -150,7 +150,8 @@ Foam::reactionModels::laminar::R(volScalarField& Y) const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::reactionModels::laminar::Qdot() const
+Foam::tmp<Foam::volInternalScalarField>
+Foam::reactionModels::laminar::Qdot() const
 {
     return chemistryPtr_->Qdot();
 }

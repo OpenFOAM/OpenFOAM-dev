@@ -45,9 +45,14 @@ struct Expressionable<pointPatchField<Type>>
 //  actually provide an implementation. This just facilitates generation of the
 //  identity value for reduction.
 template<class Type>
-struct Operate<pointPatchField<Type>, Arguments<>>
+struct Operate<pointPatchField<Type>, Arguments<Base>>
 {
     using type = const Field<Type>&;
+
+    static type access(const pointPatchField<Type>& f, const Base&)
+    {
+        return static_cast<type>(f.primitiveField());
+    }
 };
 
 //- Define the types returned by pointPatchField expressions

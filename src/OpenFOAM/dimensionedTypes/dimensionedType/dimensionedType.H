@@ -246,15 +246,6 @@ void writeEntry(Ostream& os, const dimensioned<Type>& dt);
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-template<class Type, direction r>
-dimensioned<typename powProduct<Type, r>::type>
-pow
-(
-    const dimensioned<Type>&,
-    typename powProduct<Type, r>::type
-  = pTraits<typename powProduct<Type, r>::type>::zero
-);
-
 template<class Type>
 dimensioned<typename outerProduct<Type, Type>::type>
 sqr(const dimensioned<Type>&);

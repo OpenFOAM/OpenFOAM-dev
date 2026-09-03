@@ -157,7 +157,7 @@ Foam::diameterModels::populationBalance::Av() const
         sumFiAbyV += popBal.f(i)*popBal.a(i)/popBal.v(i);
     }
 
-    return phase()*tsumFiAbyV;
+    return phase().alpha()*tsumFiAbyV;
 }
 
 

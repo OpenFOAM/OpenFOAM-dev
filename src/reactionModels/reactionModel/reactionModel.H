@@ -167,7 +167,7 @@ public:
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const = 0;
 
         //- Heat release rate [kg/m/s^3]
-        virtual tmp<volScalarField> Qdot() const = 0;
+        virtual tmp<volInternalScalarField> Qdot() const = 0;
 
         //- Update properties from given dictionary
         virtual bool read();

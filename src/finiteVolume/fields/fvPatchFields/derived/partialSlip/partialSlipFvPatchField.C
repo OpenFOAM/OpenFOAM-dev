@@ -168,7 +168,7 @@ Foam::partialSlipFvPatchField<Type>::snGradTransformDiag() const
        *transformMask
         (
             pTraits<Type>::zero,
-            pow<vector, pTraits<Type>::rank>(diag)
+            pow<pTraits<Type>::rank>(diag)
         );
 }
 

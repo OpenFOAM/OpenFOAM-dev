@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::swarmCorrections::TomiyamaSwarm::~TomiyamaSwarm()
 Foam::tmp<Foam::volScalarField>
 Foam::swarmCorrections::TomiyamaSwarm::Cs() const
 {
-    return pow(max(interface_.continuous(), residualAlpha_), 3 - 2*l_);
+    return pow(max(interface_.continuous().alpha(), residualAlpha_), 3 - 2*l_);
 }
 
 

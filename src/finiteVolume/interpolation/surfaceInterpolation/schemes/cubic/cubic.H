@@ -38,6 +38,7 @@ SourceFiles
 
 #include "linear.H"
 #include "gradScheme.H"
+#include "GeometricVectorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

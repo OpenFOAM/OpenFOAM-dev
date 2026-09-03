@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ bool Foam::functionObjects::Lambda2::calc()
         store
         (
             resultName_,
-           -eigenValues(SSplusWW)().component(vector::Y)
+           -component(eigenValues(SSplusWW), vector::Y)
         );
 
         return true;

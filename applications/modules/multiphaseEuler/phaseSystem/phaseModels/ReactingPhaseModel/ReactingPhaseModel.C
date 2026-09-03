@@ -87,7 +87,7 @@ Foam::ReactingPhaseModel<BasePhaseModel>::R(volScalarField& Yi) const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+Foam::tmp<Foam::volInternalScalarField>
 Foam::ReactingPhaseModel<BasePhaseModel>::Qdot() const
 {
     return reaction_->Qdot();

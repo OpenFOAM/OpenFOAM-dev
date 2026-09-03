@@ -146,7 +146,7 @@ void Foam::fv::acceleration::addSup
     fvMatrix<vector>& eqn
 ) const
 {
-    add((alpha*rho)(), eqn);
+    add(eval(alpha*rho)(), eqn);
 }
 
 

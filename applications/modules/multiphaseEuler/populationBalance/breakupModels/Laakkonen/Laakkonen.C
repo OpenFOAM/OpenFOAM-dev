@@ -73,7 +73,7 @@ Foam::populationBalance::breakupModels::Laakkonen::rate(const label i) const
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
     const volInternalScalarField& epsilonc = tepsilonc();
     tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
-    const volInternalScalarField muc = tmu();
+    const volInternalScalarField& muc = tmu();
 
     return
         C1_

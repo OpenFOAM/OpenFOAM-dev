@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ bool Foam::functionObjects::phaseMap::write()
 
     forAll(fluid.phases(), i)
     {
-        phaseMap += level*fluid.phases()[i];
+        phaseMap += level*fluid.phases()[i].alpha();
         level += 1;
     }
 

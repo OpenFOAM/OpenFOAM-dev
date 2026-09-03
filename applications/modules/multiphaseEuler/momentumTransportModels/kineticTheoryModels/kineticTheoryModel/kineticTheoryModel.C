@@ -513,11 +513,11 @@ void Foam::RASModels::kineticTheoryModel::correct()
           - 0.5*fvm::Sp(fvi::ddt(alpha, rho) + fvi::div(alphaRhoPhi), Theta_)
           - fvm::laplacian(kappa_, Theta_, "laplacian(kappa,Theta)")
          ==
-          - fvm::SuSp((PsCoeff*I) && gradU, Theta_)
-          + (tau && gradU)
-          + fvm::Sp(-gammaCoeff, Theta_)
-          + fvm::Sp(-J1, Theta_)
-          + fvm::Sp(J2/(Theta_ + ThetaSmall), Theta_)
+          - fvm::SuSp((PsCoeff()*I) && gradU(), Theta_)
+          + (tau() && gradU())
+          + fvm::Sp(-gammaCoeff(), Theta_)
+          + fvm::Sp(-J1(), Theta_)
+          + fvm::Sp(J2()/(Theta_() + ThetaSmall), Theta_)
           + fvModels.source(alpha, rho, Theta_)
         );
 
@@ -580,8 +580,11 @@ void Foam::RASModels::kineticTheoryModel::correct()
         kappa_ = conductivityModel_->kappa(alpha, Theta_, gs0_, rho, da, e_);
     }
 
-    Theta_.max(0);
-    Theta_.min(100);
+    Theta_.bound
+    (
+        dimensionedScalar(Theta_.dimensions(), 0),
+        dimensionedScalar(Theta_.dimensions(), 100)
+    );
 
     {
         // particle viscosity (Table 3.2, p.47)
@@ -604,7 +607,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         );
 
         // Limit viscosity
-        nut_.min(maxNut_);
+        nut_.boundUpper(maxNut_);
 
         nuFric_ = min
         (
