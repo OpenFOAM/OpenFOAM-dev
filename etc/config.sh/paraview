@@ -30,7 +30,7 @@
 #
 #------------------------------------------------------------------------------
 
-# Clean the PATH
+# Clean the path
 cleaned=$("$WM_PROJECT_DIR"/bin/foamCleanPath "$PATH" \
         "/opt/paraviewopenfoam \
          $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/cmake- \
@@ -53,56 +53,18 @@ none)
 
 system)
 
-    # Look for a paraview installation
-    if pvserverExe=$(which pvdataserver 2> /dev/null)
+    if which pvdataserver > /dev/null 2>&1
     then
-        paraviewBinDir=$(dirname $pvserverExe)
-        paraviewBinDir=$(cd $paraviewBinDir && pwd -P)
-    fi
-
-    # Set the environment
-    if [ -d "$paraviewBinDir" ]
-    then
-        export ParaView_DIR=$(dirname $paraviewBinDir)
-
+        # Determine the version
         export ParaView_VERSION=$(unset LD_LIBRARY_PATH && \
-                                  $pvserverExe --version 2> /dev/null | \
+                                  pvdataserver --version 2> /dev/null | \
                                   awk '{print $NF}')
         export ParaView_MAJOR=${ParaView_VERSION%.*}
-
-        # Set the ParaView installation
-        export ParaView_LIB_DIR=$(unset LD_LIBRARY_PATH && ldd $pvserverExe | \
-                                  grep -o "/[^ ]\+/libvtk.*-pv$ParaView_MAJOR\.so[^ ]*" | \
-                                  head -n 1 | xargs dirname 2> /dev/null)
-        export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-$ParaView_MAJOR
-
-        # Set the VTK installation, if it is not bundled inside ParaView
-        if [ ! -f $ParaView_INCLUDE_DIR/vtkMultiBlockDataSetAlgorithm.h ]
-        then
-            libvtkCommonCore=$(unset LD_LIBRARY_PATH && ldd $pvserverExe | \
-                               grep -o "/[^ \t]\+libvtkCommonCore[^ \t]\+" | \
-                               xargs readlink -f)
-            export VTK_LIB_DIR=$(dirname $libvtkCommonCore 2> /dev/null)
-            export VTK_INCLUDE_DIR=$ParaView_DIR/include/vtk-${libvtkCommonCore#*.so.}
-            unset libvtkCommonCore
-        else
-            export VTK_LIB_DIR=$ParaView_LIB_DIR
-            export VTK_INCLUDE_DIR=$ParaView_INCLUDE_DIR
-        fi
-
-        # Add to the library paths
-        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$LD_LIBRARY_PATH
-        if [ $ParaView_LIB_DIR != $VTK_LIB_DIR ]
-        then
-            export LD_LIBRARY_PATH=$VTK_LIB_DIR:$LD_LIBRARY_PATH
-        fi
 
         # Set the plugin directory
         export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
         export LD_LIBRARY_PATH=$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
     fi
-
-    unset pvserverExe paraviewBinDir vtkMajor vtkLibDir vtkIncludeDir
     ;;
 
 paraviewopenfoam)
@@ -117,17 +79,12 @@ paraviewopenfoam)
     # Set the environment
     if [ -d "$paraviewDir" ]
     then
-        export ParaView_DIR=$paraviewDir
-        export ParaView_LIB_DIR=$(echo "$ParaView_DIR"/lib* | tr ' ' ':')
-        export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-$ParaView_MAJOR
+        # Add to the path
+        export PATH=$paraviewDir/bin:$PATH
+
+        # Set the plugin directory
         export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
-
-        export VTK_LIB_DIR=$ParaView_LIB_DIR
-        export VTK_INCLUDE_DIR=$ParaView_INCLUDE_DIR
-
-        # Add to the path and the library path
-        export PATH=$ParaView_DIR/bin:$PATH
-        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
     fi
 
     unset paraviewDir
@@ -146,30 +103,29 @@ OpenFOAM | ThirdParty)
     # Set the environment
     if [ -d "$paraviewDir" ]
     then
-        export ParaView_DIR=$paraviewDir
-        export ParaView_LIB_DIR=$(echo "$ParaView_DIR"/lib* | tr ' ' ':')
+        # Determine the version
         export ParaView_VERSION=${paraviewDir##*ParaView-}
         export ParaView_MAJOR=${ParaView_VERSION%.*}
-        export ParaView_INCLUDE_DIR=$paraviewDir/include/paraview-$ParaView_MAJOR
+
+        # Add to the path
+        export PATH=$paraviewDir/bin:$PATH
+
+        # Set the plugin directory
         export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
-
-        export VTK_LIB_DIR=$ParaView_LIB_DIR
-        export VTK_INCLUDE_DIR=$ParaView_INCLUDE_DIR
-
-        # Add to the path and the library path
-        export PATH=$ParaView_DIR/bin:$PATH
-        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
 
         # Add in python libraries if required
-        paraviewPython=$ParaView_DIR/Utilities/VTKPythonWrapping
+        paraviewPython=$paraviewDir/Utilities/VTKPythonWrapping
         if [ -r "$paraviewPython" ]
         then
+            paraviewLibDir=$(echo "$paraviewDir"/lib* | tr ' ' ':')
             if [ "$PYTHONPATH" ]
             then
-                export PYTHONPATH=$PYTHONPATH:$paraviewPython:$ParaView_LIB_DIR
+                export PYTHONPATH=$PYTHONPATH:$paraviewPython:$paraviewLibDir
             else
-                export PYTHONPATH=$paraviewPython:$ParaView_LIB_DIR
+                export PYTHONPATH=$paraviewPython:$paraviewLibDir
             fi
+            unset paraviewLibDir
         fi
         unset paraviewPython
     fi
@@ -180,18 +136,22 @@ OpenFOAM | ThirdParty)
 esac
 
 # Report
-if [ "$FOAM_VERBOSE" ] && [ "$PS1" ] && [ -d "$ParaView_DIR" ]
+if [ "$FOAM_VERBOSE" ] && [ "$PS1" ] && [ "$ParaView_TYPE" != "none" ]
 then
-    echo "Using paraview"
-    echo "    ParaView_DIR         : $ParaView_DIR"
-    echo "    ParaView_LIB_DIR     : $ParaView_LIB_DIR"
-    echo "    ParaView_INCLUDE_DIR : $ParaView_INCLUDE_DIR"
-    if [ "$ParaView_TYPE" == "system" ]
+    if [ -z "$PV_PLUGIN_PATH" ]
     then
-        echo "    VTK_LIB_DIR          : $VTK_LIB_DIR"
-        echo "    VTK_INCLUDE_DIR      : $VTK_INCLUDE_DIR"
+        echo "Warning: ParaView not found"
+    else
+        if which paraview > /dev/null 2>&1
+        then
+            echo "Using ParaView: $(which paraview)"
+        else
+            echo "Using ParaView"
+        fi
+        echo "    ParaView_VERSION = $ParaView_VERSION"
+        echo "    ParaView_MAJOR = $ParaView_MAJOR"
+        echo "    PV_PLUGIN_PATH = $PV_PLUGIN_PATH"
     fi
-    echo "    PV_PLUGIN_PATH       : $PV_PLUGIN_PATH"
 fi
 
 unset cleaned

@@ -41,9 +41,6 @@ set foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR $HOME/$WM_PROJECT/$LOGNAME 
 if ( $?WM_PROJECT_SITE ) then
    set foamOldDirs="$foamOldDirs $WM_PROJECT_SITE"
 endif
-if ( $?ParaView_DIR ) then
-   set foamOldDirs="$foamOldDirs $ParaView_DIR"
-endif
 
 
 #------------------------------------------------------------------------------
@@ -146,13 +143,8 @@ unsetenv ZOLTAN_VERSION
 unsetenv ZOLTAN_INCLUDE_DIR
 unsetenv ZOLTAN_LIB_DIR
 unsetenv ParaView_TYPE
-unsetenv ParaView_DIR
-unsetenv ParaView_INCLUDE_DIR
-unsetenv ParaView_LIB_DIR
 unsetenv ParaView_MAJOR
 unsetenv ParaView_VERSION
-unsetenv VTK_INCLUDE_DIR
-unsetenv VTK_LIB_DIR
 unsetenv PV_PLUGIN_PATH
 
 

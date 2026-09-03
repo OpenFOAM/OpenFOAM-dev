@@ -12,14 +12,8 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/Lagrangian/Lagrangian/lnInclude \
     -I../PVFoamReader/vtk \
-    -I$(VTK_INCLUDE_DIR) \
-    -I$(ParaView_INCLUDE_DIR) \
-    -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
-    $(shell \
-        test -f $(VTK_INCLUDE_DIR)/vtkPolyhedron.h && \
-        echo "-DHAS_VTK_POLYHEDRON" || \
-        echo "-UHAS_VTK_POLYHEDRON" \
-    )
+    $(ParaView_INCLUDES) \
+    $(ParaView_DEFINES)
 
 LIB_LIBS = \
     -lfiniteVolume \

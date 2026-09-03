@@ -36,7 +36,7 @@ foamClean=$WM_PROJECT_DIR/bin/foamCleanPath
 # The old dirs to be cleaned from the environment variables
 foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR \
     $HOME/$WM_PROJECT/$USER $FOAM_USER_APPBIN $FOAM_USER_LIBBIN \
-    $WM_PROJECT_SITE $FOAM_SITE_APPBIN $FOAM_SITE_LIBBIN $ParaView_DIR"
+    $WM_PROJECT_SITE $FOAM_SITE_APPBIN $FOAM_SITE_LIBBIN"
 
 #------------------------------------------------------------------------------
 # Unset WM_* environment variables
@@ -142,13 +142,8 @@ unset ZOLTAN_VERSION
 unset ZOLTAN_INCLUDE_DIR
 unset ZOLTAN_LIB_DIR
 unset ParaView_TYPE
-unset ParaView_DIR
-unset ParaView_INCLUDE_DIR
-unset ParaView_LIB_DIR
 unset ParaView_MAJOR
 unset ParaView_VERSION
-unset VTK_INCLUDE_DIR
-unset VTK_LIB_DIR
 unset PV_PLUGIN_PATH
 
 

@@ -8,9 +8,8 @@ EXE_INC = \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/mesh/blockMesh/lnInclude \
     -I../PVblockMeshReader/vtk \
-    -I$(VTK_INCLUDE_DIR) \
-    -I$(ParaView_INCLUDE_DIR) \
-    -I$(ParaView_INCLUDE_DIR)/vtkkwiml
+    $(ParaView_INCLUDES) \
+    $(ParaView_DEFINES)
 
 LIB_LIBS = \
     -lmeshTools \

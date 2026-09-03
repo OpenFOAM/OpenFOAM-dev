@@ -4,9 +4,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-if [ ! -d "$ParaView_DIR" ]
+if [ "$ParaView_TYPE" = "none" ]
 then
-    echo "    Warning: ParaView not found in $ParaView_DIR. Skipping."
+    exit 0
+fi
+
+if [ -z "$PV_PLUGIN_PATH" ]
+then
+    echo "    Warning: ParaView not found. Not building PVReaders."
     exit 0
 fi
 
@@ -14,9 +19,37 @@ fi
 [ -n "$WM_CC" ] && export CC="$WM_CC"
 [ -n "$WM_CXX" ] && export CXX="$WM_CXX"
 
+# Configure (but no need to build) the dummy project
+(
+    cd PVdummy
+    mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+    cd Make/$WM_OPTIONS
+    touch .cpp
+    cmake ../..
+)
+
+# Use the makefiles from the project to set the definitions and include paths
+# for the ParaView and VTK-dependent OpenFOAM libraries
+export ParaView_DEFINES=$(
+    cd PVdummy/Make/$WM_OPTIONS && \
+    make --file=CMakeFiles/PVdummy.dir/build.make --eval="print-variable:
+	@echo \$(CXX_DEFINES)")
+export ParaView_INCLUDES=$(
+    cd PVdummy/Make/$WM_OPTIONS && \
+    make --file=CMakeFiles/PVdummy.dir/build.make --eval="print-variable:
+	@echo \$(CXX_INCLUDES)")
+
+# Test for polyhedron support and set flags accordingly
+echo \#include \"vtkPolyhedron.h\" | \
+    "$WM_CC" $ParaView_INCLUDES $ParaView_DEFINES -xc++ -E - > /dev/null 2>&1 && \
+    export ParaView_DEFINES="$ParaView_DEFINES -DHAS_VTK_POLYHEDRON" || \
+    export ParaView_DEFINES="$ParaView_DEFINES -UHAS_VTK_POLYHEDRON"
+
+# Build the ParaView and VTK-dependent OpenFOAM libraries
 wmake $targetType vtkPVblockMesh
 wmake $targetType vtkPVFoam
 
+# Build the ParaView module libraries
 if [ "$targetType" != "objects" ]
 then
     if $WM_PROJECT_DIR/bin/tools/foamVersionCompare $ParaView_VERSION ge 5.7.0
@@ -44,9 +77,5 @@ then
         )
     fi
 fi
-
-# Remove the old $FOAM_LIBBIN/libvtkPV*.so libraries, so that they do not get
-# linked in preference to the new $PV_PLUGIN_PATH/libvtkPV*.so libraries
-rm -f $FOAM_LIBBIN/libvtkPV*
 
 #------------------------------------------------------------------------------
