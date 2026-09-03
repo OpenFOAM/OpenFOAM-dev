@@ -22,13 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::continuous
+    Foam::blendingMethods::displaced
 
 Description
-    Blending method for the case in which the continuous phase is always the
-    same. E.g., for an air-particles flow, the air phase is always continuous.
-    Applies only the dispersed (i.e., phaseA_dispersedIn_phaseB, where phaseB
-    is the identified continuous phase) model.
+    Blending method for the case in which the models relating to displacement
+    by a third phase should always be used. This is unlikely to be used on its
+    own. It is intended that this be used within another blending method which
+    applies it to the subset of the mesh in which the third phase is present.
+
+    This model requires a sub-blending method to be specified to determine how
+    the different displaced models (i.e., A_dispersedIn_B_displacedBy_C,
+    B_dispersedIn_A_displacedBy_C, A_segregatedWith_B_displacedBy_C, and
+    A_B_displacedBy_C) are to be combined. 'none' is a valid and likely choice
+    for this sub-blending model, and will result in only the default/general
+    model (i.e., A_B_displacedBy_C) being used.
 
     Example usage, in constant/phaseProperties:
     \verbatim
@@ -36,19 +43,48 @@ Description
     {
         default
         {
-            type            continuous;
-            phase           air;
+            type            zonal;
+
+            // Use linear blending outside the 'bed' zone
+            default
+            {
+                type            linear;
+                displaced       no;
+                minFullyContinuousAlpha.air 0.8;
+                minPartlyContinuousAlpha.air 0.5;
+                minFullyContinuousAlpha.water 0.8;
+                minPartlyContinuousAlpha.water 0.5;
+                minFullyContinuousAlpha.particles none;
+                minPartlyContinuousAlpha.particles none;
+                minFullyContinuousAlpha.bed none;
+                minPartlyContinuousAlpha.bed none;
+            }
+
+            // Use displaced blending inside the bed zone, and
+            // only apply the default/general displaced model
+            zones
+            {
+                bed
+                {
+                    type            displaced;
+                    phase           bed;
+                    blending
+                    {
+                        type            none;
+                    }
+                }
+            }
         }
     }
     \endverbatim
 
 SourceFiles
-    continuous.C
+    displaced.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef continuous_H
-#define continuous_H
+#ifndef displaced_H
+#define displaced_H
 
 #include "blendingMethod.H"
 
@@ -60,30 +96,22 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class continuous Declaration
+                           Class displaced Declaration
 \*---------------------------------------------------------------------------*/
 
-class continuous
+class displaced
 :
     public blendingMethod
 {
+protected:
+
     // Private Data
 
-        //- The continuous phase
-        const phaseModel& phase_;
+        //- The index of the displacing phase
+        const label phasei_;
 
-        //- Apply displaced models? The displaced model coefficient will be
-        //  calculated as one-minus the continuous coefficient calculated for
-        //  the two-phase sub-system.
-        const bool displaced_;
-
-        //- The index of the continuous phase in the interface, or -1 if the
-        //  interface does not contain the continuous phase
-        const label index_;
-
-        //- The index of the non-continuous phase in the interface, or -1 if
-        //  the interface does not contain the continuous phase
-        const label otherIndex_;
+        //- The sub-blending
+        autoPtr<blendingMethod> blending_;
 
 
 protected:
@@ -110,13 +138,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("continuous");
+    TypeName("displaced");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        continuous
+        displaced
         (
             const dictionary& dict,
             const phaseInterface& interface,
@@ -125,7 +153,7 @@ public:
 
 
     //- Destructor
-    ~continuous();
+    ~displaced();
 
 
     // Member Functions

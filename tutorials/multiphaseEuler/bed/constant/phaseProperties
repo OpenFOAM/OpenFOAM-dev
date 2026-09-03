@@ -68,17 +68,6 @@ blending
         minFullyContinuousAlpha.solid none;
         minPartlyContinuousAlpha.solid none;
     }
-
-    segregated
-    {
-        type            linear;
-        minFullyContinuousAlpha.air 0.8;
-        minPartlyContinuousAlpha.air 0.5;
-        minFullyContinuousAlpha.water 0.8;
-        minPartlyContinuousAlpha.water 0.5;
-        minFullyContinuousAlpha.solid none;
-        minPartlyContinuousAlpha.solid none;
-    }
 }
 
 surfaceTension

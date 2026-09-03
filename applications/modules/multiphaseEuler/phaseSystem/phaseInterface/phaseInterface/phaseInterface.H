@@ -339,6 +339,11 @@ public:
             //  this phaseInterface does not contain the given phase
             inline label index(const phaseModel& phase) const;
 
+            //- Return the index of the other phase relative to the given
+            //  phase. Generates a FatalError if this phaseInterface does not
+            //  contain the given phase
+            inline label otherIndex(const phaseModel& phase) const;
+
             //- Access the phase for the given index. Generates a FatalError if
             //  the index is not 0 or 1.
             inline const phaseModel& operator[](const label index) const;
@@ -398,6 +403,9 @@ public:
 
                 //- Return the current index
                 inline label index() const;
+
+                //- Return the other index
+                inline label otherIndex() const;
 
 
             // Member Operators

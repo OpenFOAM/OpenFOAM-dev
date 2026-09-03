@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,6 +144,15 @@ inline Foam::label Foam::phaseInterface::index(const phaseModel& phase) const
 }
 
 
+inline Foam::label Foam::phaseInterface::otherIndex
+(
+    const phaseModel& phase
+) const
+{
+    return 1 - index(phase);
+}
+
+
 inline const Foam::phaseModel& Foam::phaseInterface::operator[]
 (
     const label index
@@ -200,6 +209,12 @@ inline Foam::phaseInterface::const_iterator::const_iterator
 inline Foam::label Foam::phaseInterface::const_iterator::index() const
 {
     return index_;
+}
+
+
+inline Foam::label Foam::phaseInterface::const_iterator::otherIndex() const
+{
+    return 1 - index_;
 }
 
 

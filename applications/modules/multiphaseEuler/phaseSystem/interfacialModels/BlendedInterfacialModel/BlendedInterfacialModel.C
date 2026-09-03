@@ -180,6 +180,17 @@ void Foam::BlendedInterfacialModel<ModelType>::check() const
 
     // Warnings associated with gaps in the blending space
 
+    if (!can1In2 && !can2In1 && !canS && !modelGeneral_.valid())
+    {
+        WarningInFunction
+            << "Blending for " << ModelType::typeName << "s does not apply "
+            << "any configuration-specific modelling, but no general model "
+            << "was provided for " << phaseInterface(phase1, phase2).name()
+            << ". Consider adding a general model for these phases, or if no "
+            << "model is needed then add a \"none\" model to suppress this "
+            << "warning." << endl;
+    }
+
     if (can1In2 && !modelGeneral_.valid() && !model1DispersedIn2_.valid())
     {
         WarningInFunction
@@ -235,6 +246,10 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
 {
     typedef GeometricField<scalar, GeoMesh> scalarGeoField;
 
+    const bool can1In2 = blending_->canBeContinuous(1);
+    const bool can2In1 = blending_->canBeContinuous(0);
+    const bool canS = blending_->canSegregate();
+
     // Create a constant field
     auto constant = [&](const scalar k)
     {
@@ -252,9 +267,7 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
     if
     (
         model1DispersedIn2_.valid()
-     || model1SegregatedWith2_.valid()
      || blendedInterfacialModel::valid(models1DispersedIn2Displaced_)
-     || blendedInterfacialModel::valid(models1SegregatedWith2Displaced_)
     )
     {
         F1D2 =
@@ -266,9 +279,7 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
     if
     (
         model2DispersedIn1_.valid()
-     || model1SegregatedWith2_.valid()
      || blendedInterfacialModel::valid(models2DispersedIn1Displaced_)
-     || blendedInterfacialModel::valid(models1SegregatedWith2Displaced_)
     )
     {
         F2D1 =
@@ -280,17 +291,17 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
 
     // Construct non-displaced coefficients
     {
-        if (model1DispersedIn2_.valid())
+        if (can1In2 && model1DispersedIn2_.valid())
         {
             f1D2 = F1D2().clone();
         }
 
-        if (model2DispersedIn1_.valid())
+        if (can2In1 && model2DispersedIn1_.valid())
         {
             f2D1 = F2D1().clone();
         }
 
-        if (model1SegregatedWith2_.valid())
+        if (canS && model1SegregatedWith2_.valid())
         {
             fS = constant(1);
             if (f1D2.valid()) { fS.ref() -= f1D2(); }
@@ -304,23 +315,6 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
             if (f2D1.valid()) { fG.ref() -= f2D1(); }
             if (fS.valid()) { fG.ref() -= fS(); }
         }
-    }
-
-    // Get the displaced blending function
-    tmp<scalarGeoField> FD;
-    if
-    (
-        blendedInterfacialModel::valid(modelsGeneralDisplaced_)
-     || blendedInterfacialModel::valid(models1DispersedIn2Displaced_)
-     || blendedInterfacialModel::valid(models2DispersedIn1Displaced_)
-     || blendedInterfacialModel::valid(models1SegregatedWith2Displaced_)
-    )
-    {
-        FD =
-            blendedInterfacialModel::interpolate<scalarGeoField>
-            (
-                blending_->fDisplaced(alphas)
-            );
     }
 
     // Construct displaced coefficients
@@ -341,50 +335,28 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
 
             if (interface_.contains(phaseD)) continue;
 
-            // Weight the contribution of a dispersed model for this phase
-            // according to the phase fraction in the subset of phases that are
-            // not part of this interface. This seems like a reasonable
-            // assumption if a stochastic viewpoint is taken. However, it is
-            // possible that other forms may be desired in which case this
-            // could be abstracted and controlled by the blending method.
-            tmp<scalarGeoField> alpha;
-            if
-            (
-                models1DispersedIn2Displaced_.set(phasei)
-             || models2DispersedIn1Displaced_.set(phasei)
-             || models1SegregatedWith2Displaced_.set(phasei)
-             || modelsGeneralDisplaced_.set(phasei)
-            )
-            {
-                alpha =
-                    blendedInterfacialModel::interpolate<scalarGeoField>
-                    (
-                        alphas[phasei]
-                       /max
-                        (
-                            1
-                          - alphas[interface_.phase1().index()]
-                          - alphas[interface_.phase2().index()],
-                            phaseD.residualAlpha()
-                        )
-                    );
-            }
+            // Get the displaced blending functions
+            tmp<scalarGeoField> FD =
+                blendedInterfacialModel::interpolate<scalarGeoField>
+                (
+                    blending_->f12DisplacedBy3(alphas, phasei)
+                );
 
-            if (models1DispersedIn2Displaced_.set(phasei))
+            if (can1In2 && models1DispersedIn2Displaced_.set(phasei))
             {
-                f1D2D.set(phasei, alpha()*FD()*F1D2());
+                f1D2D.set(phasei, FD()*F1D2());
                 fDSum.ref() += f1D2D[phasei];
             }
 
-            if (models2DispersedIn1Displaced_.set(phasei))
+            if (can2In1 && models2DispersedIn1Displaced_.set(phasei))
             {
-                f2D1D.set(phasei, alpha()*FD()*F2D1());
+                f2D1D.set(phasei, FD()*F2D1());
                 fDSum.ref() += f2D1D[phasei];
             }
 
-            if (models1SegregatedWith2Displaced_.set(phasei))
+            if (canS && models1SegregatedWith2Displaced_.set(phasei))
             {
-                fSD.set(phasei, alpha()*FD());
+                fSD.set(phasei, FD());
                 if (f1D2D.set(phasei)) fSD[phasei] -= f1D2D[phasei];
                 if (f2D1D.set(phasei)) fSD[phasei] -= f2D1D[phasei];
                 fDSum.ref() += fSD[phasei];
@@ -392,7 +364,7 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
 
             if (modelsGeneralDisplaced_.set(phasei))
             {
-                fGD.set(phasei, alpha()*FD());
+                fGD.set(phasei, FD());
                 if (f1D2D.set(phasei)) fGD[phasei] -= f1D2D[phasei];
                 if (f2D1D.set(phasei)) fGD[phasei] -= f2D1D[phasei];
                 if (fSD.set(phasei)) fGD[phasei] -= fSD[phasei];
@@ -401,13 +373,99 @@ void Foam::BlendedInterfacialModel<ModelType>::calculateBlendingCoeffs
         }
     }
 
-    // Remove the displaced part from the non-displaced coefficients
+    // Remove the displaced part from the non-displaced coefficients. Maintain
+    // the model hierarchy by reducing the coefficients of less specialised
+    // models first.
     if (fDSum.valid())
     {
-        if (f1D2.valid()) f1D2.ref() *= 1 - fDSum();
-        if (f2D1.valid()) f2D1.ref() *= 1 - fDSum();
-        if (fS.valid()) fS.ref() *= 1 - fDSum();
-        if (fG.valid()) fG.ref() *= 1 - fDSum();
+        auto remove = [&fDSum](tmp<scalarGeoField>& f)
+        {
+            tmp<scalarGeoField> fRemove = min(f(), fDSum());
+            f.ref() -= fRemove();
+            fDSum.ref() -= fRemove();
+        };
+        if (fG.valid()) remove(fG);
+        if (fS.valid()) remove(fS);
+        if (!fG.valid() && !fS.valid())
+        {
+            tmp<scalarGeoField> f_ = constant(1);
+            if (f1D2.valid()) f_.ref() -= f1D2();
+            if (f2D1.valid()) f_.ref() -= f2D1();
+            remove(f_);
+        }
+        if (f1D2.valid() && !f2D1.valid()) remove(f1D2);
+        if (!f1D2.valid() && f2D1.valid()) remove(f2D1);
+        if (f2D1.valid() && f1D2.valid())
+        {
+            tmp<scalarGeoField> f_D_ = f1D2() + f2D1(), f_D_0 = f_D_().clone();
+            remove(f_D_);
+            tmp<scalarGeoField> factor = f_D_/max(f_D_0, vSmall);
+            f1D2.ref() *= factor();
+            f2D1.ref() *= factor();
+        }
+    }
+}
+
+
+template<class ModelType>
+void Foam::BlendedInterfacialModel<ModelType>::writeBlendingCoefficients() const
+{
+    check();
+
+    const phaseSystem& fluid = interface_.fluid();
+    const label nPhases = fluid.phases().size();
+
+    // Get the blending coefficients
+    tmp<volScalarField> fG, f1D2, f2D1, fS;
+    PtrList<volScalarField> fGD(nPhases);
+    PtrList<volScalarField> f1D2D(nPhases);
+    PtrList<volScalarField> f2D1D(nPhases);
+    PtrList<volScalarField> fSD(nPhases);
+    calculateBlendingCoeffs
+    (
+        fluid.phases()
+       .PtrList<phaseModel>::convert<const volScalarField>(),
+        fG, f1D2, f2D1, fS,
+        fGD, f1D2D, f2D1D, fSD
+    );
+
+    const word prefix(ModelType::typeName, ':', interface_.name(), ':');
+
+    Info<< "Writing blending coefficients" << endl;
+
+    auto write = []
+    (
+        const phaseInterface& interface,
+        const word& name,
+        volScalarField& f
+    )
+    {
+        f.rename(word(ModelType::typeName, ':', interface.name(), ':', name));
+        f.write();
+    };
+
+    if (fG.valid()) write(interface_, "fG", fG.ref());
+    if (f1D2.valid()) write(interface_, "f1D2", f1D2.ref());
+    if (f2D1.valid()) write(interface_, "f2D1", f2D1.ref());
+    if (fS.valid()) write(interface_, "fS", fS.ref());
+
+    forAll(fluid.phases(), phasei)
+    {
+        const phaseModel& phaseD = fluid.phases()[phasei];
+
+        if (interface_.contains(phaseD)) continue;
+
+        const displacedPhaseInterface interfaceD
+        (
+            interface_.phase1(),
+            interface_.phase2(),
+            phaseD
+        );
+
+        if (fGD.set(phasei)) write(interfaceD, "fG", fGD[phasei]);
+        if (f1D2D.set(phasei)) write(interfaceD, "f1D2", f1D2D[phasei]);
+        if (f2D1D.set(phasei)) write(interfaceD, "f2D1", f2D1D[phasei]);
+        if (fSD.set(phasei)) write(interfaceD, "fS", fSD[phasei]);
     }
 }
 
@@ -418,6 +476,8 @@ void Foam::BlendedInterfacialModel<ModelType>::postProcessBlendingCoefficients
     const word& format
 ) const
 {
+    check();
+
     using namespace constant::mathematical;
 
     const phaseSystem& fluid = interface_.fluid();
@@ -839,43 +899,44 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     );
 
     // Add the model contributions to the result
-    if (modelGeneral_.valid())
+    if (fG.valid() && modelGeneral_.valid())
     {
         x.ref() += fG*(modelGeneral_().*method)(args ...);
     }
-    if (model1DispersedIn2_.valid())
+    if (f1D2.valid() && model1DispersedIn2_.valid())
     {
         x.ref() += f1D2*(model1DispersedIn2_().*method)(args ...);
     }
-    if (model2DispersedIn1_.valid())
+    if (f2D1.valid() && model2DispersedIn1_.valid())
     {
         x.ref() += f2D1*(model2DispersedIn1_().*method)(args ...);
     }
-    if (model1SegregatedWith2_.valid())
+    if (fS.valid() && model1SegregatedWith2_.valid())
     {
         x.ref() += fS*(model1SegregatedWith2_().*method)(args ...);
     }
+
     forAll(interface_.fluid().phases(), phasei)
     {
-        if (modelsGeneralDisplaced_.set(phasei))
+        if (fGD.set(phasei) && modelsGeneralDisplaced_.set(phasei))
         {
             x.ref() +=
                 fGD[phasei]
                *(modelsGeneralDisplaced_[phasei].*method)(args ...);
         }
-        if (models1DispersedIn2Displaced_.set(phasei))
+        if (f1D2D.set(phasei) && models1DispersedIn2Displaced_.set(phasei))
         {
             x.ref() +=
                 f1D2D[phasei]
                *(models1DispersedIn2Displaced_[phasei].*method)(args ...);
         }
-        if (models2DispersedIn1Displaced_.set(phasei))
+        if (f2D1D.set(phasei) && models2DispersedIn1Displaced_.set(phasei))
         {
             x.ref() +=
                 f2D1D[phasei]
                *(models2DispersedIn1Displaced_[phasei].*method)(args ...);
         }
-        if (models1SegregatedWith2Displaced_.set(phasei))
+        if (fSD.set(phasei) && models1SegregatedWith2Displaced_.set(phasei))
         {
             x.ref() +=
                 fSD[phasei]
@@ -957,25 +1018,27 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
             }
         }
     };
-    if (modelGeneral_.valid())
+
+    if (fG.valid() && modelGeneral_.valid())
     {
         addToXs(fG, (modelGeneral_().*method)(args ...));
     }
-    if (model1DispersedIn2_.valid())
+    if (f1D2.valid() && model1DispersedIn2_.valid())
     {
         addToXs(f1D2, (model1DispersedIn2_().*method)(args ...));
     }
-    if (model2DispersedIn1_.valid())
+    if (f2D1.valid() && model2DispersedIn1_.valid())
     {
         addToXs(f2D1, (model2DispersedIn1_().*method)(args ...));
     }
-    if (model1SegregatedWith2_.valid())
+    if (fS.valid() && model1SegregatedWith2_.valid())
     {
         addToXs(fS, (model1SegregatedWith2_().*method)(args ...));
     }
+
     forAll(interface_.fluid().phases(), phasei)
     {
-        if (modelsGeneralDisplaced_.set(phasei))
+        if (fGD.set(phasei) && modelsGeneralDisplaced_.set(phasei))
         {
             addToXs
             (
@@ -983,7 +1046,7 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
                 (modelsGeneralDisplaced_[phasei].*method)(args ...)
             );
         }
-        if (models1DispersedIn2Displaced_.set(phasei))
+        if (f1D2D.set(phasei) && models1DispersedIn2Displaced_.set(phasei))
         {
             addToXs
             (
@@ -991,7 +1054,7 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
                 (models1DispersedIn2Displaced_[phasei].*method)(args ...)
             );
         }
-        if (models2DispersedIn1Displaced_.set(phasei))
+        if (f2D1D.set(phasei) && models2DispersedIn1Displaced_.set(phasei))
         {
             addToXs
             (
@@ -999,7 +1062,7 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
                 (models2DispersedIn1Displaced_[phasei].*method)(args ...)
             );
         }
-        if (models1SegregatedWith2Displaced_.set(phasei))
+        if (fSD.set(phasei) && models1SegregatedWith2Displaced_.set(phasei))
         {
             addToXs
             (
@@ -1245,20 +1308,36 @@ Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
         }
     }
 
+    // Write out the actual blending coefficients if debugging
+    if (debug)
+    {
+        writeBlendingCoefficients();
+    }
+
     // Write out the blending space if needed
     if (blendingDict.found("format"))
     {
-        const word format = blendingDict.lookup<word>("format");
-
-        const label nPhases = interface_.fluid().phases().size();
-
-        if
-        (
-            (nPhases <= 2 && format != noSetWriter::typeName)
-         || (nPhases > 2 && format != noSurfaceWriter::typeName)
-        )
+        if (blending_->functionOfAlphas())
         {
-            postProcessBlendingCoefficients(format);
+            const word format = blendingDict.lookup<word>("format");
+
+            const label nPhases = interface_.fluid().phases().size();
+
+            if
+            (
+                (nPhases <= 2 && format != noSetWriter::typeName)
+             || (nPhases > 2 && format != noSurfaceWriter::typeName)
+            )
+            {
+                postProcessBlendingCoefficients(format);
+            }
+        }
+        else
+        {
+            WarningInFunction
+                << "Cannot write the blending coefficients for blending "
+                << "method " << blending_->type() << " as this method is not "
+                << "a pure function of the volume fractions" << endl;
         }
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "linear.H"
-#include "one.H"
+#include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -39,21 +39,37 @@ namespace blendingMethods
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * /
 
 Foam::tmp<Foam::volScalarField> Foam::blendingMethods::linear::fContinuous
 (
     const UPtrList<const volScalarField>& alphas,
-    const label phaseSet,
-    const label systemSet
+    const label index
 ) const
 {
-    tmp<volScalarField> x = this->x(alphas, phaseSet, systemSet);
-    tmp<volScalarField> f =
-        parameter(alphas, phaseSet, minFullyContinuousAlpha_);
-    tmp<volScalarField> p =
-        parameter(alphas, phaseSet, minPartlyContinuousAlpha_);
+    tmp<volScalarField> x = this->x(alphas, index);
+    tmp<volScalarField> f = parameter(alphas, index, minFullyContinuousAlpha_);
+    tmp<volScalarField> p = parameter(alphas, index, minPartlyContinuousAlpha_);
     return min(max((x - p())/max(f - p(), rootVSmall), zero()), one());
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::blendingMethods::linear::fDisplaced
+(
+    const UPtrList<const volScalarField>& alphas,
+    const label displacingPhasei
+) const
+{
+    if (!displaced_) return constant(alphas, 0);
+
+    const dimensionedScalar& residualAlpha =
+        interface_.fluid().phases()[displacingPhasei].residualAlpha();
+
+    return
+        max(alphas[displacingPhasei], residualAlpha)
+       /max(1 - alpha(alphas, -1, false), residualAlpha)
+       *(1 - fContinuous(alphas, -1));
 }
 
 
@@ -62,10 +78,17 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::linear::fContinuous
 Foam::blendingMethods::linear::linear
 (
     const dictionary& dict,
-    const phaseInterface& interface
+    const phaseInterface& interface,
+    const bool allowDisplaced
 )
 :
-    blendingMethod(dict, interface),
+    blendingMethod(interface),
+    displaced_
+    (
+        allowDisplaced
+      ? dict.lookupOrDefault<bool>("displaced", true)
+      : false
+    ),
     minFullyContinuousAlpha_
     (
         readParameters
@@ -74,7 +97,7 @@ Foam::blendingMethods::linear::linear
             dict,
             interface,
             {0, 1},
-            true
+            1
         )
     ),
     minPartlyContinuousAlpha_
@@ -85,7 +108,7 @@ Foam::blendingMethods::linear::linear
             dict,
             interface,
             {0, 1},
-            true
+            1
         )
     )
 {
@@ -95,14 +118,15 @@ Foam::blendingMethods::linear::linear
 
         if
         (
-            minFullyContinuousAlpha_[i].valid
-         != minPartlyContinuousAlpha_[i].valid
+            minFullyContinuousAlpha_[i].specified
+         != minPartlyContinuousAlpha_[i].specified
         )
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Both minimum fully and partly continuous alpha must be "
                 << "supplied for phases that can become continuous. Only one "
-                << "is supplied for " << iter().name() << exit(FatalError);
+                << "is supplied for " << iter().name() << "."
+                << exit(FatalIOError);
         }
 
         if
@@ -114,10 +138,10 @@ Foam::blendingMethods::linear::linear
             )
         )
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "The fully continuous alpha specified for " << iter().name()
                 << " is not greater than the partly continuous alpha"
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
     }
 
@@ -139,13 +163,13 @@ Foam::blendingMethods::linear::linear
         )
     )
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << typeName.capitalise() << " blending function for interface "
             << interface.name() << " is invalid in that it creates negative "
             << "coefficients for sub-modelled values. A valid function will "
             << "have fully continuous alphas that are greater than one minus "
             << "the partly continuous alphas in the opposite phase."
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 }
 
@@ -160,7 +184,7 @@ Foam::blendingMethods::linear::~linear()
 
 bool Foam::blendingMethods::linear::canBeContinuous(const label index) const
 {
-    return minFullyContinuousAlpha_[index].valid;
+    return minFullyContinuousAlpha_[index].specified;
 }
 
 
@@ -181,6 +205,21 @@ bool Foam::blendingMethods::linear::canSegregate() const
               > 1 + rootSmall
             )
         );
+}
+
+
+bool Foam::blendingMethods::linear::isDisplacedBy
+(
+    const label displacingPhasei
+) const
+{
+    return displaced_;
+}
+
+
+bool Foam::blendingMethods::linear::functionOfAlphas() const
+{
+    return true;
 }
 
 

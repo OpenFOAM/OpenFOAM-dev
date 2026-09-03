@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "continuous.H"
+#include "displaced.H"
 #include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,53 +33,37 @@ namespace Foam
 {
 namespace blendingMethods
 {
-    defineTypeNameAndDebug(continuous, 0);
-    addToRunTimeSelectionTable(blendingMethod, continuous, dictionary);
+    defineTypeNameAndDebug(displaced, 0);
+    addToRunTimeSelectionTable(blendingMethod, displaced, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * /
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::continuous::fContinuous
+Foam::tmp<Foam::volScalarField> Foam::blendingMethods::displaced::fContinuous
 (
     const UPtrList<const volScalarField>& alphas,
     const label index
 ) const
 {
-    return constant(alphas, index == index_ ? 1 : 0);
+    return blendingMethod::fContinuous(blending_(), alphas, index);
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::blendingMethods::continuous::fDisplaced
+Foam::tmp<Foam::volScalarField> Foam::blendingMethods::displaced::fDisplaced
 (
     const UPtrList<const volScalarField>& alphas,
     const label displacingPhasei
 ) const
 {
-    if (!displaced_ || otherIndex_ == -1) return constant(alphas, 0);
-
-    const dimensionedScalar& residualAlpha =
-        interface_.fluid().phases()[displacingPhasei].residualAlpha();
-
-    tmp<volScalarField> talphaSystem = alpha(alphas, -1, false);
-    const volScalarField& alphaSystem = talphaSystem();
-
-    // This is the limit of linear/hyperbolic methods as the minimum continuous
-    // alpha parameters tend to zero for the continuous phase, and to one for
-    // the non-continuous phases
-
-    return
-        max(alphas[displacingPhasei], residualAlpha)
-       /max(1 - alphaSystem, residualAlpha)
-       *pos(alpha(alphas, otherIndex_, false) - sqr(alphaSystem));
+    return constant(alphas, displacingPhasei == phasei_ ? 1 : 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blendingMethods::continuous::continuous
+Foam::blendingMethods::displaced::displaced
 (
     const dictionary& dict,
     const phaseInterface& interface,
@@ -87,56 +71,60 @@ Foam::blendingMethods::continuous::continuous
 )
 :
     blendingMethod(interface),
-    phase_
+    phasei_(interface.fluid().phases()[dict.lookup<word>("phase")].index()),
+    blending_
     (
-        interface_.fluid().phases()
-        [
-            dict.lookupBackwardsCompatible<word>({"continuousPhase", "phase"})
-        ]
-    ),
-    displaced_
-    (
-        allowDisplaced
-      ? dict.lookupOrDefault<bool>("displaced", true)
-      : false
-    ),
-    index_(interface.contains(phase_) ? interface.index(phase_) : -1),
-    otherIndex_(index_ != -1 ? interface.otherIndex(phase_) : -1)
-{}
+        blendingMethod::New
+        (
+            "blending",
+            dict.subDict("blending"),
+            interface,
+            false
+        )
+    )
+{
+    if (!allowDisplaced)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Blending method " << typeName << " selected as a sub-blending "
+            << "in a context in which displaced blending is not allowed"
+            << exit(FatalError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::blendingMethods::continuous::~continuous()
+Foam::blendingMethods::displaced::~displaced()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::blendingMethods::continuous::canBeContinuous(const label index) const
+bool Foam::blendingMethods::displaced::canBeContinuous(const label index) const
 {
-    return index == index_;
+    return blending_->canBeContinuous(index);
 }
 
 
-bool Foam::blendingMethods::continuous::canSegregate() const
+bool Foam::blendingMethods::displaced::canSegregate() const
 {
-    return false;
+    return blending_->canSegregate();
 }
 
 
-bool Foam::blendingMethods::continuous::isDisplacedBy
+bool Foam::blendingMethods::displaced::isDisplacedBy
 (
     const label displacingPhasei
 ) const
 {
-    return displaced_;
+    return displacingPhasei == phasei_;
 }
 
 
-bool Foam::blendingMethods::continuous::functionOfAlphas() const
+bool Foam::blendingMethods::displaced::functionOfAlphas() const
 {
-    return true;
+    return blending_->functionOfAlphas();
 }
 
 

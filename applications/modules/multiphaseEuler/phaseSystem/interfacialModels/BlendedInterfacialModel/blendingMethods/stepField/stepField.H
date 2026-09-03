@@ -22,13 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::continuous
+    Foam::blendingMethods::stepField
 
 Description
-    Blending method for the case in which the continuous phase is always the
-    same. E.g., for an air-particles flow, the air phase is always continuous.
-    Applies only the dispersed (i.e., phaseA_dispersedIn_phaseB, where phaseB
-    is the identified continuous phase) model.
+    Blending method which switches between two sub-blending methods based on
+    the value of a user-specified field. A values is specified which defines
+    the field value at which the blending switches between the two sub-blending
+    approaches.
 
     Example usage, in constant/phaseProperties:
     \verbatim
@@ -36,19 +36,37 @@ Description
     {
         default
         {
-            type            continuous;
-            phase           air;
+            type            stepField;
+            field           myField;
+            value           0.5;
+            below
+            {
+                type            linear;
+                displaced       no;
+                minFullyContinuousAlpha.air 0.8;
+                minPartlyContinuousAlpha.air 0.2;
+                minFullyContinuousAlpha.water 0.8;
+                minPartlyContinuousAlpha.water 0.2;
+                minFullyContinuousAlpha.particles none;
+                minPartlyContinuousAlpha.particles none;
+                minFullyContinuousAlpha.bed none;
+                minPartlyContinuousAlpha.bed none;
+            }
+            above
+            {
+                type            segregated;
+            }
         }
     }
     \endverbatim
 
 SourceFiles
-    continuous.C
+    stepField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef continuous_H
-#define continuous_H
+#ifndef stepField_H
+#define stepField_H
 
 #include "blendingMethod.H"
 
@@ -60,30 +78,36 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class continuous Declaration
+                           Class stepField Declaration
 \*---------------------------------------------------------------------------*/
 
-class continuous
+class stepField
 :
     public blendingMethod
 {
     // Private Data
 
-        //- The continuous phase
-        const phaseModel& phase_;
+        //- The name of the field which defines the blending regions
+        const word fieldName_;
 
-        //- Apply displaced models? The displaced model coefficient will be
-        //  calculated as one-minus the continuous coefficient calculated for
-        //  the two-phase sub-system.
-        const bool displaced_;
+        //- Coefficients dictionary held temporarily until the field value can
+        //  be constructed
+        mutable autoPtr<dictionary> dictPtr_;
 
-        //- The index of the continuous phase in the interface, or -1 if the
-        //  interface does not contain the continuous phase
-        const label index_;
+        //- The value of the field at which the blending switches
+        mutable autoPtr<dimensionedScalar> fieldValuePtr_;
 
-        //- The index of the non-continuous phase in the interface, or -1 if
-        //  the interface does not contain the continuous phase
-        const label otherIndex_;
+        //- The blending when the field is below the specified value
+        autoPtr<blendingMethod> belowBlending_;
+
+        //- The blending when the field is above the specified value
+        autoPtr<blendingMethod> aboveBlending_;
+
+
+    // Private Member Functions
+
+        //- Return the value of the field at which the blending switches
+        const dimensionedScalar& fieldValue() const;
 
 
 protected:
@@ -110,13 +134,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("continuous");
+    TypeName("stepField");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        continuous
+        stepField
         (
             const dictionary& dict,
             const phaseInterface& interface,
@@ -125,7 +149,7 @@ public:
 
 
     //- Destructor
-    ~continuous();
+    ~stepField();
 
 
     // Member Functions

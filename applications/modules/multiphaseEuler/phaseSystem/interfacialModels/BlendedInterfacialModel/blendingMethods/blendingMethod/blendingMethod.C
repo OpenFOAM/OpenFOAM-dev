@@ -42,42 +42,88 @@ Foam::blendingParameter Foam::blendingMethod::readParameter
     const word& name,
     const dictionary& dict,
     const Pair<scalar>& bounds,
-    const bool allowNone
+    const bool allowNone,
+    const scalar noneValue
 )
 {
-    if (dict.found(name) || allowNone)
+    if (allowNone)
     {
-        const token t(dict.lookup(name));
+        ITstream& is = dict.lookup(name);
 
-        if (allowNone && t.isWord() && t.wordToken() == "none")
+        const token t(is);
+
+        if (t.isWord() && t.wordToken() == "none")
         {
-            return {false, NaN};
+            return {false, noneValue};
         }
 
-        if (t.isNumber())
+        if (!t.isNumber())
         {
-            forAll(bounds, i)
-            {
-                const label s = i == 0 ? -1 : +1;
-
-                if (s*t.number() > s*bounds[i])
-                {
-                    FatalErrorInFunction
-                        << "Blending parameter " << name << " is "
-                        << (i == 0 ? "less" : "greater") << " than "
-                        << bounds[i] << exit(FatalError);
-                }
-            }
-
-            return {true, t.number()};
+            FatalIOErrorInFunction(is)
+                << "wrong token type - expected Scalar or the word 'none', "
+                << "found " << t.info() << exit(FatalIOError);
         }
-
-        FatalIOErrorInFunction(dict)
-            << "wrong token type - expected Scalar or the word 'none', found "
-            << t.info() << exit(FatalIOError);
     }
 
-    return {false, NaN};
+    const scalar value = dict.lookup<scalar>(name);
+
+    forAll(bounds, i)
+    {
+        const label s = i == 0 ? -1 : +1;
+
+        if (s*value > s*bounds[i])
+        {
+            FatalErrorInFunction
+                << "Blending parameter " << name << " is "
+                << (i == 0 ? "less" : "greater") << " than "
+                << bounds[i] << exit(FatalError);
+        }
+    }
+
+    return {true, value};
+}
+
+
+Foam::blendingParameter Foam::blendingMethod::readParameter
+(
+    const word& name,
+    const dictionary& dict,
+    const Pair<scalar>& bounds
+)
+{
+    return readParameter(name, dict, bounds, false, NaN);
+}
+
+
+Foam::blendingParameter Foam::blendingMethod::readParameter
+(
+    const word& name,
+    const dictionary& dict,
+    const Pair<scalar>& bounds,
+    const scalar noneValue
+)
+{
+    return readParameter(name, dict, bounds, true, noneValue);
+}
+
+
+Foam::Pair<Foam::blendingParameter> Foam::blendingMethod::readParameters
+(
+    const word& name,
+    const dictionary& dict,
+    const phaseInterface& interface,
+    const Pair<scalar>& bounds
+)
+{
+    const word name1 = IOobject::groupName(name, interface.phase1().name());
+    const word name2 = IOobject::groupName(name, interface.phase2().name());
+
+    return
+        Pair<blendingParameter>
+        (
+            readParameter(name1, dict, bounds),
+            readParameter(name2, dict, bounds)
+        );
 }
 
 
@@ -87,16 +133,17 @@ Foam::Pair<Foam::blendingParameter> Foam::blendingMethod::readParameters
     const dictionary& dict,
     const phaseInterface& interface,
     const Pair<scalar>& bounds,
-    const bool allowNone
+    const scalar noneValue
 )
 {
     const word name1 = IOobject::groupName(name, interface.phase1().name());
     const word name2 = IOobject::groupName(name, interface.phase2().name());
+
     return
         Pair<blendingParameter>
         (
-            readParameter(name1, dict, bounds, allowNone),
-            readParameter(name2, dict, bounds, allowNone)
+            readParameter(name1, dict, bounds, noneValue),
+            readParameter(name2, dict, bounds, noneValue)
         );
 }
 
@@ -122,109 +169,115 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethod::constant
 Foam::tmp<Foam::volScalarField> Foam::blendingMethod::alpha
 (
     const UPtrList<const volScalarField>& alphas,
-    const label set,
+    const label index,
     const bool protect
 ) const
 {
-    tmp<volScalarField> talpha = constant(alphas, 0);
-
-    forAllConstIter(phaseInterface, interface_, iter)
+    switch (index)
     {
-        if (0b01 << iter.index() & set)
+        case 0:
+        case 1:
         {
-            talpha.ref() +=
+            const label phasei = interface_[index].index();
+            return
                 protect
-              ? eval(max(iter().residualAlpha(), alphas[iter().index()]))()
-              : alphas[iter().index()];
+              ? eval(max(alphas[phasei], interface_[index].residualAlpha()))
+              : tmp<volScalarField>(alphas[phasei]);
+        }
+        case -1:
+        {
+            const label phasei0 = interface_[0].index();
+            const label phasei1 = interface_[1].index();
+            return
+                protect
+              ? eval
+                (
+                    max(alphas[phasei0], interface_[0].residualAlpha())
+                  + max(alphas[phasei1], interface_[1].residualAlpha())
+                )
+              : eval(alphas[phasei0] + alphas[phasei1]);
         }
     }
 
-    return talpha;
+    FatalErrorInFunction
+        << "Index should be 0, 1, or -1"
+        << exit(FatalError);
+
+    return tmp<volScalarField>();
 }
 
 
 Foam::tmp<Foam::volScalarField> Foam::blendingMethod::parameter
 (
     const UPtrList<const volScalarField>& alphas,
-    const label set,
+    const label index,
     const Pair<blendingParameter>& parameters
 ) const
 {
-    tmp<volScalarField> talphaParameter = constant(alphas, 0);
-
-    forAllConstIter(phaseInterface, interface_, iter)
+    switch (index)
     {
-        if (0b01 << iter.index() & set)
+        case 0:
+        case 1:
         {
-            talphaParameter.ref() +=
-                max(iter().residualAlpha(), alphas[iter().index()])
-               *parameters[iter.index()].value;
+            return constant(alphas, parameters[index].value);
+        }
+        case -1:
+        {
+            const label phasei0 = interface_[0].index();
+            const label phasei1 = interface_[1].index();
+            return
+                (
+                    max(alphas[phasei0], interface_[0].residualAlpha())
+                   *parameters[0].value
+                  + max(alphas[phasei1], interface_[1].residualAlpha())
+                   *parameters[1].value
+                )
+               /(
+                   max(alphas[phasei0], interface_[0].residualAlpha())
+                 + max(alphas[phasei1], interface_[1].residualAlpha())
+                );
+
         }
     }
 
-    return talphaParameter/alpha(alphas, set, true);
+    FatalErrorInFunction
+        << "Index should be 0, 1, or -1"
+        << exit(FatalError);
+
+    return tmp<volScalarField>();
 }
 
 
 Foam::tmp<Foam::volScalarField> Foam::blendingMethod::x
 (
     const UPtrList<const volScalarField>& alphas,
-    const label phaseSet,
-    const label systemSet
+    const label index
 ) const
 {
     return
-        systemSet == 0b00
-      ? alpha(alphas, phaseSet, false)
-      : alpha(alphas, phaseSet, true)/alpha(alphas, systemSet, true);
+        index == -1
+      ? alpha(alphas, -1, false)
+      : alpha(alphas, index, true)/alpha(alphas, -1, true);
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethod::f
+Foam::tmp<Foam::volScalarField> Foam::blendingMethod::fContinuousFiltered
 (
     const UPtrList<const volScalarField>& alphas,
-    const label phaseSet,
-    const label systemSet
+    const label index
 ) const
 {
-    label canBeContinuousPhaseSet = 0b00;
-    label canBeContinuousSystemSet = 0b00;
-    forAllConstIter(phaseInterface, interface_, iter)
-    {
-        if (canBeContinuous(iter.index()))
-        {
-            canBeContinuousPhaseSet += 0b01 << iter.index() & phaseSet;
-            canBeContinuousSystemSet += 0b01 << iter.index() & systemSet;
-        }
-    }
+    if (!canBeContinuous(index)) return constant(alphas, 0);
 
-    if (canBeContinuousPhaseSet == 0)
-    {
-        return constant(alphas, 0);
-    }
+    if (!canBeContinuous(1 - index)) return constant(alphas, 1);
 
-    if (canBeContinuousPhaseSet == canBeContinuousSystemSet)
-    {
-        return constant(alphas, 1);
-    }
-
-    return
-        fContinuous
-        (
-            alphas,
-            canBeContinuousPhaseSet,
-            canBeContinuousSystemSet
-        );
+    return fContinuous(alphas, index);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blendingMethod::blendingMethod
-(
-    const dictionary& dict,
-    const phaseInterface& interface
-)
+Foam::blendingMethod::blendingMethod(const phaseInterface& interface)
 :
     interface_(interface)
 {}
@@ -243,7 +296,7 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethod::f1DispersedIn2
     const UPtrList<const volScalarField>& alphas
 ) const
 {
-    return f(alphas, 0b10, 0b11);
+    return fContinuousFiltered(alphas, 1);
 }
 
 
@@ -252,16 +305,17 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethod::f2DispersedIn1
     const UPtrList<const volScalarField>& alphas
 ) const
 {
-    return f(alphas, 0b01, 0b11);
+    return fContinuousFiltered(alphas, 0);
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::blendingMethod::fDisplaced
+Foam::tmp<Foam::volScalarField> Foam::blendingMethod::f12DisplacedBy3
 (
-    const UPtrList<const volScalarField>& alphas
+    const UPtrList<const volScalarField>& alphas,
+    const label displacingPhasei
 ) const
 {
-    return 1 - f(alphas, 0b11, 0b00);
+    return fDisplaced(alphas, displacingPhasei);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "hyperbolic.H"
+#include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -38,18 +39,36 @@ namespace blendingMethods
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * /
 
 Foam::tmp<Foam::volScalarField> Foam::blendingMethods::hyperbolic::fContinuous
 (
     const UPtrList<const volScalarField>& alphas,
-    const label phaseSet,
-    const label systemSet
+    const label index
 ) const
 {
-    tmp<volScalarField> x = this->x(alphas, phaseSet, systemSet);
-    tmp<volScalarField> a = parameter(alphas, phaseSet, minContinuousAlpha_);
+    tmp<volScalarField> x = this->x(alphas, index);
+    tmp<volScalarField> a = parameter(alphas, index, minContinuousAlpha_);
     return (1 + tanh((4/transitionAlphaScale_.value)*(x - a)))/2;
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::blendingMethods::hyperbolic::fDisplaced
+(
+    const UPtrList<const volScalarField>& alphas,
+    const label displacingPhasei
+) const
+{
+    if (!displaced_) return constant(alphas, 0);
+
+    const dimensionedScalar& residualAlpha =
+        interface_.fluid().phases()[displacingPhasei].residualAlpha();
+
+    return
+        max(alphas[displacingPhasei], residualAlpha)
+       /max(1 - alpha(alphas, -1, false), residualAlpha)
+       *(1 - fContinuous(alphas, -1));
 }
 
 
@@ -58,17 +77,24 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::hyperbolic::fContinuous
 Foam::blendingMethods::hyperbolic::hyperbolic
 (
     const dictionary& dict,
-    const phaseInterface& interface
+    const phaseInterface& interface,
+    const bool allowDisplaced
 )
 :
-    blendingMethod(dict, interface),
+    blendingMethod(interface),
+    displaced_
+    (
+        allowDisplaced
+      ? dict.lookupOrDefault<bool>("displaced", true)
+      : false
+    ),
     minContinuousAlpha_
     (
-        readParameters("minContinuousAlpha", dict, interface, {0, 1}, true)
+        readParameters("minContinuousAlpha", dict, interface, {0, 1}, NaN)
     ),
     transitionAlphaScale_
     (
-        readParameter("transitionAlphaScale", dict, {0, vGreat}, false)
+        readParameter("transitionAlphaScale", dict, {0, vGreat})
     )
 {
     if
@@ -79,12 +105,12 @@ Foam::blendingMethods::hyperbolic::hyperbolic
       < 1 - rootSmall
     )
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << typeName.capitalise() << " blending function for interface "
             << interface.name() << " is invalid in that it creates negative "
             << "coefficients for sub-modelled values. A valid function will "
             << "have minimum continuous alphas that sum one or greater."
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 }
 
@@ -99,7 +125,7 @@ Foam::blendingMethods::hyperbolic::~hyperbolic()
 
 bool Foam::blendingMethods::hyperbolic::canBeContinuous(const label index) const
 {
-    return minContinuousAlpha_[index].valid;
+    return minContinuousAlpha_[index].specified;
 }
 
 
@@ -110,6 +136,21 @@ bool Foam::blendingMethods::hyperbolic::canSegregate() const
      && canBeContinuous(1)
      && minContinuousAlpha_[0].value + minContinuousAlpha_[1].value
       > 1 + rootSmall;
+}
+
+
+bool Foam::blendingMethods::hyperbolic::isDisplacedBy
+(
+    const label displacingPhasei
+) const
+{
+    return displaced_;
+}
+
+
+bool Foam::blendingMethods::hyperbolic::functionOfAlphas() const
+{
+    return true;
 }
 
 

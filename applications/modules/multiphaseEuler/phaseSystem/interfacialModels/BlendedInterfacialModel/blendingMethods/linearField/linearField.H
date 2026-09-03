@@ -22,13 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::continuous
+    Foam::blendingMethods::linearField
 
 Description
-    Blending method for the case in which the continuous phase is always the
-    same. E.g., for an air-particles flow, the air phase is always continuous.
-    Applies only the dispersed (i.e., phaseA_dispersedIn_phaseB, where phaseB
-    is the identified continuous phase) model.
+    Blending method which combines two sub-blending methods based on a linear
+    function of a user-specified field. Two values are specified which defines
+    the range of field values over which the blending is transitioned between
+    the two sub-blending approaches.
 
     Example usage, in constant/phaseProperties:
     \verbatim
@@ -36,19 +36,37 @@ Description
     {
         default
         {
-            type            continuous;
-            phase           air;
+            type            linearField;
+            field           myField;
+            values          (0.4 0.6);
+            below
+            {
+                type            linear;
+                displaced       no;
+                minFullyContinuousAlpha.air 0.8;
+                minPartlyContinuousAlpha.air 0.2;
+                minFullyContinuousAlpha.water 0.8;
+                minPartlyContinuousAlpha.water 0.2;
+                minFullyContinuousAlpha.particles none;
+                minPartlyContinuousAlpha.particles none;
+                minFullyContinuousAlpha.bed none;
+                minPartlyContinuousAlpha.bed none;
+            }
+            above
+            {
+                type            segregated;
+            }
         }
     }
     \endverbatim
 
 SourceFiles
-    continuous.C
+    linearField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef continuous_H
-#define continuous_H
+#ifndef linearField_H
+#define linearField_H
 
 #include "blendingMethod.H"
 
@@ -60,30 +78,36 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class continuous Declaration
+                           Class linearField Declaration
 \*---------------------------------------------------------------------------*/
 
-class continuous
+class linearField
 :
     public blendingMethod
 {
     // Private Data
 
-        //- The continuous phase
-        const phaseModel& phase_;
+        //- The name of the field which defines the blending regions
+        const word fieldName_;
 
-        //- Apply displaced models? The displaced model coefficient will be
-        //  calculated as one-minus the continuous coefficient calculated for
-        //  the two-phase sub-system.
-        const bool displaced_;
+        //- Coefficients dictionary held temporarily until the field value can
+        //  be constructed
+        mutable autoPtr<dictionary> dictPtr_;
 
-        //- The index of the continuous phase in the interface, or -1 if the
-        //  interface does not contain the continuous phase
-        const label index_;
+        //- The values of the field between which the blending switches
+        mutable autoPtr<Pair<dimensionedScalar>> fieldValuesPtr_;
 
-        //- The index of the non-continuous phase in the interface, or -1 if
-        //  the interface does not contain the continuous phase
-        const label otherIndex_;
+        //- The blending when the field is below the specified value
+        autoPtr<blendingMethod> belowBlending_;
+
+        //- The blending when the field is above the specified value
+        autoPtr<blendingMethod> aboveBlending_;
+
+
+    // Private Member Functions
+
+        //- Return the value of the field at which the blending switches
+        const Pair<dimensionedScalar>& fieldValues() const;
 
 
 protected:
@@ -110,13 +134,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("continuous");
+    TypeName("linearField");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        continuous
+        linearField
         (
             const dictionary& dict,
             const phaseInterface& interface,
@@ -125,7 +149,7 @@ public:
 
 
     //- Destructor
-    ~continuous();
+    ~linearField();
 
 
     // Member Functions

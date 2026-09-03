@@ -22,33 +22,57 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::continuous
+    Foam::blendingMethods::stepDisplaced
 
 Description
-    Blending method for the case in which the continuous phase is always the
-    same. E.g., for an air-particles flow, the air phase is always continuous.
-    Applies only the dispersed (i.e., phaseA_dispersedIn_phaseB, where phaseB
-    is the identified continuous phase) model.
+    Blending method which activates models relating to displacement by a third
+    phase based on the value of the phase fraction of that third phase.
 
-    Example usage, in constant/phaseProperties:
+    This method requires a volume fractions to be specified for each third
+    phase above which non-displaced models are deactivated and displaced models
+    are applied instead.
+
+    This model requires a sub-blending method to be specified to determine how
+    the dispersed/segregated/general model system (i.e., A_dispersedIn_B,
+    B_dispersedIn_A, A_segregatedWith_B, and A_B) is blended. This sub-blending
+    is used to generate dispersed/segregated/general coefficients for both the
+    non-displaced and displaced regimes, but it will not be used to determine
+    the proportion of displaced models that is applied.
+
     \verbatim
     blending
     {
         default
         {
-            type            continuous;
-            phase           air;
+            type            stepDisplaced;
+            displacingAlpha.air none;
+            displacingAlpha.water none;
+            displacingAlpha.particles 0.15;
+            displacingAlpha.bed 0.3;
+            blending
+            {
+                type            linear;
+                displaced       no;
+                minFullyContinuousAlpha.air 0.8;
+                minPartlyContinuousAlpha.air 0.5;
+                minFullyContinuousAlpha.water 0.8;
+                minPartlyContinuousAlpha.water 0.5;
+                minFullyContinuousAlpha.particles none;
+                minPartlyContinuousAlpha.particles none;
+                minFullyContinuousAlpha.bed none;
+                minPartlyContinuousAlpha.bed none;
+            }
         }
     }
     \endverbatim
 
 SourceFiles
-    continuous.C
+    stepDisplaced.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef continuous_H
-#define continuous_H
+#ifndef stepDisplaced_H
+#define stepDisplaced_H
 
 #include "blendingMethod.H"
 
@@ -60,30 +84,24 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class continuous Declaration
+                           Class stepDisplaced Declaration
 \*---------------------------------------------------------------------------*/
 
-class continuous
+class stepDisplaced
 :
     public blendingMethod
 {
     // Private Data
 
-        //- The continuous phase
-        const phaseModel& phase_;
+        //- The volume fraction of displacing phase above which displaced
+        //  models are used
+        List<blendingParameter> displacingAlphas_;
 
-        //- Apply displaced models? The displaced model coefficient will be
-        //  calculated as one-minus the continuous coefficient calculated for
-        //  the two-phase sub-system.
-        const bool displaced_;
+        //- List of the displacing phase indices
+        List<label> displacingPhases_;
 
-        //- The index of the continuous phase in the interface, or -1 if the
-        //  interface does not contain the continuous phase
-        const label index_;
-
-        //- The index of the non-continuous phase in the interface, or -1 if
-        //  the interface does not contain the continuous phase
-        const label otherIndex_;
+        //- The sub-blending
+        autoPtr<blendingMethod> blending_;
 
 
 protected:
@@ -110,13 +128,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("continuous");
+    TypeName("stepDisplaced");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        continuous
+        stepDisplaced
         (
             const dictionary& dict,
             const phaseInterface& interface,
@@ -125,7 +143,7 @@ public:
 
 
     //- Destructor
-    ~continuous();
+    ~stepDisplaced();
 
 
     // Member Functions
@@ -137,7 +155,7 @@ public:
         virtual bool canSegregate() const;
 
         //- Return whether or not the interface is displaced by a third phase
-        virtual bool isDisplacedBy(const label displacingPhasei) const;
+        virtual bool isDisplacedBy(const label phasei) const;
 
         //- Return whether this is a function of the volume fractions only
         virtual bool functionOfAlphas() const;

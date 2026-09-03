@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,63 +23,62 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "segregatedBlendingMethod.H"
+#include "noDrag.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blendingMethods
+namespace dragModels
 {
-    defineTypeNameAndDebug(segregated, 0);
-    addToRunTimeSelectionTable(blendingMethod, segregated, dictionary);
+    defineTypeNameAndDebug(noDrag, 0);
+    addToRunTimeSelectionTable(dragModel, noDrag, dictionary);
 }
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::blendingMethods::segregated::fContinuous
-(
-    const UPtrList<const volScalarField>& alphas,
-    const label phaseSet,
-    const label systemSet
-) const
-{
-    return constant(alphas, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blendingMethods::segregated::segregated
+Foam::dragModels::noDrag::noDrag
 (
     const dictionary& dict,
-    const phaseInterface& interface
+    const phaseInterface& interface,
+    const bool registerObject
 )
 :
-    blendingMethod(dict, interface)
+    dragModel(dict, interface, registerObject),
+    interface_(interface)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::blendingMethods::segregated::~segregated()
+Foam::dragModels::noDrag::~noDrag()
 {}
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::blendingMethods::segregated::canBeContinuous(const label index) const
+Foam::tmp<Foam::volScalarField> Foam::dragModels::noDrag::K() const
 {
-    return false;
+    return volScalarField::New
+    (
+        "F",
+        interface_.mesh(),
+        dimensionedScalar(dimK, Zero)
+    );
 }
 
 
-bool Foam::blendingMethods::segregated::canSegregate() const
+Foam::tmp<Foam::surfaceScalarField> Foam::dragModels::noDrag::Kf() const
 {
-    return true;
+    return surfaceScalarField::New
+    (
+        "F",
+        interface_.mesh(),
+        dimensionedScalar(dimK, Zero)
+    );
 }
 
 

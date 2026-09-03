@@ -22,13 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::continuous
+    Foam::blendingMethods::segregated
 
 Description
-    Blending method for the case in which the continuous phase is always the
-    same. E.g., for an air-particles flow, the air phase is always continuous.
-    Applies only the dispersed (i.e., phaseA_dispersedIn_phaseB, where phaseB
-    is the identified continuous phase) model.
+    Blending method for segregated configurations. E.g., a churning flow in
+    which it is never appropriate to consider one phase continuous. Applies
+    only the segregated (i.e., phaseA_segregatedWith_phaseB) model.
 
     Example usage, in constant/phaseProperties:
     \verbatim
@@ -36,19 +35,18 @@ Description
     {
         default
         {
-            type            continuous;
-            phase           air;
+            type            segregated;
         }
     }
     \endverbatim
 
 SourceFiles
-    continuous.C
+    segregated_blendingMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef continuous_H
-#define continuous_H
+#ifndef segregated_blendingMethod_H
+#define segregated_blendingMethod_H
 
 #include "blendingMethod.H"
 
@@ -60,32 +58,13 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class continuous Declaration
+                         Class segregated Declaration
 \*---------------------------------------------------------------------------*/
 
-class continuous
+class segregated
 :
     public blendingMethod
 {
-    // Private Data
-
-        //- The continuous phase
-        const phaseModel& phase_;
-
-        //- Apply displaced models? The displaced model coefficient will be
-        //  calculated as one-minus the continuous coefficient calculated for
-        //  the two-phase sub-system.
-        const bool displaced_;
-
-        //- The index of the continuous phase in the interface, or -1 if the
-        //  interface does not contain the continuous phase
-        const label index_;
-
-        //- The index of the non-continuous phase in the interface, or -1 if
-        //  the interface does not contain the continuous phase
-        const label otherIndex_;
-
-
 protected:
 
     // Protected Member Functions
@@ -110,13 +89,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("continuous");
+    TypeName("segregated");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        continuous
+        segregated
         (
             const dictionary& dict,
             const phaseInterface& interface,
@@ -125,7 +104,7 @@ public:
 
 
     //- Destructor
-    ~continuous();
+    ~segregated();
 
 
     // Member Functions

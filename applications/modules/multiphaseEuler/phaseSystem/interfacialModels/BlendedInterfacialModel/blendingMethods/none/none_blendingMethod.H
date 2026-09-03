@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,30 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::segregated
+    Foam::blendingMethods::none
 
 Description
-    Blending method for segregated configurations. E.g., a churning flow in
-    which it is never appropriate to consider one phase continuous.
+    A no-blending blending method. Applies only the non-configuration-specific
+    (i.e., phaseA_phaseB) model.
+
+    Example usage, in constant/phaseProperties:
+    \verbatim
+    blending
+    {
+        default
+        {
+            type            none;
+        }
+    }
+    \endverbatim
 
 SourceFiles
-    segregatedBlendingMethod.C
+    noneBlendingMethod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef segregatedBlendingMethod_H
-#define segregatedBlendingMethod_H
+#ifndef none_blendingMethod_H
+#define none_blendingMethod_H
 
 #include "blendingMethod.H"
 
@@ -46,10 +57,10 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class segregated Declaration
+                         Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-class segregated
+class none
 :
     public blendingMethod
 {
@@ -57,42 +68,57 @@ protected:
 
     // Protected Member Functions
 
-        //- Evaluate the blending function
+        //- Return the coefficient for models for which the indexed phase is
+        //  considered continuous
         virtual tmp<volScalarField> fContinuous
         (
             const UPtrList<const volScalarField>& alphas,
-            const label phaseSet,
-            const label systemSet
+            const label index
+        ) const;
+
+        //- Return the coefficient for when the interface is displaced by a
+        //  third phase
+        virtual tmp<volScalarField> fDisplaced
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label displacingPhasei
         ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("segregated");
+    TypeName("none");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        segregated
+        none
         (
             const dictionary& dict,
-            const phaseInterface& interface
+            const phaseInterface& interface,
+            const bool allowDisplaced
         );
 
 
     //- Destructor
-    ~segregated();
+    ~none();
 
 
     // Member Functions
 
-        //- Return whether or not a phase can be considered segregated
+        //- Return whether or not a phase can be considered none
         virtual bool canBeContinuous(const label index) const;
 
         //- Return whether or not this interface can segregate
         virtual bool canSegregate() const;
+
+        //- Return whether or not the interface is displaced by a third phase
+        virtual bool isDisplacedBy(const label displacingPhasei) const;
+
+        //- Return whether this is a function of the volume fractions only
+        virtual bool functionOfAlphas() const;
 };
 
 

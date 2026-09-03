@@ -116,6 +116,9 @@ class BlendedInterfacialModel
             PtrList<GeometricField<scalar, GeoMesh>>& fSD
         ) const;
 
+        //- ...
+        void writeBlendingCoefficients() const;
+
         //- Write out a set or surface that visualises the various models'
         //  utilisation of the blending space
         void postProcessBlendingCoefficients(const word& format) const;

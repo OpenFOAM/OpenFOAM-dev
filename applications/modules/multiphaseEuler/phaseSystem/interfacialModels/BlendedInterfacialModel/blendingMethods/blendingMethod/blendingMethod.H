@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Abstract base class for functions that are used to combine interfacial
     sub-models according to the volume fractions of the phases that they apply
-    to.
+    to
 
 SourceFiles
     blendingMethod.C
@@ -51,8 +51,8 @@ namespace Foam
 
 struct blendingParameter
 {
-    //- Is this parameter valid?
-    bool valid;
+    //- Was this parameter specified?
+    bool specified;
 
     //- The parameter value. Could be templated if needed.
     scalar value;
@@ -65,6 +65,21 @@ struct blendingParameter
 
 class blendingMethod
 {
+private:
+
+    // Private member functions
+
+        //- Read a parameter and check it lies within specified bounds
+        static blendingParameter readParameter
+        (
+            const word& name,
+            const dictionary& dict,
+            const Pair<scalar>& bounds,
+            const bool allowNone,
+            const scalar noneValue
+        );
+
+
 protected:
 
     // Protected Data
@@ -80,8 +95,34 @@ protected:
         (
             const word& name,
             const dictionary& dict,
+            const Pair<scalar>& bounds
+        );
+
+        //- Read a parameter and check it lies within specified bounds
+        static blendingParameter readParameter
+        (
+            const word& name,
+            const dictionary& dict,
             const Pair<scalar>& bounds,
-            const bool allowNone
+            const scalar noneValue
+        );
+
+        //- Read a parameter and check it lies within specified bounds
+        static blendingParameter readParameterIfPresent
+        (
+            const word& name,
+            const dictionary& dict,
+            const Pair<scalar>& bounds,
+            const scalar noneValue
+        );
+
+        //- Read a parameter for each phase in the interface
+        static Pair<blendingParameter> readParameters
+        (
+            const word& name,
+            const dictionary& dict,
+            const phaseInterface& interface,
+            const Pair<scalar>& bounds
         );
 
         //- Read a parameter for each phase in the interface
@@ -91,7 +132,7 @@ protected:
             const dictionary& dict,
             const phaseInterface& interface,
             const Pair<scalar>& bounds,
-            const bool allowNone
+            const scalar noneValue
         );
 
 
@@ -104,46 +145,82 @@ protected:
             const scalar k
         ) const;
 
-        //- Get the volume fraction of the given set
+        //- Get the volume fraction given the index in the interface. If the
+        //  index is 0 or 1 this returns the volume fraction of the indexed
+        //  phase, and if the index is -1 then this returns the volume fraction
+        //  of the two-phase sub-system.
         tmp<volScalarField> alpha
         (
             const UPtrList<const volScalarField>& alphas,
-            const label set,
+            const label index,
             const bool protect
         ) const;
 
-        //- Get a blending parameter averaged for the given set
+        //- Get a blending parameter. Index has the same meaning as for
+        //  blendingMethod::alpha. If the index is -1 then the parameter
+        //  returned will be a value constructed for the sub-system by
+        //  volume-fraction-weighting the parameter values for both phases.
         tmp<volScalarField> parameter
         (
             const UPtrList<const volScalarField>& alphas,
-            const label set,
+            const label index,
             const Pair<blendingParameter>& parameters
         ) const;
 
-        //- Return the coordinate of the blending function
+        //- Return the coordinate of the blending function. Index has the same
+        //  meaning as for blendingMethod::alpha.
         tmp<volScalarField> x
         (
             const UPtrList<const volScalarField>& alphas,
-            const label phaseSet,
-            const label systemSet
+            const label index
         ) const;
 
-        //- Evaluate the blending function for sets in which all phases can be
-        //  continuous
+        //- Return the coefficient for models for which the indexed phase is
+        //  considered continuous. Index has the same meaning as for
+        //  blendingMethod::alpha.
         virtual tmp<volScalarField> fContinuous
         (
             const UPtrList<const volScalarField>& alphas,
-            const label phaseSet,
-            const label systemSet
+            const label index
         ) const = 0;
 
-        //- Evaluate the blending function. Filters out phases that cannot
-        //  become continuous from the sets, then calls fContinuous
-        virtual tmp<volScalarField> f
+        //- As above, but for a different blending method
+        static inline tmp<volScalarField> fContinuous
+        (
+            const blendingMethod& blending,
+            const UPtrList<const volScalarField>& alphas,
+            const label index
+        )
+        {
+            return blending.fContinuous(alphas, index);
+        }
+
+        //- Return the coefficient for when the interface is displaced by a
+        //  third phase
+        virtual tmp<volScalarField> fDisplaced
         (
             const UPtrList<const volScalarField>& alphas,
-            const label phaseSet,
-            const label systemSet
+            const label displacingPhasei
+        ) const = 0;
+
+        //- As above, but for a different blending method
+        static inline tmp<volScalarField> fDisplaced
+        (
+            const blendingMethod& blending,
+            const UPtrList<const volScalarField>& alphas,
+            const label displacingPhasei
+        )
+        {
+            return blending.fDisplaced(alphas, displacingPhasei);
+        }
+
+        //- As blendingMethod::fContinuous, but filters out and returns default
+        //  values if the indexed phase cannot become continuous, then calls
+        //  the virtual fContinuous.
+        tmp<volScalarField> fContinuousFiltered
+        (
+            const UPtrList<const volScalarField>& alphas,
+            const label index
         ) const;
 
 
@@ -161,20 +238,17 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const phaseInterface& interface
+            const phaseInterface& interface,
+            const bool allowDisplaced
         ),
-        (dict, interface)
+        (dict, interface, allowDisplaced)
     );
 
 
     // Constructors
 
-        //- Construct from a dictionary and an interface
-        blendingMethod
-        (
-            const dictionary& dict,
-            const phaseInterface& interface
-        );
+        //- Construct for an interface
+        blendingMethod(const phaseInterface& interface);
 
 
     // Selector
@@ -183,7 +257,8 @@ public:
         (
             const word& modelTypeName,
             const dictionary& dict,
-            const phaseInterface& interface
+            const phaseInterface& interface,
+            const bool allowDisplaced = true
         );
 
 
@@ -199,6 +274,12 @@ public:
         //- Return whether or not this interface can segregate
         virtual bool canSegregate() const = 0;
 
+        //- Return whether or not the interface is displaced by a third phase
+        virtual bool isDisplacedBy(const label displacingPhasei) const = 0;
+
+        //- Return whether this is a function of the volume fractions only
+        virtual bool functionOfAlphas() const = 0;
+
         //- Return the coefficient for models in which phase 1 is dispersed in
         //  phase 2
         tmp<volScalarField> f1DispersedIn2
@@ -213,11 +294,12 @@ public:
             const UPtrList<const volScalarField>& alphas
         ) const;
 
-        //- Return the coefficient for when the interface is displaced by a
-        //  third phase
-        tmp<volScalarField> fDisplaced
+        //- Return the coefficient for models in which phases 1 and 2 are
+        //  displaced by a third phase
+        tmp<volScalarField> f12DisplacedBy3
         (
-            const UPtrList<const volScalarField>& alphas
+            const UPtrList<const volScalarField>& alphas,
+            const label displacingPhasei
         ) const;
 };
 

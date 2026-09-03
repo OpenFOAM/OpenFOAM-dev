@@ -22,13 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::continuous
+    Foam::blendingMethods::smoothedZonal
 
 Description
-    Blending method for the case in which the continuous phase is always the
-    same. E.g., for an air-particles flow, the air phase is always continuous.
-    Applies only the dispersed (i.e., phaseA_dispersedIn_phaseB, where phaseB
-    is the identified continuous phase) model.
+    Blending method which applies different sub-blending methods to different
+    cell zones. The blending methods are specified in a list of
+    sub-dictionaries, with the cell zone defined by the sub-dictionary names. A
+    default method is also specified for any part of the mesh not within one of
+    the identified zones.
+
+    A smoothing process is applied in order to prevent the transition between
+    blending methods from being instantaneous at the boundary of a zone. The
+    number of cell-length-scales over which this smoothing is done is specified
+    by the user.
+
+    Where multiple zones overlap am average of the zones' blending coefficients
+    will be used.
 
     Example usage, in constant/phaseProperties:
     \verbatim
@@ -36,19 +45,43 @@ Description
     {
         default
         {
-            type            continuous;
-            phase           air;
+            type            smoothedZonal;
+            nCellLengthScales 2;
+            default
+            {
+                type            linear;
+                displaced       no;
+                minFullyContinuousAlpha.air 0.8;
+                minPartlyContinuousAlpha.air 0.5;
+                minFullyContinuousAlpha.water 0.8;
+                minPartlyContinuousAlpha.water 0.5;
+                minFullyContinuousAlpha.particles none;
+                minPartlyContinuousAlpha.particles none;
+                minFullyContinuousAlpha.bed none;
+                minPartlyContinuousAlpha.bed none;
+            }
+            zones
+            {
+                myCellZone0
+                {
+                    type            segregated;
+                }
+                myCellZone1
+                {
+                    type            none;
+                }
+            }
         }
     }
     \endverbatim
 
 SourceFiles
-    continuous.C
+    smoothedZonal.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef continuous_H
-#define continuous_H
+#ifndef smoothedZonal_H
+#define smoothedZonal_H
 
 #include "blendingMethod.H"
 
@@ -60,30 +93,45 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class continuous Declaration
+                           Class smoothedZonal Declaration
 \*---------------------------------------------------------------------------*/
 
-class continuous
+class smoothedZonal
 :
     public blendingMethod
 {
+    // Private classes
+
+        //- Zone boundary indexing information
+        class masks;
+
+
     // Private Data
 
-        //- The continuous phase
-        const phaseModel& phase_;
+        //- Number of cell length scales over which to smooth
+        const scalar nCellLengthScales_;
 
-        //- Apply displaced models? The displaced model coefficient will be
-        //  calculated as one-minus the continuous coefficient calculated for
-        //  the two-phase sub-system.
-        const bool displaced_;
+        //- Number of smoothing iterations
+        const label nIter_;
 
-        //- The index of the continuous phase in the interface, or -1 if the
-        //  interface does not contain the continuous phase
-        const label index_;
+        //- The blending method outside the zones
+        autoPtr<blendingMethod> defaultBlending_;
 
-        //- The index of the non-continuous phase in the interface, or -1 if
-        //  the interface does not contain the continuous phase
-        const label otherIndex_;
+        //- The indices of the zones for which non-default blending applies
+        labelList zoneIndices_;
+
+        //- The blending methods in the zones
+        PtrList<blendingMethod> zoneBlendings_;
+
+
+    // Private Member Functions
+
+        //- Combine default and zone-specific function values
+        tmp<volScalarField> f
+        (
+            const tmp<volScalarField>& defaultF,
+            const PtrList<volScalarField>& zoneFs
+        ) const;
 
 
 protected:
@@ -110,13 +158,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("continuous");
+    TypeName("smoothedZonal");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        continuous
+        smoothedZonal
         (
             const dictionary& dict,
             const phaseInterface& interface,
@@ -125,7 +173,7 @@ public:
 
 
     //- Destructor
-    ~continuous();
+    ~smoothedZonal();
 
 
     // Member Functions

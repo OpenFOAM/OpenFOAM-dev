@@ -31,7 +31,8 @@ Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
 (
     const word& modelTypeName,
     const dictionary& dict,
-    const phaseInterface& interface
+    const phaseInterface& interface,
+    const bool allowDisplaced
 )
 {
     const word blendingMethodType(dict.lookup("type"));
@@ -54,7 +55,7 @@ Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
 
     printDictionary print(dict);
 
-    return cstrIter()(dict, interface);
+    return cstrIter()(dict, interface, allowDisplaced);
 }
 
 

@@ -22,13 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::continuous
+    Foam::blendingMethods::linearDisplaced
 
 Description
-    Blending method for the case in which the continuous phase is always the
-    same. E.g., for an air-particles flow, the air phase is always continuous.
-    Applies only the dispersed (i.e., phaseA_dispersedIn_phaseB, where phaseB
-    is the identified continuous phase) model.
+    Blending method which activates models relating to displacement by a third
+    phase based on a linear function of the phase fraction of that third phase.
+
+    This method requires two volume fractions to be specified for each third
+    phase, which defines the range over which the transition between
+    non-displaced and displaced models occurs.
+
+    This model requires a sub-blending method to be specified to determine how
+    the dispersed/segregated/general model system (i.e., A_dispersedIn_B,
+    B_dispersedIn_A, A_segregatedWith_B, and A_B) is blended. This sub-blending
+    is used to generate dispersed/segregated/general coefficients for both the
+    non-displaced and displaced regimes, but it will not be used to determine
+    the proportion of displaced models that is applied.
 
     Example usage, in constant/phaseProperties:
     \verbatim
@@ -36,19 +45,39 @@ Description
     {
         default
         {
-            type            continuous;
-            phase           air;
+            type            linearDisplaced;
+            minFullyDisplacingAlpha.air none;
+            minPartlyDisplacingAlpha.air none;
+            minFullyDisplacingAlpha.water none;
+            minPartlyDisplacingAlpha.water none;
+            minFullyDisplacingAlpha.particles 0.6;
+            minPartlyDisplacingAlpha.particles 0.2;
+            minFullyDisplacingAlpha.bed 0.6;
+            minPartlyDisplacingAlpha.bed 0.2;
+            blending
+            {
+                type            linear;
+                displaced       no;
+                minFullyContinuousAlpha.air 0.8;
+                minPartlyContinuousAlpha.air 0.5;
+                minFullyContinuousAlpha.water 0.8;
+                minPartlyContinuousAlpha.water 0.5;
+                minFullyContinuousAlpha.particles none;
+                minPartlyContinuousAlpha.particles none;
+                minFullyContinuousAlpha.bed none;
+                minPartlyContinuousAlpha.bed none;
+            }
         }
     }
     \endverbatim
 
 SourceFiles
-    continuous.C
+    linearDisplaced.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef continuous_H
-#define continuous_H
+#ifndef linearDisplaced_H
+#define linearDisplaced_H
 
 #include "blendingMethod.H"
 
@@ -60,30 +89,30 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class continuous Declaration
+                           Class linearDisplaced Declaration
 \*---------------------------------------------------------------------------*/
 
-class continuous
+class linearDisplaced
 :
     public blendingMethod
 {
+protected:
+
     // Private Data
 
-        //- The continuous phase
-        const phaseModel& phase_;
+        //- The volume fraction of displacing phase at which displaced models
+        //  are the only models being used
+        List<blendingParameter> minFullyDisplacingAlphas_;
 
-        //- Apply displaced models? The displaced model coefficient will be
-        //  calculated as one-minus the continuous coefficient calculated for
-        //  the two-phase sub-system.
-        const bool displaced_;
+        //- The volume fraction of displacing phase at which displaced models
+        //  begin to be used
+        List<blendingParameter> minPartlyDisplacingAlphas_;
 
-        //- The index of the continuous phase in the interface, or -1 if the
-        //  interface does not contain the continuous phase
-        const label index_;
+        //- List of the displacing phase indices
+        List<label> displacingPhases_;
 
-        //- The index of the non-continuous phase in the interface, or -1 if
-        //  the interface does not contain the continuous phase
-        const label otherIndex_;
+        //- The sub-blending
+        autoPtr<blendingMethod> blending_;
 
 
 protected:
@@ -110,13 +139,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("continuous");
+    TypeName("linearDisplaced");
 
 
     // Constructors
 
         //- Construct from a dictionary and an interface
-        continuous
+        linearDisplaced
         (
             const dictionary& dict,
             const phaseInterface& interface,
@@ -125,7 +154,7 @@ public:
 
 
     //- Destructor
-    ~continuous();
+    ~linearDisplaced();
 
 
     // Member Functions
