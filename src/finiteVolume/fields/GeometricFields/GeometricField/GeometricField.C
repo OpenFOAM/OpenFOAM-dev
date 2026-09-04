@@ -2409,6 +2409,89 @@ Foam::Ostream& Foam::operator<<
 }
 
 
+// * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * * //
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+bool Foam::reusable
+(
+    const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf
+)
+{
+    typedef GeometricField<Type, GeoMesh, PrimitiveField> geoField;
+
+    if (tgf.isTmp())
+    {
+        if (geoField::debug)
+        {
+            const geoField& gf = tgf();
+            const typename geoField::BoundaryField& gbf = gf.boundaryField();
+
+            forAll(gbf, patchi)
+            {
+                if
+                (
+                    !gbf[patchi].patch().constraint()
+                 && !isA<typename geoField::PatchField::Calculated>(gbf[patchi])
+                )
+                {
+                    WarningInFunction
+                        << "Attempt to reuse temporary with non-reusable BC "
+                        << gbf[patchi].type() << endl;
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+template<class TypeR, class GeoMesh>
+Foam::tmp<Foam::GeometricField<TypeR, GeoMesh, Foam::Field>> Foam::New
+(
+    const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf1,
+    const word& name,
+    const dimensionSet& dimensions,
+    const bool initRet
+)
+{
+    GeometricField<TypeR, GeoMesh, Field>& gf1 =
+        const_cast<GeometricField<TypeR, GeoMesh, Field>&>(tgf1());
+
+    if (reusable(tgf1))
+    {
+        gf1.rename(name);
+        gf1.dimensions().reset(dimensions);
+        return tgf1;
+    }
+    else
+    {
+        tmp<GeometricField<TypeR, GeoMesh, Field>> rtgf
+        (
+            GeometricField<TypeR, GeoMesh, Field>::New
+            (
+                name,
+                gf1.mesh(),
+                dimensions
+            )
+        );
+
+        if (initRet)
+        {
+            rtgf.ref() == tgf1();
+        }
+
+        return rtgf;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #undef checkFieldAssignment

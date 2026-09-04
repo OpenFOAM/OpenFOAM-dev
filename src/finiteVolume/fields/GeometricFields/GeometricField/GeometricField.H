@@ -896,6 +896,20 @@ Ostream& operator<<
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
+bool reusable(const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf);
+
+
+template<class TypeR, class GeoMesh>
+tmp<GeometricField<TypeR, GeoMesh, Field>> New
+(
+    const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf1,
+    const word& name,
+    const dimensionSet& dimensions,
+    const bool initRet = false
+);
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 struct OldTimeFieldCopy<GeometricField<Type, GeoMesh, PrimitiveField>>
 {
     using FieldType = GeometricField<Type, GeoMesh, PrimitiveField>;
@@ -918,10 +932,9 @@ struct OldTimeFieldCopy<GeometricField<Type, GeoMesh, PrimitiveField>>
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "GeometricFieldI.H"
+#include "GeometricFieldExpression.H"
 
 #ifdef NoRepository
-    #include "GeometricFieldExpression.H"
-    #include "GeometricFieldReuseFunctions.H"
     #include "GeometricField.C"
 #endif
 
