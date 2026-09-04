@@ -38,27 +38,11 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template
-<
-    class A,
-    class B
->
-struct multiplyOpAuto
-{
-    auto operator()(const A& a, const B& b)
-    {
-        return a*b;
-    }
-};
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 bool Foam::functionObjects::multiply::calc()
 {
-    return calcOp<multiplyOpAuto>();
+    return calcOp<multiplyOp>();
 }
 
 

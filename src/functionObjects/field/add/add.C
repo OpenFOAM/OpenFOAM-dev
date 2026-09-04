@@ -38,27 +38,11 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template
-<
-    class A,
-    class B
->
-struct plusOpAuto
-{
-    auto operator()(const A& a, const B& b)
-    {
-        return a + b;
-    }
-};
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 bool Foam::functionObjects::add::calc()
 {
-    return calcOp<plusOpAuto>();
+    return calcOp<addOp>();
 }
 
 

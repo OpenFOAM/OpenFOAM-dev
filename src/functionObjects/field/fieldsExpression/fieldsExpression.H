@@ -41,6 +41,7 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
+#include "VoidT.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,60 +82,36 @@ protected:
         template
         <
             template<class> class GeoField,
-            template<class ...> class Op,
-            class TypeA,
-            class TypeB,
-            class Enable = Op<TypeA, TypeB>
+            class Op,
+            class A,
+            class B,
+            class = typename Op::template EnableIfDefinedFor<A, B>
         >
-        bool opAndStore
-        (
-            const GeoField<TypeA>& a,
-            const GeoField<TypeB>& b
-        );
+        bool opAndStore(const GeoField<A>& a, const GeoField<B>& b);
 
         //- Operate on the fields and store the result. Not-supported overload.
-        template
-        <
-            template<class> class GeoField,
-            template<class ...> class Op,
-            class ... Args
-        >
+        template<template<class> class GeoField, class Op, class ... Args>
         bool opAndStore(const Args& ...);
 
         //- Fold the fields expression up one place
-        template
-        <
-            template<class> class GeoField,
-            template<class ...> class Op,
-            class TypeA,
-            class TypeB
-        >
+        template<template<class> class GeoField, class Op, class A, class B>
         bool foldAB(const label i);
 
         //- Fold the fields expression up one place
-        template
-        <
-            template<class> class GeoField,
-            template<class ...> class Op,
-            class TypeA
-        >
+        template<template<class> class GeoField, class Op, class A>
         bool foldA(const label i);
 
         //- Fold the fields expression up one place
-        template
-        <
-            template<class> class GeoField,
-            template<class ...> class Op
-        >
+        template<template<class> class GeoField, class Op>
         bool fold(const label i);
 
         //- Calculate and store the fields expression for the given geometric
         //  field type and operation
-        template<template<class> class GeoField, template<class ...> class Op>
+        template<template<class> class GeoField, class Op>
         bool calcGeoFieldOp();
 
         //- Calculate and store the fields expression for the given operation
-        template<template<class ...> class Op>
+        template<class Op>
         bool calcOp();
 
         //- Perform calculation on the list of fields and return success

@@ -34,6 +34,7 @@ Description
 #define ops_H
 
 #include "expressionName.H"
+#include "VoidT.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -190,6 +191,10 @@ struct addOp
 
     static const bool associative = true;
 
+    template<class A, class B>
+    using EnableIfDefinedFor =
+        VoidT<decltype(std::declval<A>() + std::declval<B>())>;
+
     static word name(const word& a, const word& b)
     {
         return a + '+' + b;
@@ -232,6 +237,10 @@ struct subtractOp
 
     static const bool associative = false;
 
+    template<class A, class B>
+    using EnableIfDefinedFor =
+        VoidT<decltype(std::declval<A>() - std::declval<B>())>;
+
     static word name(const word& a, const word& b)
     {
         return a + '-' + b;
@@ -260,6 +269,10 @@ struct multiplyOp
 
     static const bool associative = true;
 
+    template<class A, class B>
+    using EnableIfDefinedFor =
+        VoidT<decltype(std::declval<A>()*std::declval<B>())>;
+
     static word name(const word& a, const word& b)
     {
         return a + '*' + b;
@@ -287,6 +300,10 @@ struct divideOp
     static const signed char precedence = 1;
 
     static const bool associative = false;
+
+    template<class A, class B>
+    using EnableIfDefinedFor =
+        VoidT<decltype(std::declval<A>()/std::declval<B>())>;
 
     static word name(const word& a, const word& b)
     {

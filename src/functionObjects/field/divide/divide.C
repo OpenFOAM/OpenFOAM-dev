@@ -38,27 +38,11 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template
-<
-    class A,
-    class B
->
-struct divideOpAuto
-{
-    auto operator()(const A& a, const B& b)
-    {
-        return a/b;
-    }
-};
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 bool Foam::functionObjects::divide::calc()
 {
-    return calcOp<divideOpAuto>();
+    return calcOp<divideOp>();
 }
 
 

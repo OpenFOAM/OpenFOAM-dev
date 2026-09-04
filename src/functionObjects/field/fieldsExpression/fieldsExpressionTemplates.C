@@ -29,61 +29,40 @@ License
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template
-<
-    template<class> class GeoField,
-    template<class ...> class Op,
-    class TypeA,
-    class TypeB,
-    class Enable
->
+template<template<class> class GeoField, class Op, class A, class B, class>
 bool Foam::functionObjects::fieldsExpression::opAndStore
 (
-    const GeoField<TypeA>& a,
-    const GeoField<TypeB>& b
+    const GeoField<A>& a,
+    const GeoField<B>& b
 )
 {
-    //***HGW store(resultName_, Op<GeoField<TypeA>, GeoField<TypeB>>()(a, b));
+    store(resultName_, eval(Op::value(a, b)));
 
     return true;
 }
 
 
-template
-<
-    template<class> class GeoField,
-    template<class ...> class Op,
-    class ... Args
->
-bool Foam::functionObjects::fieldsExpression::opAndStore
-(
-    const Args& ...
-)
+template<template<class> class GeoField, class Op, class ... Args>
+bool Foam::functionObjects::fieldsExpression::opAndStore(const Args& ...)
 {
     return false;
 }
 
 
-template
-<
-    template<class> class GeoField,
-    template<class ...> class Op,
-    class TypeA,
-    class TypeB
->
+template<template<class> class GeoField, class Op, class A, class B>
 bool Foam::functionObjects::fieldsExpression::foldAB(const label i)
 {
     if
     (
         i == 0
-     && foundObject<GeoField<TypeA>>(fieldNames_[0])
+     && foundObject<GeoField<A>>(fieldNames_[0])
     )
     {
         clearObject(resultName_);
         store
         (
             resultName_,
-            lookupObject<GeoField<TypeA>>(fieldNames_[0]).clone()
+            lookupObject<GeoField<A>>(fieldNames_[0]).clone()
         );
 
         return true;
@@ -92,14 +71,12 @@ bool Foam::functionObjects::fieldsExpression::foldAB(const label i)
     if
     (
         i > 0
-     && foundObject<GeoField<TypeA>>(resultName_)
-     && foundObject<GeoField<TypeB>>(fieldNames_[i])
+     && foundObject<GeoField<A>>(resultName_)
+     && foundObject<GeoField<B>>(fieldNames_[i])
     )
     {
-        tmp<GeoField<TypeA>> a =
-            lookupObject<GeoField<TypeA>>(resultName_).clone();
-        const GeoField<TypeB>& b =
-            lookupObject<GeoField<TypeB>>(fieldNames_[i]);
+        tmp<GeoField<A>> a = lookupObject<GeoField<A>>(resultName_).clone();
+        const GeoField<B>& b = lookupObject<GeoField<B>>(fieldNames_[i]);
 
         clearObject(resultName_);
         return opAndStore<GeoField, Op>(a(), b);
@@ -109,18 +86,13 @@ bool Foam::functionObjects::fieldsExpression::foldAB(const label i)
 }
 
 
-template
-<
-    template<class> class GeoField,
-    template<class ...> class Op,
-    class TypeA
->
+template<template<class> class GeoField, class Op, class A>
 bool Foam::functionObjects::fieldsExpression::foldA(const label i)
 {
     bool success = false;
 
     #define processType(Type, none) \
-        success = success || foldAB<GeoField, Op, TypeA, Type>(i);
+        success = success || foldAB<GeoField, Op, A, Type>(i);
     FOR_ALL_FIELD_TYPES(processType);
     #undef processType
 
@@ -128,7 +100,7 @@ bool Foam::functionObjects::fieldsExpression::foldA(const label i)
 }
 
 
-template<template<class> class GeoField, template<class ...> class Op>
+template<template<class> class GeoField, class Op>
 bool Foam::functionObjects::fieldsExpression::fold(const label i)
 {
     bool success = false;
@@ -142,7 +114,7 @@ bool Foam::functionObjects::fieldsExpression::fold(const label i)
 }
 
 
-template<template<class> class GeoField, template<class ...> class Op>
+template<template<class> class GeoField, class Op>
 bool Foam::functionObjects::fieldsExpression::calcGeoFieldOp()
 {
     forAll(fieldNames_, i)
@@ -157,12 +129,12 @@ bool Foam::functionObjects::fieldsExpression::calcGeoFieldOp()
 }
 
 
-template<template<class ...> class Op>
+template<class Op>
 bool Foam::functionObjects::fieldsExpression::calcOp()
 {
     return
         calcGeoFieldOp<VolField, Op>()
-     //***HGW || calcGeoFieldOp<VolInternalField, Op>()
+     || calcGeoFieldOp<VolInternalField, Op>()
      || calcGeoFieldOp<SurfaceField, Op>();
 }
 
