@@ -113,7 +113,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::fd
     return volInternalScalarField::New
     (
         typedName("fd"),
-        1 - tanh(pow3(8*rd(this->nuEff(), magGradU)))
+        1 - tanh(pow3(8*rd(this->nut_(), magGradU)))
     );
 }
 
