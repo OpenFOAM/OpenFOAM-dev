@@ -637,6 +637,11 @@ bool Foam::polyMesh::writeMesh() const
         ok = ok && neighbour_.write();
     }
 
+    if (boundary_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        ok = ok && boundary_.write();
+    }
+
     if (pointZones_.writeOpt() == IOobject::AUTO_WRITE)
     {
         ok = ok && pointZones_.write();
