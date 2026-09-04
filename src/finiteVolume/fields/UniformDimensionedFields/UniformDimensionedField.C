@@ -158,13 +158,6 @@ Type& Foam::UniformDimensionedField<Type>::value()
 
 
 template<class Type>
-const Type& Foam::UniformDimensionedField<Type>::value() const
-{
-    return dimensioned<Type>::value();
-}
-
-
-template<class Type>
 void Foam::UniformDimensionedField<Type>::reset
 (
     const UniformDimensionedField<Type>& rhs

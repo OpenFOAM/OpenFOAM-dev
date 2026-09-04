@@ -104,6 +104,8 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "UniformGeometricFieldExpression.H"
+
 #ifdef NoRepository
     #include "UniformGeometricField.C"
     #include "UniformGeometricFieldI.H"

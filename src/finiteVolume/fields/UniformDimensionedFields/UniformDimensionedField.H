@@ -153,23 +153,14 @@ public:
             return true;
         }
 
-        //- Return const reference to dimensions.
-        dimensionSet& dimensions()
-        {
-            return dimensioned<Type>::dimensions();
-        }
-
-        //- Return const reference to dimensions.
-        const dimensionSet& dimensions() const
-        {
-            return dimensioned<Type>::dimensions();
-        }
-
-        //- Return a reference to the value
+        //- Return a reference to the value after storing old-time values
         Type& value();
 
         //- Return a const-reference to the value
-        const Type& value() const;
+        const Type& value() const
+        {
+            return dimensioned<Type>::value();
+        }
 
         //- Reset the field values to the given field
         //  Equivalent to operator=
@@ -204,77 +195,11 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "UniformDimensionedFieldExpression.H"
+
 #ifdef NoRepository
     #include "UniformDimensionedField.C"
 #endif
-
-#include "expressionDimensionedType.H"
-
-namespace Foam
-{
-namespace expression
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type, class ... Args>
-struct Operate
-<
-    UniformDimensionedField<Type>,
-    Arguments<Value, Args ...>,
-    EnableIfNotExpressionable<UniformDimensionedField<Type>>
->
-{
-    using type = const Type&;
-
-    static type access
-    (
-        const UniformDimensionedField<Type>& udf,
-        const Value&,
-        const Args& ... args
-    )
-    {
-        return udf.value();
-    }
-};
-
-template<class Type>
-struct Operate
-<
-    UniformDimensionedField<Type>,
-    Arguments<dimensionSet>,
-    EnableIfNotExpressionable<UniformDimensionedField<Type>>
->
-{
-    using type = const dimensionSet&;
-
-    static type access
-    (
-        const UniformDimensionedField<Type>& udt,
-        const dimensionSet&
-    )
-    {
-        return udt.dimensions();
-    }
-};
-
-template<class Type>
-struct Name
-<
-    UniformDimensionedField<Type>,
-    EnableIfNotExpressionable<UniformDimensionedField<Type>>
->
-{
-    static word value(const UniformDimensionedField<Type>& udf)
-    {
-        return udf.name();
-    }
-};
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace expression
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
