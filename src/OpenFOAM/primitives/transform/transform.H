@@ -35,6 +35,7 @@ Description
 #include "tensor.H"
 #include "mathematicalConstants.H"
 #include "dimensionSet.H"
+#include "expressionName.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,28 +21,48 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::VectorSpaceOps
+
+Description
+    Operator function for VectorSpace
+
 \*---------------------------------------------------------------------------*/
 
-#ifndef DimensionedFieldFwd_H
-#define DimensionedFieldFwd_H
+#ifndef VectorSpaceOp_H
+#define VectorSpaceOp_H
+
+#include "direction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                         Class VectorSpaceOp Declaration
+\*---------------------------------------------------------------------------*/
 
-template<class Type>
-class Field;
+template<direction N, direction I>
+struct VectorSpaceOp
+{
+    template<class Op, class ... Vs>
+    static inline void op(const Op& op, Vs& ... vs)
+    {
+        op(vs.v_[I] ...);
+        VectorSpaceOp<N, I + 1>::op(op, vs ...);
+    }
+};
 
-template
-<
-    class Type,
-    class GeoMesh,
-    template<class> class PrimitiveField = Field
->
-class DimensionedField;
+
+template<direction N>
+struct VectorSpaceOp<N, N>
+{
+    template<class Op, class ... Vs>
+    static inline void op(const Op& op, Vs& ... vs)
+    {}
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

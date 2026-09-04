@@ -591,24 +591,13 @@ struct cmptPowOp
     };
 
 EqOp(eq, x = y)
-EqOp(eqNeg, x = -y)
-EqOp(eqSqr, x = sqr(y))
-EqOp(eqMag, x = mag(y))
-
 EqOp(addEq, x += y)
-EqOp(subtractEq, x -= y)
-EqOp(multiplyEq, x *= y)
-EqOp(divideEq, x /= y)
-EqOp(addEqMagSqr, x += magSqr(y))
 EqOp(maxEq, x = max(x, y))
 EqOp(minEq, x = min(x, y))
 EqOp(minMagSqrEq, x = (magSqr(x) <= magSqr(y) ? x : y))
 EqOp(maxMagSqrEq, x = (magSqr(x) >= magSqr(y) ? x : y))
 EqOp(andEq, x = (x && y))
 EqOp(orEq, x = (x || y))
-EqOp(notEq, x = (x != y))
-
-EqOp(nopEq, (void)x)
 
 #undef EqOp
 
@@ -628,7 +617,6 @@ Op(minMagSqr, (magSqr(x) <= magSqr(y) ? x : y))
 Op(maxMagSqr, (magSqr(x) >= magSqr(y) ? x : y))
 Op(and, x && y)
 Op(or, x || y)
-Op(equal, x == y)
 Op(less, x < y)
 Op(lessEq, x <= y)
 Op(greater, x > y)
