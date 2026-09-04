@@ -56,7 +56,6 @@ SourceFiles
 #include "DLList.H"
 #include "ITstream.H"
 #include "Pair.H"
-#include "fieldTypes.H"
 #include "Tuple3.H"
 #include <tuple>
 

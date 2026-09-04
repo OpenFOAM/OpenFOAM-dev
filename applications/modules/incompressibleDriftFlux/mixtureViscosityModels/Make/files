@@ -1,7 +1,7 @@
 mixtureViscosityModel/mixtureViscosityModel.C
 mixtureViscosityModel/mixtureViscosityModelNew.C
-#***HGW plastic/plastic.C
-#***HGW BinghamPlastic/BinghamPlastic.C
+plastic/plastic.C
+BinghamPlastic/BinghamPlastic.C
 slurry/slurry.C
 Quemada/Quemada.C
 HerschelBulkley/HerschelBulkley.C

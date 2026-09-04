@@ -76,7 +76,7 @@ SourceFiles
 #ifndef advectiveFvPatchField_H
 #define advectiveFvPatchField_H
 
-#include "mixedFvPatchFields.H"
+#include "mixedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

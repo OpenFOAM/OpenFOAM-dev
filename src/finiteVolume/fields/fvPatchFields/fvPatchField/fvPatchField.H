@@ -44,8 +44,8 @@ SourceFiles
 #ifndef fvPatchField_H
 #define fvPatchField_H
 
-#include "fvPatch.H"
 #include "DimensionedField.H"
+#include "fvPatch.H"
 #include "fvPatchFieldMapperFwd.H"
 #include "fileNameList.H"
 #include "fieldTypes.H"

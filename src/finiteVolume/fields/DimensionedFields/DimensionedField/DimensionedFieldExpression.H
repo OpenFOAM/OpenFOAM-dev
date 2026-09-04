@@ -89,7 +89,7 @@ struct Operate
     Arguments<dimensionSet>
 >
 {
-    using type = const dimensionSet&;
+    using type = dimensionsOrVariableExponent;
 
     static type access
     (
@@ -97,7 +97,7 @@ struct Operate
         const dimensionSet&
     )
     {
-        return f.dimensions();
+        return type(f.dimensions());
     }
 };
 

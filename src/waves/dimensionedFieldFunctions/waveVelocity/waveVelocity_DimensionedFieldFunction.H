@@ -52,6 +52,7 @@ SourceFiles
 #define waveVelocity_DimensionedFieldFunction_H
 
 #include "DimensionedFieldFunction.H"
+#include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

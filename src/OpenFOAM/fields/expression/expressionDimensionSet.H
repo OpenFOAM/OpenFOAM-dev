@@ -47,10 +47,12 @@ namespace Foam
 namespace expression
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                     Class DimensionsOrUniformExponent Declaration
+\*---------------------------------------------------------------------------*/
 
 template<class Exponent>
-class DimensionsOrExponent
+class DimensionsOrUniformExponent
 {
     const dimensionSet& dimensions_;
 
@@ -58,13 +60,13 @@ class DimensionsOrExponent
 
 public:
 
-    DimensionsOrExponent(const Exponent& exponent)
+    DimensionsOrUniformExponent(const Exponent& exponent)
     :
         dimensions_(dimless),
         exponent_(exponent)
     {}
 
-    DimensionsOrExponent(const dimensioned<Exponent>& dt)
+    DimensionsOrUniformExponent(const dimensioned<Exponent>& dt)
     :
         dimensions_(dt.dimensions()),
         exponent_(dt.value())
@@ -78,12 +80,114 @@ public:
     friend dimensionSet pow
     (
         const dimensionSet& dimensions,
-        const DimensionsOrExponent<Exponent>& doe
+        const DimensionsOrUniformExponent<Exponent>& doue
     )
     {
-        return pow(dimensions, doe.exponent_);
+        doue.dimensions_ = dimless;
+        return pow(dimensions, doue.exponent_);
     }
 };
+
+/*---------------------------------------------------------------------------*\
+                  Class dimensionsOrVariableExponent Declaration
+\*---------------------------------------------------------------------------*/
+
+class dimensionsOrVariableExponent
+{
+    const dimensionSet dimensions_;
+
+public:
+
+    dimensionsOrVariableExponent(const dimensionSet& dimensions)
+    :
+        dimensions_(dimensions)
+    {}
+
+    operator const dimensionSet&() const
+    {
+        return dimensions_;
+    }
+
+    #define UNARY_DOVE_FUNCTION(Func)                                          \
+                                                                               \
+        friend dimensionsOrVariableExponent Func                               \
+        (                                                                      \
+            const dimensionsOrVariableExponent& dove                           \
+        )                                                                      \
+        {                                                                      \
+            return Func(dove.dimensions_);                                     \
+        }
+
+    #define UNARY_DOVE_OPERATOR(OpSym)                                         \
+        UNARY_DOVE_FUNCTION(operator OpSym)
+
+    #define BINARY_DOVE_FUNCTION(Func)                                         \
+                                                                               \
+        friend dimensionsOrVariableExponent Func                               \
+        (                                                                      \
+            const dimensionsOrVariableExponent& a,                             \
+            const dimensionsOrVariableExponent& b                              \
+        )                                                                      \
+        {                                                                      \
+            return Func(a.dimensions_, b.dimensions_);                         \
+        }                                                                      \
+                                                                               \
+        friend dimensionsOrVariableExponent Func                               \
+        (                                                                      \
+            const dimensionsOrVariableExponent& dove,                          \
+            const dimensionSet& dimensions                                     \
+        )                                                                      \
+        {                                                                      \
+            return Func(dove.dimensions_, dimensions);                         \
+        }                                                                      \
+                                                                               \
+        friend dimensionsOrVariableExponent Func                               \
+        (                                                                      \
+            const dimensionSet& dimensions,                                    \
+            const dimensionsOrVariableExponent& dove                           \
+        )                                                                      \
+        {                                                                      \
+            return Func(dimensions, dove.dimensions_);                         \
+        }
+
+    #define BINARY_DOVE_OPERATOR(OpSym)                                        \
+        BINARY_DOVE_FUNCTION(operator OpSym)
+
+    UNARY_DOVE_FUNCTION(sqr)
+    UNARY_DOVE_FUNCTION(mag)
+    UNARY_DOVE_FUNCTION(magSqr)
+
+    UNARY_DOVE_OPERATOR(-)
+
+    BINARY_DOVE_FUNCTION(max)
+    BINARY_DOVE_FUNCTION(min)
+
+    BINARY_DOVE_OPERATOR(+)
+    BINARY_DOVE_OPERATOR(-)
+    BINARY_DOVE_OPERATOR(*)
+    BINARY_DOVE_OPERATOR(/)
+    BINARY_DOVE_OPERATOR(&)
+    BINARY_DOVE_OPERATOR(^)
+    BINARY_DOVE_OPERATOR(&&)
+
+    #undef UNARY_DOVE_FUNCTION
+    #undef UNARY_DOVE_OPERATOR
+    #undef BINARY_DOVE_FUNCTION
+    #undef BINARY_DOVE_OPERATOR
+
+    friend const dimensionSet& pow
+    (
+        const dimensionSet& dimensions,
+        const dimensionsOrVariableExponent& dove
+    )
+    {
+        dimensions = dimless;
+        dove.dimensions_ = dimless;
+        return dimless;
+    }
+};
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
 struct Operate
@@ -109,7 +213,7 @@ struct Operate
     EnableIfNotExpressionable<int32_t>
 >
 {
-    using type = DimensionsOrExponent<int32_t>;
+    using type = DimensionsOrUniformExponent<int32_t>;
 
     static type access(const int32_t l, const dimensionSet&)
     {
@@ -125,7 +229,7 @@ struct Operate
     EnableIfNotExpressionable<int64_t>
 >
 {
-    using type = DimensionsOrExponent<int64_t>;
+    using type = DimensionsOrUniformExponent<int64_t>;
 
     static type access(const int64_t l, const dimensionSet&)
     {
@@ -141,7 +245,7 @@ struct Operate
     EnableIfNotExpressionable<float>
 >
 {
-    using type = DimensionsOrExponent<float>;
+    using type = DimensionsOrUniformExponent<float>;
 
     static type access(const float s, const dimensionSet&)
     {
@@ -157,7 +261,7 @@ struct Operate
     EnableIfNotExpressionable<double>
 >
 {
-    using type = DimensionsOrExponent<double>;
+    using type = DimensionsOrUniformExponent<double>;
 
     static type access(const double s, const dimensionSet&)
     {
@@ -173,7 +277,7 @@ struct Operate
     EnableIfNotExpressionable<double>
 >
 {
-    using type = DimensionsOrExponent<long double>;
+    using type = DimensionsOrUniformExponent<long double>;
 
     static type access(const long double s, const dimensionSet&)
     {
@@ -205,7 +309,7 @@ struct Operate
     EnableIfNotExpressionable<dimensionedScalar>
 >
 {
-    using type = DimensionsOrExponent<scalar>;
+    using type = DimensionsOrUniformExponent<scalar>;
 
     static type access(const dimensionedScalar& ds, const dimensionSet&)
     {

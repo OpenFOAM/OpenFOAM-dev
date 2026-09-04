@@ -1,5 +1,5 @@
 relativeVelocityModel/relativeVelocityModel.C
-#***HGW simple/simple.C
+simple/simple.C
 general/general.C
 MichaelsBolger/MichaelsBolger.C
 

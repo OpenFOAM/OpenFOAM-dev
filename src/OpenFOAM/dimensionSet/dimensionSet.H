@@ -40,7 +40,8 @@ SourceFiles
 #define dimensionSet_H
 
 #include "bool.H"
-#include "fieldTypes.H"
+#include "scalar.H"
+#include "HashTable.H"
 #include "className.H"
 #include "InfoProxy.H"
 
