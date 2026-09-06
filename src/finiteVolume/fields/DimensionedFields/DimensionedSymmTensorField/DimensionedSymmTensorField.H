@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,30 +21,21 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::tensorField
+InClass
+    Foam::DimensionedSymmTensorField
 
 Description
-    Specialisation of Field\<T\> for tensor.
+    SymmTensor specific part of the implementation of DimensionedField.
 
 SourceFiles
-    tensorField.C
+    DimensionedSymmTensorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tensorField_H
-#define tensorField_H
+#ifndef DimensionedSymmTensorField_H
+#define DimensionedSymmTensorField_H
 
-#include "vectorField.H"
-#include "tensorExpressions.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-inline auto Foam::Field<Type>::T() const
-{
-    return Foam::T(*this);
-}
+#include "DimensionedTensorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,11 +44,29 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-typedef Field<tensor> tensorField;
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<symmTensor, GeoMesh, Field>> inv
+(
+    const DimensionedField<symmTensor, GeoMesh, PrimitiveField>&,
+    const Vector<label>& solutionD
+);
+
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<symmTensor, GeoMesh, Field>> inv
+(
+    const tmp<DimensionedField<symmTensor, GeoMesh, PrimitiveField>>& tdtf,
+    const Vector<label>& solutionD
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "DimensionedSymmTensorField.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

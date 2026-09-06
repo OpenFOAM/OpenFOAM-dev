@@ -23,11 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fviReconstruct.H"
-#include "fvMesh.H"
-#include "volFields.H"
-#include "surfaceFields.H"
-#include "fviSurfaceIntegrate.H"
+#include "DimensionedSymmTensorField.H"
+#include "symmTensorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,61 +33,43 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace fvi
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<symmTensor, GeoMesh, Field>> inv
+(
+    const DimensionedField<symmTensor, GeoMesh, PrimitiveField>& dtf,
+    const Vector<label>& solutionD
+)
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
-reconstruct(const SurfaceField<Type>& ssf)
-{
-    typedef typename outerProduct<vector, Type>::type GradType;
-
-    const fvMesh& mesh = ssf.mesh()();
-
-    surfaceVectorField SfHat(mesh.Sf()/mesh.magSf());
-
-    tmp<VolInternalField<GradType>> treconField
+    tmp<DimensionedField<symmTensor, GeoMesh, Field>> tRes
     (
-        VolInternalField<GradType>::New
+        DimensionedField<symmTensor, GeoMesh, Field>::New
         (
-            "volIntegrate("+ssf.name()+')',
-            mesh,
-            dimensioned<GradType>("0", ssf.dimensions()/dimensions::area, Zero)
+            "inv(" + dtf.name() + ',' + name(solutionD) + ')',
+            dtf.mesh(),
+            inv(dtf.dimensions())
         )
     );
 
-    if (!mesh.nGeometricD())
-    {
-        return treconField;
-    }
+    inv(tRes.ref().primitiveFieldRef(), dtf.primitiveField(), solutionD);
 
-    treconField.ref() =
-        inv(surfaceSum(SfHat*mesh.Sf()), mesh.solutionD())
-      & surfaceSum(SfHat*ssf);
-
-    return treconField;
+    return tRes;
 }
 
 
-template<class Type>
-tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
-reconstruct(const tmp<SurfaceField<Type>>& tssf)
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<symmTensor, GeoMesh, Field>> inv
+(
+    const tmp<DimensionedField<symmTensor, GeoMesh, PrimitiveField>>& tdtf,
+    const Vector<label>& solutionD
+)
 {
-    typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<VolInternalField<GradType>> tvf
+    tmp<DimensionedField<symmTensor, GeoMesh, Field>> tRes
     (
-        fvi::reconstruct(tssf())
+        inv(tdtf(), solutionD)
     );
-    tssf.clear();
-    return tvf;
+    tdtf.clear();
+    return tRes;
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace fvi
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

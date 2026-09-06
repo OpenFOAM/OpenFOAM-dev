@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,12 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvcReconstruct.H"
+#include "fviReconstruct.H"
 #include "reconstructionTensors.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fviSurfaceIntegrate.H"
-#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,27 +36,26 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace fvc
+namespace fvi
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<VolField<typename outerProduct<vector, Type>::type>>
+tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
 reconstruct(const SurfaceField<Type>& ssf)
 {
     typedef typename outerProduct<vector, Type>::type GradType;
 
     const fvMesh& mesh = ssf.mesh()();
 
-    tmp<VolField<GradType>> treconField
+    tmp<VolInternalField<GradType>> treconField
     (
-        VolField<GradType>::New
+        VolInternalField<GradType>::New
         (
             "volIntegrate("+ssf.name()+')',
             mesh,
-            dimensioned<GradType>("0", ssf.dimensions()/dimensions::area, Zero),
-            extrapolatedCalculatedFvPatchField<GradType>::typeName
+            dimensioned<GradType>("0", ssf.dimensions()/dimensions::area, Zero)
         )
     );
 
@@ -67,26 +65,23 @@ reconstruct(const SurfaceField<Type>& ssf)
     }
 
     // Get reference to reconstruct tensors
-    const fvi::reconstructionTensors& rt =
-        fvi::reconstructionTensors::New(mesh);
+    const reconstructionTensors& rt = reconstructionTensors::New(mesh);
 
-    treconField.ref().internalFieldRef() =
-        rt.tensors() & fvi::surfaceSum((mesh.Sf()/mesh.magSf())*ssf);
-    treconField.ref().correctBoundaryConditions();
+    treconField.ref() = rt.tensors() & surfaceSum((mesh.Sf()/mesh.magSf())*ssf);
 
     return treconField;
 }
 
 
 template<class Type>
-tmp<VolField<typename outerProduct<vector, Type>::type>>
-reconstruct
-(
-    const tmp<SurfaceField<Type>>& tssf
-)
+tmp<VolInternalField<typename outerProduct<vector, Type>::type>>
+reconstruct(const tmp<SurfaceField<Type>>& tssf)
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<VolField<GradType>> tvf(fvc::reconstruct(tssf()));
+    tmp<VolInternalField<GradType>> tvf
+    (
+        fvi::reconstruct(tssf())
+    );
     tssf.clear();
     return tvf;
 }
@@ -94,7 +89,7 @@ reconstruct
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fvc
+} // End namespace fvi
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

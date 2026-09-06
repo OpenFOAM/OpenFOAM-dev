@@ -48,37 +48,6 @@ inline auto Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::T() const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class GeoMesh, template<class> class PrimitiveField>
-tmp<DimensionedField<tensor, GeoMesh, Field>> inv
-(
-    const DimensionedField<tensor, GeoMesh, PrimitiveField>&,
-    const Vector<label>& solutionD
-);
-
-template<class GeoMesh, template<class> class PrimitiveField>
-tmp<DimensionedField<tensor, GeoMesh, Field>> inv
-(
-    const tmp<DimensionedField<tensor, GeoMesh, PrimitiveField>>& tdtf,
-    const Vector<label>& solutionD
-);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "DimensionedTensorField.C"
-#endif
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
 
 // ************************************************************************* //

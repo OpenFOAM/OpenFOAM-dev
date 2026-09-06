@@ -37,6 +37,7 @@ SourceFiles
 
 #include "GeometricVectorField.H"
 #include "DimensionedTensorField.H"
+#include "DimensionedSymmTensorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
