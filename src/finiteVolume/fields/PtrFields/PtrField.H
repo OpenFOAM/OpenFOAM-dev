@@ -104,7 +104,7 @@ public:
         <
             class Expression,
             class ... Args,
-            class = EnableIfExpressionable<Expression>
+            class = EnableIfExpression<Expression>
         >
         explicit PtrField(const Expression& e, const Args& ... args);
 
