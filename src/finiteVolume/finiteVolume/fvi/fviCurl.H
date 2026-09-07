@@ -55,6 +55,12 @@ namespace fvi
 
     template<class Type>
     tmp<VolInternalField<Type>> curl(const tmp<VolField<Type>>&);
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    inline auto curl(const Expression& e)
+    {
+        return curl(eval(e));
+    }
 }
 
 
