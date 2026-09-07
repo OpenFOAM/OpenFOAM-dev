@@ -24,10 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fviCellReduce.H"
-#include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -64,6 +64,23 @@ namespace fvi
         const CombineOp& cop,
         const Type& nullValue = pTraits<Type>::zero
     );
+
+    template
+    <
+        class Type,
+        class CombineOp,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto cellReduce
+    (
+        const Expression& e,
+        const CombineOp& cop,
+        const Type& nullValue
+    )
+    {
+        return cellReduce(eval(e), cop, nullValue);
+    }
 }
 
 

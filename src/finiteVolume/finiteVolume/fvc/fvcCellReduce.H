@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,23 @@ namespace fvc
         const CombineOp& cop,
         const Type& nullValue = pTraits<Type>::zero
     );
+
+    template
+    <
+        class Type,
+        class CombineOp,
+        class Expression,
+        class = EnableIfExpression<Expression>
+    >
+    inline auto cellReduce
+    (
+        const Expression& e,
+        const CombineOp& cop,
+        const Type& nullValue
+    )
+    {
+        return cellReduce(eval(e), cop, nullValue);
+    }
 }
 
 
