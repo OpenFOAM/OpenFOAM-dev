@@ -1517,6 +1517,8 @@ void Foam::populationBalanceModel::solve()
 
             fluid_.fvConstraints().constrain(fi);
         }
+
+        shapeModel_->solve();
     }
 
     const volScalarField alphaF0(phases_.first().alpha()*fs_.first());
@@ -1567,8 +1569,6 @@ void Foam::populationBalanceModel::solve()
                 << max(fSum).value() << endl;
         }
     }
-
-    shapeModel_->solve();
 }
 
 
