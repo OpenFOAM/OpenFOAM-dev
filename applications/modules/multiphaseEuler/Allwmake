@@ -13,6 +13,7 @@ wmake $targetType reactions
 wmake $targetType
 
 wmake $targetType fvModels
+wmake $targetType fvConstraints
 wmake $targetType functionObjects
 
 #------------------------------------------------------------------------------

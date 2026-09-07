@@ -1,0 +1,3 @@
+limitGroupSurfaceAreaVolumeRatio/limitGroupSurfaceAreaVolumeRatio.C
+
+LIB = $(FOAM_LIBBIN)/libmultiphaseEulerFvConstraints

@@ -21,4 +21,12 @@ limitp
     min        1e4;
 }
 
+limitkappa
+{
+    type        limitGroupSurfaceAreaVolumeRatio;
+    libs        ("libmultiphaseEulerFvConstraints.so");
+
+    populationBalance aggregates;
+}
+
 // ************************************************************************* //
