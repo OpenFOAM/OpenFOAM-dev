@@ -1460,7 +1460,7 @@ void Foam::populationBalanceModel::solve()
 
     int iCorr = 0;
     scalar maxInitialResidual = 1;
-    while (++iCorr <= nCorr && maxInitialResidual > tolerance)
+    while (++iCorr <= nCorr && maxInitialResidual >= tolerance)
     {
         Info<< "populationBalance " << this->name()
             << ": Iteration " << iCorr << endl;
