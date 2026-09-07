@@ -1528,10 +1528,17 @@ void Foam::populationBalanceModel::solve()
         << "first/last = " << weightedAverage(alphaF0(), mesh().V()).value()
         << '/' << weightedAverage(alphaFNm1(), mesh().V()).value() << endl;
 
-    if (solverDict().lookupOrDefault<Switch>("scale", true))
+    if
+    (
+        solverDict().lookupOrDefaultBackwardsCompatible<Switch>
+        (
+            {"clip", "scale"},
+            true
+        )
+    )
     {
         Info<< "populationBalance " << this->name()
-            << ": Scaling group fractions " << endl;
+            << ": Clipping group fractions " << endl;
 
         forAll(fs_, i)
         {

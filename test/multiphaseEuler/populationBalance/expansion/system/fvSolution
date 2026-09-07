@@ -23,9 +23,9 @@ solvers
 
     bubbles
     {
-        nCorr                1;
+        nCorrectors          1;
         tolerance            1e-4;
-        scale                false;
+        clip                 false;
         solveOnFinalIterOnly false;
     }
 
