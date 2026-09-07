@@ -25,21 +25,10 @@ License
 
 #include "fviSurfaceIntegrate.H"
 #include "fvMesh.H"
-#include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvi
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type> void surfaceIntegrate
+template<class Type> void Foam::fvi::surfaceIntegrate
 (
     Field<Type>& ivf,
     const SurfaceField<Type>& ssf
@@ -76,8 +65,10 @@ template<class Type> void surfaceIntegrate
 
 
 template<class Type>
-tmp<VolInternalField<Type>>
-surfaceIntegrate(const SurfaceField<Type>& ssf)
+Foam::tmp<Foam::VolInternalField<Type>> Foam::fvi::surfaceIntegrate
+(
+    const SurfaceField<Type>& ssf
+)
 {
     tmp<VolInternalField<Type>> tvf
     (
@@ -102,8 +93,10 @@ surfaceIntegrate(const SurfaceField<Type>& ssf)
 
 
 template<class Type>
-tmp<VolInternalField<Type>>
-surfaceIntegrate(const tmp<SurfaceField<Type>>& tssf)
+Foam::tmp<Foam::VolInternalField<Type>> Foam::fvi::surfaceIntegrate
+(
+    const tmp<SurfaceField<Type>>& tssf
+)
 {
     tmp<VolInternalField<Type>> tvf
     (
@@ -115,14 +108,17 @@ surfaceIntegrate(const tmp<SurfaceField<Type>>& tssf)
 
 
 template<class Expression, class>
-auto surfaceIntegrate(const Expression& e)
+auto Foam::fvi::surfaceIntegrate(const Expression& e)
 {
     return surfaceIntegrate(eval(e));
 }
 
 
 template<class Type>
-tmp<VolInternalField<Type>> surfaceSum(const SurfaceField<Type>& ssf)
+Foam::tmp<Foam::VolInternalField<Type>> Foam::fvi::surfaceSum
+(
+    const SurfaceField<Type>& ssf
+)
 {
     const fvMesh& mesh = ssf.mesh()();
 
@@ -164,7 +160,10 @@ tmp<VolInternalField<Type>> surfaceSum(const SurfaceField<Type>& ssf)
 
 
 template<class Type>
-tmp<VolInternalField<Type>> surfaceSum(const tmp<SurfaceField<Type>>& tssf)
+Foam::tmp<Foam::VolInternalField<Type>> Foam::fvi::surfaceSum
+(
+    const tmp<SurfaceField<Type>>& tssf
+)
 {
     tmp<VolInternalField<Type>> tvf = surfaceSum(tssf());
     tssf.clear();
@@ -173,18 +172,10 @@ tmp<VolInternalField<Type>> surfaceSum(const tmp<SurfaceField<Type>>& tssf)
 
 
 template<class Expression, class>
-auto surfaceSum(const Expression& e)
+auto Foam::fvi::surfaceSum(const Expression& e)
 {
     return surfaceSum(eval(e));
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace fvi
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

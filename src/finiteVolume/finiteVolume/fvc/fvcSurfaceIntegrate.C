@@ -30,19 +30,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvc
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
-tmp<VolField<Type>>
-surfaceIntegrate(const SurfaceField<Type>& ssf)
+Foam::tmp<Foam::VolField<Type>> Foam::fvc::surfaceIntegrate
+(
+    const SurfaceField<Type>& ssf
+)
 {
     tmp<VolField<Type>> tvf
     (
@@ -69,8 +61,10 @@ surfaceIntegrate(const SurfaceField<Type>& ssf)
 
 
 template<class Type>
-tmp<VolField<Type>>
-surfaceIntegrate(const tmp<SurfaceField<Type>>& tssf)
+Foam::tmp<Foam::VolField<Type>> Foam::fvc::surfaceIntegrate
+(
+    const tmp<SurfaceField<Type>>& tssf
+)
 {
     tmp<VolField<Type>> tvf(fvc::surfaceIntegrate(tssf()));
     tssf.clear();
@@ -78,12 +72,11 @@ surfaceIntegrate(const tmp<SurfaceField<Type>>& tssf)
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Expression, class>
+auto Foam::fvc::surfaceIntegrate(const Expression& e)
+{
+    return surfaceIntegrate(eval(e));
+}
 
-} // End namespace fvc
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

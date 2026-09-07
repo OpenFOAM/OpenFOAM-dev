@@ -59,6 +59,9 @@ namespace fvc
     template<class Type>
     tmp<VolField<Type>>
     surfaceIntegrate(const tmp<SurfaceField<Type>>&);
+
+    template<class Expression, class = EnableIfExpression<Expression>>
+    auto surfaceIntegrate(const Expression&);
 }
 
 
