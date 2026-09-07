@@ -33,7 +33,7 @@ License
 #include "fvcDdt.H"
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
-#include "fvcVolumeIntegrate.H"
+#include "fvcDomainIntegrate.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 

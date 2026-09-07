@@ -27,7 +27,7 @@ License
 #include "basicThermo.H"
 #include "fvmSup.H"
 #include "zeroGradientFvPatchFields.H"
-#include "fvcVolumeIntegrate.H"
+#include "fvcDomainIntegrate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

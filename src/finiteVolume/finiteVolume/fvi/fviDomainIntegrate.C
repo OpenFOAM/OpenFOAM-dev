@@ -23,31 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fviVolumeIntegrate.H"
+#include "fviDomainIntegrate.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fvi::volumeIntegrate
-(
-    const VolInternalField<Type>& vf
-)
-{
-    return vf.mesh().V().primitiveField()*vf.primitiveField();
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fvi::volumeIntegrate
-(
-    const tmp<VolInternalField<Type>>& tvf
-)
-{
-    tmp<Field<Type>> tvivf(volumeIntegrate(tvf()));
-    tvf.clear();
-    return tvivf;
-}
-
 
 template<class Type>
 Foam::dimensioned<Type> Foam::fvi::domainIntegrate
@@ -59,7 +38,7 @@ Foam::dimensioned<Type> Foam::fvi::domainIntegrate
     (
         "domainIntegrate(" + vf.name() + ')',
         dimensions::volume*vf.dimensions(),
-        gSum(volumeIntegrate(vf))
+        gSum(vf.mesh().V().primitiveField()*vf.primitiveField())
     );
 }
 

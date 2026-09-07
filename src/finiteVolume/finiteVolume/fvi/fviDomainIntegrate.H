@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 InNamespace
-    Foam::fvc
+    Foam::fvi
 
 Description
-    Volume integrate volField creating a volField.
-
-    Volume integrate volField over the whole domain
-    creating a dimensioned\<Type\>
+    Volume integrate volField over the region and return a dimensioned\<Type\>
 
 SourceFiles
-    fvcVolumeIntegrate.C
+    fviDomainIntegrate.C
 
 \*---------------------------------------------------------------------------*/
 
 
-#ifndef fvcVolumeIntegrate_H
-#define fvcVolumeIntegrate_H
+#ifndef fviDomainIntegrate_H
+#define fviDomainIntegrate_H
 
 #include "volFieldsFwd.H"
-#include "primitiveFieldsFwd.H"
 #include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,23 +45,16 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Namespace fvc functions Declaration
+                      Namespace fvi functions Declaration
 \*---------------------------------------------------------------------------*/
 
-namespace fvc
+namespace fvi
 {
     template<class Type>
-    tmp<Field<Type>> volumeIntegrate(const VolField<Type>&);
+    dimensioned<Type> domainIntegrate(const VolInternalField<Type>&);
 
     template<class Type>
-    tmp<Field<Type>> volumeIntegrate(const tmp<VolField<Type>>&);
-
-
-    template<class Type>
-    dimensioned<Type> domainIntegrate(const VolField<Type>&);
-
-    template<class Type>
-    dimensioned<Type> domainIntegrate(const tmp<VolField<Type>>&);
+    dimensioned<Type> domainIntegrate(const tmp<VolInternalField<Type>>&);
 
     template<class Expression, class = EnableIfExpression<Expression>>
     ElementType<Expression> domainIntegrate(const Expression&);
@@ -79,7 +68,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "fvcVolumeIntegrate.C"
+    #include "fviDomainIntegrate.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

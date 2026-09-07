@@ -23,7 +23,7 @@ nu       ${${FOAM_CASE}/constant/physicalProperties!nu};
 codeInclude
 #{
     #include "volFields.H"
-    #include "fvcVolumeIntegrate.H"
+    #include "fvcDomainIntegrate.H"
     #include "OFstream.H"
     #include "OSspecific.H"
     #include "fvModels.H"

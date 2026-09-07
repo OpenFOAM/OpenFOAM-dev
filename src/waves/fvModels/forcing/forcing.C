@@ -26,7 +26,7 @@ License
 #include "forcing.H"
 #include "fvMatrix.H"
 #include "fviGrad.H"
-#include "fviVolumeIntegrate.H"
+#include "fviDomainIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

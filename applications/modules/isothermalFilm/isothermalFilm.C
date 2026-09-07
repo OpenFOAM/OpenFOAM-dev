@@ -30,7 +30,7 @@ License
 #include "zeroGradientFvPatchFields.H"
 #include "alphaOneFvPatchScalarField.H"
 #include "constantSurfaceTension.H"
-#include "fviVolumeIntegrate.H"
+#include "fviDomainIntegrate.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcFlux.H"

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "regionSizeDistribution.H"
-#include "fvcVolumeIntegrate.H"
+#include "fvcDomainIntegrate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

@@ -28,7 +28,7 @@ License
 #include "localEulerDdtScheme.H"
 #include "hydrostaticInitialisation.H"
 #include "fvcMeshPhi.H"
-#include "fvcVolumeIntegrate.H"
+#include "fvcDomainIntegrate.H"
 #include "fvcReconstruct.H"
 #include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"

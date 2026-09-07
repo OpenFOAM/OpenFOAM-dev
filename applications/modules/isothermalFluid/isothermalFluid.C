@@ -27,7 +27,7 @@ License
 #include "localEulerDdtScheme.H"
 #include "hydrostaticInitialisation.H"
 #include "fvcMeshPhi.H"
-#include "fvcVolumeIntegrate.H"
+#include "fvcDomainIntegrate.H"
 #include "fvcReconstruct.H"
 #include "linear.H"
 #include "fviDiv.H"

@@ -48,7 +48,7 @@ Description
 #include "fvcDdt.H"
 #include "fviGrad.H"
 #include "fvcFlux.H"
-#include "fvcVolumeIntegrate.H"
+#include "fvcDomainIntegrate.H"
 
 #include "fvmDdt.H"
 #include "fvmDiv.H"

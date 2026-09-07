@@ -25,7 +25,7 @@ License
 
 #include "specieReactionRates.H"
 #include "chemistryModel.H"
-#include "fviVolumeIntegrate.H"
+#include "fviDomainIntegrate.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
 #include "polyDistributionMap.H"

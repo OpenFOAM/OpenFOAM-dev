@@ -27,7 +27,7 @@ License
 #include "surfaceFields.H"
 #include "fviDiv.H"
 #include "fviSurfaceIntegrate.H"
-#include "fviVolumeIntegrate.H"
+#include "fviDomainIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
