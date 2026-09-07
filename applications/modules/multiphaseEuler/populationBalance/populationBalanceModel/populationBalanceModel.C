@@ -856,7 +856,7 @@ Foam::populationBalanceModel::populationBalanceModel
                 << ": dSph = " << dSphs_[i].value()
                 << ", min/average/max fraction = "
                 << min(fs_[i]()).value() << '/'
-                << average(fs_[i]()) << '/'
+                << average(fs_[i]()).value() << '/'
                 << max(fs_[i]()).value() << endl;
         }
 
