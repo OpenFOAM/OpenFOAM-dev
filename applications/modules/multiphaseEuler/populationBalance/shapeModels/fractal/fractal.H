@@ -137,6 +137,9 @@ public:
             //- Return the scaling prefactor for a group
             dimensionedScalar alphaC(const label i) const;
 
+            //- Access the groups' ratios of surface area to volume
+            const PtrList<volScalarField>& kappas() const;
+
             //- Return a reference to a secondary property field
             virtual const volScalarField& fld(const label i) const;
 

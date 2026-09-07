@@ -73,7 +73,7 @@ solvers
     {
         nCorrectors          1;
         tolerance            1e-4;
-        scale                true;
+        clip                 true;
         solveOnFinalIterOnly true;
         sourceUpdateInterval 1;
     }

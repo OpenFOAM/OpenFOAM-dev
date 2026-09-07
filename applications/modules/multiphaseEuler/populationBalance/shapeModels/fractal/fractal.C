@@ -186,6 +186,13 @@ Foam::populationBalance::shapeModels::fractal::alphaC(const label i) const
 }
 
 
+const Foam::PtrList<Foam::volScalarField>&
+Foam::populationBalance::shapeModels::fractal::kappas() const
+{
+    return kappas_;
+}
+
+
 const Foam::volScalarField&
 Foam::populationBalance::shapeModels::fractal::fld(const label i) const
 {

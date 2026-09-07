@@ -1460,7 +1460,7 @@ void Foam::populationBalanceModel::solve()
 
     int iCorr = 0;
     scalar maxInitialResidual = 1;
-    while (++iCorr <= nCorr && maxInitialResidual > tolerance)
+    while (++iCorr <= nCorr && maxInitialResidual >= tolerance)
     {
         Info<< "populationBalance " << this->name()
             << ": Iteration " << iCorr << endl;
@@ -1517,6 +1517,8 @@ void Foam::populationBalanceModel::solve()
 
             fluid_.fvConstraints().constrain(fi);
         }
+
+        shapeModel_->solve();
     }
 
     const volScalarField alphaF0(phases_.first().alpha()*fs_.first());
@@ -1526,10 +1528,17 @@ void Foam::populationBalanceModel::solve()
         << "first/last = " << weightedAverage(alphaF0(), mesh().V()).value()
         << '/' << weightedAverage(alphaFNm1(), mesh().V()).value() << endl;
 
-    if (solverDict().lookupOrDefault<Switch>("scale", true))
+    if
+    (
+        solverDict().lookupOrDefaultBackwardsCompatible<Switch>
+        (
+            {"clip", "scale"},
+            true
+        )
+    )
     {
         Info<< "populationBalance " << this->name()
-            << ": Scaling group fractions " << endl;
+            << ": Clipping group fractions " << endl;
 
         forAll(fs_, i)
         {
@@ -1567,8 +1576,6 @@ void Foam::populationBalanceModel::solve()
                 << max(fSum).value() << endl;
         }
     }
-
-    shapeModel_->solve();
 }
 
 

@@ -25,6 +25,7 @@ License
 
 #include "growthSecondaryPropertyFvScalarFieldSource.H"
 #include "populationBalanceModel.H"
+#include "sizeSpecificMassTransfer.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -114,16 +115,35 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceTerm
     Pair<tmp<DimensionedField<scalar, fvMesh>>> tsourceCoeffs =
         sourceCoeffs(model);
 
-    return
-        i ==  popBal.diameters()[i].iFirst()
-      ? eval(negPart(source)*tsourceCoeffs.second())
-      : i == popBal.diameters()[i].iLast()
-      ? eval(posPart(source)*tsourceCoeffs.first())
-      : eval
-        (
-            posPart(source)*tsourceCoeffs.first()
-          + negPart(source)*tsourceCoeffs.second()
-        );
+    if (isA<fv::sizeSpecificMassTransfer>(model))
+    {
+        const fv::sizeSpecificMassTransfer& ssmtModel =
+            refCast<const fv::sizeSpecificMassTransfer>(model);
+
+        return
+            i == popBal.diameters()[i].iFirst()
+          ? eval(negPart(ssmtModel.groupMDotByF(i + 1))*tsourceCoeffs.second())
+          : i == popBal.diameters()[i].iLast()
+          ? eval(posPart(ssmtModel.groupMDotByF(i - 1))*tsourceCoeffs.first())
+          : eval
+            (
+                posPart(ssmtModel.groupMDotByF(i - 1))*tsourceCoeffs.first()
+              + negPart(ssmtModel.groupMDotByF(i + 1))*tsourceCoeffs.second()
+            );
+    }
+    else
+    {
+        return
+            i == popBal.diameters()[i].iFirst()
+          ? eval(negPart(source)*tsourceCoeffs.second())
+          : i == popBal.diameters()[i].iLast()
+          ? eval(posPart(source)*tsourceCoeffs.first())
+          : eval
+            (
+                posPart(source)*tsourceCoeffs.first()
+              + negPart(source)*tsourceCoeffs.second()
+            );
+    }
 }
 
 
