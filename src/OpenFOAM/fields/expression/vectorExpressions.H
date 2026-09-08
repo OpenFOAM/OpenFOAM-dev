@@ -176,19 +176,6 @@ dimensioned<typename powProduct<Type, r>::type> pow
     );
 }
 
-
-// template
-// <
-//     direction r,
-//     class X,
-//     class = EnableIfExpressionable<UnaryExpression<X, powProductOp<r>>>
-// >
-// UnaryExpression<const X&, powProductOp<r>>
-// pow(const X& x)
-// {
-//     return UnaryExpression<const X&, powProductOp<r>>(x);
-// }
-
 #define UnaryPowProduct(XPar, XArg, XVar)                                      \
     template                                                                   \
     <                                                                          \
@@ -209,12 +196,6 @@ UnaryPowProduct(const X&, tmp<X>& x, x)
 UnaryPowProduct(const X&, tmp<X>&& x, x)
 
 #undef UnaryPowProduct
-
-// void hmm()
-// {
-//     const Field<vector> f(1, vector::zero);
-//     Info << pow<2>(f);
-// }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Binary vector functions
