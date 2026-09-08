@@ -45,21 +45,22 @@ Usage
     interRegionHeatTransfer
     {
         type            interRegionHeatTransfer;
-
         libs            ("libinterRegionFvModels.so");
 
         nbrRegion       other;
+        owner           true;
 
         interpolationMethod intersection;
-        master          true;
 
         semiImplicit    no;
 
         Av              200;
 
         heatTransferCoefficientModel constant;
-
-        htc             10;
+        constant
+        {
+            htc             10;
+        }
     }
     \endverbatim
 
@@ -115,9 +116,6 @@ class interRegionHeatTransfer
 
         //- Non-virtual readalpha*
         void readCoeffs(const dictionary& dict);
-
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
 
 
 public:

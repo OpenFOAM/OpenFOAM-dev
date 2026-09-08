@@ -17,11 +17,10 @@ FoamFile
 airToPorous
 {
     type            interRegionHeatTransfer;
-
     libs            ("libinterRegionFvModels.so");
 
-    nbrRegion       porous;
-    master          false;
+    neighbourRegion porous;
+    owner           false;
 
     interpolationMethod intersection;
 
@@ -31,15 +30,14 @@ airToPorous
 porosity
 {
     type            interRegionPorosityForce;
-
     libs            ("libinterRegionFvModels.so");
 
-    interRegionPorosityForce
+    neighbourRegion porous;
+
+    interpolationMethod intersection;
+
+    porosity
     {
-        nbrRegion       porous;
-
-        interpolationMethod intersection;
-
         type            DarcyForchheimer;
 
         d   (-1000 -1000 1e4);

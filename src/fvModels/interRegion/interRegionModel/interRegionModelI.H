@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,15 +27,27 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline bool Foam::fv::interRegionModel::master() const
+inline bool Foam::fv::interRegionModel::owner() const
 {
-    return master_;
+    return owner_ == 1;
+}
+
+
+inline bool Foam::fv::interRegionModel::neighbour() const
+{
+    return owner_ == 0;
 }
 
 
 inline const Foam::word& Foam::fv::interRegionModel::nbrRegionName() const
 {
     return nbrRegionName_;
+}
+
+
+inline const Foam::word& Foam::fv::interRegionModel::nbrModelName() const
+{
+    return nbrModelName_;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interRegionModel.H"
-#include "fvModels.H"
 #include "matchingCellsToCells.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -42,14 +41,34 @@ namespace fv
 
 void Foam::fv::interRegionModel::readCoeffs(const dictionary& dict)
 {
-    master_ = dict.lookupOrDefault<bool>("master", true);
+    owner_ =
+        dict.found("owner") || dict.found("master")
+      ? dict.lookupBackwardsCompatible<bool>({"owner", "master"})
+      : -1;
 
     nbrRegionName_ =
         dict.lookupBackwardsCompatible<word>
         ({
+            "neighbourRegion",
             "nbrRegion",
             "nbrRegionName"
         });
+
+    if (nbrRegionName_ == mesh().name())
+    {
+        FatalIOErrorInFunction(dict)
+            << "Neighbour region is the same as the region"
+            << exit(FatalError);
+    }
+
+    nbrModelName_ =
+        dict.lookupOrDefaultBackwardsCompatible<word>
+        (
+            {"neighbourModel", "nbrModel"},
+            word::null
+        );
+
+    nbrModelNameDict_ = dict;
 
     dict.lookup("interpolationMethod") >> interpolationMethod_;
 }
@@ -57,70 +76,26 @@ void Foam::fv::interRegionModel::readCoeffs(const dictionary& dict)
 
 const Foam::cellsToCells& Foam::fv::interRegionModel::interpolation() const
 {
+    if (neighbour())
+    {
+        FatalErrorInFunction
+            << "Inter-region mapping is not available to the neighbour model"
+            << exit(FatalError);
+    }
+
     if (!interpolationPtr_.valid())
     {
         Info<< incrIndent;
 
-        if (master_)
-        {
-            Info<< indent << "- selecting inter region mapping" << endl;
+        Info<< indent << "- selecting inter region mapping" << endl;
 
-            if (mesh().name() == nbrMesh().name())
-            {
-                FatalErrorInFunction
-                    << "Inter-region model selected, but local and "
-                    << "neighbour regions are the same: " << nl
-                    << "    local region: " << mesh().name() << nl
-                    << "    secondary region: " << nbrMesh().name() << nl
-                    << exit(FatalError);
-            }
-
-            if (mesh().bounds().overlaps(nbrMesh().bounds()))
-            {
-                interpolationPtr_ = cellsToCells::New(interpolationMethod_);
-                interpolationPtr_->update(mesh(), nbrMesh());
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "regions " << mesh().name() << " and "
-                    << nbrMesh().name() <<  " do not intersect"
-                    << exit(FatalError);
-            }
-        }
+        interpolationPtr_ = cellsToCells::New(interpolationMethod_);
+        interpolationPtr_->update(mesh(), nbrMesh());
 
         Info<< decrIndent;
     }
 
     return interpolationPtr_();
-}
-
-
-const Foam::fv::interRegionModel& Foam::fv::interRegionModel::nbrModel() const
-{
-    const fvMesh& nbrMesh = mesh().time().lookupObject<fvMesh>(nbrRegionName());
-
-    const PtrListDictionary<fvModel>& fvModels =
-        nbrMesh.lookupObject<Foam::fvModels>("fvModels");
-
-    forAll(fvModels, fvModeli)
-    {
-        if (isA<interRegionModel>(fvModels[fvModeli]))
-        {
-            const interRegionModel& model =
-                refCast<const interRegionModel>(fvModels[fvModeli]);
-
-            if (model.nbrRegionName() == mesh().name())
-            {
-                return model;
-            }
-        }
-    }
-
-    FatalErrorInFunction
-        << "Neighbour model not found in region " << nbrMesh.name() << nl
-        << exit(FatalError);
-    return NullObjectRef<interRegionModel>();
 }
 
 
@@ -135,8 +110,10 @@ Foam::fv::interRegionModel::interRegionModel
 )
 :
     fvModel(name, modelType, mesh, dict),
-    master_(false),
+    owner_(-1),
     nbrRegionName_(word::null),
+    nbrModelName_(word::null),
+    nbrModelNameDict_(),
     interpolationMethod_(cellsToCellss::matching::typeName),
     interpolationPtr_()
 {

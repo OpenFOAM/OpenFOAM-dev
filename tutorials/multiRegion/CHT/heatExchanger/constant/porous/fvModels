@@ -17,11 +17,10 @@ FoamFile
 porousToAir
 {
     type            interRegionHeatTransfer;
-
     libs            ("libinterRegionFvModels.so");
 
-    nbrRegion       air;
-    master          true;
+    neighbourRegion air;
+    owner           true;
 
     interpolationMethod intersection;
 
@@ -30,7 +29,6 @@ porousToAir
     Av              200;
 
     heatTransferCoefficientModel constant;
-
     constant
     {
         htc             10;

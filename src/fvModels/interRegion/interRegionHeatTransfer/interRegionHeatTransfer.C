@@ -26,8 +26,6 @@ License
 #include "interRegionHeatTransfer.H"
 #include "basicThermo.H"
 #include "fvmSup.H"
-#include "zeroGradientFvPatchFields.H"
-#include "fvcDomainIntegrate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -56,20 +54,13 @@ void Foam::fv::interRegionHeatTransfer::readCoeffs(const dictionary& dict)
     TName_ = dict.lookupOrDefault<word>("T", "T");
     TNbrName_ = dict.lookupOrDefault<word>("TNbr", "T");
 
-    if (master())
+    if (owner())
     {
         heatTransferAv_.reset(new heatTransferAv(dict, mesh()));
 
         heatTransferCoefficientModel_ =
             heatTransferCoefficientModel::New(dict, *this);
     }
-}
-
-
-const Foam::fv::interRegionHeatTransfer&
-Foam::fv::interRegionHeatTransfer::nbrHeatTransfer() const
-{
-    return refCast<const interRegionHeatTransfer>(nbrModel());
 }
 
 
@@ -117,6 +108,9 @@ void Foam::fv::interRegionHeatTransfer::addSup
     fvMatrix<scalar>& eqn
 ) const
 {
+    const interRegionHeatTransfer& nbrHeatTransfer =
+        nbrModel<interRegionHeatTransfer>();
+
     const volScalarField& T =
         mesh().lookupObject<volScalarField>(TName_);
 
@@ -130,7 +124,7 @@ void Foam::fv::interRegionHeatTransfer::addSup
 
     // Get the heat transfer coefficient field
     tmp<volScalarField> tHtcAv;
-    if (master())
+    if (owner())
     {
         tmp<volScalarField> mask =
             volScalarField::New
@@ -155,8 +149,8 @@ void Foam::fv::interRegionHeatTransfer::addSup
     else
     {
         tmp<volScalarField> tHtcNbr =
-            nbrHeatTransfer().heatTransferCoefficientModel_->htc()
-           *nbrHeatTransfer().heatTransferAv_->Av();
+            nbrHeatTransfer.heatTransferCoefficientModel_->htc()
+           *nbrHeatTransfer.heatTransferAv_->Av();
         tHtcAv =
             volScalarField::New
             (
@@ -206,7 +200,7 @@ void Foam::fv::interRegionHeatTransfer::addSup
 
 void Foam::fv::interRegionHeatTransfer::correct()
 {
-    if (master())
+    if (owner())
     {
         heatTransferCoefficientModel_->correct();
     }

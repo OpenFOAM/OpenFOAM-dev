@@ -53,11 +53,19 @@ class interRegionModel
 {
     // Private data
 
-        //- Master or slave region
-        bool master_;
+        //- Is this the owner region? +1 is yes, 0 is no, -1 is either "yet to
+        //  be determined" or indicates that this model has no neighbouring
+        //  model (e.g., inter-region porosity)
+        mutable label owner_;
 
         //- Name of the neighbour region to map
         word nbrRegionName_;
+
+        //- Name of the corresponding model in the neighbour region
+        word nbrModelName_;
+
+        //- Cached dictionary for delayed construction of nbrModelName
+        dictionary nbrModelNameDict_;
 
         //- Interpolation method
         word interpolationMethod_;
@@ -71,13 +79,20 @@ class interRegionModel
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
+        //- Get the neighbour interRegionModel, or null if there is none
+        const interRegionModel& nbrModelOrNull() const;
+
+        //- Access the interpolation engine
+        const cellsToCells& interpolation() const;
+
 
 protected:
 
     // Protected Member Functions
 
         //- Get the neighbour interRegionModel
-        const interRegionModel& nbrModel() const;
+        template<class InterRegionModelType = interRegionModel>
+        const InterRegionModelType& nbrModel() const;
 
 
 public:
@@ -106,17 +121,20 @@ public:
 
         // Access
 
-            //- Return whether the master region
-            inline bool master() const;
+            //- Return whether the owner region
+            inline bool owner() const;
+
+            //- Return whether the neighbour region
+            inline bool neighbour() const;
 
             //- Return const access to the neighbour region name
             inline const word& nbrRegionName() const;
 
+            //- Return const access to the neighbour region name
+            inline const word& nbrModelName() const;
+
             //- Return const access to the neighbour mesh
             inline const fvMesh& nbrMesh() const;
-
-            //- Return const access to the interpolation engine
-            const cellsToCells& interpolation() const;
 
 
         // Interpolation

@@ -25,7 +25,7 @@ License
 
 #include "interRegionPorosityForce.H"
 #include "fvMesh.H"
-#include "fvMatrices.H"
+#include "fvMatrix.H"
 #include "porosityModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -125,7 +125,7 @@ Foam::fv::interRegionPorosityForce::interRegionPorosityForce
     (
         name,
         mesh,
-        coeffs(dict),
+        coeffs(dict).subDict("porosity"),
         zoneName
     );
 }
