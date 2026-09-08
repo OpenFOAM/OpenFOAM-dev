@@ -380,7 +380,12 @@ Foam::label Foam::functionObjectList::findObjectID(const word& name) const
 
 bool Foam::functionObjectList::start()
 {
-    bool ok = readDict();
+    bool ok = true;
+
+    if (!updated_)
+    {
+        readDict();
+    }
 
     if (execution_)
     {
