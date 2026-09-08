@@ -162,6 +162,15 @@ using EnableIfExpression =
         void
     >;
 
+//- Alias to enable instantiation if a type is not a unary or binary expression
+template<class Expression>
+using EnableIfNotExpression =
+    std::enable_if_t
+    <
+        !std::is_base_of<expression::expression, Expression>::value,
+        void
+    >;
+
 //- Alias to enable instantiation if a type (and arguments) is an expression
 template<class Expression, class ... Args>
 using EnableIfExpressionable =
