@@ -63,14 +63,14 @@ static const longDoubleScalar longDoubleScalarGreat
     = 1.0/longDoubleScalarSmall;
 
 static const longDoubleScalar longDoubleScalarRootVGreat
-    = std::sqrtl(longDoubleScalarVGreat);
+    = ::sqrtl(longDoubleScalarVGreat);
 static const longDoubleScalar longDoubleScalarRootVSmall
-    = std::sqrtl(longDoubleScalarVSmall);
+    = ::sqrtl(longDoubleScalarVSmall);
 
 static const longDoubleScalar longDoubleScalarRootGreat
-    = std::sqrtl(longDoubleScalarGreat);
+    = ::sqrtl(longDoubleScalarGreat);
 static const longDoubleScalar longDoubleScalarRootSmall
-    = std::sqrtl(longDoubleScalarSmall);
+    = ::sqrtl(longDoubleScalarSmall);
 
 static const longDoubleScalar longDoubleScalarNaN
     = numeric_limits<longDoubleScalar>::signaling_NaN();
@@ -94,7 +94,7 @@ inline bool readScalar(const char* buf, longDoubleScalar& s)
 
 inline Scalar mag(const Scalar s)
 {
-    return std::fabsl(s);
+    return ::fabsl(s);
 }
 
 #define MAXMINPOW(retType, type1, type2)          \
@@ -103,7 +103,7 @@ MAXMIN(retType, type1, type2)                     \
                                                   \
 inline double pow(const type1 s, const type2 e)   \
 {                                                 \
-    return std::powl(Scalar(s), Scalar(e));       \
+    return ::powl(Scalar(s), Scalar(e));          \
 }
 
 MAXMINPOW(Scalar, Scalar, Scalar)
@@ -152,7 +152,7 @@ inline Scalar hypot(const Scalar x, const Scalar y)
 
 inline Scalar atan2(const Scalar y, const Scalar x)
 {
-    return std::atan2l(y, x);
+    return ::atan2l(y, x);
 }
 
 inline Scalar jn(const int n, const Scalar s)

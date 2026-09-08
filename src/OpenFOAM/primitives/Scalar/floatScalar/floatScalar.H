@@ -90,7 +90,7 @@ inline bool readScalar(const char* buf, floatScalar& s)
 
 inline Scalar mag(const Scalar s)
 {
-    return std::fabsf(s);
+    return ::fabsf(s);
 }
 
 
@@ -100,7 +100,7 @@ MAXMIN(retType, type1, type2)                     \
                                                   \
 inline double pow(const type1 s, const type2 e)   \
 {                                                 \
-    return std::powf(s, e);                       \
+    return ::powf(s, e);                          \
 }
 
 MAXMINPOW(Scalar, Scalar, Scalar)
@@ -115,7 +115,7 @@ MAXMINPOW(Scalar, long, Scalar)
 #define transFunc(func)            \
 inline Scalar func(const Scalar s) \
 {                                  \
-    return std::func##f(s);        \
+    return ::func##f(s);           \
 }
 
 #define cFunc(func)                \
@@ -141,12 +141,12 @@ namespace Foam
 
 inline Scalar hypot(const Scalar x, const Scalar y)
 {
-    return std::hypotf(x, y);
+    return ::hypotf(x, y);
 }
 
 inline Scalar atan2(const Scalar y, const Scalar x)
 {
-    return std::atan2f(y, x);
+    return ::atan2f(y, x);
 }
 
 inline Scalar jn(const int n, const Scalar s)
