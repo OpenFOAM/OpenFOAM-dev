@@ -68,7 +68,7 @@ namespace fvc
     <
         class Type,
         class PhiExpression,
-        class = EnableIfExpression<Expression>
+        class = EnableIfExpression<PhiExpression>
     >
     inline auto DDt
     (
