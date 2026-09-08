@@ -115,6 +115,12 @@ struct ResultIterable<Container<Type, Args ...>>
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Expression>
+using ResultType = typename expression::Result
+<
+    typename expression::AllContainers<Expression>::type
+>::template type<Expression>;
+
+template<class Expression>
 using ElementType = typename expression::Result
 <
     typename expression::AllContainers<Expression>::type
