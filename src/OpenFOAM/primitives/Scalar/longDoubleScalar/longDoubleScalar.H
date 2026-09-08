@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,14 +63,14 @@ static const longDoubleScalar longDoubleScalarGreat
     = 1.0/longDoubleScalarSmall;
 
 static const longDoubleScalar longDoubleScalarRootVGreat
-    = ::sqrtl(longDoubleScalarVGreat);
+    = std::sqrtl(longDoubleScalarVGreat);
 static const longDoubleScalar longDoubleScalarRootVSmall
-    = ::sqrtl(longDoubleScalarVSmall);
+    = std::sqrtl(longDoubleScalarVSmall);
 
 static const longDoubleScalar longDoubleScalarRootGreat
-    = ::sqrtl(longDoubleScalarGreat);
+    = std::sqrtl(longDoubleScalarGreat);
 static const longDoubleScalar longDoubleScalarRootSmall
-    = ::sqrtl(longDoubleScalarSmall);
+    = std::sqrtl(longDoubleScalarSmall);
 
 static const longDoubleScalar longDoubleScalarNaN
     = numeric_limits<longDoubleScalar>::signaling_NaN();
@@ -94,7 +94,7 @@ inline bool readScalar(const char* buf, longDoubleScalar& s)
 
 inline Scalar mag(const Scalar s)
 {
-    return ::fabsl(s);
+    return std::fabsl(s);
 }
 
 #define MAXMINPOW(retType, type1, type2)          \
@@ -103,7 +103,7 @@ MAXMIN(retType, type1, type2)                     \
                                                   \
 inline double pow(const type1 s, const type2 e)   \
 {                                                 \
-    return ::powl(Scalar(s), Scalar(e));          \
+    return std::powl(Scalar(s), Scalar(e));       \
 }
 
 MAXMINPOW(Scalar, Scalar, Scalar)
@@ -119,6 +119,12 @@ MAXMINPOW(Scalar, double, Scalar)
 #undef MAXMINPOW
 
 #define transFunc(func)            \
+inline Scalar func(const Scalar s) \
+{                                  \
+    return std::func(s);           \
+}
+
+#define cFunc(func)                \
 inline Scalar func(const Scalar s) \
 {                                  \
     return ::func(s);              \
@@ -141,12 +147,12 @@ namespace Foam
 
 inline Scalar hypot(const Scalar x, const Scalar y)
 {
-    return ::hypotl(x, y);
+    return std::hypotl(x, y);
 }
 
 inline Scalar atan2(const Scalar y, const Scalar x)
 {
-    return ::atan2l(y, x);
+    return std::atan2l(y, x);
 }
 
 inline Scalar jn(const int n, const Scalar s)
@@ -167,6 +173,7 @@ inline Scalar yn(const int n, const Scalar s)
 #undef ScalarNaN
 #undef readScalar
 #undef transFunc
+#undef cFunc
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

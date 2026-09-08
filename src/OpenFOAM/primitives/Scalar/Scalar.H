@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,11 +137,11 @@ transFunc(erfc)
 transFunc(lgamma)
 transFunc(tgamma)
 
-transFunc(j0)
-transFunc(j1)
+cFunc(j0)
+cFunc(j1)
 
-transFunc(y0)
-transFunc(y1)
+cFunc(y0)
+cFunc(y1)
 
 
 inline Scalar& setComponent(Scalar& s, const direction)
