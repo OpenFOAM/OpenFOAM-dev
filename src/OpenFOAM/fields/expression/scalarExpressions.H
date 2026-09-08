@@ -80,8 +80,8 @@ struct powOp
         return integerPow(a, b);
     }
 
-    template<class Exp>
-    static dimensionSet value(const dimensionSet& a, const Exp& b)
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
     {
         return pow(a, b);
     }
@@ -135,47 +135,42 @@ struct integerRootOp
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Unary scalar functions
 
-#define UnaryScalarOpFunction(func)                                            \
-    UnaryOpFunction(scalar, scalar, func)
-
-UnaryScalarOpFunction(pow3)
-UnaryScalarOpFunction(pow4)
-UnaryScalarOpFunction(pow5)
-UnaryScalarOpFunction(pow6)
-UnaryScalarOpFunction(pow025)
-UnaryScalarOpFunction(sqrt)
-UnaryScalarOpFunction(cbrt)
-UnaryScalarOpFunction(sign)
-UnaryScalarOpFunction(pos)
-UnaryScalarOpFunction(pos0)
-UnaryScalarOpFunction(neg)
-UnaryScalarOpFunction(neg0)
-UnaryScalarOpFunction(posPart)
-UnaryScalarOpFunction(negPart)
-UnaryScalarOpFunction(exp)
-UnaryScalarOpFunction(log)
-UnaryScalarOpFunction(log10)
-UnaryScalarOpFunction(sin)
-UnaryScalarOpFunction(cos)
-UnaryScalarOpFunction(tan)
-UnaryScalarOpFunction(asin)
-UnaryScalarOpFunction(acos)
-UnaryScalarOpFunction(atan)
-UnaryScalarOpFunction(sinh)
-UnaryScalarOpFunction(cosh)
-UnaryScalarOpFunction(tanh)
-UnaryScalarOpFunction(asinh)
-UnaryScalarOpFunction(acosh)
-UnaryScalarOpFunction(atanh)
-UnaryScalarOpFunction(erf)
-UnaryScalarOpFunction(erfc)
-UnaryScalarOpFunction(lgamma)
-UnaryScalarOpFunction(j0)
-UnaryScalarOpFunction(j1)
-UnaryScalarOpFunction(y0)
-UnaryScalarOpFunction(y1)
-
-#undef UnaryScalarOpFunction
+UnaryOpFunction(pow3)
+UnaryOpFunction(pow4)
+UnaryOpFunction(pow5)
+UnaryOpFunction(pow6)
+UnaryOpFunction(pow025)
+UnaryOpFunction(sqrt)
+UnaryOpFunction(cbrt)
+UnaryOpFunction(sign)
+UnaryOpFunction(pos)
+UnaryOpFunction(pos0)
+UnaryOpFunction(neg)
+UnaryOpFunction(neg0)
+UnaryOpFunction(posPart)
+UnaryOpFunction(negPart)
+UnaryOpFunction(exp)
+UnaryOpFunction(log)
+UnaryOpFunction(log10)
+UnaryOpFunction(sin)
+UnaryOpFunction(cos)
+UnaryOpFunction(tan)
+UnaryOpFunction(asin)
+UnaryOpFunction(acos)
+UnaryOpFunction(atan)
+UnaryOpFunction(sinh)
+UnaryOpFunction(cosh)
+UnaryOpFunction(tanh)
+UnaryOpFunction(asinh)
+UnaryOpFunction(acosh)
+UnaryOpFunction(atanh)
+UnaryOpFunction(erf)
+UnaryOpFunction(erfc)
+UnaryOpFunction(lgamma)
+UnaryOpFunction(j0)
+UnaryOpFunction(j1)
+UnaryOpFunction(y0)
+UnaryOpFunction(y1)
 
 BinaryFunction(stabilise);
 BinaryFunction(pow);

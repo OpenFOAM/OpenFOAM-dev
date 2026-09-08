@@ -30,8 +30,8 @@ Description
 #ifndef vectorExpressions_H
 #define vectorExpressions_H
 
-#include "expressions.H"
 #include "vector.H"
+#include "expressions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,14 +45,8 @@ UnaryFunction(cmptMax)
 UnaryFunction(cmptMin)
 UnaryFunction(cmptAv)
 UnaryFunction(cmptMag)
-
-#define UnaryVectorOpFunction(func)                                            \
-    UnaryOpFunction(vector, vector, func)
-
-UnaryVectorOpFunction(normalised)
-UnaryVectorOpFunction(perpendicular)
-
-#undef UnaryVectorOpFunction
+UnaryOpFunction(normalised)
+UnaryOpFunction(perpendicular)
 
 /*---------------------------------------------------------------------------*\
                          Class powProductOp Declaration

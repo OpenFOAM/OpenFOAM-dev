@@ -199,15 +199,10 @@ struct transformOp
         return "transform(" + t + ',' + v + ')';
     }
 
-    template<class Type>
-    static Type value(const tensor& t, const Type& v)
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
     {
-        return transform(t, v);
-    }
-
-    static dimensionSet value(const dimensionSet& t, const dimensionSet& v)
-    {
-        return transform(t, v);
+        return transform(a, b);
     }
 };
 
@@ -256,12 +251,6 @@ struct transformMaskOp
         return "transform(" + mt + ',' + t + ')';
     }
 
-    template<class MaskType, class Type>
-    static Type value(const MaskType& mt, const Type& t)
-    {
-        return t;
-    }
-
     static sphericalTensor value(const sphericalTensor& mt, const tensor& t)
     {
         return sph(t);
@@ -277,9 +266,10 @@ struct transformMaskOp
         return symm(t);
     }
 
-    static dimensionSet value(const dimensionSet&, const dimensionSet& v)
+    template<class MaskType, class Type>
+    static Type value(const MaskType& mt, const Type& t)
     {
-        return v;
+        return t;
     }
 };
 

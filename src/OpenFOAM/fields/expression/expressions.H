@@ -72,28 +72,23 @@ namespace Foam
 #define UnaryFunction(Func)                                                    \
     UnaryFunction_(Func, Func##Op)
 
-#define UnaryOpFunction(RetType, Type, Func)                                   \
-                                                                               \
-struct Func##Op                                                                \
-{                                                                              \
-    static const signed char precedence =                                      \
-        expression::Operation<void>::precedence;                               \
-                                                                               \
-    static word name(const word& x)                                            \
+#define UnaryOpFunction(Func)                                                  \
+    struct Func##Op                                                            \
     {                                                                          \
-        return #Func"(" + x + ')';                                             \
-    }                                                                          \
+        static const signed char precedence =                                  \
+            expression::Operation<void>::precedence;                           \
                                                                                \
-    static RetType value(const Type& x)                                        \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
+        static word name(const word& x)                                        \
+        {                                                                      \
+            return #Func"(" + x + ')';                                         \
+        }                                                                      \
                                                                                \
-    static dimensionSet value(const dimensionSet& x)                           \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-};                                                                             \
+        template<class Type>                                                   \
+        static auto value(const Type& x)                                       \
+        {                                                                      \
+            return Func(x);                                                    \
+        }                                                                      \
+    };                                                                         \
                                                                                \
 UnaryFunction(Func)
 

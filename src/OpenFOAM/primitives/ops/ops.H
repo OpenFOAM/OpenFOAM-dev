@@ -389,7 +389,8 @@ struct stabiliseOp
         return stabilise(a, b);
     }
 
-    scalar operator()(const scalar a, const scalar b) const
+    template<class A, class B>
+    auto operator()(const A& a, const B& b) const
     {
         return stabilise(a, b);
     }

@@ -30,13 +30,12 @@ Description
 #ifndef tensorExpressions_H
 #define tensorExpressions_H
 
-#include "expressions.H"
-#include "dimensionSet.H"
-
 #include "diagTensor.H"
 #include "sphericalTensor.H"
 #include "symmTensor.H"
 #include "tensor.H"
+#include "expressions.H"
+#include "dimensionSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,169 +45,25 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Unary tensor functions
 
-#define UnaryAllTensorOpFunction(RetType, Func)                                \
-                                                                               \
-struct Func##Op                                                                \
-{                                                                              \
-    static const signed char precedence =                                      \
-        expression::Operation<void>::precedence;                               \
-                                                                               \
-    static word name(const word& x)                                            \
-    {                                                                          \
-        return #Func"(" + x + ')';                                             \
-    }                                                                          \
-                                                                               \
-    static RetType value(const diagTensor& x)                                  \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static RetType value(const sphericalTensor& x)                             \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static RetType value(const symmTensor& x)                                  \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static RetType value(const tensor& x)                                      \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static dimensionSet value(const dimensionSet& x)                           \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-};                                                                             \
-                                                                               \
-UnaryFunction(Func)
+UnaryOpFunction(tr)
+UnaryOpFunction(sph)
+UnaryOpFunction(det)
+UnaryOpFunction(diag)
+UnaryOpFunction(T)
+UnaryOpFunction(inv)
+UnaryOpFunction(symm)
+UnaryOpFunction(twoSymm)
+UnaryOpFunction(eigenValues)
+UnaryOpFunction(eigenVectors)
+UnaryOpFunction(innerSqr)
+UnaryOpFunction(dev)
+UnaryOpFunction(dev2)
+UnaryOpFunction(cof)
+UnaryOpFunction(skew)
 
-#define UnaryTensorInvOpFunction(Func)                                         \
-                                                                               \
-struct Func##Op                                                                \
-{                                                                              \
-    static const signed char precedence =                                      \
-        expression::Operation<void>::precedence;                               \
-                                                                               \
-    static word name(const word& x)                                            \
-    {                                                                          \
-        return #Func"(" + x + ')';                                             \
-    }                                                                          \
-                                                                               \
-    static diagTensor value(const diagTensor& x)                               \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static sphericalTensor value(const sphericalTensor& x)                     \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static symmTensor value(const symmTensor& x)                               \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static tensor value(const tensor& x)                                       \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static dimensionSet value(const dimensionSet& x)                           \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-};                                                                             \
-                                                                               \
-UnaryFunction(Func)
-
-#define UnarySymmTensorOpFunction(RetType, Func)                               \
-                                                                               \
-struct Func##Op                                                                \
-{                                                                              \
-    static const signed char precedence =                                      \
-        expression::Operation<void>::precedence;                               \
-                                                                               \
-    static word name(const word& x)                                            \
-    {                                                                          \
-        return #Func"(" + x + ')';                                             \
-    }                                                                          \
-                                                                               \
-    static RetType value(const symmTensor& x)                                  \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static RetType value(const tensor& x)                                      \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static dimensionSet value(const dimensionSet& x)                           \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-};                                                                             \
-                                                                               \
-UnaryFunction(Func)
-
-#define UnaryTensorDevOpFunction(Func)                                         \
-                                                                               \
-struct Func##Op                                                                \
-{                                                                              \
-    static const signed char precedence =                                      \
-        expression::Operation<void>::precedence;                               \
-                                                                               \
-    static word name(const word& x)                                            \
-    {                                                                          \
-        return #Func"(" + x + ')';                                             \
-    }                                                                          \
-                                                                               \
-    static symmTensor value(const symmTensor& x)                               \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static tensor value(const tensor& x)                                       \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-                                                                               \
-    static dimensionSet value(const dimensionSet& x)                           \
-    {                                                                          \
-        return Func(x);                                                        \
-    }                                                                          \
-};                                                                             \
-                                                                               \
-UnaryFunction(Func)
-
-UnaryAllTensorOpFunction(scalar, tr)
-UnaryAllTensorOpFunction(sphericalTensor, sph)
-UnaryAllTensorOpFunction(scalar, det)
-
-UnaryOpFunction(diagTensor, tensor, diag)
-
-UnaryTensorInvOpFunction(T)
-UnaryTensorInvOpFunction(inv)
-
-UnarySymmTensorOpFunction(symmTensor, symm)
-UnarySymmTensorOpFunction(symmTensor, twoSymm)
-UnarySymmTensorOpFunction(vector, eigenValues)
-UnarySymmTensorOpFunction(tensor, eigenVectors)
-UnaryOpFunction(symmTensor, symmTensor, innerSqr)
-
-UnaryTensorDevOpFunction(dev)
-UnaryTensorDevOpFunction(dev2)
-UnaryTensorDevOpFunction(cof)
-
-UnaryOpFunction(tensor, tensor, skew)
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Unary Hodge dual function
+/*---------------------------------------------------------------------------*\
+                            Class hdualOp Declaration
+\*---------------------------------------------------------------------------*/
 
 struct hdualOp
 {
@@ -234,20 +89,15 @@ struct hdualOp
         return *x;
     }
 
-    static dimensionSet value(const dimensionSet& x)
+    template<class Type>
+    static auto value(const Type& x)
     {
         return hdual(x);
     }
 };
 
+// Unary Hodge dual function
 UnaryOperator(*, hdual)
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#undef UnaryAllTensorOpFunction
-#undef UnaryTensorInvOpFunction
-#undef UnarySymmTensorOpFunction
-#undef UnaryTensorDevOpFunction
 
 /*---------------------------------------------------------------------------*\
                             Class ddotOp Declaration
@@ -273,7 +123,6 @@ struct ddotOp
 
 // Inner product (ddot) operator
 BinaryOperator(&&, ddot);
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

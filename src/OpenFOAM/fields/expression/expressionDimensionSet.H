@@ -118,9 +118,6 @@ public:
             return Func(dove.dimensions_);                                     \
         }
 
-    #define UNARY_DOVE_OPERATOR(OpSym)                                         \
-        UNARY_DOVE_FUNCTION(operator OpSym)
-
     #define BINARY_DOVE_FUNCTION(Func)                                         \
                                                                                \
         friend dimensionsOrVariableExponent Func                               \
@@ -150,30 +147,85 @@ public:
             return Func(dimensions, dove.dimensions_);                         \
         }
 
-    #define BINARY_DOVE_OPERATOR(OpSym)                                        \
-        BINARY_DOVE_FUNCTION(operator OpSym)
-
-    UNARY_DOVE_FUNCTION(sqr)
-    UNARY_DOVE_FUNCTION(mag)
-    UNARY_DOVE_FUNCTION(magSqr)
-
-    UNARY_DOVE_OPERATOR(-)
-
+    // These are all the functions and operators defined for dimensionSet
     BINARY_DOVE_FUNCTION(max)
     BINARY_DOVE_FUNCTION(min)
-
-    BINARY_DOVE_OPERATOR(+)
-    BINARY_DOVE_OPERATOR(-)
-    BINARY_DOVE_OPERATOR(*)
-    BINARY_DOVE_OPERATOR(/)
-    BINARY_DOVE_OPERATOR(&)
-    BINARY_DOVE_OPERATOR(^)
-    BINARY_DOVE_OPERATOR(&&)
+    BINARY_DOVE_FUNCTION(cmptMultiply)
+    BINARY_DOVE_FUNCTION(cmptDivide)
+    UNARY_DOVE_FUNCTION(cmptMag)
+    //UNARY_DOVE_FUNCTION(component) // Would need a different implementation
+    //UNARY_DOVE_FUNCTION(pow) // Different implementation below
+    UNARY_DOVE_FUNCTION(sqr)
+    UNARY_DOVE_FUNCTION(innerSqr)
+    UNARY_DOVE_FUNCTION(pow3)
+    UNARY_DOVE_FUNCTION(pow4)
+    UNARY_DOVE_FUNCTION(pow5)
+    UNARY_DOVE_FUNCTION(pow6)
+    UNARY_DOVE_FUNCTION(sqrt)
+    UNARY_DOVE_FUNCTION(pow025)
+    UNARY_DOVE_FUNCTION(cbrt)
+    UNARY_DOVE_FUNCTION(magSqr)
+    UNARY_DOVE_FUNCTION(mag)
+    UNARY_DOVE_FUNCTION(sign)
+    UNARY_DOVE_FUNCTION(pos)
+    UNARY_DOVE_FUNCTION(pos0)
+    UNARY_DOVE_FUNCTION(neg)
+    UNARY_DOVE_FUNCTION(neg0)
+    UNARY_DOVE_FUNCTION(posPart)
+    UNARY_DOVE_FUNCTION(negPart)
+    UNARY_DOVE_FUNCTION(exp)
+    UNARY_DOVE_FUNCTION(log)
+    UNARY_DOVE_FUNCTION(log10)
+    UNARY_DOVE_FUNCTION(sin)
+    UNARY_DOVE_FUNCTION(cos)
+    UNARY_DOVE_FUNCTION(tan)
+    UNARY_DOVE_FUNCTION(asin)
+    UNARY_DOVE_FUNCTION(acos)
+    UNARY_DOVE_FUNCTION(atan)
+    UNARY_DOVE_FUNCTION(sinh)
+    UNARY_DOVE_FUNCTION(cosh)
+    UNARY_DOVE_FUNCTION(tanh)
+    UNARY_DOVE_FUNCTION(asinh)
+    UNARY_DOVE_FUNCTION(acosh)
+    UNARY_DOVE_FUNCTION(atanh)
+    UNARY_DOVE_FUNCTION(erf)
+    UNARY_DOVE_FUNCTION(erfc)
+    UNARY_DOVE_FUNCTION(lgamma)
+    UNARY_DOVE_FUNCTION(j0)
+    UNARY_DOVE_FUNCTION(j1)
+    UNARY_DOVE_FUNCTION(y0)
+    UNARY_DOVE_FUNCTION(y1)
+    BINARY_DOVE_FUNCTION(atan2)
+    BINARY_DOVE_FUNCTION(jn)
+    BINARY_DOVE_FUNCTION(yn)
+    UNARY_DOVE_FUNCTION(T)
+    UNARY_DOVE_FUNCTION(tr)
+    UNARY_DOVE_FUNCTION(sph)
+    UNARY_DOVE_FUNCTION(diag)
+    UNARY_DOVE_FUNCTION(symm)
+    UNARY_DOVE_FUNCTION(twoSymm)
+    UNARY_DOVE_FUNCTION(dev)
+    UNARY_DOVE_FUNCTION(dev2)
+    UNARY_DOVE_FUNCTION(skew)
+    UNARY_DOVE_FUNCTION(hdual)
+    UNARY_DOVE_FUNCTION(eigenValues)
+    UNARY_DOVE_FUNCTION(eigenVectors)
+    UNARY_DOVE_FUNCTION(det)
+    UNARY_DOVE_FUNCTION(cof)
+    UNARY_DOVE_FUNCTION(inv)
+    UNARY_DOVE_FUNCTION(normalised)
+    UNARY_DOVE_FUNCTION(perpendicular)
+    UNARY_DOVE_FUNCTION(operator-)
+    BINARY_DOVE_FUNCTION(operator+)
+    BINARY_DOVE_FUNCTION(operator-)
+    BINARY_DOVE_FUNCTION(operator*)
+    BINARY_DOVE_FUNCTION(operator/)
+    BINARY_DOVE_FUNCTION(operator&)
+    BINARY_DOVE_FUNCTION(operator^)
+    BINARY_DOVE_FUNCTION(operator&&)
 
     #undef UNARY_DOVE_FUNCTION
-    #undef UNARY_DOVE_OPERATOR
     #undef BINARY_DOVE_FUNCTION
-    #undef BINARY_DOVE_OPERATOR
 
     friend const dimensionSet& pow
     (
