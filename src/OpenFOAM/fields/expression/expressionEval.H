@@ -47,29 +47,9 @@ namespace Foam
 
 //- Evaluate an expression and return a temporary object
 template<class Expression, class = EnableIfExpressionable<Expression>>
-tmp
-<
-    typename expression::Result
-    <
-        typename expression::AllContainers<Expression>::type
-    >::template type<Expression>
->
-eval(const Expression& e)
+tmp<ResultType<Expression>> eval(const Expression& e)
 {
-    return
-        tmp
-        <
-            typename expression::Result
-            <
-                typename expression::AllContainers<Expression>::type
-            >::template type<Expression>
-        >
-        (
-            new typename expression::Result
-            <
-                typename expression::AllContainers<Expression>::type
-            >::template type<Expression>(e)
-        );
+    return tmp<ResultType<Expression>>(new ResultType<Expression>(e));
 }
 
 
