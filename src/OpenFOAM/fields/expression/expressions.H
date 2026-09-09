@@ -47,7 +47,15 @@ namespace Foam
 // Define a unary function or operator given the global function or operator
 // name and the operator class that it uses
 
-#define UnaryFunction__(Func, Op, XPar, XArg, XVar)                            \
+#define UnaryFunction_(FUNC, Func, Op)                                         \
+    FUNC(Func, Op, const X&, const X& x, x)                                    \
+    FUNC(Func, Op, const X&, X& x, x)                                          \
+    FUNC(Func, Op, X, X&& x, std::move(x))                                     \
+    FUNC(Func, Op, const X&, const tmp<X>& x, x)                               \
+    FUNC(Func, Op, const X&, tmp<X>& x, x)                                     \
+    FUNC(Func, Op, const X&, tmp<X>&& x, x)
+
+#define UnaryFunctionTemplate(Func, Op, XPar, XArg, XVar)                      \
     template                                                                   \
     <                                                                          \
         class X,                                                               \
@@ -58,21 +66,30 @@ namespace Foam
         return UnaryExpression<XPar, Op>(XVar);                                \
     }                                                                          \
 
-#define UnaryFunction_(Func, Op)                                               \
-    UnaryFunction__(Func, Op, const X&, const X& x, x)                         \
-    UnaryFunction__(Func, Op, const X&, X& x, x)                               \
-    UnaryFunction__(Func, Op, X, X&& x, std::move(x))                          \
-    UnaryFunction__(Func, Op, const X&, const tmp<X>& x, x)                    \
-    UnaryFunction__(Func, Op, const X&, tmp<X>& x, x)                          \
-    UnaryFunction__(Func, Op, const X&, tmp<X>&& x, x)
+#define UnaryEagerFunctionTemplate(Func, Op, XPar, XArg, XVar)                 \
+                                                                               \
+    UnaryFunctionTemplate(Func##_, Op, XPar, XArg, XVar)                       \
+                                                                               \
+    template                                                                   \
+    <                                                                          \
+        class X,                                                               \
+        class = EnableIfExpressionable<UnaryExpression<X, Op>>                 \
+    >                                                                          \
+    tmp<ResultType<UnaryExpression<XPar, Op>>> Func(XArg)                      \
+    {                                                                          \
+        return eval(Func##_(Eval<XPar>::eval(XVar)));                          \
+    }                                                                          \
 
 #define UnaryOperator(OpSym, Func)                                             \
-    UnaryFunction_(operator OpSym, Func##Op)
+    UnaryFunction_(UnaryFunctionTemplate, operator OpSym, Func##Op)
 
 #define UnaryFunction(Func)                                                    \
-    UnaryFunction_(Func, Func##Op)
+    UnaryFunction_(UnaryFunctionTemplate, Func, Func##Op)
 
-#define UnaryOpFunction(Func)                                                  \
+#define UnaryEagerFunction(Func)                                               \
+    UnaryFunction_(UnaryEagerFunctionTemplate, Func, Func##Op)
+
+#define UnaryOp(Func)                                                          \
     struct Func##Op                                                            \
     {                                                                          \
         static const signed char precedence =                                  \
@@ -88,9 +105,15 @@ namespace Foam
         {                                                                      \
             return Func(x);                                                    \
         }                                                                      \
-    };                                                                         \
-                                                                               \
-UnaryFunction(Func)
+    };
+
+#define UnaryOpFunction(Func)                                                  \
+    UnaryOp(Func)                                                              \
+    UnaryFunction(Func)
+
+#define UnaryOpEagerFunction(Func)                                             \
+    UnaryOp(Func)                                                              \
+    UnaryEagerFunction(Func)
 
 // Promotion operator (i.e., unary plus). Has no effect. Just facilitates
 // expressions with plus signs added for clarity.
@@ -320,9 +343,9 @@ ElementType<Expression> gWeightedAverage
         class B,                                                               \
         class = EnableIfExpressionable<BinaryExpression<A, B, Op>>             \
     >                                                                          \
-    tmp<ResultType<BinaryExpression<A, B, Op>>> Func(AArg, BArg)               \
+    tmp<ResultType<BinaryExpression<APar, BPar, Op>>> Func(AArg, BArg)         \
     {                                                                          \
-        return eval(Func##_(Eval<A>::eval(AVar), Eval<B>::eval(BVar)));        \
+        return eval(Func##_(Eval<APar>::eval(AVar), Eval<BPar>::eval(BVar)));  \
     }                                                                          \
 
 #define BinaryOperator(OpSym, Func)                                            \
