@@ -13,8 +13,9 @@ Description
 libs     ("libutilityFunctionObjects.so");
 type     coded;
 
-// executeAtStart is on (by default) so calls the execute function once, with:
-executeControl none;
+// Only prints at time 0 (zero)
+executeControl runTimes;
+executeTimes   (0);
 
 // Parameters, which can be read from other files using macro expansions, e.g.
 // magU  ${${FOAM_CASE}/0/U!Uinlet};
