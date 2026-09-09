@@ -114,18 +114,18 @@ class fvMeshDistribute
             label findNonEmptyPatch() const;
 
             //- Save boundary fields
-            template<class Type, class Mesh>
+            template<class GeoField>
             void saveBoundaryFields
             (
-                PtrList<SurfaceBoundaryField<Type>>&
+                PtrList<typename GeoField::BoundaryField>&
             ) const;
 
             //- Map boundary fields
-            template<class Type, class Mesh>
+            template<class GeoField>
             void mapBoundaryFields
             (
                 const polyTopoChangeMap& map,
-                const PtrList<SurfaceBoundaryField<Type>>&
+                const PtrList<typename GeoField::BoundaryField>&
             );
 
             //- Set value of exposed patch faces

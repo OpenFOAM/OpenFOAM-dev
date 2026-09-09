@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fvMeshDistribute.H"
 #include "polyTopoChangeMap.H"
 #include "processorFvPatchField.H"
 
@@ -55,35 +56,43 @@ void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 }
 
 
-template<class Type, class Mesh>
+template<class GeoField>
 void Foam::fvMeshDistribute::saveBoundaryFields
 (
-    PtrList<SurfaceBoundaryField<Type>>& bfields
+    PtrList<typename GeoField::BoundaryField>& bfields
 ) const
 {
     // Save whole boundary field
 
-    const UPtrList<SurfaceField<Type>> fields
+    const UPtrList<GeoField> fields
     (
-        mesh_.fields<SurfaceField<Type>>(false, fvMesh::curGeometryFields)
+        mesh_.fields<GeoField>(false, fvMesh::curGeometryFields)
     );
 
     bfields.setSize(fields.size());
 
     forAll(fields, i)
     {
-        const SurfaceField<Type>& field = fields[i];
+        const GeoField& field = fields[i];
 
-        bfields.set(i, field.boundaryField().clone().ptr());
+        bfields.set
+        (
+            i,
+            new typename GeoField::BoundaryField
+            (
+                field.boundaryField(),
+                field
+            )
+        );
     }
 }
 
 
-template<class Type, class Mesh>
+template<class GeoField>
 void Foam::fvMeshDistribute::mapBoundaryFields
 (
     const polyTopoChangeMap& map,
-    const PtrList<SurfaceBoundaryField<Type>>& oldBfields
+    const PtrList<typename GeoField::BoundaryField>& oldBfields
 )
 {
     // Map boundary field
@@ -91,23 +100,23 @@ void Foam::fvMeshDistribute::mapBoundaryFields
     const labelList& oldPatchStarts = map.oldPatchStarts();
     const labelList& faceMap = map.faceMap();
 
-    UPtrList<SurfaceField<Type>> fields
+    UPtrList<GeoField> fields
     (
-        mesh_.fields<SurfaceField<Type>>(false, fvMesh::curGeometryFields)
+        mesh_.fields<GeoField>(false, fvMesh::curGeometryFields)
     );
 
     forAll(fields, i)
     {
-        SurfaceField<Type>& field = fields[i];
+        GeoField& field = fields[i];
 
-        SurfaceBoundaryField<Type>& bfield = field.boundaryFieldRef();
-        const SurfaceBoundaryField<Type>& oldBfield = oldBfields[i];
+        typename GeoField::BoundaryField& bfield = field.boundaryFieldRef();
+        const typename GeoField::BoundaryField& oldBfield = oldBfields[i];
 
         // Pull from old boundary field into bfield.
 
         forAll(bfield, patchi)
         {
-            fvsPatchField<Type>& patchField = bfield[patchi];
+            typename GeoField::PatchField& patchField = bfield[patchi];
             label facei = patchField.patch().start();
 
             forAll(patchField, i)

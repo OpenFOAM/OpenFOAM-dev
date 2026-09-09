@@ -559,17 +559,27 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
     // Do mapping of fields from one patchField to the other ourselves since
     // is currently not supported by topoChange.
 
-    // Store boundary fields (we only do this for surfaceFields)
-    PtrList<SurfaceBoundaryField<scalar>> sFields;
-    saveBoundaryFields<scalar, surfaceMesh>(sFields);
-    PtrList<SurfaceBoundaryField<vector>> vFields;
-    saveBoundaryFields<vector, surfaceMesh>(vFields);
-    PtrList<SurfaceBoundaryField<sphericalTensor>> sptFields;
-    saveBoundaryFields<sphericalTensor, surfaceMesh>(sptFields);
-    PtrList<SurfaceBoundaryField<symmTensor>> sytFields;
-    saveBoundaryFields<symmTensor, surfaceMesh>(sytFields);
-    PtrList<SurfaceBoundaryField<tensor>> tFields;
-    saveBoundaryFields<tensor, surfaceMesh>(tFields);
+    // Store boundary fields
+    PtrList<VolBoundaryField<scalar>> vsf;
+    saveBoundaryFields<VolField<scalar>>(vsf);
+    PtrList<VolBoundaryField<vector>> vvf;
+    saveBoundaryFields<VolField<vector>>(vvf);
+    PtrList<VolBoundaryField<sphericalTensor>> vsptf;
+    saveBoundaryFields<VolField<sphericalTensor>>(vsptf);
+    PtrList<VolBoundaryField<symmTensor>> vsytf;
+    saveBoundaryFields<VolField<symmTensor>>(vsytf);
+    PtrList<VolBoundaryField<tensor>> vtf;
+    saveBoundaryFields<VolField<tensor>>(vtf);
+    PtrList<SurfaceBoundaryField<scalar>> ssf;
+    saveBoundaryFields<SurfaceField<scalar>>(ssf);
+    PtrList<SurfaceBoundaryField<vector>> svf;
+    saveBoundaryFields<SurfaceField<vector>>(svf);
+    PtrList<SurfaceBoundaryField<sphericalTensor>> ssptf;
+    saveBoundaryFields<SurfaceField<sphericalTensor>>(ssptf);
+    PtrList<SurfaceBoundaryField<symmTensor>> ssytf;
+    saveBoundaryFields<SurfaceField<symmTensor>>(ssytf);
+    PtrList<SurfaceBoundaryField<tensor>> stf;
+    saveBoundaryFields<SurfaceField<tensor>>(stf);
 
     // Change the mesh (without keeping old points).
     // Note: parallel comms allowed.
@@ -589,11 +599,16 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
 
     // Map patch fields using stored boundary fields. Note: assumes order
     // of fields has not changed in object registry!
-    mapBoundaryFields<scalar, surfaceMesh>(map, sFields);
-    mapBoundaryFields<vector, surfaceMesh>(map, vFields);
-    mapBoundaryFields<sphericalTensor, surfaceMesh>(map, sptFields);
-    mapBoundaryFields<symmTensor, surfaceMesh>(map, sytFields);
-    mapBoundaryFields<tensor, surfaceMesh>(map, tFields);
+    mapBoundaryFields<VolField<scalar>>(map, vsf);
+    mapBoundaryFields<VolField<vector>>(map, vvf);
+    mapBoundaryFields<VolField<sphericalTensor>>(map, vsptf);
+    mapBoundaryFields<VolField<symmTensor>>(map, vsytf);
+    mapBoundaryFields<VolField<tensor>>(map, vtf);
+    mapBoundaryFields<SurfaceField<scalar>>(map, ssf);
+    mapBoundaryFields<SurfaceField<vector>>(map, svf);
+    mapBoundaryFields<SurfaceField<sphericalTensor>>(map, ssptf);
+    mapBoundaryFields<SurfaceField<symmTensor>>(map, ssytf);
+    mapBoundaryFields<SurfaceField<tensor>>(map, stf);
 
     // Adapt constructMaps.
 
