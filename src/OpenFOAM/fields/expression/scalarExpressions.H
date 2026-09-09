@@ -141,7 +141,6 @@ UnaryOpFunction(pow5)
 UnaryOpFunction(pow6)
 UnaryOpFunction(pow025)
 UnaryOpFunction(sqrt)
-UnaryOpFunction(cbrt)
 UnaryOpFunction(sign)
 UnaryOpFunction(pos)
 UnaryOpFunction(pos0)
@@ -158,6 +157,9 @@ UnaryOpFunction(tan)
 UnaryOpFunction(asin)
 UnaryOpFunction(acos)
 UnaryOpFunction(atan)
+
+// Expensive unary scalar functions
+UnaryOpFunction(cbrt)
 UnaryOpFunction(sinh)
 UnaryOpFunction(cosh)
 UnaryOpFunction(tanh)
@@ -173,9 +175,12 @@ UnaryOpFunction(y0)
 UnaryOpFunction(y1)
 
 BinaryFunction(stabilise);
-BinaryFunction(pow);
 BinaryFunction(integerPow);
 BinaryFunction(integerRoot);
+
+// Eager evaluate pow to avoid interference with loop optimisation
+// Benefit demonstrated on x86 processors with sse2 and avx512
+BinaryEagerFunction(pow);
 
 /*---------------------------------------------------------------------------*\
                             Class atan2Op Declaration

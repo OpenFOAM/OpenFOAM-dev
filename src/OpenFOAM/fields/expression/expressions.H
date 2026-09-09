@@ -281,7 +281,23 @@ ElementType<Expression> gWeightedAverage
 // Define a binary function or operator given the global function or operator
 // name and the operator class that it uses
 
-#define BinaryFunction___(Func, Op, APar, AArg, AVar, BPar, BArg, BVar)        \
+#define BinaryFunction__(FUNC, Func, Op, APar, AArg, AVar)                     \
+    FUNC(Func, Op, APar, AArg, AVar, const B&, const B& b, b)                  \
+    FUNC(Func, Op, APar, AArg, AVar, const B&, B& b, b)                        \
+    FUNC(Func, Op, APar, AArg, AVar, B, B&& b, std::move(b))                   \
+    FUNC(Func, Op, APar, AArg, AVar, const B&, const tmp<B>& b, b)             \
+    FUNC(Func, Op, APar, AArg, AVar, const B&, tmp<B>& b, b)                   \
+    FUNC(Func, Op, APar, AArg, AVar, const B&, tmp<B>&& b, b)
+
+#define BinaryFunction_(FUNC, Func, Op)                                        \
+    BinaryFunction__(FUNC, Func, Op, const A&, const A& a, a)                  \
+    BinaryFunction__(FUNC, Func, Op, const A&, A& a, a)                        \
+    BinaryFunction__(FUNC, Func, Op, A, A&& a, std::move(a))                   \
+    BinaryFunction__(FUNC, Func, Op, const A&, const tmp<A>& a, a)             \
+    BinaryFunction__(FUNC, Func, Op, const A&, tmp<A>& a, a)                   \
+    BinaryFunction__(FUNC, Func, Op, const A&, tmp<A>&& a, a)
+
+#define BinaryFunctionTemplate(Func, Op, APar, AArg, AVar, BPar, BArg, BVar)   \
     template                                                                   \
     <                                                                          \
         class A,                                                               \
@@ -293,27 +309,30 @@ ElementType<Expression> gWeightedAverage
         return BinaryExpression<APar, BPar, Op>(AVar, BVar);                   \
     }                                                                          \
 
-#define BinaryFunction__(Func, Op, APar, AArg, AVar)                           \
-    BinaryFunction___(Func, Op, APar, AArg, AVar, const B&, const B& b, b)     \
-    BinaryFunction___(Func, Op, APar, AArg, AVar, const B&, B& b, b)           \
-    BinaryFunction___(Func, Op, APar, AArg, AVar, B, B&& b, std::move(b))      \
-    BinaryFunction___(Func, Op, APar, AArg, AVar, const B&, const tmp<B>& b, b)\
-    BinaryFunction___(Func, Op, APar, AArg, AVar, const B&, tmp<B>& b, b)      \
-    BinaryFunction___(Func, Op, APar, AArg, AVar, const B&, tmp<B>&& b, b)
-
-#define BinaryFunction_(Func, Op)                                              \
-    BinaryFunction__(Func, Op, const A&, const A& a, a)                        \
-    BinaryFunction__(Func, Op, const A&, A& a, a)                              \
-    BinaryFunction__(Func, Op, A, A&& a, std::move(a))                         \
-    BinaryFunction__(Func, Op, const A&, const tmp<A>& a, a)                   \
-    BinaryFunction__(Func, Op, const A&, tmp<A>& a, a)                         \
-    BinaryFunction__(Func, Op, const A&, tmp<A>&& a, a)
+#define BinaryEagerFunctionTemplate(                                           \
+    Func, Op, APar, AArg, AVar, BPar, BArg, BVar)                              \
+                                                                               \
+    BinaryFunctionTemplate(Func##_, Op, APar, AArg, AVar, BPar, BArg, BVar)    \
+                                                                               \
+    template                                                                   \
+    <                                                                          \
+        class A,                                                               \
+        class B,                                                               \
+        class = EnableIfExpressionable<BinaryExpression<A, B, Op>>             \
+    >                                                                          \
+    tmp<ResultType<BinaryExpression<A, B, Op>>> Func(AArg, BArg)               \
+    {                                                                          \
+        return eval(Func##_(Eval<A>::eval(AVar), Eval<B>::eval(BVar)));        \
+    }                                                                          \
 
 #define BinaryOperator(OpSym, Func)                                            \
-    BinaryFunction_(operator OpSym, Func##Op)
+    BinaryFunction_(BinaryFunctionTemplate, operator OpSym, Func##Op)
 
 #define BinaryFunction(Func)                                                   \
-    BinaryFunction_(Func, Func##Op)
+    BinaryFunction_(BinaryFunctionTemplate, Func, Func##Op)
+
+#define BinaryEagerFunction(Func)                                              \
+    BinaryFunction_(BinaryEagerFunctionTemplate, Func, Func##Op)
 
 // Addition operator and sum function
 BinaryOperator(+, add);
