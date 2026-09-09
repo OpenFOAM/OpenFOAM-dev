@@ -45,16 +45,40 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Evaluate an expression and return a temporary object
+//- Base class for conditional expression evaluation
+template<class Expression, class = void>
+struct Eval;
+
+//- If the argument is not an expression return it
+template<class Expression>
+struct Eval<Expression, EnableIfNotExpression<Expression>>
+{
+    static const Expression& eval(const Expression& e)
+    {
+        return e;
+    }
+};
+
+//- If the argument is an expression evaluate it and return the result
+template<class Expression>
+struct Eval<Expression, EnableIfExpression<Expression>>
+{
+    static tmp<ResultType<Expression>> eval(const Expression& e)
+    {
+        return tmp<ResultType<Expression>>(new ResultType<Expression>(e));
+    }
+};
+
+//- If the argument is an expression evaluate it and return the tmp<result>
+//  otherwise return it
 template<class Expression, class = EnableIfExpressionable<Expression>>
 tmp<ResultType<Expression>> eval(const Expression& e)
 {
-    return tmp<ResultType<Expression>>(new ResultType<Expression>(e));
+    return Eval<Expression>::eval(e);
 }
 
-
 //- Evaluate an expression and write to Ostream
-template<class Expression, class = EnableIfExpressionable<Expression>>
+template<class Expression, class = EnableIfExpression<Expression>>
 Ostream& operator<<(Ostream& os, const Expression& e)
 {
     os << eval(e);
