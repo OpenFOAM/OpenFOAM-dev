@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -85,8 +85,8 @@ setenv WM_PRECISION_OPTION DP
 #    WM_LABEL_SIZE = 32 | 64
 setenv WM_LABEL_SIZE 32
 
-#- Optimised, debug, profiling:
-#    WM_COMPILE_OPTION = Opt | Debug | Prof
+#- Native, optimised, debug, profiling:
+#    WM_COMPILE_OPTION = Native | Opt | Debug | Prof
 setenv WM_COMPILE_OPTION Opt
 
 #- MPI implementation:
