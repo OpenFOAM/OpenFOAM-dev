@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,8 @@ public:
             UList<Type>& allCellInfo,
             const label maxIter,
             TrackingData& td =
-                FaceCellWave<Type, TrackingData>::defaultTrackingData_
+                FaceCellWave<Type, TrackingData>::defaultTrackingData_,
+            const bool global = true
         );
 
 
@@ -120,9 +121,9 @@ public:
         virtual label faceToCell();
 
         //- Propagate from cell to face. Returns total number of faces
-        //  (over all processors) changed. (Faces on processorpatches are
+        //  (over all processors) changed. (Faces on processor patches are
         //  counted double)
-        virtual label cellToFace();
+        virtual label cellToFace(const bool global = true);
 };
 
 

@@ -67,7 +67,7 @@ namespace Foam
 
 void Foam::functionObjects::regionSizeDistribution::writeAlphaFields
 (
-    const regionSplit& regions,
+    const fvRegionSplit& regions,
     const Map<label>& patchRegions,
     const Map<scalar>& regionVolume,
     const volScalarField& alpha
@@ -152,7 +152,7 @@ void Foam::functionObjects::regionSizeDistribution::writeAlphaFields
 Foam::Map<Foam::label>
 Foam::functionObjects::regionSizeDistribution::findPatchRegions
 (
-    const regionSplit& regions
+    const fvRegionSplit& regions
 ) const
 {
     // Mark all regions starting at patches
@@ -305,7 +305,7 @@ void Foam::functionObjects::regionSizeDistribution::generateFields
 (
     const word& fieldName,              // name of field
     const Field<Type>& cellField,       // per cell field data
-    const regionSplit& regions,         // per cell the region(=droplet)
+    const fvRegionSplit& regions,       // per cell the region(=droplet)
     const labelList& sortedRegions,     // valid regions in sorted order
     const scalarField& sortedNormalisation,
     const labelList& indices,           // index of bin for each region
@@ -442,59 +442,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
     Info<< indent << "Maximum droplet diameter = " << maxDiam_ << endl;
     Info<< indent << "Maximum droplet volume   = " << maxDropletVol << endl;
 
-
-    // Determine blocked faces
-    boolList blockedFace(mesh_.nFaces(), false);
-
-    {
-        for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
-        {
-            scalar ownVal = alpha[mesh_.faceOwner()[facei]];
-            scalar neiVal = alpha[mesh_.faceNeighbour()[facei]];
-
-            if
-            (
-                (ownVal < threshold_ && neiVal > threshold_)
-             || (ownVal > threshold_ && neiVal < threshold_)
-            )
-            {
-                blockedFace[facei] = true;
-            }
-        }
-
-        // Block coupled faces
-        forAll(alpha.boundaryField(), patchi)
-        {
-            const fvPatchScalarField& fvp = alpha.boundaryField()[patchi];
-            if (fvp.coupled())
-            {
-                tmp<scalarField> townFld(fvp.patchInternalField());
-                const scalarField& ownFld = townFld();
-                tmp<scalarField> tnbrFld(fvp.patchNeighbourField());
-                const scalarField& nbrFld = tnbrFld();
-
-                label start = fvp.patch().poly().start();
-
-                forAll(ownFld, i)
-                {
-                    scalar ownVal = ownFld[i];
-                    scalar neiVal = nbrFld[i];
-
-                    if
-                    (
-                        (ownVal < threshold_ && neiVal > threshold_)
-                     || (ownVal > threshold_ && neiVal < threshold_)
-                    )
-                    {
-                        blockedFace[start+i] = true;
-                    }
-                }
-            }
-        }
-    }
-
-
-    regionSplit regions(mesh_, blockedFace);
+    fvRegionSplit regions(mesh_, alpha, threshold_);
 
     Info<< indent << "Determined " << regions.nRegions()
         << " disconnected regions" << endl;
@@ -549,6 +497,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
     if (debug)
     {
+        Info<< indent << "All regions:" << endl;
         Info<< indent << "" << tab << "Region"
             << tab << "Volume(mesh)"
             << tab << "Volume(" << alpha.name() << "):"
@@ -588,7 +537,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
     {
         Info<< indent << "Patch connected regions (liquid core):" << endl;
-        Info<< tab << "    Region"
+        Info<< indent << "" << tab << "Region"
             << tab << "Volume(mesh)"
             << tab << "Volume(" << alpha.name() << "):"
             << endl;

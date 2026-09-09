@@ -261,7 +261,8 @@ public:
             UList<Type>& allFaceInfo,
             UList<Type>& allCellInfo,
             const label maxIter,
-            TrackingData& td = defaultTrackingData_
+            TrackingData& td = defaultTrackingData_,
+            const bool global = true
         );
 
         //- Construct from mesh and explicitly connected boundary faces
@@ -277,7 +278,8 @@ public:
             UList<Type>& allFaceInfo,
             UList<Type>& allCellInfo,
             const label maxIter,
-            TrackingData& td = defaultTrackingData_
+            TrackingData& td = defaultTrackingData_,
+            const bool global = true
         );
 
         //- Disallow default bitwise copy construction
@@ -345,16 +347,16 @@ public:
 
             //- Propagate from face to cell. Returns total number of cells
             //  (over all processors) changed.
-           virtual label faceToCell();
+            virtual label faceToCell();
 
             //- Propagate from cell to face. Returns total number of faces
-            //  (over all processors) changed. (Faces on processorpatches are
+            //  (over all processors) changed. (Faces on processor patches are
             //  counted double)
-            virtual label cellToFace();
+            virtual label cellToFace(const bool global = true);
 
             //- Iterate until no changes or maxIter reached.  Returns actual
             //  number of iterations.
-            virtual label iterate(const label maxIter);
+            label iterate(const label maxIter, const bool global = true);
 
 
     // Member Operators

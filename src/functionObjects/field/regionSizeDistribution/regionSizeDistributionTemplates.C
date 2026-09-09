@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "regionSizeDistribution.H"
-#include "regionSplit.H"
+#include "fvRegionSplit.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -32,7 +32,7 @@ License
 template<class Type>
 Foam::Map<Type> Foam::functionObjects::regionSizeDistribution::regionSum
 (
-    const regionSplit& regions,
+    const fvRegionSplit& regions,
     const Field<Type>& fld
 ) const
 {

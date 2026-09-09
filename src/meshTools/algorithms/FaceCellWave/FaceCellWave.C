@@ -660,7 +660,8 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
     UList<Type>& allFaceInfo,
     UList<Type>& allCellInfo,
     const label maxIter,
-    TrackingData& td
+    TrackingData& td,
+    const bool global
 )
 :
     mesh_(mesh),
@@ -697,7 +698,7 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
     setFaceInfo(changedFaces, changedFacesInfo);
 
     // Iterate until nothing changes
-    label iter = iterate(maxIter);
+    label iter = iterate(maxIter, global);
 
     if ((maxIter > 0) && (iter >= maxIter))
     {
@@ -721,7 +722,8 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
     UList<Type>& allFaceInfo,
     UList<Type>& allCellInfo,
     const label maxIter,
-    TrackingData& td
+    TrackingData& td,
+    const bool global
 )
 :
     mesh_(mesh),
@@ -758,7 +760,7 @@ Foam::FaceCellWave<Type, TrackingData>::FaceCellWave
     setFaceInfo(changedFaces, changedFacesInfo);
 
     // Iterate until nothing changes
-    label iter = iterate(maxIter);
+    label iter = iterate(maxIter, global);
 
     if ((maxIter > 0) && (iter >= maxIter))
     {
@@ -870,7 +872,10 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::faceToCell()
 
 
 template<class Type, class TrackingData>
-Foam::label Foam::FaceCellWave<Type, TrackingData>::cellToFace()
+Foam::label Foam::FaceCellWave<Type, TrackingData>::cellToFace
+(
+    const bool global
+)
 {
     // Propagate cell to face
 
@@ -926,7 +931,7 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::cellToFace()
         handleCyclicPatches();
     }
 
-    if (Pstream::parRun())
+    if (global && Pstream::parRun())
     {
         // Transfer changed faces from neighbouring processors.
         handleProcPatches();
@@ -948,7 +953,11 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::cellToFace()
 
 // Iterate
 template<class Type, class TrackingData>
-Foam::label Foam::FaceCellWave<Type, TrackingData>::iterate(const label maxIter)
+Foam::label Foam::FaceCellWave<Type, TrackingData>::iterate
+(
+    const label maxIter,
+    const bool global
+)
 {
     if (hasCyclicPatches_)
     {
@@ -956,7 +965,7 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::iterate(const label maxIter)
         handleCyclicPatches();
     }
 
-    if (Pstream::parRun())
+    if (global && Pstream::parRun())
     {
         // Transfer changed faces from neighbouring processors.
         handleProcPatches();
@@ -985,7 +994,7 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::iterate(const label maxIter)
             break;
         }
 
-        label nFaces = cellToFace();
+        label nFaces = cellToFace(global);
 
         if (debug)
         {

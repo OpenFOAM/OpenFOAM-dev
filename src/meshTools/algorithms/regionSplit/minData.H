@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,33 +108,33 @@ public:
             ) const;
 
             //- Transform across an interface
-            template<class TrackingData>
+            template<class Patch, class TrackingData>
             inline void transform
             (
-                const polyPatch& patch,
+                const Patch& patch,
                 const label patchFacei,
                 const transformer& transform,
                 TrackingData& td
             );
 
             //- Influence of neighbouring face.
-            template<class TrackingData>
+            template<class NeighbourFacei, class TrackingData>
             inline bool updateCell
             (
                 const polyMesh&,
                 const label thisCelli,
-                const label neighbourFacei,
+                const NeighbourFacei& neighbourFacei,
                 const minData& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Influence of neighbouring cell.
-            template<class TrackingData>
+            template<class Facei, class TrackingData>
             inline bool updateFace
             (
                 const polyMesh&,
-                const label thisFacei,
+                const Facei& thisFacei,
                 const label neighbourCelli,
                 const minData& neighbourInfo,
                 const scalar tol,
@@ -142,11 +142,11 @@ public:
             );
 
             //- Influence of different value on same face.
-            template<class TrackingData>
+            template<class Facei, class TrackingData>
             inline bool updateFace
             (
                 const polyMesh&,
-                const label thisFacei,
+                const Facei& thisFacei,
                 const minData& neighbourInfo,
                 const scalar tol,
                 TrackingData& td

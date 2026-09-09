@@ -102,7 +102,8 @@ Foam::OppositeFaceCellWave<Type, TrackingData>::OppositeFaceCellWave
     UList<Type>& allFaceInfo,
     UList<Type>& allCellInfo,
     const label maxIter,
-    TrackingData& td
+    TrackingData& td,
+    const bool global
 )
 :
     FaceCellWave<Type, TrackingData>
@@ -113,12 +114,13 @@ Foam::OppositeFaceCellWave<Type, TrackingData>::OppositeFaceCellWave
         allFaceInfo,
         allCellInfo,
         0,              // maxIter,
-        td
+        td,
+        global
     ),
     changedOppositeFaces_(this->mesh_.nCells())
 {
     // Iterate until nothing changes
-    label iter = this->iterate(maxIter);
+    label iter = this->iterate(global, maxIter);
 
     if ((maxIter > 0) && (iter >= maxIter))
     {
@@ -253,7 +255,10 @@ Foam::label Foam::OppositeFaceCellWave<Type, TrackingData>::faceToCell()
 
 
 template<class Type, class TrackingData>
-Foam::label Foam::OppositeFaceCellWave<Type, TrackingData>::cellToFace()
+Foam::label Foam::OppositeFaceCellWave<Type, TrackingData>::cellToFace
+(
+    const bool global
+)
 {
     forAll(this->changedCells_, changedCelli)
     {
@@ -302,7 +307,7 @@ Foam::label Foam::OppositeFaceCellWave<Type, TrackingData>::cellToFace()
         this->handleCyclicPatches();
     }
 
-    if (Pstream::parRun())
+    if (global && Pstream::parRun())
     {
         // Transfer changed faces from neighbouring processors.
         this->handleProcPatches();

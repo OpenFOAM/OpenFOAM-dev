@@ -110,7 +110,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class regionSplit;
+class fvRegionSplit;
 
 namespace functionObjects
 {
@@ -155,7 +155,7 @@ class regionSizeDistribution
     // Private Member Functions
 
         template<class Type>
-        Map<Type> regionSum(const regionSplit&, const Field<Type>&) const;
+        Map<Type> regionSum(const fvRegionSplit&, const Field<Type>&) const;
 
         //- Get data in order
         template<class Type>
@@ -169,14 +169,14 @@ class regionSizeDistribution
         //  droplets (liquidCore, backGround)
         void writeAlphaFields
         (
-            const regionSplit& regions,
+            const fvRegionSplit& regions,
             const Map<label>& keepRegions,
             const Map<scalar>& regionVolume,
             const volScalarField& alpha
         ) const;
 
         //- Mark all regions starting at patches
-        Map<label> findPatchRegions(const regionSplit&) const;
+        Map<label> findPatchRegions(const fvRegionSplit&) const;
 
         //- Helper: divide if denom != 0
         template<class Type>
@@ -212,7 +212,7 @@ class regionSizeDistribution
         (
             const word& fieldName,              // name of field
             const Field<Type>& cellField,       // per cell field data
-            const regionSplit& regions,         // per cell the region(=droplet)
+            const fvRegionSplit& regions,       // per cell the region(=droplet)
             const labelList& sortedRegions,     // valid regions in sorted order
             const scalarField& sortedNormalisation,
             const labelList& indices,           // index of bin for each region

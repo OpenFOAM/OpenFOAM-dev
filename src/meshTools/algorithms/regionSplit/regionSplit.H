@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,70 +25,13 @@ Class
     Foam::regionSplit
 
 Description
-    This class separates the mesh into distinct unconnected regions,
-    each of which is then given a label according to globalNumbering().
+    This class enumerates disconnected regions of a mesh. It inherits a
+    label list which it populates on construction with the region index for
+    each cell in the mesh.
 
-
-    Say 6 cells, 3 processors, with single baffle on proc1.
-
-              baffle
-                |
-    +---+---+---+---+---+---+
-    |   |   |   |   |   |   |
-    +---+---+---+---+---+---+
-      proc0 | proc1 | proc2
-
-
-
-    1: determine local regions (uncoupled)
-
-    +---+---+---+---+---+---+
-    | 0 | 0 | 0 | 1 | 0 | 0 |
-    +---+---+---+---+---+---+
-      proc0 | proc1 | proc2
-
-
-
-    2: make global
-
-    +---+---+---+---+---+---+
-    | 0 | 0 | 1 | 2 | 3 | 3 |
-    +---+---+---+---+---+---+
-      proc0 | proc1 | proc2
-
-
-
-    3: merge connected across procs
-
-    +---+---+---+---+---+---+
-    | 0 | 0 | 0 | 2 | 2 | 2 |
-    +---+---+---+---+---+---+
-      proc0 | proc1 | proc2
-
-
-
-    4. determine locally owner regions. determine compact numbering for the
-    local regions and send these to all processors that need them:
-
-    proc0 uses regions:
-        - 0 which is local to it.
-    proc1 uses regions
-        - 0 which originates from proc0
-        - 2 which is local to it
-    proc2 uses regions
-        - 2 which originates from proc1
-
-    So proc1 needs to get the compact number for region 0 from proc0 and proc2
-    needs to get the compact number for region 2 from proc1:
-
-    +---+---+---+---+---+---+
-    | 0 | 0 | 0 | 1 | 1 | 1 |
-    +---+---+---+---+---+---+
-      proc0 | proc1 | proc2
-
-
-    Can optionally keep all regions local to the processor.
-
+    Optionally additional blocked faces and/or explicit connections can be
+    provided, and a switch can be used to deactivate communication and keep
+    regions on different processors separate.
 
 SourceFiles
     regionSplit.C
@@ -98,9 +41,9 @@ SourceFiles
 #ifndef regionSplit_H
 #define regionSplit_H
 
-#include "globalIndex.H"
-#include "labelPair.H"
+#include "regionSplitBase.H"
 #include "boolList.H"
+#include "labelPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -115,14 +58,12 @@ class polyMesh;
 
 class regionSplit
 :
-    public labelList
+    public regionSplitBase
 {
     // Private Data
 
         //- Reference to the polyMesh
         const polyMesh& mesh_;
-
-        mutable autoPtr<globalIndex> globalNumberingPtr_;
 
 
     // Private Member Functions
@@ -133,16 +74,33 @@ class regionSplit
             const globalIndex& globalFaces,
             const boolList& blockedFace,
             const List<labelPair>& explicitConnections,
-            labelList& cellRegion
+            labelList& cellRegion,
+            const bool global
         ) const;
 
-        //- Calculate global region split. Return globalIndex.
-        autoPtr<globalIndex> calcRegionSplit
+        //- Calculate local region split. Return the number of regions.
+        label calcLocalRegionSplit
         (
-            const bool doGlobalRegions,
             const boolList& blockedFace,
             const List<labelPair>& explicitConnections,
             labelList& cellRegion
+        ) const;
+
+        //- Calculate global region split. Return the number of regions.
+        label calcGlobalRegionSplit
+        (
+            const boolList& blockedFace,
+            const List<labelPair>& explicitConnections,
+            labelList& cellRegion
+        ) const;
+
+        //- Calculate global region split. Return the number of regions.
+        label calcRegionSplit
+        (
+            const boolList& blockedFace,
+            const List<labelPair>& explicitConnections,
+            labelList& cellRegion,
+            const bool global
         ) const;
 
 
@@ -157,17 +115,17 @@ public:
         //- Construct from mesh
         regionSplit
         (
-            const polyMesh&,
-            const bool doGlobalRegions = Pstream::parRun()
+            const polyMesh& mesh,
+            const bool global = Pstream::parRun()
         );
 
         //- Construct from mesh and whether face is blocked
         //  NOTE: blockedFace has to be consistent across coupled faces!
         regionSplit
         (
-            const polyMesh&,
+            const polyMesh& mesh,
             const boolList& blockedFace,
-            const bool doGlobalRegions = Pstream::parRun()
+            const bool global = Pstream::parRun()
         );
 
         //- Construct from mesh and whether face is blocked. Additional explicit
@@ -175,14 +133,11 @@ public:
         //  NOTE: blockedFace has to be consistent across coupled faces!
         regionSplit
         (
-            const polyMesh&,
+            const polyMesh& mesh,
             const boolList& blockedFace,
             const List<labelPair>&,
-            const bool doGlobalRegions = Pstream::parRun()
+            const bool global = Pstream::parRun()
         );
-
-        //- Disallow default bitwise copy construction
-        regionSplit(const regionSplit&) = delete;
 
 
     // Member Functions
@@ -191,24 +146,6 @@ public:
         const polyMesh& mesh() const
         {
             return mesh_;
-        }
-
-        //- Return global region numbering
-        const globalIndex& globalNumbering() const
-        {
-            return globalNumberingPtr_();
-        }
-
-        //- Return local number of regions
-        label nLocalRegions() const
-        {
-            return globalNumbering().localSize(Pstream::myProcNo());
-        }
-
-        //- Return total number of regions
-        label nRegions() const
-        {
-            return globalNumbering().size();
         }
 };
 

@@ -927,7 +927,7 @@ Foam::labelList Foam::decompositionMethod::decompose
         if (debug)
         {
             Info<< "Constrained decomposition:" << endl
-                << "    split into " << localRegion.nLocalRegions()
+                << "    split into " << localRegion.nRegions()
                 << " regions."
                 << endl;
         }
@@ -940,7 +940,7 @@ Foam::labelList Foam::decompositionMethod::decompose
         // somewhere in the middle of the domain which might not be anywhere
         // near any of the cells.
 
-        pointField regionCentres(localRegion.nLocalRegions(), point::max);
+        pointField regionCentres(localRegion.nRegions(), point::max);
 
         forAll(localRegion, celli)
         {
@@ -955,7 +955,7 @@ Foam::labelList Foam::decompositionMethod::decompose
         // Do decomposition on agglomeration
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        scalarField regionWeights(localRegion.nLocalRegions(), 0);
+        scalarField regionWeights(localRegion.nRegions(), 0);
 
         if (hasWeights)
         {

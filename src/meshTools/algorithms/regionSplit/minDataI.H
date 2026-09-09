@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polyMesh.H"
+#include "minData.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -61,10 +61,10 @@ inline bool Foam::minData::sameGeometry
 }
 
 
-template<class TrackingData>
+template<class Patch, class TrackingData>
 inline void Foam::minData::transform
 (
-    const polyPatch& patch,
+    const Patch& patch,
     const label patchFacei,
     const transformer& transform,
     TrackingData& td
@@ -72,12 +72,12 @@ inline void Foam::minData::transform
 {}
 
 
-template<class TrackingData>
+template<class NeighbourFacei, class TrackingData>
 inline bool Foam::minData::updateCell
 (
     const polyMesh&,
     const label thisCelli,
-    const label neighbourFacei,
+    const NeighbourFacei& neighbourFacei,
     const minData& neighbourInfo,
     const scalar tol,
     TrackingData&
@@ -95,19 +95,18 @@ inline bool Foam::minData::updateCell
 }
 
 
-template<class TrackingData>
+template<class Facei, class TrackingData>
 inline bool Foam::minData::updateFace
 (
-    const polyMesh& mesh,
-    const label thisFacei,
+    const polyMesh&,
+    const Facei& thisFacei,
     const label neighbourCelli,
     const minData& neighbourInfo,
     const scalar tol,
     TrackingData&
 )
 {
-    // From cell to its faces.
-
+    // From cell to its faces
     if (neighbourInfo.data_ < data_)
     {
         operator=(neighbourInfo);
@@ -120,11 +119,11 @@ inline bool Foam::minData::updateFace
 }
 
 
-template<class TrackingData>
+template<class Facei, class TrackingData>
 inline bool Foam::minData::updateFace
 (
     const polyMesh&,
-    const label thisFacei,
+    const Facei& thisFacei,
     const minData& neighbourInfo,
     const scalar tol,
     TrackingData&

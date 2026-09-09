@@ -73,9 +73,10 @@ algorithms/FaceCellWave/FaceCellWaveName.C
 algorithms/PointEdgeWave/PointEdgeWaveName.C
 algorithms/PatchEdgeFaceWave/PatchEdgeFaceWaveName.C
 algorithms/PatchEdgeFaceWave/patchPatchDist.C
+algorithms/regionSplit/regionSplitBase.C
+algorithms/regionSplit/regionSplit.C
 
-regionSplit/regionSplit.C
-regionSplit/localPointRegion.C
+localPointRegion/localPointRegion.C
 
 indexedOctree/treeDataEdge.C
 indexedOctree/treeDataFace.C
