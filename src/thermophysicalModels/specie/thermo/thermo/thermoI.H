@@ -25,6 +25,7 @@ License
 
 #include "thermo.H"
 #include "thermodynamicConstants.H"
+#include "IOstreams.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
