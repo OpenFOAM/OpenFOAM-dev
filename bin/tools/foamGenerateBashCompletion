@@ -185,16 +185,22 @@ _findArgs () {
         xargs
 }
 
-_unitArgs ()
+_dimensions ()
 {
-    _opts="-help"
+    foamUnits | \\
+        sed -n -e "/^Fundamental Dimensions/,/^$/p" \\
+               -e "/^Derived Dimensions/,/^$/p" | \\
+        grep "^[\t ]" | tr -d "\[\]" | xargs
+}
 
-    # If '-all' is not selected, it is an option
-    _opts="\$_opts -all"
-
-    echo "\$@" | grep -q -- "-d" && _args="-d"
-    _opts="\$_opts \$(foamUnits \$_args | xargs -n 1 | grep '\\[' | tr -d '\\[\\]')"
-    echo "\$_opts" | xargs -n 1 | sort
+_units ()
+{
+    foamUnits | \\
+        sed -n -e "/^Fundamental Units/,/^$/p" \\
+               -e "/^Derived Units/,/^$/p" \\
+               -e "/^Scaled Units/,/^$/p" \\
+               -e "/^Derived-Scaled Units/,/^$/p" | \\
+        grep "^[\t ]" | tr -d "\[\]" | xargs
 }
 
 EOF
@@ -416,15 +422,27 @@ _foamUnits () {
     cat<<EOF
 _foamUnits_ ()
 {
+    # Note: 'used' is redundant here
 $(declareLocals)
 
-    opts="-all -value \$(_unitArgs "\$used")"
+    # Default: '-help', '-all', units and dimensions
+    opts="-help -all \$(_units) \$(_dimensions)"
+
+    # '-help' or '-all' used: no further options
+    echo "\$line" | grep -qE -- "-(help|all)" && opts=""
+
+    # one dimension used: no further options
+    _dimensions | grep -wq "\$prev" && opts=""
+
+    # one unit used: return units and '-value'
+    _units | grep -wq "\$prev" && opts="\$(_units) -value"
+
+    # one unit used: return units and '-value'
+    _units | grep -wq "\$prev" && [ "\$COMP_CWORD" = 3 ] && opts="-value"
+
     extra=""
 
-$(caseStart)
-        -*) ;;
-        *) opts="" ;;
-$(caseEnd)
+    COMPREPLY=( \$(compgen -W "\${opts}" \$extra -- \${cur}) )
 }
 complete -o filenames -o nospace -F _foamUnits_ foamUnits
 
