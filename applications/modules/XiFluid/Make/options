@@ -6,7 +6,7 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/fluid/lnInclude \
-    -I$(LIB_SRC)/ThermophysicalTransportModels/fluidThermo/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/phaseFluidMulticomponentThermo/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/coupledThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
@@ -22,10 +22,8 @@ EXE_INC = \
 LIB_LIBS = \
     -lbasicFluidSolver \
     -lisothermalFluidSolver \
-    -lmomentumTransportModels \
-    -lcompressibleMomentumTransportModels \
     -lphaseCompressibleMomentumTransportModels \
-    -lphaseFluidThermophysicalTransportModels \
+    -lphaseFluidMulticomponentThermophysicalTransportModels \
     -lcoupledThermophysicalTransportModels \
     -lmulticomponentThermophysicalModels \
     -lreactionModels \

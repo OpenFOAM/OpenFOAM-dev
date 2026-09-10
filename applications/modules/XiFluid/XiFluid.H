@@ -124,7 +124,7 @@ See also
 #include "ubRhoThermo.H"
 #include "reactionModel.H"
 #include "ubMomentumTransportModel.H"
-#include "PhaseThermophysicalTransportModel.H"
+#include "phaseFluidMulticomponentThermophysicalTransportModel.H"
 #include "SuModel.H"
 #include "XiModel.H"
 
@@ -161,11 +161,8 @@ protected:
 
     // Unburnt and burnt gas Thermophysical transport
 
-        typedef PhaseThermophysicalTransportModel
-        <
-            phaseCompressible::momentumTransportModel,
-            fluidThermo
-        > thermophysicalTransportModel;
+        typedef phaseFluidMulticomponentThermophysicalTransportModel
+            thermophysicalTransportModel;
 
         autoPtr<thermophysicalTransportModel> uThermophysicalTransport_;
         autoPtr<thermophysicalTransportModel> bThermophysicalTransport_;
