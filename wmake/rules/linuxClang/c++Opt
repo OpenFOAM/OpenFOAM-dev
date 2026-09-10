@@ -1,2 +1,2 @@
 c++DBUG     =
-c++OPT      = -O3
+c++OPT      = -O3 -mllvm -inline-threshold=5000 -Wno-unused-command-line-argument
