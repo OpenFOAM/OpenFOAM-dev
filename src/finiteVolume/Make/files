@@ -321,6 +321,8 @@ $(derivedFvPatchFields)/totalTemperature/totalTemperatureFvPatchScalarField.C
 $(derivedFvPatchFields)/translatingWallVelocity/translatingWallVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/turbulentInlet/turbulentInletFvPatchFields.C
 $(derivedFvPatchFields)/turbulentKineticEnergy/turbulentKineticEnergyFvPatchScalarField.C
+$(derivedFvPatchFields)/turbulentSyntheticEddyInlet/turbulentSyntheticEddyInletFvPatchVectorField.C
+$(derivedFvPatchFields)/turbulentSyntheticEddyInlet/eddy/syntheticEddy.C
 $(derivedFvPatchFields)/uniformDensityHydrostaticPressure/uniformDensityHydrostaticPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/uniformFixedGradient/uniformFixedGradientFvPatchFields.C
 $(derivedFvPatchFields)/uniformFixedValue/uniformFixedValueFvPatchFields.C
