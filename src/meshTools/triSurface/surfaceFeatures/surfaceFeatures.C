@@ -222,7 +222,7 @@ void Foam::surfaceFeatures::calcFeatPoints
                 if (edgeStat[edgeI] != NONE)
                 {
                     edgeVecs.append(edges[edgeI].vec(localPoints));
-                    edgeVecs.last() /= mag(edgeVecs.last());
+                    edgeVecs.last() /= (mag(edgeVecs.last()) + vSmall);
                 }
             }
 
