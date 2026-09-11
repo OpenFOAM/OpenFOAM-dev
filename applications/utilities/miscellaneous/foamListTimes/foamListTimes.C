@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         "execute functionEntries"
     );
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
 
     entry::disableFunctionEntries = !args.optionFound("functionEntries");
 

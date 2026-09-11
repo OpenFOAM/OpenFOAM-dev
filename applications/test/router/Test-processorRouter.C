@@ -95,7 +95,7 @@ point meshCentre(const polyMesh& mesh)
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     #include "createMesh.H"
 

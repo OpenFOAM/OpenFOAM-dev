@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
     argList::validArgs.append("patch");
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     timeSelector::select0(runTime, args);
 

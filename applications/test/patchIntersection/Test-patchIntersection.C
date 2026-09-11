@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         "snapping tolerance - default is " + name(defaultSnapTol)
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     #include "createPolyMesh.H"
 

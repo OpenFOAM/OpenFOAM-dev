@@ -50,7 +50,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     timeSelector::select0(runTime, args);
     #include "createMesh.H"

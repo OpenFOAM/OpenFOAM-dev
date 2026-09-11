@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
         "do not update fields"
     );
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
 
     // Get times list

@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
     argList::noParallel();
     argList::validArgs.append("patch");
 
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     #include "createPolyMesh.H"
 

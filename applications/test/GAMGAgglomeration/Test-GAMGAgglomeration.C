@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         "normalise agglomeration (0..1)"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
 
     bool writeObj = args.optionFound("writeObj");

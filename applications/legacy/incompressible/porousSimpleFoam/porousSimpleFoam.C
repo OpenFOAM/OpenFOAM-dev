@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     #define CREATE_FIELDS_2 createPorousZones.H
     #include "postProcess.H"
 
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     #include "createMesh.H"
     #include "createControl.H"

@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
     // Include explicit constant option, execute from zero by default
     timeSelector::addOptions(true, false);
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "setMeshPath.H"
 
     const bool region              = args.optionFound("region");

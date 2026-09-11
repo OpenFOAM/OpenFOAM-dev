@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
         "preserve surface outside of mesh bounds"
     );
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
 
     const fileName surfFileName = args[1];

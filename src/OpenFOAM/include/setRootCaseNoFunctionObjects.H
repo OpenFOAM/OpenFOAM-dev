@@ -1,6 +1,7 @@
-Foam::argList args(argc, argv);
+argList::addBoolOption
+(
+    "functionObjects",
+    "execute functionObjects"
+);
 
-if (!args.checkRootCase())
-{
-    Foam::FatalError.exit();
-}
+#include "setRootCase.H"

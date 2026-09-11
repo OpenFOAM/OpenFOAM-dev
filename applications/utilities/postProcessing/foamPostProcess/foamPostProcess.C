@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
     // Set functionObject post-processing mode
     functionObject::postProcess = true;
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
 
     bool printedList = false;
 

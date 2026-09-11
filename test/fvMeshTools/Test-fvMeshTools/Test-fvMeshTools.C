@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
     #include "createSpecifiedMesh.H"
 

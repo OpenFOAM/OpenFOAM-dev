@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
         "Restrict cells to refine to those in specified cellSet"
     );
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
 
     Foam::word meshRegionName = polyMesh::defaultRegion;

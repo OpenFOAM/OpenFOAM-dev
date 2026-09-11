@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     argList::noParallel();
     argList::validArgs.append("feature angle[0-180]");
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
     #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();

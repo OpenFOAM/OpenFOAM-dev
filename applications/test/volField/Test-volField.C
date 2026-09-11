@@ -39,7 +39,7 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
 
     #include "createTime.H"
     #include "createMesh.H"

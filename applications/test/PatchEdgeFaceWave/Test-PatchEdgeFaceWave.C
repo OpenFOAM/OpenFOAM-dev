@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 {
     argList::validArgs.append("patch");
 
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     #include "createMesh.H"
 

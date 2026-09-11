@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
 
     IOobject meshIo

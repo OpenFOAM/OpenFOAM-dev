@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         "minimum z-height for transferring liner faces to cylinder-head"
     );
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
 
     const fileName kivaFileName =

@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         "Calculate and write the pressure field"
     );
 
-    #include "setRootCaseFunctionObjects.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTime.H"
     #include "createMesh.H"
 

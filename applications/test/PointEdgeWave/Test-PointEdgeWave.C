@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 {
     argList::validArgs.append("(patches)");
 
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     #include "createPolyMesh.H"
 

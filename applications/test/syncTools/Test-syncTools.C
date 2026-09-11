@@ -588,7 +588,7 @@ void testFaceSync(const polyMesh& mesh, randomGenerator& rndGen)
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     #include "createPolyMesh.H"
 

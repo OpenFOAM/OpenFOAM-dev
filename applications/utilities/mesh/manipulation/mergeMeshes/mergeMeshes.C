@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
         "list of case mesh regions to merge"
     );
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
 
     const wordList meshes
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     argList::validArgs.append("file");
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
 
     if (!Pstream::parRun())
     {

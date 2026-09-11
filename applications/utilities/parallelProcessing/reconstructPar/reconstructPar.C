@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
     // the user accidentally trashing the initial fields)
     timeSelector::addOptions(true, true);
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "setMeshPath.H"
 
     const bool writeCellProc = args.optionFound("cellProc");

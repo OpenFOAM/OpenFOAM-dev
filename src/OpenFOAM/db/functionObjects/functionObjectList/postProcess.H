@@ -72,7 +72,7 @@ if (argList::postProcess(argc, argv))
     // Set functionObject post-processing mode
     functionObject::postProcess = true;
 
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
 
     if (args.optionFound("list"))
     {

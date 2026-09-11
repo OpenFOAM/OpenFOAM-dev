@@ -58,7 +58,7 @@ bool notEqual(const scalar s1, const scalar s2, const scalar tol)
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
-    #include "setRootCase.H"
+    #include "setRootCaseFunctionObjects.H"
     #include "createTime.H"
     timeSelector::select0(runTime, args);
     #include "createMesh.H"

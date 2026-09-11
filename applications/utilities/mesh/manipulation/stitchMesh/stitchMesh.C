@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
     argList::validArgs.append("patchPairs");
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
 
     // Select time if specified

@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "setMeshPath.H"
     #include "createTimeNoFunctionObjects.H"
 

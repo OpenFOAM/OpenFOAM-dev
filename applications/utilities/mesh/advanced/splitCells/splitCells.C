@@ -542,7 +542,7 @@ int main(int argc, char *argv[])
         "scalar", "edge snap tolerance (default 0.2)"
     );
 
-    #include "setRootCaseNoFunctionObjects.H"
+    #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
     #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();

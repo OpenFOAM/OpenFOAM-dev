@@ -1,7 +1,7 @@
 argList::addBoolOption
 (
-    "functionObjects",
-    "execute functionObjects"
+    "noFunctionObjects",
+    "do not execute functionObjects"
 );
 
-#include "setRootCaseNoFunctionObjects.H"
+#include "setRootCase.H"
