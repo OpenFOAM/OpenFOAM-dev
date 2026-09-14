@@ -159,11 +159,14 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
 
     nRegionNameChars++;
 
-    prefix0_.append(nRegionNameChars, ' ');
+    prefix0_.std::string::append(nRegionNameChars, ' ');
 
     forAll(regionSolverNames, i)
     {
-        prefixes_[i].append(nRegionNameChars - prefixes_[i].size(), ' ');
+        prefixes_[i].std::string::append
+        (
+            nRegionNameChars - prefixes_[i].size(), ' '
+        );
     }
 }
 
