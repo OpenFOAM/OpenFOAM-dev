@@ -91,12 +91,7 @@ public:
         inline word(const char*, const bool doStripInvalid=true);
 
         //- Copy constructor with a maximum number of characters
-        inline word
-        (
-            const char*,
-            const size_type,
-            const bool doStripInvalid
-        );
+        inline word(const char*, const size_type);
 
         //- Copy constructor of string
         inline word(const string&, const bool doStripInvalid=true);

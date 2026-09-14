@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,18 +39,17 @@ Description
 
 namespace Foam
 {
-    //! \cond fileScope
     //  Extract up to the first non-word characters
     inline word getFirstWord(const char* str)
     {
         if (str)
         {
-            label n = 0;
+            word::size_type n = 0;
             while (str[n] && word::valid(str[n]))
             {
                 ++n;
             }
-            return word(str, n, true);
+            return word(str, n);
         }
         else
         {
@@ -58,8 +57,6 @@ namespace Foam
         }
 
     }
-    //! \endcond
-
 } // End namespace Foam
 
 
