@@ -121,13 +121,12 @@ Foam::functionObjects::energyFluxBase::calcPhihs
           ? schemesField_
           : fttm.thermo().he().name();
 
-        return
-            fvc::flux
-            (
-                phi,
-                fttm.thermo().hs(),
-                "div(" + phi.name() + "," + schemesField + ")"
-            );
+        return fvc::flux
+        (
+            phi,
+            fttm.thermo().hs(),
+            word("div(", phi.name(), ',', schemesField, ')')
+        );
     }
 
     return surfaceScalarField::New("0", mesh(), dimensions::power);

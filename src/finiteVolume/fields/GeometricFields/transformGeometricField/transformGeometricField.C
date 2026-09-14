@@ -70,7 +70,7 @@ tmp<GeometricField<Type, GeoMesh>> transform
     (
         GeometricField<Type, GeoMesh>::New
         (
-            "transform(" + trf.name() + ',' + tf.name() + ')',
+            word("transform(", trf.name(), ',', tf.name(), ')'),
             tf.mesh(),
             tf.dimensions()
         )
@@ -149,7 +149,7 @@ tmp<GeometricField<Type, GeoMesh>> transform
     (
         GeometricField<Type, GeoMesh>::New
         (
-            "transform(" + t.name() + ',' + tf.name() + ')',
+            word("transform(", t.name(), ',', tf.name(), ')'),
             tf.mesh(),
             tf.dimensions()
         )

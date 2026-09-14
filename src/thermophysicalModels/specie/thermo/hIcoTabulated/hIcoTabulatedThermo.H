@@ -141,7 +141,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "hIcoTabulated<" + EquationOfState::typeName() + '>';
+            return word("hIcoTabulated<", EquationOfState::typeName(), '>');
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_

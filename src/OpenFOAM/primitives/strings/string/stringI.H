@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,30 @@ License
 
 #include <iostream>
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-inline Foam::string::string()
+inline void Foam::string::Append(string& s)
 {}
 
 
-inline Foam::string::string(const std::string& str)
-:
-    std::string(str)
+template<class Str>
+inline void Foam::string::Append(string& s, const Str& a)
+{
+    s += a;
+}
+
+
+template <class Str, class... Strs>
+inline void Foam::string::Append(string& s, const Str& a, Strs const&... strs)
+{
+    s += a;
+    Append(s, strs...);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+inline Foam::string::string()
 {}
 
 
@@ -49,15 +64,15 @@ inline Foam::string::string(string&& str)
 {}
 
 
-inline Foam::string::string(const char* str)
+inline Foam::string::string(const std::string& str)
 :
     std::string(str)
 {}
 
 
-inline Foam::string::string(const char* str, const size_type len)
+inline Foam::string::string(const char* str)
 :
-    std::string(str, len)
+    std::string(str)
 {}
 
 
@@ -67,10 +82,30 @@ inline Foam::string::string(const char c)
 {}
 
 
+inline Foam::string::string(const char* str, const size_type len)
+:
+    std::string(str, len)
+{}
+
+
 inline Foam::string::string(const size_type len, const char c)
 :
     std::string(len, c)
 {}
+
+
+template<class Str, class Str1, class... Strs>
+inline Foam::string::string
+(
+    const Str& str,
+    const Str1& str1,
+    Strs const&... strs
+)
+:
+    string(str)
+{
+    Append(*this, str1, strs...);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -198,6 +233,23 @@ inline bool Foam::string::match(const std::string& str) const
 }
 
 
+template <class... Strs>
+inline Foam::string& Foam::string::append(Strs const&... strs)
+{
+    Append(*this, strs...);
+    return *this;
+}
+
+
+template <class Str, class... Strs>
+inline Foam::string Foam::string::cat(const Str& a, Strs const&... strs)
+{
+    string s(a);
+    Append(s, strs...);
+    return s;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 inline Foam::string Foam::string::operator()
@@ -226,13 +278,13 @@ inline unsigned Foam::string::hash::operator()
 }
 
 
-void Foam::string::operator=(const string& str)
+inline void Foam::string::operator=(const string& str)
 {
     std::string::operator=(str);
 }
 
 
-void Foam::string::operator=(string&& str)
+inline void Foam::string::operator=(string&& str)
 {
     std::string::operator=(move(str));
 }

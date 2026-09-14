@@ -52,7 +52,7 @@ struct powOp
 
     static word name(const word& a, const word& b)
     {
-        return "pow(" + a + ',' + b + ')';
+        return word("pow(", a, ',', b, ')');
     }
 
     static scalar value(const scalar a, const float b)
@@ -100,7 +100,7 @@ struct integerPowOp
 
     static word name(const word& a, const word& b)
     {
-        return "integerPow(" + a + ',' + b + ')';
+        return word("integerPow(", a, ',', b, ')');
     }
 
     static scalar value(const scalar a, const label b)
@@ -122,7 +122,7 @@ struct integerRootOp
 
     static word name(const word& a, const word& b)
     {
-        return "integerRoot(" + a + ',' + b + ')';
+        return word("integerRoot(", a, ',', b, ')');
     }
 
     static scalar value(const scalar a, const label b)
@@ -195,7 +195,7 @@ struct atan2Op
 
     static word name(const word& a, const word& b)
     {
-        return "atan2(" + a + ',' + b + ')';
+        return word("atan2(", a, ',', b, ')');
     }
 
     static scalar value(const scalar a, const scalar b)
@@ -220,7 +220,7 @@ struct jnOp
 
     static word name(const word& n, const word& s)
     {
-        return "jn(" + n + ',' + s + ')';
+        return word("jn(", n, ',', s, ')');
     }
 
     static scalar value(const int n, const scalar s)
@@ -245,7 +245,7 @@ struct ynOp
 
     static word name(const word& n, const word& s)
     {
-        return "yn(" + n + ',' + s + ')';
+        return word("yn(", n, ',', s, ')');
     }
 
     static scalar value(const int n, const scalar s)

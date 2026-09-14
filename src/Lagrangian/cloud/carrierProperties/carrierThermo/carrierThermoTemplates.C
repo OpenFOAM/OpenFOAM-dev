@@ -47,8 +47,10 @@ Foam::autoPtr<CarrierThermo> Foam::carrierThermo::New
     const Thermo& thermo =
         c.mesh().poly().lookupObject<Thermo>(thermoName);
 
-    const word thermoTypeName =
-        CarrierThermo::derivedThermoName() + "<" + thermo.mixtureName() + ">";
+    const word thermoTypeName
+    (
+        CarrierThermo::derivedThermoName(), '<', thermo.mixtureName(), '>'
+    );
 
     typename CarrierThermo::cloudConstructorTable::iterator cstrIter =
         CarrierThermo::cloudConstructorTablePtr_->find(thermoTypeName);

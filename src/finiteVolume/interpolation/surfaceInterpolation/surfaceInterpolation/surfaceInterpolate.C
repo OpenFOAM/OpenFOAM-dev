@@ -251,7 +251,7 @@ Foam::fvc::interpolate
             << endl;
     }
 
-    return interpolate(vf, "interpolate(" + vf.name() + ')');
+    return interpolate(vf, word("interpolate(", vf.name(), ')'));
 }
 
 
@@ -334,7 +334,7 @@ Foam::fvc::dotInterpolate
     return scheme<Type>
     (
         vf.mesh(),
-        "dotInterpolate(" + Sf.name() + ',' + vf.name() + ')'
+        word("dotInterpolate(", Sf.name(), ',', vf.name(), ')')
     )().dotInterpolate(Sf, vf);
 }
 

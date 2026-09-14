@@ -54,7 +54,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve()
             phasei,
             new surfaceScalarField
             (
-                "phi" + alpha.name() + "Corr",
+                word("phi", alpha.name(), "Corr"),
                 fvc::flux
                 (
                     phi,

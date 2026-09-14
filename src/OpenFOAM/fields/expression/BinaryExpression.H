@@ -640,7 +640,7 @@ struct Name
                 Op::precedence != Operation<void>::precedence
              && Operation<A>::precedence != Operation<void>::precedence
              && Op::precedence > Operation<A>::precedence
-              ? '(' + nameA::value(e.a) + ')'
+              ? word('(', nameA::value(e.a), ')')
               : nameA::value(e.a),
                 Op::precedence != Operation<void>::precedence
              && Operation<B>::precedence != Operation<void>::precedence
@@ -651,7 +651,7 @@ struct Name
                      && !Op::associative
                     )
                 )
-              ? '(' + nameB::value(e.b) + ')'
+              ? word('(', nameB::value(e.b), ')')
               : nameB::value(e.b)
             );
     }

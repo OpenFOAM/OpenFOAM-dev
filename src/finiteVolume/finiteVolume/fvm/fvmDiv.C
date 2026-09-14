@@ -86,7 +86,7 @@ Foam::fvm::div
     const VolField<Type>& vf
 )
 {
-    return fvm::div(flux, vf, "div("+flux.name()+','+vf.name()+')');
+    return fvm::div(flux, vf, word("div(", flux.name(), ',', vf.name(), ')'));
 }
 
 template<class Type>

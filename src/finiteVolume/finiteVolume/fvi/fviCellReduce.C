@@ -44,7 +44,7 @@ Foam::fvi::cellReduce
     (
         VolInternalField<Type>::New
         (
-            "cellReduce(" + ssf.name() + ')',
+            word("cellReduce(", ssf.name(), ')'),
             mesh,
             dimensioned<Type>
             (

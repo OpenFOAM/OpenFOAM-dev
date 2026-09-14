@@ -137,7 +137,7 @@ Foam::functionObjects::specieFluxBase::calcPhiYif
         (
             phi,
             Yi,
-            "div(" + phi.name() + "," + schemesField_ + ")"
+            word("div(", phi.name(), ',', schemesField_, ')')
         );
 }
 

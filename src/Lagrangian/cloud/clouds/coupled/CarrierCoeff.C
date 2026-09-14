@@ -42,9 +42,12 @@ void Foam::CarrierCoeff<Type, Implicit>::initialise
         (
             IOobject
             (
-                lField.mesh().mesh().name()
-              + ":" + eqn_.name()
-              + ":S" + (Implicit ? 'p' : 'u'),
+                word
+                (
+                    lField.mesh().mesh().name(),
+                    ':', eqn_.name(),
+                    ":S", (Implicit ? 'p' : 'u')
+                ),
                 eqn_.mesh().time().name(),
                 eqn_.mesh(),
                 IOobject::NO_READ,

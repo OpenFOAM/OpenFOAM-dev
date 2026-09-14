@@ -118,7 +118,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "perfectGas<" + word(Specie::typeName_()) + '>';
+            return word("perfectGas<", word(Specie::typeName_()), '>');
         }
 
 

@@ -103,7 +103,7 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
     (
         SurfaceField<Type>::New
         (
-            "gammaSnGradCorr("+vf.name()+')',
+            word("gammaSnGradCorr(", vf.name(), ')'),
             mesh,
             SfGammaCorr.dimensions()
            *vf.dimensions()*mesh.deltaCoeffs().dimensions()
@@ -139,7 +139,7 @@ gaussLaplacianScheme<Type, GType>::fviLaplacian
         fvi::div(this->tsnGradScheme_().snGrad(vf)*mesh.magSf())
     );
 
-    tLaplacian.ref().rename("laplacian(" + vf.name() + ')');
+    tLaplacian.ref().rename(word("laplacian(", vf.name(), ')'));
 
     return tLaplacian;
 }
@@ -174,7 +174,7 @@ gaussLaplacianScheme<Type, GType>::fviLaplacian
 
     tLaplacian.ref().rename
     (
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')
     );
 
     return tLaplacian;
@@ -195,7 +195,7 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
         fvc::div(this->tsnGradScheme_().snGrad(vf)*mesh.magSf())
     );
 
-    tLaplacian.ref().rename("laplacian(" + vf.name() + ')');
+    tLaplacian.ref().rename(word("laplacian(", vf.name(), ')'));
 
     return tLaplacian;
 }
@@ -230,7 +230,7 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
 
     tLaplacian.ref().rename
     (
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')
     );
 
     return tLaplacian;

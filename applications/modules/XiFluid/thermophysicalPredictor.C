@@ -369,7 +369,13 @@ void Foam::solvers::XiFluid::ubSolve
     fvScalarMatrix fEqn
     (
         fvm::ddt(bc, rho, f)
-      + fvm::div(alphaPhiub, f, "div(" + alphaPhiub.name() + ',' + fName + ')')
+
+      + fvm::div
+        (
+            alphaPhiub,
+            f,
+            word("div(", alphaPhiub.name(), ',', fName, ')')
+        )
 
         // Advective-diffusive stabilisation for bc -> 0
       + fvmStab(bc, bcStab, D, f)

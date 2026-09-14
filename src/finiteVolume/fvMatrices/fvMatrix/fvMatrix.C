@@ -803,7 +803,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::A() const
     (
         volScalarField::New
         (
-            "A(" + psi_.name() + ')',
+            word("A(", psi_.name(), ')'),
             mesh(),
             dimensions_/psi_.dimensions()/dimensions::volume,
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -824,7 +824,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMatrix<Type>::Su() const
     (
         VolInternalField<Type>::New
         (
-            "Su(" +psi_.name() + ')',
+            word("Su(", psi_.name(), ')'),
             mesh(),
             dimensions_/dimensions::volume,
             -source()/mesh().V().primitiveField()
@@ -842,7 +842,7 @@ Foam::tmp<Foam::volInternalScalarField> Foam::fvMatrix<Type>::Sp() const
     (
         volInternalScalarField::New
         (
-            "Sp(" + psi_.name() + ')',
+            word("Sp(", psi_.name(), ')'),
             mesh(),
             dimensions_/psi_.dimensions()/dimensions::volume,
             hasDiag()
@@ -863,7 +863,7 @@ Foam::fvMatrix<Type>::H() const
     (
         VolField<Type>::New
         (
-            "H(" + psi_.name() + ')',
+            word("H(", psi_.name(), ')'),
             mesh(),
             dimensions_/dimensions::volume,
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -969,7 +969,7 @@ flux() const
     (
         SurfaceField<Type>::New
         (
-            "flux(" + psi_.name() + ')',
+            word("flux(", psi_.name(), ')'),
             mesh(),
             dimensions()
         )

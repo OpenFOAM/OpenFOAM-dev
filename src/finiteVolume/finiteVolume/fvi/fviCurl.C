@@ -43,7 +43,7 @@ template<class Type>
 tmp<VolInternalField<Type>>
 curl(const VolField<Type>& vf)
 {
-    word nameCurlVf = "curl(" + vf.name() + ')';
+    word nameCurlVf = word("curl(", vf.name(), ')');
 
     // Gausses theorem curl
     // tmp<VolInternalField<Type>> tcurlVf =

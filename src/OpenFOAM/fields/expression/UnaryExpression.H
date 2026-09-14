@@ -349,7 +349,7 @@ struct Name
                 Op::precedence != Operation<void>::precedence
              && Operation<X>::precedence != Operation<void>::precedence
              && Op::precedence > Operation<X>::precedence
-              ? '(' + nameX::value(e.x) + ')'
+              ? word('(', nameX::value(e.x), ')')
               : nameX::value(e.x)
             );
     }

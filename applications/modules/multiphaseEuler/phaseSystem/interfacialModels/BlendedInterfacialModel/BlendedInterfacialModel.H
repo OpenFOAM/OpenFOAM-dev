@@ -234,8 +234,8 @@ public:
     (                                                                          \
         BlendedInterfacialModel<ModelType>,                                    \
         (                                                                      \
-            word(BlendedInterfacialModel<ModelType>::typeName_()) + "<"        \
-          + ModelType::typeName + ">"                                          \
+            word(BlendedInterfacialModel<ModelType>::typeName_(),              \
+            '<', ModelType::typeName, '>')                                     \
         ).c_str(),                                                             \
         DebugSwitch                                                            \
     );

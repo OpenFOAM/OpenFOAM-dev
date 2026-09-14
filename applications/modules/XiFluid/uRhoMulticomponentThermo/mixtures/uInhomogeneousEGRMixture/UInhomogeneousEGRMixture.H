@@ -118,9 +118,11 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                uInhomogeneousEGRMixture::typeName
-              + '<' + ThermoType::typeName() + '>';
+            return word
+            (
+                uInhomogeneousEGRMixture::typeName,
+                '<', ThermoType::typeName(), '>'
+            );
         }
 
         const ThermoType& specieThermo(const label speciei) const;

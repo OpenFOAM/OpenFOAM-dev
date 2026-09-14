@@ -75,12 +75,15 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
         dict.lookupOrDefault<word>
         (
             "name",
+            word
             (
-                iF.mesh().name() == polyMesh::defaultRegion
-              ? word::null
-              : word(iF.mesh().name() + '_')
+                (
+                    iF.mesh().name() == polyMesh::defaultRegion
+                  ? word::null
+                  : word(iF.mesh().name() + '_')
+                ),
+                iF.name(), '_', p.name()
             )
-          + iF.name() + '_' + p.name()
         ),
         dict,
         codeKeys,

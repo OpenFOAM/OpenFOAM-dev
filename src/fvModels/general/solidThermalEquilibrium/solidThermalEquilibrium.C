@@ -167,7 +167,7 @@ void Foam::fv::solidThermalEquilibrium::addSup
         (
             A*alphahe,
             eqn.psi(),
-            "laplacian(" + alphahe.name() + "," + eqn.psi().name() + ")"
+            word("laplacian(", alphahe.name(), ',', eqn.psi().name(), ')')
         );
 }
 
@@ -195,7 +195,7 @@ void Foam::fv::solidThermalEquilibrium::addSup
         (
             A*alphahe,
             eqn.psi(),
-            "laplacian(" + alphahe.name() + "," + eqn.psi().name() + ")"
+            word("laplacian(", alphahe.name(), ',', eqn.psi().name(), ')')
         );
 }
 

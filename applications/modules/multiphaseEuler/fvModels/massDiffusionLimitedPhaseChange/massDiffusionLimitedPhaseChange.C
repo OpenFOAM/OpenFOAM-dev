@@ -224,7 +224,7 @@ Foam::fv::massDiffusionLimitedPhaseChange::massDiffusionLimitedPhaseChange
                 (
                     IOobject
                     (
-                        name + ":mDot" + specieName.capitalise() + "Su",
+                        word(name, ":mDot", specieName.capitalise(), "Su"),
                         mesh.time().name(),
                         mesh
                     ),
@@ -240,7 +240,7 @@ Foam::fv::massDiffusionLimitedPhaseChange::massDiffusionLimitedPhaseChange
                 (
                     IOobject
                     (
-                        name + ":mDot" + specieName.capitalise() + "Sp",
+                        word(name, ":mDot", specieName.capitalise(), "Sp"),
                         mesh.time().name(),
                         mesh
                     ),
@@ -290,7 +290,7 @@ Foam::fv::massDiffusionLimitedPhaseChange::mDot(const label mDoti) const
     tmp<volInternalScalarField> tResult =
         volInternalScalarField::New
         (
-            name() + ":mDot" + specieName.capitalise(),
+            word(name(), ":mDot", specieName.capitalise()),
             this->mesh(),
             dimensionedScalar(dimensions::density/dimensions::time, 0)
         );

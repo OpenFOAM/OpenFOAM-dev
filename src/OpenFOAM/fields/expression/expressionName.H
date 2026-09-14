@@ -93,7 +93,7 @@ struct Name<Expression, EnableIfExpressionable<Expression>>
     {
         std::ostringstream oss;
         oss << std::hex << reinterpret_cast<uintptr_t>(&(*f.begin()));
-        return "[" + typeName<Expression, word>() + ":" + oss.str() + "]";
+        return word("[", typeName<Expression, word>(), ":", oss.str(), "]");
     }
 };
 

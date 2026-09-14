@@ -80,7 +80,7 @@ Foam::fvm::laplacian
     (
         Gamma,
         vf,
-        "laplacian(" + vf.name() + ')'
+        word("laplacian(", vf.name(), ')')
     );
 }
 
@@ -223,7 +223,7 @@ Foam::fvm::laplacian
     (
         gamma,
         vf,
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')
     );
 }
 
@@ -328,7 +328,7 @@ Foam::fvm::laplacian
     (
         gamma,
         vf,
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')
     );
 }
 

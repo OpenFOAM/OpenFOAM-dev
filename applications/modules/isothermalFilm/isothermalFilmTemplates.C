@@ -54,7 +54,7 @@ void Foam::solvers::isothermalFilm::constrainField
 //     (
 //         FieldType::New
 //         (
-//             "constrained(" + field.name() + ')',
+//             word("constrained(", field.name(), ')'),
 //             field
 //         )
 //     );
@@ -75,7 +75,7 @@ Foam::tmp<FieldType> Foam::solvers::isothermalFilm::constrainedField
     (
         FieldType::New
         (
-            "constrained(" + tfield().name() + ')',
+            word("constrained(", tfield().name(), ')'),
             tfield
         )
     );

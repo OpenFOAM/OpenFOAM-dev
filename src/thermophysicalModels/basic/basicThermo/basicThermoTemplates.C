@@ -162,13 +162,13 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
         // Construct the name of the thermo package from the components
         const word thermoTypeName
         (
-            word(thermoTypeDict.lookup("type")) + '<'
-          + word(mixtureName(thermoTypeDict)) + '<'
-          + word(thermoTypeDict.lookup("transport")) + '<'
-          + word(thermoTypeDict.lookup("thermo")) + '<'
-          + word(thermoTypeDict.lookup("equationOfState")) + '<'
-          + word(thermoTypeDict.lookup("specie")) + ">>,"
-          + word(thermoTypeDict.lookup("energy")) + ">>>"
+            thermoTypeDict.lookup<word>("type"), '<',
+            mixtureName(thermoTypeDict), '<',
+            thermoTypeDict.lookup<word>("transport"), '<',
+            thermoTypeDict.lookup<word>("thermo"), '<',
+            thermoTypeDict.lookup<word>("equationOfState"), '<',
+            thermoTypeDict.lookup<word>("specie"), ">>,",
+            thermoTypeDict.lookup<word>("energy"), ">>>"
         );
 
         return lookupCstrIter<Thermo, Table>

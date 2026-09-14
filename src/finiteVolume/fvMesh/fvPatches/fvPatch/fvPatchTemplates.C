@@ -130,7 +130,7 @@ Foam::fvPatch::lookupField
 
     const IOobject io
     (
-        name + '_' + this->name(),
+        word(name, '_', this->name()),
         time().name(),
         db(),
         IOobject::NO_READ,

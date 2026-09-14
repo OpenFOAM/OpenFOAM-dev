@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ Foam::sidedPhaseInterface::~sidedPhaseInterface()
 
 Foam::word Foam::sidedPhaseInterface::name() const
 {
-    return phaseInterface::name() + '_' + separator() + '_' + phase().name();
+    return word(phaseInterface::name(), '_', separator(), '_', phase().name());
 }
 
 

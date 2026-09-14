@@ -74,7 +74,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvi::surfaceIntegrate
     (
         VolInternalField<Type>::New
         (
-            "surfaceIntegrate("+ssf.name()+')',
+            word("surfaceIntegrate(", ssf.name(), ')'),
             ssf.mesh()(),
             dimensioned<Type>
             (
@@ -126,7 +126,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvi::surfaceSum
     (
         VolInternalField<Type>::New
         (
-            "surfaceSum("+ssf.name()+')',
+            word("surfaceSum(", ssf.name(), ')'),
             mesh,
             dimensioned<Type>("0", ssf.dimensions(), Zero)
         )

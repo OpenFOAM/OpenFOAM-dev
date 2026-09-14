@@ -165,7 +165,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "logPolynomial<" + Thermo::typeName() + '>';
+            return word("logPolynomial<", Thermo::typeName(), '>');
         }
 
         //- Dynamic viscosity [kg/m/s]

@@ -169,7 +169,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
     (
         SurfaceField<Type>::New
         (
-            "interpolate("+vf.name()+')',
+            word("interpolate(", vf.name(), ')'),
             mesh,
             vf.dimensions()
         )
@@ -254,7 +254,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
     (
         SurfaceField<RetType>::New
         (
-            "interpolate("+vf.name()+')',
+            word("interpolate(", vf.name(), ')'),
             mesh,
             Sf.dimensions()*vf.dimensions()
         )

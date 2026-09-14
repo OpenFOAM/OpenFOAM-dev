@@ -113,7 +113,10 @@ Foam::distributionGroupFractionFvScalarFieldSource::sourceValue
     return
         DimensionedField<scalar, fvMesh>::New
         (
-            model.name() + ":" + this->internalField().name() + "SourceValue",
+            word
+            (
+                model.name(), ':', this->internalField().name(), "SourceValue"
+            ),
             this->internalField().mesh(),
             dimensionedScalar(dimless, eta(model))
         );
@@ -142,7 +145,10 @@ Foam::distributionGroupFractionFvScalarFieldSource::internalCoeff
     return
         DimensionedField<scalar, fvMesh>::New
         (
-            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            word
+            (
+                model.name(), ':', this->internalField().name(), "InternalCoeff"
+            ),
             this->internalField().mesh(),
             dimensionedScalar(dimless, scalar(0))
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,9 +137,11 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                "incompressiblePerfectGas<"
-              + word(Specie::typeName_()) + '>';
+            return word
+            (
+                "incompressiblePerfectGas<",
+                word(Specie::typeName_()), '>'
+            );
         }
 
 

@@ -143,7 +143,7 @@ Foam::motionSmootherAlgo::avg
     (
         PointField<Type>::New
         (
-            "avg("+fld.name()+')',
+            word("avg(", fld.name(), ')'),
             fld.mesh(),
             dimensioned<Type>("zero", fld.dimensions(), Zero)
         )

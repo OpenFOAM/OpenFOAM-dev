@@ -130,7 +130,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "polynomialSolid<" + Thermo::typeName() + '>';
+            return word("polynomialSolid<", Thermo::typeName(), '>');
         }
 
         //- Is the thermal conductivity isotropic

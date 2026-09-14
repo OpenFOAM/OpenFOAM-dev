@@ -93,7 +93,10 @@ Foam::nucleationGroupFractionFvScalarFieldSource::internalCoeff
     return
         DimensionedField<scalar, fvMesh>::New
         (
-            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            word
+            (
+                model.name(), ':', this->internalField().name(), "InternalCoeff"
+            ),
             this->internalField().mesh(),
             dimensionedScalar(dimless, scalar(0))
         );

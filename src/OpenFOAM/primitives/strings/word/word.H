@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,6 +107,16 @@ public:
         //- Construct from Istream
         word(Istream&);
 
+        //- Concatenating constructor
+        template<class Str, class Str1, class Str2, class... Strs>
+        inline word
+        (
+            const Str& str,
+            const Str1& str1,
+            const Str2& str2,
+            Strs const&... strs
+        );
+
 
     // Member Functions
 
@@ -115,6 +125,9 @@ public:
 
         //- Return the word with the first letter capitalised
         inline word capitalise() const;
+
+        template<class Str, class... Strs>
+        inline static word cat(const Str& a, Strs const&... strs);
 
 
     // Member Operators

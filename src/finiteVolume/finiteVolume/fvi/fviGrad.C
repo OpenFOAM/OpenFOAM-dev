@@ -47,7 +47,7 @@ grad
     const SurfaceField<Type>& ssf
 )
 {
-    return fv::gaussGrad<Type>::fviGrad(ssf, "grad(" + ssf.name() + ')');
+    return fv::gaussGrad<Type>::fviGrad(ssf, word("grad(", ssf.name(), ')'));
 }
 
 
@@ -108,7 +108,7 @@ grad
     const VolField<Type>& vf
 )
 {
-    return fvi::grad(vf, "grad(" + vf.name() + ')');
+    return fvi::grad(vf, word("grad(", vf.name(), ')'));
 }
 
 

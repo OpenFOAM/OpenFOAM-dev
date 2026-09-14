@@ -68,7 +68,7 @@ struct powProductOp<0>
 
     static word name(const word& f)
     {
-        return "pow<0>(" + f + ')';
+        return word("pow<0>(", f, ')');
     }
 
     template<class Form, class Cmpt, direction Ncmpts>
@@ -97,7 +97,7 @@ struct powProductOp<1>
 
     static word name(const word& f)
     {
-        return "pow<1>(" + f + ')';
+        return word("pow<1>(", f, ')');
     }
 
     template<class Form, class Cmpt, direction Ncmpts>
@@ -126,7 +126,7 @@ struct powProductOp<2>
 
     static word name(const word& f)
     {
-        return "pow<2>(" + f + ')';
+        return word("pow<2>(", f, ')');
     }
 
     template<class Form, class Cmpt, direction Ncmpts>
@@ -164,7 +164,7 @@ dimensioned<typename powProduct<Type, r>::type> pow
 {
     return dimensioned<typename powProduct<Type, r>::type>
     (
-        "pow(" + dt.name() + ',' + name(r) + ')',
+        word("pow(", dt.name(), ',', name(r), ')'),
         pow(dt.dimensions(), r),
         powProductOp<r>::value(dt.value())
     );
@@ -210,7 +210,7 @@ struct componentOp
 
     static word name(const word& vs, const word& d)
     {
-        return "component(" + vs + ',' + d + ')';
+        return word("component(", vs, ',', d, ')');
     }
 
     template<class VSType, class Dtype>

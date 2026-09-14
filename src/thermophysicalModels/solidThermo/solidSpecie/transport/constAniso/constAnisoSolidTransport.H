@@ -103,7 +103,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "constAnisoSolid<" + Thermo::typeName() + '>';
+            return word("constAnisoSolid<", Thermo::typeName(), '>');
         }
 
         //- Is the thermal conductivity isotropic

@@ -217,7 +217,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZones::relative
             Foam::New
             (
                 tphi,
-                "relative(" + tphi().name() + ')',
+                word("relative(", tphi().name(), ')'),
                 tphi().dimensions(),
                 true
             )
@@ -335,7 +335,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZones::absolute
             Foam::New
             (
                 tphi,
-                "absolute(" + tphi().name() + ')',
+                word("absolute(", tphi().name(), ')'),
                 tphi().dimensions(),
                 true
             )
@@ -380,7 +380,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZones::absolute
             Foam::New
             (
                 tphi,
-                "absolute(" + tphi().name() + ')',
+                word("absolute(", tphi().name(), ')'),
                 tphi().dimensions(),
                 true
             )

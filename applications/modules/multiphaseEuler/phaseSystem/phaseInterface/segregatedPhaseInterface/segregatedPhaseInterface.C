@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ Foam::segregatedPhaseInterface::~segregatedPhaseInterface()
 
 Foam::word Foam::segregatedPhaseInterface::name() const
 {
-    return phase1().name() + '_' + separator() + '_' + phase2().name();
+    return word(phase1().name(), '_', separator(), '_', phase2().name());
 }
 
 

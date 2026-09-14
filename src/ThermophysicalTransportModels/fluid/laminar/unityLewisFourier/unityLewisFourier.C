@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ tmp<surfaceScalarField> unityLewisFourier<BasicThermophysicalTransportModel>::j
     (
         IOobject::groupName
         (
-            "j(" + Yi.name() + ')',
+            word("j(", Yi.name(), ')'),
             this->thermo().phaseName()
         ),
        -fvc::interpolate(this->alpha()*this->DEff(Yi))

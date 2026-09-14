@@ -45,7 +45,7 @@ Foam::fvc::cellReduce
     (
         VolField<Type>::New
         (
-            "cellReduce(" + ssf.name() + ')',
+            word("cellReduce(", ssf.name(), ')'),
             mesh,
             dimensioned<Type>
             (

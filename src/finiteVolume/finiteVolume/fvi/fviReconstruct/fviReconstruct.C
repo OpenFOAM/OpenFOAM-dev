@@ -53,7 +53,7 @@ reconstruct(const SurfaceField<Type>& ssf)
     (
         VolInternalField<GradType>::New
         (
-            "volIntegrate("+ssf.name()+')',
+            word("volIntegrate(", ssf.name(), ')'),
             mesh,
             dimensioned<GradType>("0", ssf.dimensions()/dimensions::area, Zero)
         )

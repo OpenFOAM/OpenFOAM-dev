@@ -167,7 +167,7 @@ public:
         {
             tmp<FieldType> result = FieldType::New
             (
-                "filtered(" + tf().name() + ')',
+                word("filtered(", tf().name(), ')'),
                 operator[](tf()),
                 extrapolatedCalculatedFvPatchField
                 <

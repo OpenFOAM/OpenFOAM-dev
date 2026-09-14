@@ -865,14 +865,17 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
             surfaceWriterPtr_->write
             (
                 baseFileDir()/name()/time_.name(),
-                word(selectionTypeNames[selectionType_])
-              + "("
-              + (
-                    selectionType_ == selectionTypes::patches
-                  ? selectionName_.replaceAll(" ", ",").c_str()
-                  : selectionName_.c_str()
-                )
-              + ")",
+                word
+                (
+                    selectionTypeNames[selectionType_],
+                    '(',
+                    (
+                        selectionType_ == selectionTypes::patches
+                      ? selectionName_.replaceAll(" ", ",").c_str()
+                      : selectionName_.c_str()
+                    ),
+                    ')'
+                ),
                 points,
                 faces,
                 fields_,

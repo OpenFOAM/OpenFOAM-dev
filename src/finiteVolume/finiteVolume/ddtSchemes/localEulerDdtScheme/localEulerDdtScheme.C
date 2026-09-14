@@ -60,7 +60,7 @@ localEulerDdtScheme<Type>::fviDdt
     const dimensioned<Type>& dt
 )
 {
-    const word ddtName("ddt(" + dt.name() + ')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     return VolInternalField<Type>::New
     (
@@ -86,7 +86,7 @@ localEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt(" + vf.name() + ')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     return VolInternalField<Type>::New
     (
@@ -106,7 +106,7 @@ localEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     return VolInternalField<Type>::New
     (
@@ -126,7 +126,7 @@ localEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     return VolInternalField<Type>::New
     (
@@ -147,7 +147,10 @@ localEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     return VolInternalField<Type>::New
     (
@@ -164,7 +167,7 @@ localEulerDdtScheme<Type>::fvcDdt
     const dimensioned<Type>& dt
 )
 {
-    const word ddtName("ddt(" + dt.name() + ')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     return VolField<Type>::New
     (
@@ -190,7 +193,7 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt(" + vf.name() + ')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     return VolField<Type>::New
     (
@@ -210,7 +213,7 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     return VolField<Type>::New
     (
@@ -230,7 +233,7 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     return VolField<Type>::New
     (
@@ -251,7 +254,10 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     return VolField<Type>::New
     (
@@ -270,7 +276,7 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const surfaceScalarField& rDeltaT = localRDeltaTf();
 
-    const word ddtName("ddt("+sf.name()+')');
+    const word ddtName("ddt(", sf.name(), ')');
 
     return SurfaceField<Type>::New
     (
@@ -474,7 +480,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
         (
             IOobject
             (
-                "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
+                word("ddtCorr(", U.name(), ',', Uf.name(), ')'),
                 mesh().time().name(),
                 mesh()
             ),
@@ -506,7 +512,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
         (
             IOobject
             (
-                "ddtCorr(" + U.name() + ',' + phi.name() + ')',
+                word("ddtCorr(", U.name(), ',', phi.name(), ')'),
                 mesh().time().name(),
                 mesh()
             ),
@@ -548,8 +554,11 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
             (
                 IOobject
                 (
-                    "ddtCorr("
-                  + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+                    word
+                    (
+                        "ddtCorr(",
+                        rho.name(), ',', U.name(), ',', rhoUf.name(), ')'
+                    ),
                     mesh().time().name(),
                     mesh()
                 ),
@@ -576,8 +585,11 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
             (
                 IOobject
                 (
-                    "ddtCorr("
-                  + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+                    word
+                    (
+                        "ddtCorr(",
+                        rho.name(), ',', U.name(), ',', rhoUf.name(), ')'
+                    ),
                     mesh().time().name(),
                     mesh()
                 ),
@@ -635,8 +647,11 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
             (
                 IOobject
                 (
-                    "ddtCorr("
-                  + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+                    word
+                    (
+                        "ddtCorr(",
+                        rho.name(), ',', U.name(), ',', phi.name(), ')'
+                    ),
                     mesh().time().name(),
                     mesh()
                 ),
@@ -667,8 +682,11 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
             (
                 IOobject
                 (
-                    "ddtCorr("
-                  + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+                    word
+                    (
+                        "ddtCorr(",
+                        rho.name(), ',', U.name(), ',', phi.name(), ')'
+                    ),
                     mesh().time().name(),
                     mesh()
                 ),
@@ -715,9 +733,11 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr("
-          + alpha.name() + rho.name() + ',' + U.name() + ',' + Uf.name()
-          + ')',
+            word
+            (
+                "ddtCorr(",
+                alpha.name(), rho.name(), ',', U.name(), ',', Uf.name(), ')'
+            ),
             this->fvcDdtPhiCoeff(U.oldTime(), mesh().Sf() & Uf.oldTime())
            *rDeltaT
            *(
@@ -762,9 +782,12 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr("
-          + alpha.name() + rho.name() + ',' + U.name() + ',' + phi.name()
-          + ')',
+            word
+            (
+                "ddtCorr(",
+                alpha.name(), rho.name(), ',', U.name(), ',', phi.name(),
+                ')'
+            ),
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
            *rDeltaT
            *(

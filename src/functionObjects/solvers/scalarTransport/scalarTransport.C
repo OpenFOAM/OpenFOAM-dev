@@ -209,7 +209,7 @@ bool Foam::functionObjects::scalarTransport::execute()
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);
 
-    const word divScheme("div(phi," + schemesField_ + ")");
+    const word divScheme("div(phi,", schemesField_, ')');
 
     const int nCorr =
         mesh_.solution().solverDict(solverField_)
@@ -261,7 +261,10 @@ bool Foam::functionObjects::scalarTransport::execute()
                         (
                             D,
                             s_,
-                            "laplacian(" + D.name() + "," + schemesField_ + ")"
+                            word
+                            (
+                                "laplacian(", D.name(), ',', schemesField_, ')'
+                            )
                         );
                 }
 
@@ -299,7 +302,7 @@ bool Foam::functionObjects::scalarTransport::execute()
                     (
                         rho*D,
                         s_,
-                        "laplacian(" + D.name() + "," + schemesField_ + ")"
+                        word("laplacian(", D.name(), ',', schemesField_, ')')
                     );
             }
 
@@ -371,7 +374,7 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
             (
                 D,
                 s_,
-                "laplacian(" + D.name() + "," + schemesField_ + ")"
+                word("laplacian(", D.name(), ',', schemesField_, ')')
             )
         );
 
@@ -410,7 +413,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
     const bool LTS = fv::localEulerDdt::enabled(mesh_);
 
-    const word divScheme("div(phi," + schemesField_ + ")");
+    const word divScheme("div(phi,", schemesField_, ')');
 
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);

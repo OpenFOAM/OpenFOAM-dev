@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void Foam::functionObjects::forceCoeffs::writeFileHeader(const label i)
 
             for (label j = 0; j < nBin_; j++)
             {
-                const word jn('(' + Foam::name(j) + ')');
+                const word jn('(', Foam::name(j), ')');
                 writeTabbed(file(i), "Cm" + jn);
                 writeTabbed(file(i), "Cd" + jn);
                 writeTabbed(file(i), "Cl" + jn);

@@ -54,7 +54,7 @@ reconstruct(const SurfaceField<Type>& ssf)
     (
         VolField<GradType>::New
         (
-            "volIntegrate("+ssf.name()+')',
+            word("volIntegrate(", ssf.name(), ')'),
             mesh,
             dimensioned<GradType>("0", ssf.dimensions()/dimensions::area, Zero),
             extrapolatedCalculatedFvPatchField<GradType>::typeName

@@ -87,7 +87,7 @@ gaussConvectionScheme<Type>::fviDiv
 
     tConvection.ref().rename
     (
-        "convection(" + faceFlux.name() + ',' + vf.name() + ')'
+        word("convection(", faceFlux.name(), ',', vf.name(), ')')
     );
 
     return tConvection;
@@ -109,7 +109,7 @@ gaussConvectionScheme<Type>::fvcDiv
 
     tConvection.ref().rename
     (
-        "convection(" + faceFlux.name() + ',' + vf.name() + ')'
+        word("convection(", faceFlux.name(), ',', vf.name(), ')')
     );
 
     return tConvection;

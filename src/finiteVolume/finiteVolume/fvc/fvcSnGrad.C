@@ -69,7 +69,7 @@ Foam::fvc::snGrad
     const VolField<Type>& vf
 )
 {
-    return snGrad(vf, "snGrad(" + vf.name() + ')');
+    return snGrad(vf, word("snGrad(", vf.name(), ')'));
 }
 
 

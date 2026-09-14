@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ tmp<SurfaceField<typename innerProduct<vector, Type>::type>> flux
     return scheme<Type>
     (
         vf.mesh(),
-        "flux(" + vf.name() + ')'
+        word("flux(", vf.name(), ')')
     )().dotInterpolate(vf.mesh().Sf(), vf);
 }
 
@@ -164,7 +164,7 @@ flux
 {
     return fvc::flux
     (
-        phi, vf, "flux("+phi.name()+','+vf.name()+')'
+        phi, vf, word("flux(", phi.name(), ',', vf.name(), ')')
     );
 }
 

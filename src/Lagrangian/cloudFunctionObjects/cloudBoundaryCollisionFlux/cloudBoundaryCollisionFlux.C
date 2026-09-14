@@ -259,7 +259,7 @@ bool Foam::functionObjects::cloudBoundaryCollisionFlux::write()
         (
             IOobject
             (
-                cloud().mesh().name() + ":" + phiName_ + "Coll",
+                word(cloud().mesh().name(), ':', phiName_, "Coll"),
                 time_.name(),
                 mesh(),
                 IOobject::NO_READ,

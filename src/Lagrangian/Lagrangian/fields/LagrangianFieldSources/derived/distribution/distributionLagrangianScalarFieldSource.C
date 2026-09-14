@@ -89,7 +89,7 @@ Foam::distributionLagrangianScalarFieldSource::value
     return
         LagrangianSubScalarField::New
         (
-            internalField().name() + ":" + injection.name(),
+            word(internalField().name(), ':', injection.name()),
             subMesh,
             internalDimensions(),
             distribution_->sample(subMesh.size())

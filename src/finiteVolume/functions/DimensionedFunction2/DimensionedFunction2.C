@@ -172,7 +172,7 @@ Foam::DimensionedFunction2<Type>::value
     (
         DimensionedField<Type, GeoMesh>::New
         (
-            function_->name() + "(" + x.name() + ')',
+            word(function_->name(), '(', x.name(), ')'),
             x.mesh(),
             valueDimensions_
         )
@@ -202,7 +202,7 @@ Foam::DimensionedFunction2<Type>::value
     (
         GeometricField<Type, GeoMesh>::New
         (
-            function_->name() + "(" + x.name() + ')',
+            word(function_->name(), '(', x.name(), ')'),
             x.mesh(),
             valueDimensions_
         )

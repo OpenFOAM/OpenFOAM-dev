@@ -238,7 +238,7 @@ Foam::volPointInterpolation::interpolate
     const VolField<Type>& vf
 ) const
 {
-    return interpolate(vf, "volPointInterpolate(" + vf.name() + ')', false);
+    return interpolate(vf, word("volPointInterpolate(", vf.name(), ')'), false);
 }
 
 

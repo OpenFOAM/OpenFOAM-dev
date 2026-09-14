@@ -215,7 +215,7 @@ Foam::DimensionedFunction1<Type>::value
     (
         DimensionedField<Type, GeoMesh>::New
         (
-            function_->name() + "(" + x.name() + ')',
+            word(function_->name(), '(', x.name(), ')'),
             x.mesh(),
             valueDimensions_
         )
@@ -239,7 +239,7 @@ Foam::DimensionedFunction1<Type>::derivative
     (
         DimensionedField<Type, GeoMesh>::New
         (
-            function_->name() + "'(" + x.name() + ')',
+            word(function_->name(), "'(", x.name(), ')'),
             x.mesh(),
             valueDimensions_/xDimensions_
         )
@@ -295,7 +295,7 @@ Foam::DimensionedFunction1<Type>::value
     (
         GeometricField<Type, GeoMesh>::New
         (
-            function_->name() + "(" + x.name() + ')',
+            word(function_->name(), '(', x.name(), ')'),
             x.mesh(),
             valueDimensions_
         )
@@ -319,7 +319,7 @@ Foam::DimensionedFunction1<Type>::derivative
     (
         GeometricField<Type, GeoMesh>::New
         (
-            function_->name() + "'(" + x.name() + ')',
+            word(function_->name(), "'(", x.name(), ')'),
             x.mesh(),
             valueDimensions_/xDimensions_
         )

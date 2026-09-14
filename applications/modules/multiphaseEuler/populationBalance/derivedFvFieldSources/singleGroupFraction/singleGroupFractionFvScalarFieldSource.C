@@ -78,13 +78,12 @@ Foam::singleGroupFractionFvScalarFieldSource::sourceValue
     const DimensionedField<scalar, fvMesh>& source
 ) const
 {
-    return
-        DimensionedField<scalar, fvMesh>::New
-        (
-            model.name() + ":" + this->internalField().name() + "SourceValue",
-            this->internalField().mesh(),
-            dimensionedScalar(dimless, eta())
-        );
+    return DimensionedField<scalar, fvMesh>::New
+    (
+        word(model.name(), ':', this->internalField().name(), "SourceValue"),
+        this->internalField().mesh(),
+        dimensionedScalar(dimless, eta())
+    );
 }
 
 
@@ -107,13 +106,12 @@ Foam::singleGroupFractionFvScalarFieldSource::internalCoeff
     const DimensionedField<scalar, fvMesh>& source
 ) const
 {
-    return
-        DimensionedField<scalar, fvMesh>::New
-        (
-            model.name() + ":" + this->internalField().name() + "InternalCoeff",
-            this->internalField().mesh(),
-            dimensionedScalar(dimless, scalar(0))
-        );
+    return DimensionedField<scalar, fvMesh>::New
+    (
+        word(model.name(), ':', this->internalField().name(), "InternalCoeff"),
+        this->internalField().mesh(),
+        dimensionedScalar(dimless, scalar(0))
+    );
 }
 
 

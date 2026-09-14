@@ -57,7 +57,7 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
     (
         volScalarField::New
         (
-            "reconstruct("+ssf.name()+')',
+            word("reconstruct(", ssf.name(), ')'),
             mesh,
             dimensionedScalar
             (

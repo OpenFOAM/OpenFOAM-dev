@@ -50,7 +50,7 @@ div
 {
     return VolInternalField<Type>::New
     (
-        "div("+ssf.name()+')',
+        word("div(", ssf.name(), ')'),
         fvi::surfaceIntegrate(ssf)
     );
 }
@@ -108,7 +108,7 @@ div
     const VolField<Type>& vf
 )
 {
-    return fvi::div(vf, "div("+vf.name()+')');
+    return fvi::div(vf, word("div(", vf.name(), ')'));
 }
 
 
@@ -209,7 +209,7 @@ div
 {
     return fvi::div
     (
-        flux, vf, "div("+flux.name()+','+vf.name()+')'
+        flux, vf, word("div(", flux.name(), ',', vf.name(), ')')
     );
 }
 

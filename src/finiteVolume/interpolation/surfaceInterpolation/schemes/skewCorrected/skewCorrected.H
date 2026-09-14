@@ -135,7 +135,7 @@ public:
             (
                 SurfaceField<Type>::New
                 (
-                    "skewCorrected::skewCorrection(" + vf.name() + ')',
+                    word("skewCorrected::skewCorrection(", vf.name(), ')'),
                     mesh,
                     dimensioned<Type>
                     (

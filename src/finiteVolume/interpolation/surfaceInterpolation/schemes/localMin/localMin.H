@@ -119,7 +119,7 @@ public:
             (
                 SurfaceField<Type>::New
                 (
-                    "localMin::interpolate(" + vf.name() + ')',
+                    word("localMin::interpolate(", vf.name(), ')'),
                     mesh,
                     vf.dimensions()
                 )

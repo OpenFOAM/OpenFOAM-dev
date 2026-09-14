@@ -40,7 +40,7 @@ Foam::linearUpwind<Foam::vector>::correction
     (
         surfaceVectorField::New
         (
-            "linearUpwind::correction(" + vf.name() + ')',
+            word("linearUpwind::correction(", vf.name(), ')'),
             mesh,
             dimensioned<vector>(vf.name(), vf.dimensions(), Zero)
         )

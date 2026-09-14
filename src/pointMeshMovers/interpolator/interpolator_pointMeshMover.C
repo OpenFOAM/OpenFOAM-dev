@@ -171,7 +171,7 @@ Foam::pointMeshMovers::interpolator::curPointField() const
         (
             IOobject
             (
-                word("uniformInterpolate(") + fieldName_ + ')',
+                word("uniformInterpolate(", fieldName_, ')'),
                 pMesh.time().name(),
                 pMesh.db(),
                 IOobject::NO_READ,

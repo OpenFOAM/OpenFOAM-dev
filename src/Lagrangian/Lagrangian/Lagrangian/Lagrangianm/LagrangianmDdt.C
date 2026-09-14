@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ bool Foam::Lagrangianm::initDdt
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", psi.name(), ')'))
         ).ref().LagrangianmInitDdt(mDims, psi, instantaneousDdt);
 }
 
@@ -75,7 +75,7 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::noDdt
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", psi.name(), ')'))
         ).ref().LagrangianmNoDdt(deltaT, mDims, psi);
 }
 
@@ -105,7 +105,7 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::Ddt
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", psi.name(), ')'))
         ).ref().LagrangianmDdt(deltaT, psi);
 }
 
@@ -124,7 +124,7 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::Ddt
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + m.name() + ',' + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", m.name(), ',', psi.name(), ')'))
         ).ref().LagrangianmDdt(deltaT, m, psi);
 }
 

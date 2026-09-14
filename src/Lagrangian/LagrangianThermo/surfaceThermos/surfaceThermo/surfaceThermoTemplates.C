@@ -77,11 +77,13 @@ Foam::autoPtr<SurfaceThermo> Foam::surfaceThermo::New
     const basicLagrangianSubThermo& farThermo
 )
 {
-    const word thermoTypeName =
-        SurfaceThermo::derivedThermoName()
-      + "<"
-      + farThermo.mixtureName()
-      + ">";
+    const word thermoTypeName
+    (
+        SurfaceThermo::derivedThermoName(),
+        '<',
+        farThermo.mixtureName(),
+        '>'
+    );
 
     typename SurfaceThermo::cloudConstructorTable::iterator cstrIter =
         SurfaceThermo::cloudConstructorTablePtr_->find(thermoTypeName);

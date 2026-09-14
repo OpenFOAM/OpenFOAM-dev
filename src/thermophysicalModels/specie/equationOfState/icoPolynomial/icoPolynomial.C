@@ -42,7 +42,7 @@ Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
             FixedPolynomial<scalar, PolySize>
         >
         (
-            "rhoCoeffs<" + Foam::name(PolySize) + '>',
+            word("rhoCoeffs<", Foam::name(PolySize), '>'),
             Function1s::unitSets({dimensions::temperature, dimensions::density})
         )
     )
@@ -62,7 +62,7 @@ void Foam::icoPolynomial<Specie, PolySize>::write(Ostream& os) const
         "equationOfState",
         dictionary::entries
         (
-            word("rhoCoeffs<" + Foam::name(PolySize) + '>'), rhoCoeffs_
+            word(word("rhoCoeffs<", Foam::name(PolySize), '>')), rhoCoeffs_
         )
     );
 }

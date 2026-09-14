@@ -53,7 +53,7 @@ struct pointTransformOp
 
     static word name(const word& st, const word& v)
     {
-        return "pointTransform(" + st + ',' + v + ')';
+        return word("pointTransform(", st, ',', v, ')');
     }
 
     template<class Type>

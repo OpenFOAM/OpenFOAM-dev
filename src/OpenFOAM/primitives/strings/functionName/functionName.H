@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,25 +83,13 @@ public:
         inline explicit functionName(const word&);
 
         //- Copy constructor of string
-        inline explicit functionName
-        (
-            const string&,
-            const bool doStripInvalid=true
-        );
+        inline explicit functionName(const string&);
 
         //- Copy constructor of std::string
-        inline explicit functionName
-        (
-            const std::string&,
-            const bool doStripInvalid=true
-        );
+        inline explicit functionName(const std::string&);
 
         //- Copy constructor of character array
-        inline explicit functionName
-        (
-            const char*,
-            const bool doStripInvalid=true
-        );
+        inline explicit functionName(const char*);
 
         //- Construct from Istream
         //  Words are treated as literals, strings with an auto-test

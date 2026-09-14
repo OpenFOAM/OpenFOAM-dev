@@ -150,7 +150,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "icoTabulated<" + Thermo::typeName() + '>';
+            return word("icoTabulated<", Thermo::typeName(), '>');
         }
 
         //- Dynamic viscosity [kg/m/s]

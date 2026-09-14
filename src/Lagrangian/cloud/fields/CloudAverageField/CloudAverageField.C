@@ -114,7 +114,7 @@ Foam::CloudAverageField<Type>::interpolate
               ? LagrangianAverage<Type>::New
                 (
                     word(mesh.schemes().averaging(this->name_)),
-                    "average(" + this->name_ + ')',
+                    word("average(", this->name_, ')'),
                     tcellWeightSum_(),
                     weightPsiOrPsiState_(mesh)
                 )
@@ -122,7 +122,7 @@ Foam::CloudAverageField<Type>::interpolate
               : LagrangianAverage<Type>::New
                 (
                     word(mesh.schemes().averaging(this->name_)),
-                    "average(" + this->name_ + ')',
+                    word("average(", this->name_, ')'),
                     tcellWeightSum_(),
                     weightPsiOrPsiDerived_(mesh)()
                 )
@@ -132,7 +132,7 @@ Foam::CloudAverageField<Type>::interpolate
               ? LagrangianAverage<Type>::New
                 (
                     word(mesh.schemes().averaging(this->name_)),
-                    "average(" + this->name_ + ')',
+                    word("average(", this->name_, ')'),
                     weightState_(mesh),
                     weightPsiOrPsiState_(mesh)
                 )
@@ -140,7 +140,7 @@ Foam::CloudAverageField<Type>::interpolate
               ? LagrangianAverage<Type>::New
                 (
                     word(mesh.schemes().averaging(this->name_)),
-                    "average(" + this->name_ + ')',
+                    word("average(", this->name_, ')'),
                     weightState_(mesh),
                     weightPsiOrPsiDerived_(mesh)()
                 )
@@ -148,7 +148,7 @@ Foam::CloudAverageField<Type>::interpolate
               ? LagrangianAverage<Type>::New
                 (
                     word(mesh.schemes().averaging(this->name_)),
-                    "average(" + this->name_ + ')',
+                    word("average(", this->name_, ')'),
                     weightDerived_(mesh)(),
                     weightPsiOrPsiState_(mesh)
                 )
@@ -156,7 +156,7 @@ Foam::CloudAverageField<Type>::interpolate
               : LagrangianAverage<Type>::New
                 (
                     word(mesh.schemes().averaging(this->name_)),
-                    "average(" + this->name_ + ')',
+                    word("average(", this->name_, ')'),
                     weightDerived_(mesh)(),
                     weightPsiOrPsiDerived_(mesh)()
                 )

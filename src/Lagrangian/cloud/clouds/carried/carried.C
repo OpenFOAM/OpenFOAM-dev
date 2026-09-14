@@ -63,7 +63,7 @@ Foam::autoPtr<Foam::volVectorField> Foam::clouds::carried::readDUdtc
 {
     typeIOobject<volVectorField> io
     (
-        "ddt(" + Uc.psi().name() + ")",
+        word("ddt(", Uc.psi().name(), ')'),
         Uc.psi().mesh().time().name(),
         Uc.psi().mesh(),
         IOobject::READ_IF_PRESENT,
@@ -94,7 +94,7 @@ const Foam::volVectorField& Foam::clouds::carried::dUdtc() const
             (
                 IOobject
                 (
-                    "ddt(" + Uc.psi().name() + ")",
+                    word("ddt(", Uc.psi().name(), ')'),
                     Uc.psi().mesh().time().name(),
                     Uc.psi().mesh(),
                     IOobject::NO_READ,

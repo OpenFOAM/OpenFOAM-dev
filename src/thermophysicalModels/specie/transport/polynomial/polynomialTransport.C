@@ -40,7 +40,7 @@ Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
     (
         subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
-            "muCoeffs<" + Foam::name(PolySize) + '>',
+            word("muCoeffs<", Foam::name(PolySize), '>'),
             Function1s::unitSets
             (
                 {dimensions::temperature, dimensions::dynamicViscosity}
@@ -51,7 +51,7 @@ Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
     (
         subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
-            "kappaCoeffs<" + Foam::name(PolySize) + '>',
+            word("kappaCoeffs<", Foam::name(PolySize), '>'),
             Function1s::unitSets
             (
                 {dimensions::temperature, dimensions::thermalConductivity}
@@ -85,8 +85,8 @@ void Foam::polynomialTransport<Thermo, PolySize>::write(Ostream& os) const
         "transport",
         dictionary::entries
         (
-            word("muCoeffs<" + Foam::name(PolySize) + '>'), muCoeffs_,
-            word("kappaCoeffs<" + Foam::name(PolySize) + '>'), kappaCoeffs_
+            word(word("muCoeffs<", Foam::name(PolySize), '>')), muCoeffs_,
+            word(word("kappaCoeffs<", Foam::name(PolySize), '>')), kappaCoeffs_
         )
     );
 }

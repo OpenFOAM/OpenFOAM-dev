@@ -39,7 +39,7 @@ bool Foam::functionObjects::blendingFactor::calcBF()
 
     const VolField<Type>& field = lookupObject<VolField<Type>>(fieldName_);
 
-    const word divScheme("div(" + phiName_ + ',' + fieldName_ + ')');
+    const word divScheme(word("div(", phiName_, ',', fieldName_, ')'));
     ITstream& its = mesh_.schemes().div(divScheme);
 
     const surfaceScalarField& phi = lookupObject<surfaceScalarField>(phiName_);

@@ -1037,10 +1037,13 @@ Foam::populationBalanceModel::populationBalanceModel
                     j,
                     new dimensionedScalar
                     (
-                        "binaryBreakupDelta_"
-                      + Foam::name(i)
-                      + "_"
-                      + Foam::name(j),
+                        word
+                        (
+                            "binaryBreakupDelta_",
+                            Foam::name(i),
+                            '_',
+                            Foam::name(j)
+                        ),
                         vMid0 < 0.5*vs_[j] && 0.5*vs_[j] < vMid1
                       ? mag(0.5*vs_[j] - vMid0)
                       : 0.5*vs_[j] < vMid0

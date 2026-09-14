@@ -196,7 +196,7 @@ Foam::fv::gradScheme<Type>::fviGrad
     const VolField<Type>& vf
 ) const
 {
-    return fviGrad(vf, "grad(" + vf.name() + ')');
+    return fviGrad(vf, word("grad(", vf.name(), ')'));
 }
 
 
@@ -318,7 +318,7 @@ Foam::fv::gradScheme<Type>::fvcGrad
     const VolField<Type>& vf
 ) const
 {
-    return fvcGrad(vf, "grad(" + vf.name() + ')');
+    return fvcGrad(vf, word("grad(", vf.name(), ')'));
 }
 
 

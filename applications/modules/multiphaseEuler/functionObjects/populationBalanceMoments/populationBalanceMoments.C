@@ -157,14 +157,17 @@ Foam::word Foam::functionObjects::populationBalanceMoments::defaultFldName()
         (
             IOobject::groupName
             (
-                "weighted"
-              + meanName
-              + word(momentTypeNames_[momentType_]).capitalise()
-              + "("
-              + weightTypeSymbolicName()
-              + ","
-              + coordinateTypeSymbolicName()
-              + ")",
+                word
+                (
+                    "weighted",
+                    meanName,
+                    word(momentTypeNames_[momentType_]).capitalise(),
+                    '(',
+                    weightTypeSymbolicName(),
+                    ',',
+                    coordinateTypeSymbolicName(),
+                    ')'
+                ),
                 popBalName_
             )
         );
@@ -179,13 +182,16 @@ Foam::functionObjects::populationBalanceMoments::integerMomentFldName()
         (
             IOobject::groupName
             (
-                word(momentTypeNames_[momentType_])
-              + Foam::name(order_)
-              + "("
-              + weightTypeSymbolicName()
-              + ","
-              + coordinateTypeSymbolicName()
-              + ")",
+                word
+                (
+                    momentTypeNames_[momentType_],
+                    Foam::name(order_),
+                    '(',
+                    weightTypeSymbolicName(),
+                    ',',
+                    coordinateTypeSymbolicName(),
+                    ')'
+                ),
                 popBalName_
             )
         );

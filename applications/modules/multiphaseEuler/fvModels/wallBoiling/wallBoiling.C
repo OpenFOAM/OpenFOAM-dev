@@ -673,7 +673,7 @@ void Foam::fv::wallBoiling::correctMDot() const
           + (1 - mDot.boiling_)*lagProps.alphatConvLiquid;
         infoField
         (
-            "mDot[" + mesh().boundary()[patchi].name() + "]",
+            word("mDot[", mesh().boundary()[patchi].name(), "]"),
             dimensions::density/dimensions::time,
             mDot
         );

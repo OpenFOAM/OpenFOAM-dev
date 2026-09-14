@@ -40,7 +40,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvc::surfaceIntegrate
     (
         VolField<Type>::New
         (
-            "surfaceIntegrate("+ssf.name()+')',
+            word("surfaceIntegrate(", ssf.name(), ')'),
             ssf.mesh()(),
             dimensioned<Type>
             (

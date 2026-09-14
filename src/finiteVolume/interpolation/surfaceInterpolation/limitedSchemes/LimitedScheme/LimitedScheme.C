@@ -137,7 +137,7 @@ Foam::LimitedScheme<Type, Limiter, LimitFunc>::limiter
 {
     const fvMesh& mesh = this->mesh();
 
-    const word limiterFieldName(type() + "Limiter(" + phi.name() + ')');
+    const word limiterFieldName(type(), "Limiter(", phi.name(), ')');
 
     if (this->mesh().solution().cache("limiter"))
     {

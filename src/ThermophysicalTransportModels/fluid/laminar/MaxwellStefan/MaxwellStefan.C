@@ -451,8 +451,8 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
             {
                 if (j >= i)
                 {
-                    const word nameij(species[i] + '-' + species[j]);
-                    const word nameji(species[j] + '-' + species[i]);
+                    const word nameij(species[i], '-', species[j]);
+                    const word nameji(species[j], '-', species[i]);
 
                     word Dname;
 

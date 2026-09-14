@@ -174,7 +174,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "sutherland<" + Thermo::typeName() + '>';
+            return word("sutherland<", Thermo::typeName(), '>');
         }
 
         //- Dynamic viscosity [kg/m/s]

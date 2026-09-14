@@ -124,9 +124,11 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                  Thermo::typeName() + ','
-                + Type<thermo<Thermo, Type>>::typeName();
+            return word
+            (
+                Thermo::typeName(), ',',
+                Type<thermo<Thermo, Type>>::typeName()
+            );
         }
 
         //- Return true if energy type is enthalpy

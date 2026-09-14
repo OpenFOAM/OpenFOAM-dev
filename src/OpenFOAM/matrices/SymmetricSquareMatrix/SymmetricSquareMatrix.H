@@ -113,8 +113,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                word("SymmetricSquareMatrix<") + pTraits<Type>::typeName + '>';
+            return word("SymmetricSquareMatrix<", pTraits<Type>::typeName, '>');
         }
 
 

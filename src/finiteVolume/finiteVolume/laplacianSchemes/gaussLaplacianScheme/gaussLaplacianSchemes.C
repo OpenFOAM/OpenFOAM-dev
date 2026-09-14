@@ -104,7 +104,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fviLaplacian         \
                                                                                \
     tLaplacian.ref().rename                                                    \
     (                                                                          \
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'                    \
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')                  \
     );                                                                         \
                                                                                \
     return tLaplacian;                                                         \
@@ -127,7 +127,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian         \
                                                                                \
     tLaplacian.ref().rename                                                    \
     (                                                                          \
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'                    \
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')                  \
     );                                                                         \
                                                                                \
     return tLaplacian;                                                         \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ inline Foam::variable::variable(const word& w)
 
 inline Foam::variable::variable(const string& s, const bool doStripInvalid)
 :
-    word(s)
+    word(s, false)
 {
     if (doStripInvalid)
     {
@@ -81,7 +81,7 @@ inline Foam::variable::variable(const string& s, const bool doStripInvalid)
 
 inline Foam::variable::variable(const std::string& s, const bool doStripInvalid)
 :
-    word(s)
+    word(s, false)
 {
     if (doStripInvalid)
     {
@@ -92,7 +92,7 @@ inline Foam::variable::variable(const std::string& s, const bool doStripInvalid)
 
 inline Foam::variable::variable(const char* s, const bool doStripInvalid)
 :
-    word(s)
+    word(s, false)
 {
     if (doStripInvalid)
     {

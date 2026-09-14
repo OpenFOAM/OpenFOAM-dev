@@ -141,7 +141,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "NSRDS14<" + EquationOfState::typeName() + '>';
+            return word("NSRDS14<", EquationOfState::typeName(), '>');
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_

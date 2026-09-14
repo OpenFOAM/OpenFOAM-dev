@@ -62,7 +62,7 @@ Foam::interpolations::cellPointWallModified<Type>::calcPointField
     (
         pointVectorField::New
         (
-            "volPointInterpolateWallModified(" + psi.name() + ')',
+            word("volPointInterpolateWallModified(", psi.name(), ')'),
             pointMesh::New(mesh),
             dimensioned<Type>("zero", psi.dimensions(), Zero)
         )

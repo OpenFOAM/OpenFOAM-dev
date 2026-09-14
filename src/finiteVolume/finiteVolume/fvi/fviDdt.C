@@ -46,7 +46,7 @@ ddt(const dimensioned<Type> dt, const fvMesh& mesh)
     return fv::ddtScheme<Type>::New
     (
         mesh,
-        mesh.schemes().ddt("ddt(" + dt.name() + ')')
+        mesh.schemes().ddt(word("ddt(", dt.name(), ')'))
     ).ref().fviDdt(dt);
 }
 
@@ -58,7 +58,7 @@ ddt(const VolInternalField<Type>& vf)
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().ddt("ddt(" + vf.name() + ')')
+        vf.mesh().schemes().ddt(word("ddt(", vf.name(), ')'))
     ).ref().fviDdt(vf);
 }
 
@@ -82,7 +82,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt(word("ddt(", rho.name(), ',', vf.name(), ')'))
     ).ref().fviDdt(rho, vf);
 }
 
@@ -110,7 +110,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt(word("ddt(", rho.name(), ',', vf.name(), ')'))
     ).ref().fviDdt(rho, vf);
 }
 
@@ -165,10 +165,7 @@ ddt
         vf.mesh(),
         vf.mesh().schemes().ddt
         (
-            "ddt("
-          + alpha.name() + ','
-          + rho.name() + ','
-          + vf.name() + ')'
+            word("ddt(", alpha.name(), ',' , rho.name(), ',' , vf.name(), ')')
         )
     ).ref().fviDdt(alpha, rho, vf);
 }

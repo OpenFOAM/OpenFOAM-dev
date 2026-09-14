@@ -174,12 +174,15 @@ void Foam::functionObjects::LagrangianFieldValue::writeName
             writeTabbed
             (
                 file(),
-                word(operationTypeNames_[operation_])
-              + "("
-              + name
-              + (word(componentNames[d]).empty() ? "" : "_")
-              + word(componentNames[d])
-              + ")"
+                word
+                (
+                    operationTypeNames_[operation_],
+                    '(',
+                    name,
+                    (word(componentNames[d]).empty() ? "" : "_"),
+                    componentNames[d],
+                    ')'
+                )
             );
         }
     }
@@ -208,16 +211,19 @@ void Foam::functionObjects::LagrangianFieldValue::writeLocationName
                 writeTabbed
                 (
                     file(),
-                    word(operationTypeNames_[operation_])
-                  + "("
-                  + name
-                  + (word(componentNames[d]).empty() ? "" : "_")
-                  + word(componentNames[d])
-                  + ")"
-                  + ":"
-                  + locationName
-                  + (word(lcomponentNames[ld]).empty() ? "" : "_")
-                  + word(lcomponentNames[ld])
+                    word
+                    (
+                        operationTypeNames_[operation_],
+                        '(',
+                        name,
+                        (word(componentNames[d]).empty() ? "" : "_"),
+                        componentNames[d],
+                        ')',
+                        ':',
+                        locationName,
+                        (word(lcomponentNames[ld]).empty() ? "" : "_"),
+                        lcomponentNames[ld]
+                    )
                 );
             }
         }

@@ -159,12 +159,14 @@ void Foam::fv::volumeBlockage::addGeneralSupType
     const volScalarField D(this->D(eqn.psi().name()));
 
     // Divergence term
-    const word divScheme = "div(" + phiName + "," + eqn.psi().name() + ")";
+    const word divScheme("div(", phiName, ',', eqn.psi().name(), ')');
     eqn -= AByB*fvm::div(phi, eqn.psi(), divScheme);
 
     // Laplacian term
-    const word laplacianScheme =
-        "laplacian(" + D.name() + "," + eqn.psi().name() + ")";
+    const word laplacianScheme
+    (
+        "laplacian(", D.name(), ',', eqn.psi().name(), ')'
+    );
     eqn +=
         fvm::laplacian(D, eqn.psi())
       - 1/B()*fvm::laplacian(B*D, eqn.psi(), laplacianScheme);
@@ -226,7 +228,7 @@ void Foam::fv::volumeBlockage::addAlphaSupType
 
         const volScalarField AByB(volumeAlpha()/(1 - volumeAlpha()));
 
-        const word scheme("div(" + phiName + "," + eqn.psi().name() + ")");
+        const word scheme("div(", phiName, ',', eqn.psi().name(), ')');
 
         eqn -= fvi::div(fvc::interpolate(AByB)*phi, eqn.psi(), scheme);
     }

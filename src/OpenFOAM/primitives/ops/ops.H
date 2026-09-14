@@ -157,7 +157,7 @@ struct notOp
                                                                                \
         static word name(const word& x)                                        \
         {                                                                      \
-            return #Func"(" + x + ')';                                         \
+            return word(#Func"(", x, ')');                                     \
         }                                                                      \
                                                                                \
         template<class Type>                                                   \
@@ -197,7 +197,7 @@ struct addOp
 
     static word name(const word& a, const word& b)
     {
-        return a + '+' + b;
+        return word(a, '+', b);
     }
 
     template<class A, class B>
@@ -214,7 +214,7 @@ struct addOp
 
     static word name(const word& x)
     {
-        return "sum(" + x + ')';
+        return word("sum(", x, ')');
     }
 
     template<class X>
@@ -243,7 +243,7 @@ struct subtractOp
 
     static word name(const word& a, const word& b)
     {
-        return a + '-' + b;
+        return word(a, '-', b);
     }
 
     template<class A, class B>
@@ -275,7 +275,7 @@ struct multiplyOp
 
     static word name(const word& a, const word& b)
     {
-        return a + '*' + b;
+        return word(a, '*', b);
     }
 
     template<class A, class B>
@@ -307,7 +307,7 @@ struct divideOp
 
     static word name(const word& a, const word& b)
     {
-        return a + '|' + b;
+        return word(a, '|', b);
     }
 
     template<class A, class B>
@@ -335,7 +335,7 @@ struct innerOp
 
     static word name(const word& a, const word& b)
     {
-        return a + '&' + b;
+        return word(a, '&', b);
     }
 
     template<class A, class B>
@@ -357,7 +357,7 @@ struct crossOp
 
     static word name(const word& a, const word& b)
     {
-        return a + '^' + b;
+        return word(a, '^', b);
     }
 
     template<class A, class B>
@@ -380,7 +380,7 @@ struct stabiliseOp
 
     static word name(const word& a, const word& b)
     {
-        return "stabilise(" + a + ',' + b + ')';
+        return word("stabilise(", a, ',', b, ')');
     }
 
     template<class A, class B>
@@ -409,7 +409,7 @@ struct maxOp
 
     static word name(const word& a, const word& b)
     {
-        return "max(" + a + ',' + b + ')';
+        return word("max(", a, ',', b, ')');
     }
 
     template<class A, class B>
@@ -426,7 +426,7 @@ struct maxOp
 
     static word name(const word& x)
     {
-        return "max(" + x + ')';
+        return word("max(", x, ')');
     }
 
     template<class X>
@@ -449,7 +449,7 @@ struct minOp
 
     static word name(const word& a, const word& b)
     {
-        return "min(" + a + ',' + b + ')';
+        return word("min(", a, ',', b, ')');
     }
 
     template<class A, class B>
@@ -466,7 +466,7 @@ struct minOp
 
     static word name(const word& x)
     {
-        return "min(" + x + ')';
+        return word("min(", x, ')');
     }
 
     template<class X>
@@ -489,7 +489,7 @@ struct minModOp
 
     static word name(const word& a, const word& b)
     {
-        return "minMod(" + a + ',' + b + ')';
+        return word("minMod(", a, ',', b, ')');
     }
 
     template<class A, class B>
@@ -506,7 +506,7 @@ struct minModOp
 
     static word name(const word& x)
     {
-        return "minMod(" + x + ')';
+        return word("minMod(", x, ')');
     }
 
     template<class X>
@@ -528,7 +528,7 @@ struct cmptMultiplyOp
 
     static word name(const word& a, const word& b)
     {
-        return "cmptMultiply(" + a + ',' + b + ')';
+        return word("cmptMultiply(", a, ',', b, ')');
     }
 
     template<class A, class B>
@@ -556,7 +556,7 @@ struct cmptDivideOp
 
     static word name(const word& a, const word& b)
     {
-        return "cmptDivide(" + a + ',' + b + ')';
+        return word("cmptDivide(", a, ',', b, ')');
     }
 
     template<class A, class B>
@@ -585,7 +585,7 @@ struct cmptPowOp
 
     static word name(const word& a, const word& b)
     {
-        return "cmptPow(" + a + ',' + b + ')';
+        return word("cmptPow(", a, ',', b, ')');
     }
 
     template<class A, class B>

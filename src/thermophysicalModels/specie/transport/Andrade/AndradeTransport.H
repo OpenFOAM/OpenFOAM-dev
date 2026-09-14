@@ -179,7 +179,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "Andrade<" + Thermo::typeName() + '>';
+            return word("Andrade<", Thermo::typeName(), '>');
         }
 
         //- Dynamic viscosity [kg/m/s]

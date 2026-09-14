@@ -827,14 +827,16 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     );
 
     // Construct the result
-    tmp<typeGeoField> x =
-        typeGeoField::New
+    tmp<typeGeoField> x = typeGeoField::New
+    (
+        word
         (
-            ModelType::typeName + ":"
-          + IOobject::groupName(name, interface_.name()),
-            interface_.mesh(),
-            dimensioned<Type>(dims, Zero)
-        );
+            ModelType::typeName, ':',
+            IOobject::groupName(name, interface_.name())
+        ),
+        interface_.mesh(),
+        dimensioned<Type>(dims, Zero)
+    );
 
     // Add the model contributions to the result
     if (modelGeneral_.valid())
@@ -940,11 +942,14 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
                     dxIter.key(),
                     typeGeoField::New
                     (
-                        ModelType::typeName + ':'
-                      + IOobject::groupName
+                        word
                         (
-                            IOobject::groupName(name, dxIter.key()),
-                            interface_.name()
+                            ModelType::typeName, ':',
+                            IOobject::groupName
+                            (
+                                IOobject::groupName(name, dxIter.key()),
+                                interface_.name()
+                            )
                         ),
                         f**dxIter()
                     ).ptr()

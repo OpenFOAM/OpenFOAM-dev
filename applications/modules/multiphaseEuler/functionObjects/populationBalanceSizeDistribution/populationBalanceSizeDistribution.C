@@ -398,7 +398,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::read
     const dictionary& dict
 )
 {
-    Log << type() << " " << name() << ":" << nl;
+    Log << type() << " " << name() << ':' << nl;
 
     fvMeshFunctionObject::read(dict);
 

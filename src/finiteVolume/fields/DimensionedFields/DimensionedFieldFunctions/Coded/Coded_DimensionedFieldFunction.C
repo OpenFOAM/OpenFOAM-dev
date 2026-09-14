@@ -75,16 +75,19 @@ Coded
         dict.lookupOrDefault<word>
         (
             "name",
+            word
             (
-                field.mesh().db().name() == polyMesh::defaultRegion
-              ? word::null
-              : word(field.mesh().db().name() + '_')
-            )
-          + field.name()
-          + (
-                field.mesh().name() == field.mesh().db().name()
-              ? word::null
-              : word('_' + field.mesh().name())
+                (
+                    field.mesh().db().name() == polyMesh::defaultRegion
+                  ? word::null
+                  : word(field.mesh().db().name() + '_')
+                ),
+                field.name(),
+                (
+                    field.mesh().name() == field.mesh().db().name()
+                  ? word::null
+                  : word('_' + field.mesh().name())
+                )
             )
         ),
         dict,

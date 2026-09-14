@@ -199,7 +199,7 @@ inline bool Foam::tmp<T>::valid() const
 template<class T>
 inline Foam::word Foam::tmp<T>::typeName() const
 {
-    return "tmp<" + word(typeid(T).name()) + '>';
+    return word("tmp<", word(typeid(T).name()), '>');
 }
 
 

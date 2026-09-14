@@ -343,14 +343,14 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     const dimensioned<Type>& dt
 )
 {
-    const word ddtName("ddt(" + dt.name() + ')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     if (mesh().moving())
     {
         DDt0Field<VolField<Type>>& ddt0 =
             ddt0_<VolField<Type>>
             (
-                "ddt0(" + dt.name() + ')',
+                word("ddt0(", dt.name(), ')'),
                 dt.dimensions()
             );
 
@@ -398,11 +398,11 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + vf.name() + ')',
+            word("ddt0(", vf.name(), ')'),
             vf.dimensions()
         );
 
-    const word ddtName("ddt(" + vf.name() + ')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
@@ -454,11 +454,11 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", rho.name(), ',', vf.name(), ')'),
             rho.dimensions()*vf.dimensions()
         );
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
@@ -510,11 +510,11 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", rho.name(), ',', vf.name(), ')'),
             rho.dimensions()*vf.dimensions()
         );
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
@@ -568,13 +568,13 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'),
             alpha.dimensions()*rho.dimensions()*vf.dimensions()
         );
 
     const word ddtName
     (
-        "ddt(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')'
+        word("ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')')
     );
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
@@ -631,11 +631,11 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + dt.name() + ')',
+            word("ddt0(", dt.name(), ')'),
             dt.dimensions()
         );
 
-    const word ddtName("ddt(" + dt.name() + ')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     tmp<VolField<Type>> tdtdt
     (
@@ -688,11 +688,11 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + vf.name() + ')',
+            word("ddt0(", vf.name(), ')'),
             vf.dimensions()
         );
 
-    const word ddtName("ddt(" + vf.name() + ')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
@@ -767,11 +767,11 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", rho.name(), ',', vf.name(), ')'),
             rho.dimensions()*vf.dimensions()
         );
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
@@ -846,11 +846,11 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", rho.name(), ',', vf.name(), ')'),
             rho.dimensions()*vf.dimensions()
         );
 
-    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
@@ -935,13 +935,13 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'),
             alpha.dimensions()*rho.dimensions()*vf.dimensions()
         );
 
     const word ddtName
     (
-        "ddt(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')'
+        word("ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')')
     );
 
     dimensionedScalar rDtCoef = rDtCoef_(ddt0);
@@ -1046,7 +1046,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + vf.name() + ')',
+            word("ddt0(", vf.name(), ')'),
             vf.dimensions()
         );
 
@@ -1130,7 +1130,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", rho.name(), ',', vf.name(), ')'),
             rho.dimensions()*vf.dimensions()
         );
 
@@ -1213,7 +1213,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", rho.name(), ',', vf.name(), ')'),
             rho.dimensions()*vf.dimensions()
         );
 
@@ -1305,7 +1305,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddt0(" + alpha.name() + ',' + rho.name() + ',' + vf.name() + ')',
+            word("ddt0(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'),
             alpha.dimensions()*rho.dimensions()*vf.dimensions()
         );
 
@@ -1421,14 +1421,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddtCorrDdt0(" + U.name() + ')',
+            word("ddtCorrDdt0(", U.name(), ')'),
             U.dimensions()
         );
 
     DDt0Field<SurfaceField<Type>>& dUfdt0 =
         ddt0_<SurfaceField<Type>>
         (
-            "ddtCorrDdt0(" + Uf.name() + ')',
+            word("ddtCorrDdt0(", Uf.name(), ')'),
             Uf.dimensions()
         );
 
@@ -1450,7 +1450,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
+        word("ddtCorr(", U.name(), ',', Uf.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), mesh().Sf() & Uf.oldTime())
        *(
             mesh().Sf()
@@ -1474,14 +1474,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            "ddtCorrDdt0(" + U.name() + ')',
+            word("ddtCorrDdt0(", U.name(), ')'),
             U.dimensions()
         );
 
     DDt0Field<fluxFieldType>& dphidt0 =
         ddt0_<fluxFieldType>
         (
-            "ddtCorrDdt0(" + phi.name() + ')',
+            word("ddtCorrDdt0(", phi.name(), ')'),
             phi.dimensions()
         );
 
@@ -1503,7 +1503,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + phi.name() + ')',
+        word("ddtCorr(", U.name(), ',', phi.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
        *(
             (rDtCoef*phi.oldTime() + offCentre_(dphidt0()))
@@ -1535,14 +1535,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
         DDt0Field<VolField<Type>>& ddt0 =
             ddt0_<VolField<Type>>
             (
-                "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
+                word("ddtCorrDdt0(", rho.name(), ',', U.name(), ')'),
                 rho.dimensions()*U.dimensions()
             );
 
         DDt0Field<SurfaceField<Type>>& drhoUfdt0 =
             ddt0_<SurfaceField<Type>>
             (
-                "ddtCorrDdt0(" + rhoUf.name() + ')',
+                word("ddtCorrDdt0(", rhoUf.name(), ')'),
                 rhoUf.dimensions()
             );
 
@@ -1571,7 +1571,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 rhoU0,
@@ -1596,14 +1596,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
         DDt0Field<VolField<Type>>& ddt0 =
             ddt0_<VolField<Type>>
             (
-                "ddtCorrDdt0(" + U.name() + ')',
+                word("ddtCorrDdt0(", U.name(), ')'),
                 U.dimensions()
             );
 
         DDt0Field<SurfaceField<Type>>& drhoUfdt0 =
             ddt0_<SurfaceField<Type>>
             (
-                "ddtCorrDdt0(" + rhoUf.name() + ')',
+                word("ddtCorrDdt0(", rhoUf.name(), ')'),
                 rhoUf.dimensions()
             );
 
@@ -1626,7 +1626,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),
@@ -1674,14 +1674,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
         DDt0Field<VolField<Type>>& ddt0 =
             ddt0_<VolField<Type>>
             (
-                "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
+                word("ddtCorrDdt0(", rho.name(), ',', U.name(), ')'),
                 rho.dimensions()*U.dimensions()
             );
 
         DDt0Field<fluxFieldType>& dphidt0 =
             ddt0_<fluxFieldType>
             (
-                "ddtCorrDdt0(" + phi.name() + ')',
+                word("ddtCorrDdt0(", phi.name(), ')'),
                 phi.dimensions()
             );
 
@@ -1710,7 +1710,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff(rhoU0, phi.oldTime(), rho.oldTime())
            *(
                 (rDtCoef*phi.oldTime() + offCentre_(dphidt0()))
@@ -1731,14 +1731,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
         DDt0Field<VolField<Type>>& ddt0 =
             ddt0_<VolField<Type>>
             (
-                "ddtCorrDdt0(" + U.name() + ')',
+                word("ddtCorrDdt0(", U.name(), ')'),
                 U.dimensions()
             );
 
         DDt0Field<fluxFieldType>& dphidt0 =
             ddt0_<fluxFieldType>
             (
-                "ddtCorrDdt0(" + phi.name() + ')',
+                word("ddtCorrDdt0(", phi.name(), ')'),
                 phi.dimensions()
             );
 
@@ -1760,7 +1760,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime(), rho.oldTime())
            *(
                 (rDtCoef*phi.oldTime() + offCentre_(dphidt0()))

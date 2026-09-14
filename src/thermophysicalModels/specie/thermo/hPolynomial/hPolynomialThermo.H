@@ -173,7 +173,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "hPolynomial<" + EquationOfState::typeName() + '>';
+            return word("hPolynomial<", EquationOfState::typeName(), '>');
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_

@@ -134,7 +134,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "tabulatedSolid<" + Thermo::typeName() + '>';
+            return word("tabulatedSolid<", Thermo::typeName(), '>');
         }
 
         //- Is the thermal conductivity isotropic

@@ -64,7 +64,7 @@ Foam::growthGroupFractionFvScalarFieldSource::w
     const label q = this->q(model);
 
     // Name of the weight normalisation field
-    const word wName = popBal.phases()[i].name() + ":" + model.name() + ":w";
+    const word wName(popBal.phases()[i].name(), ':', model.name(), ":w");
 
     // Quick return for volume moments that do not need to compute a weight
     if (q == 3)

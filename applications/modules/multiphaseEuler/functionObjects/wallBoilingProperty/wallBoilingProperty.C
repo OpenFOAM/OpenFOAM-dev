@@ -131,7 +131,7 @@ bool Foam::functionObjects::wallBoilingProperty::execute()
         (
             IOobject
             (
-                model.name() + ":" + fieldName_,
+                word(model.name(), ':', fieldName_),
                 mesh().time().name(),
                 mesh(),
                 IOobject::NO_READ,
@@ -173,7 +173,7 @@ bool Foam::functionObjects::wallBoilingProperty::write()
 
     if (isNull(model)) return false;
 
-    return writeObject(model.name() + ":" + fieldName_);
+    return writeObject(word(model.name(), ':', fieldName_));
 }
 
 

@@ -212,7 +212,7 @@ SLTSDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviSLrDeltaT());
 
-    const word ddtName("ddt("+dt.name()+')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     if (mesh().moving())
     {
@@ -248,7 +248,7 @@ SLTSDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviSLrDeltaT());
 
-    const word ddtName("ddt("+vf.name()+')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -279,7 +279,7 @@ SLTSDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviSLrDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -310,7 +310,7 @@ SLTSDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviSLrDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -346,7 +346,10 @@ SLTSDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviSLrDeltaT());
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     if (mesh().moving())
     {
@@ -381,7 +384,7 @@ SLTSDdtScheme<Type>::fvcDdt
 {
     const volInternalScalarField rDeltaT(SLrDeltaT());
 
-    const word ddtName("ddt("+dt.name()+')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     if (mesh().moving())
     {
@@ -433,7 +436,7 @@ SLTSDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(SLrDeltaT());
 
-    const word ddtName("ddt("+vf.name()+')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -468,7 +471,7 @@ SLTSDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(SLrDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -503,7 +506,7 @@ SLTSDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(SLrDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -545,7 +548,10 @@ SLTSDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(SLrDeltaT());
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     if (mesh().moving())
     {
@@ -762,7 +768,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
+        word("ddtCorr(", U.name(), ',', Uf.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr)
        *rDeltaT*phiCorr
     );
@@ -786,7 +792,7 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + phi.name() + ')',
+        word("ddtCorr(", U.name(), ',', phi.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime(), phiCorr)
        *rDeltaT*phiCorr
     );
@@ -820,7 +826,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr, rho.oldTime())
            *rDeltaT*phiCorr
         );
@@ -839,7 +845,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),
@@ -889,7 +895,7 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 rhoU0,
@@ -912,7 +918,7 @@ SLTSDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),

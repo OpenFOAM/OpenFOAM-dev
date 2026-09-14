@@ -124,7 +124,7 @@ public:
             (
                 SurfaceField<Type>::New
                 (
-                    "localMax::interpolate(" + vf.name() + ')',
+                    word("localMax::interpolate(", vf.name(), ')'),
                     mesh,
                     vf.dimensions()
                 )

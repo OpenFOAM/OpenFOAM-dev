@@ -215,7 +215,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H() const
     (
         volScalarField::New
         (
-            "H("+psi_.name()+')',
+            word("H(", psi_.name(), ')'),
             psi_.mesh(),
             dimensions_/dimensions::volume,
             extrapolatedCalculatedFvPatchScalarField::typeName

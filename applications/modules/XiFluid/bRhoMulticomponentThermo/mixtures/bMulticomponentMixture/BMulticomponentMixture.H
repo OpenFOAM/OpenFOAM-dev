@@ -76,9 +76,11 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                bMulticomponentMixture::typeName
-              + '<' + ThermoType::typeName() + '>';
+            return word
+            (
+                bMulticomponentMixture::typeName,
+                '<', ThermoType::typeName(), '>'
+            );
         }
 
 

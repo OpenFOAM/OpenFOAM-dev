@@ -249,7 +249,7 @@ struct add2Op
 
     static word name(const word& a, const word& b)
     {
-        return a + '+' + b;
+        return word(a, '+', b);
     }
 
     template<class A, class B>
@@ -266,7 +266,7 @@ struct add2Op
 
     static word name(const word& x)
     {
-        return "sum(" + x + ')';
+        return word("sum(", x, ')');
     }
 };
 

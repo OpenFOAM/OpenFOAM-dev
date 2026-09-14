@@ -46,8 +46,10 @@ Foam::chemistryReductionMethod<ThermoType>::New
         Info<< indentOrNl
             << "Selecting chemistry reduction method " << methodName << endl;
 
-        const word methodTypeName =
-            methodName + '<' + ThermoType::typeName() + '>';
+        const word methodTypeName
+        (
+            methodName, '<', ThermoType::typeName(), '>'
+        );
 
         typename dictionaryConstructorTable::iterator cstrIter =
             dictionaryConstructorTablePtr_->find(methodTypeName);

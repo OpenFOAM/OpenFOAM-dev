@@ -199,15 +199,17 @@ struct PhaseInterfaceInfo<TypeSet<InterfaceType, InterfaceTypes ...>>
         string type(InterfaceType::typeName_());
         type.removeTrailing("PhaseInterface");
 
-        const string s =
-            type + " (i.e., contains '_" + InterfaceType::separator() + "_')";
+        const string s
+        (
+            type, " (i.e., contains '_" + InterfaceType::separator(), "_')"
+        );
 
         return
             sizeof ... (InterfaceTypes) == 0
           ? s.c_str()
           : sizeof ... (InterfaceTypes) == 1
-          ? s + ' ' + andOr + ' ' + subS
-          : s + ", " + subS;
+          ? string(s, ' ', andOr, ' ', subS)
+          : string(s, ", ", subS);
     }
 };
 

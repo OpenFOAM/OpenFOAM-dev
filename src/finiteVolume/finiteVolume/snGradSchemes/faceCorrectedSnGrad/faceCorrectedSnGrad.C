@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
     (
         SurfaceField<Type>::New
         (
-            "snGradCorr("+vf.name()+')',
+            word("snGradCorr(", vf.name(), ')'),
             mesh,
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )
@@ -129,7 +129,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::correction
     (
         SurfaceField<Type>::New
         (
-            "snGradCorr("+vf.name()+')',
+            word("snGradCorr(", vf.name(), ')'),
             mesh,
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )

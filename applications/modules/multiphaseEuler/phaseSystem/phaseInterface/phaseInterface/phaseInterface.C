@@ -213,10 +213,10 @@ Foam::word Foam::phaseInterface::separatorsToTypeName
     {
         typeName.append
         (
-            '_'
-          + separators[separatori]
-          + (separators[separatori].empty() ? "" : "_")
-          + phaseName
+            '_',
+            separators[separatori],
+            (separators[separatori].empty() ? "" : "_"),
+            phaseName
         );
     }
 
@@ -246,7 +246,7 @@ Foam::word Foam::phaseInterface::namePartsToName
     {
         if (nameParts[i] != word::null)
         {
-            name.append(nameParts[i] + "_");
+            name.append(nameParts[i], '_');
         }
     }
 
@@ -267,7 +267,7 @@ Foam::word Foam::phaseInterface::oldNamePartsToName
         // Phase name part
         if (fluid.phases().found(oldNameParts[i]))
         {
-            name.append(oldNameParts[i] + "_");
+            name.append(oldNameParts[i], '_');
         }
 
         // Separator
@@ -278,7 +278,7 @@ Foam::word Foam::phaseInterface::oldNamePartsToName
 
             if (separator != word::null)
             {
-                name.append(separator + "_");
+                name.append(separator, '_');
             }
         }
     }
@@ -510,7 +510,7 @@ Foam::autoPtr<Foam::phaseInterface> Foam::phaseInterface::New
 
 Foam::word Foam::phaseInterface::name() const
 {
-    return phase1().name() + "_" + phase2().name();
+    return word(phase1().name(), '_', phase2().name());
 }
 
 

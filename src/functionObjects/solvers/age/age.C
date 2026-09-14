@@ -152,7 +152,7 @@ bool Foam::functionObjects::age::execute()
     );
     volScalarField& age = tage.ref();
 
-    const word divScheme("div(phi," + schemesField_ + ")");
+    const word divScheme("div(phi,", schemesField_, ')');
 
     const int nCorr =
         mesh_.solution().solverDict(solverField_)
@@ -183,7 +183,7 @@ bool Foam::functionObjects::age::execute()
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
 
-        const word laplacianScheme("laplacian(muEff," + schemesField_ + ")");
+        const word laplacianScheme("laplacian(muEff,", schemesField_, ')');
 
         tmp<volScalarField> tnuEff;
         if (diffusion_)
@@ -224,8 +224,10 @@ bool Foam::functionObjects::age::execute()
         {
             tnuEff = mesh_.lookupType<momentumTransportModel>().nuEff();
 
-            laplacianScheme =
-                "laplacian(" + tnuEff().name() + ',' + schemesField_ + ")";
+            laplacianScheme = word
+            (
+                "laplacian(", tnuEff().name(), ',', schemesField_, ')'
+            );
         }
 
         for (int i=0; i<=nCorr; i++)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ dimensionedSphericalTensor dimensionedSphericalTensor::T() const
 {
     return dimensionedSphericalTensor
     (
-        name()+".T()",
+        name() + ".T()",
         dimensions(),
         value().T()
     );
@@ -50,7 +50,7 @@ dimensionedScalar tr(const dimensionedSphericalTensor& dt)
 {
     return dimensionedScalar
     (
-        "tr("+dt.name()+')',
+        word("tr(", dt.name(), ')'),
         dt.dimensions(),
         tr(dt.value())
     );
@@ -61,7 +61,7 @@ dimensionedScalar det(const dimensionedSphericalTensor& dt)
 {
     return dimensionedScalar
     (
-        "det("+dt.name()+')',
+        word("det(", dt.name(), ')'),
         pow(dt.dimensions(), sphericalTensor::dim),
         det(dt.value())
     );
@@ -72,7 +72,7 @@ dimensionedSphericalTensor inv(const dimensionedSphericalTensor& dt)
 {
     return dimensionedSphericalTensor
     (
-        "inv("+dt.name()+')',
+        word("inv(", dt.name(), ')'),
         dimless/dt.dimensions(),
         inv(dt.value())
     );

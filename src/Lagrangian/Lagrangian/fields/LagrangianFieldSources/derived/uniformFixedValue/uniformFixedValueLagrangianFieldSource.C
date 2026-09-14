@@ -97,7 +97,7 @@ Foam::uniformFixedValueLagrangianFieldSource<Type>::internalCoeff
     return
         LagrangianSubScalarField::New
         (
-            this->internalField().name() + ":" + source.name() + "Coeff",
+            word(this->internalField().name(), ':', source.name(), "Coeff"),
             subMesh,
             dimensionedScalar(dimless, Zero)
         );

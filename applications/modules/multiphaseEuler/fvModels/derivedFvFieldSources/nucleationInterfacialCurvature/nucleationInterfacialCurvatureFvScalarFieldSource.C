@@ -81,13 +81,12 @@ Foam::nucleationInterfacialCurvatureFvScalarFieldSource::internalCoeff
     const DimensionedField<scalar, fvMesh>& source
 ) const
 {
-    return
-        DimensionedField<scalar, fvMesh>::New
-        (
-            model.name() + ":" + this->internalField().name() + "InternalCoeff",
-            this->internalField().mesh(),
-            dimensionedScalar(dimless, scalar(-1))
-        );
+    return DimensionedField<scalar, fvMesh>::New
+    (
+        word(model.name(), ':', this->internalField().name(), "InternalCoeff"),
+        this->internalField().mesh(),
+        dimensionedScalar(dimless, scalar(-1))
+    );
 }
 
 

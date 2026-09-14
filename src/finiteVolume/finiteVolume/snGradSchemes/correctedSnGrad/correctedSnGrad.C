@@ -56,10 +56,10 @@ Foam::fv::correctedSnGrad<Type>::fullGradCorrection
             gradScheme<Type>::New
             (
                 mesh,
-                mesh.schemes().grad("grad(" + vf.name() + ')')
-            )().fvcGrad(vf, "grad(" + vf.name() + ')')
+                mesh.schemes().grad(word("grad(", vf.name(), ')'))
+            )().fvcGrad(vf, word("grad(", vf.name(), ')'))
         );
-    tssf.ref().rename("snGradCorr(" + vf.name() + ')');
+    tssf.ref().rename(word("snGradCorr(", vf.name(), ')'));
 
     return tssf;
 }
@@ -79,7 +79,7 @@ Foam::fv::correctedSnGrad<Type>::correction
     (
         SurfaceField<Type>::New
         (
-            "snGradCorr("+vf.name()+')',
+            word("snGradCorr(", vf.name(), ')'),
             mesh,
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )

@@ -46,10 +46,14 @@ namespace fv
 void Foam::fv::solidElectricalConduction::readCoeffs(const dictionary& dict)
 {
     const word sigmaKey = "sigma";
-    const word sigmaScalarKey =
-        sigmaKey + '<' + pTraits<scalar>::typeName + '>';
-    const word sigmaTensorKey =
-        sigmaKey + '<' + pTraits<tensor>::typeName + '>';
+    const word sigmaScalarKey
+    (
+        sigmaKey, '<', pTraits<scalar>::typeName, '>'
+    );
+    const word sigmaTensorKey
+    (
+        sigmaKey, '<', pTraits<tensor>::typeName, '>'
+    );
 
     const bool haveSigma = dict.found(sigmaKey);
     const bool haveScalarSigma = dict.found(sigmaScalarKey);

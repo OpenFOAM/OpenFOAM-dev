@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,21 +68,21 @@ Description
     ClassNameNoDebug(TypeNameString);                                          \
     virtual const word& type() const { return typeName; }                      \
     template<class Name>                                                       \
-    word typedName(Name name) const { return (type() + ':') + name; }
+    word typedName(Name name) const { return word(type(), ':', name); }
 
 //- Declare a ClassName() with extra virtual type info
 #define TypeName(TypeNameString)                                               \
     ClassName(TypeNameString);                                                 \
     virtual const word& type() const { return typeName; }                      \
     template<class Name>                                                       \
-    word typedName(Name name) const { return (type() + ':') + name; }
+    word typedName(Name name) const { return word(type(), ':', name); }
 
 //- Declare a FunctionName() with extra virtual type info
 #define FunctionTypeName(TypeNameString)                                       \
     FunctionName(TypeNameString);                                              \
     virtual const word& type() const { return typeName; }                      \
     template<class Name>                                                       \
-    word typedName(Name name) const { return (type() + ':') + name; }
+    word typedName(Name name) const { return word(type(), ':', name); }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -187,7 +187,7 @@ inline bool isA(const Type& t)
 template<class TypeName, class Name>
 inline word typedName(Name name)
 {
-    return (TypeName::typeName + ':') + name;
+    return word(TypeName::typeName, ':', name);
 }
 
 

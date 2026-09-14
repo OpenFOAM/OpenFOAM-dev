@@ -98,7 +98,7 @@ Foam::fv::reactionDrivenPhaseChange::mDot(const label mDoti) const
     tmp<volInternalScalarField> tResult =
         volInternalScalarField::New
         (
-            name() + ":mDot_" + species()[mDoti],
+            word(name(), ":mDot_", species()[mDoti]),
             mesh(),
             dimensionedScalar(dimensions::density/dimensions::time, 0)
         );

@@ -298,7 +298,7 @@ void Foam::fv::wallCondensation::correctMDot() const
 
         infoField
         (
-            "mDot[" + mesh().boundary()[patchi].name() + "]",
+            word("mDot[", mesh().boundary()[patchi].name(), "]"),
             dimensions::density/dimensions::time,
             mDot
         );

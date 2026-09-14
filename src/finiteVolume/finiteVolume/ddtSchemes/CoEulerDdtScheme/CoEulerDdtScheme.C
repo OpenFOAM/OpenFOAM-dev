@@ -183,7 +183,7 @@ CoEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviCorDeltaT());
 
-    const word ddtName("ddt("+dt.name()+')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     if (mesh().moving())
     {
@@ -219,7 +219,7 @@ CoEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviCorDeltaT());
 
-    const word ddtName("ddt("+vf.name()+')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -250,7 +250,7 @@ CoEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviCorDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -281,7 +281,7 @@ CoEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviCorDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -317,7 +317,10 @@ CoEulerDdtScheme<Type>::fviDdt
 {
     const volInternalScalarField rDeltaT(fviCorDeltaT());
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     if (mesh().moving())
     {
@@ -353,7 +356,7 @@ CoEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(CorDeltaT());
 
-    const word ddtName("ddt("+dt.name()+')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     if (mesh().moving())
     {
@@ -408,7 +411,7 @@ CoEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(CorDeltaT());
 
-    const word ddtName("ddt("+vf.name()+')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -447,7 +450,7 @@ CoEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(CorDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -486,7 +489,7 @@ CoEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(CorDeltaT());
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     if (mesh().moving())
     {
@@ -529,7 +532,10 @@ CoEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField rDeltaT(CorDeltaT());
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     if (mesh().moving())
     {
@@ -756,7 +762,7 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
+        word("ddtCorr(", U.name(), ',', Uf.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr)*rDeltaT*phiCorr
     );
 }
@@ -779,7 +785,7 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + phi.name() + ')',
+        word("ddtCorr(", U.name(), ',', phi.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime(), phiCorr)
        *rDeltaT*phiCorr
     );
@@ -813,7 +819,7 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr, rho.oldTime())
            *rDeltaT*phiCorr
         );
@@ -832,7 +838,7 @@ CoEulerDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),
@@ -882,7 +888,7 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 rhoU0,
@@ -905,7 +911,7 @@ CoEulerDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),

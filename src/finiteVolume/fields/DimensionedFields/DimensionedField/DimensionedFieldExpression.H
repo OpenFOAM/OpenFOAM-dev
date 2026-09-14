@@ -182,7 +182,7 @@ struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
                 DimensionedField<Type, GeoMesh, PrimitiveField>
             >::template elementType<Expression>
             (
-                "average(" + name(e) + ')',
+                word("average(", name(e), ')'),
                 access(e, NullObjectRef<dimensionSet>()),
                 Reduce<PrimitiveField<Type>>::average
                 (
@@ -211,7 +211,7 @@ struct Reduce<DimensionedField<Type, GeoMesh, PrimitiveField>>
                 DimensionedField<Type, GeoMesh, PrimitiveField>
             >::template elementType<Expression>
             (
-                "weightedAverage(" + name(e) + ',' + name(we) + ')',
+                word("weightedAverage(", name(e), ',', name(we), ')'),
                 access(e, NullObjectRef<dimensionSet>()),
                 Reduce<PrimitiveField<Type>>::weightedAverage
                 (

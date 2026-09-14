@@ -41,7 +41,7 @@ Foam::tmp<GeoField> Foam::uniformInterpolate
     (
         GeoField::New
         (
-            "uniformInterpolate(" + field0.name() + ')',
+            word("uniformInterpolate(", field0.name(), ')'),
             weights[0]*(*fields[indices[0]])
         )
     );

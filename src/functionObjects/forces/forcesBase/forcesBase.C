@@ -138,7 +138,7 @@ void Foam::functionObjects::forcesBase::writeFileHeader(const label i)
 
             for (label j = 0; j < nBin_; j++)
             {
-                const word jn('(' + Foam::name(j) + ')');
+                const word jn('(', Foam::name(j), ')');
                 const word f("forces" + jn + forceTypes);
                 const word m("moments" + jn + forceTypes);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ d2dt2
     return fv::d2dt2Scheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().d2dt2("d2dt2(" + vf.name() + ')')
+        vf.mesh().schemes().d2dt2(word("d2dt2(", vf.name(), ')'))
     ).ref().fvmD2dt2(vf);
 }
 
@@ -66,7 +66,10 @@ d2dt2
     return fv::d2dt2Scheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().d2dt2("d2dt2(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().d2dt2
+        (
+            word("d2dt2(", rho.name(), ',', vf.name(), ')')
+        )
     ).ref().fvmD2dt2(rho, vf);
 }
 
@@ -82,7 +85,10 @@ d2dt2
     return fv::d2dt2Scheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().d2dt2("d2dt2(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().d2dt2
+        (
+            word("d2dt2(", rho.name(), ',', vf.name(), ')')
+        )
     ).ref().fvmD2dt2(rho, vf);
 }
 

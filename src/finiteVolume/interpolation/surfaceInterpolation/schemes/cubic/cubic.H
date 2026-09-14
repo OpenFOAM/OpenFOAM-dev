@@ -133,7 +133,7 @@ public:
             (
                 SurfaceField<Type>::New
                 (
-                    "cubic::correction(" + vf.name() +')',
+                    word("cubic::correction(", vf.name(), ')'),
                     surfaceInterpolationScheme<Type>::interpolate(vf, -kSc, kSc)
                 )
             );

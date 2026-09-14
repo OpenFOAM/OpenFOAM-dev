@@ -66,7 +66,7 @@ Foam::functionObjects::fieldExpression::fieldExpression
         dict.found("result") ? dict.lookup<word>("result")
       : &defaultFieldName == &noFieldName_ ? functionName
       : fieldName_ == defaultFieldName ? functionName
-      : word(functionName + '(' + fieldName_ + ')')
+      : word(functionName, '(' + fieldName_, ')')
     )
 {
     read(dict);

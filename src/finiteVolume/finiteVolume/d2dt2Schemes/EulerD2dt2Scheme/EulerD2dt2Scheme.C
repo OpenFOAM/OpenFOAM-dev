@@ -51,7 +51,7 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0())
     );
 
-    const word d2dt2name("d2dt2("+vf.name()+')');
+    const word d2dt2name("d2dt2(", vf.name(), ')');
 
     const scalar deltaT = mesh().time().deltaTValue();
     const scalar deltaT0 = mesh().time().deltaT0Value();
@@ -116,7 +116,7 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0())
     );
 
-    const word d2dt2name("d2dt2("+rho.name()+','+vf.name()+')');
+    const word d2dt2name("d2dt2(", rho.name(), ',', vf.name(), ')');
 
     const scalar deltaT = mesh().time().deltaTValue();
     const scalar deltaT0 = mesh().time().deltaT0Value();

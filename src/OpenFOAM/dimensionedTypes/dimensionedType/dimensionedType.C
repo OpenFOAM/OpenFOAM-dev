@@ -339,7 +339,7 @@ Foam::dimensioned<Type>::component
 {
     return dimensioned<cmptType>
     (
-        name_ + ".component(" + Foam::name(d) + ')',
+        word(name_, ".component(", Foam::name(d), ')'),
         dimensions_,
         value_.component(d)
     );
@@ -474,7 +474,7 @@ Foam::sqr(const dimensioned<Type>& dt)
 {
     return dimensioned<typename outerProduct<Type, Type>::type>
     (
-        "sqr(" + dt.name() + ')',
+        word("sqr(", dt.name(), ')'),
         sqr(dt.dimensions()),
         sqr(dt.value())
     );
@@ -486,7 +486,7 @@ Foam::dimensioned<Foam::scalar> Foam::magSqr(const dimensioned<Type>& dt)
 {
     return dimensioned<scalar>
     (
-        "magSqr(" + dt.name() + ')',
+        word("magSqr(", dt.name(), ')'),
         magSqr(dt.dimensions()),
         magSqr(dt.value())
     );
@@ -498,7 +498,7 @@ Foam::dimensioned<Foam::scalar> Foam::mag(const dimensioned<Type>& dt)
 {
     return dimensioned<scalar>
     (
-        "mag(" + dt.name() + ')',
+        word("mag(", dt.name(), ')'),
         dt.dimensions(),
         mag(dt.value())
     );
@@ -514,7 +514,7 @@ Foam::dimensioned<Type> Foam::cmptMultiply
 {
     return dimensioned<Type>
     (
-        "cmptMultiply(" + dt1.name() + ',' + dt2.name() + ')',
+        word("cmptMultiply(", dt1.name(), ',', dt2.name(), ')'),
         cmptMultiply(dt1.dimensions(), dt2.dimensions()),
         cmptMultiply(dt1.value(), dt2.value())
     );
@@ -530,7 +530,7 @@ Foam::dimensioned<Type> Foam::cmptDivide
 {
     return dimensioned<Type>
     (
-        "cmptDivide(" + dt1.name() + ',' + dt2.name() + ')',
+        word("cmptDivide(", dt1.name(), ',', dt2.name(), ')'),
         cmptDivide(dt1.dimensions(), dt2.dimensions()),
         cmptDivide(dt1.value(), dt2.value())
     );
@@ -553,7 +553,7 @@ Foam::dimensioned<Type> Foam::max
 
     return dimensioned<Type>
     (
-        "max(" + dt1.name() + ',' + dt2.name() + ')',
+        word("max(", dt1.name(), ',', dt2.name(), ')'),
         dt1.dimensions(),
         max(dt1.value(), dt2.value())
     );
@@ -576,7 +576,7 @@ Foam::dimensioned<Type> Foam::min
 
     return dimensioned<Type>
     (
-        "min(" + dt1.name() + ',' + dt2.name() + ')',
+        word("min(", dt1.name(), ',', dt2.name(), ')'),
         dt1.dimensions(),
         min(dt1.value(), dt2.value())
     );
@@ -670,7 +670,7 @@ Foam::dimensioned<Type> Foam::operator+
 {
     return dimensioned<Type>
     (
-        '(' + dt1.name() + '+' + dt2.name() + ')',
+        word('(', dt1.name(), '+', dt2.name(), ')'),
         dt1.dimensions() + dt2.dimensions(),
         dt1.value() + dt2.value()
     );
@@ -698,7 +698,7 @@ Foam::dimensioned<Type> Foam::operator-
 {
     return dimensioned<Type>
     (
-        '(' + dt1.name() + '-' + dt2.name() + ')',
+        word('(', dt1.name(), '-', dt2.name(), ')'),
         dt1.dimensions() - dt2.dimensions(),
         dt1.value() - dt2.value()
     );
@@ -714,7 +714,7 @@ Foam::dimensioned<Type> Foam::operator*
 {
     return dimensioned<Type>
     (
-        '(' + ds.name() + '*' + dt.name() + ')',
+        word('(', ds.name(), '*', dt.name(), ')'),
         ds.dimensions() * dt.dimensions(),
         ds.value() * dt.value()
     );
@@ -730,7 +730,7 @@ Foam::dimensioned<Type> Foam::operator/
 {
     return dimensioned<Type>
     (
-        '(' + dt.name() + '|' + ds.name() + ')',
+        word('(', dt.name(), '|', ds.name(), ')'),
         dt.dimensions()/ds.dimensions(),
         dt.value()/ds.value()
     );
@@ -749,7 +749,7 @@ Foam::operator op                                                              \
 {                                                                              \
     return dimensioned<typename product<Type1, Type2>::type>                   \
     (                                                                          \
-        '(' + dt1.name() + #op + dt2.name() + ')',                             \
+        word('(', dt1.name(), #op, dt2.name(), ')'),                           \
         dt1.dimensions() op dt2.dimensions(),                                  \
         dt1.value() op dt2.value()                                             \
     );                                                                         \
@@ -765,7 +765,7 @@ Foam::operator op                                                              \
 {                                                                              \
     return dimensioned<typename product<Type, Form>::type>                     \
     (                                                                          \
-        '(' + dt1.name() + #op + name(t2) + ')',                               \
+        word('(', dt1.name(), #op, name(t2), ')'),                             \
         dt1.dimensions(),                                                      \
         dt1.value() op static_cast<const Form&>(t2)                            \
     );                                                                         \
@@ -781,7 +781,7 @@ Foam::operator op                                                              \
 {                                                                              \
     return dimensioned<typename product<Form, Type>::type>                     \
     (                                                                          \
-        '(' + name(t1) + #op + dt2.name() + ')',                               \
+        word('(', name(t1), #op, dt2.name(), ')'),                             \
         dt2.dimensions(),                                                      \
         static_cast<const Form&>(t1) op dt2.value()                            \
     );                                                                         \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,15 +50,15 @@ inline void Foam::word::stripInvalid()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::word::word(const word& w)
-:
-    string(w)
-{}
-
-
 inline Foam::word::word()
 :
     string()
+{}
+
+
+inline Foam::word::word(const word& w)
+:
+    string(w)
 {}
 
 
@@ -110,6 +110,22 @@ inline Foam::word::word
 }
 
 
+template<class Str, class Str1, class Str2, class... Strs>
+inline Foam::word::word
+(
+    const Str& str,
+    const Str1& str1,
+    const Str2& str2,
+    Strs const&... strs
+)
+:
+    word(str, false)
+{
+    Append(*this, str1);
+    Append(*this, str2, strs...);
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline bool Foam::word::valid(char c)
@@ -132,6 +148,15 @@ inline Foam::word Foam::word::capitalise() const
 {
     word w(*this);
     w[0] = toupper(w[0]);
+    return w;
+}
+
+
+template <class Str, class... Strs>
+inline Foam::word Foam::word::cat(const Str& a, Strs const&... strs)
+{
+    word w(a);
+    Append(w, strs...);
     return w;
 }
 

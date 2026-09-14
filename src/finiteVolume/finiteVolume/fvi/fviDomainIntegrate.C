@@ -36,7 +36,7 @@ Foam::dimensioned<Type> Foam::fvi::domainIntegrate
 {
     return dimensioned<Type>
     (
-        "domainIntegrate(" + vf.name() + ')',
+        word("domainIntegrate(", vf.name(), ')'),
         dimensions::volume*vf.dimensions(),
         gSum(vf.mesh().V().primitiveField()*vf.primitiveField())
     );
@@ -62,7 +62,7 @@ Foam::ElementType<Expression> Foam::fvi::domainIntegrate(const Expression& e)
 
     return ElementType<Expression>
     (
-        "domainIntegrate(" + expression::name(e) + ')',
+        word("domainIntegrate(", expression::name(e), ')'),
         dimensions::volume*expression::access(e, dimensions::invalid),
         gSum
         (

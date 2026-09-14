@@ -440,7 +440,7 @@ void Foam::phaseSystem::solve
                         (
                             phase.phi()(),
                             alpha,
-                            "div(phi," + alpha.name() + ')'
+                            word("div(phi,", alpha.name(), ')')
                         ),
                         phase.alphaPhi()().boundary().types()
                     )
@@ -482,9 +482,8 @@ void Foam::phaseSystem::solve
 
                             const word phirScheme
                             (
-                                "div(phir,"
-                              + alpha2.name() + ',' + alpha.name()
-                              + ')'
+                                "div(phir,", alpha2.name(), ',',
+                                alpha.name(), ')'
                             );
 
                             alphaPhi += fvc::flux

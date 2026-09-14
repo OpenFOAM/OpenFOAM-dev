@@ -35,7 +35,7 @@ namespace Foam
 
 //- Interpolate selected fields (given by indices and corresponding weights)
 //  (boundary type becomes calculated). Fields stored per index. Field gets name
-//  "uniformInterpolate(" + fld.name() + ')'.
+//  word("uniformInterpolate(", fld.name(), ')').
 template<class GeoField>
 tmp<GeoField> uniformInterpolate
 (

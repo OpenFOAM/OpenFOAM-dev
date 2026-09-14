@@ -50,7 +50,7 @@ average(const SurfaceField<Type>& ssf)
     (
         VolInternalField<Type>::New
         (
-            "average("+ssf.name()+')',
+            word("average(", ssf.name(), ')'),
             mesh,
             dimensioned<Type>("0", ssf.dimensions(), Zero)
         )

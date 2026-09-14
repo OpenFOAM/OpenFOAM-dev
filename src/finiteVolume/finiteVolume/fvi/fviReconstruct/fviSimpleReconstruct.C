@@ -59,7 +59,7 @@ reconstruct
     (
         VolInternalField<GradType>::New
         (
-            "reconstruct("+ssf.name()+')',
+            word("reconstruct(", ssf.name(), ')'),
             mesh,
             dimensioned<GradType>
             (

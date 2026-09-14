@@ -38,7 +38,7 @@ Foam::word Foam::Lagrangian::ddtSchemes::CrankNicolson<Type>::S0Name
     const LagrangianSubSubField<Type>& psi
 ) const
 {
-    return typedName("S0(" + psi.mesh().complete(psi.name()) + ")");
+    return typedName(word("S0(", psi.mesh().complete(psi.name()), ')'));
 }
 
 
@@ -48,7 +48,7 @@ Foam::word Foam::Lagrangian::ddtSchemes::CrankNicolson<Type>::deltaTSp0Name
     const LagrangianSubSubField<Type>& psi
 ) const
 {
-    return typedName("deltaTSp0(" + psi.mesh().complete(psi.name()) + ")");
+    return typedName(word("deltaTSp0(", psi.mesh().complete(psi.name()), ')'));
 }
 
 

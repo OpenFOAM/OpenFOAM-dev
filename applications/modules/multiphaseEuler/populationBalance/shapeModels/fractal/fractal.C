@@ -230,7 +230,7 @@ void Foam::populationBalance::shapeModels::fractal::solve()
         (
             IOobject::groupName
             (
-                alpha.member() + fi.member().capitalise() + "Phi",
+                word(alpha.member(), fi.member().capitalise(), "Phi"),
                 alpha.group()
             ),
             max(fvc::interpolate(fi, "fi"), small)*phase.alphaPhi()

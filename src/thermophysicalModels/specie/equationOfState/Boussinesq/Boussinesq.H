@@ -166,9 +166,11 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                "Boussinesq<"
-              + word(Specie::typeName_()) + '>';
+            return word
+            (
+                "Boussinesq<",
+                word(Specie::typeName_()), '>'
+            );
         }
 
 

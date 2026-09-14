@@ -44,7 +44,7 @@ tmp<DimensionedField<tensor, GeoMesh, Field>> inv
     (
         DimensionedField<tensor, GeoMesh, Field>::New
         (
-            "inv(" + dtf.name() + ',' + name(solutionD) + ')',
+            word("inv(", dtf.name(), ',', name(solutionD), ')'),
             dtf.mesh(),
             inv(dtf.dimensions())
         )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::tmp<Foam::LagrangianSubField<Type>> Foam::Lagrangianc::Ddt
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", psi.name(), ')'))
         ).ref().LagrangiancDdt(psi);
 }
 
@@ -60,7 +60,7 @@ Foam::tmp<Foam::LagrangianSubField<Type>> Foam::Lagrangianc::Ddt
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + m.name() + ',' + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", m.name(), ',', psi.name(), ')'))
         ).ref().LagrangiancDdt(m, psi);
 }
 
@@ -77,7 +77,7 @@ Foam::tmp<Foam::LagrangianSubField<Type>> Foam::Lagrangianc::deltaTddt0
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", psi.name(), ')'))
         ).ref().LagrangiancdeltaTddt0(psi);
 }
 
@@ -95,7 +95,7 @@ Foam::tmp<Foam::LagrangianSubField<Type>> Foam::Lagrangianc::deltaTddt0
         Lagrangian::ddtScheme<Type>::New
         (
             mesh,
-            mesh.schemes().ddt("ddt(" + m.name() + ',' + psi.name() + ')')
+            mesh.schemes().ddt(word("ddt(", m.name(), ',', psi.name(), ')'))
         ).ref().LagrangiancdeltaTddt0(m, psi);
 }
 

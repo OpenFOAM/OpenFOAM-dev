@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ laplacian
     const VolField<Type>& vf
 )
 {
-    return fvc::laplacian(vf, "laplacian(" + vf.name() + ')');
+    return fvc::laplacian(vf, word("laplacian(", vf.name(), ')'));
 }
 
 
@@ -273,7 +273,7 @@ laplacian
     (
         gamma,
         vf,
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')
     );
 }
 
@@ -290,7 +290,7 @@ laplacian
     (
         tgamma,
         vf,
-        "laplacian(" + tgamma().name() + ',' + vf.name() + ')'
+        word("laplacian(", tgamma().name(), ',', vf.name(), ')')
     );
 }
 
@@ -307,7 +307,7 @@ laplacian
     (
         gamma,
         tvf,
-        "laplacian(" + gamma.name() + ',' + tvf().name() + ')'
+        word("laplacian(", gamma.name(), ',', tvf().name(), ')')
     );
 }
 
@@ -324,7 +324,7 @@ laplacian
     (
         tgamma,
         tvf,
-        "laplacian(" + tgamma().name() + ',' + tvf().name() + ')'
+        word("laplacian(", tgamma().name(), ',', tvf().name(), ')')
     );
 }
 
@@ -414,7 +414,7 @@ laplacian
     (
         gamma,
         vf,
-        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+        word("laplacian(", gamma.name(), ',', vf.name(), ')')
     );
 }
 

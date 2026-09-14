@@ -80,7 +80,7 @@ backwardDdtScheme<Type>::fviDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+dt.name()+')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_();
@@ -127,7 +127,7 @@ backwardDdtScheme<Type>::fviDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+vf.name()+')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -178,7 +178,7 @@ backwardDdtScheme<Type>::fviDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -229,7 +229,7 @@ backwardDdtScheme<Type>::fviDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -282,7 +282,10 @@ backwardDdtScheme<Type>::fviDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -336,7 +339,7 @@ backwardDdtScheme<Type>::fvcDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+dt.name()+')');
+    const word ddtName("ddt(", dt.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_();
@@ -400,7 +403,7 @@ backwardDdtScheme<Type>::fvcDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+vf.name()+')');
+    const word ddtName("ddt(", vf.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -459,7 +462,7 @@ backwardDdtScheme<Type>::fvcDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -518,7 +521,7 @@ backwardDdtScheme<Type>::fvcDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+rho.name()+','+vf.name()+')');
+    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -581,7 +584,10 @@ backwardDdtScheme<Type>::fvcDdt
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
-    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
+    const word ddtName
+    (
+        "ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'
+    );
 
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -893,7 +899,7 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
+        word("ddtCorr(", U.name(), ',', Uf.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), (mesh().Sf() & Uf.oldTime()))
        *rDeltaT
        *(
@@ -929,7 +935,7 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
 
     return fluxFieldType::New
     (
-        "ddtCorr(" + U.name() + ',' + phi.name() + ')',
+        word("ddtCorr(", U.name(), ',', phi.name(), ')'),
         this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
        *rDeltaT
        *(
@@ -980,7 +986,7 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 rhoU0,
@@ -1008,7 +1014,7 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
     {
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', rhoUf.name(), ')'),
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),
@@ -1079,7 +1085,7 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff(rhoU0, phi.oldTime(), rho.oldTime())
            *rDeltaT
            *(
@@ -1100,7 +1106,7 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
     {
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+            word("ddtCorr(", rho.name(), ',', U.name(), ',', phi.name(), ')'),
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime(), rho.oldTime())
            *rDeltaT
            *(
@@ -1157,9 +1163,11 @@ backwardDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr("
-          + alpha.name() + rho.name() + ',' + U.name() + ',' + Uf.name()
-          + ')',
+            word
+            (
+                "ddtCorr(",
+                alpha.name(), rho.name(), ',', U.name(), ',', Uf.name(), ')'
+            ),
             this->fvcDdtPhiCoeff(U.oldTime(), mesh().Sf() & Uf.oldTime())
            *rDeltaT
            *(
@@ -1223,9 +1231,11 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr("
-          + alpha.name() + rho.name() + ',' + U.name() + ',' + phi.name()
-          + ')',
+            word
+            (
+                "ddtCorr(",
+                alpha.name(), rho.name(), ',', U.name(), ',', phi.name(), ')'
+            ),
             this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
            *rDeltaT
            *(

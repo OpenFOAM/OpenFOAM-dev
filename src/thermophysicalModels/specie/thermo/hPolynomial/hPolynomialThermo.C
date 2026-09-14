@@ -56,7 +56,7 @@ Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
     (
         subDict.lookup<FixedLaurentPolynomial<scalar, 0, PolySize>>
         (
-            "CpCoeffs<" + Foam::name(PolySize) + '>',
+            word("CpCoeffs<", Foam::name(PolySize), '>'),
             Function1s::unitSets
             (
                 {dimensions::temperature, dimensions::specificHeatCapacity}
@@ -97,7 +97,7 @@ void Foam::hPolynomialThermo<EquationOfState, PolySize>::write
         (
             "hf", hf_,
             "sf", sf_,
-            word("CpCoeffs<" + Foam::name(PolySize) + '>'), CpCoeffs_
+            word(word("CpCoeffs<", Foam::name(PolySize), '>')), CpCoeffs_
         )
     );
 }

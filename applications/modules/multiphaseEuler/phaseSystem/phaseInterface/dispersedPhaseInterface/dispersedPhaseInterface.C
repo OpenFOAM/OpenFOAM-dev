@@ -105,7 +105,7 @@ Foam::dispersedPhaseInterface::~dispersedPhaseInterface()
 
 Foam::word Foam::dispersedPhaseInterface::name() const
 {
-    return dispersed().name() + '_' + separator() + '_' + continuous().name();
+    return word(dispersed().name(), '_', separator(), '_', continuous().name());
 }
 
 

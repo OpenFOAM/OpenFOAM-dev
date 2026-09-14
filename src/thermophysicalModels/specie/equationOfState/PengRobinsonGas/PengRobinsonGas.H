@@ -170,7 +170,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "PengRobinsonGas<" + word(Specie::typeName_()) + '>';
+            return word("PengRobinsonGas<", word(Specie::typeName_()), '>');
         }
 
         // Fundamental properties

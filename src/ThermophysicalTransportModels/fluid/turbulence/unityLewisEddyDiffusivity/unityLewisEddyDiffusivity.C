@@ -185,7 +185,7 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
     (
         IOobject::groupName
         (
-            "j(" + Yi.name() + ')',
+            word("j(", Yi.name(), ')'),
             this->thermo().phaseName()
         ),
        -fvc::interpolate(this->DEff(Yi)*this->alpha())*fvc::snGrad(Yi)

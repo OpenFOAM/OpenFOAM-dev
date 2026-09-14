@@ -383,7 +383,7 @@ Foam::meshToMesh0::interpolate
         (
             IOobject
             (
-                "interpolated(" + fromVf.name() + ')',
+                word("interpolated(", fromVf.name(), ')'),
                 toMesh_.time().name(),
                 toMesh_,
                 IOobject::NO_READ,

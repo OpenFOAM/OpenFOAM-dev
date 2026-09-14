@@ -94,7 +94,7 @@ public:
         //- Return the instantiated type name
         inline static word typeName()
         {
-            return "zonalMixture<" + ThermoType::typeName() + '>';
+            return word("zonalMixture<", ThermoType::typeName(), '>');
         }
 
         //- Return the table of zones

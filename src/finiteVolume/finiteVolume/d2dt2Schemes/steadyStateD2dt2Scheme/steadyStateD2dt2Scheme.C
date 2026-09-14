@@ -48,7 +48,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
 {
     return VolField<Type>::New
     (
-        "d2dt2("+vf.name()+')',
+        word("d2dt2(", vf.name(), ')'),
         mesh(),
         dimensioned<Type>
         (
@@ -70,7 +70,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
 {
     return VolField<Type>::New
     (
-        "d2dt2("+rho.name()+','+vf.name()+')',
+        word("d2dt2(", rho.name(), ',', vf.name(), ')'),
         mesh(),
         dimensioned<Type>
         (

@@ -41,7 +41,7 @@ Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
     (
         IOobject
         (
-            name + '_' + funcName,
+            word(name, '_', funcName),
             mesh.time().name(),
             mesh.db(),
             IOobject::NO_READ,
@@ -97,7 +97,7 @@ Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
     (
         IOobject
         (
-            name + '_' + funcName,
+            word(name, '_', funcName),
             mesh.time().name(),
             mesh.db(),
             IOobject::NO_READ,

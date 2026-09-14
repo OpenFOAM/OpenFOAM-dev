@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,33 +43,21 @@ inline Foam::functionName::functionName(const word& w)
 {}
 
 
-inline Foam::functionName::functionName
-(
-    const string& s,
-    const bool doStripInvalid
-)
+inline Foam::functionName::functionName(const string& s)
 :
-    word(s, doStripInvalid)
+    word(s)
 {}
 
 
-inline Foam::functionName::functionName
-(
-    const std::string& s,
-    const bool doStripInvalid
-)
+inline Foam::functionName::functionName(const std::string& s)
 :
-    word(s, doStripInvalid)
+    word(s)
 {}
 
 
-inline Foam::functionName::functionName
-(
-    const char* s,
-    const bool doStripInvalid
-)
+inline Foam::functionName::functionName(const char* s)
 :
-    word(s, doStripInvalid)
+    word(s)
 {}
 
 

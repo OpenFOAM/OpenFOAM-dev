@@ -415,7 +415,7 @@ void Maxwell<BasicMomentumTransportModel>::correct()
             (
                 alphaRhoPhi,
                 sigma,
-                "div(" + alphaRhoPhi.name() + ',' + sigma_.name() + ')'
+                word("div(", alphaRhoPhi.name(), ',', sigma_.name(), ')')
             )
          ==
             alpha()*rho()*P

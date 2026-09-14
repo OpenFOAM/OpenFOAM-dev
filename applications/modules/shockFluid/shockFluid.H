@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,15 +181,21 @@ private:
                 (
                     vf,
                     dir,
-                    "reconstruct("
-                  + (reconFieldName != word::null ? reconFieldName : vf.name())
-                  + ')'
+                    word
+                    (
+                        "reconstruct(",
+                        (
+                            reconFieldName != word::null
+                          ? reconFieldName
+                          : vf.name()
+                        ), ')'
+                    )
                 )
             );
 
             SurfaceField<Type>& sf = tsf.ref();
 
-            sf.rename(vf.name() + '_' + dir.name());
+            sf.rename(word(vf.name(), '_', dir.name()));
 
             return tsf;
         }

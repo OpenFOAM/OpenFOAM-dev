@@ -93,9 +93,11 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                uHomogeneousMixture::typeName
-              + '<' + ThermoType::typeName() + '>';
+            return word
+            (
+                uHomogeneousMixture::typeName,
+                '<', ThermoType::typeName(), '>'
+            );
         }
 
         inline const ThermoType& specieThermo(const label speciei) const

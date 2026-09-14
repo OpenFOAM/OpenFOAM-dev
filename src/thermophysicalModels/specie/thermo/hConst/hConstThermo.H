@@ -164,7 +164,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "hConst<" + EquationOfState::typeName() + '>';
+            return word("hConst<", EquationOfState::typeName(), '>');
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_

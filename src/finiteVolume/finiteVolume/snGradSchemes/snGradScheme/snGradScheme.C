@@ -111,7 +111,7 @@ snGradScheme<Type>::snGrad
     (
         SurfaceField<Type>::New
         (
-            snGradName + "("+vf.name()+')',
+            word(snGradName, '(', vf.name(), ')'),
             mesh,
             vf.dimensions()*tdeltaCoeffs().dimensions()
         )

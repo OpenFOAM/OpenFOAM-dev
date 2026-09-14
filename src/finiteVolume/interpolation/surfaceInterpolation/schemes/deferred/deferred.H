@@ -128,7 +128,7 @@ public:
         {
             return SurfaceField<Type>::New
             (
-                "deferred::correction(" + vf.name() + ')',
+                word("deferred::correction(", vf.name(), ')'),
                 tScheme_->interpolate(vf)
               - upwind<Type>::interpolate(vf, upwind<Type>::weights())
             );

@@ -143,7 +143,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "NSRDS<" + Thermo::typeName() + '>';
+            return word("NSRDS<", Thermo::typeName(), '>');
         }
 
         //- Dynamic viscosity [kg/m/s]

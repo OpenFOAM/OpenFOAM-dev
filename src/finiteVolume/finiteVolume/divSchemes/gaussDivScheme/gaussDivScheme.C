@@ -51,7 +51,7 @@ gaussDivScheme<Type>::fviDiv(const VolField<Type>& vf)
         )
     );
 
-    tDiv.ref().rename("div(" + vf.name() + ')');
+    tDiv.ref().rename(word("div(", vf.name(), ')'));
 
     return tDiv;
 }
@@ -69,7 +69,7 @@ gaussDivScheme<Type>::fvcDiv(const VolField<Type>& vf)
         )
     );
 
-    tDiv.ref().rename("div(" + vf.name() + ')');
+    tDiv.ref().rename(word("div(", vf.name(), ')'));
 
     return tDiv;
 }

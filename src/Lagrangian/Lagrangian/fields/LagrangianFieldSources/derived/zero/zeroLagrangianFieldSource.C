@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::zeroLagrangianFieldSource<Type>::sourceValue
     return
         LagrangianSubField<Type>::New
         (
-            this->internalField().name() + ":" + source.name() + "Coeff",
+            word(this->internalField().name(), ':', source.name(), "Coeff"),
             subMesh,
             dimensioned<Type>(this->internalDimensions(), Zero)
         );
@@ -64,7 +64,7 @@ Foam::zeroLagrangianFieldSource<Type>::internalCoeff
     return
         LagrangianSubScalarField::New
         (
-            this->internalField().name() + ":" + source.name() + "Coeff",
+            word(this->internalField().name(), ':', source.name(), "Coeff"),
             subMesh,
             dimensionedScalar(dimless, Zero)
         );
@@ -82,7 +82,7 @@ Foam::zeroLagrangianFieldSource<Type>::value
     return
         LagrangianSubField<Type>::New
         (
-            this->internalField().name() + ":" + injection.name() + "Coeff",
+            word(this->internalField().name(), ':', injection.name(), "Coeff"),
             subMesh,
             dimensioned<Type>(this->internalDimensions(), Zero)
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ dimensionedSymmTensor dimensionedSymmTensor::T() const
 {
     return dimensionedSymmTensor
     (
-        name()+".T()",
+        name() + ".T()",
         dimensions(),
         value().T()
     );
@@ -50,7 +50,7 @@ dimensionedSymmTensor sqr(const dimensionedVector& dv)
 {
     return dimensionedSymmTensor
     (
-        "sqr("+dv.name()+')',
+        word("sqr(", dv.name(), ')'),
         sqr(dv.dimensions()),
         sqr(dv.value())
     );
@@ -61,7 +61,7 @@ dimensionedSymmTensor innerSqr(const dimensionedSymmTensor& dt)
 {
     return dimensionedSymmTensor
     (
-        "innerSqr("+dt.name()+')',
+        word("innerSqr(", dt.name(), ')'),
         sqr(dt.dimensions()),
         innerSqr(dt.value())
     );
@@ -72,7 +72,7 @@ dimensionedScalar tr(const dimensionedSymmTensor& dt)
 {
     return dimensionedScalar
     (
-        "tr("+dt.name()+')',
+        word("tr(", dt.name(), ')'),
         dt.dimensions(),
         tr(dt.value())
     );
@@ -83,7 +83,7 @@ dimensionedSymmTensor symm(const dimensionedSymmTensor& dt)
 {
     return dimensionedSymmTensor
     (
-        "symm("+dt.name()+')',
+        word("symm(", dt.name(), ')'),
         dt.dimensions(),
         symm(dt.value())
     );
@@ -94,7 +94,7 @@ dimensionedSymmTensor twoSymm(const dimensionedSymmTensor& dt)
 {
     return dimensionedSymmTensor
     (
-        "twoSymm("+dt.name()+')',
+        word("twoSymm(", dt.name(), ')'),
         dt.dimensions(),
         twoSymm(dt.value())
     );
@@ -105,7 +105,7 @@ dimensionedSymmTensor dev(const dimensionedSymmTensor& dt)
 {
     return dimensionedSymmTensor
     (
-        "dev("+dt.name()+')',
+        word("dev(", dt.name(), ')'),
         dt.dimensions(),
         dev(dt.value())
     );
@@ -116,7 +116,7 @@ dimensionedSymmTensor dev2(const dimensionedSymmTensor& dt)
 {
     return dimensionedSymmTensor
     (
-        "dev2("+dt.name()+')',
+        word("dev2(", dt.name(), ')'),
         dt.dimensions(),
         dev2(dt.value())
     );
@@ -127,7 +127,7 @@ dimensionedScalar det(const dimensionedSymmTensor& dt)
 {
     return dimensionedScalar
     (
-        "det("+dt.name()+')',
+        word("det(", dt.name(), ')'),
         pow(dt.dimensions(), symmTensor::dim),
         det(dt.value())
     );
@@ -138,7 +138,7 @@ dimensionedSymmTensor cof(const dimensionedSymmTensor& dt)
 {
     return dimensionedSymmTensor
     (
-        "cof("+dt.name()+')',
+        word("cof(", dt.name(), ')'),
         pow(dt.dimensions(), symmTensor::dim - 1),
         cof(dt.value())
     );
@@ -149,7 +149,7 @@ dimensionedSymmTensor inv(const dimensionedSymmTensor& dt)
 {
     return dimensionedSymmTensor
     (
-        "inv("+dt.name()+')',
+        word("inv(", dt.name(), ')'),
         dimless/dt.dimensions(),
         inv(dt.value())
     );

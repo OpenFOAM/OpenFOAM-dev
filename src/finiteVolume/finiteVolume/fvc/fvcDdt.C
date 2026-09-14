@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         mesh,
-        mesh.schemes().ddt("ddt(" + dt.name() + ')')
+        mesh.schemes().ddt(word("ddt(", dt.name(), ')'))
     ).ref().fvcDdt(dt);
 }
 
@@ -65,7 +65,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().ddt("ddt(" + vf.name() + ')')
+        vf.mesh().schemes().ddt(word("ddt(", vf.name(), ')'))
     ).ref().fvcDdt(vf);
 }
 
@@ -81,7 +81,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt(word("ddt(", rho.name(), ',', vf.name(), ')'))
     ).ref().fvcDdt(rho, vf);
 }
 
@@ -97,7 +97,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         vf.mesh(),
-        vf.mesh().schemes().ddt("ddt(" + rho.name() + ',' + vf.name() + ')')
+        vf.mesh().schemes().ddt(word("ddt(", rho.name(), ',', vf.name(), ')'))
     ).ref().fvcDdt(rho, vf);
 }
 
@@ -128,10 +128,7 @@ ddt
         vf.mesh(),
         vf.mesh().schemes().ddt
         (
-            "ddt("
-          + alpha.name() + ','
-          + rho.name() + ','
-          + vf.name() + ')'
+            word("ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')')
         )
     ).ref().fvcDdt(alpha, rho, vf);
 }
@@ -186,7 +183,7 @@ ddt
     return fv::ddtScheme<Type>::New
     (
         sf.mesh(),
-        sf.mesh().schemes().ddt("ddt(" + sf.name() + ')')
+        sf.mesh().schemes().ddt(word("ddt(", sf.name(), ')'))
     ).ref().fvcDdt(sf);
 }
 
@@ -201,7 +198,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().schemes().ddt("ddt(" + U.name() + ')')
+        U.mesh().schemes().ddt(word("ddt(", U.name(), ')'))
     ).ref().fvcDdtUfCorr(U, Uf);
 }
 
@@ -216,7 +213,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().schemes().ddt("ddt(" + U.name() + ')')
+        U.mesh().schemes().ddt(word("ddt(", U.name(), ')'))
     ).ref().fvcDdtPhiCorr(U, phi);
 }
 
@@ -253,7 +250,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
         U.mesh(),
         U.mesh().schemes().ddt
         (
-            "ddt(" + rho.name() + U.name() + ')'
+            word("ddt(", rho.name(), U.name(), ')')
         )
     ).ref().fvcDdtUfCorr(rho, U, rhoUf);
 }
@@ -270,7 +267,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().schemes().ddt("ddt(" + rho.name() + ',' + U.name() + ')')
+        U.mesh().schemes().ddt(word("ddt(", rho.name(), ',', U.name(), ')'))
     ).ref().fvcDdtPhiCorr(rho, U, phi);
 }
 
@@ -309,7 +306,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
         U.mesh(),
         U.mesh().schemes().ddt
         (
-            "ddt(" + alpha.name() + rho.name() + ',' + U.name() + ')'
+            word("ddt(", alpha.name(), rho.name(), ',', U.name(), ')')
         )
     ).ref().fvcDdtUfCorr(alpha, rho, U, Uf);
 }
@@ -329,7 +326,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
         U.mesh(),
         U.mesh().schemes().ddt
         (
-            "ddt(" + alpha.name() + rho.name() + ',' + U.name() + ')'
+            word("ddt(", alpha.name(), rho.name(), ',', U.name(), ')')
         )
     ).ref().fvcDdtPhiCorr(alpha, rho, U, phi);
 }

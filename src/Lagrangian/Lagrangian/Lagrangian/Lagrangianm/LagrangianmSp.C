@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::Sp
         Lagrangian::SpScheme<Type, SpType>::New
         (
             mesh,
-            mesh.schemes().Sp("Sp(" + Sp.name() + ',' + psi.name() + ')')
+            mesh.schemes().Sp(word("Sp(", Sp.name(), ',', psi.name(), ')'))
         ).ref().LagrangianmSp(Sp, psi);
 }
 

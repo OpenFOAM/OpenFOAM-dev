@@ -137,7 +137,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
     volScalarField& Phi(this->Phi());
 
     // Construct the Phi Laplacian scheme names
-    const word PhiLaplacianScheme = "laplacian(" + pName_ + ")";
+    const word PhiLaplacianScheme("laplacian(", pName_, ')');
 
     // Debug writing. Write the material derivative of alpha, before and after
     // the solution of the potential and the correction of alphaPhi. Before
@@ -147,13 +147,16 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
     {
         const volInternalScalarField DDtAlpha
         (
-            "DDt("
-          + IOobject::groupName
+            word
             (
-                IOobject::member(alpha.name()) + Foam::name(i),
-                IOobject::group(alpha.name())
-            )
-          + ")",
+                "DDt(",
+                IOobject::groupName
+                (
+                    IOobject::member(alpha.name()) + Foam::name(i),
+                    IOobject::group(alpha.name())
+                ),
+                ')'
+            ),
             fvi::ddt(alpha) + fvi::div(alphaPhi)
         );
         Info<< type() << ": Writing " << DDtAlpha.name() << endl;
@@ -420,7 +423,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                 (
                     alphaPhi,
                     s_,
-                    "div(" + alphaPhi.name() + "," + schemesField_ + ")"
+                    word("div(", alphaPhi.name(), ',', schemesField_, ')')
                 )
              ==
                 fvModels.source(alpha, s_)
@@ -437,10 +440,13 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                     (
                         fvc::interpolate(alpha)*fvc::interpolate(D),
                         s_,
-                        "laplacian("
-                      + alphaPhi.name() + ","
-                      + D.name() + ","
-                      + schemesField_ + ")"
+                        word
+                        (
+                            "laplacian(",
+                            alphaPhi.name(), ',',
+                            D.name(), ',',
+                            schemesField_, ')'
+                        )
                     );
             }
 
@@ -464,7 +470,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                 (
                     alphaPhi,
                     s_,
-                    "div(" + alphaPhi.name() + "," + schemesField_ + ")"
+                    word("div(", alphaPhi.name(), ',', schemesField_, ')')
                 )
              ==
                 fvModels.source(alpha, rho, s_)
@@ -481,10 +487,13 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                     (
                         fvc::interpolate(alpha)*fvc::interpolate(rho*D),
                         s_,
-                        "laplacian("
-                      + alphaPhi.name() + ","
-                      + D.name() + ","
-                      + schemesField_ + ")"
+                        word
+                        (
+                            "laplacian(",
+                            alphaPhi.name(), ',',
+                            D.name(), ',',
+                            schemesField_, ')'
+                        )
                     );
             }
 

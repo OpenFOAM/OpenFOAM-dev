@@ -141,7 +141,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "NSRDS<" + word(Specie::typeName_()) + '>';
+            return word("NSRDS<", word(Specie::typeName_()), '>');
         }
 
 

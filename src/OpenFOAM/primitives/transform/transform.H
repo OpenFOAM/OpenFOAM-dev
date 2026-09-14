@@ -196,7 +196,7 @@ struct transformOp
 
     static word name(const word& t, const word& v)
     {
-        return "transform(" + t + ',' + v + ')';
+        return word("transform(", t, ',', v, ')');
     }
 
     template<class A, class B>
@@ -248,7 +248,7 @@ struct transformMaskOp
 
     static word name(const word& mt, const word& t)
     {
-        return "transform(" + mt + ',' + t + ')';
+        return word("transform(", mt, ',', t, ')');
     }
 
     static sphericalTensor value(const sphericalTensor& mt, const tensor& t)

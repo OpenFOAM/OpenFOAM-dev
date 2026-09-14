@@ -46,7 +46,7 @@ curl
     const VolField<Type>& vf
 )
 {
-    word nameCurlVf = "curl(" + vf.name() + ')';
+    word nameCurlVf = word("curl(", vf.name(), ')');
 
     // Gausses theorem curl
     // tmp<VolField<Type>> tcurlVf =

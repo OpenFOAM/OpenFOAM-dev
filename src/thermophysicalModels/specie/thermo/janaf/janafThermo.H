@@ -207,7 +207,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "janaf<" + EquationOfState::typeName() + '>';
+            return word("janaf<", EquationOfState::typeName(), '>');
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_

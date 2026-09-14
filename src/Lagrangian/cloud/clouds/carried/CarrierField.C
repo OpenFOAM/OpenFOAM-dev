@@ -229,7 +229,7 @@ Foam::CarrierFieldGradBase<Type>::interpolateGrad
         (
             IOobject
             (
-                subMesh.sub("grad(" + this->name_ + ')'),
+                subMesh.sub(word("grad(", this->name_, ')')),
                 mesh.time().name(),
                 mesh,
                 IOobject::NO_READ,

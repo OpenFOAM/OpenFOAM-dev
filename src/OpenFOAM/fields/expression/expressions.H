@@ -97,7 +97,7 @@ namespace Foam
                                                                                \
         static word name(const word& x)                                        \
         {                                                                      \
-            return #Func"(" + x + ')';                                         \
+            return word(#Func"(", x, ')');                                     \
         }                                                                      \
                                                                                \
         template<class Type>                                                   \

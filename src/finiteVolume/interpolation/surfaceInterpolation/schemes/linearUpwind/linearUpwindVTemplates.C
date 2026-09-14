@@ -99,7 +99,7 @@ Foam::linearUpwindV<Type>::correction
     (
         SurfaceField<Type>::New
         (
-            "linearUpwindV::correction(" + vf.name() + ')',
+            word("linearUpwindV::correction(", vf.name(), ')'),
             mesh,
             dimensioned<Type>
             (

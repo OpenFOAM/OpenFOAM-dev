@@ -65,7 +65,7 @@ Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
     {
         const word instantiatedType
         (
-            type + '<' + thermo.thermoName() + ">"
+            type, '<', thermo.thermoName(), '>'
         );
 
         Info<< "Instantiated as " << instantiatedType << endl;

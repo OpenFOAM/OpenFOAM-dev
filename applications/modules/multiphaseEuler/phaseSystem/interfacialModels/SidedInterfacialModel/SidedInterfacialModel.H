@@ -138,8 +138,8 @@ public:
     (                                                                          \
         SidedInterfacialModel<ModelType>,                                      \
         (                                                                      \
-            word(SidedInterfacialModel<ModelType>::typeName_()) + "<"          \
-          + ModelType::typeName + ">"                                          \
+            word(SidedInterfacialModel<ModelType>::typeName_(), '<',           \
+            ModelType::typeName, '>')                                          \
         ).c_str(),                                                             \
         DebugSwitch                                                            \
     );

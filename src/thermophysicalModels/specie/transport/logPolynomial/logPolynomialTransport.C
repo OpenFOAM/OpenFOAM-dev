@@ -40,7 +40,7 @@ Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
     (
         subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
-            "muLogCoeffs<" + Foam::name(PolySize) + '>',
+            word("muLogCoeffs<", Foam::name(PolySize), '>'),
             Function1s::unitSets({units::none, units::none})
         )
     ),
@@ -48,7 +48,7 @@ Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
     (
         subDict.lookup<FixedPolynomial<scalar, PolySize>>
         (
-            "kappaLogCoeffs<" + Foam::name(PolySize) + '>',
+            word("kappaLogCoeffs<", Foam::name(PolySize), '>'),
             Function1s::unitSets({units::none, units::none})
         )
     )
@@ -79,9 +79,9 @@ void Foam::logPolynomialTransport<Thermo, PolySize>::write(Ostream& os) const
         "transport",
         dictionary::entries
         (
-            word("muLogCoeffs<" + Foam::name(PolySize) + '>'),
+            word(word("muLogCoeffs<", Foam::name(PolySize), '>')),
             muLogCoeffs_,
-            word("kappaLogCoeffs<" + Foam::name(PolySize) + '>'),
+            word(word("kappaLogCoeffs<", Foam::name(PolySize), '>')),
             kappaLogCoeffs_
         )
     );

@@ -87,7 +87,7 @@ public:
         //  non-reacting and reacting solvers are compatible
         static word typeName()
         {
-            return "pureMixture<" + ThermoType::typeName() + '>';
+            return word("pureMixture<", ThermoType::typeName(), '>');
         }
 
         //- Return the table of species

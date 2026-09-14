@@ -125,7 +125,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "exponentialSolid<" + Thermo::typeName() + '>';
+            return word("exponentialSolid<", Thermo::typeName(), '>');
         }
 
         //- Is the thermal conductivity isotropic
