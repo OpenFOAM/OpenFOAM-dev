@@ -86,7 +86,7 @@ public:
     // Constructors
 
         //- Construct given the number of elements
-        regionSplitBase(const int size);
+        regionSplitBase(const label size);
 
         //- Disallow default bitwise copy construction
         regionSplitBase(const regionSplitBase&) = delete;
