@@ -32,8 +32,9 @@ Description
       the \c schemesField entry,
     - To employ the same solver settings as another field set
       the \c solverField entry,
-    - The \c diffusivity entry can be set to \c none, \c constant, \c viscosity
-    - A constant diffusivity is specified with the \c D entry,
+    - The \c diffusivity entry can be set to \c none, \c constant, \c field,
+      \c viscosity
+    - Constant and field diffusivities are specified with the \c D entry,
     - If a momentum transport model is available and the \c viscosity
       diffusivity option specified an effective diffusivity may be constructed
       from the laminar and turbulent viscosities using the diffusivity
@@ -120,11 +121,12 @@ public:
         {
             none,
             constant,
+            field,
             viscosity
         };
 
         //- Diffusivity type names
-        static const NamedEnum<diffusivityType, 3> diffusivityTypeNames_;
+        static const NamedEnum<diffusivityType, 4> diffusivityTypeNames_;
 
 
 private:
@@ -144,13 +146,16 @@ private:
         diffusivityType diffusivity_;
 
         //- Constant diffusivity coefficient (optional)
-        scalar D_;
+        dimensionedScalar D_;
+
+        //- Diffusivity field name (optional)
+        word Dname_;
 
         //- Laminar diffusivity coefficient (optional)
-        scalar alphal_;
+        dimensionedScalar alphal_;
 
         //- Turbulent diffusivity coefficient (optional)
-        scalar alphat_;
+        dimensionedScalar alphat_;
 
         //- Name of field whose schemes are used (optional)
         word schemesField_;

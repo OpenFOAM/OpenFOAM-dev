@@ -141,13 +141,16 @@ class phaseScalarTransport
         scalarTransport::diffusivityType diffusivity_;
 
         //- Constant diffusivity coefficient (optional)
-        scalar D_;
+        dimensionedScalar D_;
+
+        //- Diffusivity field name (optional)
+        word Dname_;
 
         //- Laminar diffusivity coefficient (optional)
-        scalar alphal_;
+        dimensionedScalar alphal_;
 
         //- Turbulent diffusivity coefficient (optional)
-        scalar alphat_;
+        dimensionedScalar alphat_;
 
         //- Residual volume-fraction
         scalar residualAlpha_;
