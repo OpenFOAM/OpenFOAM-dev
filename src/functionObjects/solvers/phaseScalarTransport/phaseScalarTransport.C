@@ -237,18 +237,12 @@ Foam::functionObjects::phaseScalarTransport::D
     const surfaceScalarField& alphaPhi
 ) const
 {
-    const word Dname("D" + s_.name());
-
-    if (diffusivity_ == scalarTransport::diffusivityType::constant)
+    if (diffusivity_ == scalarTransport::diffusivityType::field)
     {
-        return volScalarField::New
-        (
-            Dname,
-            mesh_,
-            dimensionedScalar(dimensions::kinematicViscosity, D_)
-        );
+        return mesh_.lookupObject<volScalarField>(Dname_);
     }
-    else
+
+    if (diffusivity_ == scalarTransport::diffusivityType::viscosity)
     {
         const word& nameNoPhase = momentumTransportModel::typeName;
         const word namePhase = IOobject::groupName(nameNoPhase, phaseName_);
@@ -265,10 +259,17 @@ Foam::functionObjects::phaseScalarTransport::D
 
         return volScalarField::New
         (
-            Dname,
+            "D" + s_.name(),
             alphal_*turbulence.nu() + alphat_*turbulence.nut()
         );
     }
+
+    FatalErrorInFunction
+        << "Diffusivity field requested for non-field diffusivity option '"
+        << scalarTransport::diffusivityTypeNames_[diffusivity_] << "'"
+        << exit(FatalError);
+
+    return tmp<volScalarField>();
 }
 
 
@@ -284,6 +285,10 @@ Foam::functionObjects::phaseScalarTransport::phaseScalarTransport
     fvMeshFunctionObject(name, runTime, dict),
     fieldName_(dict.lookup("field")),
     phaseName_(IOobject::group(fieldName_)),
+    D_("D", dimensions::kinematicViscosity, NaN),
+    Dname_(word::null),
+    alphal_("alphal", dimless, NaN),
+    alphat_("alphat", dimless, NaN),
     s_
     (
         IOobject
@@ -358,14 +363,19 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
             break;
 
         case scalarTransport::diffusivityType::constant:
-            dict.lookup("D") >> D_;
+            // This is used instead of D_.read(dict) in order to avoid
+            // successfully parsing a word as the name of the dimensioned type,
+            // and then mucking up the subsequent error message
+            D_.value() = dict.lookup<scalar>(D_.name(), D_.dimensions());
+            break;
+
+        case scalarTransport::diffusivityType::field:
+            Dname_ = dict.lookup<word>("D");
             break;
 
         case scalarTransport::diffusivityType::viscosity:
-            alphal_ =
-                dict.lookupBackwardsCompatible<scalar>({"alphal", "alphaD"});
-            alphat_ =
-                dict.lookupBackwardsCompatible<scalar>({"alphat", "alphaDt"});
+            alphal_.read(dict);
+            alphat_.read(dict);
             break;
     }
 
@@ -431,22 +441,28 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
               + fvi::ddt(residualAlpha_, s_)
             );
 
-            if (diffusivity_ != scalarTransport::diffusivityType::none)
+            if (diffusivity_ == scalarTransport::diffusivityType::constant)
             {
-                const volScalarField D(this->D(alphaPhi));
-
+                auto alphaD = fvc::interpolate(alpha)*D_;
                 fieldEqn -=
                     fvm::laplacian
                     (
-                        fvc::interpolate(alpha)*fvc::interpolate(D),
+                        alphaD,
                         s_,
-                        word
-                        (
-                            "laplacian(",
-                            alphaPhi.name(), ',',
-                            D.name(), ',',
-                            schemesField_, ')'
-                        )
+                        word("laplacian(", alpha.name(), ',',
+                        D_.name(), ',', schemesField_, ')')
+                    );
+            }
+            else if (diffusivity_ != scalarTransport::diffusivityType::none)
+            {
+                tmp<volScalarField> tD(this->D(alphaPhi));
+                fieldEqn -=
+                    fvm::laplacian
+                    (
+                        fvc::interpolate(alpha)*fvc::interpolate(tD()),
+                        s_,
+                        word("laplacian(", alpha.name(), ',',
+                        tD().name(), ',', schemesField_, ')')
                     );
             }
 
@@ -478,22 +494,28 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
               + fvi::ddt(residualAlpha_*rho, s_)
             );
 
-            if (diffusivity_ != scalarTransport::diffusivityType::none)
-            {
-                const volScalarField D(this->D(alphaPhi));
 
+            if (diffusivity_ == scalarTransport::diffusivityType::constant)
+            {
                 fieldEqn -=
                     fvm::laplacian
                     (
-                        fvc::interpolate(alpha)*fvc::interpolate(rho*D),
+                        fvc::interpolate(alpha)*fvc::interpolate(rho)*D_,
                         s_,
-                        word
-                        (
-                            "laplacian(",
-                            alphaPhi.name(), ',',
-                            D.name(), ',',
-                            schemesField_, ')'
-                        )
+                        word("laplacian(", alpha.name(), ',', rho.name(), ',',
+                        D_.name(), ',', schemesField_, ')')
+                    );
+            }
+            else if (diffusivity_ != scalarTransport::diffusivityType::none)
+            {
+                tmp<volScalarField> tD(this->D(alphaPhi));
+                fieldEqn -=
+                    fvm::laplacian
+                    (
+                        fvc::interpolate(alpha)*fvc::interpolate(rho*tD()),
+                        s_,
+                        word("laplacian(", alpha.name(), ',', rho.name(), ',',
+                        tD().name(), ',', schemesField_, ')')
                     );
             }
 

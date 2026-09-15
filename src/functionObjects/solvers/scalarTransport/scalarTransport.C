@@ -67,11 +67,12 @@ namespace functionObjects
 const Foam::NamedEnum
 <
     Foam::functionObjects::scalarTransport::diffusivityType,
-    3
+    4
 > Foam::functionObjects::scalarTransport::diffusivityTypeNames_
 {
     "none",
     "constant",
+    "field",
     "viscosity"
 };
 
@@ -81,28 +82,29 @@ const Foam::NamedEnum
 Foam::tmp<Foam::volScalarField>
 Foam::functionObjects::scalarTransport::D() const
 {
-    const word Dname("D" + fieldName_);
-
-    if (diffusivity_ == diffusivityType::constant)
+    if (diffusivity_ == diffusivityType::field)
     {
-        return volScalarField::New
-        (
-            Dname,
-            mesh_,
-            dimensionedScalar(Dname, dimensions::kinematicViscosity, D_)
-        );
+        return mesh_.lookupObject<volScalarField>(Dname_);
     }
-    else
+
+    if (diffusivity_ == diffusivityType::viscosity)
     {
         const momentumTransportModel& turbulence =
             mesh_.lookupType<momentumTransportModel>();
 
         return volScalarField::New
         (
-            Dname,
+            "D" + fieldName_,
             alphal_*turbulence.nu() + alphat_*turbulence.nut()
         );
     }
+
+    FatalErrorInFunction
+        << "Diffusivity field requested for non-field diffusivity option '"
+        << diffusivityTypeNames_[diffusivity_] << "'"
+        << exit(FatalError);
+
+    return tmp<volScalarField>();
 }
 
 
@@ -118,7 +120,10 @@ Foam::functionObjects::scalarTransport::scalarTransport
     fvMeshFunctionObject(name, runTime, dict),
     fieldName_(dict.lookupOrDefault<word>("field", "s")),
     diffusivity_(diffusivityType::none),
-    D_(0),
+    D_("D", dimensions::kinematicViscosity, NaN),
+    Dname_(word::null),
+    alphal_("alphal", dimless, NaN),
+    alphat_("alphal", dimless, NaN),
     s_
     (
         IOobject
@@ -183,12 +188,19 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
             break;
 
         case diffusivityType::constant:
-            dict.lookup("D") >> D_;
+            // This is used instead of D_.read(dict) in order to avoid
+            // successfully parsing a word as the name of the dimensioned type,
+            // and then mucking up the subsequent error message
+            D_.value() = dict.lookup<scalar>(D_.name(), D_.dimensions());
+            break;
+
+        case diffusivityType::field:
+            Dname_ = dict.lookup<word>("D");
             break;
 
         case diffusivityType::viscosity:
-            dict.lookup("alphal") >> alphal_;
-            dict.lookup("alphat") >> alphat_;
+            alphal_.read(dict);
+            alphat_.read(dict);
             break;
     }
 
@@ -252,19 +264,27 @@ bool Foam::functionObjects::scalarTransport::execute()
                     fvModels.source(s_)
                 );
 
-                if (diffusivity_ != diffusivityType::none)
+                if (diffusivity_ == diffusivityType::constant)
                 {
-                    const volScalarField D(this->D());
-
                     sEqn -=
                         fvm::laplacian
                         (
-                            D,
+                            D_,
                             s_,
-                            word
-                            (
-                                "laplacian(", D.name(), ',', schemesField_, ')'
-                            )
+                            word("laplacian(", D_.name(), ',',
+                            schemesField_, ')')
+                        );
+                }
+                else if (diffusivity_ != diffusivityType::none)
+                {
+                    tmp<volScalarField> tD(this->D());
+                    sEqn -=
+                        fvm::laplacian
+                        (
+                            tD(),
+                            s_,
+                            word("laplacian(", tD().name(), ',',
+                            schemesField_, ')')
                         );
                 }
 
@@ -293,16 +313,27 @@ bool Foam::functionObjects::scalarTransport::execute()
                 fvModels.source(rho, s_)
             );
 
-            if (diffusivity_ != diffusivityType::none)
+            if (diffusivity_ == diffusivityType::constant)
             {
-                const volScalarField D(this->D());
-
                 sEqn -=
                     fvm::laplacian
                     (
-                        rho*D,
+                        rho*D_,
                         s_,
-                        word("laplacian(", D.name(), ',', schemesField_, ')')
+                        word("laplacian(", rho.name(), ',', D_.name(), ',',
+                        schemesField_, ')')
+                    );
+            }
+            else if (diffusivity_ != diffusivityType::none)
+            {
+                tmp<volScalarField> tD(this->D());
+                sEqn -=
+                    fvm::laplacian
+                    (
+                        rho*tD(),
+                        s_,
+                        word("laplacian(", rho.name(), ',', tD().name(), ',',
+                        schemesField_, ')')
                     );
             }
 
@@ -365,18 +396,34 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
     // and boundedness of the explicit advection
     if (diffusivity_ != diffusivityType::none)
     {
-        const volScalarField D(this->D());
-
         fvScalarMatrix sEqn
         (
             fvm::ddt(s_) - fvi::ddt(s_)
-          - fvm::laplacian
-            (
-                D,
-                s_,
-                word("laplacian(", D.name(), ',', schemesField_, ')')
-            )
         );
+
+        if (diffusivity_ == diffusivityType::constant)
+        {
+            sEqn -=
+                fvm::laplacian
+                (
+                    D_,
+                    s_,
+                    word("laplacian(", D_.name(), ',',
+                    schemesField_, ')')
+                );
+        }
+        else
+        {
+            tmp<volScalarField> tD(this->D());
+            sEqn -=
+                fvm::laplacian
+                (
+                    tD(),
+                    s_,
+                    word("laplacian(", tD().name(), ',',
+                    schemesField_, ')')
+                );
+        }
 
         sEqn.solve(controls.subDict("diffusivity"));
 
