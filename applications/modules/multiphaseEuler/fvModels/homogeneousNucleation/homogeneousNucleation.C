@@ -186,12 +186,6 @@ Foam::fv::homogeneousNucleation::mDot() const
 Foam::tmp<Foam::volInternalScalarField>
 Foam::fv::homogeneousNucleation::tau() const
 {
-    static const dimensionedScalar mDotRootVSmall
-    (
-        dimensions::density/dimensions::time,
-        rootVSmall
-    );
-
     const ThermoRefPair<multicomponentThermo> multicomponentThermos =
         this->multicomponentThermos(true, false);
 
@@ -208,7 +202,9 @@ Foam::fv::homogeneousNucleation::tau() const
         Yi*WSolution/thermoSolution.Wi(specieis().first())
     );
 
-    return Xi*rhoSolution/max(mDotByAlphaSolution_, mDotRootVSmall);
+    return
+        max(Xi, rootVSmall)
+       /max(mDotByAlphaSolution_/rhoSolution, dimensions::rate(vSmall));
 }
 
 
