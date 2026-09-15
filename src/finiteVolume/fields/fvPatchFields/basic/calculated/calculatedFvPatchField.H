@@ -166,6 +166,9 @@ public:
 
         //- Inherit assignment
         using fvPatchField<Type>::operator=;
+
+        //- Inherit forced assignment
+        using fvPatchField<Type>::operator==;
 };
 
 

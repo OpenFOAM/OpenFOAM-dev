@@ -438,7 +438,7 @@ void Maxwell<BasicMomentumTransportModel>::correct()
             sigmaSum += sigmas_[modei];
         }
 
-        sigma_ == sigmaSum;
+        sigma_ = sigmaSum;
     }
 }
 

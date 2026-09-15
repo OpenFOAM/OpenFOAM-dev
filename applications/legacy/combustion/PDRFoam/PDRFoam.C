@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 
                 if (!ign.ignited())
                 {
-                    thermo.heu() == thermo.he();
+                    thermo.heu() = thermo.he();
                 }
 
                 #include "pEqn.H"
