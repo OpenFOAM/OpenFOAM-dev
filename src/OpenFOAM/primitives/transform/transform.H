@@ -189,6 +189,9 @@ inline dimensionSet transform
 
 struct transformOp
 {
+    static constexpr const char* prefix = "transform(";
+    static const char infix = ',';
+    static const char postfix = ')';
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
@@ -241,6 +244,9 @@ inline symmTensor transformMask<symmTensor>(const tensor& t)
 
 struct transformMaskOp
 {
+    static constexpr const char* prefix = "transformMask(";
+    static const char infix = ',';
+    static const char postfix = ')';
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
@@ -248,7 +254,7 @@ struct transformMaskOp
 
     static word name(const word& mt, const word& t)
     {
-        return word("transform(", mt, ',', t, ')');
+        return word("transformMask(", mt, ',', t, ')');
     }
 
     static sphericalTensor value(const sphericalTensor& mt, const tensor& t)

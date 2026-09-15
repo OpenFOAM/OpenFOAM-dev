@@ -47,13 +47,11 @@ namespace Foam
 
 struct nopOp
 {
+    static const word::Null prefix;
+    static const word::Null postfix;
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
-
-    static word name(const word& x)
-    {
-        return x;
-    }
 
     template<class X>
     static X value(const X& x)
@@ -74,12 +72,10 @@ struct nopOp
 
 struct promoteOp
 {
-    static const signed char precedence = 2;
+    static const word::Null prefix;
+    static const word::Null postfix;
 
-    static word name(const word& x)
-    {
-        return x;
-    }
+    static const signed char precedence = 2;
 
     template<class X>
     static X value(const X& x)
@@ -100,12 +96,10 @@ struct promoteOp
 
 struct negateOp
 {
-    static const signed char precedence = 2;
+    static const char prefix = '-';
+    static const word::Null postfix;
 
-    static word name(const word& x)
-    {
-        return '-' + x;
-    }
+    static const signed char precedence = 2;
 
     template<class X>
     static auto value(const X& x)
@@ -126,12 +120,10 @@ struct negateOp
 
 struct notOp
 {
-    static const signed char precedence = 2;
+    static const char prefix = '!';
+    static const word::Null postfix;
 
-    static word name(const word& x)
-    {
-        return '!' + x;
-    }
+    static const signed char precedence = 2;
 
     template<class X>
     static auto value(const X& x)
@@ -152,13 +144,11 @@ struct notOp
 #define UnaryFunctionOp(Func)                                                  \
     struct Func##Op                                                            \
     {                                                                          \
+        static constexpr const char* prefix = #Func"(";                        \
+        static const char postfix = ')';                                       \
+                                                                               \
         static const signed char precedence =                                  \
             expression::Operation<void>::precedence;                           \
-                                                                               \
-        static word name(const word& x)                                        \
-        {                                                                      \
-            return word(#Func"(", x, ')');                                     \
-        }                                                                      \
                                                                                \
         template<class Type>                                                   \
         static auto value(const Type x)                                        \
@@ -187,6 +177,10 @@ UnaryFunctionOp(cmptMag)
 
 struct addOp
 {
+    static const word::Null prefix;
+    static const char infix = '+';
+    static const word::Null postfix;
+
     static const signed char precedence = 0;
 
     static const bool associative = true;
@@ -194,11 +188,6 @@ struct addOp
     template<class A, class B>
     using EnableIfDefinedFor =
         VoidT<decltype(std::declval<A>() + std::declval<B>())>;
-
-    static word name(const word& a, const word& b)
-    {
-        return word(a, '+', b);
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -233,6 +222,10 @@ using sumOp = addOp;
 
 struct subtractOp
 {
+    static const word::Null prefix;
+    static const char infix = '-';
+    static const word::Null postfix;
+
     static const signed char precedence = 0;
 
     static const bool associative = false;
@@ -240,11 +233,6 @@ struct subtractOp
     template<class A, class B>
     using EnableIfDefinedFor =
         VoidT<decltype(std::declval<A>() - std::declval<B>())>;
-
-    static word name(const word& a, const word& b)
-    {
-        return word(a, '-', b);
-    }
 
     template<class A, class B>
     auto operator()(const A& a, const B& b) const
@@ -265,6 +253,10 @@ struct subtractOp
 
 struct multiplyOp
 {
+    static const word::Null prefix;
+    static const char infix = '*';
+    static const word::Null postfix;
+
     static const signed char precedence = 1;
 
     static const bool associative = true;
@@ -272,11 +264,6 @@ struct multiplyOp
     template<class A, class B>
     using EnableIfDefinedFor =
         VoidT<decltype(std::declval<A>()*std::declval<B>())>;
-
-    static word name(const word& a, const word& b)
-    {
-        return word(a, '*', b);
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -297,6 +284,10 @@ struct multiplyOp
 
 struct divideOp
 {
+    static const word::Null prefix;
+    static const char infix = '|';
+    static const word::Null postfix;
+
     static const signed char precedence = 1;
 
     static const bool associative = false;
@@ -304,11 +295,6 @@ struct divideOp
     template<class A, class B>
     using EnableIfDefinedFor =
         VoidT<decltype(std::declval<A>()/std::declval<B>())>;
-
-    static word name(const word& a, const word& b)
-    {
-        return word(a, '|', b);
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -329,14 +315,13 @@ struct divideOp
 
 struct innerOp
 {
+    static const word::Null prefix;
+    static const char infix = '&';
+    static const word::Null postfix;
+
     static const signed char precedence = 1;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word(a, '&', b);
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -351,14 +336,13 @@ struct innerOp
 
 struct crossOp
 {
+    static const word::Null prefix;
+    static const char infix = '^';
+    static const word::Null postfix;
+
     static const signed char precedence = 1;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word(a, '^', b);
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -373,15 +357,14 @@ struct crossOp
 
 struct stabiliseOp
 {
+    static constexpr const char* prefix = "stabilise(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("stabilise(", a, ',', b, ')');
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -402,15 +385,14 @@ struct stabiliseOp
 
 struct maxOp
 {
+    static constexpr const char* prefix = "max(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("max(", a, ',', b, ')');
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -442,15 +424,14 @@ struct maxOp
 
 struct minOp
 {
+    static constexpr const char* prefix = "min(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("min(", a, ',', b, ')');
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -482,15 +463,14 @@ struct minOp
 
 struct minModOp
 {
+    static constexpr const char* prefix = "minMod(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("minMod(", a, ',', b, ')');
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -502,11 +482,6 @@ struct minModOp
     auto operator()(const A& a, const B& b) const
     {
         return minMod(a, b);
-    }
-
-    static word name(const word& x)
-    {
-        return word("minMod(", x, ')');
     }
 
     template<class X>
@@ -522,14 +497,13 @@ struct minModOp
 
 struct cmptMultiplyOp
 {
+    static constexpr const char* prefix = "cmptMultiply(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence = 1;
 
     static const bool associative = true;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("cmptMultiply(", a, ',', b, ')');
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -550,14 +524,13 @@ struct cmptMultiplyOp
 
 struct cmptDivideOp
 {
+    static constexpr const char* prefix = "cmptDivide(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence = 1;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("cmptDivide(", a, ',', b, ')');
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)
@@ -578,15 +551,14 @@ struct cmptDivideOp
 
 struct cmptPowOp
 {
+    static constexpr const char* prefix = "cmptPow(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("cmptPow(", a, ',', b, ')');
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)

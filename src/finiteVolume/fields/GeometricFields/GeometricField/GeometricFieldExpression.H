@@ -249,7 +249,16 @@ struct Name
     >
 >
 {
-    static word value
+    static word& append
+    (
+        word& name,
+        const GeometricField<Type, GeoMesh, PrimitiveField>& f
+    )
+    {
+        return name.append(f.name());
+    }
+
+    static const word& value
     (
         const GeometricField<Type, GeoMesh, PrimitiveField>& f
     )

@@ -341,17 +341,33 @@ struct Name
 {
     using nameX = Name<std::decay_t<X>>;
 
+    static word& append(word& name, const UnaryExpression<X, Op>& e)
+    {
+        name.append(Op::prefix);
+
+        if
+        (
+            Op::precedence != Operation<void>::precedence
+         && Operation<X>::precedence != Operation<void>::precedence
+         && Op::precedence > Operation<X>::precedence
+        )
+        {
+            name.append('(');
+            nameX::append(name, e.x);
+            name.append(')');
+        }
+        else
+        {
+            nameX::append(name, e.x);
+        }
+
+        return name.append(Op::postfix);
+    }
+
     static word value(const UnaryExpression<X, Op>& e)
     {
-        return
-            Op::name
-            (
-                Op::precedence != Operation<void>::precedence
-             && Operation<X>::precedence != Operation<void>::precedence
-             && Op::precedence > Operation<X>::precedence
-              ? word('(', nameX::value(e.x), ')')
-              : nameX::value(e.x)
-            );
+        word name;
+        return append(name, e);
     }
 };
 

@@ -87,7 +87,12 @@ struct Name
     EnableIfNotExpressionable<dimensioned<Type>>
 >
 {
-    static word value(const dimensioned<Type>& dt)
+    static word& append(word& name, const dimensioned<Type>& dt)
+    {
+        return name.append(dt.name());
+    }
+
+    static const word& value(const dimensioned<Type>& dt)
     {
         return dt.name();
     }

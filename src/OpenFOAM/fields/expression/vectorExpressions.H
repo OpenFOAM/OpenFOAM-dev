@@ -61,15 +61,13 @@ struct powProductOp;
 template<>
 struct powProductOp<0>
 {
+    static constexpr const char* prefix = "pow<0>(";
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& f)
-    {
-        return word("pow<0>(", f, ')');
-    }
 
     template<class Form, class Cmpt, direction Ncmpts>
     static typename powProduct<Form, 0>::type value
@@ -90,15 +88,13 @@ struct powProductOp<0>
 template<>
 struct powProductOp<1>
 {
+    static constexpr const char* prefix = "pow<1>(";
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& f)
-    {
-        return word("pow<1>(", f, ')');
-    }
 
     template<class Form, class Cmpt, direction Ncmpts>
     static typename powProduct<Form, 1>::type value
@@ -119,15 +115,13 @@ struct powProductOp<1>
 template<>
 struct powProductOp<2>
 {
+    static constexpr const char* prefix = "pow<2>(";
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& f)
-    {
-        return word("pow<2>(", f, ')');
-    }
 
     template<class Form, class Cmpt, direction Ncmpts>
     static typename powProduct<Form, 2>::type value
@@ -203,15 +197,14 @@ BinaryFunction(cmptDivide);
 
 struct componentOp
 {
+    static constexpr const char* prefix = "component(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& vs, const word& d)
-    {
-        return word("component(", vs, ',', d, ')');
-    }
 
     template<class VSType, class Dtype>
     static auto value(const VSType& vs, const Dtype& d)

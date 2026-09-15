@@ -145,6 +145,14 @@ inline Foam::word Foam::word::capitalise() const
 }
 
 
+template <class... Strs>
+inline Foam::word& Foam::word::append(Strs const&... strs)
+{
+    Append(*this, strs...);
+    return *this;
+}
+
+
 template <class Str, class... Strs>
 inline Foam::word Foam::word::cat(const Str& a, Strs const&... strs)
 {

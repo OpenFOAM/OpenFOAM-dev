@@ -93,6 +93,9 @@ public:
         //- An empty string
         static const string null;
 
+        //- An empty string type
+        struct Null {};
+
 
     //- Hashing function class, shared by all the derived classes
     class hash
@@ -298,6 +301,11 @@ public:
 
         inline void operator=(const string&);
         inline void operator=(string&&);
+
+        using std::string::operator+=;
+
+        inline void operator+=(const Null&)
+        {}
 };
 
 

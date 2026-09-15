@@ -45,15 +45,14 @@ namespace Foam
 
 struct powOp
 {
+    static constexpr const char* prefix = "pow(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("pow(", a, ',', b, ')');
-    }
 
     static scalar value(const scalar a, const float b)
     {
@@ -93,15 +92,14 @@ struct powOp
 
 struct integerPowOp
 {
+    static constexpr const char* prefix = "integerPow(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("integerPow(", a, ',', b, ')');
-    }
 
     static scalar value(const scalar a, const label b)
     {
@@ -115,15 +113,14 @@ struct integerPowOp
 
 struct integerRootOp
 {
+    static constexpr const char* prefix = "integerRoot(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("integerRoot(", a, ',', b, ')');
-    }
 
     static scalar value(const scalar a, const label b)
     {
@@ -188,15 +185,14 @@ BinaryEagerFunction(pow);
 
 struct atan2Op
 {
+    static constexpr const char* prefix = "atan2(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& a, const word& b)
-    {
-        return word("atan2(", a, ',', b, ')');
-    }
 
     static scalar value(const scalar a, const scalar b)
     {
@@ -213,15 +209,14 @@ BinaryFunction(atan2);
 
 struct jnOp
 {
+    static constexpr const char* prefix = "jn(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& n, const word& s)
-    {
-        return word("jn(", n, ',', s, ')');
-    }
 
     static scalar value(const int n, const scalar s)
     {
@@ -238,15 +233,14 @@ BinaryFunction(jn);
 
 struct ynOp
 {
+    static constexpr const char* prefix = "yn(";
+    static const char infix = ',';
+    static const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& n, const word& s)
-    {
-        return word("yn(", n, ',', s, ')');
-    }
 
     static scalar value(const int n, const scalar s)
     {

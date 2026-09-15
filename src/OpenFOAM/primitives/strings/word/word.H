@@ -121,6 +121,9 @@ public:
         //- Return the word with the first letter capitalised
         inline word capitalise() const;
 
+        template<class... Strs>
+        inline word& append(Strs const&... strs);
+
         template<class Str, class... Strs>
         inline static word cat(const Str& a, Strs const&... strs);
 

@@ -632,28 +632,57 @@ struct Name
     using nameA = Name<std::decay_t<A>>;
     using nameB = Name<std::decay_t<B>>;
 
+    static word& append(word& name, const BinaryExpression<A, B, Op>& e)
+    {
+        name.append(Op::prefix);
+
+        if
+        (
+            Op::precedence != Operation<void>::precedence
+         && Operation<A>::precedence != Operation<void>::precedence
+         && Op::precedence > Operation<A>::precedence
+        )
+        {
+            name.append('(');
+            nameA::append(name, e.a);
+            name.append(')');
+        }
+        else
+        {
+            nameA::append(name, e.a);
+        }
+
+        name.append(Op::infix);
+
+        if
+        (
+            Op::precedence != Operation<void>::precedence
+         && Operation<B>::precedence != Operation<void>::precedence
+         && (
+                Op::precedence > Operation<B>::precedence
+             || (
+                    Op::precedence == Operation<B>::precedence
+                 && !Op::associative
+                )
+            )
+        )
+        {
+            name.append('(');
+            nameB::append(name, e.b);
+            name.append(')');
+        }
+        else
+        {
+            nameB::append(name, e.b);
+        }
+
+        return name.append(Op::postfix);
+    }
+
     static word value(const BinaryExpression<A, B, Op>& e)
     {
-        return
-            Op::name
-            (
-                Op::precedence != Operation<void>::precedence
-             && Operation<A>::precedence != Operation<void>::precedence
-             && Op::precedence > Operation<A>::precedence
-              ? word('(', nameA::value(e.a), ')')
-              : nameA::value(e.a),
-                Op::precedence != Operation<void>::precedence
-             && Operation<B>::precedence != Operation<void>::precedence
-             && (
-                    Op::precedence > Operation<B>::precedence
-                 || (
-                        Op::precedence == Operation<B>::precedence
-                     && !Op::associative
-                    )
-                )
-              ? word('(', nameB::value(e.b), ')')
-              : nameB::value(e.b)
-            );
+        word name;
+        return append(name, e);
     }
 };
 

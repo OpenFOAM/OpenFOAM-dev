@@ -92,13 +92,11 @@ namespace Foam
 #define UnaryOp(Func)                                                          \
     struct Func##Op                                                            \
     {                                                                          \
+        static constexpr const char* prefix = #Func"(";                        \
+        static const char postfix = ')';                                       \
+                                                                               \
         static const signed char precedence =                                  \
             expression::Operation<void>::precedence;                           \
-                                                                               \
-        static word name(const word& x)                                        \
-        {                                                                      \
-            return word(#Func"(", x, ')');                                     \
-        }                                                                      \
                                                                                \
         template<class Type>                                                   \
         static auto value(const Type& x)                                       \

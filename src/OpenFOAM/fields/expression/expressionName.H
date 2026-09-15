@@ -78,22 +78,37 @@ struct Name;
 template<class Expression>
 struct Name<Expression, EnableIfNotExpressionable<Expression>>
 {
-    static word value(const Expression& e)
+    static word& append(word& name, const Expression& e)
     {
         OStringStream oss;
         oss << e;
-        return oss.str();
+        return name.append(oss.str());
+    }
+
+    static word value(const Expression& e)
+    {
+        word name;
+        return append(name, e);
     }
 };
 
 template<class Expression>
 struct Name<Expression, EnableIfExpressionable<Expression>>
 {
-    static word value(const Expression& f)
+    static word& append(word& name, const Expression& f)
     {
         std::ostringstream oss;
         oss << std::hex << reinterpret_cast<uintptr_t>(&(*f.begin()));
-        return word("[", typeName<Expression, word>(), ":", oss.str(), "]");
+        return name.append
+        (
+            '[', typeName<Expression, word>(), ':', oss.str(), ']'
+        );
+    }
+
+    static word value(const Expression& e)
+    {
+        word name;
+        return append(name, e);
     }
 };
 
@@ -102,7 +117,7 @@ struct Name<Expression, EnableIfExpressionable<Expression>>
 //- Function to get the name of an expression. More convenient than using the
 //  classes above directly, as the expression type is deduced.
 template<class Expression>
-word name(const Expression& e)
+auto name(const Expression& e)
 {
     return Name<Expression>::value(e);
 }
