@@ -94,17 +94,19 @@ inline Foam::string::string(const size_type len, const char c)
 {}
 
 
-template<class Str, class Str1, class... Strs>
+template<class Str1, class Str2, class Str3, class... Strs>
 inline Foam::string::string
 (
-    const Str& str,
     const Str1& str1,
+    const Str2& str2,
+    const Str3& str3,
     Strs const&... strs
 )
 :
-    string(str)
+    string(str1)
 {
-    Append(*this, str1, strs...);
+    Append(*this, str2);
+    Append(*this, str3, strs...);
 }
 
 

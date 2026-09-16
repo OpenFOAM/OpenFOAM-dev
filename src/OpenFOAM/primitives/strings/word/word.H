@@ -103,12 +103,12 @@ public:
         word(Istream&);
 
         //- Concatenating constructor
-        template<class Str, class Str1, class Str2, class... Strs>
+        template<class Str1, class Str2, class Str3, class... Strs>
         inline word
         (
-            const Str& str,
             const Str1& str1,
             const Str2& str2,
+            const Str3& str3,
             Strs const&... strs
         );
 
