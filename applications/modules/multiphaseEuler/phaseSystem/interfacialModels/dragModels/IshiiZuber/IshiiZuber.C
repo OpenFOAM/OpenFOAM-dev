@@ -73,7 +73,11 @@ Foam::dragModels::IshiiZuber::CdRe() const
     const volScalarField muMix
     (
         muc
-       *pow(max(1 - interface_.dispersed().alpha(), 1e-3), -2.5*muStar)
+       *pow
+        (
+            max(1 - interface_.dispersed().alpha(), scalar(1e-3)),
+            -scalar(2.5)*muStar
+        )
     );
 
     const volScalarField ReM(Re*muc/muMix);

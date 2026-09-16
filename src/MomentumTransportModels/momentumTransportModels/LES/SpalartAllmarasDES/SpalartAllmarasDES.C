@@ -27,6 +27,7 @@ License
 #include "fviGrad.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
+#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

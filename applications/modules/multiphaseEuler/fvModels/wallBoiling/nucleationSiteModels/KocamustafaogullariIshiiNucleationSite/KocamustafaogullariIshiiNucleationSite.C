@@ -74,7 +74,7 @@ KocamustafaogullariIshiiNucleationSite::calculate
     // eq. (32)
     const ScalarFieldType f
     (
-        2.157e-7*pow(rhoM, -3.2)*pow(1 + 0.0049*rhoM, 4.13)
+        2.157e-7*pow(rhoM, -3.2)*pow(1 + scalar(0.0049)*rhoM, 4.13)
     );
 
     // eq. (17)

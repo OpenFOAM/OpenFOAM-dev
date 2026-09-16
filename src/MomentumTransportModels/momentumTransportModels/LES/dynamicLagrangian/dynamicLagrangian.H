@@ -44,6 +44,7 @@ SourceFiles
 
 #include "LESeddyViscosity.H"
 #include "simpleFilter.H"
+#include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -127,7 +128,7 @@ public:
         tmp<volScalarField> k(const tmp<volTensorField>& gradU) const
         {
             return
-                pow(2.0*flm_/fmm_, 2.0/3.0)
+                pow(2*flm_/fmm_, 2.0/3.0)
               * pow(this->Ce_, -2.0/3.0)
               * sqr(this->delta())*magSqr(dev(symm(gradU)));
         }

@@ -26,6 +26,7 @@ License
 #include "kOmegaSSTSAS.H"
 #include "fvcLaplacian.H"
 #include "fviLaplacian.H"
+#include "fviGrad.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

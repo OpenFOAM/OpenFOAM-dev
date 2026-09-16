@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmegaSSTLM.H"
+#include "fviGrad.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,7 +42,7 @@ tmp<volScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::F1
 ) const
 {
     const volScalarField Ry(this->y()*sqrt(this->k_)/this->nu());
-    const volScalarField F3(exp(-pow(Ry/120.0, 8)));
+    const volScalarField F3(exp(-pow(Ry/120, 8)));
 
     return max(kOmegaSST<BasicMomentumTransportModel>::F1(CDkOmega), F3);
 }
@@ -98,7 +99,7 @@ tmp<volInternalScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::Fthetat
             max
             (
                 Fwake*exp(-pow4(yBydelta)),
-                (1 - sqr((gammaInt_() - 1.0/ce2_)/(1 - 1.0/ce2_)))
+                (1 - sqr((gammaInt_() - 1/ce2_)/(1 - 1/ce2_)))
             ),
             scalar(1)
         )
@@ -527,7 +528,7 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
         bound(gammaInt_, 0);
     }
 
-    const volInternalScalarField Freattach(exp(-pow4(RT/20.0)));
+    const volInternalScalarField Freattach(exp(-pow4(RT/20)));
     const volInternalScalarField gammaSep
     (
         min(2*max(Rev/(3.235*ReThetac) - 1, scalar(0))*Freattach, scalar(2))
