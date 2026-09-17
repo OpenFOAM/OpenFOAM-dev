@@ -2349,7 +2349,7 @@ void Foam::fileOperations::masterUncollatedFileOperation::setTime
     {
         instantList& times = *iter();
 
-        const instant timeNow(tm.value(), tm.name());
+        const instant timeNow(tm.userTimeValue(), tm.name());
 
         if (times.size() > 0 && times[0].name() == tm.constant())
         {
