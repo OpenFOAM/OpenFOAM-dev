@@ -1599,6 +1599,8 @@ void Foam::hexRef8::setInstance(const fileName& inst)
             << "Resetting file instance to " << inst << endl;
     }
 
+    writeOpt() = IOobject::AUTO_WRITE;
+
     cellLevel_.instance() = inst;
     pointLevel_.instance() = inst;
     level0Edge_.instance() = inst;
@@ -1904,8 +1906,6 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
     {
         checkMesh();
     }
-
-    writeOpt() = IOobject::AUTO_WRITE;
 }
 
 
@@ -2017,8 +2017,6 @@ Foam::hexRef8::hexRef8
     {
         checkMesh();
     }
-
-    writeOpt() = IOobject::AUTO_WRITE;
 }
 
 
@@ -4326,6 +4324,9 @@ void Foam::hexRef8::distribute(const polyDistributionMap& map)
         history_.distribute(map);
     }
 
+    // Mark files as changed
+    setInstance(mesh_.facesInstance());
+
     // Update face removal engine
     faceRemover_.distribute(map);
 
@@ -5475,6 +5476,8 @@ bool Foam::hexRef8::writeObject
     {
         writeOk = writeOk && history_.writeObject(fmt, ver, cmp, write);
     }
+
+    writeOpt() = IOobject::NO_WRITE;
 
     return writeOk;
 }
