@@ -123,9 +123,24 @@ protected:
         //  if not found
         tmpNrc<dirIndexList> lookupProcessorsPath(const fileName&) const;
 
-        //- Does ioobject exist. Is either a directory (empty name()) or
-        //  a file
+        //- Does IOobject exist? Is either a directory (empty name()) or
+        //  a file.
         bool exists(IOobject& io) const;
+
+        //- Helper: check IO for local existence. Like filePathInfo but
+        //  without parent searching and instance searching
+        virtual bool exists(const dirIndexList& pDirs, IOobject& io) const;
+
+        //- ...
+        void searchInstance
+        (
+            const dirIndexList& pDirs,
+            IOobject& io,
+            const IOobject& startIo,
+            const scalar startValue,
+            const word& stopInstance,
+            const instantList& times
+        ) const;
 
 
 public:

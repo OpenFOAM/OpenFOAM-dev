@@ -376,6 +376,99 @@ bool Foam::fileOperation::exists(IOobject& io) const
 }
 
 
+bool Foam::fileOperation::exists(const dirIndexList& pDirs, IOobject& io) const
+{
+    return exists(io);
+}
+
+
+void Foam::fileOperation::searchInstance
+(
+    const dirIndexList& pDirs,
+    IOobject& io,
+    const IOobject& startIo,
+    const scalar startValue,
+    const word& stopInstance,
+    const instantList& ts
+) const
+{
+    const Time& time = io.time();
+
+    // Find the instance at or immediately below the start time
+    label instancei;
+    for (instancei = ts.size() - 1; instancei >= 0; -- instancei)
+    {
+        if
+        (
+            ts[instancei].name() == time.constant()
+         || ts[instancei].value() <= startValue
+        )
+        {
+            break;
+        }
+    }
+
+    // Error if the object must be read
+    auto notFound = [&]()
+    {
+        if
+        (
+            startIo.readOpt() == IOobject::MUST_READ
+         || startIo.readOpt() == IOobject::MUST_READ_IF_MODIFIED
+        )
+        {
+            if (io.name().empty())
+            {
+                FatalErrorInFunction
+                    << "Cannot find directory " << io.local();
+            }
+            else
+            {
+                FatalErrorInFunction
+                    << "Cannot find file \"" << io.name()
+                    << "\" in directory " << io.local();
+            }
+
+            FatalIOError
+                << " in times " << startIo.instance() << " down to "
+                << (stopInstance == word::null ? time.constant() : stopInstance)
+                << exit(FatalError);
+        }
+    };
+
+    // Create a numeric stop time
+    const scalar stopValue =
+        stopInstance == word::null ? -vGreat : instant(stopInstance).value();
+
+    // Search remaining instances
+    for (; instancei >= 0; -- instancei)
+    {
+        if (ts[instancei].value() < stopValue)
+        {
+            notFound();
+            io.instance() = stopInstance;
+            return;
+        }
+
+        io.instance() = ts[instancei].name();
+        if (exists(pDirs, io)) return;
+    }
+
+    // Ensure that the constant instance has been checked
+    if (stopValue <= 0 && (!ts.size() || ts[0].name() != time.constant()))
+    {
+        io.instance() = time.constant();
+        if (exists(pDirs, io)) return;
+    }
+
+    // Everything has been searched and nothing has been found. Return the
+    // constant instance, or the stop instance (if any).
+    notFound();
+    io.instance() = stopValue <= 0 ? time.constant() : stopInstance;
+    return;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fileOperation::fileOperation(label comm)
@@ -692,91 +785,28 @@ Foam::instantList Foam::fileOperation::findTimes
 
 Foam::IOobject Foam::fileOperation::findInstance
 (
-    const IOobject& startIO,
+    const IOobject& startIo,
     const scalar startValue,
     const word& stopInstance
 ) const
 {
     // Make a copy
-    IOobject io(startIO);
+    IOobject io(startIo);
 
     // Quick return if the given object exists
     if (exists(io)) return io;
 
-    const Time& time = io.time();
-    const instantList ts = time.times();
+    // Search other instances
+    searchInstance
+    (
+        dirIndexList(),
+        io,
+        startIo,
+        startValue,
+        stopInstance,
+        io.time().times()
+    );
 
-    // Find the instance at or immediately below the start time
-    label instancei;
-    for (instancei = ts.size() - 1; instancei >= 0; -- instancei)
-    {
-        if
-        (
-            ts[instancei].name() == time.constant()
-         || ts[instancei].value() <= startValue
-        )
-        {
-            break;
-        }
-    }
-
-    // Error if the object must be read
-    auto notFound = [&]()
-    {
-        if
-        (
-            startIO.readOpt() == IOobject::MUST_READ
-         || startIO.readOpt() == IOobject::MUST_READ_IF_MODIFIED
-        )
-        {
-            if (io.name().empty())
-            {
-                FatalErrorInFunction
-                    << "Cannot find directory " << io.local();
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "Cannot find file \"" << io.name()
-                    << "\" in directory " << io.local();
-            }
-
-            FatalIOError
-                << " in times " << startIO.instance() << " down to "
-                << (stopInstance == word::null ? time.constant() : stopInstance)
-                << exit(FatalError);
-        }
-    };
-
-    // Create a numeric stop time
-    const scalar stopValue =
-        stopInstance == word::null ? -vGreat : instant(stopInstance).value();
-
-    // Search remaining instances
-    for (; instancei >= 0; -- instancei)
-    {
-        if (ts[instancei].value() < stopValue)
-        {
-            notFound();
-            io.instance() = stopInstance;
-            return io;
-        }
-
-        io.instance() = ts[instancei].name();
-        if (exists(io)) return io;
-    }
-
-    // Ensure that the constant instance has been checked
-    if (stopValue <= 0 && (!ts.size() || ts[0].name() != time.constant()))
-    {
-        io.instance() = time.constant();
-        if (exists(io)) return io;
-    }
-
-    // Everything has been searched and nothing has been found. Return the
-    // constant instance, or the stop instance (if any).
-    notFound();
-    io.instance() = stopValue <= 0 ? time.constant() : stopInstance;
     return io;
 }
 

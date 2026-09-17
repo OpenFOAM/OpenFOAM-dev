@@ -245,13 +245,8 @@ Foam::fileOperations::masterUncollatedFileOperation::filePathInfo
 
         // Check for approximately same time. E.g. if time = 1e-2 and
         // directory is 0.01 (due to different time formats)
-        HashPtrTable<instantList>::const_iterator pathFnd
-        (
-            times_.find
-            (
-                io.time().path()
-            )
-        );
+        HashPtrTable<instantList>::const_iterator pathFnd =
+            times_.find(io.time().path());
         if (pathFnd != times_.end())
         {
             newInstancePath = findInstancePath
@@ -1440,202 +1435,43 @@ bool Foam::fileOperations::masterUncollatedFileOperation::exists
 }
 
 
-Foam::IOobject
-Foam::fileOperations::masterUncollatedFileOperation::findInstance
+Foam::IOobject Foam::fileOperations::masterUncollatedFileOperation::findInstance
 (
-    const IOobject& startIO,
+    const IOobject& startIo,
     const scalar startValue,
     const word& stopInstance
 ) const
 {
-    if (debug)
-    {
-        Pout<< "masterUncollatedFileOperation::findInstance :"
-            << " Starting searching for name:" << startIO.name()
-            << " local:" << startIO.local()
-            << " from instance:" << startIO.instance()
-            << endl;
-    }
+    const label comm = UPstream::worldComm; // comm_ ???
 
+    // Make a copy
+    IOobject io(startIo);
 
-    const Time& time = startIO.time();
-
-    IOobject io(startIO);
-
-    // Note: - if name is empty, just check the directory itself
-    //       - check both for isFile and headerOk since the latter does a
-    //         filePath so searches for the file.
-    //       - check for an object with local file scope (so no looking up in
-    //         parent directory in case of parallel)
-
-
+    // ???
     tmpNrc<dirIndexList> pDirs(lookupProcessorsPath(io.objectPath(false)));
 
-    word foundInstance;
+    // Quick return if the given object exists
+    bool ioExists = Pstream::master(comm) && exists(pDirs, io);
+    Pstream::scatter(ioExists, Pstream::msgType(), comm);
+    if (ioExists) return io;
 
-    // if (Pstream::master(comm_))
-    if (Pstream::master(UPstream::worldComm))
+    // Search other instances
+    const instantList ts = io.time().times();
+    if (Pstream::master(comm))
     {
-        if (exists(pDirs, io))
-        {
-            foundInstance = io.instance();
-        }
+        searchInstance
+        (
+            pDirs,
+            io,
+            startIo,
+            startValue,
+            stopInstance,
+            ts
+        );
     }
 
-    // Do parallel early exit to avoid calling time.times()
-    // Pstream::scatter(foundInstance, Pstream::msgType(), comm_);
-    Pstream::scatter(foundInstance, Pstream::msgType(), UPstream::worldComm);
-    if (!foundInstance.empty())
-    {
-        io.instance() = foundInstance;
-        if (debug)
-        {
-            Pout<< "masterUncollatedFileOperation::findInstance :"
-                << " for name:" << io.name() << " local:" << io.local()
-                << " found starting instance:" << io.instance() << endl;
-        }
-        return io;
-    }
-
-
-    // Search back through the time directories to find the time
-    // closest to and lower than current time
-
-    instantList ts = time.times();
-    // if (Pstream::master(comm_))
-    if (Pstream::master(UPstream::worldComm))
-    {
-        label instanceI;
-
-        for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
-        {
-            if (ts[instanceI].value() <= startValue)
-            {
-                break;
-            }
-        }
-
-        // continue searching from here
-        for (; instanceI >= 0; --instanceI)
-        {
-            // Shortcut: if actual directory is the timeName we've
-            // already tested it
-            if (ts[instanceI].name() == time.name())
-            {
-                continue;
-            }
-
-            io.instance() = ts[instanceI].name();
-            if (exists(pDirs, io))
-            {
-                foundInstance = io.instance();
-                if (debug)
-                {
-                    Pout<< "masterUncollatedFileOperation::findInstance :"
-                        << " for name:" << io.name() << " local:" << io.local()
-                        << " found at:" << io.instance()
-                        << endl;
-                }
-                break;
-            }
-
-            // Check if hit minimum instance
-            if (ts[instanceI].name() == stopInstance)
-            {
-                if
-                (
-                    startIO.readOpt() == IOobject::MUST_READ
-                 || startIO.readOpt() == IOobject::MUST_READ_IF_MODIFIED
-                )
-                {
-                    if (io.name().empty())
-                    {
-                        FatalErrorInFunction
-                            << "Cannot find directory "
-                            << io.local() << " in times " << time.name()
-                            << " down to " << stopInstance
-                            << exit(FatalError);
-                    }
-                    else
-                    {
-                        FatalErrorInFunction
-                            << "Cannot find file \"" << io.name()
-                            << "\" in directory " << io.local()
-                            << " in times " << time.name()
-                            << " down to " << stopInstance
-                            << exit(FatalError);
-                    }
-                }
-                foundInstance = io.instance();
-                if (debug)
-                {
-                    Pout<< "masterUncollatedFileOperation::findInstance :"
-                        << " name:" << io.name() << " local:" << io.local()
-                        << " found at stopinstance:" << io.instance() << endl;
-                }
-                break;
-            }
-        }
-
-
-        if (foundInstance.empty())
-        {
-            // times() usually already includes the constant() so would
-            // have been checked above. Re-test if
-            // - times() is empty. Sometimes this can happen (e.g. decomposePar
-            //   with collated)
-            // - times()[0] is not constant
-            if (!ts.size() || ts[0].name() != time.constant())
-            {
-                // Note. This needs to be a hard-coded constant, rather than the
-                // constant function of the time, because the latter points to
-                // the case constant directory in parallel cases
-
-                io.instance() = time.constant();
-                if (exists(pDirs, io))
-                {
-                    if (debug)
-                    {
-                        Pout<< "masterUncollatedFileOperation::findInstance :"
-                            << " name:" << io.name()
-                            << " local:" << io.local()
-                            << " found at:" << io.instance() << endl;
-                    }
-                    foundInstance = io.instance();
-                }
-            }
-        }
-
-        if (foundInstance.empty())
-        {
-            if
-            (
-                startIO.readOpt() == IOobject::MUST_READ
-             || startIO.readOpt() == IOobject::MUST_READ_IF_MODIFIED
-            )
-            {
-                FatalErrorInFunction
-                    << "Cannot find file \"" << io.name() << "\" in directory "
-                    << io.local() << " in times " << startIO.instance()
-                    << " down to " << time.constant()
-                    << exit(FatalError);
-            }
-            else
-            {
-                foundInstance = time.constant();
-            }
-        }
-    }
-
-    // Pstream::scatter(foundInstance, Pstream::msgType(), comm_);
-    Pstream::scatter(foundInstance, Pstream::msgType(), UPstream::worldComm);
-    io.instance() = foundInstance;
-    if (debug)
-    {
-        Pout<< "masterUncollatedFileOperation::findInstance :"
-            << " name:" << io.name() << " local:" << io.local()
-            << " returning instance:" << io.instance() << endl;
-    }
+    // Communicate and return
+    Pstream::scatter(io.instance(), Pstream::msgType(), comm);
     return io;
 }
 

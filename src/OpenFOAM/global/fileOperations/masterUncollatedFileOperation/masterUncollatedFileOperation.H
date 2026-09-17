@@ -482,7 +482,7 @@ protected:
 
         //- Helper: check IO for local existence. Like filePathInfo but
         //  without parent searching and instance searching
-        bool exists(const dirIndexList&, IOobject& io) const;
+        virtual bool exists(const dirIndexList&, IOobject& io) const;
 
 
 public:
