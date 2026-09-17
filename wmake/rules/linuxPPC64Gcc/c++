@@ -6,7 +6,7 @@ c++WARN     = -Wall -Wextra -Wold-style-cast -Wnon-virtual-dtor \
 # Suppress some warnings for flex++
 c++LESSWARN = -Wno-old-style-cast -Wno-unused-local-typedefs -Wno-array-bounds
 
-CC          = g++ -std=c++14 -m64 -mcpu=power5+
+CC          = g++ -std=c++17 -m64 -mcpu=power5+
 
 include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 

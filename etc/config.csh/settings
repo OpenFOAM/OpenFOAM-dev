@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -48,7 +48,7 @@ case Linux:
         setenv WM_CC 'gcc'
         setenv WM_CXX 'g++'
         setenv WM_CFLAGS '-fPIC'
-        setenv WM_CXXFLAGS '-fPIC -std=c++0x'
+        setenv WM_CXXFLAGS '-fPIC -std=c++17'
         setenv WM_LDFLAGS
         breaksw
 
@@ -59,7 +59,7 @@ case Linux:
             setenv WM_CC 'gcc'
             setenv WM_CXX 'g++'
             setenv WM_CFLAGS '-m32 -fPIC'
-            setenv WM_CXXFLAGS '-m32 -fPIC -std=c++0x'
+            setenv WM_CXXFLAGS '-m32 -fPIC -std=c++17'
             setenv WM_LDFLAGS '-m32'
             breaksw
 
@@ -69,7 +69,7 @@ case Linux:
             setenv WM_CC 'gcc'
             setenv WM_CXX 'g++'
             setenv WM_CFLAGS '-m64 -fPIC'
-            setenv WM_CXXFLAGS '-m64 -fPIC -std=c++0x'
+            setenv WM_CXXFLAGS '-m64 -fPIC -std=c++17'
             setenv WM_LDFLAGS '-m64'
             breaksw
 
@@ -86,7 +86,7 @@ case Linux:
         setenv WM_CC 'gcc'
         setenv WM_CXX 'g++'
         setenv WM_CFLAGS '-fPIC'
-        setenv WM_CXXFLAGS '-fPIC -std=c++0x'
+        setenv WM_CXXFLAGS '-fPIC -std=c++17'
         setenv WM_LDFLAGS ''
         breaksw
 
@@ -97,7 +97,7 @@ case Linux:
         setenv WM_CC 'gcc'
         setenv WM_CXX 'g++'
         setenv WM_CFLAGS '-fPIC'
-        setenv WM_CXXFLAGS '-fPIC -std=c++0x'
+        setenv WM_CXXFLAGS '-fPIC -std=c++17'
         setenv WM_LDFLAGS
         breaksw
 
@@ -107,7 +107,7 @@ case Linux:
         setenv WM_CC 'gcc'
         setenv WM_CXX 'g++'
         setenv WM_CFLAGS '-m64 -fPIC'
-        setenv WM_CXXFLAGS '-m64 -fPIC -std=c++0x'
+        setenv WM_CXXFLAGS '-m64 -fPIC -std=c++17'
         setenv WM_LDFLAGS '-m64'
         breaksw
 
@@ -117,7 +117,7 @@ case Linux:
         setenv WM_CC 'gcc'
         setenv WM_CXX 'g++'
         setenv WM_CFLAGS '-m64 -fPIC'
-        setenv WM_CXXFLAGS '-m64 -fPIC -std=c++0x'
+        setenv WM_CXXFLAGS '-m64 -fPIC -std=c++17'
         setenv WM_LDFLAGS '-m64'
         breaksw
 
@@ -135,7 +135,7 @@ case SunOS:
     setenv WM_CC 'gcc'
     setenv WM_CXX 'g++'
     setenv WM_CFLAGS '-mabi=64 -fPIC'
-    setenv WM_CXXFLAGS '-mabi=64 -fPIC -std=c++0x'
+    setenv WM_CXXFLAGS '-mabi=64 -fPIC -std=c++17'
     setenv WM_LDFLAGS '-mabi=64 -G0'
     breaksw
 

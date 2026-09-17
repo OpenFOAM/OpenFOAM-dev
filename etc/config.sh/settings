@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -45,7 +45,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-fPIC'
-        export WM_CXXFLAGS='-fPIC -std=c++0x'
+        export WM_CXXFLAGS='-fPIC -std=c++17'
         export WM_LDFLAGS=
     ;;
 
@@ -56,7 +56,7 @@ Linux)
             export WM_CC='gcc'
             export WM_CXX='g++'
             export WM_CFLAGS='-m32 -fPIC'
-            export WM_CXXFLAGS='-m32 -fPIC -std=c++0x'
+            export WM_CXXFLAGS='-m32 -fPIC -std=c++17'
             export WM_LDFLAGS='-m32'
             ;;
 
@@ -66,7 +66,7 @@ Linux)
             export WM_CC='gcc'
             export WM_CXX='g++'
             export WM_CFLAGS='-m64 -fPIC'
-            export WM_CXXFLAGS='-m64 -fPIC -std=c++0x'
+            export WM_CXXFLAGS='-m64 -fPIC -std=c++17'
             export WM_LDFLAGS='-m64'
             ;;
 
@@ -83,7 +83,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-fPIC'
-        export WM_CXXFLAGS='-fPIC -std=c++0x'
+        export WM_CXXFLAGS='-fPIC -std=c++17'
         export WM_LDFLAGS=
         ;;
 
@@ -94,7 +94,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-fPIC'
-        export WM_CXXFLAGS='-fPIC -std=c++0x'
+        export WM_CXXFLAGS='-fPIC -std=c++17'
         export WM_LDFLAGS=
         ;;
 
@@ -104,7 +104,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-m64 -fPIC'
-        export WM_CXXFLAGS='-m64 -fPIC -std=c++0x'
+        export WM_CXXFLAGS='-m64 -fPIC -std=c++17'
         export WM_LDFLAGS='-m64'
         ;;
 
@@ -114,7 +114,7 @@ Linux)
         export WM_CC='gcc'
         export WM_CXX='g++'
         export WM_CFLAGS='-m64 -fPIC'
-        export WM_CXXFLAGS='-m64 -fPIC -std=c++0x'
+        export WM_CXXFLAGS='-m64 -fPIC -std=c++17'
         export WM_LDFLAGS='-m64'
         ;;
 
@@ -131,7 +131,7 @@ SunOS)
     export WM_CC='gcc'
     export WM_CXX='g++'
     export WM_CFLAGS='-mabi=64 -fPIC'
-    export WM_CXXFLAGS='-mabi=64 -fPIC -std=c++0x'
+    export WM_CXXFLAGS='-mabi=64 -fPIC -std=c++17'
     export WM_LDFLAGS='-mabi=64 -G0'
     ;;
 

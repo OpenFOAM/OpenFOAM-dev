@@ -8,7 +8,7 @@ c++WARN     = -Wall -Wextra -Wold-style-cast -Wnon-virtual-dtor \
 c++LESSWARN = -Wno-old-style-cast -Wno-unused-local-typedefs \
               -Wno-tautological-undefined-compare -Wno-shift-negative-value
 
-CC          = clang++ -std=c++14 -m64
+CC          = clang++ -std=c++17 -m64
 
 include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 

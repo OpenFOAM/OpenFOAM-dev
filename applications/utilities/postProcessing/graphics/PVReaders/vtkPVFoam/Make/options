@@ -1,8 +1,7 @@
 EXE_INC = \
     $(shell \
         $(WM_PROJECT_DIR)/bin/tools/foamVersionCompare \
-        $(ParaView_VERSION) ge 6.1.0 && \
-        echo "--std=c++17" \
+        $(ParaView_VERSION) ge 6.1.0 \
     ) \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
