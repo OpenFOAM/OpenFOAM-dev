@@ -45,9 +45,9 @@ namespace Foam
 
 struct powOp
 {
-    static constexpr const char* prefix = "pow(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "pow(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -92,9 +92,9 @@ struct powOp
 
 struct integerPowOp
 {
-    static constexpr const char* prefix = "integerPow(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "integerPow(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -113,9 +113,9 @@ struct integerPowOp
 
 struct integerRootOp
 {
-    static constexpr const char* prefix = "integerRoot(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "integerRoot(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -185,9 +185,9 @@ BinaryEagerFunction(pow);
 
 struct atan2Op
 {
-    static constexpr const char* prefix = "atan2(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "atan2(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -209,9 +209,9 @@ BinaryFunction(atan2);
 
 struct jnOp
 {
-    static constexpr const char* prefix = "jn(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "jn(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -233,9 +233,9 @@ BinaryFunction(jn);
 
 struct ynOp
 {
-    static constexpr const char* prefix = "yn(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "yn(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;

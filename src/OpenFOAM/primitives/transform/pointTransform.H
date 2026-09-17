@@ -46,15 +46,14 @@ namespace Foam
 
 struct pointTransformOp
 {
+    static inline const char* prefix = "pointTransform(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static word name(const word& st, const word& v)
-    {
-        return word("pointTransform(", st, ',', v, ')');
-    }
 
     template<class Type>
     static Type value(const spatialTransform& st, const Type& v)

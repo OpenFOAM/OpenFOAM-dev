@@ -67,8 +67,8 @@ UnaryOpFunction(skew)
 
 struct hdualOp
 {
-    static const char prefix = '*';
-    static const word::Null postfix;
+    static inline const char prefix = '*';
+    static inline const word::Null postfix;
 
     static const signed char precedence = 2;
 
@@ -103,9 +103,9 @@ UnaryOperator(*, hdual)
 
 struct ddotOp
 {
-    static const word::Null prefix;
-    static constexpr const char* infix = "&&";
-    static const word::Null postfix;
+    static inline const word::Null prefix;
+    static inline const char* infix = "&&";
+    static inline const word::Null postfix;
 
     static const signed char precedence = 1;
 

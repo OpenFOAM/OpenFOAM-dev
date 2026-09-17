@@ -92,8 +92,8 @@ namespace Foam
 #define UnaryOp(Func)                                                          \
     struct Func##Op                                                            \
     {                                                                          \
-        static constexpr const char* prefix = #Func"(";                        \
-        static const char postfix = ')';                                       \
+        static inline const char* prefix = #Func"(";                           \
+        static inline const char postfix = ')';                                \
                                                                                \
         static const signed char precedence =                                  \
             expression::Operation<void>::precedence;                           \

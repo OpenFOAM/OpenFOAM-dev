@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ class IOobject
 public:
 
     //- Keyword for the FoamFile header sub-dictionary
-    static constexpr const char* foamFile = "FoamFile";
+    static inline const char* foamFile = "FoamFile";
 
     // Public data types
 

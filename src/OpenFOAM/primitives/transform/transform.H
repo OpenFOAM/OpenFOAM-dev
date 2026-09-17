@@ -189,9 +189,10 @@ inline dimensionSet transform
 
 struct transformOp
 {
-    static constexpr const char* prefix = "transform(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "transform(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 
@@ -244,9 +245,10 @@ inline symmTensor transformMask<symmTensor>(const tensor& t)
 
 struct transformMaskOp
 {
-    static constexpr const char* prefix = "transformMask(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "transformMask(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
+
     static const signed char precedence =
         expression::Operation<void>::precedence;
 

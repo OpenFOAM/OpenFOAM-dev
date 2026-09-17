@@ -61,8 +61,8 @@ struct powProductOp;
 template<>
 struct powProductOp<0>
 {
-    static constexpr const char* prefix = "pow<0>(";
-    static const char postfix = ')';
+    static inline const char* prefix = "pow<0>(";
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -88,8 +88,8 @@ struct powProductOp<0>
 template<>
 struct powProductOp<1>
 {
-    static constexpr const char* prefix = "pow<1>(";
-    static const char postfix = ')';
+    static inline const char* prefix = "pow<1>(";
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -115,8 +115,8 @@ struct powProductOp<1>
 template<>
 struct powProductOp<2>
 {
-    static constexpr const char* prefix = "pow<2>(";
-    static const char postfix = ')';
+    static inline const char* prefix = "pow<2>(";
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
@@ -197,9 +197,9 @@ BinaryFunction(cmptDivide);
 
 struct componentOp
 {
-    static constexpr const char* prefix = "component(";
-    static const char infix = ',';
-    static const char postfix = ')';
+    static inline const char* prefix = "component(";
+    static inline const char infix = ',';
+    static inline const char postfix = ')';
 
     static const signed char precedence =
         expression::Operation<void>::precedence;
