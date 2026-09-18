@@ -54,10 +54,13 @@ Foam::solidBodyMotionFunctions::axisRotationMotion::axisRotationMotion
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(name, SBMFCoeffs, runTime)
-{
-    read(SBMFCoeffs);
-}
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime),
+    origin_(SBMFCoeffs_.lookup<vector>("origin", dimensions::length)),
+    omega_
+    (
+        SBMFCoeffs_.lookup<vector>( "omega", units::radians/dimensions::time)
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -88,24 +91,6 @@ Foam::solidBodyMotionFunctions::axisRotationMotion::transformation() const
     {
         return septernion::I;
     }
-}
-
-
-bool Foam::solidBodyMotionFunctions::axisRotationMotion::read
-(
-    const dictionary& SBMFCoeffs
-)
-{
-    solidBodyMotionFunction::read(SBMFCoeffs);
-
-    origin_ = SBMFCoeffs_.lookup<vector>("origin", dimensions::length);
-    omega_ = SBMFCoeffs_.lookup<vector>
-    (
-        "omega",
-        units::radians/dimensions::time
-    );
-
-    return true;
 }
 
 

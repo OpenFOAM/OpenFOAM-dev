@@ -140,12 +140,10 @@ Foam::pointMeshMovers::multiSolidBody::multiSolidBody
                 << exit(FatalIOError);
         }
 
-        const dictionary& subDict = iter().dict();
-
         SBMFs_.set
         (
             zonei,
-            solidBodyMotionFunction::New(subDict, mesh.time())
+            solidBodyMotionFunction::New(dict, mesh.time(), iter().keyword())
         );
 
         zonei ++;

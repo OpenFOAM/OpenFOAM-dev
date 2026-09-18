@@ -138,9 +138,6 @@ public:
             return spatialTransform(transformation());
         }
 
-        //- Update properties from given dictionary
-        virtual bool read(const dictionary& dict) = 0;
-
         //- Write in dictionary format
         virtual void writeData(Ostream&) const;
 

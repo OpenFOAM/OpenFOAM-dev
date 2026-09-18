@@ -86,17 +86,4 @@ Foam::solidBodyMotionFunctions::rotatingMotion::transformation() const
 }
 
 
-bool Foam::solidBodyMotionFunctions::rotatingMotion::read
-(
-    const dictionary& SBMFCoeffs
-)
-{
-    solidBodyMotionFunction::read(SBMFCoeffs);
-
-    omega_.reset(new Function1s::omega(time_, SBMFCoeffs));
-
-    return true;
-}
-
-
 // ************************************************************************* //

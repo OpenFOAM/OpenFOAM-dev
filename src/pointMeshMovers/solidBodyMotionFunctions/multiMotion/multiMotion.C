@@ -52,9 +52,33 @@ Foam::solidBodyMotionFunctions::multiMotion::multiMotion
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(name, SBMFCoeffs, runTime)
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime),
+    SBMFs_(SBMFCoeffs_.size())
 {
-    read(SBMFCoeffs);
+    label i = 0;
+    forAllConstIter(IDLList<entry>, SBMFCoeffs_, iter)
+    {
+        if (iter().isDict())
+        {
+            SBMFs_.set
+            (
+                i,
+                solidBodyMotionFunction::New
+                (
+                    SBMFCoeffs,
+                    time_,
+                    iter().keyword()
+                )
+            );
+
+            Info<< "Constructed SBMF " << i << " : "
+                << iter().keyword() << " of type "
+                << SBMFs_[i].type() << endl;
+
+            i++;
+        }
+    }
+    SBMFs_.setSize(i);
 }
 
 
@@ -81,44 +105,6 @@ Foam::solidBodyMotionFunctions::multiMotion::transformation() const
     DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
-}
-
-
-bool Foam::solidBodyMotionFunctions::multiMotion::read
-(
-    const dictionary& SBMFCoeffs
-)
-{
-    solidBodyMotionFunction::read(SBMFCoeffs);
-
-    label i = 0;
-    SBMFs_.setSize(SBMFCoeffs_.size());
-
-    forAllConstIter(IDLList<entry>, SBMFCoeffs_, iter)
-    {
-        if (iter().isDict())
-        {
-            SBMFs_.set
-            (
-                i,
-                solidBodyMotionFunction::New
-                (
-                    SBMFCoeffs,
-                    time_,
-                    iter().keyword()
-                )
-            );
-
-            Info<< "Constructed SBMF " << i << " : "
-                << iter().keyword() << " of type "
-                << SBMFs_[i].type() << endl;
-
-            i++;
-        }
-    }
-    SBMFs_.setSize(i);
-
-    return true;
 }
 
 

@@ -56,10 +56,11 @@ oscillatingRotatingMotion
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(name, SBMFCoeffs, runTime)
-{
-    read(SBMFCoeffs);
-}
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime),
+    origin_(SBMFCoeffs_.lookup("origin")),
+    amplitude_(SBMFCoeffs_.lookup("amplitude")),
+    omega_(SBMFCoeffs_.lookup<scalar>("omega"))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -88,21 +89,6 @@ transformation() const
     DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
-}
-
-
-bool Foam::solidBodyMotionFunctions::oscillatingRotatingMotion::read
-(
-    const dictionary& SBMFCoeffs
-)
-{
-    solidBodyMotionFunction::read(SBMFCoeffs);
-
-    SBMFCoeffs_.lookup("origin") >> origin_;
-    SBMFCoeffs_.lookup("amplitude") >> amplitude_;
-    SBMFCoeffs_.lookup("omega") >> omega_;
-
-    return true;
 }
 
 

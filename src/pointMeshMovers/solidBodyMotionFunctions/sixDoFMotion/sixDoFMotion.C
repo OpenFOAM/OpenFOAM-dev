@@ -54,10 +54,29 @@ Foam::solidBodyMotionFunctions::sixDoFMotion::sixDoFMotion
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(name, SBMFCoeffs, runTime)
-{
-    read(SBMFCoeffs);
-}
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime),
+    CofG_(SBMFCoeffs_.lookup("CofG")),
+    translation_
+    (
+        Function1<vector>::New
+        (
+            "translation",
+            time_.userUnits(),
+            dimensions::length,
+            SBMFCoeffs_
+        ).ptr()
+    ),
+    rotation_
+    (
+        Function1<vector>::New
+        (
+            "rotation",
+            time_.userUnits(),
+            units::degrees,
+            SBMFCoeffs_
+        ).ptr()
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -82,41 +101,6 @@ Foam::solidBodyMotionFunctions::sixDoFMotion::transformation() const
     DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
     return TR;
-}
-
-
-bool Foam::solidBodyMotionFunctions::sixDoFMotion::read
-(
-    const dictionary& SBMFCoeffs
-)
-{
-    solidBodyMotionFunction::read(SBMFCoeffs);
-
-    translation_.reset
-    (
-        Function1<vector>::New
-        (
-            "translation",
-            time_.userUnits(),
-            dimensions::length,
-            SBMFCoeffs_
-        ).ptr()
-    );
-
-    rotation_.reset
-    (
-        Function1<vector>::New
-        (
-            "rotation",
-            time_.userUnits(),
-            units::degrees,
-            SBMFCoeffs_
-        ).ptr()
-    );
-
-    SBMFCoeffs_.lookup("CofG") >> CofG_;
-
-    return true;
 }
 
 

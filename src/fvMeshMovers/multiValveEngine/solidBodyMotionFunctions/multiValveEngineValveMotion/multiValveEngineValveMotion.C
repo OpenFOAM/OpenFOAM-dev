@@ -55,12 +55,10 @@ multiValveEngineValveMotion
 )
 :
     solidBodyMotionFunction(name, SBMFCoeffs, runTime),
-    fluidRegionName_(),
-    valveName_(),
+    fluidRegionName_(SBMFCoeffs.lookup<word>("fluidRegion")),
+    valveName_(SBMFCoeffs.lookup<word>("valve")),
     valveIndex_(-1)
-{
-    read(SBMFCoeffs);
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -129,23 +127,6 @@ transformation() const
            *fluidEngineMover.valves[valveIndex_].axis
           : vector::zero
         );
-}
-
-
-bool Foam::solidBodyMotionFunctions::multiValveEngineValveMotion::read
-(
-    const dictionary& SBMFCoeffs
-)
-{
-    solidBodyMotionFunction::read(SBMFCoeffs);
-
-    fluidRegionName_ = SBMFCoeffs.lookup<word>("fluidRegion");
-
-    valveName_ = SBMFCoeffs.lookup<word>("valve");
-
-    valveIndex_ = -1;
-
-    return true;
 }
 
 

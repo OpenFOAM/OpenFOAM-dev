@@ -57,17 +57,6 @@ Foam::solidBodyMotionFunction::~solidBodyMotionFunction()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::solidBodyMotionFunction::read(const dictionary& dict)
-{
-    SBMFCoeffs_ =
-        dict.isDict(name_)
-      ? dict.subDict(name_)
-      : dict;
-
-    return true;
-}
-
-
 void Foam::solidBodyMotionFunction::writeData(Ostream& os) const
 {
     os << SBMFCoeffs_;

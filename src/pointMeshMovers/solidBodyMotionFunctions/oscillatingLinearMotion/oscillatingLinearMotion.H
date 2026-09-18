@@ -106,9 +106,6 @@ public:
         //- Return the solid-body motion transformation septernion
         virtual septernion transformation() const;
 
-        //- Update properties from given dictionary
-        virtual bool read(const dictionary& SBMFCoeffs);
-
 
     // Member Operators
 

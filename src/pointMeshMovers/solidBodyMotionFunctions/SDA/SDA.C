@@ -53,7 +53,28 @@ Foam::solidBodyMotionFunctions::SDA::SDA
     solidBodyMotionFunction(name, SBMFCoeffs, runTime),
     CofG_(SBMFCoeffs_.lookup("CofG"))
 {
-    read(SBMFCoeffs);
+    SBMFCoeffs_.lookup("CofG") >> CofG_;
+    SBMFCoeffs_.lookup("lambda") >> lambda_;
+    SBMFCoeffs_.lookup("rollAmax") >> rollAmax_;
+    SBMFCoeffs_.lookup("rollAmin") >> rollAmin_;
+    SBMFCoeffs_.lookup("heaveA") >> heaveA_;
+    SBMFCoeffs_.lookup("swayA") >> swayA_;
+    SBMFCoeffs_.lookup("Q") >> Q_;
+    SBMFCoeffs_.lookup("Tp") >> Tp_;
+    SBMFCoeffs_.lookup("Tpn") >> Tpn_;
+    SBMFCoeffs_.lookup("dTi") >> dTi_;
+    SBMFCoeffs_.lookup("dTp") >> dTp_;
+
+    // Rescale parameters according to the given scale parameter
+    if (lambda_ > 1 + small)
+    {
+        heaveA_ /= lambda_;
+        swayA_ /= lambda_;
+        Tp_ /= sqrt(lambda_);
+        Tpn_ /= sqrt(lambda_);
+        dTi_ /= sqrt(lambda_);
+        dTp_ /= sqrt(lambda_);
+    }
 }
 
 
@@ -97,37 +118,6 @@ Foam::septernion Foam::solidBodyMotionFunctions::SDA::transformation() const
     DebugInFunction << "Time = " << time << " transformation: " << TR << endl;
 
     return TR;
-}
-
-
-bool Foam::solidBodyMotionFunctions::SDA::read(const dictionary& SBMFCoeffs)
-{
-    solidBodyMotionFunction::read(SBMFCoeffs);
-
-    SBMFCoeffs_.lookup("CofG") >> CofG_;
-    SBMFCoeffs_.lookup("lambda") >> lambda_;
-    SBMFCoeffs_.lookup("rollAmax") >> rollAmax_;
-    SBMFCoeffs_.lookup("rollAmin") >> rollAmin_;
-    SBMFCoeffs_.lookup("heaveA") >> heaveA_;
-    SBMFCoeffs_.lookup("swayA") >> swayA_;
-    SBMFCoeffs_.lookup("Q") >> Q_;
-    SBMFCoeffs_.lookup("Tp") >> Tp_;
-    SBMFCoeffs_.lookup("Tpn") >> Tpn_;
-    SBMFCoeffs_.lookup("dTi") >> dTi_;
-    SBMFCoeffs_.lookup("dTp") >> dTp_;
-
-    // Rescale parameters according to the given scale parameter
-    if (lambda_ > 1 + small)
-    {
-        heaveA_ /= lambda_;
-        swayA_ /= lambda_;
-        Tp_ /= sqrt(lambda_);
-        Tpn_ /= sqrt(lambda_);
-        dTi_ /= sqrt(lambda_);
-        dTp_ /= sqrt(lambda_);
-    }
-
-    return true;
 }
 
 
