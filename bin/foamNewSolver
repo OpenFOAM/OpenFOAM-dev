@@ -128,7 +128,9 @@ do
 
     while read -r line
     do
-        sed -i "s@\(${line%::*}::\)\(${line##*::}\)@\1\n//\2@" "$file"
+        comment=""
+        [ "$(echo "$line" | cut -c1-2)" = // ] && comment=//
+        sed -i "s@\(${line%::*}::\)\(${line##*::}\)@\1\n$comment\2@" "$file"
     done < "$tmpfile"
 done
 
