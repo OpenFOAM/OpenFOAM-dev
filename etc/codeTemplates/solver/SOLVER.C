@@ -61,7 +61,8 @@ Foam::solvers::NAME::NAME(fvMesh& mesh)
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::velocity
     ),
 
     U(U_)
