@@ -68,13 +68,12 @@ Foam::solidBodyMotionFunctions::linearMotion::~linearMotion()
 Foam::septernion
 Foam::solidBodyMotionFunctions::linearMotion::transformation() const
 {
-    scalar t = time_.value();
+    const scalar t = time_.value();
 
     // Translation of centre of gravity with constant velocity
     const vector displacement = velocity_*t;
 
-    quaternion R(1);
-    septernion TR(septernion(-displacement)*R);
+    const septernion TR(septernion(-displacement)*quaternion(1));
 
     DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 

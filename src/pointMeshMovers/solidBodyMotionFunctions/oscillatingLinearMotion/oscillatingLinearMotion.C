@@ -70,12 +70,11 @@ Foam::solidBodyMotionFunctions::oscillatingLinearMotion::
 Foam::septernion
 Foam::solidBodyMotionFunctions::oscillatingLinearMotion::transformation() const
 {
-    scalar t = time_.value();
+    const scalar t = time_.value();
 
     const vector displacement = amplitude_*sin(omega_*t);
 
-    quaternion R(1);
-    septernion TR(septernion(-displacement)*R);
+    septernion TR(septernion(-displacement)*quaternion(1));
 
     DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 

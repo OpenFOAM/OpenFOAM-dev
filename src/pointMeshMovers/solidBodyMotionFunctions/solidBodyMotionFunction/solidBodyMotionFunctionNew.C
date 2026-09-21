@@ -71,4 +71,54 @@ Foam::autoPtr<Foam::solidBodyMotionFunction> Foam::solidBodyMotionFunction::New
 }
 
 
+Foam::autoPtr<Foam::solidBodyMotionFunction> Foam::solidBodyMotionFunction::New
+(
+    const PtrListDictionary<solidBodyMotionFunction>& SBMFs,
+    const dictionary& dict,
+    const Time& runTime,
+    const word& name
+)
+{
+    const dictionary& coeffDict(dict.subDict(name));
+    const word motionType(coeffDict.lookup("type"));
+
+    PtrListDictionaryConstructorTable::iterator cstrIter =
+        PtrListDictionaryConstructorTablePtr_->find(motionType);
+
+    if (cstrIter == PtrListDictionaryConstructorTablePtr_->end())
+    {
+        dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(motionType);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalIOErrorInFunction(coeffDict)
+                << "Unknown solidBodyMotionFunction type "
+                << motionType << nl << nl
+                << "Valid solidBodyMotionFunctions are : " << endl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << exit(FatalIOError);
+        }
+
+        Info<< indentOrNl
+            << "Selecting solid-body motion function " << motionType << endl;
+
+        return autoPtr<solidBodyMotionFunction>
+        (
+            cstrIter()(name, coeffDict, runTime)
+        );
+    }
+    else
+    {
+        Info<< indentOrNl
+            << "Selecting multi-body motion function " << motionType << endl;
+
+        return autoPtr<solidBodyMotionFunction>
+        (
+            cstrIter()(name, SBMFs, coeffDict, runTime)
+        );
+    }
+}
+
+
 // ************************************************************************* //

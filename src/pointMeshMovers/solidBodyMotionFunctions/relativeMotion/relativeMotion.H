@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,54 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidBodyMotionFunctions::multiMotion
+    Foam::solidBodyMotionFunctions::relativeMotion
 
 Description
-    Combination of SolidBodyMotionFvMesh 6DoF motion functions.
+    Solid-body motion relative to a reference motion specified in the same list.
+
+Usage
+    Example of multiSolidBody motion specified in dynamicMeshDict:
+    \verbatim
+    mover
+    {
+        type        multiSolidBody;
+        libs        ("libpointMeshMovers.so");
+
+        outer
+        {
+            type        rotatingMotion;
+
+            origin      (5 5 0);
+            axis        (0 0 1);
+            omega       0.1;
+        }
+
+        inner
+        {
+            type        relativeMotion;
+
+            relativeMotion  rotatingMotion;
+            relativeTo  outer;
+
+            origin      (4 5 0);
+            axis        (0 0 1);
+            omega       -0.2;
+        }
+    }
+    \endverbatim
+    The inner region is specified to rotate within and relative to the
+    rotation of the outer region.
+
+See also
+    Foam::solidBodyMotionFunctions::multiMotion
 
 SourceFiles
-    multiMotion.C
+    relativeMotion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef multiMotion_H
-#define multiMotion_H
+#ifndef relativeMotion_H
+#define relativeMotion_H
 
 #include "solidBodyMotionFunction.H"
 
@@ -45,38 +81,36 @@ namespace solidBodyMotionFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class multiMotion Declaration
+                       Class relativeMotion Declaration
 \*---------------------------------------------------------------------------*/
 
-class multiMotion
+class relativeMotion
 :
     public solidBodyMotionFunction
 {
     // Private Data
 
-        //- Motions to combine
-        PtrList<solidBodyMotionFunction> SBMFs_;
+        //- List of solidBodyMotionFunctions
+        const PtrListDictionary<solidBodyMotionFunction>& SBMFs_;
+
+        //- Name of reference motion function
+        const word referenceName_;
+
+        //- Reference motion
+        autoPtr<solidBodyMotionFunction> SBMF_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("multiMotion");
+    TypeName("relativeMotion");
 
 
     // Constructors
 
-        //- Construct from components
-        multiMotion
-        (
-            const word& name,
-            const dictionary& SBMFCoeffs,
-            const Time& runTime
-        );
-
         //- Construct from solidBodyMotionFunction list
         //  and coefficients dictionary
-        multiMotion
+        relativeMotion
         (
             const word& name,
             const PtrListDictionary<solidBodyMotionFunction>& SBMFs,
@@ -85,25 +119,18 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        multiMotion(const multiMotion&) = delete;
+        relativeMotion(const relativeMotion&) = delete;
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
         {
-            return autoPtr<solidBodyMotionFunction>
-            (
-                new multiMotion
-                (
-                    name_,
-                    SBMFCoeffs_,
-                    time_
-                )
-            );
+            NotImplemented;
+            return autoPtr<solidBodyMotionFunction>(nullptr);
         }
 
 
     //- Destructor
-    virtual ~multiMotion();
+    virtual ~relativeMotion();
 
 
     // Member Functions
@@ -115,7 +142,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const multiMotion&) = delete;
+        void operator=(const relativeMotion&) = delete;
 };
 
 

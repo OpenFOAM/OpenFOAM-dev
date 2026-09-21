@@ -9,9 +9,10 @@ solidBodyMotionFunctions/sixDoFMotion/sixDoFMotion.C
 solidBodyMotionFunctions/linearMotion/linearMotion.C
 solidBodyMotionFunctions/rotatingMotion/rotatingMotion.C
 solidBodyMotionFunctions/axisRotationMotion/axisRotationMotion.C
-solidBodyMotionFunctions/multiMotion/multiMotion.C
 solidBodyMotionFunctions/oscillatingLinearMotion/oscillatingLinearMotion.C
 solidBodyMotionFunctions/oscillatingRotatingMotion/oscillatingRotatingMotion.C
+solidBodyMotionFunctions/relativeMotion/relativeMotion.C
+solidBodyMotionFunctions/multiMotion/multiMotion.C
 
 displacementPoints0/displacementPoints0.C
 

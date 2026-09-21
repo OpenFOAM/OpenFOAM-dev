@@ -38,6 +38,7 @@ SourceFiles
 
 #include "displacementPoints0.H"
 #include "solidBodyMotionFunction.H"
+#include "PtrListDictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,7 +58,7 @@ class multiSolidBody
     // Private Data
 
         //- The motion control function
-        PtrList<solidBodyMotionFunction> SBMFs_;
+        PtrListDictionary<solidBodyMotionFunction> SBMFs_;
 
         //- Specified cellZones
         labelList zoneIndices_;

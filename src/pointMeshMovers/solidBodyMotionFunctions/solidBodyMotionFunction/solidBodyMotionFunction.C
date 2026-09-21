@@ -31,6 +31,7 @@ namespace Foam
 {
     defineTypeNameAndDebug(solidBodyMotionFunction, 0);
     defineRunTimeSelectionTable(solidBodyMotionFunction, dictionary);
+    defineRunTimeSelectionTable(solidBodyMotionFunction, PtrListDictionary);
 }
 
 

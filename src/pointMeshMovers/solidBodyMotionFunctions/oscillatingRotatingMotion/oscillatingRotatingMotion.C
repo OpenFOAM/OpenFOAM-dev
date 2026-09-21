@@ -76,15 +76,12 @@ Foam::septernion
 Foam::solidBodyMotionFunctions::oscillatingRotatingMotion::
 transformation() const
 {
-    scalar t = time_.value();
+    const scalar t = time_.value();
 
-    vector eulerAngles = amplitude_*sin(omega_*t);
+    const vector eulerAngles = amplitude_*degToRad(sin(omega_*t));
 
-    // Convert the rotational motion from deg to rad
-    eulerAngles *= pi/180.0;
-
-    quaternion R(quaternion::XYZ, eulerAngles);
-    septernion TR(septernion(-origin_)*R*septernion(origin_));
+    const quaternion R(quaternion::XYZ, eulerAngles);
+    const septernion TR(septernion(-origin_)*R*septernion(origin_));
 
     DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 

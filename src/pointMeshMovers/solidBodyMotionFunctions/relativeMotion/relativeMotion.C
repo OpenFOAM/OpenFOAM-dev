@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "multiMotion.H"
+#include "relativeMotion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,17 +32,11 @@ namespace Foam
 {
 namespace solidBodyMotionFunctions
 {
-    defineTypeNameAndDebug(multiMotion, 0);
+    defineTypeNameAndDebug(relativeMotion, 0);
     addToRunTimeSelectionTable
     (
         solidBodyMotionFunction,
-        multiMotion,
-        dictionary
-    );
-    addToRunTimeSelectionTable
-    (
-        solidBodyMotionFunction,
-        multiMotion,
+        relativeMotion,
         PtrListDictionary
     );
 }
@@ -51,44 +45,7 @@ namespace solidBodyMotionFunctions
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidBodyMotionFunctions::multiMotion::multiMotion
-(
-    const word& name,
-    const dictionary& SBMFCoeffs,
-    const Time& runTime
-)
-:
-    solidBodyMotionFunction(name, SBMFCoeffs, runTime),
-    SBMFs_(SBMFCoeffs_.size())
-{
-    label i = 0;
-    forAllConstIter(IDLList<entry>, SBMFCoeffs_, iter)
-    {
-        if (iter().isDict())
-        {
-            SBMFs_.set
-            (
-                i,
-                solidBodyMotionFunction::New
-                (
-                    SBMFCoeffs,
-                    time_,
-                    iter().keyword()
-                )
-            );
-
-            Info<< "Constructed SBMF " << i << " : "
-                << iter().keyword() << " of type "
-                << SBMFs_[i].type() << endl;
-
-            i++;
-        }
-    }
-    SBMFs_.setSize(i);
-}
-
-
-Foam::solidBodyMotionFunctions::multiMotion::multiMotion
+Foam::solidBodyMotionFunctions::relativeMotion::relativeMotion
 (
     const word& name,
     const PtrListDictionary<solidBodyMotionFunction>& SBMFs,
@@ -97,53 +54,28 @@ Foam::solidBodyMotionFunctions::multiMotion::multiMotion
 )
 :
     solidBodyMotionFunction(name, SBMFCoeffs, runTime),
-    SBMFs_(SBMFCoeffs_.size())
-{
-    label i = 0;
-    forAllConstIter(IDLList<entry>, SBMFCoeffs_, iter)
-    {
-        if (iter().isDict())
-        {
-            SBMFs_.set
-            (
-                i,
-                solidBodyMotionFunction::New
-                (
-                    SBMFs,
-                    SBMFCoeffs,
-                    time_,
-                    iter().keyword()
-                )
-            );
-
-            Info<< "Constructed SBMF " << i << " : "
-                << iter().keyword() << " of type "
-                << SBMFs_[i].type() << endl;
-
-            i++;
-        }
-    }
-    SBMFs_.setSize(i);
-}
+    SBMFs_(SBMFs),
+    referenceName_(SBMFCoeffs.lookup<word>("relativeTo")),
+    SBMF_(solidBodyMotionFunction::New(SBMFCoeffs, time_, typeName))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::solidBodyMotionFunctions::multiMotion::~multiMotion()
+Foam::solidBodyMotionFunctions::relativeMotion::~relativeMotion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::septernion
-Foam::solidBodyMotionFunctions::multiMotion::transformation() const
+Foam::solidBodyMotionFunctions::relativeMotion::transformation() const
 {
-    septernion TR = SBMFs_[0].transformation();
+    // Get the reference transformation
+    septernion TR = SBMFs_[referenceName_].transformation();
 
-    for (label i = 1; i < SBMFs_.size(); i++)
-    {
-        TR *= SBMFs_[i].transformation();
-    }
+    // Set this body transformation relative to the reference
+    TR *= SBMF_->transformation();
 
     DebugInFunction
         << "Time = " << time_.value() << " transformation: " << TR << endl;

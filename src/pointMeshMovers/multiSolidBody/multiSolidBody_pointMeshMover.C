@@ -121,10 +121,10 @@ Foam::pointMeshMovers::multiSolidBody::multiSolidBody
     const dictionary& dict
 )
 :
-    displacementPoints0(mesh, dict, typeName)
+    displacementPoints0(mesh, dict, typeName),
+    SBMFs_(dict.size())
 {
     zoneIndices_.setSize(dict.size());
-    SBMFs_.setSize(dict.size());
     label zonei = 0;
     forAllConstIter(dictionary, dict, iter)
     {
@@ -143,10 +143,17 @@ Foam::pointMeshMovers::multiSolidBody::multiSolidBody
         SBMFs_.set
         (
             zonei,
-            solidBodyMotionFunction::New(dict, mesh.time(), iter().keyword())
+            iter().keyword(),
+            solidBodyMotionFunction::New
+            (
+                SBMFs_,
+                dict,
+                mesh.time(),
+                iter().keyword()
+            )
         );
 
-        zonei ++;
+        zonei++;
     }
     zoneIndices_.setSize(zonei);
     SBMFs_.setSize(zonei);

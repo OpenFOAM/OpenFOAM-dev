@@ -175,7 +175,7 @@ public:
         //- Return the name of this phase
         const word& name() const;
 
-        //- Return the name of the phase for use as the keyword in PtrDictionary
+        //- Return the name of the phase for use as the keyword
         const word& keyword() const;
 
         //- Return the index of the phase
