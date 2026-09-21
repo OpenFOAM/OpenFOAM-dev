@@ -101,9 +101,20 @@ struct integerPowOp
 
     static const bool associative = false;
 
-    static scalar value(const scalar a, const label b)
+    static scalar value(const scalar a, const int32_t b)
     {
         return integerPow(a, b);
+    }
+
+    static scalar value(const scalar a, const int64_t b)
+    {
+        return integerPow(a, b);
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return pow(a, b);
     }
 };
 
@@ -122,9 +133,20 @@ struct integerRootOp
 
     static const bool associative = false;
 
-    static scalar value(const scalar a, const label b)
+    static scalar value(const scalar a, const int32_t b)
     {
         return integerRoot(a, b);
+    }
+
+    static scalar value(const scalar a, const int64_t b)
+    {
+        return integerRoot(a, b);
+    }
+
+    template<class A, class B>
+    static auto value(const A& a, const B& b)
+    {
+        return root(a, b);
     }
 };
 

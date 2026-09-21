@@ -86,6 +86,16 @@ public:
         doue.dimensions_ = dimless;
         return pow(dimensions, doue.exponent_);
     }
+
+    friend dimensionSet root
+    (
+        const dimensionSet& dimensions,
+        const DimensionsOrUniformExponent<Exponent>& doue
+    )
+    {
+        doue.dimensions_ = dimless;
+        return pow(dimensions, scalar(1)/doue.exponent_);
+    }
 };
 
 /*---------------------------------------------------------------------------*\
