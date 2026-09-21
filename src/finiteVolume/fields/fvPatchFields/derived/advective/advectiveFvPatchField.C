@@ -45,7 +45,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     mixedFvPatchField<Type>(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    fieldInf_(Zero),
+    fieldInf_(nullptr),
     lInf_(-great)
 {
     if (dict.found("value"))
@@ -76,7 +76,16 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
                 << exit(FatalIOError);
         }
 
-        fieldInf_ = dict.lookup<Type>("fieldInf", iF.dimensions());
+        fieldInf_.set
+        (
+            Function1<Type>::New
+            (
+                "fieldInf",
+                time().userUnits(),
+                iF.dimensions(),
+                dict
+            ).ptr()
+        );
     }
 }
 
@@ -93,7 +102,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     mixedFvPatchField<Type>(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
-    fieldInf_(ptf.fieldInf_),
+    fieldInf_(ptf.fieldInf_, false),
     lInf_(ptf.lInf_)
 {}
 
@@ -101,15 +110,15 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
 template<class Type>
 Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
 (
-    const advectiveFvPatchField& ptpsf,
+    const advectiveFvPatchField& ptf,
     const DimensionedField<Type, fvMesh>& iF
 )
 :
-    mixedFvPatchField<Type>(ptpsf, iF),
-    phiName_(ptpsf.phiName_),
-    rhoName_(ptpsf.rhoName_),
-    fieldInf_(ptpsf.fieldInf_),
-    lInf_(ptpsf.lInf_)
+    mixedFvPatchField<Type>(ptf, iF),
+    phiName_(ptf.phiName_),
+    rhoName_(ptf.rhoName_),
+    fieldInf_(ptf.fieldInf_, false),
+    lInf_(ptf.lInf_)
 {}
 
 
@@ -185,6 +194,9 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         // Calculate the field relaxation coefficient k (See notes)
         const scalarField k(w*deltaT/lInf_);
 
+        // Far-field value at the new time
+        const Type fieldInf(fieldInf_->value(time().value()));
+
         if
         (
             ddtScheme == fv::EulerDdtScheme<scalar>::typeName
@@ -193,7 +205,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         {
             this->refValue() =
             (
-                field.oldTime().boundaryField()[patchi] + k*fieldInf_
+                field.oldTime().boundaryField()[patchi] + k*fieldInf
             )/(1.0 + k);
 
             this->valueFraction() = (1.0 + k)/(1.0 + alpha + k);
@@ -204,7 +216,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
             (
                 2.0*field.oldTime().boundaryField()[patchi]
               - 0.5*field.oldTime().oldTime().boundaryField()[patchi]
-              + k*fieldInf_
+              + k*fieldInf
             )/(1.5 + k);
 
             this->valueFraction() = (1.5 + k)/(1.5 + alpha + k);
@@ -228,7 +240,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
 
             this->refValue() =
             (
-                field.oldTime().boundaryField()[patchi] + k*fieldInf_
+                field.oldTime().boundaryField()[patchi] + k*fieldInf
             )/(1.0 + k);
 
             this->valueFraction() = (1.0 + k)/(1.0 + alpha + k);
@@ -299,7 +311,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void Foam::advectiveFvPatchField<Type>::write(Ostream& os) const
+void Foam::advectiveFvPatchField<Type>::writeData(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
 
@@ -308,10 +320,23 @@ void Foam::advectiveFvPatchField<Type>::write(Ostream& os) const
 
     if (lInf_ > 0)
     {
-        writeEntry(os, "fieldInf", fieldInf_);
         writeEntry(os, "lInf", lInf_);
-    }
 
+        writeEntry
+        (
+            os,
+            time().userUnits(),
+            internalField().dimensions(),
+            fieldInf_()
+        );
+    }
+}
+
+
+template<class Type>
+void Foam::advectiveFvPatchField<Type>::write(Ostream& os) const
+{
+    writeData(os);
     writeEntry(os, "value", *this);
 }
 

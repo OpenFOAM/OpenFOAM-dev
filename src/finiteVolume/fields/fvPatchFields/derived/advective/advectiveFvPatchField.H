@@ -33,7 +33,7 @@ Description
     supported.  Additionally an optional mechanism to relax the value at
     the boundary to a specified far-field value is provided which is
     switched on by specifying the relaxation length-scale \c lInf and the
-    far-field value \c fieldInf.
+    optionally time-varying far-field value \c fieldInf.
 
     The flow/wave speed \c (w) at the outlet is provided by the virtual function
     advectionSpeed() the default implementation of which requires the name of
@@ -48,11 +48,11 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        phi          | flux field name         | no          | phi
-        rho          | density field name      | no          | rho
-        fieldInf     | value of field beyond patch | no      |
-        lInf         | distance beyond patch for \c fieldInf | no |
+        Property     | Description              | Required    | Default value
+        phi          | Flux field name          | no          | phi
+        rho          | Density field name       | no          | rho
+        fieldInf     | Far field value Function1           | no |
+        lInf         | Far field value relaxation distance | no |
     \endtable
 
     Example of the boundary condition specification:
@@ -65,8 +65,8 @@ Usage
     \endverbatim
 
     Note:
-        If \c lInf is specified, \c fieldInf will be required; \c rho is only
-        required in the case of a mass-based flux.
+        If \c lInf is specified, \c fieldInf is required.
+        \c rho is only required in the case of a mass-based flux.
 
 SourceFiles
     advectiveFvPatchField.C
@@ -77,6 +77,7 @@ SourceFiles
 #define advectiveFvPatchField_H
 
 #include "mixedFvPatchField.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -103,8 +104,8 @@ protected:
         //  if necessary
         word rhoName_;
 
-        //- Field value of the far-field
-        Type fieldInf_;
+        //- Far-field value
+        autoPtr<Function1<Type>> fieldInf_;
 
         //- Relaxation length-scale
         scalar lInf_;
@@ -167,35 +168,6 @@ public:
         using fvPatchField<Type>::patchInternalField;
         using fvPatchField<Type>::internalField;
 
-
-        // Access
-
-            //- Return the field at infinity
-            const Type& fieldInf() const
-            {
-                return fieldInf_;
-            }
-
-            //- Return reference to the field at infinity to allow adjustment
-            Type& fieldInf()
-            {
-                return fieldInf_;
-            }
-
-            //- Return the relaxation length-scale
-            scalar lInf() const
-            {
-                return lInf_;
-            }
-
-            //- Return reference to the relaxation length-scale
-            //  to allow adjustment
-            scalar& lInf()
-            {
-                return lInf_;
-            }
-
-
         // Evaluation functions
 
             //- Calculate and return the advection speed at the boundary
@@ -204,6 +176,8 @@ public:
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
 
+        //- Write data not value
+        void writeData(Ostream&) const;
 
         //- Write
         virtual void write(Ostream&) const;

@@ -159,22 +159,6 @@ public:
         using fvPatchField<Type>::db;
         using fvPatchField<Type>::patch;
 
-
-        // Access
-
-            //- Return the heat capacity ratio
-            scalar gamma() const
-            {
-                return gamma_;
-            }
-
-            //- Return reference to the heat capacity ratio to allow adjustment
-            scalar& gamma()
-            {
-                return gamma_;
-            }
-
-
         // Evaluation functions
 
             //- Calculate and return the advection speed at the boundary

@@ -114,20 +114,9 @@ Foam::waveTransmissiveFvPatchField<Type>::advectionSpeed() const
 template<class Type>
 void Foam::waveTransmissiveFvPatchField<Type>::write(Ostream& os) const
 {
-    fvPatchField<Type>::write(os);
-
-    writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
-    writeEntryIfDifferent<word>(os, "rho", "rho", this->rhoName_);
+    advectiveFvPatchField<Type>::writeData(os);
     writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
-
     writeEntry(os, "gamma", gamma_);
-
-    if (this->lInf_ > small)
-    {
-        writeEntry(os, "fieldInf", this->fieldInf_);
-        writeEntry(os, "lInf", this->lInf_);
-    }
-
     writeEntry(os, "value", *this);
 }
 
