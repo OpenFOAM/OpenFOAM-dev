@@ -30,14 +30,14 @@ fi
 
 # Use the makefiles from the project to set the definitions and include paths
 # for the ParaView and VTK-dependent OpenFOAM libraries
-export ParaView_DEFINES=$(
+export ParaView_DEFINES="$(
     cd PVdummy/Make/$WM_OPTIONS && \
     make --file=CMakeFiles/PVdummy.dir/build.make --eval="print-variable:
-	@echo \$(CXX_DEFINES)")
-export ParaView_INCLUDES=$(
+	@echo \$(CXX_DEFINES)")"
+export ParaView_INCLUDES="$(
     cd PVdummy/Make/$WM_OPTIONS && \
     make --file=CMakeFiles/PVdummy.dir/build.make --eval="print-variable:
-	@echo \$(CXX_INCLUDES)")
+	@echo \$(CXX_INCLUDES)")"
 
 # Test for polyhedron support and set flags accordingly
 echo \#include \"vtkPolyhedron.h\" | \
