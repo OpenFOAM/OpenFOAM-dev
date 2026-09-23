@@ -39,7 +39,7 @@ turbulentEpsilonFvScalarFieldSource
 )
 :
     fvScalarFieldSource(iF, dict),
-    mixingLength_(dict.lookup<scalar>("mixingLength", dimensions::length)),
+    mixingLength_("mixingLength", dimensions::length, dict),
     kName_(dict.lookupOrDefault<word>("k", "k")),
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09))
 {}
@@ -94,7 +94,7 @@ Foam::turbulentEpsilonFvScalarFieldSource::sourceValue
 {
     const scalarField ks(this->value<scalar>(kName_, model, source, cells));
 
-    return pow(Cmu_, 0.75)*ks*sqrt(ks)/mixingLength_;
+    return pow(Cmu_, 0.75)*ks*sqrt(ks)/mixingLength_.value();
 }
 
 

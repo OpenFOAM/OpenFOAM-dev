@@ -89,7 +89,7 @@ private:
     // Private Data
 
         //- Turbulent length scale
-        scalar mixingLength_;
+        dimensionedScalar mixingLength_;
 
         //- Name of the turbulent kinetic energy field
         word kName_;
