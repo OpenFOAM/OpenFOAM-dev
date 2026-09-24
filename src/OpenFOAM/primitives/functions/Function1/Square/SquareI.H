@@ -31,13 +31,11 @@ License
 template<class Type>
 inline Type Foam::Function1s::Square<Type>::value(const scalar x) const
 {
-    const scalar markFraction = markSpace_/(1 + markSpace_);
-
     const scalar phi = frequency_*(x - start_);
     const scalar fraction = phi - floor(phi);
 
     return
-        amplitude_->value(x)*(fraction < markFraction ? 1 : -1)
+        amplitude_->value(x)*(fraction < dutyCycle_ ? 1 : -1)
       + level_->value(x);
 }
 
@@ -66,16 +64,14 @@ inline Type Foam::Function1s::Square<Type>::integral
 
     auto integral0 = [&](const scalar x)
     {
-        const scalar markFraction = markSpace_/(1 + markSpace_);
-
         const scalar phi = frequency_*(x - start_);
         const scalar fraction = phi - floor(phi);
 
         return
             (2*amplitude_->value(x)/frequency_)
            *(
-               markFraction*floor(phi + 1 - markFraction)
-             + fraction*(fraction < markFraction ? 1 : 0)
+               dutyCycle_*floor(phi + 1 - dutyCycle_)
+             + fraction*(fraction < dutyCycle_ ? 1 : 0)
              - frequency_/2*x
             );
     };

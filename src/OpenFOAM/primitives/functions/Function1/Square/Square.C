@@ -25,6 +25,39 @@ License
 
 #include "Square.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::scalar Foam::Function1s::Square<Type>::readDutyCycle
+(
+    const dictionary& dict
+) const
+{
+    const bool haveDutyCycle = dict.found("dutyCycle");
+    const bool haveMarkSpace = dict.found("markSpace");
+
+    if (haveDutyCycle && haveMarkSpace)
+    {
+        FatalIOErrorInFunction(dict)
+            << "both keywords dutyCycle and markSpace defined in dictionary "
+            << dict.name() << exit(FatalIOError);
+    }
+
+    if (haveDutyCycle)
+    {
+        return dict.lookup<scalar>("dutyCycle", units::unitless);
+    }
+
+    if (haveMarkSpace)
+    {
+        const scalar r = dict.lookup<scalar>("markSpace", units::unitless);
+        return r/(1 + r);
+    }
+
+    return 0.5;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -40,7 +73,7 @@ Foam::Function1s::Square<Type>::Square
     frequency_(dict.lookup<scalar>("frequency", units::unitless/units.x)),
     start_(dict.lookupOrDefault<scalar>("start", units.x, 0)),
     level_(Function1<Type>::New("level", units, dict)),
-    markSpace_(dict.lookupOrDefault<scalar>("markSpace", units::unitless, 1)),
+    dutyCycle_(readDutyCycle(dict)),
     integrable_(amplitude_->constant() && level_->constant())
 {}
 
@@ -53,7 +86,7 @@ Foam::Function1s::Square<Type>::Square(const Square<Type>& se)
     frequency_(se.frequency_),
     start_(se.start_),
     level_(se.level_, false),
-    markSpace_(se.markSpace_),
+    dutyCycle_(se.dutyCycle_),
     integrable_(se.integrable_)
 {}
 
@@ -78,7 +111,7 @@ void Foam::Function1s::Square<Type>::write
     writeEntry(os, "frequency", units::unitless/units.x, frequency_);
     writeEntry(os, "start", units.x, start_);
     writeEntry(os, units, level_());
-    writeEntry(os, "markSpace", units::unitless, markSpace_);
+    writeEntry(os, "dutyCycle", units::unitless, dutyCycle_);
 }
 
 

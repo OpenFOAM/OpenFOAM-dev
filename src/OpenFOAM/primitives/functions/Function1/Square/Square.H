@@ -42,6 +42,7 @@ Description
         f       | Frequency        | scalar          |
         x_0     | Phase            | scalar          | 0
         l       | Offset level     | Function1<Type> |
+        D       | Duty cycle       | scalar          | 0.5
         r       | Mark/space ratio | scalar          | 1
     \endvartable
 
@@ -54,7 +55,7 @@ Description
             frequency 10;
             start     0;
             level     2e-6;
-            markSpace 0.5;
+            dutyCycle 0.5;
         }
     \endverbatim
 
@@ -67,7 +68,7 @@ Description
             frequency 10;
             start     0;
             level     (10 1 0);
-            markSpace 0.5;
+            markSpace 1;
         }
     \endverbatim
 
@@ -111,13 +112,18 @@ class Square
         //- Level to which the square function is added
         const autoPtr<Function1<Type>> level_;
 
-        //- Mark/space ratio of the square function; the fraction of one period
-        //  in which the function value is at the higher of the two possible
-        //  values.
-        const scalar markSpace_;
+        //- The fraction of one period in which the function value is at the
+        //  higher of the two possible values
+        const scalar dutyCycle_;
 
         //- Is this function integrable?
         const bool integrable_;
+
+
+    // Private Member Functions
+
+        //- Read the duty cycle
+        scalar readDutyCycle(const dictionary& dict) const;
 
 
 public:
