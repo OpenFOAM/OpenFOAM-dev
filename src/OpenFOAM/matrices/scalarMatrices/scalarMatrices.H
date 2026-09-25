@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,6 +88,9 @@ void LUDecompose
     label& sign
 );
 
+//- LU decompose using efficient ikj-loop with row filtering, without pivoting
+void LUDecompose(scalarSquareMatrix& A, const scalar rowTol = 1e-6);
+
 //- LU decompose the matrix into a lower (L) and upper (U) part. U = L.T()
 void LUDecompose(scalarSymmetricSquareMatrix& matrix);
 
@@ -98,6 +101,15 @@ void LUBacksubstitute
 (
     const scalarSquareMatrix& luMmatrix,
     const labelList& pivotIndices,
+    List<Type>& source
+);
+
+//- LU back-substitution with given source, returning the solution
+//  in the source
+template<class Type>
+void LUBacksubstitute
+(
+    const scalarSquareMatrix& luMmatrix,
     List<Type>& source
 );
 

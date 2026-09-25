@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,12 @@ class seulex
                 stepFactor1_, stepFactor2_, stepFactor3_,
                 stepFactor4_, stepFactor5_,
                 kFactor1_, kFactor2_;
+
+        // Controls
+
+           //- Optional LU decomposition pivoting switch
+           //  Defaults to false
+           Switch pivot_;
 
         // Evaluated constants
 

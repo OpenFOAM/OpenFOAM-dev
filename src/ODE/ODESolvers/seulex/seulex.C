@@ -50,6 +50,7 @@ namespace Foam
 Foam::seulex::seulex(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
+    pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
     jacRedo_(min(1e-4, min(relTol_))),
     nSeq_(iMaxx_),
     cpu_(iMaxx_),
@@ -124,11 +125,25 @@ bool Foam::seulex::seul
         a_(i, i) += 1/dx;
     }
 
-    LUDecompose(a_, pivotIndices_);
+    if (pivot_)
+    {
+        LUDecompose(a_, pivotIndices_);
+    }
+    else
+    {
+        LUDecompose(a_);
+    }
 
     scalar xnew = x0 + dx;
     odes_.derivatives(xnew, y0, li, dy_);
-    LUBacksubstitute(a_, pivotIndices_, dy_);
+    if (pivot_)
+    {
+        LUBacksubstitute(a_, pivotIndices_, dy_);
+    }
+    else
+    {
+        LUBacksubstitute(a_, dy_);
+    }
 
     yTemp_ = y0;
 
@@ -152,7 +167,14 @@ bool Foam::seulex::seul
                 dy_[i] = dydx_[i] - dy_[i]/dx;
             }
 
-            LUBacksubstitute(a_, pivotIndices_, dy_);
+            if (pivot_)
+            {
+                LUBacksubstitute(a_, pivotIndices_, dy_);
+            }
+            else
+            {
+                LUBacksubstitute(a_, dy_);
+            }
 
             const scalar denom = max(1, dy1);
 
@@ -178,7 +200,15 @@ bool Foam::seulex::seul
         }
 
         odes_.derivatives(xnew, yTemp_, li, dy_);
-        LUBacksubstitute(a_, pivotIndices_, dy_);
+
+        if (pivot_)
+        {
+            LUBacksubstitute(a_, pivotIndices_, dy_);
+        }
+        else
+        {
+            LUBacksubstitute(a_, dy_);
+        }
     }
 
     for (label i=0; i<n_; i++)

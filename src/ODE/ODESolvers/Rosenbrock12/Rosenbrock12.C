@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,7 @@ Foam::Rosenbrock12::Rosenbrock12(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
     adaptiveSolver(ode, dict),
+    pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
     k1_(n_),
     k2_(n_),
     err_(n_),
@@ -112,7 +113,14 @@ Foam::scalar Foam::Rosenbrock12::solve
         a_(i, i) += 1.0/(gamma*dx);
     }
 
-    LUDecompose(a_, pivotIndices_);
+    if (pivot_)
+    {
+        LUDecompose(a_, pivotIndices_);
+    }
+    else
+    {
+        LUDecompose(a_);
+    }
 
     // Calculate k1:
     forAll(k1_, i)
@@ -120,7 +128,14 @@ Foam::scalar Foam::Rosenbrock12::solve
         k1_[i] = dydx0[i] + dx*d1*dfdx_[i];
     }
 
-    LUBacksubstitute(a_, pivotIndices_, k1_);
+    if (pivot_)
+    {
+        LUBacksubstitute(a_, pivotIndices_, k1_);
+    }
+    else
+    {
+        LUBacksubstitute(a_, k1_);
+    }
 
     // Calculate k2:
     forAll(y, i)
@@ -135,7 +150,14 @@ Foam::scalar Foam::Rosenbrock12::solve
         k2_[i] = dydx_[i] + dx*d2*dfdx_[i] + c21*k1_[i]/dx;
     }
 
-    LUBacksubstitute(a_, pivotIndices_, k2_);
+    if (pivot_)
+    {
+        LUBacksubstitute(a_, pivotIndices_, k2_);
+    }
+    else
+    {
+        LUBacksubstitute(a_, k2_);
+    }
 
     // Calculate error and update state:
     forAll(y, i)

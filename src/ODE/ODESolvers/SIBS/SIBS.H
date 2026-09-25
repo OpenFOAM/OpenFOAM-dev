@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,6 +66,16 @@ class SIBS
         static const label nSeq_[iMaxX_];
 
         static const scalar safe1, safe2, redMax, redMin, scaleMX;
+
+        // Controls
+
+           //- Optional LU decomposition pivoting switch
+           //  Defaults to false
+           Switch pivot_;
+
+        // Temporary storage
+        // held to avoid dynamic memory allocation between calls
+        // and to transfer internal values between functions
 
         mutable scalarField a_;
         mutable scalarSquareMatrix alpha_;

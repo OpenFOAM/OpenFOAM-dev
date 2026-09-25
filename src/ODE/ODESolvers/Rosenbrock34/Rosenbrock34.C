@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,6 +109,7 @@ Foam::Rosenbrock34::Rosenbrock34(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
     adaptiveSolver(ode, dict),
+    pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
     k1_(n_),
     k2_(n_),
     k3_(n_),
@@ -172,7 +173,14 @@ Foam::scalar Foam::Rosenbrock34::solve
         a_(i, i) += 1.0/(gamma*dx);
     }
 
-    LUDecompose(a_, pivotIndices_);
+    if (pivot_)
+    {
+        LUDecompose(a_, pivotIndices_);
+    }
+    else
+    {
+        LUDecompose(a_);
+    }
 
     // Calculate k1:
     forAll(k1_, i)
@@ -180,7 +188,14 @@ Foam::scalar Foam::Rosenbrock34::solve
         k1_[i] = dydx0[i] + dx*d1*dfdx_[i];
     }
 
-    LUBacksubstitute(a_, pivotIndices_, k1_);
+    if (pivot_)
+    {
+        LUBacksubstitute(a_, pivotIndices_, k1_);
+    }
+    else
+    {
+        LUBacksubstitute(a_, k1_);
+    }
 
     // Calculate k2:
     forAll(y, i)
@@ -195,7 +210,14 @@ Foam::scalar Foam::Rosenbrock34::solve
         k2_[i] = dydx_[i] + dx*d2*dfdx_[i] + c21*k1_[i]/dx;
     }
 
-    LUBacksubstitute(a_, pivotIndices_, k2_);
+    if (pivot_)
+    {
+        LUBacksubstitute(a_, pivotIndices_, k2_);
+    }
+    else
+    {
+        LUBacksubstitute(a_, k2_);
+    }
 
     // Calculate k3:
     forAll(y, i)
@@ -210,7 +232,14 @@ Foam::scalar Foam::Rosenbrock34::solve
         k3_[i] = dydx_[i] + dx*d3*dfdx_[i] + (c31*k1_[i] + c32*k2_[i])/dx;
     }
 
-    LUBacksubstitute(a_, pivotIndices_, k3_);
+    if (pivot_)
+    {
+        LUBacksubstitute(a_, pivotIndices_, k3_);
+    }
+    else
+    {
+        LUBacksubstitute(a_, k3_);
+    }
 
     // Calculate k4:
     forAll(k4_, i)
@@ -219,7 +248,14 @@ Foam::scalar Foam::Rosenbrock34::solve
           + (c41*k1_[i] + c42*k2_[i] + c43*k3_[i])/dx;
     }
 
-    LUBacksubstitute(a_, pivotIndices_, k4_);
+    if (pivot_)
+    {
+        LUBacksubstitute(a_, pivotIndices_, k4_);
+    }
+    else
+    {
+        LUBacksubstitute(a_, k4_);
+    }
 
     // Calculate error and update state:
     forAll(y, i)

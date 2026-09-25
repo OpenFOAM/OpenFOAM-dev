@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,6 +130,52 @@ void Foam::LUBacksubstitute
         label ip = pivotIndices[i];
         Type sum = sourceSol[ip];
         sourceSol[ip] = sourceSol[i];
+        const scalar* __restrict__ luMatrixi = luMatrix[i];
+
+        if (ii != 0)
+        {
+            for (label j=ii-1; j<i; j++)
+            {
+                sum -= luMatrixi[j]*sourceSol[j];
+            }
+        }
+        else if (sum != pTraits<Type>::zero)
+        {
+            ii = i+1;
+        }
+
+        sourceSol[i] = sum;
+    }
+
+    for (label i=m-1; i>=0; i--)
+    {
+        Type sum = sourceSol[i];
+        const scalar* __restrict__ luMatrixi = luMatrix[i];
+
+        for (label j=i+1; j<m; j++)
+        {
+            sum -= luMatrixi[j]*sourceSol[j];
+        }
+
+        sourceSol[i] = sum/luMatrixi[i];
+    }
+}
+
+
+template<class Type>
+void Foam::LUBacksubstitute
+(
+    const scalarSquareMatrix& luMatrix,
+    List<Type>& sourceSol
+)
+{
+    label m = luMatrix.m();
+
+    label ii = 0;
+
+    for (label i=0; i<m; i++)
+    {
+        Type sum = sourceSol[i];
         const scalar* __restrict__ luMatrixi = luMatrix[i];
 
         if (ii != 0)

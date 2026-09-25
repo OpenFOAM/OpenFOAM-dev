@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,44 +65,44 @@ addCompoundToRunTimeSelectionTable
 
 void Foam::LUDecompose
 (
-    scalarSquareMatrix& matrix,
+    scalarSquareMatrix& A,
     labelList& pivotIndices
 )
 {
     label sign;
-    LUDecompose(matrix, pivotIndices, sign);
+    LUDecompose(A, pivotIndices, sign);
 }
 
 
 void Foam::LUDecompose
 (
-    scalarSquareMatrix& matrix,
+    scalarSquareMatrix& A,
     labelList& pivotIndices,
     label& sign
 )
 {
-    const label m = matrix.m();
+    const label m = A.m();
     scalarList vv(m);
     sign = 1;
 
     for (label i=0; i<m; i++)
     {
-        scalar largestCoeff = 0.0;
+        scalar largestCoeff = 0;
         scalar temp;
-        const scalar* __restrict__ matrixi = matrix[i];
+        const scalar* __restrict__ Ai = A[i];
 
         for (label j=0; j<m; j++)
         {
-            if ((temp = mag(matrixi[j])) > largestCoeff)
+            if ((temp = mag(Ai[j])) > largestCoeff)
             {
                 largestCoeff = temp;
             }
         }
 
-        if (largestCoeff == 0.0)
+        if (largestCoeff == 0)
         {
             FatalErrorInFunction
-                << "Singular matrix" << exit(FatalError);
+                << "Singular A" << exit(FatalError);
         }
 
         vv[i] = 1.0/largestCoeff;
@@ -110,34 +110,34 @@ void Foam::LUDecompose
 
     for (label j=0; j<m; j++)
     {
-        scalar* __restrict__ matrixj = matrix[j];
+        scalar* __restrict__ Aj = A[j];
 
         for (label i=0; i<j; i++)
         {
-            scalar* __restrict__ matrixi = matrix[i];
+            scalar* __restrict__ Ai = A[i];
 
-            scalar sum = matrixi[j];
+            scalar sum = Ai[j];
             for (label k=0; k<i; k++)
             {
-                sum -= matrixi[k]*matrix(k, j);
+                sum -= Ai[k]*A(k, j);
             }
-            matrixi[j] = sum;
+            Ai[j] = sum;
         }
 
         label iMax = 0;
 
-        scalar largestCoeff = 0.0;
+        scalar largestCoeff = 0;
         for (label i=j; i<m; i++)
         {
-            scalar* __restrict__ matrixi = matrix[i];
-            scalar sum = matrixi[j];
+            scalar* __restrict__ Ai = A[i];
+            scalar sum = Ai[j];
 
             for (label k=0; k<j; k++)
             {
-                sum -= matrixi[k]*matrix(k, j);
+                sum -= Ai[k]*A(k, j);
             }
 
-            matrixi[j] = sum;
+            Ai[j] = sum;
 
             scalar temp;
             if ((temp = vv[i]*mag(sum)) >= largestCoeff)
@@ -151,73 +151,101 @@ void Foam::LUDecompose
 
         if (j != iMax)
         {
-            scalar* __restrict__ matrixiMax = matrix[iMax];
+            scalar* __restrict__ AiMax = A[iMax];
 
             for (label k=0; k<m; k++)
             {
-                Swap(matrixj[k], matrixiMax[k]);
+                Swap(Aj[k], AiMax[k]);
             }
 
             sign *= -1;
             vv[iMax] = vv[j];
         }
 
-        if (matrixj[j] == 0.0)
+        if (Aj[j] == 0)
         {
-            matrixj[j] = small;
+            Aj[j] = small;
         }
 
         if (j != m-1)
         {
-            scalar rDiag = 1.0/matrixj[j];
+            const scalar rDiag = 1.0/Aj[j];
 
             for (label i=j+1; i<m; i++)
             {
-                matrix(i, j) *= rDiag;
+                A(i, j) *= rDiag;
             }
         }
     }
 }
 
 
-void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
+void Foam::LUDecompose(scalarSquareMatrix& A, const scalar rowTol)
+{
+    const label m = A.m();
+
+    for (label i=0; i<m; i++)
+    {
+        for (label k=0; k<i; k++)
+        {
+            // Compute the row multiplier for the lower triangular matrix L
+            A(i, k) /= A(k, k);
+
+            // If the row multiplier is 0 skip the inner j loop
+            if (mag(A(i, k)) < rowTol)
+            {
+                A(i, k) = 0;
+                continue;
+            }
+
+            // Update the remaining elements of the row
+            for (label j=k+1; j<m; j++)
+            {
+                A(i, j) -= A(i, k)*A(k, j);
+            }
+        }
+    }
+}
+
+
+void Foam::LUDecompose(scalarSymmetricSquareMatrix& A)
 {
     // Store result in upper triangular part of matrix
-    label size = matrix.m();
+    const label m = A.m();
 
     // Set upper triangular parts to zero.
-    for (label j=0; j<size; j++)
+    for (label j=0; j<m; j++)
     {
-        for (label k=j + 1; k<size; k++)
+        for (label k=j + 1; k<m; k++)
         {
-            matrix(j, k) = 0.0;
+            A(j, k) = 0;
         }
     }
 
-    for (label j=0; j<size; j++)
+    for (label j=0; j<m; j++)
     {
-        scalar d = 0.0;
+        scalar d = 0;
 
         for (label k=0; k<j; k++)
         {
-            scalar s = 0.0;
+            scalar s = 0;
 
             for (label i=0; i<k; i++)
             {
-                s += matrix(i, k)*matrix(i, j);
+                s += A(i, k)*A(i, j);
             }
 
-            s = (matrix(j, k) - s)/matrix(k, k);
+            s = (A(j, k) - s)/A(k, k);
 
-            matrix(k, j) = s;
-            matrix(j, k) = s;
+            A(k, j) = s;
+            A(j, k) = s;
 
             d += sqr(s);
         }
 
-        d = matrix(j, j) - d;
+        d = A(j, j) - d;
 
-        if (d < 0.0)
+        if (d < 0)
         {
             FatalErrorInFunction
                 << "Matrix is not symmetric positive-definite. Unable to "
@@ -225,7 +253,7 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& matrix)
                 << abort(FatalError);
         }
 
-        matrix(j, j) = sqrt(d);
+        A(j, j) = sqrt(d);
     }
 }
 

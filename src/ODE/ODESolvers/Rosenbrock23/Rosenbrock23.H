@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,16 @@ class Rosenbrock23
     public adaptiveSolver
 {
     // Private Data
+
+        // Controls
+
+           //- Optional LU decomposition pivoting switch
+           //  Defaults to false
+           Switch pivot_;
+
+        // Temporary storage
+        // held to avoid dynamic memory allocation between calls
+        // and to transfer internal values between functions
 
         mutable scalarField k1_;
         mutable scalarField k2_;

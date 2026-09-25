@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ namespace Foam
 Foam::SIBS::SIBS(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
+    pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
     a_(iMaxX_, 0.0),
     alpha_(kMaxX_, 0.0),
     d_p_(n_, kMaxX_, 0.0),

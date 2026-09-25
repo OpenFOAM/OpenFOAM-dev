@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,14 +53,29 @@ void Foam::SIBS::SIMPR
     }
 
     labelList pivotIndices(n_);
-    LUDecompose(a, pivotIndices);
+
+    if (pivot_)
+    {
+        LUDecompose(a, pivotIndices);
+    }
+    else
+    {
+        LUDecompose(a);
+    }
 
     for (label i=0; i<n_; i++)
     {
         yEnd[i] = h*(dydx[i] + h*dfdx[i]);
     }
 
-    LUBacksubstitute(a, pivotIndices, yEnd);
+    if (pivot_)
+    {
+        LUBacksubstitute(a, pivotIndices, yEnd);
+    }
+    else
+    {
+        LUBacksubstitute(a, yEnd);
+    }
 
     scalarField del(yEnd);
     scalarField ytemp(n_);
@@ -81,11 +96,18 @@ void Foam::SIBS::SIMPR
             yEnd[i] = h*yEnd[i] - del[i];
         }
 
-        LUBacksubstitute(a, pivotIndices, yEnd);
+        if (pivot_)
+        {
+            LUBacksubstitute(a, pivotIndices, yEnd);
+        }
+        else
+        {
+            LUBacksubstitute(a, yEnd);
+        }
 
         for (label i=0; i<n_; i++)
         {
-            ytemp[i] += (del[i] += 2.0*yEnd[i]);
+            ytemp[i] += (del[i] += 2*yEnd[i]);
         }
 
         x += h;
@@ -97,7 +119,14 @@ void Foam::SIBS::SIMPR
         yEnd[i] = h*yEnd[i] - del[i];
     }
 
-    LUBacksubstitute(a, pivotIndices, yEnd);
+    if (pivot_)
+    {
+        LUBacksubstitute(a, pivotIndices, yEnd);
+    }
+    else
+    {
+        LUBacksubstitute(a, yEnd);
+    }
 
     for (label i=0; i<n_; i++)
     {
