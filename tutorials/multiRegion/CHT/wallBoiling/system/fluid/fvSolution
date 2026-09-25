@@ -60,7 +60,6 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors    1;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;
     nEnergyCorrectors   1;
