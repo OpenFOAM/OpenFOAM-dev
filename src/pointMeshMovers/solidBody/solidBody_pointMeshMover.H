@@ -66,9 +66,6 @@ class solidBody
         //- Points to move when cell zone is supplied
         labelList zonePoints_;
 
-        //- Cache the current transform for topoChange
-        mutable spatialTransform transform_;
-
 
     // Private Member Functions
 

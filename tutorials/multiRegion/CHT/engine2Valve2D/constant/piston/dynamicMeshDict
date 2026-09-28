@@ -18,7 +18,7 @@ mover
 {
     type            solidBody;
 
-    libs            ("libpointMeshMovers.so");
+    libs            ("libfvMeshMoversMultiValveEngine.so");
 
     cellZone        all;
 

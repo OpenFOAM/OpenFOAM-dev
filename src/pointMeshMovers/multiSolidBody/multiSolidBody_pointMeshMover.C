@@ -161,12 +161,6 @@ Foam::pointMeshMovers::multiSolidBody::multiSolidBody
     zonePoints_.setSize(zonei);
     updateZonePointIndices();
 
-    transforms_.setSize(zonei);
-    forAll(zoneIndices_, zonei)
-    {
-        transforms_[zonei] = SBMFs_[zonei].spatialTransformation();
-    }
-
     forAll(zoneIndices_, zonei)
     {
         Info<< "Applying solid-body motion " << SBMFs_[zonei].type()
@@ -191,13 +185,11 @@ Foam::tmp<Foam::pointField> Foam::pointMeshMovers::multiSolidBody::newPoints()
 
     forAll(zoneIndices_, zonei)
     {
-        transforms_[zonei] = SBMFs_[zonei].spatialTransformation();
-
         UIndirectList<point>(transformedPts, zonePoints_[zonei]) = eval
         (
             pointTransform
             (
-                transforms_[zonei],
+                SBMFs_[zonei].spatialTransformation(),
                 pointField(points0_, zonePoints_[zonei])
             )
         );
@@ -222,6 +214,8 @@ void Foam::pointMeshMovers::multiSolidBody::topoChange
 
     forAll(zoneIndices_, zonei)
     {
+        const spatialTransform st = SBMFs_[zonei].spatialTransformation();
+
         forAll(zonePoints_[zonei], zonePointi)
         {
             const label pointi = zonePoints_[zonei][zonePointi];
@@ -242,8 +236,7 @@ void Foam::pointMeshMovers::multiSolidBody::topoChange
             }
             else
             {
-                newPoints0[pointi] =
-                    transforms_[zonei].invTransformPoint(points[pointi]);
+                newPoints0[pointi] = st.invTransformPoint(points[pointi]);
             }
         }
     }
@@ -278,12 +271,13 @@ void Foam::pointMeshMovers::multiSolidBody::mapMesh(const polyMeshMap& map)
 
     forAll(zoneIndices_, zonei)
     {
+        const spatialTransform st = SBMFs_[zonei].spatialTransformation();
+
         forAll(zonePoints_[zonei], zonePointi)
         {
             const label pointi = zonePoints_[zonei][zonePointi];
 
-            points0[pointi] =
-                    transforms_[zonei].invTransformPoint(points0[pointi]);
+            points0[pointi] = st.invTransformPoint(points0[pointi]);
         }
     }
 

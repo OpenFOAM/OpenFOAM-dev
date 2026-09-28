@@ -66,9 +66,6 @@ class multiSolidBody
         //- Points to move per cellZone
         labelListList zonePoints_;
 
-        //- Cache the current transforms for topoChange
-        mutable List<spatialTransform> transforms_;
-
 
     // Private Member Functions
 
