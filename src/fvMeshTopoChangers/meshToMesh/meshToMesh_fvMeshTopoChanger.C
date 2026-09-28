@@ -28,6 +28,9 @@ License
 #include "pointFields.H"
 #include "meshToMeshAdjustTimeStep.H"
 #include "intersectionCellsToCells.H"
+#include "intersectionPatchToPatch.H"
+#include "nearestCellsToCellsExtrapolation.H"
+#include "nearestPatchToPatchExtrapolation.H"
 #include "surfaceToVolVelocity.H"
 #include "MeshToMeshMapGeometricFields.H"
 #include "polyMeshMap.H"
@@ -126,6 +129,22 @@ Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
     ),
     repeat_(dict.lookupOrDefault<scalar>("repeat", units::none, 0)),
     cycle_(dict.lookupOrDefault<scalar>("cycle", units::none, 0)),
+    cellsExtrapolationType_
+    (
+        dict.lookupOrDefault<word>
+        (
+            "extrapolation",
+            cellsToCellsExtrapolations::nearest::typeName
+        )
+    ),
+    patchExtrapolationType_
+    (
+        dict.lookupOrDefault<word>
+        (
+            "boundaryExtrapolation",
+            patchToPatchExtrapolations::nearest::typeName
+        )
+    ),
     timeIndex_(-1),
     mapped_(false)
 {
@@ -268,7 +287,10 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         (
             otherMesh,
             mesh(),
-            cellsToCellss::intersection::typeName
+            cellsToCellss::intersection::typeName,
+            cellsExtrapolationType_,
+            patchToPatches::intersection::typeName,
+            patchExtrapolationType_
         );
 
         // Ensure the deltaCoeffs are available for constraint patch evaluation

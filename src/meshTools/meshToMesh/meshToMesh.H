@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,9 +38,9 @@ SourceFiles
 
 #include "polyMesh.H"
 #include "cellsToCells.H"
-#include "cellsToCellsStabilisation.H"
+#include "cellsToCellsExtrapolation.H"
 #include "patchToPatch.H"
-#include "patchToPatchStabilisation.H"
+#include "patchToPatchExtrapolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,11 +64,14 @@ class meshToMesh
         //- Interpolation engine between source and target cells
         autoPtr<cellsToCells> cellsInterpolation_;
 
-        //- Stabilisation engine for the source cells
-        mutable autoPtr<cellsToCellsStabilisation> srcCellsStabilisation_;
+        //- Cells extrapolation engine type
+        const word cellsExtrapolationType_;
 
-        //- Stabilisation engine for the target cells
-        mutable autoPtr<cellsToCellsStabilisation> tgtCellsStabilisation_;
+        //- Extrapolation engine for the source cells
+        mutable autoPtr<cellsToCellsExtrapolation> srcCellsExtrapolation_;
+
+        //- Extrapolation engine for the target cells
+        mutable autoPtr<cellsToCellsExtrapolation> tgtCellsExtrapolation_;
 
         //- List of corresponding source and target patch indices
         List<labelPair> patchIndices_;
@@ -76,11 +79,14 @@ class meshToMesh
         //- List of interpolation engines between source and target patches
         PtrList<patchToPatch> patchInterpolations_;
 
-        //- List of stabilisation engines for the source patches
-        mutable PtrList<patchToPatchStabilisation> srcPatchStabilisations_;
+        //- Patch extrapolation engine type
+        const word patchExtrapolationType_;
 
-        //- List of stabilisation engines for the source patches
-        mutable PtrList<patchToPatchStabilisation> tgtPatchStabilisations_;
+        //- List of extrapolation engines for the source patches
+        mutable PtrList<patchToPatchExtrapolation> srcPatchExtrapolations_;
+
+        //- List of extrapolation engines for the source patches
+        mutable PtrList<patchToPatchExtrapolation> tgtPatchExtrapolations_;
 
 
 protected:
@@ -92,13 +98,13 @@ protected:
             //- Return the interpolation engine between source and target cells
             inline const cellsToCells& cellsInterpolation() const;
 
-            //- Return the stabilisation engine for the source cells
-            inline const cellsToCellsStabilisation&
-                srcCellsStabilisation() const;
+            //- Return the extrapolation engine for the source cells
+            inline const cellsToCellsExtrapolation&
+                srcCellsExtrapolation() const;
 
-            //- Return the stabilisation engine for the target cells
-            inline const cellsToCellsStabilisation&
-                tgtCellsStabilisation() const;
+            //- Return the extrapolation engine for the target cells
+            inline const cellsToCellsExtrapolation&
+                tgtCellsExtrapolation() const;
 
             //- Return the list of corresponding source and target patch indices
             inline const List<labelPair>& patchIndices() const;
@@ -110,14 +116,14 @@ protected:
                 const label i
             ) const;
 
-            //- Return the stabilisation engine for a source patch
-            inline const patchToPatchStabilisation& srcPatchStabilisation
+            //- Return the extrapolation engine for a source patch
+            inline const patchToPatchExtrapolation& srcPatchExtrapolation
             (
                 const label i
             ) const;
 
-            //- Return the stabilisation engine for a target patch
-            inline const patchToPatchStabilisation& tgtPatchStabilisation
+            //- Return the extrapolation engine for a target patch
+            inline const patchToPatchExtrapolation& tgtPatchExtrapolation
             (
                 const label i
             ) const;
@@ -139,7 +145,30 @@ public:
         (
             const polyMesh& srcMesh,
             const polyMesh& tgtMesh,
-            const word& engineType,
+            const word& cellsInterpolationType,
+            const word& cellsExtrapolationType,
+            const word& patchInterpolationType,
+            const word& patchExtrapolationType,
+            const HashTable<word>& patchMap = NullObjectRef<HashTable<word>>()
+        );
+
+        //- As above but with default extrapolation methods
+        meshToMesh
+        (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
+            const word& cellsInterpolationType,
+            const word& patchInterpolationType,
+            const HashTable<word>& patchMap = NullObjectRef<HashTable<word>>()
+        );
+
+        //- As above but with the same interpolation type for both cells and
+        //  patches and default extrapolation methods
+        meshToMesh
+        (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
+            const word& interpolationType,
             const HashTable<word>& patchMap = NullObjectRef<HashTable<word>>()
         );
 

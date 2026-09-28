@@ -116,6 +116,9 @@ topoChanger
 
     repeat          720;
     timeDelta       1e-6;
+
+    extrapolation multiNearest;
+    boundaryExtrapolation nearest;
 }
 
 // ************************************************************************* //

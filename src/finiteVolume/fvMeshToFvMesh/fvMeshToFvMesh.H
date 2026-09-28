@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,9 @@ private:
 
     // Private Member Functions
 
+        //- Write the target coverage as a field for debugging purposes
+        void writeTargetCoverage() const;
+
         //- Evaluate constraint types for the given vol field
         template<class Type>
         static void evaluateConstraintTypes(VolField<Type>& fld);
@@ -93,7 +96,30 @@ public:
         (
             const fvMesh& srcMesh,
             const fvMesh& tgtMesh,
-            const word& engineType,
+            const word& cellsInterpolationType,
+            const word& cellsExtrapolationType,
+            const word& patchInterpolationType,
+            const word& patchExtrapolationType,
+            const HashTable<word>& patchMap = NullObjectRef<HashTable<word>>()
+        );
+
+        //- As above but with default extrapolation methods
+        fvMeshToFvMesh
+        (
+            const fvMesh& srcMesh,
+            const fvMesh& tgtMesh,
+            const word& cellsInterpolationType,
+            const word& patchInterpolationType,
+            const HashTable<word>& patchMap = NullObjectRef<HashTable<word>>()
+        );
+
+        //- As above but with the same interpolation type for both cells and
+        //  patches and default extrapolation methods
+        fvMeshToFvMesh
+        (
+            const fvMesh& srcMesh,
+            const fvMesh& tgtMesh,
+            const word& interpolationType,
             const HashTable<word>& patchMap = NullObjectRef<HashTable<word>>()
         );
 

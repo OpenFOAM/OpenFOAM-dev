@@ -28,6 +28,8 @@ License
 #include "emptyPolyPatch.H"
 #include "wedgePolyPatch.H"
 #include "processorPolyPatch.H"
+#include "nearestCellsToCellsExtrapolation.H"
+#include "nearestPatchToPatchExtrapolation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -43,19 +45,24 @@ Foam::meshToMesh::meshToMesh
 (
     const polyMesh& srcMesh,
     const polyMesh& tgtMesh,
-    const word& engineType,
+    const word& cellsInterpolationType,
+    const word& cellsExtrapolationType,
+    const word& patchInterpolationType,
+    const word& patchExtrapolationType,
     const HashTable<word>& patchMap
 )
 :
     srcMesh_(srcMesh),
     tgtMesh_(tgtMesh),
     cellsInterpolation_(),
-    srcCellsStabilisation_(),
-    tgtCellsStabilisation_(),
+    cellsExtrapolationType_(cellsExtrapolationType),
+    srcCellsExtrapolation_(),
+    tgtCellsExtrapolation_(),
     patchIndices_(),
     patchInterpolations_(),
-    srcPatchStabilisations_(),
-    tgtPatchStabilisations_()
+    patchExtrapolationType_(patchExtrapolationType),
+    srcPatchExtrapolations_(),
+    tgtPatchExtrapolations_()
 {
     // If no patch map was supplied, then assume a consistent pair of meshes in
     // which corresponding patches have the same name
@@ -141,20 +148,20 @@ Foam::meshToMesh::meshToMesh
     // Calculate cell addressing and weights
     Info<< "Creating cellsToCells between source mesh "
         << srcMesh_.name() << " and target mesh " << tgtMesh_.name()
-        << " using " << engineType << endl << incrIndent;
+        << " using " << cellsInterpolationType << endl << incrIndent;
 
-    cellsInterpolation_ = cellsToCells::New(engineType);
+    cellsInterpolation_ = cellsToCells::New(cellsInterpolationType);
     cellsInterpolation_->update(srcMesh_, tgtMesh_);
 
-    srcCellsStabilisation_.clear();
-    tgtCellsStabilisation_.clear();
+    srcCellsExtrapolation_.clear();
+    tgtCellsExtrapolation_.clear();
 
     Info<< decrIndent;
 
     // Calculate patch addressing and weights
     patchInterpolations_.setSize(patchIndices_.size());
-    srcPatchStabilisations_.setSize(patchIndices_.size());
-    tgtPatchStabilisations_.setSize(patchIndices_.size());
+    srcPatchExtrapolations_.setSize(patchIndices_.size());
+    tgtPatchExtrapolations_.setSize(patchIndices_.size());
     forAll(patchIndices_, i)
     {
         const label srcPatchi = patchIndices_[i].first();
@@ -165,12 +172,12 @@ Foam::meshToMesh::meshToMesh
 
         Info<< "Creating patchToPatch between source patch "
             << srcPp.name() << " and target patch " << tgtPp.name()
-            << " using " << engineType << endl << incrIndent;
+            << " using " << patchInterpolationType << endl << incrIndent;
 
         patchInterpolations_.set
         (
             i,
-            patchToPatch::New(engineType, true)
+            patchToPatch::New(patchInterpolationType, true)
         );
 
         patchInterpolations_[i].update
@@ -183,6 +190,49 @@ Foam::meshToMesh::meshToMesh
         Info<< decrIndent;
     }
 }
+
+
+Foam::meshToMesh::meshToMesh
+(
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
+    const word& cellsInterpolationType,
+    const word& patchInterpolationType,
+    const HashTable<word>& patchMap
+)
+:
+    meshToMesh
+    (
+        srcMesh,
+        tgtMesh,
+        cellsInterpolationType,
+        cellsToCellsExtrapolations::nearest::typeName,
+        patchInterpolationType,
+        patchToPatchExtrapolations::nearest::typeName,
+        patchMap
+    )
+{}
+
+
+Foam::meshToMesh::meshToMesh
+(
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
+    const word& interpolationType,
+    const HashTable<word>& patchMap
+)
+:
+    meshToMesh
+    (
+        srcMesh,
+        tgtMesh,
+        interpolationType,
+        cellsToCellsExtrapolations::nearest::typeName,
+        interpolationType,
+        patchToPatchExtrapolations::nearest::typeName,
+        patchMap
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

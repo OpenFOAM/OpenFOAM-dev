@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,6 +105,12 @@ class meshToMesh
 
         //- Optional cycle period
         scalar cycle_;
+
+        //- Cells extrapolation algorithm
+        word cellsExtrapolationType_;
+
+        //- Patch extrapolation algorithm
+        word patchExtrapolationType_;
 
         //- The time index used for updating
         label timeIndex_;

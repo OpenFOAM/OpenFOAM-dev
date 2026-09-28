@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,85 +22,94 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cellsToCellsStabilisation
+    Foam::patchToPatchExtrapolation
 
 Description
-    Stabilisation data and routines for cell-to-cell interpolations
+    Extrapolation procedure for patch-to-patch interpolations which copies the
+    value from the nearest successfully mapped face.
 
 SourceFiles
-    cellsToCellsStabilisation.C
-    cellsToCellsStabilisationTemplates.C
+    patchToPatchExtrapolation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellsToCellsStabilisation_H
-#define cellsToCellsStabilisation_H
+#ifndef nearestPatchToPatchExtrapolation_H
+#define nearestPatchToPatchExtrapolation_H
 
-#include "cellsToCells.H"
+#include "patchToPatchExtrapolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class distributionMap;
+
+namespace patchToPatchExtrapolations
+{
+
 /*---------------------------------------------------------------------------*\
-                  Class cellsToCellsStabilisation Declaration
+                            Class nearest Declaration
 \*---------------------------------------------------------------------------*/
 
-class cellsToCellsStabilisation
+class nearest
+:
+    public patchToPatchExtrapolation
 {
     // Private Data
 
-        //- Is stabilisation occurring?
-        bool stabilisation_;
+        //- For each uncoupled face, the local face used to extrapolate the
+        //  interpolation
+        labelList uncoupledFaceLocalFaces_;
 
-        //- For each cell, the local cell used to stabilise the interpolation
-        labelList localStabilisationCells_;
+        //- Map from faces to local extrapolation faces
+        autoPtr<distributionMap> extrapolationMapPtr_;
 
-        //- Map from cells to local stabilisation cells
-        autoPtr<distributionMap> stabilisationMapPtr_;
+
+    // Private Member Functions
+
+        //- Extrapolate the given field if necessary
+        template<class Type>
+        void extrapolateType(Field<Type>& fld) const;
 
 
 public:
 
     //- Run-time type information
-    TypeName("cellsToCellsStabilisation");
+    TypeName("nearest");
 
 
     // Constructors
 
         //- Construct null
-        cellsToCellsStabilisation();
+        nearest();
 
 
     //- Destructor
-    virtual ~cellsToCellsStabilisation();
+    virtual ~nearest();
 
 
     // Member Functions
 
-        //- Compute the stabilisation addressing if necessary
+        //- Compute the extrapolation addressing if necessary
         void update
         (
-            const polyMesh& mesh,
-            const PackedBoolList& cellCoupleds
+            const polyPatch& patch,
+            const PackedBoolList& faceCoupleds
         );
 
-        //- Stabilise the given field if necessary
-        template<class Type>
-        void stabilise(Field<Type>& fld) const;
+        //- Extrapolate the given field if necessary
+        #define declareExtrapolateType(Type, nullArg) \
+            virtual void extrapolate(Field<Type>& fld) const;
+        FOR_ALL_FIELD_TYPES(declareExtrapolateType);
+        #undef declareExtrapolateType
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace patchToPatchExtrapolations
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "cellsToCellsStabilisationTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

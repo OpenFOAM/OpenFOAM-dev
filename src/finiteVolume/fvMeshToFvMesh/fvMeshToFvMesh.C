@@ -33,44 +33,101 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fvMeshToFvMesh::writeTargetCoverage() const
+{
+    Info<< typeName << ": Writing target coverage" << endl;
+
+    volInternalScalarField
+    (
+        "tgtCoverage",
+        srcToTgt<scalar>
+        (
+            volInternalScalarField::New
+            (
+                "1",
+                srcMesh_,
+                dimensionedScalar(dimless, scalar(1))
+            )(),
+            volInternalScalarField::New
+            (
+                "0",
+                tgtMesh_,
+                dimensionedScalar(dimless, scalar(0))
+            )()
+        )
+    ).write();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fvMeshToFvMesh::fvMeshToFvMesh
 (
     const fvMesh& srcMesh,
     const fvMesh& tgtMesh,
-    const word& engineType,
+    const word& cellsInterpolationType,
+    const word& cellsExtrapolationType,
+    const word& patchInterpolationType,
+    const word& patchExtrapolationType,
     const HashTable<word>& patchMap
 )
 :
-    meshToMesh(srcMesh, tgtMesh, engineType, patchMap),
+    meshToMesh
+    (
+        srcMesh,
+        tgtMesh,
+        cellsInterpolationType,
+        cellsExtrapolationType,
+        patchInterpolationType,
+        patchExtrapolationType,
+        patchMap
+    ),
     srcMesh_(srcMesh),
     tgtMesh_(tgtMesh)
 {
-    if (debug)
-    {
-        Info<< typeName << ": Writing target coverage" << endl;
+    if (debug) writeTargetCoverage();
+}
 
-        volInternalScalarField
-        (
-            "tgtCoverage",
-            srcToTgt<scalar>
-            (
-                volInternalScalarField::New
-                (
-                    "1",
-                    srcMesh_,
-                    dimensionedScalar(dimless, scalar(1))
-                )(),
-                volInternalScalarField::New
-                (
-                    "0",
-                    tgtMesh_,
-                    dimensionedScalar(dimless, scalar(0))
-                )()
-            )
-        ).write();
-    }
+
+Foam::fvMeshToFvMesh::fvMeshToFvMesh
+(
+    const fvMesh& srcMesh,
+    const fvMesh& tgtMesh,
+    const word& cellsInterpolationType,
+    const word& patchInterpolationType,
+    const HashTable<word>& patchMap
+)
+:
+    meshToMesh
+    (
+        srcMesh,
+        tgtMesh,
+        cellsInterpolationType,
+        patchInterpolationType,
+        patchMap
+    ),
+    srcMesh_(srcMesh),
+    tgtMesh_(tgtMesh)
+{
+    if (debug) writeTargetCoverage();
+}
+
+
+Foam::fvMeshToFvMesh::fvMeshToFvMesh
+(
+    const fvMesh& srcMesh,
+    const fvMesh& tgtMesh,
+    const word& interpolationType,
+    const HashTable<word>& patchMap
+)
+:
+    meshToMesh(srcMesh, tgtMesh, interpolationType, patchMap),
+    srcMesh_(srcMesh),
+    tgtMesh_(tgtMesh)
+{
+    if (debug) writeTargetCoverage();
 }
 
 

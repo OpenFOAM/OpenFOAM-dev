@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,82 +22,77 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchToPatchNormalisedFieldMapper
+    Foam::patchToPatchExtrapolation
 
 Description
-    Patch-to-patch fieldMapper which fills values for non-overlapping parts of
-    the target patch by normalisation (for partly non-overlapping faces), or by
-    referencing values from the nearest overlapping part (for completely
-    non-overlapping faces).
+    An unimplemented extrapolation procedure for patch-to-patch interpolations.
+    This simply checks that the interpolation is complete and that
+    extrapolation is not necessary and raises an error if that is not the case.
+
+SourceFiles
+    patchToPatchExtrapolation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchToPatchNormalisedFieldMapper_H
-#define patchToPatchNormalisedFieldMapper_H
+#ifndef nonePatchToPatchExtrapolation_H
+#define nonePatchToPatchExtrapolation_H
 
-#include "patchToPatchFieldMapper.H"
 #include "patchToPatchExtrapolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace patchToPatchExtrapolations
+{
 
 /*---------------------------------------------------------------------------*\
-           Class patchToPatchNormalisedFieldMapper Declaration
+                            Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchToPatchNormalisedFieldMapper
+class none
 :
-    public patchToPatchFieldMapper
+    public patchToPatchExtrapolation
 {
-    // Private Data
-
-        //- Patch extrapolation engine
-        const patchToPatchExtrapolation& pE_;
-
-
-    // Private Member Functions
-
-        //- Map from one field to another
-        template<class Type>
-        void map(Field<Type>& f, const Field<Type>& mapF) const;
-
-        //- Map a field and return the result as tmp
-        template<class Type>
-        tmp<Field<Type>> map(const Field<Type>& mapF) const;
-
-
 public:
+
+    //- Run-time type information
+    TypeName("none");
+
 
     // Constructors
 
-        //- Construct given a patch-to-patch interpolation and extrapolation
-        patchToPatchNormalisedFieldMapper
-        (
-            const patchToPatch& pToP,
-            const patchToPatchExtrapolation& pE
-        )
-        :
-            patchToPatchFieldMapper(pToP),
-            pE_(pE)
-        {}
+        //- Construct null
+        none();
 
 
     //- Destructor
-    virtual ~patchToPatchNormalisedFieldMapper()
-    {}
+    virtual ~none();
 
 
-    // Member Operators
+    // Member Functions
 
-        //- Map a field
-        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_MAP_OPERATOR, );
+        //- Compute the extrapolation addressing if necessary
+        void update
+        (
+            const polyPatch& patch,
+            const PackedBoolList& faceCoupleds
+        );
+
+        //- Extrapolate the given field if necessary
+        #define declareExtrapolateType(Type, nullArg)                          \
+            virtual void extrapolate(Field<Type>& fld) const                   \
+            {                                                                  \
+                NotImplemented;                                                \
+            }
+        FOR_ALL_FIELD_TYPES(declareExtrapolateType);
+        #undef declareExtrapolateType
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace patchToPatchExtrapolations
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

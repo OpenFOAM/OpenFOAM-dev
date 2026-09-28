@@ -23,130 +23,121 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellsToCellsStabilisation.H"
-#include "syncTools.H"
+#include "nearestCellsToCellsExtrapolation.H"
+#include "globalIndex.H"
 #include "wallPoint.H"
 #include "WallLocationData.H"
 #include "WallInfo.H"
 #include "FaceCellWave.H"
-#include "globalIndex.H"
+#include "distributionMap.H"
 #include "OBJstream.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(cellsToCellsStabilisation, 0);
+namespace cellsToCellsExtrapolations
+{
+    defineTypeNameAndDebug(nearest, 0);
+    addToRunTimeSelectionTable(cellsToCellsExtrapolation, nearest, word);
+}
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::cellsToCellsExtrapolations::nearest::extrapolateType
+(
+    Field<Type>& fld
+) const
+{
+    if (!extrapolation_) return;
+
+    // Communicate remote field values as necessary
+    tmp<Field<Type>> srcFld;
+    if (Pstream::parRun())
+    {
+        srcFld = fld.clone();
+        extrapolationMapPtr_->distribute(srcFld.ref());
+    }
+    else
+    {
+        srcFld = tmp<Field<Type>>(fld);
+    }
+
+    // Set the values in the uncoupled cells
+    forAll(uncoupledCells_, uncoupledCelli)
+    {
+        const label celli = uncoupledCells_[uncoupledCelli];
+
+        fld[celli] = srcFld()[uncoupledCellLocalCells_[uncoupledCelli]];
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cellsToCellsStabilisation::cellsToCellsStabilisation()
+Foam::cellsToCellsExtrapolations::nearest::nearest()
 :
-    stabilisation_(false),
-    localStabilisationCells_(),
-    stabilisationMapPtr_(nullptr)
+    cellsToCellsExtrapolation(),
+    uncoupledCellLocalCells_(),
+    extrapolationMapPtr_(nullptr)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::cellsToCellsStabilisation::~cellsToCellsStabilisation()
+Foam::cellsToCellsExtrapolations::nearest::~nearest()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::cellsToCellsStabilisation::update
+void Foam::cellsToCellsExtrapolations::nearest::update
 (
     const polyMesh& mesh,
     const PackedBoolList& cellCoupleds
 )
 {
-    // Determine whether or not stabilisation is necessary
-    stabilisation_ = false;
-    forAll(cellCoupleds, celli)
-    {
-        if (!cellCoupleds[celli])
-        {
-            stabilisation_ = true;
-            break;
-        }
-    }
-    reduce(stabilisation_, orOp());
+    cellsToCellsExtrapolation::update(cellCoupleds);
 
     // Quick return if nothing is to be done
-    if (!stabilisation_) return;
+    if (!extrapolation_) return;
 
-    // Get some information regarding the cells on the other side of couplings
-    List<remote> bFaceNbrProcCells(mesh.nFaces() - mesh.nInternalFaces());
-    boolList bFaceNbrIsCoupled(mesh.nFaces() - mesh.nInternalFaces());
-    forAll(bFaceNbrIsCoupled, bFacei)
-    {
-        const label owni = mesh.faceOwner()[bFacei + mesh.nInternalFaces()];
-        bFaceNbrProcCells[bFacei] = remote(Pstream::myProcNo(), owni);
-        bFaceNbrIsCoupled[bFacei] = cellCoupleds[owni];
-    }
-    syncTools::swapBoundaryFaceList(mesh, bFaceNbrProcCells);
-    syncTools::swapBoundaryFaceList(mesh, bFaceNbrIsCoupled);
+    // Global cell addressing
+    const globalIndex globalCellIndex(mesh.nCells());
 
-    // Determine the "cut" faces that separate coupled and un-coupled cellS
-    typedef WallInfo<WallLocationData<wallPoint, remote>> info;
-    DynamicList<label> cutFaces;
-    DynamicList<info> cutFaceInfos;
-    for (label facei = 0; facei < mesh.nFaces(); ++ facei)
-    {
-        const label owni = mesh.faceOwner()[facei];
-        const bool ownIsCoupled = cellCoupleds[owni];
-
-        if (facei < mesh.nInternalFaces())
-        {
-            const label nbri = mesh.faceNeighbour()[facei];
-            const bool nbrIsCoupled = cellCoupleds[nbri];
-
-            if (ownIsCoupled != nbrIsCoupled)
-            {
-                const label celli = ownIsCoupled ? owni : nbri;
-
-                cutFaces.append(facei);
-                cutFaceInfos.append
-                (
-                    info
-                    (
-                        remote(Pstream::myProcNo(), celli),
-                        mesh.faceCentres()[facei],
-                        0
-                    )
-                );
-            }
-        }
-        else
-        {
-            const label bFacei = facei - mesh.nInternalFaces();
-
-            const bool nbrIsCoupled = bFaceNbrIsCoupled[bFacei];
-
-            if (!ownIsCoupled && nbrIsCoupled)
-            {
-                cutFaces.append(facei);
-                cutFaceInfos.append
-                (
-                    info
-                    (
-                        bFaceNbrProcCells[bFacei],
-                        mesh.faceCentres()[facei],
-                        0
-                    )
-                );
-            }
-        }
-    }
+    // Get the list of faces which separate regions which do and do not need
+    // extrapolation. For each face, also get the global index of the adjacent
+    // cell which is coupled.
+    labelList cutFaces, cutFacesCoupledCells;
+    getCutFaces
+    (
+        mesh,
+        cellCoupleds,
+        globalCellIndex,
+        cutFaces,
+        cutFacesCoupledCells
+    );
 
     // Wave the information about the cut faces' connected coupled cells into
     // the un-coupled cells. Base this wave on distance to the cut face.
     // Initialise coupled cells to have a distance of zero, so that we do not
     // waste time waving into coupled regions of the mesh.
+    typedef WallInfo<WallLocationData<wallPoint, label>> info;
+    List<info> cutFaceInfos(cutFaces.size());
+    forAll(cutFaces, cutFacei)
+    {
+        cutFaceInfos[cutFacei] =
+            info
+            (
+                cutFacesCoupledCells[cutFacei],
+                mesh.faceCentres()[cutFaces[cutFacei]],
+                0
+            );
+    }
     List<info> faceInfos(mesh.nFaces()), cellInfos(mesh.nCells());
     forAll(cellCoupleds, celli)
     {
@@ -155,7 +146,7 @@ void Foam::cellsToCellsStabilisation::update
             cellInfos[celli] =
                 info
                 (
-                    remote(Pstream::myProcNo(), celli),
+                    globalCellIndex.toGlobal(celli),
                     mesh.cellCentres()[celli],
                     0
                 );
@@ -172,49 +163,48 @@ void Foam::cellsToCellsStabilisation::update
     );
 
     // Check that the wave connected to all un-coupled cells
-    forAll(cellCoupleds, celli)
+    forAll(uncoupledCells_, uncoupledCelli)
     {
-        if (!cellCoupleds[celli] && !cellInfos[celli].valid(wave.data()))
+        const label celli = uncoupledCells_[uncoupledCelli];
+
+        if (!cellInfos[celli].valid(wave.data()))
         {
             FatalErrorInFunction
                 << "Un-coupled cell " << celli << " of mesh " << mesh.name()
                 << " on processor " << Pstream::myProcNo() << " with centre "
                 << "at " << mesh.cellCentres()[celli] << " was not connected "
-                << "to a coupled cell by the stabilisation wave. This "
+                << "to a coupled cell by the extrapolation wave. This "
                 << "indicates that an entire non-contiguous region of mesh "
                 << "lies outside of the other mesh being mapped to. This is "
                 << "not recoverable." << exit(FatalError);
         }
     }
 
-    // Construct the cell to local stabilisation cell map
-    const globalIndex cellGlobalIndex(mesh.nCells());
-    localStabilisationCells_.resize(mesh.nCells());
-    forAll(cellCoupleds, celli)
+    // Construct the cell to local extrapolation cell map
+    uncoupledCellLocalCells_.resize(uncoupledCells_.size());
+    forAll(uncoupledCells_, uncoupledCelli)
     {
-        const remote& r = cellInfos[celli].data();
-        localStabilisationCells_[celli] =
-            cellCoupleds[celli]
-          ? cellGlobalIndex.toGlobal(celli)
-          : cellGlobalIndex.toGlobal(r.proci, r.elementi);
+        const label celli = uncoupledCells_[uncoupledCelli];
+
+        uncoupledCellLocalCells_[uncoupledCelli] = cellInfos[celli].data();
     }
 
     // Construct the distribution map, if necessary
     if (Pstream::parRun())
     {
         List<Map<label>> compactMap;
-        stabilisationMapPtr_.reset
+        extrapolationMapPtr_.reset
         (
             new distributionMap
             (
-                cellGlobalIndex,
-                localStabilisationCells_,
+                globalCellIndex,
+                uncoupledCellLocalCells_,
                 compactMap
             )
         );
     }
 
-    // Write out stabilisation connections
+    // Write out connections
     if (debug)
     {
         OBJstream obj
@@ -225,7 +215,7 @@ void Foam::cellsToCellsStabilisation::update
         );
 
         pointField ccs(mesh.cellCentres());
-        stabilise(ccs);
+        extrapolate(ccs);
 
         forAll(ccs, celli)
         {
@@ -235,6 +225,18 @@ void Foam::cellsToCellsStabilisation::update
         }
     }
 }
+
+
+#define implementExtrapolateType(Type, nullArg)                                \
+    void Foam::cellsToCellsExtrapolations::nearest::extrapolate                \
+    (                                                                          \
+        Field<Type>& fld                                                       \
+    ) const                                                                    \
+    {                                                                          \
+        extrapolateType(fld);                                                  \
+    }
+FOR_ALL_FIELD_TYPES(implementExtrapolateType);
+#undef implementExtrapolateType
 
 
 // ************************************************************************* //

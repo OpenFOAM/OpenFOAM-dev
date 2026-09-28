@@ -33,37 +33,43 @@ inline const Foam::cellsToCells& Foam::meshToMesh::cellsInterpolation() const
 }
 
 
-inline const Foam::cellsToCellsStabilisation&
-Foam::meshToMesh::srcCellsStabilisation() const
+inline const Foam::cellsToCellsExtrapolation&
+Foam::meshToMesh::srcCellsExtrapolation() const
 {
-    if (!srcCellsStabilisation_.valid())
+    if (!srcCellsExtrapolation_.valid())
     {
-        srcCellsStabilisation_.reset(new cellsToCellsStabilisation());
-        srcCellsStabilisation_->update
+        srcCellsExtrapolation_.reset
+        (
+            cellsToCellsExtrapolation::New(cellsExtrapolationType_).ptr()
+        );
+        srcCellsExtrapolation_->update
         (
             srcMesh_,
             cellsInterpolation_->srcCoupled()
         );
     }
 
-    return srcCellsStabilisation_();
+    return srcCellsExtrapolation_();
 }
 
 
-inline const Foam::cellsToCellsStabilisation&
-Foam::meshToMesh::tgtCellsStabilisation() const
+inline const Foam::cellsToCellsExtrapolation&
+Foam::meshToMesh::tgtCellsExtrapolation() const
 {
-    if (!tgtCellsStabilisation_.valid())
+    if (!tgtCellsExtrapolation_.valid())
     {
-        tgtCellsStabilisation_.reset(new cellsToCellsStabilisation());
-        tgtCellsStabilisation_->update
+        tgtCellsExtrapolation_.reset
+        (
+            cellsToCellsExtrapolation::New(cellsExtrapolationType_).ptr()
+        );
+        tgtCellsExtrapolation_->update
         (
             tgtMesh_,
             cellsInterpolation_->tgtCoupled()
         );
     }
 
-    return tgtCellsStabilisation_();
+    return tgtCellsExtrapolation_();
 }
 
 
@@ -82,43 +88,51 @@ inline const Foam::patchToPatch& Foam::meshToMesh::patchInterpolation
 }
 
 
-inline const Foam::patchToPatchStabilisation&
-Foam::meshToMesh::srcPatchStabilisation(const label i) const
+inline const Foam::patchToPatchExtrapolation&
+Foam::meshToMesh::srcPatchExtrapolation(const label i) const
 {
-    if (!srcPatchStabilisations_.set(i))
+    if (!srcPatchExtrapolations_.set(i))
     {
         const label srcPatchi = patchIndices_[i].first();
         const polyPatch& srcPp = srcMesh_.boundary()[srcPatchi];
 
-        srcPatchStabilisations_.set(i, new patchToPatchStabilisation());
-        srcPatchStabilisations_[i].update
+        srcPatchExtrapolations_.set
+        (
+            i,
+            patchToPatchExtrapolation::New(patchExtrapolationType_).ptr()
+        );
+        srcPatchExtrapolations_[i].update
         (
             srcPp,
             patchInterpolations_[i].srcCoupled()
         );
     }
 
-    return srcPatchStabilisations_[i];
+    return srcPatchExtrapolations_[i];
 }
 
 
-inline const Foam::patchToPatchStabilisation&
-Foam::meshToMesh::tgtPatchStabilisation(const label i) const
+inline const Foam::patchToPatchExtrapolation&
+Foam::meshToMesh::tgtPatchExtrapolation(const label i) const
 {
-    if (!tgtPatchStabilisations_.set(i))
+    if (!tgtPatchExtrapolations_.set(i))
     {
         const label tgtPatchi = patchIndices_[i].first();
         const polyPatch& tgtPp = tgtMesh_.boundary()[tgtPatchi];
 
-        tgtPatchStabilisations_.set(i, new patchToPatchStabilisation());
-        tgtPatchStabilisations_[i].update
+        tgtPatchExtrapolations_.set
+        (
+            i,
+            patchToPatchExtrapolation::New(patchExtrapolationType_).ptr()
+        );
+        tgtPatchExtrapolations_[i].update
         (
             tgtPp,
             patchInterpolations_[i].tgtCoupled()
         );
     }
 
-    return tgtPatchStabilisations_[i];
+    return tgtPatchExtrapolations_[i];
 }
 
 

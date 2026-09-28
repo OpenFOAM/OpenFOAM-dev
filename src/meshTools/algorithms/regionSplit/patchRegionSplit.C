@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,42 +23,54 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchToPatchNormalisedFieldMapper.H"
+#include "patchRegionSplit.H"
+#include "PatchTools.H"
+#include "uindirectPrimitivePatch.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::patchToPatchNormalisedFieldMapper::map
-(
-    Field<Type>& f,
-    const Field<Type>& mapF
-) const
+namespace Foam
 {
-    f = pToP_.srcToTgt(mapF);
-
-    pE_.extrapolate(f);
+    defineTypeNameAndDebug(patchRegionSplit, 0);
 }
 
 
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::patchToPatchNormalisedFieldMapper::map
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::patchRegionSplit::patchRegionSplit
 (
-    const Field<Type>& mapF
-) const
-{
-    tmp<Field<Type>> tf(new Field<Type>());
-    map(tf.ref(), mapF);
-    return tf;
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR,
-    patchToPatchNormalisedFieldMapper
+    const polyMesh& mesh,
+    const labelList& faces
 )
+:
+    regionSplitBase(faces.size())
+{
+    const uindirectPrimitivePatch patch
+    (
+        UIndirectList<face>(mesh.faces(), faces),
+        mesh.points()
+    );
+
+    const label nLocalZones = PatchTools::markZones(patch, boolList(), *this);
+
+    nRegions_ =
+        Pstream::parRun()
+      ? compactGlobalRegionSplit(globalIndex(nLocalZones), *this)
+      : compactLocalRegionSplit(*this);
+}
+
+
+Foam::patchRegionSplit::patchRegionSplit(const polyPatch& patch)
+:
+    regionSplitBase(patch.size())
+{
+    const label nLocalZones = PatchTools::markZones(patch, boolList(), *this);
+
+    nRegions_ =
+        Pstream::parRun()
+      ? compactGlobalRegionSplit(globalIndex(nLocalZones), *this)
+      : compactLocalRegionSplit(*this);
+}
 
 
 // ************************************************************************* //

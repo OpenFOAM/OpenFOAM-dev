@@ -23,59 +23,91 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchToPatchStabilisation.H"
+#include "nearestPatchToPatchExtrapolation.H"
+#include "distributionMap.H"
 #include "PatchEdgeFacePointData.H"
 #include "PatchEdgeFaceWave.H"
 #include "SubField.H"
 #include "globalIndex.H"
 #include "OBJstream.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(patchToPatchStabilisation, 0);
+namespace patchToPatchExtrapolations
+{
+    defineTypeNameAndDebug(nearest, 0);
+    addToRunTimeSelectionTable(patchToPatchExtrapolation, nearest, word);
+}
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::patchToPatchExtrapolations::nearest::extrapolateType
+(
+    Field<Type>& fld
+) const
+{
+    if (!extrapolation_) return;
+
+    // Communicate remote field values as necessary
+    tmp<Field<Type>> srcFld;
+    if (Pstream::parRun())
+    {
+        srcFld = fld.clone();
+        extrapolationMapPtr_->distribute(srcFld.ref());
+    }
+    else
+    {
+        srcFld = tmp<Field<Type>>(fld);
+    }
+
+    // Set the values in the uncoupled faces
+    forAll(uncoupledFaces_, uncoupledFacei)
+    {
+        const label celli = uncoupledFaces_[uncoupledFacei];
+
+        fld[celli] = srcFld()[uncoupledFaceLocalFaces_[uncoupledFacei]];
+    }
+
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::patchToPatchStabilisation::patchToPatchStabilisation()
+Foam::patchToPatchExtrapolations::nearest::nearest()
 :
-    stabilisation_(false),
-    localStabilisationCells_(),
-    stabilisationMapPtr_(nullptr)
+    patchToPatchExtrapolation(),
+    uncoupledFaceLocalFaces_(),
+    extrapolationMapPtr_(nullptr)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::patchToPatchStabilisation::~patchToPatchStabilisation()
+Foam::patchToPatchExtrapolations::nearest::~nearest()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::patchToPatchStabilisation::update
+void Foam::patchToPatchExtrapolations::nearest::update
 (
     const polyPatch& patch,
     const PackedBoolList& faceCoupleds
 )
 {
-    // Determine whether or not stabilisation is necessary
-    stabilisation_ = false;
-    forAll(faceCoupleds, facei)
-    {
-        if (!faceCoupleds[facei])
-        {
-            stabilisation_ = true;
-            break;
-        }
-    }
-    reduce(stabilisation_, orOp());
+    patchToPatchExtrapolation::update(faceCoupleds);
 
     // Quick return if nothing is to be done
-    if (!stabilisation_) return;
+    if (!extrapolation_) return;
+
+    // Global patch-face addressing
+    const globalIndex globalPatchFaceIndex(patch.size());
 
     // Construct initial edges. All edges that border a coupled face are added
     // here. The wave will propagate everywhere for just the first iteration.
@@ -83,7 +115,7 @@ void Foam::patchToPatchStabilisation::update
     // through the uncoupled faces. This is a bit odd, but it is easier than
     // doing the necessary synchronisation to determine which edges lie
     // in-between coupled and non-coupled faces.
-    typedef PatchEdgeFacePointData<remote> info;
+    typedef PatchEdgeFacePointData<label> info;
     DynamicList<label> initialEdges(patch.nEdges());
     DynamicList<info> initialEdgeInfos(patch.nEdges());
     forAll(patch.edgeFaces(), edgei)
@@ -99,7 +131,7 @@ void Foam::patchToPatchStabilisation::update
                 (
                     info
                     (
-                        remote(Pstream::myProcNo(), facei),
+                        globalPatchFaceIndex.toGlobal(facei),
                         patch.edges()[edgei].centre(patch.localPoints()),
                         0
                     )
@@ -121,7 +153,7 @@ void Foam::patchToPatchStabilisation::update
             faceInfos[facei] =
                 info
                 (
-                    remote(Pstream::myProcNo(), facei),
+                    globalPatchFaceIndex.toGlobal(facei),
                     patch.faceCentres()[facei],
                     0
                 );
@@ -147,41 +179,38 @@ void Foam::patchToPatchStabilisation::update
                 << "Un-mapped face " << facei << " of patch " << patch.name()
                 << " on processor " << Pstream::myProcNo() << " with centre "
                 << "at " << patch.faceCentres()[facei] << " was not connected "
-                << "to a mapped cell by the stabilisation wave. This "
+                << "to a mapped cell by the extrapolation wave. This "
                 << "indicates that an entire non-contiguous region of patch "
                 << "lies outside of the other patch being mapped to. This is "
                 << "not recoverable." << exit(FatalError);
         }
     }
 
-    // Construct the cell to local stabilisation cell map
-    const globalIndex cellGlobalIndex(patch.size());
-    localStabilisationCells_.resize(patch.size());
-    forAll(faceCoupleds, facei)
+    // Construct the cell to local extrapolation cell map
+    uncoupledFaceLocalFaces_.resize(uncoupledFaces_.size());
+    forAll(uncoupledFaces_, uncoupledFacei)
     {
-        const remote& r = faceInfos[facei].data();
-        localStabilisationCells_[facei] =
-            faceCoupleds[facei]
-          ? cellGlobalIndex.toGlobal(facei)
-          : cellGlobalIndex.toGlobal(r.proci, r.elementi);
+        const label facei = uncoupledFaces_[uncoupledFacei];
+
+        uncoupledFaceLocalFaces_[uncoupledFacei] = faceInfos[facei].data();
     }
 
     // Construct the distribution map, if necessary
     if (Pstream::parRun())
     {
         List<Map<label>> compactMap;
-        stabilisationMapPtr_.reset
+        extrapolationMapPtr_.reset
         (
             new distributionMap
             (
-                cellGlobalIndex,
-                localStabilisationCells_,
+                globalPatchFaceIndex,
+                uncoupledFaceLocalFaces_,
                 compactMap
             )
         );
     }
 
-    // Write out stabilisation connections
+    // Write out connections
     if (debug)
     {
         OBJstream obj
@@ -193,7 +222,7 @@ void Foam::patchToPatchStabilisation::update
 
         const pointField fcs(patch.faceCentres());
         pointField sfcs(fcs);
-        stabilise(sfcs);
+        extrapolate(sfcs);
 
         forAll(fcs, celli)
         {
@@ -203,6 +232,18 @@ void Foam::patchToPatchStabilisation::update
         }
     }
 }
+
+
+#define implementExtrapolateType(Type, nullArg)                                \
+    void Foam::patchToPatchExtrapolations::nearest::extrapolate                \
+    (                                                                          \
+        Field<Type>& fld                                                       \
+    ) const                                                                    \
+    {                                                                          \
+        extrapolateType(fld);                                                  \
+    }
+FOR_ALL_FIELD_TYPES(implementExtrapolateType);
+#undef implementExtrapolateType
 
 
 // ************************************************************************* //

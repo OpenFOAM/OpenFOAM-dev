@@ -191,7 +191,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
             patchToPatchNormalisedFieldMapper
             (
                 patchInterpolation(i),
-                tgtPatchStabilisation(i)
+                tgtPatchExtrapolation(i)
             )
         );
     }
@@ -280,7 +280,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
             cellsInterpolation().srcToTgt(srcFld)
         );
 
-    tgtCellsStabilisation().stabilise(ttgtFld.ref());
+    tgtCellsExtrapolation().extrapolate(ttgtFld.ref());
 
     return ttgtFld;
 }
@@ -331,7 +331,7 @@ Foam::fvMeshToFvMesh::srcToTgt
                     patchToPatchNormalisedFieldMapper
                     (
                         patchInterpolation(i),
-                        tgtPatchStabilisation(i)
+                        tgtPatchExtrapolation(i)
                     )
                 )
             );
