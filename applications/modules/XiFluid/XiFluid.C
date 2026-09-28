@@ -140,7 +140,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         SuModel::New
         (
             combustionProperties,
-            thermo_.uThermo(),
+            thermo_,
             isothermalFluid::momentumTransport()
         )
     ),

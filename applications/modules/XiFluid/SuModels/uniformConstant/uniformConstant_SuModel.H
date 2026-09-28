@@ -76,7 +76,7 @@ public:
         uniformConstant
         (
             const dictionary& dict,
-            const uRhoMulticomponentThermo& thermo,
+            const ubRhoThermo& thermo,
             const compressibleMomentumTransportModel& turbulence
         );
 

@@ -30,7 +30,7 @@ License
 Foam::autoPtr<Foam::SuModel> Foam::SuModel::New
 (
     const dictionary& combustionProperties,
-    const uRhoMulticomponentThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& momentumTransport
 )
 {

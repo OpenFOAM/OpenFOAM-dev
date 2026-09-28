@@ -61,7 +61,7 @@ bool Foam::SuModels::transport::readCoeffs(const dictionary& dict)
 Foam::SuModels::transport::transport
 (
     const dictionary& dict,
-    const uRhoMulticomponentThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence
 )
 :
@@ -96,7 +96,7 @@ void Foam::SuModels::transport::correct()
     const Foam::fvConstraints& fvConstraints(Foam::fvConstraints::New(mesh));
 
     const volScalarField& rho = momentumTransport_.rho();
-    const volScalarField& b = thermo_.Y("b");
+    const volScalarField& b = thermo_.b();
     const volScalarField& mgb = mesh.lookupObject<volScalarField>("mgb");
     const volScalarField& Xi = mesh.lookupObject<volScalarField>("Xi");
     const surfaceScalarField& phiSt =

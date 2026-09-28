@@ -52,7 +52,7 @@ bool Foam::SuModels::unstrained::readCoeffs(const dictionary& dict)
 Foam::SuModels::unstrained::unstrained
 (
     const dictionary& dict,
-    const uRhoMulticomponentThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence
 )
 :
@@ -62,7 +62,7 @@ Foam::SuModels::unstrained::unstrained
         laminarFlameSpeed::New
         (
             dict.subDict("unstrainedLaminarFlameSpeed"),
-            thermo_
+            uThermo_
         )
     )
 {
