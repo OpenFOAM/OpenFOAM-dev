@@ -77,6 +77,7 @@ Usage
 #include "pointFieldDecomposer.H"
 #include "lagrangianFieldDecomposer.H"
 #include "LagrangianFieldDecomposer.H"
+#include "delayedNewLine.H"
 
 using namespace Foam;
 
@@ -183,34 +184,6 @@ void writeDecomposition(const domainDecomposition& meshes)
         << endl;
 }
 
-
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-class delayedNewLine
-{
-    mutable bool first_;
-
-public:
-
-    delayedNewLine()
-    :
-        first_(true)
-    {}
-
-    friend Ostream& operator<<(Ostream& os, const delayedNewLine& dnl)
-    {
-        if (!dnl.first_) os << nl;
-        dnl.first_ = false;
-        return os;
-    }
-};
-
 }
 
 
@@ -281,7 +254,7 @@ int main(int argc, char *argv[])
 
     if (decomposeGeomOnly)
     {
-        Info<< "Skipping decomposing fields" << nl << endl;
+        Info<< nl << "Skipping decomposing fields" << endl;
 
         if (decomposeFieldsOnly || copyZero)
         {
@@ -293,7 +266,7 @@ int main(int argc, char *argv[])
     }
 
     // Set time from database
-    Info<< "Create time" << nl << endl;
+    Info<< nl << "Create time" << endl;
     processorRunTimes runTimes(Foam::Time::controlDictName, args);
     const Time& runTime = runTimes.completeTime();
 
@@ -315,8 +288,8 @@ int main(int argc, char *argv[])
         const label nProcs0 =
             fileHandler().nProcs(runTimes.completeTime().path());
 
-        Info<< "Removing " << nProcs0
-            << " existing processor directories" << nl << endl;
+        Info<< nl << "Removing " << nProcs0
+            << " existing processor directories" << endl;
 
         // Remove existing processor directories
         const fileNameList dirs
@@ -421,14 +394,12 @@ int main(int argc, char *argv[])
      && regionMeshes.readDecompose(decomposeSets)
     )
     {
-        Info<< endl;
-
         if (writeCellProc)
         {
             forAll(regionNames, regioni)
             {
-                writeDecomposition(regionMeshes[regioni]());
                 Info<< endl;
+                writeDecomposition(regionMeshes[regioni]());
                 fileHandler().flush();
             }
         }
@@ -444,15 +415,14 @@ int main(int argc, char *argv[])
         // Set the time
         runTimes.setTime(times[timei], timei);
 
-        Info<< "Time = " << runTimes.completeTime().userTimeName()
-            << nl << endl;
+        Info<< nl << "Time = " << runTimes.completeTime().userTimeName()
+            << endl;
 
         // Update the meshes, if necessary
         const fvMesh::readUpdateState stat =
             !(decomposeFieldsOnly && copyZero)
           ? regionMeshes.readUpdateDecompose()
           : fvMesh::UNCHANGED;
-        if (stat >= fvMesh::TOPO_CHANGE) Info<< endl;
 
         // Write the mesh out (if anything has changed), if necessary
         if (!decomposeFieldsOnly)
@@ -465,8 +435,8 @@ int main(int argc, char *argv[])
         {
             if (writeCellProc && stat >= fvMesh::TOPO_CHANGE)
             {
-                writeDecomposition(regionMeshes[regioni]());
                 Info<< endl;
+                writeDecomposition(regionMeshes[regioni]());
                 fileHandler().flush();
             }
         }
@@ -483,6 +453,8 @@ int main(int argc, char *argv[])
         {
             const fileName completeTimePath =
                 runTimes.completeTime().timePath();
+
+            Info<< endl;
 
             fileName prevProcTimePath;
             for (label proci = 0; proci < runTimes.nProcs(); proci++)
@@ -510,8 +482,6 @@ int main(int argc, char *argv[])
                 }
             }
 
-            Info<< endl;
-
             continue;
         }
 
@@ -523,311 +493,306 @@ int main(int argc, char *argv[])
             const word regionDir =
                 regionName == polyMesh::defaultRegion ? word::null : regionName;
 
+            Info<< endl;
+
             const delayedNewLine dnl;
 
-            // Prefixed scope
-            {
-                const RegionRef<domainDecomposition> meshes =
-                    regionMeshes[regioni];
+            const RegionRef<domainDecomposition> meshes =
+                regionMeshes[regioni];
 
-                // Search for objects at this time
-                IOobjectList objects
+            // Search for objects at this time
+            IOobjectList objects
+            (
+                meshes().completeMesh(),
+                runTimes.completeTime().name()
+            );
+
+            {
+                Info<< dnl << "Decomposing FV fields" << endl;
+
+                if (fvFieldDecomposer::decomposes(objects))
+                {
+                    fvFieldDecomposer fvDecomposer
+                    (
+                        meshes().completeMesh(),
+                        meshes().procMeshes(),
+                        meshes().procFaceAddressing(),
+                        meshes().procCellAddressing(),
+                        meshes().procFaceAddressingBf()
+                    );
+
+                    #define DO_FV_VOL_INTERNAL_FIELDS_TYPE(Type, nullArg)  \
+                        fvDecomposer.decomposeVolInternalFields<Type>      \
+                        (objects);
+                    FOR_ALL_FIELD_TYPES(DO_FV_VOL_INTERNAL_FIELDS_TYPE)
+                    #undef DO_FV_VOL_INTERNAL_FIELDS_TYPE
+
+                    #define DO_FV_VOL_FIELDS_TYPE(Type, nullArg)           \
+                        fvDecomposer.decomposeVolFields<Type>              \
+                        (objects);
+                    FOR_ALL_FIELD_TYPES(DO_FV_VOL_FIELDS_TYPE)
+                    #undef DO_FV_VOL_FIELDS_TYPE
+
+                    #define DO_FV_SURFACE_FIELDS_TYPE(Type, nullArg)       \
+                        fvDecomposer.decomposeFvSurfaceFields<Type>        \
+                        (objects);
+                    FOR_ALL_FIELD_TYPES(DO_FV_SURFACE_FIELDS_TYPE)
+                    #undef DO_FV_SURFACE_FIELDS_TYPE
+                }
+                else
+                {
+                    Info<< dnl << "    (no FV fields)" << endl;
+                }
+            }
+
+            {
+                Info<< dnl << "Decomposing point fields" << endl;
+
+                if (pointFieldDecomposer::decomposes(objects))
+                {
+                    pointFieldDecomposer pointDecomposer
+                    (
+                        pointMesh::New(meshes().completeMesh()),
+                        meshes().procMeshes(),
+                        meshes().procPointAddressing()
+                    );
+
+                    #define DO_POINT_FIELDS_TYPE(Type, nullArg)            \
+                        pointDecomposer.decomposeFields<Type>              \
+                        (objects);
+                    FOR_ALL_FIELD_TYPES(DO_POINT_FIELDS_TYPE)
+                    #undef DO_POINT_FIELDS_TYPE
+                }
+                else
+                {
+                    Info<< dnl << "    (no point fields)" << endl;
+                }
+            }
+
+            {
+                // Find cloud directories
+                fileNameList cloudDirs
                 (
-                    meshes().completeMesh(),
-                    runTimes.completeTime().name()
+                    fileHandler().readDir
+                    (
+                        runTimes.completeTime().timePath()
+                       /regionDir
+                       /lagrangian::cloud::prefix,
+                        fileType::directory
+                    )
                 );
 
+                // Add objects in any found cloud directories
+                HashTable<IOobjectList> cloudsObjects;
+                forAll(cloudDirs, i)
                 {
-                    Info<< dnl << "Decomposing FV fields" << endl;
-
-                    if (fvFieldDecomposer::decomposes(objects))
-                    {
-                        fvFieldDecomposer fvDecomposer
-                        (
-                            meshes().completeMesh(),
-                            meshes().procMeshes(),
-                            meshes().procFaceAddressing(),
-                            meshes().procCellAddressing(),
-                            meshes().procFaceAddressingBf()
-                        );
-
-                        #define DO_FV_VOL_INTERNAL_FIELDS_TYPE(Type, nullArg)  \
-                            fvDecomposer.decomposeVolInternalFields<Type>      \
-                            (objects);
-                        FOR_ALL_FIELD_TYPES(DO_FV_VOL_INTERNAL_FIELDS_TYPE)
-                        #undef DO_FV_VOL_INTERNAL_FIELDS_TYPE
-
-                        #define DO_FV_VOL_FIELDS_TYPE(Type, nullArg)           \
-                            fvDecomposer.decomposeVolFields<Type>              \
-                            (objects);
-                        FOR_ALL_FIELD_TYPES(DO_FV_VOL_FIELDS_TYPE)
-                        #undef DO_FV_VOL_FIELDS_TYPE
-
-                        #define DO_FV_SURFACE_FIELDS_TYPE(Type, nullArg)       \
-                            fvDecomposer.decomposeFvSurfaceFields<Type>        \
-                            (objects);
-                        FOR_ALL_FIELD_TYPES(DO_FV_SURFACE_FIELDS_TYPE)
-                        #undef DO_FV_SURFACE_FIELDS_TYPE
-                    }
-                    else
-                    {
-                        Info<< dnl << "    (no FV fields)" << endl;
-                    }
-                }
-
-                {
-                    Info<< dnl << "Decomposing point fields" << endl;
-
-                    if (pointFieldDecomposer::decomposes(objects))
-                    {
-                        pointFieldDecomposer pointDecomposer
-                        (
-                            pointMesh::New(meshes().completeMesh()),
-                            meshes().procMeshes(),
-                            meshes().procPointAddressing()
-                        );
-
-                        #define DO_POINT_FIELDS_TYPE(Type, nullArg)            \
-                            pointDecomposer.decomposeFields<Type>              \
-                            (objects);
-                        FOR_ALL_FIELD_TYPES(DO_POINT_FIELDS_TYPE)
-                        #undef DO_POINT_FIELDS_TYPE
-                    }
-                    else
-                    {
-                        Info<< dnl << "    (no point fields)" << endl;
-                    }
-                }
-
-                {
-                    // Find cloud directories
-                    fileNameList cloudDirs
+                    // Do local scan for valid cloud objects
+                    IOobjectList cloudObjs
                     (
-                        fileHandler().readDir
-                        (
-                            runTimes.completeTime().timePath()
-                           /regionDir
-                           /lagrangian::cloud::prefix,
-                            fileType::directory
-                        )
+                        meshes().completeMesh(),
+                        runTimes.completeTime().name(),
+                        lagrangian::cloud::prefix/cloudDirs[i],
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE,
+                        false
                     );
 
-                    // Add objects in any found cloud directories
-                    HashTable<IOobjectList> cloudsObjects;
-                    forAll(cloudDirs, i)
+                    // If "positions" is present, then add to the table
+                    if (cloudObjs.lookup(word("positions")))
                     {
-                        // Do local scan for valid cloud objects
-                        IOobjectList cloudObjs
-                        (
-                            meshes().completeMesh(),
-                            runTimes.completeTime().name(),
-                            lagrangian::cloud::prefix/cloudDirs[i],
-                            IOobject::MUST_READ,
-                            IOobject::NO_WRITE,
-                            false
-                        );
-
-                        // If "positions" is present, then add to the table
-                        if (cloudObjs.lookup(word("positions")))
-                        {
-                            cloudsObjects.insert(cloudDirs[i], cloudObjs);
-                        }
-                    }
-
-                    // Decompose the objects found above
-                    if (cloudsObjects.size())
-                    {
-                        forAllConstIter
-                        (
-                            HashTable<IOobjectList>,
-                            cloudsObjects,
-                            iter
-                        )
-                        {
-                            const word cloudName =
-                                string::validate<word>(iter.key());
-
-                            const IOobjectList& cloudObjects = iter();
-
-                            Info<< dnl << "Decomposing lagrangian fields for "
-                                << "cloud " << cloudName << endl;
-
-                            if
-                            (
-                                lagrangianFieldDecomposer::decomposes
-                                (
-                                    cloudObjects
-                                )
-                            )
-                            {
-                                const lagrangianFieldDecomposer
-                                    lagrangianDecomposer
-                                    (
-                                        meshes().completeMesh(),
-                                        meshes().procMeshes(),
-                                        meshes().procFaceAddressing(),
-                                        meshes().procCellAddressing(),
-                                        cloudName
-                                    );
-
-                                lagrangianDecomposer.decomposePositions();
-
-                                #define DO_CLOUD_FIELDS_TYPE(Type, nullArg)    \
-                                    lagrangianDecomposer.decomposeFields<Type> \
-                                    (cloudObjects);
-                                DO_CLOUD_FIELDS_TYPE(label, )
-                                FOR_ALL_FIELD_TYPES(DO_CLOUD_FIELDS_TYPE)
-                                #undef DO_CLOUD_FIELDS_TYPE
-                            }
-                            else
-                            {
-                                Info<< dnl << "    (no lagrangian fields)"
-                                    << endl;
-                            }
-                        }
+                        cloudsObjects.insert(cloudDirs[i], cloudObjs);
                     }
                 }
 
+                // Decompose the objects found above
+                if (cloudsObjects.size())
                 {
-                    // Find Lagrangian directories
-                    fileNameList LagrangianDirs
+                    forAllConstIter
                     (
-                        fileHandler().readDir
-                        (
-                            runTimes.completeTime().timePath()
-                           /regionDir
-                           /LagrangianMesh::prefix,
-                            fileType::directory
-                        )
-                    );
-
-                    // Add objects in any found Lagrangian directories
-                    HashTable<IOobjectList> LagrangianObjects;
-                    forAll(LagrangianDirs, i)
+                        HashTable<IOobjectList>,
+                        cloudsObjects,
+                        iter
+                    )
                     {
-                        // Do local scan for valid Lagrangian objects
-                        IOobjectList objects
-                        (
-                            meshes().completeMesh(),
-                            runTimes.completeTime().name(),
-                            LagrangianMesh::prefix/LagrangianDirs[i],
-                            IOobject::MUST_READ,
-                            IOobject::NO_WRITE,
-                            false
-                        );
+                        const word cloudName =
+                            string::validate<word>(iter.key());
 
-                        // If coordinates or fields are present then add
-                        // this set of objects to the table
+                        const IOobjectList& cloudObjects = iter();
+
+                        Info<< dnl << "Decomposing lagrangian fields for "
+                            << "cloud " << cloudName << endl;
+
                         if
                         (
-                            objects.found(LagrangianMesh::coordinatesName)
-                         || LagrangianFieldDecomposer::decomposes
+                            lagrangianFieldDecomposer::decomposes
                             (
-                                objects
+                                cloudObjects
                             )
                         )
                         {
-                            LagrangianObjects.insert
-                            (
-                                LagrangianDirs[i],
-                                objects
-                            );
-                        }
-                    }
-
-                    // Decompose the objects found above
-                    if (LagrangianObjects.size())
-                    {
-                        forAllConstIter
-                        (
-                            HashTable<IOobjectList>,
-                            LagrangianObjects,
-                            iter
-                        )
-                        {
-                            const word LagrangianName =
-                                string::validate<word>(iter.key());
-
-                            Info<< dnl << "Decomposing Lagrangian fields "
-                                << "for " << LagrangianName << endl;
-
-                            const LagrangianFieldDecomposer
-                                LagrangianDecomposer
+                            const lagrangianFieldDecomposer
+                                lagrangianDecomposer
                                 (
                                     meshes().completeMesh(),
                                     meshes().procMeshes(),
                                     meshes().procFaceAddressing(),
                                     meshes().procCellAddressing(),
-                                    LagrangianName
+                                    cloudName
                                 );
 
-                            LagrangianDecomposer.decomposePositions();
+                            lagrangianDecomposer.decomposePositions();
 
-                            if
-                            (
-                                LagrangianFieldDecomposer::decomposes
-                                (
-                                    iter()
-                                )
-                            )
-                            {
-                                #define DO_LAGRANGIAN_FIELDS_TYPE(             \
-                                    Type, GeoField)                            \
-                                    LagrangianDecomposer                       \
-                                   .decomposeFields<GeoField<Type>>            \
-                                    (iter());
-                                DO_LAGRANGIAN_FIELDS_TYPE
-                                (
-                                    label,
-                                    LagrangianField
-                                )
-                                FOR_ALL_FIELD_TYPES
-                                (
-                                    DO_LAGRANGIAN_FIELDS_TYPE,
-                                    LagrangianField
-                                )
-                                DO_LAGRANGIAN_FIELDS_TYPE
-                                (
-                                    label,
-                                    LagrangianInternalField
-                                )
-                                FOR_ALL_FIELD_TYPES
-                                (
-                                    DO_LAGRANGIAN_FIELDS_TYPE,
-                                    LagrangianInternalField
-                                )
-                                #undef DO_LAGRANGIAN_FIELDS_TYPE
-
-                                // --> Note we don't have to explicitly
-                                // decompose the dynamic variants of these
-                                // fields as they are IO compatible with the
-                                // non-dynamic fields
-                            }
-                            else
-                            {
-                                Info<< dnl << "    (no lagrangian fields)"
-                                    << endl;
-                            }
+                            #define DO_CLOUD_FIELDS_TYPE(Type, nullArg)    \
+                                lagrangianDecomposer.decomposeFields<Type> \
+                                (cloudObjects);
+                            DO_CLOUD_FIELDS_TYPE(label, )
+                            FOR_ALL_FIELD_TYPES(DO_CLOUD_FIELDS_TYPE)
+                            #undef DO_CLOUD_FIELDS_TYPE
+                        }
+                        else
+                        {
+                            Info<< dnl << "    (no lagrangian fields)"
+                                << endl;
                         }
                     }
                 }
             }
 
-            Info<< dnl;
+            {
+                // Find Lagrangian directories
+                fileNameList LagrangianDirs
+                (
+                    fileHandler().readDir
+                    (
+                        runTimes.completeTime().timePath()
+                       /regionDir
+                       /LagrangianMesh::prefix,
+                        fileType::directory
+                    )
+                );
+
+                // Add objects in any found Lagrangian directories
+                HashTable<IOobjectList> LagrangianObjects;
+                forAll(LagrangianDirs, i)
+                {
+                    // Do local scan for valid Lagrangian objects
+                    IOobjectList objects
+                    (
+                        meshes().completeMesh(),
+                        runTimes.completeTime().name(),
+                        LagrangianMesh::prefix/LagrangianDirs[i],
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE,
+                        false
+                    );
+
+                    // If coordinates or fields are present then add
+                    // this set of objects to the table
+                    if
+                    (
+                        objects.found(LagrangianMesh::coordinatesName)
+                     || LagrangianFieldDecomposer::decomposes
+                        (
+                            objects
+                        )
+                    )
+                    {
+                        LagrangianObjects.insert
+                        (
+                            LagrangianDirs[i],
+                            objects
+                        );
+                    }
+                }
+
+                // Decompose the objects found above
+                if (LagrangianObjects.size())
+                {
+                    forAllConstIter
+                    (
+                        HashTable<IOobjectList>,
+                        LagrangianObjects,
+                        iter
+                    )
+                    {
+                        const word LagrangianName =
+                            string::validate<word>(iter.key());
+
+                        Info<< dnl << "Decomposing Lagrangian fields "
+                            << "for " << LagrangianName << endl;
+
+                        const LagrangianFieldDecomposer
+                            LagrangianDecomposer
+                            (
+                                meshes().completeMesh(),
+                                meshes().procMeshes(),
+                                meshes().procFaceAddressing(),
+                                meshes().procCellAddressing(),
+                                LagrangianName
+                            );
+
+                        LagrangianDecomposer.decomposePositions();
+
+                        if
+                        (
+                            LagrangianFieldDecomposer::decomposes
+                            (
+                                iter()
+                            )
+                        )
+                        {
+                            #define DO_LAGRANGIAN_FIELDS_TYPE(             \
+                                Type, GeoField)                            \
+                                LagrangianDecomposer                       \
+                               .decomposeFields<GeoField<Type>>            \
+                                (iter());
+                            DO_LAGRANGIAN_FIELDS_TYPE
+                            (
+                                label,
+                                LagrangianField
+                            )
+                            FOR_ALL_FIELD_TYPES
+                            (
+                                DO_LAGRANGIAN_FIELDS_TYPE,
+                                LagrangianField
+                            )
+                            DO_LAGRANGIAN_FIELDS_TYPE
+                            (
+                                label,
+                                LagrangianInternalField
+                            )
+                            FOR_ALL_FIELD_TYPES
+                            (
+                                DO_LAGRANGIAN_FIELDS_TYPE,
+                                LagrangianInternalField
+                            )
+                            #undef DO_LAGRANGIAN_FIELDS_TYPE
+
+                            // --> Note we don't have to explicitly
+                            // decompose the dynamic variants of these
+                            // fields as they are IO compatible with the
+                            // non-dynamic fields
+                        }
+                        else
+                        {
+                            Info<< dnl << "    (no lagrangian fields)"
+                                << endl;
+                        }
+                    }
+                }
+            }
         }
 
         // Distribute the uniform directory
         if (haveUniform(runTimes))
         {
-            Info<< "Distributing uniform files" << endl;
+            Info<< nl << "Distributing uniform files" << endl;
 
             decomposeUniform
             (
                 copyUniform || distributed,
                 runTimes
             );
-
-            Info<< endl;
         }
 
         if (regionNames == wordList(1, polyMesh::defaultRegion)) continue;
@@ -841,22 +806,19 @@ int main(int argc, char *argv[])
 
             if (haveUniform(runTimes, regionDir))
             {
-                // Prefixed scope
-                {
-                    const RegionRef<domainDecomposition> meshes =
-                        regionMeshes[regioni];
+                Info<< nl;
 
-                    Info<< "Distributing uniform files" << endl;
+                const RegionRef<domainDecomposition> meshes =
+                    regionMeshes[regioni];
 
-                    decomposeUniform
-                    (
-                        copyUniform || distributed,
-                        runTimes,
-                        regionDir
-                    );
-                }
+                Info<< "Distributing uniform files" << endl;
 
-                Info<< endl;
+                decomposeUniform
+                (
+                    copyUniform || distributed,
+                    runTimes,
+                    regionDir
+                );
             }
         }
     }

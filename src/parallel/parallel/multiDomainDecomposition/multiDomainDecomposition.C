@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,11 +94,6 @@ bool Foam::multiDomainDecomposition::readDecompose(const bool doSets)
         if (this->operator[](regioni)().readDecompose(false))
         {
             decomposed = true;
-
-            if (regioni != size() - 1)
-            {
-                Info<< endl;
-            }
         }
     }
 
@@ -130,11 +125,6 @@ bool Foam::multiDomainDecomposition::readReconstruct(const bool doSets)
         if (this->operator[](regioni)().readReconstruct(false))
         {
             reconstructed = true;
-
-            if (regioni != size() - 1)
-            {
-                Info<< endl;
-            }
         }
     }
 
@@ -167,11 +157,6 @@ Foam::multiDomainDecomposition::readUpdateDecompose()
         const fvMesh::readUpdateState regionStat =
             this->operator[](regioni)().readUpdateDecompose(false);
 
-        if (regioni != size() - 1 && regionStat >= fvMesh::TOPO_CHANGE)
-        {
-            Info<< endl;
-        }
-
         stat = stat > regionStat ? stat : regionStat;
     }
 
@@ -198,11 +183,6 @@ Foam::multiDomainDecomposition::readUpdateReconstruct()
     {
         const fvMesh::readUpdateState regionStat =
             this->operator[](regioni)().readUpdateReconstruct(false);
-
-        if (regioni != size() - 1 && regionStat >= fvMesh::TOPO_CHANGE)
-        {
-            Info<< endl;
-        }
 
         stat = stat > regionStat ? stat : regionStat;
     }

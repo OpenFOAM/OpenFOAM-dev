@@ -28,6 +28,7 @@ License
 #include "processorPolyPatch.H"
 #include "processorCyclicPolyPatch.H"
 #include "zoneGenerator.H"
+#include "delayedNewLine.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -138,6 +139,8 @@ Foam::domainDecomposition::determineCoupledFaces
 
 void Foam::domainDecomposition::reconstruct()
 {
+    Info().OSstream::write(nl); // !!! don't prefix
+
     Info<< "Reconstructing meshes" << incrIndent << nl << endl;
 
     // ???
@@ -552,22 +555,44 @@ void Foam::domainDecomposition::reconstructPoints()
 
 void Foam::domainDecomposition::reconstructZones(const bool force)
 {
-    const pointZoneList& pointZones = completeMesh().pointZones();
-    const pointZoneList& pointZones0 = procMeshes_[0].pointZones();
-
     const label pointZonesCompare = compareInstances
     (
-        pointZones.instance(),
-        pointZones0.instance()
+        completeMesh().pointZones().instance(),
+        procMeshes_[0].pointZones().instance()
     );
+
+    const label faceZonesCompare = compareInstances
+    (
+        completeMesh().faceZones().instance(),
+        procMeshes_[0].faceZones().instance()
+    );
+
+    const label cellZonesCompare = compareInstances
+    (
+        completeMesh().cellZones().instance(),
+        procMeshes_[0].cellZones().instance()
+    );
+
+    if
+    (
+        force
+     || pointZonesCompare == 1
+     || faceZonesCompare == 1
+     || cellZonesCompare == 1
+    )
+    {
+        Info().OSstream::write(nl); // !!! don't prefix
+    }
+
+    const delayedNewLine dnl;
 
     if (force || pointZonesCompare == 1)
     {
-        Info<< "Reconstructing pointZones" << incrIndent << endl;
+        Info<< dnl << "Reconstructing pointZones" << incrIndent << nl << endl;
 
-        forAll(pointZones0, pzi)
+        forAll(procMeshes_[0].pointZones(), pzi)
         {
-            Info<< indent << pointZones0[pzi].name() << endl;
+            Info<< indent << procMeshes_[0].pointZones()[pzi].name() << endl;
 
             boolList selected(completeMesh_->nPoints(), false);
 
@@ -588,7 +613,7 @@ void Foam::domainDecomposition::reconstructZones(const bool force)
             (
                 new pointZone
                 (
-                    pointZones0[pzi].name(),
+                    procMeshes_[0].pointZones()[pzi].name(),
                     zoneGenerator::indices(selected),
                     completeMesh_->pointZones()
                 )
@@ -596,76 +621,19 @@ void Foam::domainDecomposition::reconstructZones(const bool force)
         }
 
         completeMesh_->pointZones().writeOpt() = IOobject::AUTO_WRITE;
-        completeMesh_->pointZones().instance() = pointZones0.instance();
+        completeMesh_->pointZones().instance() =
+            procMeshes_[0].pointZones().instance();
 
-        Info<< decrIndent << endl;
+        Info<< decrIndent;
     }
-
-    const cellZoneList& cellZones = completeMesh().cellZones();
-    const cellZoneList& cellZones0 = procMeshes_[0].cellZones();
-
-    const label cellZonesCompare = compareInstances
-    (
-        cellZones.instance(),
-        cellZones0.instance()
-    );
-
-    if (force || cellZonesCompare == 1)
-    {
-        Info<< "Reconstructing cellZones" << incrIndent << endl;
-
-        forAll(cellZones0, pzi)
-        {
-            Info << indent << cellZones0[pzi].name() << endl;
-
-            boolList selected(completeMesh_->nCells(), false);
-
-            for (label proci=0; proci<nProcs(); proci++)
-            {
-                const labelList& cellZonei =
-                    procMeshes_[proci].cellZones()[pzi];
-
-                const labelList& pca = procCellAddressing_[proci];
-
-                forAll(cellZonei, zci)
-                {
-                    selected[pca[cellZonei[zci]]] = true;
-                }
-            }
-
-            completeMesh_->cellZones().append
-            (
-                new cellZone
-                (
-                    cellZones0[pzi].name(),
-                    zoneGenerator::indices(selected),
-                    completeMesh_->cellZones()
-                )
-            );
-        }
-
-        completeMesh_->cellZones().writeOpt() = IOobject::AUTO_WRITE;
-        completeMesh_->cellZones().instance() = cellZones0.instance();
-
-        Info<< decrIndent << endl;
-    }
-
-    const faceZoneList& faceZones = completeMesh().faceZones();
-    const faceZoneList& faceZones0 = procMeshes_[0].faceZones();
-
-    const label faceZonesCompare = compareInstances
-    (
-        faceZones.instance(),
-        faceZones0.instance()
-    );
 
     if (force || faceZonesCompare == 1)
     {
-        Info<< "Reconstructing faceZones" << incrIndent << endl;
+        Info<< dnl << "Reconstructing faceZones" << incrIndent << nl << endl;
 
-        forAll(faceZones0, pzi)
+        forAll(procMeshes_[0].faceZones(), pzi)
         {
-            Info<< indent << faceZones0[pzi].name() << endl;
+            Info<< indent << procMeshes_[0].faceZones()[pzi].name() << endl;
 
             boolList selectedFaces(completeMesh_->nFaces(), false);
             boolList flipMap(completeMesh_->nFaces(), false);
@@ -678,7 +646,7 @@ void Foam::domainDecomposition::reconstructZones(const bool force)
                     procMeshes_[proci].faceZones()[pzi];
 
                 const boolList& flipMapi =
-                    faceZones0[pzi].oriented()
+                    procMeshes_[0].faceZones()[pzi].oriented()
                       ? procMeshes_[proci].faceZones()[pzi].flipMap()
                       : boolList::null();
 
@@ -721,13 +689,13 @@ void Foam::domainDecomposition::reconstructZones(const bool force)
 
             const labelList faceIndices(zoneGenerator::indices(selectedFaces));
 
-            if (faceZones0[pzi].oriented())
+            if (procMeshes_[0].faceZones()[pzi].oriented())
             {
                 completeMesh_->faceZones().append
                 (
                     new faceZone
                     (
-                        faceZones0[pzi].name(),
+                        procMeshes_[0].faceZones()[pzi].name(),
                         faceIndices,
                         boolList(flipMap, faceIndices),
                         completeMesh_->faceZones()
@@ -740,7 +708,7 @@ void Foam::domainDecomposition::reconstructZones(const bool force)
                 (
                     new faceZone
                     (
-                        faceZones0[pzi].name(),
+                        procMeshes_[0].faceZones()[pzi].name(),
                         faceIndices,
                         completeMesh_->faceZones()
                     )
@@ -749,9 +717,51 @@ void Foam::domainDecomposition::reconstructZones(const bool force)
         }
 
         completeMesh_->faceZones().writeOpt() = IOobject::AUTO_WRITE;
-        completeMesh_->faceZones().instance() = faceZones0.instance();
+        completeMesh_->faceZones().instance() =
+            procMeshes_[0].faceZones().instance();
 
-        Info<< decrIndent << endl;
+        Info<< decrIndent;
+    }
+
+    if (force || cellZonesCompare == 1)
+    {
+        Info<< dnl << "Reconstructing cellZones" << incrIndent << nl << endl;
+
+        forAll(procMeshes_[0].cellZones(), pzi)
+        {
+            Info << indent << procMeshes_[0].cellZones()[pzi].name() << endl;
+
+            boolList selected(completeMesh_->nCells(), false);
+
+            for (label proci=0; proci<nProcs(); proci++)
+            {
+                const labelList& cellZonei =
+                    procMeshes_[proci].cellZones()[pzi];
+
+                const labelList& pca = procCellAddressing_[proci];
+
+                forAll(cellZonei, zci)
+                {
+                    selected[pca[cellZonei[zci]]] = true;
+                }
+            }
+
+            completeMesh_->cellZones().append
+            (
+                new cellZone
+                (
+                    procMeshes_[0].cellZones()[pzi].name(),
+                    zoneGenerator::indices(selected),
+                    completeMesh_->cellZones()
+                )
+            );
+        }
+
+        completeMesh_->cellZones().writeOpt() = IOobject::AUTO_WRITE;
+        completeMesh_->cellZones().instance() =
+            procMeshes_[0].cellZones().instance();
+
+        Info<< decrIndent;
     }
 }
 
