@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Description
 
 See also
     Foam::functionObject
-    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::functionObject
     Foam::functionObjects::logFiles
 
 SourceFiles
@@ -55,7 +55,7 @@ SourceFiles
 #ifndef userTimeStepFunctionObject_H
 #define userTimeStepFunctionObject_H
 
-#include "regionFunctionObject.H"
+#include "functionObject.H"
 #include "logFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -71,7 +71,7 @@ namespace functionObjects
 
 class userTimeStep
 :
-    public regionFunctionObject,
+    public functionObject,
     public logFiles
 {
 

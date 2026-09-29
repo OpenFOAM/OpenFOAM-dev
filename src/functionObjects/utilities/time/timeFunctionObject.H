@@ -45,7 +45,6 @@ Description
 
 See also
     Foam::functionObject
-    Foam::regionFunctionObject
     Foam::functionObjects::logFiles
 
 SourceFiles
@@ -56,7 +55,7 @@ SourceFiles
 #ifndef timeFunctionObject_H
 #define timeFunctionObject_H
 
-#include "regionFunctionObject.H"
+#include "functionObject.H"
 #include "logFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,7 +71,7 @@ namespace functionObjects
 
 class time
 :
-    public regionFunctionObject,
+    public functionObject,
     public logFiles
 {
     // Private Data
