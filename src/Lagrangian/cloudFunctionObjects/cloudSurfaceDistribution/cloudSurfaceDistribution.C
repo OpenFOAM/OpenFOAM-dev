@@ -189,7 +189,7 @@ void Foam::functionObjects::cloudSurfaceDistribution::readCoeffs
     {
         FatalIOErrorInFunction(dict)
             << "Cannot change the selected surface at run-time"
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     // If we are continuing then the number of bins must not have changed
@@ -293,7 +293,7 @@ Foam::boolList Foam::functionObjects::cloudSurfaceDistribution::selected
             forAll(facei, subi)
             {
                 if (states[subi] <= LagrangianState::inCell) continue;
-                result = z.lookupMap().found(facei[subi]);
+                result[subi] = z.lookupMap().found(facei[subi]);
             }
             break;
         }
@@ -302,7 +302,7 @@ Foam::boolList Foam::functionObjects::cloudSurfaceDistribution::selected
             forAll(facei, subi)
             {
                 if (states[subi] <= LagrangianState::inCell) continue;
-                result = selectionSet_.found(facei[subi]);
+                result[subi] = selectionSet_.found(facei[subi]);
             }
             break;
         }
@@ -717,6 +717,7 @@ bool Foam::functionObjects::cloudSurfaceDistribution::write()
     propsDict.add("select", selectionTypeNames[selectionType_]);
     propsDict.add(selectionTypeNames[selectionType_], selectionName_);
     propsDict.add("fields", fields_);
+    propsDict.add("weightFields", weightFields_);
     propsDict.add("nBins", nBins_);
     propsDict.add("sums", sums_);
     propsDict.add("ranges", ranges_);
