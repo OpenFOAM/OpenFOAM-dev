@@ -544,6 +544,8 @@ bool Foam::domainDecomposition::readDecompose(const bool doPost)
         }
 
         decomposePoints();
+
+        decomposeZones();
     }
     else
     {
@@ -692,6 +694,8 @@ bool Foam::domainDecomposition::readReconstruct(const bool doPost)
         }
 
         reconstructPoints();
+
+        reconstructZones();
     }
     else
     {
@@ -777,63 +781,61 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateDecompose
 {
     const fvMesh::readUpdateState stat = readUpdate();
 
-    // Topology changes
+    // Topology changes ...
+    const label facesCompare =
+        compareInstances
+        (
+            completeMesh().facesInstance(),
+            procMeshes_[0].facesInstance()
+        );
+
+    // If the complete mesh has newer topology then we need to decompose
+    if (facesCompare == -1)
     {
-        const label facesCompare =
-            compareInstances
-            (
-                completeMesh().facesInstance(),
-                procMeshes_[0].facesInstance()
-            );
-
-        // If the complete mesh has newer topology then we need to decompose
-        if (facesCompare == -1)
-        {
-            decompose();
-        }
-
-        // If there has been matching topology change then reload the addressing
-        if (facesCompare == 0 && stat >= fvMesh::TOPO_CHANGE)
-        {
-            readAddressing();
-        }
-
-        // The processor meshes should not have newer topology when decomposing
-        if (facesCompare == +1)
-        {
-            FatalErrorInFunction
-                << "Cannot decompose at time "
-                << procMeshes_[0].facesInstance()
-                << " because the processor mesh topology has evolved further"
-                << " than the complete mesh topology." << exit(FatalError);
-        }
+        decompose();
     }
 
-    // Geometry changes
+    // If there has been matching topology change then reload the addressing
+    if (facesCompare == 0 && stat >= fvMesh::TOPO_CHANGE)
     {
-        const label pointsCompare =
-            compareInstances
-            (
-                completeMesh().pointsInstance(),
-                procMeshes_[0].pointsInstance()
-            );
+        readAddressing();
+    }
 
-        // If the complete mesh has newer geometry then we need to decompose
-        // the points
-        if (pointsCompare == -1)
-        {
-            decomposePoints();
-        }
+    // The processor meshes should not have newer topology when decomposing
+    if (facesCompare == +1)
+    {
+        FatalErrorInFunction
+            << "Cannot decompose at time "
+            << procMeshes_[0].facesInstance()
+            << " because the processor mesh topology has evolved further"
+            << " than the complete mesh topology." << exit(FatalError);
+    }
 
-        // The processor meshes should not have newer geometry when decomposing
-        if (pointsCompare == +1)
-        {
-            FatalErrorInFunction
-                << "Cannot decompose at time "
-                << procMeshes_[0].pointsInstance()
-                << " because the processor mesh geometry has evolved further"
-                << " than the complete mesh geometry." << exit(FatalError);
-        }
+    // Geometry changes ...
+    const label pointsCompare =
+        compareInstances
+        (
+            completeMesh().pointsInstance(),
+            procMeshes_[0].pointsInstance()
+        );
+
+    // If the complete mesh has newer geometry then we need to decompose
+    // the points
+    if (facesCompare != -1 && pointsCompare == -1)
+    {
+        decomposePoints();
+
+        decomposeZones();
+    }
+
+    // The processor meshes should not have newer geometry when decomposing
+    if (pointsCompare == +1)
+    {
+        FatalErrorInFunction
+            << "Cannot decompose at time "
+            << procMeshes_[0].pointsInstance()
+            << " because the processor mesh geometry has evolved further"
+            << " than the complete mesh geometry." << exit(FatalError);
     }
 
     if (doPost)
@@ -886,64 +888,62 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateReconstruct
 {
     const fvMesh::readUpdateState stat = readUpdate();
 
-    // Topology changes
+    // Topology changes ...
+    const label facesCompare =
+        compareInstances
+        (
+            completeMesh().facesInstance(),
+            procMeshes_[0].facesInstance()
+        );
+
+    // The complete mesh should not have newer topology when reconstructing
+    if (facesCompare == -1)
     {
-        const label facesCompare =
-            compareInstances
-            (
-                completeMesh().facesInstance(),
-                procMeshes_[0].facesInstance()
-            );
-
-        // The complete mesh should not have newer topology when reconstructing
-        if (facesCompare == -1)
-        {
-            FatalErrorInFunction
-                << "Cannot reconstruct at time "
-                << completeMesh().facesInstance()
-                << " because the complete mesh topology has evolved further"
-                << " than the processor mesh topology." << exit(FatalError);
-        }
-
-        // If there has been matching topology change then reload the addressing
-        if (facesCompare == 0 && stat >= fvMesh::TOPO_CHANGE)
-        {
-            readAddressing();
-        }
-
-        // If the processor meshes have newer topology then we need to
-        // reconstruct
-        if (facesCompare == +1)
-        {
-            reconstruct();
-        }
+        FatalErrorInFunction
+            << "Cannot reconstruct at time "
+            << completeMesh().facesInstance()
+            << " because the complete mesh topology has evolved further"
+            << " than the processor mesh topology." << exit(FatalError);
     }
 
-    // Geometry changes
+    // If there has been matching topology change then reload the addressing
+    if (facesCompare == 0 && stat >= fvMesh::TOPO_CHANGE)
     {
-        const label pointsCompare =
-            compareInstances
-            (
-                completeMesh().pointsInstance(),
-                procMeshes_[0].pointsInstance()
-            );
+        readAddressing();
+    }
 
-        // The complete mesh should not have newer geometry when reconstructing
-        if (pointsCompare == -1)
-        {
-            FatalErrorInFunction
-                << "Cannot reconstruct at time "
-                << completeMesh().pointsInstance()
-                << " because the complete mesh geometry has evolved further"
-                << " than the processor mesh geometry." << exit(FatalError);
-        }
+    // If the processor meshes have newer topology then we need to
+    // reconstruct
+    if (facesCompare == +1)
+    {
+        reconstruct();
+    }
 
-        // If the processor meshes have newer geometry then we need to
-        // reconstruct the points
-        if (pointsCompare == +1)
-        {
-            reconstructPoints();
-        }
+    // Geometry changes ...
+    const label pointsCompare =
+        compareInstances
+        (
+            completeMesh().pointsInstance(),
+            procMeshes_[0].pointsInstance()
+        );
+
+    // The complete mesh should not have newer geometry when reconstructing
+    if (pointsCompare == -1)
+    {
+        FatalErrorInFunction
+            << "Cannot reconstruct at time "
+            << completeMesh().pointsInstance()
+            << " because the complete mesh geometry has evolved further"
+            << " than the processor mesh geometry." << exit(FatalError);
+    }
+
+    // If the processor meshes have newer geometry then we need to
+    // reconstruct the points
+    if (facesCompare != +1 && pointsCompare == +1)
+    {
+        reconstructPoints();
+
+        reconstructZones();
     }
 
     if (doPost)

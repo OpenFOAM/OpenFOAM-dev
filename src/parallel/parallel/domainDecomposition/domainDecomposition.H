@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,14 +130,6 @@ class domainDecomposition
 
         // Decomposition
 
-            //- Mark all elements with value or -2 if occur twice
-            static void mark
-            (
-                const labelList& zoneElems,
-                const label zoneI,
-                labelList& elementToZone
-            );
-
             //- Add face to inter-processor patch
             void addInterProcFace
             (
@@ -176,6 +168,10 @@ class domainDecomposition
             //  the processor meshes
             void decomposePoints();
 
+            //- Decompose the complete mesh's zones and apply the result to
+            //  the processor meshes
+            void decomposeZones(const bool force = false);
+
 
         // Reconstruction
 
@@ -198,6 +194,10 @@ class domainDecomposition
             //- Reconstruct the processor meshes' points and apply the result
             //  to the complete mesh
             void reconstructPoints();
+
+            //- Reconstruct the processor meshes' zones and apply the result
+            //  to the complete mesh
+            void reconstructZones(const bool force = false);
 
 
         // Non conformal

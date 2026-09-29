@@ -547,8 +547,11 @@ void Foam::domainDecomposition::reconstructPoints()
 
         completeMesh_->setPoints(completePoints);
     }
+}
 
 
+void Foam::domainDecomposition::reconstructZones(const bool force)
+{
     const pointZoneList& pointZones = completeMesh().pointZones();
     const pointZoneList& pointZones0 = procMeshes_[0].pointZones();
 
@@ -558,7 +561,7 @@ void Foam::domainDecomposition::reconstructPoints()
         pointZones0.instance()
     );
 
-    if (pointZonesCompare == 1)
+    if (force || pointZonesCompare == 1)
     {
         Info<< "Reconstructing pointZones" << incrIndent << endl;
 
@@ -598,7 +601,6 @@ void Foam::domainDecomposition::reconstructPoints()
         Info<< decrIndent << endl;
     }
 
-
     const cellZoneList& cellZones = completeMesh().cellZones();
     const cellZoneList& cellZones0 = procMeshes_[0].cellZones();
 
@@ -608,7 +610,7 @@ void Foam::domainDecomposition::reconstructPoints()
         cellZones0.instance()
     );
 
-    if (cellZonesCompare == 1)
+    if (force || cellZonesCompare == 1)
     {
         Info<< "Reconstructing cellZones" << incrIndent << endl;
 
@@ -648,7 +650,6 @@ void Foam::domainDecomposition::reconstructPoints()
         Info<< decrIndent << endl;
     }
 
-
     const faceZoneList& faceZones = completeMesh().faceZones();
     const faceZoneList& faceZones0 = procMeshes_[0].faceZones();
 
@@ -658,7 +659,7 @@ void Foam::domainDecomposition::reconstructPoints()
         faceZones0.instance()
     );
 
-    if (faceZonesCompare == 1)
+    if (force || faceZonesCompare == 1)
     {
         Info<< "Reconstructing faceZones" << incrIndent << endl;
 
