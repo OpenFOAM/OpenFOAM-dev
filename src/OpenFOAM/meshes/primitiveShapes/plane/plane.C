@@ -160,8 +160,8 @@ Foam::plane::plane(const dictionary& dict)
 
     const dictionary& subDict =
         allowSubDict
-      ? dict
-      : dict.optionalSubDict(specificationNames_[spec] + "Dict");
+      ? dict.optionalSubDict(specificationNames_[spec] + "Dict")
+      : dict;
 
     switch (spec)
     {
