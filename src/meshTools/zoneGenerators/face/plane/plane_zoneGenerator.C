@@ -25,8 +25,7 @@ License
 
 #include "plane_zoneGenerator.H"
 #include "polyMesh.H"
-#include "uindirectPrimitivePatch.H"
-#include "PatchTools.H"
+#include "patchRegionSplit.H"
 #include "syncTools.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -138,198 +137,43 @@ Foam::zoneSet Foam::zoneGenerators::plane::generate() const
     // connected to the contiguous region closest to the specified point
     if (include_ == include::closest)
     {
-        // Step 1: Get locally contiguous regions for the new face set and the
-        // total number of regions across all processors.
-        labelList newSetFaceRegions(faceIndices.size(), -1);
-        label nRegions = -1;
-        {
-            // Create a patch of the set faces
-            const uindirectPrimitivePatch newSetPatch
-            (
-                UIndirectList<face>(mesh_.faces(), faceIndices),
-                mesh_.points()
-            );
+        // Identify contiguous regions
+        const patchRegionSplit prs(mesh_, faceIndices);
 
-            // Get the region ID-s and store the total number of regions on
-            // each processor
-            labelList procNRegions(Pstream::nProcs(), -1);
-            procNRegions[Pstream::myProcNo()] =
-                PatchTools::markZones
+        // Find the smallest distance from each region to the point
+        scalarField regionMinDistSqr(prs.nRegions(), vGreat);
+        forAll(faceIndices, fi)
+        {
+            const label facei = faceIndices[fi];
+            const label regioni = prs[fi];
+
+            const scalar distSqr =
+                magSqr
                 (
-                    newSetPatch,
-                    boolList(newSetPatch.nEdges(), false),
-                    newSetFaceRegions
+                    mesh_.faces()[facei].nearestPoint
+                    (
+                        point_,
+                        mesh_.points()
+                    ).rawPoint()
+                  - point_
                 );
-            Pstream::gatherList(procNRegions);
-            Pstream::scatterList(procNRegions);
 
-            // Cumulative sum the number of regions on each processor to get an
-            // offset which makes the local region ID-s globally unique
-            labelList procRegionOffset(Pstream::nProcs(), 0);
-            for (label proci = 1; proci < Pstream::nProcs(); proci++)
-            {
-                procRegionOffset[proci] +=
-                    procRegionOffset[proci - 1]
-                  + procNRegions[proci - 1];
-            }
-
-            // Apply the offset
-            forAll(faceIndices, fi)
-            {
-                newSetFaceRegions[fi] +=
-                    procRegionOffset[Pstream::myProcNo()];
-            }
-
-            // Store the total number of regions across all processors
-            nRegions = procRegionOffset.last() + procNRegions.last();
+            regionMinDistSqr[regioni] = min(regionMinDistSqr[regioni], distSqr);
         }
+        Pstream::listCombineGather(regionMinDistSqr, minEqOp());
+        Pstream::listCombineScatter(regionMinDistSqr);
 
-        // Step 2: Create a region map which combines regions which are
-        // connected across coupled interfaces
-        labelList regionMap(identityMap(nRegions));
+        // Choose the closest region
+        const label selectedRegioni = findMin(regionMinDistSqr);
+
+        // Remove faces in other regions from the list by shuffling up
+        label fi0 = 0;
+        forAll(faceIndices, fi)
         {
-            // Put region labels on connected boundary edges and synchronise to
-            // create a list of all regions connected to a given edge
-            labelListList meshEdgeRegions(mesh_.nEdges(), labelList());
-            forAll(faceIndices, fi)
-            {
-                const label facei = faceIndices[fi];
-                const label regioni = newSetFaceRegions[fi];
-                forAll(mesh_.faceEdges()[facei], faceEdgei)
-                {
-                    const label edgei = mesh_.faceEdges()[facei][faceEdgei];
-                    meshEdgeRegions[edgei] = labelList(1, regioni);
-                }
-            }
-            syncTools::syncEdgeList
-            (
-                mesh_,
-                meshEdgeRegions,
-                globalMeshData::ListPlusEqOp(),
-                labelList()
-            );
-
-            // Combine edge regions to create a list of what regions a given
-            // region is connected to
-            List<labelHashSet> regionRegions(nRegions);
-            forAll(faceIndices, fi)
-            {
-                const label facei = faceIndices[fi];
-                const label regioni = newSetFaceRegions[fi];
-                forAll(mesh_.faceEdges()[facei], faceEdgei)
-                {
-                    const label edgei = mesh_.faceEdges()[facei][faceEdgei];
-                    forAll(meshEdgeRegions[edgei], edgeRegioni)
-                    {
-                        if (meshEdgeRegions[edgei][edgeRegioni] != regioni)
-                        {
-                            regionRegions[regioni].insert
-                            (
-                                meshEdgeRegions[edgei][edgeRegioni]
-                            );
-                        }
-                    }
-                }
-            }
-            Pstream::listCombineGather(regionRegions, addEqOp());
-            Pstream::listCombineScatter(regionRegions);
-
-            // Collapse the region connections into a map between each region
-            // and the lowest numbered region that it connects to
-            forAll(regionRegions, regioni)
-            {
-                forAllConstIter(labelHashSet, regionRegions[regioni], iter)
-                {
-                    regionMap[iter.key()] =
-                        min(regionMap[iter.key()], regionMap[regioni]);
-                }
-            }
+            faceIndices[fi0] = faceIndices[fi];
+            if (prs[fi] == selectedRegioni) fi0 ++;
         }
-
-        // Step 3: Combine connected regions
-        labelList regionNFaces;
-        {
-            // Remove duplicates from the region map
-            label regioni0 = 0;
-            forAll(regionMap, regioni)
-            {
-                if (regionMap[regioni] > regioni0)
-                {
-                    regioni0++;
-                    regionMap[regioni] = regioni0;
-                }
-            }
-
-            // Recompute the number of regions
-            nRegions = regioni0 + 1;
-
-            // Renumber the face region ID-s
-            newSetFaceRegions =
-                IndirectList<label>(regionMap, newSetFaceRegions);
-
-            // Report the final number and size of the regions
-            regionNFaces = labelList(nRegions, 0);
-            forAll(faceIndices, fi)
-            {
-                regionNFaces[newSetFaceRegions[fi]] ++;
-            }
-            Pstream::listCombineGather(regionNFaces, addEqOp());
-            Pstream::listCombineScatter(regionNFaces);
-            Info<< "    Found " << nRegions << " contiguous regions with "
-                << regionNFaces << " faces" << endl;
-        }
-
-        // Step 4: Choose the closest region to output
-        label selectedRegioni = -1;
-        {
-            // Compute the region centres
-            scalarField regionMagAreas(nRegions, 0);
-            pointField regionCentres(nRegions, Zero);
-            forAll(faceIndices, fi)
-            {
-                const label facei = faceIndices[fi];
-                const label regioni = newSetFaceRegions[fi];
-
-                const vector& a = mesh_.faceAreas()[facei];
-                const point& c = mesh_.faceCentres()[facei];
-
-                regionMagAreas[regioni] += mag(a);
-                regionCentres[regioni] += mag(a)*c;
-            }
-            Pstream::listCombineGather(regionMagAreas, addEqOp());
-            Pstream::listCombineGather(regionCentres, addEqOp());
-            Pstream::listCombineScatter(regionMagAreas);
-            Pstream::listCombineScatter(regionCentres);
-            regionCentres /= regionMagAreas;
-
-            // Find the region centroid closest to the reference point
-            selectedRegioni = returnReduce
-            (
-                findMin(eval(mag(regionCentres - point_))()),
-                minOp()
-            );
-
-            // Report the selection
-            Info<< "    Selecting region " << selectedRegioni << " with "
-                << regionNFaces[selectedRegioni]
-                << " faces as the closest to point " << point_ << endl;
-        }
-
-        // Step 5: Remove any faces from the set list not in the selected region
-        {
-            // Remove faces from the list by shuffling up and resizing
-            label fi0 = 0;
-            forAll(faceIndices, fi)
-            {
-                faceIndices[fi0] = faceIndices[fi];
-
-                if (newSetFaceRegions[fi] == selectedRegioni)
-                {
-                    fi0++;
-                }
-            }
-            faceIndices.resize(fi0);
-        }
+        faceIndices.resize(fi0);
     }
 
     boolList flipMap(faceIndices.size());

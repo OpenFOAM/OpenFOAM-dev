@@ -24,14 +24,69 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchRegionSplit.H"
-#include "PatchTools.H"
 #include "uindirectPrimitivePatch.H"
+#include "PatchEdgeFaceWave.H"
+#include "globalIndex.H"
+#include "patchEdgeFaceRegion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(patchRegionSplit, 0);
+}
+
+
+// * * * * * * * * * * * * * * Private Constructors  * * * * * * * * * * * * //
+
+template<class Patch>
+Foam::patchRegionSplit::patchRegionSplit
+(
+    const polyMesh& mesh,
+    const Patch& patch
+)
+:
+    regionSplitBase(patch.size())
+{
+    // Create global indices for the edges
+    const globalIndex globalPatchEdgeIndex(patch.nEdges());
+
+    // Initialise wave data
+    List<patchEdgeFaceRegion> edgeData(patch.nEdges()), faceData(patch.size());
+
+    // Seed all edges with their global index
+    labelList seedEdges = identityMap(patch.nEdges());
+    List<patchEdgeFaceRegion> seedEdgesData(patch.nEdges());
+    forAll(seedEdges, patchEdgei)
+    {
+        seedEdgesData[patchEdgei] = globalPatchEdgeIndex.toGlobal(patchEdgei);
+    }
+
+    // Propagate inwards so that every face data now contains the lowest global
+    // edge index in the contiguous region
+    PatchEdgeFaceWave<Patch, patchEdgeFaceRegion> deltaCalc
+    (
+        mesh,
+        patch,
+        seedEdges,
+        seedEdgesData,
+        edgeData,
+        faceData,
+        returnReduce(patch.size(), sumOp()),
+        PatchEdgeFaceWave<Patch, patchEdgeFaceRegion>::defaultTrackingData_
+    );
+
+    // Unpack indices into the region index list
+    forAll(patch, patchFacei)
+    {
+        this->operator[](patchFacei) = faceData[patchFacei].region();
+    }
+
+    // Compact the region indices
+    nRegions_ =
+        Pstream::parRun()
+      ? compactGlobalRegionSplit(globalPatchEdgeIndex, *this)
+      : compactLocalRegionSplit(*this);
 }
 
 
@@ -43,34 +98,22 @@ Foam::patchRegionSplit::patchRegionSplit
     const labelList& faces
 )
 :
-    regionSplitBase(faces.size())
-{
-    const uindirectPrimitivePatch patch
+    patchRegionSplit
     (
-        UIndirectList<face>(mesh.faces(), faces),
-        mesh.points()
-    );
-
-    const label nLocalZones = PatchTools::markZones(patch, boolList(), *this);
-
-    nRegions_ =
-        Pstream::parRun()
-      ? compactGlobalRegionSplit(globalIndex(nLocalZones), *this)
-      : compactLocalRegionSplit(*this);
-}
+        mesh,
+        uindirectPrimitivePatch
+        (
+            UIndirectList<face>(mesh.faces(), faces),
+            mesh.points()
+        )
+    )
+{}
 
 
 Foam::patchRegionSplit::patchRegionSplit(const polyPatch& patch)
 :
-    regionSplitBase(patch.size())
-{
-    const label nLocalZones = PatchTools::markZones(patch, boolList(), *this);
-
-    nRegions_ =
-        Pstream::parRun()
-      ? compactGlobalRegionSplit(globalIndex(nLocalZones), *this)
-      : compactLocalRegionSplit(*this);
-}
+    patchRegionSplit(patch.mesh(), patch)
+{}
 
 
 // ************************************************************************* //

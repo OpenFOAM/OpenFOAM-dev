@@ -25,7 +25,7 @@ Class
     Foam::minData
 
 Description
-    For use with FaceCellWave. Transports minimum passive data
+    For use with FaceCellWave. Transports minimum label data.
 
 SourceFiles
     minDataI.H
@@ -47,15 +47,11 @@ namespace Foam
 class polyPatch;
 class polyMesh;
 class transformer;
-
-
-// Forward declaration of friend functions and operators
-
 class minData;
 
+// Forward declaration of friend functions and operators
 Istream& operator>>(Istream&, minData&);
 Ostream& operator<<(Ostream&, const minData&);
-
 
 /*---------------------------------------------------------------------------*\
                            Class minData Declaration
@@ -84,6 +80,7 @@ public:
 
         // Access
 
+            //- Return the data
             inline label data() const
             {
                 return data_;
@@ -93,11 +90,11 @@ public:
         // Needed by FaceCellWave
 
             //- Check whether origin has been changed at all or
-            //  still contains original (invalid) value.
+            //  still contains original (invalid) value
             template<class TrackingData>
             inline bool valid(TrackingData& td) const;
 
-            //- Check for identical geometrical data. Used for cyclics checking.
+            //- Check for identical geometrical data
             template<class TrackingData>
             inline bool sameGeometry
             (
@@ -117,7 +114,7 @@ public:
                 TrackingData& td
             );
 
-            //- Influence of neighbouring face.
+            //- Influence of neighbouring face
             template<class NeighbourFacei, class TrackingData>
             inline bool updateCell
             (
@@ -129,7 +126,7 @@ public:
                 TrackingData& td
             );
 
-            //- Influence of neighbouring cell.
+            //- Influence of neighbouring cell
             template<class Facei, class TrackingData>
             inline bool updateFace
             (
@@ -141,7 +138,7 @@ public:
                 TrackingData& td
             );
 
-            //- Influence of different value on same face.
+            //- Influence of different value on same face
             template<class Facei, class TrackingData>
             inline bool updateFace
             (
@@ -152,15 +149,14 @@ public:
                 TrackingData& td
             );
 
-            //- Same (like operator==)
+            //- Test equality
             template<class TrackingData>
             inline bool equal(const minData&, TrackingData& td) const;
 
+
     // Member Operators
 
-        // Needed for List IO
         inline bool operator==(const minData&) const;
-
         inline bool operator!=(const minData&) const;
 
 

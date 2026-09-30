@@ -1819,7 +1819,7 @@ Foam::label Foam::meshRefinement::markPatchZones
 
                 if
                 (
-                    edgeinfo.updateEdge<int>
+                    edgeinfo.updateEdge<indirectPrimitivePatch, int>
                     (
                         mesh_,
                         patch,

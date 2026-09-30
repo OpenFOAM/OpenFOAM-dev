@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,11 +104,11 @@ inline bool Foam::patchEdgeFaceRegion::valid(TrackingData& td) const
 }
 
 
-template<class TrackingData>
+template<class Patch, class TrackingData>
 inline void Foam::patchEdgeFaceRegion::transform
 (
     const polyMesh& mesh,
-    const indirectPrimitivePatch& patch,
+    const Patch& patch,
     const tensor& rotTensor,
     const scalar tol,
     TrackingData& td
@@ -116,11 +116,11 @@ inline void Foam::patchEdgeFaceRegion::transform
 {}
 
 
-template<class TrackingData>
+template<class Patch, class TrackingData>
 inline bool Foam::patchEdgeFaceRegion::updateEdge
 (
     const polyMesh& mesh,
-    const indirectPrimitivePatch& patch,
+    const Patch& patch,
     const label edgei,
     const label facei,
     const patchEdgeFaceRegion& faceInfo,
@@ -132,11 +132,11 @@ inline bool Foam::patchEdgeFaceRegion::updateEdge
 }
 
 
-template<class TrackingData>
+template<class Patch, class TrackingData>
 inline bool Foam::patchEdgeFaceRegion::updateEdge
 (
     const polyMesh& mesh,
-    const indirectPrimitivePatch& patch,
+    const Patch& patch,
     const patchEdgeFaceRegion& edgeInfo,
     const bool sameOrientation,
     const scalar tol,
@@ -147,11 +147,11 @@ inline bool Foam::patchEdgeFaceRegion::updateEdge
 }
 
 
-template<class TrackingData>
+template<class Patch, class TrackingData>
 inline bool Foam::patchEdgeFaceRegion::updateFace
 (
     const polyMesh& mesh,
-    const indirectPrimitivePatch& patch,
+    const Patch& patch,
     const label facei,
     const label edgei,
     const patchEdgeFaceRegion& edgeInfo,

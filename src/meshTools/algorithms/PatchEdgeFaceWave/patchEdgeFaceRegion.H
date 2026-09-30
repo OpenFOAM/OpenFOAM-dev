@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,6 @@ SourceFiles
 #include "label.H"
 #include "scalar.H"
 #include "tensor.H"
-#include "indirectPrimitivePatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -110,22 +109,22 @@ public:
             inline bool valid(TrackingData& td) const;
 
             //- Apply rotation matrix
-            template<class TrackingData>
+            template<class Patch, class TrackingData>
             inline void transform
             (
                 const polyMesh& mesh,
-                const indirectPrimitivePatch& patch,
+                const Patch& patch,
                 const tensor& rotTensor,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Influence of face on edge
-            template<class TrackingData>
+            template<class Patch, class TrackingData>
             inline bool updateEdge
             (
                 const polyMesh& mesh,
-                const indirectPrimitivePatch& patch,
+                const Patch& patch,
                 const label edgei,
                 const label facei,
                 const patchEdgeFaceRegion& faceInfo,
@@ -134,11 +133,11 @@ public:
             );
 
             //- New information for edge (from e.g. coupled edge)
-            template<class TrackingData>
+            template<class Patch, class TrackingData>
             inline bool updateEdge
             (
                 const polyMesh& mesh,
-                const indirectPrimitivePatch& patch,
+                const Patch& patch,
                 const patchEdgeFaceRegion& edgeInfo,
                 const bool sameOrientation,
                 const scalar tol,
@@ -146,11 +145,11 @@ public:
             );
 
             //- Influence of edge on face.
-            template<class TrackingData>
+            template<class Patch, class TrackingData>
             inline bool updateFace
             (
                 const polyMesh& mesh,
-                const indirectPrimitivePatch& patch,
+                const Patch& patch,
                 const label facei,
                 const label edgei,
                 const patchEdgeFaceRegion& edgeInfo,
@@ -165,15 +164,22 @@ public:
 
     // Member Operators
 
-        // Needed for List IO
         inline bool operator==(const patchEdgeFaceRegion&) const;
         inline bool operator!=(const patchEdgeFaceRegion&) const;
 
 
     // IOstream Operators
 
-        inline friend Ostream& operator<<(Ostream&, const patchEdgeFaceRegion&);
-        inline friend Istream& operator>>(Istream&, patchEdgeFaceRegion&);
+        inline friend Ostream& operator<<
+        (
+            Ostream&,
+            const patchEdgeFaceRegion&
+        );
+        inline friend Istream& operator>>
+        (
+            Istream&,
+            patchEdgeFaceRegion&
+        );
 };
 
 

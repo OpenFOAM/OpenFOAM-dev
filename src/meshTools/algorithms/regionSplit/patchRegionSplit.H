@@ -53,6 +53,17 @@ class patchRegionSplit
 :
     public regionSplitBase
 {
+    // Private constructors
+
+        //- Construct from a poly-mesh and a primitive patch
+        template<class Patch>
+        patchRegionSplit
+        (
+            const polyMesh& mesh,
+            const Patch& patch
+        );
+
+
 public:
 
     //- Runtime type information

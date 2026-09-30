@@ -106,7 +106,6 @@ inline bool Foam::minData::updateFace
     TrackingData&
 )
 {
-    // From cell to its faces
     if (neighbourInfo.data_ < data_)
     {
         operator=(neighbourInfo);
@@ -129,7 +128,6 @@ inline bool Foam::minData::updateFace
     TrackingData&
 )
 {
-    // From face to face (e.g. coupled faces)
     if (neighbourInfo.data_ < data_)
     {
         operator=(neighbourInfo);
