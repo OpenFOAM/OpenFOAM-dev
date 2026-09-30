@@ -40,7 +40,6 @@ Description
 #include "fvMesh.H"
 #include "MeshedSurfaces.H"
 #include "globalIndex.H"
-#include "cellSet.H"
 #include "systemDict.H"
 
 #include "extrudedMesh.H"
@@ -197,25 +196,6 @@ void updateFaceLabels(const polyTopoChangeMap& map, labelList& faceLabels)
 }
 
 
-void updateCellSet(const polyTopoChangeMap& map, labelHashSet& cellLabels)
-{
-    const labelList& reverseMap = map.reverseCellMap();
-
-    labelHashSet newCellLabels(2*cellLabels.size());
-
-    forAll(cellLabels, i)
-    {
-        label oldCelli = cellLabels[i];
-
-        if (reverseMap[oldCelli] >= 0)
-        {
-            newCellLabels.insert(reverseMap[oldCelli]);
-        }
-    }
-    cellLabels.transfer(newCellLabels);
-}
-
-
 template<class PatchType>
 void changeFrontBackPatches
 (
@@ -315,9 +295,6 @@ int main(int argc, char *argv[])
     labelList frontPatchFaces;
     word backPatchName;
     labelList backPatchFaces;
-
-    // Optional added cells (get written to cellSet)
-    labelHashSet addedCellsSet;
 
     if (mode == extrudeSurfaceType::patch || mode == extrudeSurfaceType::mesh)
     {
@@ -734,27 +711,6 @@ int main(int argc, char *argv[])
             map().reverseFaceMap(),
             backPatchFaces
         );
-
-        // Store added cells
-        if (mode == extrudeSurfaceType::mesh)
-        {
-            const labelListList addedCells
-            (
-                layerExtrude.addedCells
-                (
-                    meshFromMesh,
-                    layerExtrude.layerFaces()
-                )
-            );
-            forAll(addedCells, facei)
-            {
-                const labelList& aCells = addedCells[facei];
-                forAll(aCells, i)
-                {
-                    addedCellsSet.insert(aCells[i]);
-                }
-            }
-        }
     }
     else
     {
@@ -897,7 +853,6 @@ int main(int argc, char *argv[])
             // Update stored data
             updateFaceLabels(map(), frontPatchFaces);
             updateFaceLabels(map(), backPatchFaces);
-            updateCellSet(map(), addedCellsSet);
         }
     }
 
@@ -995,9 +950,6 @@ int main(int argc, char *argv[])
 
         // Update fields
         mesh.topoChange(map);
-
-        // Update local data
-        updateCellSet(map(), addedCellsSet);
     }
 
     // Set the write instance based on the overwrite flag and whether or not a
@@ -1038,21 +990,6 @@ int main(int argc, char *argv[])
         FatalErrorInFunction
             << "Failed writing " << mesh.name()
             << exit(FatalError);
-    }
-
-    // Need writing cellSet
-    label nAdded = returnReduce(addedCellsSet.size(), sumOp());
-    if (nAdded > 0)
-    {
-        cellSet addedCells(mesh, "addedCells", addedCellsSet);
-        Info<< "Writing added cells to cellSet " << addedCells.name()
-            << nl << endl;
-        if (!addedCells.write())
-        {
-            FatalErrorInFunction
-                << "Failed writing " << addedCells.name()
-                << exit(FatalError);
-        }
     }
 
     Info<< "End\n" << endl;
