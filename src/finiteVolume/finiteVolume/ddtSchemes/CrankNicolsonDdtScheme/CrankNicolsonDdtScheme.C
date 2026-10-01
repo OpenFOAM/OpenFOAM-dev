@@ -354,12 +354,17 @@ CrankNicolsonDdtScheme<Type>::fviDdt
                 dt.dimensions()
             );
 
-        dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+        const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            const dimensionedScalar rDtCoef0 = rDtCoef0_(ddt0);
+
+            ddt0.internalFieldRef() =
+            (
+                (rDtCoef0*dt)*(mesh().V0() - mesh().V00())
+              - mesh().V00()*offCentre_(ddt0.internalField())
+            )/mesh().V0();
         }
 
         return VolInternalField<Type>::New
@@ -392,26 +397,50 @@ template<class Type>
 tmp<VolInternalField<Type>>
 CrankNicolsonDdtScheme<Type>::fviDdt
 (
-    const VolInternalField<Type>& vf
+    const VolInternalField<Type>& vif
 )
 {
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            word("ddt0(", vf.name(), ')'),
-            vf.dimensions()
+            word("ddt0(", vif.name(), ')'),
+            vif.dimensions()
         );
 
-    const word ddtName("ddt(", vf.name(), ')');
+    const word ddtName("ddt(", vif.name(), ')');
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+
+            ddt0.primitiveFieldRef() =
+            (
+                rDtCoef0*
+                (
+                    mesh().V0().primitiveField()*vif.oldTime().primitiveField()
+                  - mesh().V00().primitiveField()
+                   *vif.oldTime().oldTime().primitiveField()
+                )
+              - mesh().V00().primitiveField()*offCentre_(ddt0.primitiveField())
+            )/mesh().V0().primitiveField();
+
+            if (isA<VolField<Type>>(vif))
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+
+                ddt0.boundaryFieldRef() =
+                (
+                    rDtCoef0*
+                    (
+                        vf.oldTime().boundaryField()
+                      - vf.oldTime().oldTime().boundaryField()
+                    ) - offCentre_(ddt0.boundaryField())
+                );
+            }
         }
 
         return VolInternalField<Type>::New
@@ -420,8 +449,8 @@ CrankNicolsonDdtScheme<Type>::fviDdt
             (
                 rDtCoef*
                 (
-                    mesh().V()*vf
-                  - mesh().V0()*vf.oldTime()
+                    mesh().V()*vif
+                  - mesh().V0()*vif.oldTime()
                 ) - mesh().V0()*offCentre_(ddt0()())
             )/mesh().V()
         );
@@ -430,14 +459,25 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            if (isA<VolField<Type>>(vif))
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+
+                ddt0 = rDtCoef0_(ddt0)*(vf.oldTime() - vf.oldTime().oldTime())
+                     - offCentre_(ddt0());
+            }
+            else
+            {
+                ddt0.internalFieldRef() =
+                    rDtCoef0_(ddt0)*(vif.oldTime() - vif.oldTime().oldTime())
+                  - offCentre_(ddt0.internalField());
+            }
         }
 
         return VolInternalField<Type>::New
         (
             ddtName,
-            rDtCoef*(vf - vf.oldTime()) - offCentre_(ddt0()())
+            rDtCoef*(vif - vif.oldTime()) - offCentre_(ddt0()())
         );
     }
 }
@@ -448,26 +488,50 @@ tmp<VolInternalField<Type>>
 CrankNicolsonDdtScheme<Type>::fviDdt
 (
     const dimensionedScalar& rho,
-    const VolInternalField<Type>& vf
+    const VolInternalField<Type>& vif
 )
 {
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            word("ddt0(", rho.name(), ',', vf.name(), ')'),
-            rho.dimensions()*vf.dimensions()
+            word("ddt0(", rho.name(), ',', vif.name(), ')'),
+            rho.dimensions()*vif.dimensions()
         );
 
-    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
+    const word ddtName("ddt(", rho.name(), ',', vif.name(), ')');
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+
+            ddt0.primitiveFieldRef() =
+            (
+                rDtCoef0*rho.value()*
+                (
+                    mesh().V0().primitiveField()*vif.oldTime().primitiveField()
+                  - mesh().V00().primitiveField()
+                   *vif.oldTime().oldTime().primitiveField()
+                )
+              - mesh().V00().primitiveField()*offCentre_(ddt0.primitiveField())
+            )/mesh().V0().primitiveField();
+
+            if (isA<VolField<Type>>(vif))
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+
+                ddt0.boundaryFieldRef() =
+                (
+                    rDtCoef0*rho.value()*
+                    (
+                        vf.oldTime().boundaryField()
+                      - vf.oldTime().oldTime().boundaryField()
+                    ) - offCentre_(ddt0.boundaryField())
+                );
+            }
         }
 
         return VolInternalField<Type>::New
@@ -476,8 +540,8 @@ CrankNicolsonDdtScheme<Type>::fviDdt
             (
                 rDtCoef*rho*
                 (
-                    mesh().V()*vf
-                  - mesh().V0()*vf.oldTime()
+                    mesh().V()*vif
+                  - mesh().V0()*vif.oldTime()
                 ) - mesh().V0()*offCentre_(ddt0()())
             )/mesh().V()
         );
@@ -486,14 +550,27 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            if (isA<VolField<Type>>(vif))
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+
+                ddt0 =
+                    rDtCoef0_(ddt0)*rho*(vf.oldTime() - vf.oldTime().oldTime())
+                  - offCentre_(ddt0());
+            }
+            else
+            {
+                ddt0.internalFieldRef() =
+                    rDtCoef0_(ddt0)
+                   *rho*(vif.oldTime() - vif.oldTime().oldTime())
+                  - offCentre_(ddt0.internalField());
+            }
         }
 
         return VolInternalField<Type>::New
         (
             ddtName,
-            rDtCoef*rho*(vf - vf.oldTime()) - offCentre_(ddt0()())
+            rDtCoef*rho*(vif - vif.oldTime()) - offCentre_(ddt0()())
         );
     }
 }
@@ -503,27 +580,57 @@ template<class Type>
 tmp<VolInternalField<Type>>
 CrankNicolsonDdtScheme<Type>::fviDdt
 (
-    const volInternalScalarField& rho,
-    const VolInternalField<Type>& vf
+    const volInternalScalarField& rhoif,
+    const VolInternalField<Type>& vif
 )
 {
     DDt0Field<VolField<Type>>& ddt0 =
         ddt0_<VolField<Type>>
         (
-            word("ddt0(", rho.name(), ',', vf.name(), ')'),
-            rho.dimensions()*vf.dimensions()
+            word("ddt0(", rhoif.name(), ',', vif.name(), ')'),
+            rhoif.dimensions()*vif.dimensions()
         );
 
-    const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
+    const word ddtName("ddt(", rhoif.name(), ',', vif.name(), ')');
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+
+            ddt0.primitiveFieldRef() =
+            (
+                rDtCoef0*
+                (
+                    mesh().V0().primitiveField()
+                   *rhoif.oldTime().primitiveField()
+                   *vif.oldTime().primitiveField()
+                  - mesh().V00().primitiveField()
+                   *rhoif.oldTime().oldTime().primitiveField()
+                   *vif.oldTime().oldTime().primitiveField()
+                )
+              - mesh().V00().primitiveField()*offCentre_(ddt0.primitiveField())
+            )/mesh().V0().primitiveField();
+
+            if (isA<VolField<Type>>(vif) && isA<volScalarField>(rhoif))
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+                const volScalarField& rho(refCast<const volScalarField>(rhoif));
+
+                ddt0.boundaryFieldRef() =
+                (
+                    rDtCoef0*
+                    (
+                        rho.oldTime().boundaryField()
+                       *vf.oldTime().boundaryField()
+                      - rho.oldTime().oldTime().boundaryField()
+                       *vf.oldTime().oldTime().boundaryField()
+                    ) - offCentre_(ddt0.boundaryField())
+                );
+            }
         }
 
         return VolInternalField<Type>::New
@@ -532,9 +639,9 @@ CrankNicolsonDdtScheme<Type>::fviDdt
             (
                 rDtCoef*
                 (
-                    mesh().V()*rho*vf
-                  - mesh().V0()*rho.oldTime()
-                   *vf.oldTime()
+                    mesh().V()*rhoif*vif
+                  - mesh().V0()*rhoif.oldTime()
+                   *vif.oldTime()
                 ) - mesh().V00()*offCentre_(ddt0()())
             )/mesh().V()
         );
@@ -543,14 +650,32 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            if (isA<VolField<Type>>(vif) && isA<volScalarField>(rhoif))
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+                const volScalarField& rho(refCast<const volScalarField>(rhoif));
+
+                ddt0 = rDtCoef0_(ddt0)*
+                (
+                    rho.oldTime()*vf.oldTime()
+                  - rho.oldTime().oldTime()*vf.oldTime().oldTime()
+                ) - offCentre_(ddt0());
+            }
+            else
+            {
+                ddt0.internalFieldRef() = rDtCoef0_(ddt0)*
+                (
+                    rhoif.oldTime()*vif.oldTime()
+                  - rhoif.oldTime().oldTime()*vif.oldTime().oldTime()
+                ) - offCentre_(ddt0.internalField());
+            }
         }
 
         return VolInternalField<Type>::New
         (
             ddtName,
-            rDtCoef*(rho*vf - rho.oldTime()*vf.oldTime()) - offCentre_(ddt0()())
+            rDtCoef
+           *(rhoif*vif - rhoif.oldTime()*vif.oldTime()) - offCentre_(ddt0()())
         );
     }
 }
@@ -560,31 +685,75 @@ template<class Type>
 tmp<VolInternalField<Type>>
 CrankNicolsonDdtScheme<Type>::fviDdt
 (
-    const volInternalScalarField& alpha,
-    const volInternalScalarField& rho,
-    const VolInternalField<Type>& vf
+    const volInternalScalarField& alphaif,
+    const volInternalScalarField& rhoif,
+    const VolInternalField<Type>& vif
 )
 {
-    DDt0Field<VolField<Type>>& ddt0 =
-        ddt0_<VolField<Type>>
-        (
-            word("ddt0(", alpha.name(), ',', rho.name(), ',', vf.name(), ')'),
-            alpha.dimensions()*rho.dimensions()*vf.dimensions()
-        );
+    DDt0Field<VolField<Type>>& ddt0 = ddt0_<VolField<Type>>
+    (
+        word("ddt0(", alphaif.name(), ',', rhoif.name(), ',', vif.name(), ')'),
+        alphaif.dimensions()*rhoif.dimensions()*vif.dimensions()
+    );
 
     const word ddtName
     (
-        word("ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')')
+        word("ddt(", alphaif.name(), ',', rhoif.name(), ',', vif.name(), ')')
     );
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+
+            ddt0.primitiveFieldRef() =
+            (
+                rDtCoef0*
+                (
+                    mesh().V0().primitiveField()
+                   *alphaif.oldTime().primitiveField()
+                   *rhoif.oldTime().primitiveField()
+                   *vif.oldTime().primitiveField()
+
+                  - mesh().V00().primitiveField()
+                   *rhoif.oldTime().oldTime().primitiveField()
+                   *alphaif.oldTime().oldTime().primitiveField()
+                   *vif.oldTime().oldTime().primitiveField()
+                )
+              - mesh().V00().primitiveField()*offCentre_(ddt0.primitiveField())
+            )/mesh().V0().primitiveField();
+
+            if
+            (
+                isA<VolField<Type>>(vif)
+             && isA<volScalarField>(alphaif)
+             && isA<volScalarField>(rhoif)
+            )
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+                const volScalarField& alpha
+                (
+                    refCast<const volScalarField>(alphaif)
+                );
+                const volScalarField& rho(refCast<const volScalarField>(rhoif));
+
+                ddt0.boundaryFieldRef() =
+                (
+                    rDtCoef0*
+                    (
+                        alpha.oldTime().boundaryField()
+                       *rho.oldTime().boundaryField()
+                       *vf.oldTime().boundaryField()
+
+                      - alpha.oldTime().oldTime().boundaryField()
+                       *rho.oldTime().oldTime().boundaryField()
+                       *vf.oldTime().oldTime().boundaryField()
+                    ) - offCentre_(ddt0.boundaryField())
+                );
+            }
         }
 
         return VolInternalField<Type>::New
@@ -593,8 +762,8 @@ CrankNicolsonDdtScheme<Type>::fviDdt
             (
                 rDtCoef*
                 (
-                    mesh().V()*alpha*rho*vf
-                  - mesh().V0()*alpha.oldTime()*rho.oldTime()*vf.oldTime()
+                    mesh().V()*alphaif*rhoif*vif
+                  - mesh().V0()*alphaif.oldTime()*rhoif.oldTime()*vif.oldTime()
                 ) - mesh().V00()*offCentre_(ddt0()())
             )/mesh().V()
         );
@@ -603,8 +772,44 @@ CrankNicolsonDdtScheme<Type>::fviDdt
     {
         if (evaluate(ddt0))
         {
-            FatalErrorInFunction
-                << ddt0.name() << " not available" << exit(FatalError);
+            if
+            (
+                isA<VolField<Type>>(vif)
+             && isA<volScalarField>(alphaif)
+             && isA<volScalarField>(rhoif)
+            )
+            {
+                const VolField<Type>& vf(refCast<const VolField<Type>>(vif));
+                const volScalarField& alpha
+                (
+                    refCast<const volScalarField>(alphaif)
+                );
+                const volScalarField& rho(refCast<const volScalarField>(rhoif));
+
+                ddt0 = rDtCoef0_(ddt0)*
+                (
+                    alpha.oldTime()
+                   *rho.oldTime()
+                   *vf.oldTime()
+
+                  - alpha.oldTime().oldTime()
+                   *rho.oldTime().oldTime()
+                   *vf.oldTime().oldTime()
+                ) - offCentre_(ddt0());
+            }
+            else
+            {
+                ddt0.internalFieldRef() = rDtCoef0_(ddt0)*
+                (
+                    alphaif.oldTime()
+                   *rhoif.oldTime()
+                   *vif.oldTime()
+
+                  - alphaif.oldTime().oldTime()
+                   *rhoif.oldTime().oldTime()
+                   *vif.oldTime().oldTime()
+                ) - offCentre_(ddt0.internalField());
+            }
         }
 
         return VolInternalField<Type>::New
@@ -612,8 +817,8 @@ CrankNicolsonDdtScheme<Type>::fviDdt
             ddtName,
             rDtCoef
            *(
-                alpha*rho*vf
-              - alpha.oldTime()*rho.oldTime()*vf.oldTime()
+                alphaif*rhoif*vif
+              - alphaif.oldTime()*rhoif.oldTime()*vif.oldTime()
             )
           - offCentre_(ddt0()())
         );
@@ -652,13 +857,13 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         )
     );
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
         if (evaluate(ddt0))
         {
-            dimensionedScalar rDtCoef0 = rDtCoef0_(ddt0);
+            const dimensionedScalar rDtCoef0 = rDtCoef0_(ddt0);
 
             ddt0.internalFieldRef() =
             (
@@ -694,7 +899,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt(", vf.name(), ')');
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
@@ -773,7 +978,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
@@ -852,7 +1057,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
 
     const word ddtName("ddt(", rho.name(), ',', vf.name(), ')');
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
@@ -944,7 +1149,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         word("ddt(", alpha.name(), ',', rho.name(), ',', vf.name(), ')')
     );
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (mesh().moving())
     {
@@ -1432,7 +1637,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
             Uf.dimensions()
         );
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (evaluate(ddt0))
     {
@@ -1485,7 +1690,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
             phi.dimensions()
         );
 
-    dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+    const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
     if (evaluate(ddt0))
     {
@@ -1546,7 +1751,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
                 rhoUf.dimensions()
             );
 
-        dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+        const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
         VolField<Type> rhoU0
         (
@@ -1607,7 +1812,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
                 rhoUf.dimensions()
             );
 
-        dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+        const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
         if (evaluate(ddt0))
         {
@@ -1685,7 +1890,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
                 phi.dimensions()
             );
 
-        dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+        const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
         VolField<Type> rhoU0
         (
@@ -1742,7 +1947,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
                 phi.dimensions()
             );
 
-        dimensionedScalar rDtCoef = rDtCoef_(ddt0);
+        const dimensionedScalar rDtCoef = rDtCoef_(ddt0);
 
         if (evaluate(ddt0))
         {
