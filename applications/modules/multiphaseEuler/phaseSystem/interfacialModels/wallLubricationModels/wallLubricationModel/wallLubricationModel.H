@@ -115,7 +115,7 @@ public:
 
         static autoPtr<wallLubricationModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         );
 
@@ -152,9 +152,9 @@ public:
 
         inline static autoPtr<blendedWallLubricationModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
-            const dictionary& blendingDict
+            const entry& blendingEntry
         )
         {
             return
@@ -162,9 +162,9 @@ public:
                 (
                     new blendedWallLubricationModel
                     (
-                        subDicts,
+                        entries,
                         interface,
-                        blendingDict
+                        blendingEntry
                     )
                 );
         }

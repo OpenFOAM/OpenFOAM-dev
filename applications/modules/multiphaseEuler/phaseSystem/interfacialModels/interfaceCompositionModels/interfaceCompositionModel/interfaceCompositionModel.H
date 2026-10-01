@@ -120,7 +120,7 @@ public:
 
         static autoPtr<interfaceCompositionModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         );
 
@@ -211,13 +211,13 @@ public:
 
         inline static autoPtr<sidedInterfaceCompositionModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         )
         {
             return autoPtr<sidedInterfaceCompositionModel>
             (
-                new sidedInterfaceCompositionModel(subDicts, interface)
+                new sidedInterfaceCompositionModel(entries, interface)
             );
         }
 };

@@ -96,14 +96,14 @@ public:
 
         static autoPtr<turbulentDispersionModel> New
         (
-            const dictionary& subDicts,
+            const dictionary& entries,
             const phaseInterface& interface,
             const bool outer = false
         );
 
         static autoPtr<turbulentDispersionModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         );
 
@@ -138,9 +138,9 @@ public:
 
         inline static autoPtr<blendedTurbulentDispersionModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
-            const dictionary& blendingDict
+            const entry& blendingEntry
         )
         {
             return
@@ -148,9 +148,9 @@ public:
                 (
                     new blendedTurbulentDispersionModel
                     (
-                        subDicts,
+                        entries,
                         interface,
-                        blendingDict
+                        blendingEntry
                     )
                 );
         }

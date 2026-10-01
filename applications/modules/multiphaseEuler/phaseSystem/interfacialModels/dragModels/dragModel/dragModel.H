@@ -108,7 +108,7 @@ public:
 
         static autoPtr<dragModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         );
 
@@ -150,14 +150,14 @@ public:
 
         inline static autoPtr<blendedDragModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
-            const dictionary& blendingDict
+            const entry& blendingEntry
         )
         {
             return autoPtr<blendedDragModel>
             (
-                new blendedDragModel(subDicts, interface, blendingDict)
+                new blendedDragModel(entries, interface, blendingEntry)
             );
         }
 

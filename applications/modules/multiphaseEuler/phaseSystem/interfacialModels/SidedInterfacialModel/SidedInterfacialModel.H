@@ -89,7 +89,7 @@ public:
         template<class ... Args>
         SidedInterfacialModel
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
             const Args& ... args
         );

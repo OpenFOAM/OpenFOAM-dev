@@ -54,10 +54,19 @@ air
 
 blending
 {
-    default
-    {
-        type            segregated;
-    }
+    default         segregated;
+}
+
+interfaceCompression
+{
+    blending        none;
+
+    air_water       1;
+    air_oil         1;
+    air_mercury     1;
+    water_oil       1;
+    water_mercury   1;
+    oil_mercury     1;
 }
 
 surfaceTension
@@ -97,16 +106,6 @@ surfaceTension
         type            constant;
         sigma           0.4;
     }
-}
-
-interfaceCompression
-{
-    air_water       1;
-    air_oil         1;
-    air_mercury     1;
-    water_oil       1;
-    water_mercury   1;
-    oil_mercury     1;
 }
 
 // ************************************************************************* //

@@ -42,7 +42,7 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class ModelType>
-const dictionary& blendingDict
+const entry& blendingEntry
 (
     const phaseSystem& fluid,
     const dictionary& dict
@@ -52,12 +52,22 @@ const dictionary& blendingDict
     {
         if (dict.isDict("blending"))
         {
-            return dict.subDict("blending");
+            return dict.lookupEntry("blending");
         }
 
-        const dictionary& fluidBlendingDict = fluid.subDict("blending");
+        const word blendingMethodType = dict.lookup<word>("blending");
 
-        return fluidBlendingDict.subDict(dict.lookup<word>("blending"));
+        if (fluid.found("blending"))
+        {
+            const dictionary& fluidBlendingDict = fluid.subDict("blending");
+
+            if (fluidBlendingDict.found(blendingMethodType))
+            {
+                return fluidBlendingDict.lookupEntry(blendingMethodType);
+            }
+        }
+
+        return dict.lookupEntry("blending");
     }
 
     if (fluid.found("blending"))
@@ -66,26 +76,26 @@ const dictionary& blendingDict
 
         if (fluidBlendingDict.found(modelName<ModelType>()))
         {
-            return fluidBlendingDict.subDict(modelName<ModelType>());
+            return fluidBlendingDict.lookupEntry(modelName<ModelType>());
         }
 
         if (fluidBlendingDict.found("default"))
         {
-            return fluidBlendingDict.subDict("default");
+            return fluidBlendingDict.lookupEntry("default");
         }
     }
 
-    return dict.subDict("blending");
+    return dict.lookupEntry("blending");
 }
 
 
-inline UPtrList<const dictionary> blendedModelSubDicts
+inline UPtrList<const entry> blendedModelEntries
 (
     const dictionary& dict,
     const wordHashSet& ignoreKeys = wordHashSet()
 )
 {
-    return modelSubDicts(dict, ignoreKeys | wordHashSet({"blending"}));
+    return modelEntries(dict, ignoreKeys | wordHashSet({"blending"}));
 }
 
 
@@ -133,13 +143,13 @@ Foam::HashPtrTable
     }
 
     return
-        generateInterfacialModels<ModelType, dictionary, Args ...>
+        generateInterfacialModels<ModelType, entry, Args ...>
         (
             fluid,
             dict,
             ignoreKeys | wordHashSet({"blending"}),
             ignoreNonModelPhaseInterfaceTypes,
-            blendingDict<ModelType>(fluid, dict),
+            blendingEntry<ModelType>(fluid, dict),
             args ...
         );
 }

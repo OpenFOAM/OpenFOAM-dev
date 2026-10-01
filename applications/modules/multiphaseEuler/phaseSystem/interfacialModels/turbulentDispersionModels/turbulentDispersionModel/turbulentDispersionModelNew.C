@@ -64,14 +64,14 @@ Foam::turbulentDispersionModel::New
 Foam::autoPtr<Foam::turbulentDispersionModel>
 Foam::turbulentDispersionModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
     return
         New
         (
-            modelSubDict<turbulentDispersionModel>(subDicts),
+            modelEntry<turbulentDispersionModel>(entries).dict(),
             interface,
             true
         );

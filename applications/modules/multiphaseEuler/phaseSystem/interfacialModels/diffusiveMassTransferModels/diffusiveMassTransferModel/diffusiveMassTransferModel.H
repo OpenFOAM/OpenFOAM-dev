@@ -99,7 +99,7 @@ public:
 
         static autoPtr<diffusiveMassTransferModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         );
 
@@ -134,18 +134,18 @@ public:
 
         inline static autoPtr<blendedDiffusiveMassTransferModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
-            const dictionary& blendingDict
+            const entry& blendingEntry
         )
         {
             return autoPtr<blendedDiffusiveMassTransferModel>
             (
                 new blendedDiffusiveMassTransferModel
                 (
-                    subDicts,
+                    entries,
                     interface,
-                    blendingDict
+                    blendingEntry
                 )
             );
         }
@@ -180,18 +180,18 @@ public:
 
         inline static autoPtr<sidedBlendedDiffusiveMassTransferModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
-            const dictionary& blendingDict
+            const entry& blendingEntry
         )
         {
             return autoPtr<sidedBlendedDiffusiveMassTransferModel>
             (
                 new sidedBlendedDiffusiveMassTransferModel
                 (
-                    subDicts,
+                    entries,
                     interface,
-                    blendingDict
+                    blendingEntry
                 )
             );
         }
@@ -220,13 +220,13 @@ public:
 
         inline static autoPtr<sidedDiffusiveMassTransferModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         )
         {
             return autoPtr<sidedDiffusiveMassTransferModel>
             (
-                new sidedDiffusiveMassTransferModel(subDicts, interface)
+                new sidedDiffusiveMassTransferModel(entries, interface)
             );
         }
 
@@ -260,18 +260,18 @@ public:
 
         inline static autoPtr<blendedSidedDiffusiveMassTransferModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
-            const dictionary& blendingDict
+            const entry& blendingEntry
         )
         {
             return autoPtr<blendedSidedDiffusiveMassTransferModel>
             (
                 new blendedSidedDiffusiveMassTransferModel
                 (
-                    subDicts,
+                    entries,
                     interface,
-                    blendingDict
+                    blendingEntry
                 )
             );
         }

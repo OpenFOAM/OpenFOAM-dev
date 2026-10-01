@@ -62,11 +62,11 @@ Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
 
 Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
-    return New(modelSubDict<heatTransferModel>(subDicts), interface, true);
+    return New(modelEntry<heatTransferModel>(entries).dict(), interface, true);
 }
 
 

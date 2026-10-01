@@ -60,6 +60,7 @@ SourceFiles
 namespace Foam
 {
 
+class blendedInterfaceCompressionCoefficient;
 class surfaceTensionCoefficientModel;
 class momentumTransferSystem;
 class pressureReference;
@@ -132,13 +133,13 @@ protected:
 
         //- Table of interface compression coefficients
         typedef
-            HashTable
+            HashPtrTable
             <
-                scalar,
+                blendedInterfaceCompressionCoefficient,
                 phaseInterfaceKey,
                 phaseInterfaceKey::hash
             >
-            cAlphaTable;
+            interfaceCompressionCoefficientTable;
 
         //- Table of surface tension models
         typedef
@@ -187,15 +188,14 @@ protected:
         //- Rate of change of pressure
         volInternalScalarField dpdt_;
 
-        //- Interface compression coefficients
-        cAlphaTable cAlphas_;
-
         //- Stabilisation for normalisation of the interface normal
         dimensionedScalar deltaN_;
 
+        //- Interface compression coefficients
+        interfaceCompressionCoefficientTable interfaceCompressionCoefficients_;
+
         //- Surface tension models
-        surfaceTensionCoefficientModelTable
-            surfaceTensionCoefficientModels_;
+        surfaceTensionCoefficientModelTable surfaceTensionCoefficientModels_;
 
 
     // Protected Member Functions

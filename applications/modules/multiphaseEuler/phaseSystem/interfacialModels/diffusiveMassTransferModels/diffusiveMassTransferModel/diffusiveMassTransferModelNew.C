@@ -30,12 +30,12 @@ License
 Foam::autoPtr<Foam::diffusiveMassTransferModel>
 Foam::diffusiveMassTransferModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
     const dictionary& modelDict =
-        modelSubDict<diffusiveMassTransferModel>(subDicts);
+        modelEntry<diffusiveMassTransferModel>(entries).dict();
 
     const word diffusiveMassTransferModelType(modelDict.lookup("type"));
 

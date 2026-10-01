@@ -68,14 +68,14 @@ Foam::surfaceTensionCoefficientModel::New
 Foam::autoPtr<Foam::surfaceTensionCoefficientModel>
 Foam::surfaceTensionCoefficientModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
     return
         New
         (
-            modelSubDict<surfaceTensionCoefficientModel>(subDicts),
+            modelEntry<surfaceTensionCoefficientModel>(entries).dict(),
             interface,
             true
         );

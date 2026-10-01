@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "phaseSystem.H"
+#include "interfaceCompressionCoefficient.H"
 #include "surfaceTensionCoefficientModel.H"
 #include "surfaceInterpolate.H"
 #include "fviDdt.H"
@@ -33,8 +34,7 @@ License
 #include "fvcSnGrad.H"
 #include "fvCorrectPhi.H"
 #include "fvcMeshPhi.H"
-#include "generateInterfacialModels.H"
-#include "generateInterfacialValues.H"
+#include "generateBlendedInterfacialModels.H"
 #include "correctContactAngle.H"
 #include "fixedValueFvsPatchFields.H"
 #include "movingWallVelocityFvPatchVectorField.H"
@@ -240,22 +240,13 @@ Foam::phaseSystem::phaseSystem
         dimensionedScalar(dimensions::pressure/dimensions::time, 0)
     ),
 
-    cAlphas_
-    (
-        found("interfaceCompression")
-      ? generateInterfacialValues<scalar>
-        (
-            *this,
-            subDict("interfaceCompression")
-        )
-      : cAlphaTable()
-    ),
-
     deltaN_
     (
         "deltaN",
         1e-8/pow(average(mesh_.V()), 1.0/3.0)
     ),
+
+    interfaceCompressionCoefficients_(),
 
     surfaceTensionCoefficientModels_()
 {
@@ -263,6 +254,16 @@ Foam::phaseSystem::phaseSystem
         << relativeObjectPath().c_str() << endl;
 
     printDictionary print(*this);
+
+    // Interface compression coefficients
+    interfaceCompressionCoefficients_ =
+        found(modelName<blendedInterfaceCompressionCoefficient>())
+      ? generateBlendedInterfacialModels<blendedInterfaceCompressionCoefficient>
+        (
+            *this,
+            subDict(modelName<blendedInterfaceCompressionCoefficient>())
+        )
+      : interfaceCompressionCoefficientTable();
 
     // Surface tension models
     surfaceTensionCoefficientModels_ =
@@ -601,7 +602,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::surfaceTension
         {
             const phaseInterface interface(phase1, phase2);
 
-            if (cAlphas_.found(interface))
+            if (interfaceCompressionCoefficients_.found(interface))
             {
                 tSurfaceTension.ref() +=
                     fvc::interpolate(sigma(interface)*K(phase1, phase2))
@@ -920,37 +921,32 @@ void Foam::phaseSystem::correctPhi
 
 bool Foam::phaseSystem::read()
 {
-    if (regIOobject::read())
+    if (!regIOobject::read()) return false;
+
+    bool readOK = true;
+
+    forAll(phaseModels_, phasei)
     {
-        bool readOK = true;
-
-        forAll(phaseModels_, phasei)
-        {
-            readOK &= phaseModels_[phasei].read();
-        }
-
-        cAlphas_ =
-            found("interfaceCompression")
-          ? generateInterfacialValues<scalar>
-            (
-                *this,
-                subDict("interfaceCompression")
-            )
-          : cAlphaTable();
-
-        surfaceTensionCoefficientModels_ =
-            generateInterfacialModels<surfaceTensionCoefficientModel>
-            (
-                *this,
-                subDict(modelName<surfaceTensionCoefficientModel>())
-            );
-
-        return readOK;
+        readOK &= phaseModels_[phasei].read();
     }
-    else
-    {
-        return false;
-    }
+
+    interfaceCompressionCoefficients_ =
+        found(modelName<blendedInterfaceCompressionCoefficient>())
+      ? generateBlendedInterfacialModels<blendedInterfaceCompressionCoefficient>
+        (
+            *this,
+            subDict(modelName<blendedInterfaceCompressionCoefficient>())
+        )
+      : interfaceCompressionCoefficientTable();
+
+    surfaceTensionCoefficientModels_ =
+        generateInterfacialModels<surfaceTensionCoefficientModel>
+        (
+            *this,
+            subDict(modelName<surfaceTensionCoefficientModel>())
+        );
+
+    return readOK;
 }
 
 

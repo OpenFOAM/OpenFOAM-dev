@@ -105,14 +105,14 @@ public:
 
         static autoPtr<surfaceTensionCoefficientModel> New
         (
-            const dictionary& subDicts,
+            const dictionary& entries,
             const phaseInterface& interface,
             const bool outer = false
         );
 
         static autoPtr<surfaceTensionCoefficientModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         );
 

@@ -64,14 +64,14 @@ Foam::interfaceCompositionModel::New
 Foam::autoPtr<Foam::interfaceCompositionModel>
 Foam::interfaceCompositionModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
     return
         New
         (
-            modelSubDict<interfaceCompositionModel>(subDicts),
+            modelEntry<interfaceCompositionModel>(entries).dict(),
             interface,
             true
         );

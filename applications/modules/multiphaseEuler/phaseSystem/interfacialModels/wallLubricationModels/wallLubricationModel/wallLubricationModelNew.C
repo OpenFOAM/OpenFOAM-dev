@@ -62,11 +62,17 @@ Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
 
 Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
-    return New(modelSubDict<wallLubricationModel>(subDicts), interface, true);
+    return
+        New
+        (
+            modelEntry<wallLubricationModel>(entries).dict(),
+            interface,
+            true
+        );
 }
 
 

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "phaseSystem.H"
+#include "interfaceCompressionCoefficient.H"
 #include "momentumTransferSystem.H"
 
 #include "subCycle.H"
@@ -448,7 +449,7 @@ void Foam::phaseSystem::solve
 
                 surfaceScalarField& alphaPhi = alphaPhis[movingPhasei];
 
-                if (!cAlphas_.empty())
+                if (!interfaceCompressionCoefficients_.empty())
                 {
                     forAll(phases(), phasei)
                     {
@@ -457,42 +458,49 @@ void Foam::phaseSystem::solve
 
                         if (&phase2 == &phase) continue;
 
-                        cAlphaTable::const_iterator cAlpha
+                        auto interfaceCompressionCoefficentIter =
+                            interfaceCompressionCoefficients_.find
+                            (
+                                phaseInterface(phase, phase2)
+                            );
+
+                        if
                         (
-                            cAlphas_.find(phaseInterface(phase, phase2))
+                            interfaceCompressionCoefficentIter
+                         == interfaceCompressionCoefficients_.end()
+                        ) continue;
+
+                        const blendedInterfaceCompressionCoefficient& cAlpha =
+                            *interfaceCompressionCoefficentIter();
+
+                        const surfaceScalarField phir
+                        (
+                            phase.phi() - phase2.phi()
                         );
 
-                        if (cAlpha != cAlphas_.end())
-                        {
-                            const surfaceScalarField phir
-                            (
-                                phase.phi() - phase2.phi()
-                            );
+                        const surfaceScalarField phic
+                        (
+                            (mag(phi_) + mag(phir))/mesh_.magSf()
+                        );
 
-                            const surfaceScalarField phic
-                            (
-                                (mag(phi_) + mag(phir))/mesh_.magSf()
-                            );
+                        const surfaceScalarField phirc
+                        (
+                            min(cAlpha.cAlpha<surfaceMesh>()*phic, max(phic))
+                           *nHatf(alpha, alpha2)
+                        );
 
-                            const surfaceScalarField phirc
-                            (
-                                min(cAlpha()*phic, max(phic))
-                               *nHatf(alpha, alpha2)
-                            );
+                        const word phirScheme
+                        (
+                            "div(phir,", alpha2.name(), ',',
+                            alpha.name(), ')'
+                        );
 
-                            const word phirScheme
-                            (
-                                "div(phir,", alpha2.name(), ',',
-                                alpha.name(), ')'
-                            );
-
-                            alphaPhi += fvc::flux
-                            (
-                                -fvc::flux(-phirc, alpha2, phirScheme),
-                                alpha,
-                                phirScheme
-                            );
-                        }
+                        alphaPhi += fvc::flux
+                        (
+                            -fvc::flux(-phirc, alpha2, phirScheme),
+                            alpha,
+                            phirScheme
+                        );
                     }
                 }
 

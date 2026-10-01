@@ -1,0 +1,83 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "blendingMethod.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
+(
+    const word& modelTypeName,
+    const entry& entry,
+    const phaseInterface& interface,
+    const bool allowDisplaced
+)
+{
+    const word blendingMethodType
+    (
+        !entry.isDict() ? entry.stream() : entry.dict().lookup("type")
+    );
+
+    Info<< indentOrNl << "Selecting " << typeName << ' ' << blendingMethodType
+        << " for " << modelTypeName << " for " << interface.name() << endl;
+
+    wordConstructorTable::iterator wordCstrIter =
+        wordConstructorTablePtr_->find(blendingMethodType);
+
+    dictionaryConstructorTable::iterator dictCstrIter =
+        dictionaryConstructorTablePtr_->find(blendingMethodType);
+
+    if (dictCstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalIOErrorInFunction(!entry.isDict() ? entry.stream() : entry.dict())
+            << "Unknown " << typeName << " type "
+            << blendingMethodType << endl << endl
+            << "Valid " << typeName << " types are : " << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalIOError);
+    }
+
+    if (!entry.isDict() && wordCstrIter == wordConstructorTablePtr_->end())
+    {
+        FatalIOErrorInFunction(entry.stream())
+            << typeName << " type " << blendingMethodType
+            << " must be specified as a sub-dictionary"
+            << exit(FatalIOError);
+    }
+
+    if (!entry.isDict())
+    {
+        return wordCstrIter()(interface, allowDisplaced);
+    }
+    else
+    {
+        printDictionary print(entry.dict());
+
+        return dictCstrIter()(entry.dict(), interface, allowDisplaced);
+    }
+}
+
+
+// ************************************************************************* //

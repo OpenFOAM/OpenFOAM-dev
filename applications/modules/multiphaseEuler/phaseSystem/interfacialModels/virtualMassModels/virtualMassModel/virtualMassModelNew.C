@@ -62,11 +62,11 @@ Foam::autoPtr<Foam::virtualMassModel> Foam::virtualMassModel::New
 
 Foam::autoPtr<Foam::virtualMassModel> Foam::virtualMassModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
-    return New(modelSubDict<virtualMassModel>(subDicts), interface, true);
+    return New(modelEntry<virtualMassModel>(entries).dict(), interface, true);
 }
 
 

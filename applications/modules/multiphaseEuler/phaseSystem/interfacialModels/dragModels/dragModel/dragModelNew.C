@@ -61,11 +61,11 @@ Foam::autoPtr<Foam::dragModel> Foam::dragModel::New
 
 Foam::autoPtr<Foam::dragModel> Foam::dragModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
-    return New(modelSubDict<dragModel>(subDicts), interface, true);
+    return New(modelEntry<dragModel>(entries).dict(), interface, true);
 }
 
 

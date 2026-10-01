@@ -104,7 +104,7 @@ public:
 
         static autoPtr<liftModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface
         );
 
@@ -139,14 +139,14 @@ public:
 
         inline static autoPtr<blendedLiftModel> New
         (
-            const UPtrList<const dictionary>& subDicts,
+            const UPtrList<const entry>& entries,
             const phaseInterface& interface,
-            const dictionary& blendingDict
+            const entry& blendingEntry
         )
         {
             return autoPtr<blendedLiftModel>
             (
-                new blendedLiftModel(subDicts, interface, blendingDict)
+                new blendedLiftModel(entries, interface, blendingEntry)
             );
         }
 

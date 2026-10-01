@@ -61,11 +61,11 @@ Foam::autoPtr<Foam::liftModel> Foam::liftModel::New
 
 Foam::autoPtr<Foam::liftModel> Foam::liftModel::New
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface
 )
 {
-    return New(modelSubDict<liftModel>(subDicts), interface, true);
+    return New(modelEntry<liftModel>(entries).dict(), interface, true);
 }
 
 

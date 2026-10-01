@@ -32,7 +32,7 @@ template<class ModelType>
 template<class ... Args>
 Foam::SidedInterfacialModel<ModelType>::SidedInterfacialModel
 (
-    const UPtrList<const dictionary>& subDicts,
+    const UPtrList<const entry>& entries,
     const phaseInterface& interface,
     const Args& ... args
 )
@@ -60,7 +60,7 @@ Foam::SidedInterfacialModel<ModelType>::SidedInterfacialModel
         interfaces,
         models,
         interface.fluid(),
-        subDicts,
+        entries,
         wordHashSet(),
         interface,
         args ...
