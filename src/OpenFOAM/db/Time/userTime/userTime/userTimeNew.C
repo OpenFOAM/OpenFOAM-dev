@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "realTime.H"
+#include "argList.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -37,7 +38,10 @@ Foam::userTimes::userTime::New
     {
         const word type(dict(controlDict).lookup("type"));
 
-        Info<< indentOrNl << "Selecting userTime " << type << endl;
+        if (argList::validOptions.found("noFunctionObjects"))
+        {
+            Info<< indentOrNl << "Selecting userTime " << type << endl;
+        }
 
         dictionaryConstructorTable::iterator cstrIter =
             dictionaryConstructorTablePtr_->find(type);
