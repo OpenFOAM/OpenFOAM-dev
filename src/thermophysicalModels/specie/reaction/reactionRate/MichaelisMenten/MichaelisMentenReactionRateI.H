@@ -94,7 +94,7 @@ inline void Foam::MichaelisMentenReactionRate::ddc
 ) const
 {
     ddc = 0;
-    ddc[s_] = - Vmax_/sqr(Km_ + c[s_]);
+    ddc[s_] = -Vmax_/sqr(Km_ + c[s_]);
 }
 
 

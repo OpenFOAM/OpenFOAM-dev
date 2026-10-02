@@ -133,7 +133,7 @@ inline void Foam::ArrheniusReactionRate::ddc
     scalarField& ddc
 ) const
 {
-    ddc = 0;
+    NotImplemented;
 }
 
 

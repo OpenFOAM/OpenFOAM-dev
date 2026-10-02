@@ -350,7 +350,7 @@ inline void Foam::fluxLimitedLangmuirHinshelwoodReactionRate::ddc
     scalarField& ddc
 ) const
 {
-    ddc = 0;
+    NotImplemented;
 }
 
 

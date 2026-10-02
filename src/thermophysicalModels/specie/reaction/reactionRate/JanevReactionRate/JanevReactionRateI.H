@@ -165,7 +165,7 @@ inline void Foam::JanevReactionRate::ddc
     scalarField& ddc
 ) const
 {
-    ddc = 0;
+    NotImplemented;
 }
 
 

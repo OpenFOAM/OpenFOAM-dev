@@ -180,7 +180,7 @@ inline void Foam::LandauTellerReactionRate::ddc
     scalarField& ddc
 ) const
 {
-    ddc = 0;
+    NotImplemented;
 }
 
 

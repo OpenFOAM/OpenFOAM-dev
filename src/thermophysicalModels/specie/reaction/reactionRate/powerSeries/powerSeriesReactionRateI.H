@@ -137,7 +137,7 @@ inline void Foam::powerSeriesReactionRate::ddc
     scalarField& ddc
 ) const
 {
-    ddc = 0;
+    NotImplemented;
 }
 
 

@@ -167,7 +167,11 @@ inline bool Foam::ChemicallyActivatedReactionRate
     ChemicallyActivationFunction
 >::hasDdc() const
 {
+    #if CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN
     return true;
+    #else
+    return k0_.hasDdc();
+    #endif
 }
 
 
@@ -210,7 +214,6 @@ inline void Foam::ChemicallyActivatedReactionRate
     #else
 
     k0_.ddc(p, T, c, li, ddc);
-
     ddc *= 1/(1 + Pr)*F;
 
     #endif

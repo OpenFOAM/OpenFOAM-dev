@@ -146,7 +146,11 @@ template<class ReactionRate, class FallOffFunction>
 inline bool
 Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::hasDdc() const
 {
+    #if FALL_OFF_FUNCTION_JACOBIAN
     return true;
+    #else
+    return kInf_.hasDdc();
+    #endif
 }
 
 
@@ -185,7 +189,6 @@ inline void Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::ddc
     #else
 
     kInf_.ddc(p, T, c, li, ddc);
-
     ddc *= (Pr/(1 + Pr))*F;
 
     #endif
