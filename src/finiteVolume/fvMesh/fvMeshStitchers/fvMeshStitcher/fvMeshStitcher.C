@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvMeshStitcher.H"
+#include "boolListOps.H"
 #include "globalIndex.H"
 #include "fviSurfaceIntegrate.H"
 #include "MultiRegionList.H"
@@ -62,21 +63,6 @@ edge meshEdge
         p.meshPoints()[p.edges()[edgei][0]],
         p.meshPoints()[p.edges()[edgei][1]]
     );
-}
-
-
-bool any(const boolList& l)
-{
-    bool result = false;
-    forAll(l, i)
-    {
-        if (l[i])
-        {
-            result = true;
-            break;
-        }
-    }
-    return returnReduce(result, andOp());
 }
 
 }
@@ -1727,6 +1713,7 @@ bool Foam::fvMeshStitcher::connectThis
         (geometric || !matchTopology)
       ? this->patchCoupleds()
       : boolList(mesh_.boundary().size(), false);
+    const bool anyPatchCoupleds = gAny(patchCoupleds);
 
     // Access all the intersections in advance. Makes the log nicer.
     forAll(mesh_.boundary(), patchi)
@@ -1765,7 +1752,7 @@ bool Foam::fvMeshStitcher::connectThis
         }
     }
 
-    if (any(patchCoupleds))
+    if (anyPatchCoupleds)
     {
         Info<< indent << typeName << ": Connecting";
         if (mesh_.name() != polyMesh::defaultRegion)
@@ -1826,7 +1813,7 @@ bool Foam::fvMeshStitcher::connectThis
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
 
-    if (any(patchCoupleds))
+    if (anyPatchCoupleds)
     {
         const scalarField o(openness());
         const scalar gMaxO = gMax(o);
@@ -1965,7 +1952,7 @@ bool Foam::fvMeshStitcher::connectThis
         }
     }
 
-    if (any(patchCoupleds))
+    if (anyPatchCoupleds)
     {
         Info<< decrIndent;
     }
