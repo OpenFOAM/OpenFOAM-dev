@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,7 @@ License
 #include "NonEquilibriumReversibleReaction.H"
 #include "ArrheniusReactionRate.H"
 #include "thirdBodyArrheniusReactionRate.H"
+#include "pLogReactionRate.H"
 #include "FallOffReactionRate.H"
 #include "ChemicallyActivatedReactionRate.H"
 #include "LindemannFallOffFunction.H"
@@ -53,10 +54,11 @@ const char* Foam::chemkinReader::reactionTypeNames[4] =
     "unknownReactionType"
 };
 
-const char* Foam::chemkinReader::reactionRateTypeNames[8] =
+const char* Foam::chemkinReader::reactionRateTypeNames[9] =
 {
     "Arrhenius",
     "thirdBodyArrhenius",
+    "pLog",
     "unimolecularFallOff",
     "chemicallyActivatedBimolecular",
     "LandauTeller",
@@ -88,6 +90,7 @@ void Foam::chemkinReader::initReactionKeywordTable()
     reactionKeywordTable_.insert("RLT", reverseLandauTellerReactionType);
     reactionKeywordTable_.insert("JAN", JanevReactionType);
     reactionKeywordTable_.insert("FIT1", powerSeriesReactionRateType);
+    reactionKeywordTable_.insert("PLOG", pLogReactionType);
     reactionKeywordTable_.insert("HV", radiationActivatedReactionType);
     reactionKeywordTable_.insert("TDEP", speciesTempReactionType);
     reactionKeywordTable_.insert("EXCI", energyLossReactionType);
@@ -578,6 +581,39 @@ void Foam::chemkinReader::addReaction
                     )
                 );
             }
+            break;
+        }
+        case pLog:
+        {
+            const scalarList& pLogCoeffs =
+                reactionCoeffsTable[reactionRateTypeNames[rrType]];
+
+            List<pLogReactionRate::pCoeffs> pLogCoeffList
+            (
+                pLogCoeffs.size()/4
+            );
+
+            label pi = 0;
+            for(label i=0; i<pLogCoeffs.size(); i+=4)
+            {
+                pLogCoeffList[pi].p = 101325*pLogCoeffs[i];
+                pLogCoeffList[pi].A = Afactor*pLogCoeffs[i + 1];
+                pLogCoeffList[pi].beta = pLogCoeffs[i + 2];
+                pLogCoeffList[pi].Ta = pLogCoeffs[i + 3]/RR;
+
+                pLogCoeffList[pi].lnp = log(pLogCoeffList[pi].p);
+                pLogCoeffList[pi].lnA = log(pLogCoeffList[pi].A);
+
+                pi++;
+            }
+
+            addReactionType
+            (
+                rType,
+                lhs, rhs,
+                pLogReactionRate(pLogCoeffList)
+            );
+
             break;
         }
         case unimolecularFallOff:

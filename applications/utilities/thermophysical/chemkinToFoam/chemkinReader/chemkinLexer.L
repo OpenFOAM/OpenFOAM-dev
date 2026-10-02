@@ -119,6 +119,7 @@ Foam::word foamName(const Foam::string& s)
 one_space             [ \t\f\r]
 space                 {one_space}*
 some_space            {one_space}+
+newline               [ \n]
 
 alpha                 [_A-Za-z]
 digit                 [0-9]
@@ -170,6 +171,7 @@ reactionKeywordSlash  {reactionKeyword}"/"{space}
 thirdBodyEfficiency   {space}{floatNum}{space}"/"{space}
 startReactionCoeffs   {space}"/"{space}
 endReactionCoeffs     {space}"/"{space}
+endPLogReactionCoeffs {space}"/"{newline}
 reactionCoeff         {space}{floatNum}{space}
 
 calPerMol             {space}"CAL/MOLE"{space}
@@ -216,6 +218,7 @@ otherReactionUnit     {space}("MOLE"|"MOLECULE"|"EVOL"|"EVOLTS"){space}
 %x readPDependentSpecie
 %x readThirdBodyEfficiency
 %x readReactionCoeffs
+%x readPLogReactionCoeffs
 %x readTdepSpecie
 %x readReactionOrderSpecie
 %x readReactionOrder
@@ -850,6 +853,15 @@ bool finishReaction = false;
             {
                 if (finishReaction)
                 {
+                    if (reactionCoeffsName == "pLog")
+                    {
+                        reactionCoeffsTable.insert
+                        (
+                            reactionCoeffsName, reactionCoeffs.shrink()
+                        );
+                        reactionCoeffs.clear();
+                    }
+
                     addReaction
                     (
                         lhs,
@@ -1136,6 +1148,18 @@ bool finishReaction = false;
 
                     reactionCoeffsName = reactionRateTypeNames[rrType];
                     BEGIN(readReactionCoeffs);
+                    break;
+                }
+
+                case pLogReactionType:
+                {
+                    if (rrType == Arrhenius)
+                    {
+                        rrType = pLog;
+                    }
+
+                    reactionCoeffsName = reactionRateTypeNames[rrType];
+                    BEGIN(readPLogReactionCoeffs);
                     break;
                 }
 
@@ -1428,6 +1452,14 @@ bool finishReaction = false;
 <readReactionCoeffs>{endReactionCoeffs} {
         reactionCoeffsTable.insert(reactionCoeffsName, reactionCoeffs.shrink());
         reactionCoeffs.clear();
+        BEGIN(readReactionKeyword);
+    }
+
+<readPLogReactionCoeffs>{reactionCoeff} {
+        reactionCoeffs.append(stringToScalar(YYText()));
+    }
+
+<readPLogReactionCoeffs>{endPLogReactionCoeffs} {
         BEGIN(readReactionKeyword);
     }
 

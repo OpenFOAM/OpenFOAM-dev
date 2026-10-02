@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,6 +115,7 @@ private:
         enum reactionKeyword
         {
             thirdBodyReactionType,
+            pLogReactionType,
             unimolecularFallOffReactionType,
             chemicallyActivatedBimolecularReactionType,
             TroeReactionType,
@@ -150,6 +151,7 @@ private:
         {
             Arrhenius,
             thirdBodyArrhenius,
+            pLog,
             unimolecularFallOff,
             chemicallyActivatedBimolecular,
             LandauTeller,
@@ -158,7 +160,7 @@ private:
             unknownReactionRateType
         };
 
-        static const char* reactionRateTypeNames[8];
+        static const char* reactionRateTypeNames[9];
 
         enum fallOffFunctionType
         {

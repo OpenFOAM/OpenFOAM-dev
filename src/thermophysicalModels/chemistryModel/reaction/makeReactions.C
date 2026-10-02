@@ -28,6 +28,7 @@ License
 #include "ArrheniusReactionRate.H"
 #include "LandauTellerReactionRate.H"
 #include "thirdBodyArrheniusReactionRate.H"
+#include "pLogReactionRate.H"
 
 #include "JanevReactionRate.H"
 #include "powerSeriesReactionRate.H"
@@ -60,6 +61,8 @@ namespace Foam
     forCoeffLiquids(makeIRNReactions, LandauTellerReactionRate);
     forCoeffGases(makeIRNReactions, thirdBodyArrheniusReactionRate);
     forCoeffLiquids(makeIRNReactions, thirdBodyArrheniusReactionRate);
+    forCoeffGases(makeIRNReactions, pLogReactionRate);
+    forCoeffLiquids(makeIRNReactions, pLogReactionRate);
 
     // Irreversible/reversible reactions
     forCoeffGases(makeIRReactions, JanevReactionRate);
