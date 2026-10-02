@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarField& c) const
 }
 
 
-inline Foam::tmp<Foam::scalarField>
+inline const Foam::scalarField&
 Foam::thirdBodyEfficiencies::dMdc(const scalarField& c) const
 {
     return *this;

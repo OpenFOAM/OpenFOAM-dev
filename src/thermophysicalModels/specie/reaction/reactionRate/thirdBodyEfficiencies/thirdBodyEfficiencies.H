@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,9 +86,8 @@ public:
         //- Calculate and return M, the concentration of the third-bodies
         inline scalar M(const scalarField& c) const;
 
-        //- Calculate and return the derivative of M, w.r.t. the species
-        //  concentrations
-        inline tmp<scalarField> dMdc(const scalarField& c) const;
+        //- Return the derivative of M, w.r.t. the species concentrations
+        inline const scalarField& dMdc(const scalarField& c) const;
 
         //- Write to stream
         inline void write(Ostream& os) const;
