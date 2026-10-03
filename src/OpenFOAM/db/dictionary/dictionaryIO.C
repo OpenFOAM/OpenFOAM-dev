@@ -401,7 +401,7 @@ Foam::fileName Foam::findConfigFile
 
         forAll(etcDirs, i)
         {
-            const fileName dictFile(search(configName, etcDirs[i]));
+            const fileName dictFile(searchDir(configName, etcDirs[i]));
 
             if (!dictFile.empty())
             {

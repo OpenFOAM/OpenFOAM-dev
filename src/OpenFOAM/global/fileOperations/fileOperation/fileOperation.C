@@ -1153,10 +1153,37 @@ void Foam::fileHandler(autoPtr<fileOperation>& newHandlerPtr)
 }
 
 
-Foam::fileName Foam::search(const word& file, const fileName& directory)
+// Foam::fileName Foam::search(const word& file, const fileName& directory)
+// {
+//     // Search the current directory for the file
+//     fileNameList files(fileHandler().readDir(directory));
+//     forAll(files, i)
+//     {
+//         if (files[i] == file)
+//         {
+//             return directory/file;
+//         }
+//     }
+
+//     // If not found search each of the sub-directories
+//     fileNameList dirs(fileHandler().readDir(directory, fileType::directory));
+//     forAll(dirs, i)
+//     {
+//         fileName path = search(file, directory/dirs[i]);
+//         if (path != fileName::null)
+//         {
+//             return path;
+//         }
+//     }
+
+//     return fileName::null;
+// }
+
+
+Foam::fileName Foam::searchDir(const word& file, const fileName& directory)
 {
     // Search the current directory for the file
-    fileNameList files(fileHandler().readDir(directory));
+    fileNameList files(readDir(directory));
     forAll(files, i)
     {
         if (files[i] == file)
@@ -1166,10 +1193,10 @@ Foam::fileName Foam::search(const word& file, const fileName& directory)
     }
 
     // If not found search each of the sub-directories
-    fileNameList dirs(fileHandler().readDir(directory, fileType::directory));
+    fileNameList dirs(readDir(directory, fileType::directory));
     forAll(dirs, i)
     {
-        fileName path = search(file, directory/dirs[i]);
+        fileName path = searchDir(file, directory/dirs[i]);
         if (path != fileName::null)
         {
             return path;
