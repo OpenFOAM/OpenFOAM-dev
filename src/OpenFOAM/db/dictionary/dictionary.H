@@ -431,8 +431,8 @@ public:
             const entry& lookupEntry
             (
                 const word&,
-                bool recursive,
-                bool patternMatch
+                bool recursive=false,
+                bool patternMatch=true
             ) const;
 
             //- Find and return an entry data stream if present, trying a list
@@ -442,8 +442,8 @@ public:
             const entry& lookupEntryBackwardsCompatible
             (
                 const wordList&,
-                bool recursive,
-                bool patternMatch
+                bool recursive=false,
+                bool patternMatch=true
             ) const;
 
             //- Find and return an entry data stream
