@@ -103,17 +103,6 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
 {
     chemistryReductionMethod<ThermoType>::initReduceMechanism();
 
-    scalarField c1(this->chemistry_.nEqns(), 0.0);
-
-    for (label i=0; i<this->nSpecie(); i++)
-    {
-        c1[i] = c[i];
-    }
-
-    c1[this->nSpecie()] = T;
-    c1[this->nSpecie()+1] = p;
-
-
     // Number of initialised rAB for each lines
     Field<label> NbrABInit(this->nSpecie(),0);
 
@@ -135,7 +124,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
 
         // for each reaction compute omegai
         scalar omegaf, omegar;
-        R.omega(p, T, c1, li, omegaf, omegar);
+        R.omega(p, T, c, li, omegaf, omegar);
 
         scalar fr = mag(omegaf) + mag(omegar);
         scalar NCi(0.0),NHi(0.0),NOi(0.0),NNi(0.0);
