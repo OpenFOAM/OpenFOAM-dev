@@ -110,6 +110,7 @@ Foam::Rosenbrock34::Rosenbrock34(const ODESystem& ode, const dictionary& dict)
     ODESolver(ode, dict),
     adaptiveSolver(ode, dict),
     pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
+    rowTol_(dict.lookupOrDefault<scalar>("rowTol", min(absTol_))),
     k1_(n_),
     k2_(n_),
     k3_(n_),
@@ -179,7 +180,7 @@ Foam::scalar Foam::Rosenbrock34::solve
     }
     else
     {
-        LUDecompose(a_);
+        LUDecompose(a_, rowTol_);
     }
 
     // Calculate k1:

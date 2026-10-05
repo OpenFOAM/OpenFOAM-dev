@@ -60,7 +60,7 @@ void Foam::SIBS::SIMPR
     }
     else
     {
-        LUDecompose(a);
+        LUDecompose(a, rowTol_);
     }
 
     for (label i=0; i<n_; i++)

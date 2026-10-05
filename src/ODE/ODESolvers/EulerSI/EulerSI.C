@@ -42,6 +42,7 @@ Foam::EulerSI::EulerSI(const ODESystem& ode, const dictionary& dict)
     ODESolver(ode, dict),
     adaptiveSolver(ode, dict),
     pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
+    rowTol_(dict.lookupOrDefault<scalar>("rowTol", min(absTol_))),
     err_(n_),
     dydx_(n_),
     dfdx_(n_),
@@ -103,7 +104,7 @@ Foam::scalar Foam::EulerSI::solve
     }
     else
     {
-        LUDecompose(a_);
+        LUDecompose(a_, rowTol_);
     }
 
     // Calculate error estimate from the change in state:

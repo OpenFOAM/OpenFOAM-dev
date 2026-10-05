@@ -72,6 +72,10 @@ class EulerSI
            //  Defaults to false
            Switch pivot_;
 
+           //- Optional LU decomposition row filtering tolerance
+           //  Defaults to min(absTol_)
+           scalar rowTol_;
+
         // Temporary storage
         // held to avoid dynamic memory allocation between calls
         // and to transfer internal values between functions

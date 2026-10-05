@@ -79,6 +79,11 @@ class seulex
            //  Defaults to false
            Switch pivot_;
 
+           //- Optional LU decomposition row filtering tolerance
+           //  Defaults to min(absTol_)
+           scalar rowTol_;
+
+
         // Evaluated constants
 
             scalar jacRedo_;

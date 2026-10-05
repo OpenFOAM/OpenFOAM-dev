@@ -88,8 +88,9 @@ void LUDecompose
     label& sign
 );
 
-//- LU decompose using efficient ikj-loop with row filtering, without pivoting
-void LUDecompose(scalarSquareMatrix& A, const scalar rowTol = 1e-6);
+//- LU decompose using efficient ikj-loop with optional row filtering,
+//  without pivoting
+void LUDecompose(scalarSquareMatrix& A, const scalar rowTol = 0);
 
 //- LU decompose the matrix into a lower (L) and upper (U) part. U = L.T()
 void LUDecompose(scalarSymmetricSquareMatrix& matrix);

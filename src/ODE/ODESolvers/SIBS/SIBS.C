@@ -50,6 +50,7 @@ Foam::SIBS::SIBS(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
     pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
+    rowTol_(dict.lookupOrDefault<scalar>("rowTol", min(absTol_))),
     a_(iMaxX_, 0.0),
     alpha_(kMaxX_, 0.0),
     d_p_(n_, kMaxX_, 0.0),

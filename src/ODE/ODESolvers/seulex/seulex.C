@@ -51,6 +51,7 @@ Foam::seulex::seulex(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
     pivot_(dict.lookupOrDefault<Switch>("pivot", false)),
+    rowTol_(dict.lookupOrDefault<scalar>("rowTol", min(absTol_))),
     jacRedo_(min(1e-4, min(relTol_))),
     nSeq_(iMaxx_),
     cpu_(iMaxx_),
@@ -131,7 +132,7 @@ bool Foam::seulex::seul
     }
     else
     {
-        LUDecompose(a_);
+        LUDecompose(a_, rowTol_);
     }
 
     scalar xnew = x0 + dx;
