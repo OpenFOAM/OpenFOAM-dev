@@ -29,7 +29,11 @@ License
 
 inline Foam::scalar Foam::integerPow(const scalar x, const label e)
 {
-    if (e == 0)
+    if (e == 1)
+    {
+        return x;
+    }
+    else if (e == 0)
     {
         return 1;
     }
