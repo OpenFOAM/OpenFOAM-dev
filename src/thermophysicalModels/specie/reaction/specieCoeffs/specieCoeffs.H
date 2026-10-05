@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,9 @@ public:
         //- Exponent of the specie concentration
         specieExponent exponent;
 
+        //- Exponent of the specie concentration - 1 (for Jacobian)
+        specieExponent exponentM1;
+
 
     // Constructors
 
@@ -75,7 +78,8 @@ public:
         :
             index(-labelMax),
             stoichCoeff(NaN),
-            exponent()
+            exponent(),
+            exponentM1()
         {}
 
         //- Construct from species table and input stream

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ inline Foam::specieExponent::specieExponent()
 {}
 
 
-inline Foam::specieExponent::specieExponent(const label integerExponent)
+inline Foam::specieExponent::specieExponent(const int32_t integerExponent)
 :
     integerExponent_(integerExponent),
     scalarExponent_(integerExponent)
@@ -51,10 +51,10 @@ inline Foam::specieExponent::specieExponent(const label integerExponent)
 
 inline Foam::specieExponent::specieExponent(const scalar scalarExponent)
 :
-    integerExponent_(labelMax),
+    integerExponent_(INT32_MAX),
     scalarExponent_(scalarExponent)
 {
-    const label integerExponent = floor(scalarExponent);
+    const int32_t integerExponent = floor(scalarExponent);
     if (integerExponent == scalarExponent)
     {
         integerExponent_ = integerExponent;
@@ -71,7 +71,7 @@ inline Foam::specieExponent::operator scalar() const
 
 
 inline Foam::specieExponent&
-Foam::specieExponent::operator=(const label integerExponent)
+Foam::specieExponent::operator=(const int32_t integerExponent)
 {
     return *this = specieExponent(integerExponent);
 }
@@ -137,7 +137,31 @@ inline Foam::specieExponent Foam::operator-
     const specieExponent& b
 )
 {
-    return a + (-b);
+    if (a.hasIntegerExponent() && b.hasIntegerExponent())
+    {
+        return a.integerExponent_ - b.integerExponent_;
+    }
+    else
+    {
+        return a.scalarExponent_ - b.scalarExponent_;
+    }
+}
+
+
+inline Foam::specieExponent Foam::operator-
+(
+    const specieExponent& a,
+    const int32_t b
+)
+{
+    if (a.hasIntegerExponent())
+    {
+        return a.integerExponent_ - b;
+    }
+    else
+    {
+        return a.scalarExponent_ - b;
+    }
 }
 
 
