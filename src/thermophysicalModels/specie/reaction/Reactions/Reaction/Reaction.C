@@ -296,20 +296,16 @@ void Foam::Reaction<ThermoType>::C
     scalar& Cr
 ) const
 {
-    Cf = Cr = 1;
-
-    forAll(lhs(), i)
+    Cf = pow(c[lhs()[0].index], lhs()[0].exponent);
+    for(label i=1; i<lhs().size(); i++)
     {
-        const label si = lhs()[i].index;
-        const specieExponent& el = lhs()[i].exponent;
-        Cf *= c[si] >= small || el >= 1 ? pow(max(c[si], 0), el) : 0;
+        Cf *= pow(c[lhs()[i].index], lhs()[i].exponent);
     }
 
-    forAll(rhs(), i)
+    Cr = pow(c[rhs()[0].index], rhs()[0].exponent);
+    for(label i=1; i<rhs().size(); i++)
     {
-        const label si = rhs()[i].index;
-        const specieExponent& er = rhs()[i].exponent;
-        Cr *= c[si] >= small || er >= 1 ? pow(max(c[si], 0), er) : 0;
+        Cr *= pow(c[rhs()[i].index], rhs()[i].exponent);
     }
 }
 
@@ -325,20 +321,27 @@ Foam::scalar Foam::Reaction<ThermoType>::omega
     scalar& omegar
 ) const
 {
-    const scalar clippedT = min(max(T, this->Tlow()), this->Thigh());
+    C(p, T, c, li, omegaf, omegar);
 
-    // Rate constants
-    const scalar kf = this->kf(p, clippedT, c, li);
-    const scalar kr = this->kr(kf, p, clippedT, c, li);
-
-    // Concentration products
-    scalar Cf, Cr;
-    this->C(p, T, c, li, Cf, Cr);
-
-    omegaf = kf*Cf;
-    omegar = kr*Cr;
+    const scalar kf = this->kf(p, T, c, li);
+    omegaf = kf*omegaf;
+    omegar = kr(kf, p, T, c, li)*omegar;
 
     return omegaf - omegar;
+}
+
+
+template<class ThermoType>
+Foam::scalar Foam::Reaction<ThermoType>::omega
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    const label li
+) const
+{
+    scalar omegaf, omegar;
+    return omega(p, T, c, li, omegaf, omegar);
 }
 
 
@@ -355,20 +358,29 @@ void Foam::Reaction<ThermoType>::dNdtByV
     const label Nsi0
 ) const
 {
-    scalar omegaf, omegar;
-    const scalar omega = this->omega(p, T, c, li, omegaf, omegar);
+    const scalar omega = this->omega(p, T, c, li);
 
-    forAll(lhs(), i)
+    if (reduced)
     {
-        const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-        const scalar sl = lhs()[i].stoichCoeff;
-        dNdtByV[Nsi0 + si] -= sl*omega;
+        forAll(lhs(), i)
+        {
+            dNdtByV[Nsi0 + c2s[lhs()[i].index]] -= lhs()[i].stoichCoeff*omega;
+        }
+        forAll(rhs(), i)
+        {
+            dNdtByV[Nsi0 + c2s[rhs()[i].index]] += rhs()[i].stoichCoeff*omega;
+        }
     }
-    forAll(rhs(), i)
+    else
     {
-        const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-        const scalar sr = rhs()[i].stoichCoeff;
-        dNdtByV[Nsi0 + si] += sr*omega;
+        forAll(lhs(), i)
+        {
+            dNdtByV[Nsi0 + lhs()[i].index] -= lhs()[i].stoichCoeff*omega;
+        }
+        forAll(rhs(), i)
+        {
+            dNdtByV[Nsi0 + rhs()[i].index] += rhs()[i].stoichCoeff*omega;
+        }
     }
 }
 
@@ -396,103 +408,128 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcTp
 
     // Concentration products
     scalar Cf, Cr;
-    this->C(p, T, c, li, Cf, Cr);
+    C(p, T, c, li, Cf, Cr);
 
     // Overall reaction rate
     const scalar omega = kf*Cf - kr*Cr;
 
     // Specie reaction rates
-    forAll(lhs(), i)
+    if (reduced)
     {
-        const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-        const scalar sl = lhs()[i].stoichCoeff;
-        dNdtByV[Nsi0 + si] -= sl*omega;
+        forAll(lhs(), i)
+        {
+            dNdtByV[Nsi0 + c2s[lhs()[i].index]] -= lhs()[i].stoichCoeff*omega;
+        }
+        forAll(rhs(), i)
+        {
+            dNdtByV[Nsi0 + c2s[rhs()[i].index]] += rhs()[i].stoichCoeff*omega;
+        }
     }
-    forAll(rhs(), i)
+    else
     {
-        const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-        const scalar sr = rhs()[i].stoichCoeff;
-        dNdtByV[Nsi0 + si] += sr*omega;
+        forAll(lhs(), i)
+        {
+            dNdtByV[Nsi0 + lhs()[i].index] -= lhs()[i].stoichCoeff*omega;
+        }
+        forAll(rhs(), i)
+        {
+            dNdtByV[Nsi0 + rhs()[i].index] += rhs()[i].stoichCoeff*omega;
+        }
     }
 
     // Jacobian contributions from the derivative of the concentration products
     // w.r.t. concentration
+    forAll(lhs(), j)
     {
-        forAll(lhs(), j)
+        const label sj = reduced ? c2s[lhs()[j].index] : lhs()[j].index;
+        const label Nsi0j = Nsi0 + sj;
+
+        scalar dCfdcj = 1;
+        forAll(lhs(), i)
         {
-            const label sj = reduced ? c2s[lhs()[j].index] : lhs()[j].index;
-
-            scalar dCfdcj = 1;
-            forAll(lhs(), i)
+            if (i == j)
             {
-                const label si = lhs()[i].index;
-                const specieExponent& el = lhs()[i].exponent;
-                if (i == j)
-                {
-                    dCfdcj *=
-                        c[si] >= small || el >= 1
-                      ? el*pow(max(c[si], 0), el - specieExponent(label(1)))
-                      : 0;
-                }
-                else
-                {
-                    dCfdcj *=
-                        c[si] >= small || el >= 1
-                      ? pow(max(c[si], 0), el)
-                      : 0;
-                }
+                dCfdcj *=
+                    lhs()[i].exponent
+                   *pow(c[lhs()[i].index], lhs()[i].exponentM1);
             }
-
-            forAll(lhs(), i)
+            else
             {
-                const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-                const scalar sl = lhs()[i].stoichCoeff;
-                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) -= sl*kf*dCfdcj;
-            }
-            forAll(rhs(), i)
-            {
-                const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-                const scalar sr = rhs()[i].stoichCoeff;
-                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) += sr*kf*dCfdcj;
+                dCfdcj *= pow(c[lhs()[i].index], lhs()[i].exponent);
             }
         }
 
-        forAll(rhs(), j)
+        if (reduced)
         {
-            const label sj = reduced ? c2s[rhs()[j].index] : rhs()[j].index;
-
-            scalar dCrcj = 1;
-            forAll(rhs(), i)
-            {
-                const label si = rhs()[i].index;
-                const specieExponent& er = rhs()[i].exponent;
-                if (i == j)
-                {
-                    dCrcj *=
-                        c[si] >= small || er >= 1
-                      ? er*pow(max(c[si], 0), er - specieExponent(label(1)))
-                      : 0;
-                }
-                else
-                {
-                    dCrcj *=
-                        c[si] >= small || er >= 1
-                      ? pow(max(c[si], 0), er)
-                      : 0;
-                }
-            }
-
             forAll(lhs(), i)
             {
-                const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-                const scalar sl = lhs()[i].stoichCoeff;
-                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) += sl*kr*dCrcj;
+                ddNdtByVdcTp(Nsi0 + c2s[lhs()[i].index], Nsi0j)
+                    -= lhs()[i].stoichCoeff*kf*dCfdcj;
             }
             forAll(rhs(), i)
             {
-                const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-                const scalar sr = rhs()[i].stoichCoeff;
-                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) -= sr*kr*dCrcj;
+                ddNdtByVdcTp(Nsi0 + c2s[rhs()[i].index], Nsi0j)
+                    += rhs()[i].stoichCoeff*kf*dCfdcj;
+            }
+        }
+        else
+        {
+            forAll(lhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + lhs()[i].index, Nsi0j)
+                    -= lhs()[i].stoichCoeff*kf*dCfdcj;
+            }
+            forAll(rhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + rhs()[i].index, Nsi0j)
+                    += rhs()[i].stoichCoeff*kf*dCfdcj;
+            }
+        }
+    }
+    forAll(rhs(), j)
+    {
+        const label sj = reduced ? c2s[rhs()[j].index] : rhs()[j].index;
+        const label Nsi0j = Nsi0 + sj;
+
+        scalar dCrcj = 1;
+        forAll(rhs(), i)
+        {
+            if (i == j)
+            {
+                dCrcj *=
+                    rhs()[i].exponent
+                   *pow(c[rhs()[i].index], rhs()[i].exponentM1);
+            }
+            else
+            {
+                dCrcj *= pow(c[rhs()[i].index], rhs()[i].exponent);
+            }
+        }
+
+        if (reduced)
+        {
+            forAll(lhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + c2s[lhs()[i].index], Nsi0j)
+                    += lhs()[i].stoichCoeff*kr*dCrcj;
+            }
+            forAll(rhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + c2s[rhs()[i].index], Nsi0j)
+                    -= rhs()[i].stoichCoeff*kr*dCrcj;
+            }
+        }
+        else
+        {
+            forAll(lhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + lhs()[i].index, Nsi0j)
+                    += lhs()[i].stoichCoeff*kr*dCrcj;
+            }
+            forAll(rhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + rhs()[i].index, Nsi0j)
+                    -= rhs()[i].stoichCoeff*kr*dCrcj;
             }
         }
     }
@@ -502,19 +539,33 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcTp
     {
         const scalar dkfdT = this->dkfdT(p, T, c, li);
         const scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kr);
-
         const scalar dwdT = dkfdT*Cf - dkrdT*Cr;
-        forAll(lhs(), i)
+
+        if (reduced)
         {
-            const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-            const scalar sl = lhs()[i].stoichCoeff;
-            ddNdtByVdcTp(Nsi0 + si, Tsi) -= sl*dwdT;
+            forAll(lhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + c2s[lhs()[i].index], Tsi)
+                    -= lhs()[i].stoichCoeff*dwdT;
+            }
+            forAll(rhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + c2s[rhs()[i].index], Tsi)
+                    += rhs()[i].stoichCoeff*dwdT;
+            }
         }
-        forAll(rhs(), i)
+        else
         {
-            const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-            const scalar sr = rhs()[i].stoichCoeff;
-            ddNdtByVdcTp(Nsi0 + si, Tsi) += sr*dwdT;
+            forAll(lhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + lhs()[i].index, Tsi)
+                    -= lhs()[i].stoichCoeff*dwdT;
+            }
+            forAll(rhs(), i)
+            {
+                ddNdtByVdcTp(Nsi0 + rhs()[i].index, Tsi)
+                    += rhs()[i].stoichCoeff*dwdT;
+            }
         }
     }
 
@@ -531,21 +582,37 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcTp
         forAll(c, j)
         {
             const label sj = reduced ? c2s[j] : j;
+            const label Nsi0j = Nsi0 + sj;
 
             if (sj == -1) continue;
 
             const scalar dwdc = dkfdc[j]*Cf - dkrdc[j]*Cr;
-            forAll(lhs(), i)
+
+            if (reduced)
             {
-                const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
-                const scalar sl = lhs()[i].stoichCoeff;
-                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) -= sl*dwdc;
+                forAll(lhs(), i)
+                {
+                    ddNdtByVdcTp(Nsi0 + c2s[lhs()[i].index], Nsi0j)
+                        -= lhs()[i].stoichCoeff*dwdc;
+                }
+                forAll(rhs(), i)
+                {
+                    ddNdtByVdcTp(Nsi0 + c2s[rhs()[i].index], Nsi0j)
+                        += rhs()[i].stoichCoeff*dwdc;
+                }
             }
-            forAll(rhs(), i)
+            else
             {
-                const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
-                const scalar sr = rhs()[i].stoichCoeff;
-                ddNdtByVdcTp(Nsi0 + si, Nsi0 + sj) += sr*dwdc;
+                forAll(lhs(), i)
+                {
+                    ddNdtByVdcTp(Nsi0 + lhs()[i].index, Nsi0j)
+                        -= lhs()[i].stoichCoeff*dwdc;
+                }
+                forAll(rhs(), i)
+                {
+                    ddNdtByVdcTp(Nsi0 + rhs()[i].index, Nsi0j)
+                        += rhs()[i].stoichCoeff*dwdc;
+                }
             }
         }
     }
