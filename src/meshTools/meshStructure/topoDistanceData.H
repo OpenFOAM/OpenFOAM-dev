@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,8 @@ SourceFiles
 #ifndef topoDistanceData_H
 #define topoDistanceData_H
 
-#include "point.H"
-#include "tensor.H"
+#include "scalar.H"
+#include "contiguous.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,14 +49,10 @@ class polyPatch;
 class polyMesh;
 class transformer;
 
-
 // Forward declaration of friend functions and operators
-
 class topoDistanceData;
-
-Istream& operator>>(Istream&, topoDistanceData&);
-Ostream& operator<<(Ostream&, const topoDistanceData&);
-
+inline Istream& operator>>(Istream&, topoDistanceData&);
+inline Ostream& operator<<(Ostream&, const topoDistanceData&);
 
 /*---------------------------------------------------------------------------*\
                       Class topoDistanceData Declaration
@@ -92,11 +88,11 @@ public:
 
         // Access
 
-
             inline label data() const
             {
                 return data_;
             }
+
             inline label distance() const
             {
                 return distance_;
@@ -169,18 +165,17 @@ public:
             template<class TrackingData>
             inline bool equal(const topoDistanceData&, TrackingData& td) const;
 
+
     // Member Operators
 
-        // Needed for List IO
         inline bool operator==(const topoDistanceData&) const;
-
         inline bool operator!=(const topoDistanceData&) const;
 
 
     // IOstream Operators
 
-        friend Ostream& operator<<(Ostream&, const topoDistanceData&);
-        friend Istream& operator>>(Istream&, topoDistanceData&);
+        inline friend Ostream& operator<<(Ostream&, const topoDistanceData&);
+        inline friend Istream& operator>>(Istream&, topoDistanceData&);
 };
 
 

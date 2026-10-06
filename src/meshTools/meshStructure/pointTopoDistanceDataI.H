@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,14 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "pointTopoDistanceData.H"
 #include "polyMesh.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::pointTopoDistanceData::pointTopoDistanceData()
 :
     data_(-1),
@@ -38,7 +35,6 @@ inline Foam::pointTopoDistanceData::pointTopoDistanceData()
 {}
 
 
-// Construct from components
 inline Foam::pointTopoDistanceData::pointTopoDistanceData
 (
     const label data,
@@ -59,7 +55,6 @@ inline bool Foam::pointTopoDistanceData::valid(TrackingData& td) const
 }
 
 
-// No geometric data so never any problem on cyclics
 template<class TrackingData>
 inline bool Foam::pointTopoDistanceData::sameGeometry
 (
@@ -72,7 +67,6 @@ inline bool Foam::pointTopoDistanceData::sameGeometry
 }
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::pointTopoDistanceData::transform
 (
@@ -84,7 +78,6 @@ inline void Foam::pointTopoDistanceData::transform
 {}
 
 
-// Update this with information from connected edge
 template<class TrackingData>
 inline bool Foam::pointTopoDistanceData::updatePoint
 (
@@ -109,7 +102,6 @@ inline bool Foam::pointTopoDistanceData::updatePoint
 }
 
 
-// Update this with new information on same point
 template<class TrackingData>
 inline bool Foam::pointTopoDistanceData::updatePoint
 (
@@ -132,7 +124,6 @@ inline bool Foam::pointTopoDistanceData::updatePoint
 }
 
 
-// Update this with new information on same point. No extra information.
 template<class TrackingData>
 inline bool Foam::pointTopoDistanceData::updatePoint
 (
@@ -153,7 +144,6 @@ inline bool Foam::pointTopoDistanceData::updatePoint
 }
 
 
-// Update this with information from connected point
 template<class TrackingData>
 inline bool Foam::pointTopoDistanceData::updateEdge
 (
@@ -205,6 +195,28 @@ inline bool Foam::pointTopoDistanceData::operator!=
 ) const
 {
     return !(*this == rhs);
+}
+
+
+// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+
+inline Foam::Ostream& Foam::operator<<
+(
+    Foam::Ostream& os,
+    const Foam::pointTopoDistanceData& wDist
+)
+{
+    return os << wDist.data_ << token::SPACE << wDist.distance_;
+}
+
+
+inline Foam::Istream& Foam::operator>>
+(
+    Foam::Istream& is,
+    Foam::pointTopoDistanceData& wDist
+)
+{
+    return is >> wDist.data_ >> wDist.distance_;
 }
 
 

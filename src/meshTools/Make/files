@@ -188,8 +188,6 @@ mappedPatches/nonConformalMappedPatchBase/nonConformalMappedPatchBase.C
 mappedPatches/nonConformalMappedPolyPatch/nonConformalMappedWallPolyPatch.C
 
 meshStructure/meshStructure.C
-meshStructure/topoDistanceData.C
-meshStructure/pointTopoDistanceData.C
 
 tetOverlapVolume/tetOverlapVolume.C
 

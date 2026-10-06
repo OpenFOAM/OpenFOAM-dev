@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pointTopoDistanceData
+    Foam::topoDistance
 
 Description
-    For use with PointEdgeWave. Determines topological distance to
-    starting points
+    For use with FaceCellWave. Determines topological distance to starting faces
 
 SourceFiles
-    pointTopoDistanceDataI.H
-    pointTopoDistanceData.C
+    topoDistanceI.H
+    topoDistance.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pointTopoDistanceData_H
-#define pointTopoDistanceData_H
+#ifndef topoDistance_H
+#define topoDistance_H
 
 #include "scalar.H"
 #include "contiguous.H"
@@ -51,20 +50,17 @@ class polyMesh;
 class transformer;
 
 // Forward declaration of friend functions and operators
-class pointTopoDistanceData;
-inline Istream& operator>>(Istream&, pointTopoDistanceData&);
-inline Ostream& operator<<(Ostream&, const pointTopoDistanceData&);
+class topoDistance;
+inline Istream& operator>>(Istream&, topoDistance&);
+inline Ostream& operator<<(Ostream&, const topoDistance&);
 
 /*---------------------------------------------------------------------------*\
-                    Class pointTopoDistanceData Declaration
+                      Class topoDistance Declaration
 \*---------------------------------------------------------------------------*/
 
-class pointTopoDistanceData
+class topoDistance
 {
     // Private Data
-
-        //- Starting data
-        label data_;
 
         //- Distance
         label distance_;
@@ -75,33 +71,24 @@ public:
     // Constructors
 
         //- Construct null
-        inline pointTopoDistanceData();
+        inline topoDistance();
 
-        //- Construct from count
-        inline pointTopoDistanceData
-        (
-            const label data,
-            const label distance
-        );
+        //- Construct from distance
+        inline topoDistance(const label distance);
 
 
     // Member Functions
 
         // Access
 
-            inline label data() const
-            {
-                return data_;
-            }
-
+            //- Distance
             inline label distance() const
             {
                 return distance_;
             }
 
 
-        // Needed by PointEdgeWave
-
+        // Needed by FaceCellWave
 
             //- Check whether origin has been changed at all or
             //  still contains original (invalid) value.
@@ -112,100 +99,78 @@ public:
             template<class TrackingData>
             inline bool sameGeometry
             (
-                const pointTopoDistanceData&,
-                const scalar tol,
+                const polyMesh&,
+                const topoDistance&,
+                const scalar,
                 TrackingData& td
             ) const;
 
             //- Transform across an interface
-            template<class TrackingData>
+            template<class Patch, class TrackingData>
             inline void transform
             (
-                const polyPatch& patch,
+                const Patch& patch,
                 const label patchFacei,
                 const transformer& transform,
                 TrackingData& td
             );
 
-            //- Influence of edge on point
-            template<class TrackingData>
-            inline bool updatePoint
+            //- Influence of neighbouring face.
+            template<class Mesh, class NeighbourFacei, class TrackingData>
+            inline bool updateCell
             (
-                const polyMesh& mesh,
-                const label pointi,
-                const label edgeI,
-                const pointTopoDistanceData& edgeInfo,
+                const Mesh&,
+                const label thisCelli,
+                const NeighbourFacei& neighbourFacei,
+                const topoDistance& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
-            //- Influence of different value on same point.
-            //  Merge new and old info.
-            template<class TrackingData>
-            inline bool updatePoint
+            //- Influence of neighbouring cell.
+            template<class Mesh, class ThisFacei, class TrackingData>
+            inline bool updateFace
             (
-                const polyMesh& mesh,
-                const label pointi,
-                const pointTopoDistanceData& newPointInfo,
+                const Mesh&,
+                const ThisFacei& thisFacei,
+                const label neighbourCelli,
+                const topoDistance& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
-            //- Influence of different value on same point.
-            //  No information about current position whatsoever.
-            template<class TrackingData>
-            inline bool updatePoint
+            //- Influence of different value on same face.
+            template<class Mesh, class ThisFacei, class TrackingData>
+            inline bool updateFace
             (
-                const pointTopoDistanceData& newPointInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of point on edge.
-            template<class TrackingData>
-            inline bool updateEdge
-            (
-                const polyMesh& mesh,
-                const label edgeI,
-                const label pointi,
-                const pointTopoDistanceData& pointInfo,
+                const Mesh&,
+                const ThisFacei& thisFacei,
+                const topoDistance& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Same (like operator==)
             template<class TrackingData>
-            inline bool equal
-            (
-                const pointTopoDistanceData&,
-                TrackingData&
-            ) const;
+            inline bool equal(const topoDistance&, TrackingData& td) const;
 
 
     // Member Operators
 
-        inline bool operator==(const pointTopoDistanceData&) const;
-        inline bool operator!=(const pointTopoDistanceData&) const;
+        inline bool operator==(const topoDistance&) const;
+        inline bool operator!=(const topoDistance&) const;
 
 
     // IOstream Operators
 
-        inline friend Ostream& operator<<
-        (
-            Ostream&,
-            const pointTopoDistanceData&
-        );
-        inline friend Istream& operator>>
-        (
-            Istream&,
-            pointTopoDistanceData&
-        );
+        inline friend Ostream& operator<<(Ostream&, const topoDistance&);
+        inline friend Istream& operator>>(Istream&, topoDistance&);
 };
 
 
-//- Data associated with pointTopoDistanceData type are contiguous
+//- Data associated with topoDistance type are contiguous
 template<>
-inline bool contiguous<pointTopoDistanceData>()
+inline bool contiguous<topoDistance>()
 {
     return true;
 }
@@ -217,7 +182,7 @@ inline bool contiguous<pointTopoDistanceData>()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "pointTopoDistanceDataI.H"
+#include "topoDistanceI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

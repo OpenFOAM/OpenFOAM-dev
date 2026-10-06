@@ -23,25 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "topoDistanceData.H"
+#include "topoDistance.H"
 #include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::topoDistanceData::topoDistanceData()
+inline Foam::topoDistance::topoDistance()
 :
-    data_(-1),
     distance_(-1)
 {}
 
 
-inline Foam::topoDistanceData::topoDistanceData
-(
-    const label data,
-    const label distance
-)
+inline Foam::topoDistance::topoDistance(const label distance)
 :
-    data_(data),
     distance_(distance)
 {}
 
@@ -49,17 +43,17 @@ inline Foam::topoDistanceData::topoDistanceData
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class TrackingData>
-inline bool Foam::topoDistanceData::valid(TrackingData& td) const
+inline bool Foam::topoDistance::valid(TrackingData& td) const
 {
     return distance_ != -1;
 }
 
 
 template<class TrackingData>
-inline bool Foam::topoDistanceData::sameGeometry
+inline bool Foam::topoDistance::sameGeometry
 (
     const polyMesh&,
-    const topoDistanceData&,
+    const topoDistance&,
     const scalar,
     TrackingData&
 ) const
@@ -68,10 +62,10 @@ inline bool Foam::topoDistanceData::sameGeometry
 }
 
 
-template<class TrackingData>
-inline void Foam::topoDistanceData::transform
+template<class Patch, class TrackingData>
+inline void Foam::topoDistance::transform
 (
-    const polyPatch& patch,
+    const Patch& patch,
     const label patchFacei,
     const transformer& transform,
     TrackingData& td
@@ -79,13 +73,13 @@ inline void Foam::topoDistanceData::transform
 {}
 
 
-template<class TrackingData>
-inline bool Foam::topoDistanceData::updateCell
+template<class Mesh, class NeighbourFacei, class TrackingData>
+inline bool Foam::topoDistance::updateCell
 (
-    const polyMesh&,
+    const Mesh&,
     const label thisCelli,
-    const label neighbourFacei,
-    const topoDistanceData& neighbourInfo,
+    const NeighbourFacei& neighbourFacei,
+    const topoDistance& neighbourInfo,
     const scalar tol,
     TrackingData&
 )
@@ -102,20 +96,19 @@ inline bool Foam::topoDistanceData::updateCell
 }
 
 
-template<class TrackingData>
-inline bool Foam::topoDistanceData::updateFace
+template<class Mesh, class ThisFacei, class TrackingData>
+inline bool Foam::topoDistance::updateFace
 (
-    const polyMesh& mesh,
-    const label thisFacei,
+    const Mesh&,
+    const ThisFacei& thisFacei,
     const label neighbourCelli,
-    const topoDistanceData& neighbourInfo,
+    const topoDistance& neighbourInfo,
     const scalar tol,
     TrackingData&
 )
 {
     if (distance_ == -1)
     {
-        data_ = neighbourInfo.data_;
         distance_ = neighbourInfo.distance_ + 1;
         return true;
     }
@@ -126,12 +119,12 @@ inline bool Foam::topoDistanceData::updateFace
 }
 
 
-template<class TrackingData>
-inline bool Foam::topoDistanceData::updateFace
+template<class Mesh, class ThisFacei, class TrackingData>
+inline bool Foam::topoDistance::updateFace
 (
-    const polyMesh&,
-    const label thisFacei,
-    const topoDistanceData& neighbourInfo,
+    const Mesh&,
+    const ThisFacei& thisFacei,
+    const topoDistance& neighbourInfo,
     const scalar tol,
     TrackingData&
 )
@@ -149,9 +142,9 @@ inline bool Foam::topoDistanceData::updateFace
 
 
 template<class TrackingData>
-inline bool Foam::topoDistanceData::equal
+inline bool Foam::topoDistance::equal
 (
-    const topoDistanceData& rhs,
+    const topoDistance& rhs,
     TrackingData& td
 ) const
 {
@@ -161,18 +154,18 @@ inline bool Foam::topoDistanceData::equal
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline bool Foam::topoDistanceData::operator==
+inline bool Foam::topoDistance::operator==
 (
-    const Foam::topoDistanceData& rhs
+    const Foam::topoDistance& rhs
 ) const
 {
-    return data() == rhs.data() && distance() == rhs.distance();
+    return distance() == rhs.distance();
 }
 
 
-inline bool Foam::topoDistanceData::operator!=
+inline bool Foam::topoDistance::operator!=
 (
-    const Foam::topoDistanceData& rhs
+    const Foam::topoDistance& rhs
 ) const
 {
     return !(*this == rhs);
@@ -184,20 +177,20 @@ inline bool Foam::topoDistanceData::operator!=
 inline Foam::Ostream& Foam::operator<<
 (
     Foam::Ostream& os,
-    const Foam::topoDistanceData& wDist
+    const Foam::topoDistance& wDist
 )
 {
-    return os << wDist.data_ << token::SPACE << wDist.distance_;
+    return os << wDist.distance_;
 }
 
 
 inline Foam::Istream& Foam::operator>>
 (
     Foam::Istream& is,
-    Foam::topoDistanceData& wDist
+    Foam::topoDistance& wDist
 )
 {
-    return is >> wDist.data_ >> wDist.distance_;
+    return is >> wDist.distance_;
 }
 
 
