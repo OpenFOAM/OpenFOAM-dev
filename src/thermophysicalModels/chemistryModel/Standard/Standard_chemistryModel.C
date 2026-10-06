@@ -157,7 +157,13 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
         }
     }
 
-    const scalar T = YTp[nSpecie_];
+    const scalar T = maxMin
+    (
+        YTp[nSpecie_],
+        Reaction<ThermoType>::TlowDefault,
+        Reaction<ThermoType>::ThighDefault
+    );
+
     const scalar p = YTp[nSpecie_ + 1];
 
     // Evaluate the mixture density
@@ -250,7 +256,13 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
         }
     }
 
-    const scalar T = YTp[nSpecie_];
+    const scalar T = maxMin
+    (
+        YTp[nSpecie_],
+        Reaction<ThermoType>::TlowDefault,
+        Reaction<ThermoType>::ThighDefault
+    );
+
     const scalar p = YTp[nSpecie_ + 1];
 
     // Evaluate the specific volumes and mixture density
