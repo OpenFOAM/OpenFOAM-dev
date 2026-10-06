@@ -127,28 +127,40 @@ Foam::blendingMethods::smoothedZonal::masks::masks
     );
     const int scalarSolverPerformanceDebug0 = SolverPerformance<scalar>::debug;
     SolverPerformance<scalar>::debug = 0;
-    (
-        correction(fvm::Sp(invSqrLengthScale, defaultMask_))
-      - fv::gaussLaplacianScheme<scalar, scalar>::fvmLaplacianUncorrected
-        (
-            mesh.magSf(),
-            mesh.nonOrthDeltaCoeffs(),
-            defaultMask_
-        )
-    )->solve(solveDict);
-    forAll(zoneIndices, zonei)
+    auto solve = [&](volScalarField& mask)
     {
         (
-            correction(fvm::Sp(invSqrLengthScale, zoneMasks_[zonei]))
+            correction(fvm::Sp(invSqrLengthScale, mask))
           - fv::gaussLaplacianScheme<scalar, scalar>::fvmLaplacianUncorrected
             (
                 mesh.magSf(),
                 mesh.nonOrthDeltaCoeffs(),
-                zoneMasks_[zonei]
+                mask
             )
         )->solve(solveDict);
+    };
+    solve(defaultMask_);
+    forAll(zoneIndices, zonei)
+    {
+        solve(zoneMasks_[zonei]);
     }
     SolverPerformance<scalar>::debug = scalarSolverPerformanceDebug0;
+
+    // Clip. Assume a hyperbolic profile. Invert and then re-evaluate using an
+    // approximation of tanh which reaches its -1/+1 limits at a finite value.
+    auto clip = [](volScalarField& mask)
+    {
+        const volScalarField x
+        (
+            min(max(log(mask/max(1 - mask, vSmall))/2, -3), +3)
+        );
+        mask = (x*(27 + sqr(x))/(27 + 9*sqr(x)) + 1)/2;
+    };
+    clip(defaultMask_);
+    forAll(zoneIndices, zonei)
+    {
+        clip(zoneMasks_[zonei]);
+    }
 
     // Normalise
     volScalarField sumMask(defaultMask_);
