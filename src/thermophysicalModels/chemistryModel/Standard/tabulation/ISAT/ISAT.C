@@ -59,7 +59,7 @@ Foam::chemistryTabulationMethods::ISAT::ISAT
     log_(coeffDict.lookupOrDefault<Switch>("log", false)),
     reduction_(chemistry_.reduction()),
     chemisTree_(*this, coeffDict),
-    scaleFactor_(chemistry.nEqns() + 1, 1),
+    scaleFactor_(chemistry.nEqns() + 2, 1),
     runTime_(chemistry.time()),
     timeSteps_(0),
     chPMaxLifeTime_
@@ -224,7 +224,9 @@ void Foam::chemistryTabulationMethods::ISAT::calcNewC
     scalarField& Rphiq
 )
 {
-    const label nEqns = chemistry_.nEqns(); // Species, T, p
+    const label nSpecie = chemistry_.nSpecie();
+    const label nVar = nSpecie + 3; // c, T, p, deltaT
+
     const List<label>& completeToSimplified = phi0->completeToSimplifiedIndex();
 
     const scalarField dphi(phiq - phi0->phi());
@@ -237,7 +239,7 @@ void Foam::chemistryTabulationMethods::ISAT::calcNewC
     //
 
     Rphiq = phi0->Rphi();
-    for (label i=0; i<nEqns - 2; i++)
+    for (label i=0; i<nSpecie; i++)
     {
         if (reduction_)
         {
@@ -247,12 +249,12 @@ void Foam::chemistryTabulationMethods::ISAT::calcNewC
             {
                 // If specie is active, or T or p, then extrapolate using the
                 // gradients matrix
-                for (label j=0; j<nEqns + 1; j++)
+                for (label j=0; j<nVar; j++)
                 {
                     const label sj =
-                        j < nEqns - 2
+                        j < nSpecie
                       ? completeToSimplified[j]
-                      : j - (nEqns - 2) + phi0->nActive();
+                      : j - nSpecie + phi0->nActive();
 
                     if (sj != -1)
                     {
@@ -269,7 +271,7 @@ void Foam::chemistryTabulationMethods::ISAT::calcNewC
         else
         {
             // Extrapolate using the gradients matrix
-            for (label j=0; j<nEqns + 1; j++)
+            for (label j=0; j<nVar; j++)
             {
                 Rphiq[i] += gradientsMatrix(i, j)*dphi[j];
             }
@@ -370,8 +372,9 @@ void Foam::chemistryTabulationMethods::ISAT::computeA
 )
 {
     const label nSpecie = chemistry_.nSpecie();
+    const label nVar = nSpecie + 3;
 
-    scalarField Rphiqs(chemistry_.nEqns() + 1);
+    scalarField Rphiqs(nVar);
     for (label i=0; i<nSpecie; i++)
     {
         const label si = chemistry_.sToc(i);
@@ -390,29 +393,34 @@ void Foam::chemistryTabulationMethods::ISAT::computeA
     // C(psi0,t0+dt)*(I-dt*J(psi(t0+dt))) = C(psi0, t0)
     // A = C(psi0,t0)/(I-dt*J(psi(t0+dt)))
     // where C(psi0,t0) = I
-    scalarField dYTpdt(nSpecie + 2, Zero);
-    chemistry_.jacobian(runTime_.value(), Rphiqs, li, dYTpdt, A);
+    scalarField dYTdt(nSpecie + 1, Zero);
+    chemistry_.jacobian(runTime_.value(), Rphiqs, li, dYTdt, A);
 
     // Inverse of I - dt*J(psi(t0 + dt))
-    for (label i=0; i<nSpecie + 2; i++)
+    for (label i=0; i<nSpecie + 1; i++)
     {
-        for (label j=0; j<nSpecie + 2; j++)
+        for (label j=0; j<nSpecie + 1; j++)
         {
             A(i, j) *= -dt;
         }
         A(i, i) += 1;
     }
+
+    // p diagonal
+    A(nSpecie + 1, nSpecie + 1) = 1;
+
+    // deltaT diagonal
     A(nSpecie + 2, nSpecie + 2) = 1;
+
     LUscalarMatrix LUA(A);
     LUA.inv(A);
 
-    // After inversion, lines of p and T are set to 0 except diagonal.  This
-    // avoid skewness of the ellipsoid of accuracy and potential issues in the
-    // binary tree.
+    // After inversion, line of T is set to 0 except diagonal.
+    // This avoid skewness of the ellipsoid of accuracy and potential issues
+    // in the binary tree.
     for (label i=0; i<nSpecie; i++)
     {
         A(nSpecie, i) = 0;
-        A(nSpecie + 1, i) = 0;
     }
 }
 
@@ -599,7 +607,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT::add
     }
 
     // Compute the A matrix needed to store the chemPoint.
-    const label ASize = chemistry_.nEqns() + 1;
+    const label ASize = chemistry_.nEqns() + 2;
     scalarSquareMatrix A(ASize, Zero);
     computeA(A, Rphiq, li, deltaT);
 

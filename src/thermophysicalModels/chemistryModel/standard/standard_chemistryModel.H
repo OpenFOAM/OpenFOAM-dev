@@ -126,8 +126,11 @@ protected:
         //- ODE solver
         mutable autoPtr<ODESolver> odeSolver_;
 
-        // ODE solver data
-        mutable scalarField cTp_;
+        //- ODE solver integration state variable
+        mutable scalarField cT_;
+
+        //- Constant pressure for the current ODE integration
+        mutable scalar p_;
 
 
 public:

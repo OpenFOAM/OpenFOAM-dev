@@ -55,8 +55,8 @@ inline void Foam::chemistryModels::standard::setNSpecie(const label newNs)
 
 inline Foam::label Foam::chemistryModels::standard::nEqns() const
 {
-    // nEqns = number of species + temperature + pressure
-    return nSpecie_ + 2;
+    // nEqns = number of species + temperature
+    return nSpecie_ + 1;
 }
 
 

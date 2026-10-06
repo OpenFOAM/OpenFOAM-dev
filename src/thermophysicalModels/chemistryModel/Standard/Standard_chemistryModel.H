@@ -135,10 +135,10 @@ class Standard
         DynamicField<scalar> sc_;
 
         //- Specie-temperature-pressure workspace fields
-        mutable FixedList<scalarField, 5> YTpWork_;
+        mutable FixedList<scalarField, 5> YTWork_;
 
         //- Specie-temperature-pressure workspace matrices
-        mutable FixedList<scalarSquareMatrix, 2> YTpYTpWork_;
+        mutable FixedList<scalarSquareMatrix, 2> YTYTWork_;
 
         //- Mechanism reduction method
         autoPtr<chemistryReductionMethod<ThermoType>> mechRedPtr_;
@@ -248,18 +248,18 @@ public:
             virtual void derivatives
             (
                 const scalar t,
-                const scalarField& YTp,
+                const scalarField& YT,
                 const label li,
-                scalarField& dYTpdt
+                scalarField& dYTdt
             ) const;
 
             //- Calculate the ODE jacobian
             virtual void jacobian
             (
                 const scalar t,
-                const scalarField& YTp,
+                const scalarField& YT,
                 const label li,
-                scalarField& dYTpdt,
+                scalarField& dYTdt,
                 scalarSquareMatrix& J
             ) const;
 

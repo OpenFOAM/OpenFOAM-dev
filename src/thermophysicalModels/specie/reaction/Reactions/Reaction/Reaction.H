@@ -351,20 +351,20 @@ public:
 
             //- Derivative of the net reaction rate for each species involved
             //  w.r.t. the concentration and temperature
-            void ddNdtByVdcTp
+            void ddNdtByVdcT
             (
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
                 const label li,
                 scalarField& dNdtByV,
-                scalarSquareMatrix& ddNdtByVdcTp,
+                scalarSquareMatrix& ddNdtByVdcT,
                 const bool reduced,
                 const List<label>& c2s,
                 const label csi0,
                 const label Tsi,
-                scalarField& cTpWork0,
-                scalarField& cTpWork1
+                scalarField& cTWork0,
+                scalarField& cTWork1
             ) const;
 
 

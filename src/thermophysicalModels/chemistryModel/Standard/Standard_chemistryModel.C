@@ -53,8 +53,8 @@ Foam::chemistryModels::Standard<ThermoType>::Standard
     RR_(nSpecie_),
     Y_(nSpecie_),
     c_(nSpecie_),
-    YTpWork_(scalarField(nSpecie_ + 2)),
-    YTpYTpWork_(scalarSquareMatrix(nSpecie_ + 2)),
+    YTWork_(scalarField(nSpecie_ + 1)),
+    YTYTWork_(scalarSquareMatrix(nSpecie_ + 1)),
     mechRedPtr_
     (
         chemistryReductionMethod<ThermoType>::New
@@ -137,40 +137,38 @@ template<class ThermoType>
 void Foam::chemistryModels::Standard<ThermoType>::derivatives
 (
     const scalar time,
-    const scalarField& YTp,
+    const scalarField& YT,
     const label li,
-    scalarField& dYTpdt
+    scalarField& dYTdt
 ) const
 {
     if (reduction_)
     {
         forAll(sToc_, i)
         {
-            Y_[sToc_[i]] = max(YTp[i], 0);
+            Y_[sToc_[i]] = max(YT[i], 0);
         }
     }
     else
     {
         forAll(Y_, i)
         {
-            Y_[i] = max(YTp[i], 0);
+            Y_[i] = max(YT[i], 0);
         }
     }
 
     const scalar T = maxMin
     (
-        YTp[nSpecie_],
+        YT[nSpecie_],
         Reaction<ThermoType>::TlowDefault,
         Reaction<ThermoType>::ThighDefault
     );
-
-    const scalar p = YTp[nSpecie_ + 1];
 
     // Evaluate the mixture density
     scalar rhoM = 0;
     for (label i=0; i<Y_.size(); i++)
     {
-        rhoM += Y_[i]/specieThermos_[i].rho(p, T);
+        rhoM += Y_[i]/specieThermos_[i].rho(p_, T);
     }
     rhoM = 1/rhoM;
 
@@ -181,18 +179,18 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
     }
 
     // Evaluate contributions from reactions
-    dYTpdt = Zero;
+    dYTdt = Zero;
     forAll(reactions_, ri)
     {
         if (!mechRed_.reactionDisabled(ri))
         {
             reactions_[ri].dNdtByV
             (
-                p,
+                p_,
                 T,
                 c_,
                 li,
-                dYTpdt,
+                dYTdt,
                 reduction_,
                 cTos_,
                 0
@@ -204,7 +202,7 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
     for (label i=0; i<nSpecie_; i++)
     {
         const scalar WiByrhoM = specieThermos_[sToc(i)].W()/rhoM;
-        scalar& dYidt = dYTpdt[i];
+        scalar& dYidt = dYTdt[i];
         dYidt *= WiByrhoM;
     }
 
@@ -214,20 +212,16 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
     scalar CpM = 0;
     for (label i=0; i<Y_.size(); i++)
     {
-        CpM += Y_[i]*specieThermos_[i].Cp(p, T);
+        CpM += Y_[i]*specieThermos_[i].Cp(p_, T);
     }
 
     // dT/dt
-    scalar& dTdt = dYTpdt[nSpecie_];
+    scalar& dTdt = dYTdt[nSpecie_];
     for (label i=0; i<nSpecie_; i++)
     {
-        dTdt -= dYTpdt[i]*specieThermos_[sToc(i)].ha(p, T);
+        dTdt -= dYTdt[i]*specieThermos_[sToc(i)].ha(p_, T);
     }
     dTdt /= CpM;
-
-    // dp/dt = 0 (pressure is assumed constant)
-    scalar& dpdt = dYTpdt[nSpecie_ + 1];
-    dpdt = 0;
 }
 
 
@@ -235,9 +229,9 @@ template<class ThermoType>
 void Foam::chemistryModels::Standard<ThermoType>::jacobian
 (
     const scalar t,
-    const scalarField& YTp,
+    const scalarField& YT,
     const label li,
-    scalarField& dYTpdt,
+    scalarField& dYTdt,
     scalarSquareMatrix& J
 ) const
 {
@@ -245,31 +239,29 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     {
         forAll(sToc_, i)
         {
-            Y_[sToc_[i]] = max(YTp[i], 0);
+            Y_[sToc_[i]] = max(YT[i], 0);
         }
     }
     else
     {
         forAll(c_, i)
         {
-            Y_[i] = max(YTp[i], 0);
+            Y_[i] = max(YT[i], 0);
         }
     }
 
     const scalar T = maxMin
     (
-        YTp[nSpecie_],
+        YT[nSpecie_],
         Reaction<ThermoType>::TlowDefault,
         Reaction<ThermoType>::ThighDefault
     );
 
-    const scalar p = YTp[nSpecie_ + 1];
-
     // Evaluate the specific volumes and mixture density
-    scalarField& v = YTpWork_[0];
+    scalarField& v = YTWork_[0];
     for (label i=0; i<Y_.size(); i++)
     {
-        v[i] = 1/specieThermos_[i].rho(p, T);
+        v[i] = 1/specieThermos_[i].rho(p_, T);
     }
     scalar rhoM = 0;
     for (label i=0; i<Y_.size(); i++)
@@ -285,7 +277,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     }
 
     // Evaluate the derivatives of concentration w.r.t. mass fraction
-    scalarSquareMatrix& dcdY = YTpYTpWork_[0];
+    scalarSquareMatrix& dcdY = YTYTWork_[0];
     for (label i=0; i<nSpecie_; i++)
     {
         const scalar rhoMByWi = rhoM/specieThermos_[sToc(i)].W();
@@ -310,37 +302,37 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     scalar alphavM = 0;
     for (label i=0; i<Y_.size(); i++)
     {
-        alphavM += Y_[i]*rhoM*v[i]*specieThermos_[i].alphav(p, T);
+        alphavM += Y_[i]*rhoM*v[i]*specieThermos_[i].alphav(p_, T);
     }
 
     // Evaluate contributions from reactions
-    dYTpdt = Zero;
-    scalarSquareMatrix& ddNdtByVdcTp = YTpYTpWork_[1];
-    for (label i=0; i<nSpecie_ + 2; i++)
+    dYTdt = Zero;
+    scalarSquareMatrix& ddNdtByVdcT = YTYTWork_[1];
+    for (label i=0; i<nSpecie_ + 1; i++)
     {
-        for (label j=0; j<nSpecie_ + 2; j++)
+        for (label j=0; j<nSpecie_ + 1; j++)
         {
-            ddNdtByVdcTp[i][j] = 0;
+            ddNdtByVdcT[i][j] = 0;
         }
     }
     forAll(reactions_, ri)
     {
         if (!mechRed_.reactionDisabled(ri))
         {
-            reactions_[ri].ddNdtByVdcTp
+            reactions_[ri].ddNdtByVdcT
             (
-                p,
+                p_,
                 T,
                 c_,
                 li,
-                dYTpdt,
-                ddNdtByVdcTp,
+                dYTdt,
+                ddNdtByVdcT,
                 reduction_,
                 cTos_,
                 0,
                 nSpecie_,
-                YTpWork_[1],
-                YTpWork_[2]
+                YTWork_[1],
+                YTWork_[2]
             );
         }
     }
@@ -349,7 +341,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     for (label i=0; i<nSpecie_; i++)
     {
         const scalar WiByrhoM = specieThermos_[sToc(i)].W()/rhoM;
-        scalar& dYidt = dYTpdt[i];
+        scalar& dYidt = dYTdt[i];
         dYidt *= WiByrhoM;
 
         for (label j=0; j<nSpecie_; j++)
@@ -359,14 +351,14 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
             {
                 case jacobianType::fast:
                     {
-                        const scalar ddNidtByVdcj = ddNdtByVdcTp(i, j);
+                        const scalar ddNidtByVdcj = ddNdtByVdcT(i, j);
                         ddNidtByVdYj = ddNidtByVdcj*dcdY(j, j);
                     }
                     break;
                 case jacobianType::exact:
                     for (label k=0; k<nSpecie_; k++)
                     {
-                        const scalar ddNidtByVdck = ddNdtByVdcTp(i, k);
+                        const scalar ddNidtByVdck = ddNdtByVdcT(i, k);
                         ddNidtByVdYj += ddNidtByVdck*dcdY(k, j);
                     }
                     break;
@@ -376,45 +368,38 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
             ddYidtdYj = WiByrhoM*ddNidtByVdYj + rhoM*v[sToc(j)]*dYidt;
         }
 
-        scalar ddNidtByVdT = ddNdtByVdcTp(i, nSpecie_);
+        scalar ddNidtByVdT = ddNdtByVdcT(i, nSpecie_);
         for (label j=0; j<nSpecie_; j++)
         {
-            const scalar ddNidtByVdcj = ddNdtByVdcTp(i, j);
+            const scalar ddNidtByVdcj = ddNdtByVdcT(i, j);
             ddNidtByVdT -= ddNidtByVdcj*c_[sToc(j)]*alphavM;
         }
 
         scalar& ddYidtdT = J(i, nSpecie_);
         ddYidtdT = WiByrhoM*ddNidtByVdT + alphavM*dYidt;
-
-        scalar& ddYidtdp = J(i, nSpecie_ + 1);
-        ddYidtdp = 0;
     }
 
     // Evaluate the effect on the thermodynamic system ...
 
     // Evaluate the mixture Cp and its derivative
-    scalarField& Cp = YTpWork_[3];
+    scalarField& Cp = YTWork_[3];
     scalar CpM = 0, dCpMdT = 0;
     for (label i=0; i<Y_.size(); i++)
     {
-        Cp[i] = specieThermos_[i].Cp(p, T);
+        Cp[i] = specieThermos_[i].Cp(p_, T);
         CpM += Y_[i]*Cp[i];
-        dCpMdT += Y_[i]*specieThermos_[i].dCpdT(p, T);
+        dCpMdT += Y_[i]*specieThermos_[i].dCpdT(p_, T);
     }
 
     // dT/dt
-    scalarField& ha = YTpWork_[4];
-    scalar& dTdt = dYTpdt[nSpecie_];
+    scalarField& ha = YTWork_[4];
+    scalar& dTdt = dYTdt[nSpecie_];
     for (label i=0; i<nSpecie_; i++)
     {
-        ha[sToc(i)] = specieThermos_[sToc(i)].ha(p, T);
-        dTdt -= dYTpdt[i]*ha[sToc(i)];
+        ha[sToc(i)] = specieThermos_[sToc(i)].ha(p_, T);
+        dTdt -= dYTdt[i]*ha[sToc(i)];
     }
     dTdt /= CpM;
-
-    // dp/dt = 0 (pressure is assumed constant)
-    scalar& dpdt = dYTpdt[nSpecie_ + 1];
-    dpdt = 0;
 
     // d(dTdt)/dY
     for (label i=0; i<nSpecie_; i++)
@@ -435,23 +420,12 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     ddTdtdT = 0;
     for (label i=0; i<nSpecie_; i++)
     {
-        const scalar dYidt = dYTpdt[i];
+        const scalar dYidt = dYTdt[i];
         const scalar ddYidtdT = J(i, nSpecie_);
         ddTdtdT -= dYidt*Cp[sToc(i)] + ddYidtdT*ha[sToc(i)];
     }
     ddTdtdT -= dTdt*dCpMdT;
     ddTdtdT /= CpM;
-
-    // d(dTdt)/dp = 0 (pressure is assumed constant)
-    scalar& ddTdtdp = J(nSpecie_, nSpecie_ + 1);
-    ddTdtdp = 0;
-
-    // d(dpdt)/dYiTp = 0 (pressure is assumed constant)
-    for (label i=0; i<nSpecie_ + 2; i++)
-    {
-        scalar& ddpdtdYiTp = J(nSpecie_ + 1, i);
-        ddpdtdYiTp = 0;
-    }
 }
 
 
@@ -556,7 +530,7 @@ Foam::chemistryModels::Standard<ThermoType>::specieReactionRR
     const volScalarField& Tvf = this->thermo().T();
     const volScalarField& pvf = this->thermo().p();
 
-    scalarField& dNdtByV = YTpWork_[0];
+    scalarField& dNdtByV = YTWork_[0];
 
     reactionEvaluationScope scope(*this);
 
@@ -623,7 +597,7 @@ void Foam::chemistryModels::Standard<ThermoType>::calculate()
     const volScalarField& Tvf = this->thermo().T();
     const volScalarField& pvf = this->thermo().p();
 
-    scalarField& dNdtByV = YTpWork_[0];
+    scalarField& dNdtByV = YTWork_[0];
 
     reactionEvaluationScope scope(*this);
 
@@ -713,8 +687,8 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
     scalarField Y0(nSpecie_);
 
     // Composition vector (Yi, T, p, deltaT)
-    scalarField phiq(nEqns() + 1);
-    scalarField Rphiq(nEqns() + 1);
+    scalarField phiq(nEqns() + 2);
+    scalarField Rphiq(nEqns() + 2);
 
     // Minimum chemical timestep
     scalar deltaTMin = great;
@@ -730,7 +704,7 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
 
         const scalar rho0 = rho0vf[celli];
 
-        scalar p = p0vf[celli];
+        p_ = p0vf[celli];
         scalar T = T0vf[celli];
 
         for (label i=0; i<nSpecie_; i++)
@@ -743,7 +717,7 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
             phiq[i] = Yvf_[i].oldTime()[celli];
         }
         phiq[nSpecie()] = T;
-        phiq[nSpecie() + 1] = p;
+        phiq[nSpecie() + 1] = p_;
         phiq[nSpecie() + 2] = deltaT[celli];
 
         // Initialise time progress
@@ -763,7 +737,6 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
                 Y_[i] = Rphiq[i];
             }
             T = Rphiq[nSpecie()];
-            p = Rphiq[nSpecie() + 1];
         }
         // This position is reached when tabulation is not used OR
         // if the solution is not retrieved.
@@ -780,7 +753,7 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
                 }
 
                 // Reduce mechanism change the number of species (only active)
-                mechRed_.reduceMechanism(p, T, c_, cTos_, sToc_, celli);
+                mechRed_.reduceMechanism(p_, T, c_, cTos_, sToc_, celli);
 
                 // Set the simplified mass fraction field
                 sY_.setSize(nSpecie_);
@@ -805,7 +778,7 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
                     // Solve the reduced set of ODE
                     solve
                     (
-                        p,
+                        p_,
                         T,
                         sY_,
                         celli,
@@ -820,7 +793,7 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
                 }
                 else
                 {
-                    solve(p, T, Y_, celli, dt, deltaTChem_[celli]);
+                    solve(p_, T, Y_, celli, dt, deltaTChem_[celli]);
                 }
                 timeLeft -= dt;
             }
@@ -839,7 +812,7 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
                     Rphiq[i] = Y_[i];
                 }
                 Rphiq[Rphiq.size()-3] = T;
-                Rphiq[Rphiq.size()-2] = p;
+                Rphiq[Rphiq.size()-2] = p_;
                 Rphiq[Rphiq.size()-1] = deltaT[celli];
 
                 tabulation_.add
@@ -1065,7 +1038,7 @@ void Foam::chemistryModels::Standard<ThermoType>::solve
     // reduction is active
     if (odeSolver_->resize())
     {
-        odeSolver_->resizeField(cTp_);
+        odeSolver_->resizeField(cT_);
     }
 
     const label nSpecie = this->nSpecie();
@@ -1073,27 +1046,24 @@ void Foam::chemistryModels::Standard<ThermoType>::solve
     // Copy the concentration, T and P to the total solve-vector
     for (int i=0; i<nSpecie; i++)
     {
-        cTp_[i] = c[i];
+        cT_[i] = c[i];
     }
-    cTp_[nSpecie] = T;
-    cTp_[nSpecie+1] = p;
+    cT_[nSpecie] = T;
 
     if (debug)
     {
-        scalarField dcTp(this->nEqns(), rootSmall);
-        dcTp[nSpecie] = T*rootSmall;
-        dcTp[nSpecie+1] = p*rootSmall;
-        this->check(0, cTp_, dcTp, li);
+        scalarField dcT(this->nEqns(), rootSmall);
+        dcT[nSpecie] = T*rootSmall;
+        this->check(0, cT_, dcT, li);
     }
 
-    odeSolver_->solve(0, deltaT, cTp_, li, subDeltaT);
+    odeSolver_->solve(0, deltaT, cT_, li, subDeltaT);
 
     for (int i=0; i<nSpecie; i++)
     {
-        c[i] = max(0.0, cTp_[i]);
+        c[i] = max(0.0, cT_[i]);
     }
-    T = cTp_[nSpecie];
-    p = cTp_[nSpecie+1];
+    T = cT_[nSpecie];
 }
 
 

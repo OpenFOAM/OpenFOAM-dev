@@ -59,7 +59,8 @@ Foam::chemistryModels::standard::standard
     cTos_(nSpecie_, -1),
     sToc_(nSpecie_),
     odeSolver_(ODESolver::New(*this, typeDict("ode"))),
-    cTp_(nEqns())
+    cT_(nEqns()),
+    p_(0)
 {}
 
 
