@@ -572,7 +572,13 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::write
 
     if (offset_.valid())
     {
-        writeEntry(os, offset_());
+        writeEntry
+        (
+            os,
+            this->time().userUnits(),
+            this->internalField().dimensions(),
+            offset_()
+        );
     }
 }
 

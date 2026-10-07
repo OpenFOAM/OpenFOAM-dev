@@ -204,7 +204,7 @@ void Foam::lumpedMassTemperatureFvPatchScalarField::write
     writeEntry(os, "rho", rho_);
     writeEntry(os, "Cv", Cv_);
     writeEntry(os, "T", T_.value());
-    writeEntry(os, Q_());
+    writeEntry(os, time().userUnits(), dimensions::power, Q_());
     writeEntry(os, "volume", V_);
     writeEntry(os, "value", *this);
 }

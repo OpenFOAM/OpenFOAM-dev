@@ -135,7 +135,13 @@ void Foam::uniformFixedValueLagrangianFieldSource<Type>::write
 {
     LagrangianFieldSource<Type>::write(os);
 
-    writeEntry(os, uniformValue_());
+    writeEntry
+    (
+        os,
+        this->time().userUnits(),
+        this->internalDimensions(),
+        uniformValue_()
+    );
 }
 
 

@@ -189,11 +189,23 @@ void Foam::flowRateNumberLagrangianScalarFieldSource::write(Ostream& os) const
 
     if (volumetricFlowRate_.valid())
     {
-        writeEntry(os, volumetricFlowRate_());
+        writeEntry
+        (
+            os,
+            time().userUnits(),
+            dimensions::volumetricFlux,
+            volumetricFlowRate_()
+        );
     }
     else
     {
-        writeEntry(os, massFlowRate_());
+        writeEntry
+        (
+            os,
+            time().userUnits(),
+            dimensions::massFlux,
+            massFlowRate_()
+        );
     }
 }
 
