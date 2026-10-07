@@ -143,6 +143,19 @@ Foam::species::thermo<Thermo, Type>::Kc(const scalar p, const scalar T) const
 {
     using namespace constant::thermodynamic;
 
+    // !!! This looks wrong, but it's not.
+    //
+    // For a valid reaction (i.e., for which mass is balanced), Y equals zero.
+    // However 'specie::operator==' guarantees that it is set to something
+    // small, and W is correspondingly small, such that their ratio equals the
+    // number of moles created by the reaction minus the number consumed.
+    //
+    // This is unpleasant. Ideally, none of this would be here and thermo would
+    // not store a mass fraction at all. If we reduced these thermo models to
+    // just storing the coefficients relating to the 'change' associated with
+    // the reaction, then the net molar production and implementation of
+    // equilibrium constant could be moved to the reversible reaction itself.
+    //
     const scalar nm = this->Y()/this->W();
 
     if (equal(nm, small))
@@ -165,6 +178,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::Kx
 {
     using namespace constant::thermodynamic;
 
+    // !!! This looks wrong, but it's not. See comments in 'thermo::Kc'.
     const scalar nm = this->Y()/this->W();
 
     if (equal(nm, small))
@@ -188,6 +202,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::Kn
 {
     using namespace constant::thermodynamic;
 
+    // !!! This looks wrong, but it's not. See comments in 'thermo::Kc'.
     const scalar nm = this->Y()/this->W();
 
     if (equal(nm, small))
@@ -387,7 +402,9 @@ Foam::species::thermo<Thermo, Type>::dKcdTbyKc
     const scalar dKcdTbyKc =
         (this->s(pStd, T) + this->gStd(T)/T)*this->Y()/(RR*T);
 
+    // !!! This looks wrong, but it's not. See comments in 'thermo::Kc'.
     const scalar nm = this->Y()/this->W();
+
     if (equal(nm, small))
     {
         return dKcdTbyKc;
