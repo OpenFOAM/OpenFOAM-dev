@@ -30,20 +30,24 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
+Foam::ReactionList<ThermoType>::ReactionList()
+:
+    Tlow_(0),
+    Thigh_(great)
+{}
+
+
+template<class ThermoType>
 Foam::ReactionList<ThermoType>::ReactionList
 (
     const speciesTable& species,
     const PtrList<ThermoType>& speciesThermo,
     const dictionary& dict
 )
+:
+    Tlow_(dict.lookupOrDefault<scalar>("Tlow", 0)),
+    Thigh_(dict.lookupOrDefault<scalar>("Thigh", great))
 {
-    // Set general temperature limits from the dictionary
-    Reaction<ThermoType>::TlowDefault =
-        dict.lookupOrDefault<scalar>("Tlow", 0);
-
-    Reaction<ThermoType>::ThighDefault =
-        dict.lookupOrDefault<scalar>("Thigh", great);
-
     const dictionary& reactions(dict.subDict("reactions"));
 
     this->setSize(reactions.size());
@@ -74,14 +78,10 @@ Foam::ReactionList<ThermoType>::ReactionList
     const objectRegistry& ob,
     const dictionary& dict
 )
+:
+    Tlow_(dict.lookupOrDefault<scalar>("Tlow", 0)),
+    Thigh_(dict.lookupOrDefault<scalar>("Thigh", great))
 {
-    // Set general temperature limits from the dictionary
-    Reaction<ThermoType>::TlowDefault =
-        dict.lookupOrDefault<scalar>("Tlow", 0);
-
-    Reaction<ThermoType>::ThighDefault =
-        dict.lookupOrDefault<scalar>("Thigh", great);
-
     const dictionary& reactions(dict.subDict("reactions"));
 
     this->setSize(reactions.size());
@@ -122,8 +122,8 @@ void Foam::ReactionList<ThermoType>::write(Ostream& os) const
         }
     }
 
-    writeEntry(os, "Tlow", Reaction<ThermoType>::TlowDefault);
-    writeEntry(os, "Thigh", Reaction<ThermoType>::ThighDefault);
+    writeEntry(os, "Tlow", Tlow_);
+    writeEntry(os, "Thigh", Thigh_);
 }
 
 

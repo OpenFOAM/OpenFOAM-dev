@@ -264,6 +264,8 @@ private:
             const label nCoeffs
         ) const;
 
+        void setTlimits(const scalar Tlow, const scalar Thigh);
+
         template<class ReactionRateType>
         void addReactionType
         (

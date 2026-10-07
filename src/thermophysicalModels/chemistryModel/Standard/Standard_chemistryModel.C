@@ -157,11 +157,9 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
         }
     }
 
-    const scalar T = maxMin
+    const scalar T
     (
-        YT[nSpecie_],
-        Reaction<ThermoType>::TlowDefault,
-        Reaction<ThermoType>::ThighDefault
+        maxMin(YT[nSpecie_], reactions_.Tlow(), reactions_.Thigh())
     );
 
     // Evaluate the mixture density
@@ -250,11 +248,9 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
         }
     }
 
-    const scalar T = maxMin
+    const scalar T
     (
-        YT[nSpecie_],
-        Reaction<ThermoType>::TlowDefault,
-        Reaction<ThermoType>::ThighDefault
+        maxMin(YT[nSpecie_], reactions_.Tlow(), reactions_.Thigh())
     );
 
     // Evaluate the specific volumes and mixture density
@@ -684,11 +680,14 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
 
     reactionEvaluationScope scope(*this);
 
-    scalarField Y0(nSpecie_);
-
-    // Composition vector (Yi, T, p, deltaT)
-    scalarField phiq(nEqns() + 2);
-    scalarField Rphiq(nEqns() + 2);
+    // Tabulated state vector (Yi, T, p, deltaT)
+    scalarField phiq;
+    scalarField Rphiq;
+    if (tabulation_.tabulates())
+    {
+        phiq.setSize(nEqns() + 2);
+        Rphiq.setSize(nEqns() + 2);
+    }
 
     // Minimum chemical timestep
     scalar deltaTMin = great;
@@ -709,16 +708,19 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
 
         for (label i=0; i<nSpecie_; i++)
         {
-            Y_[i] = Y0[i] = Yvf_[i].oldTime()[celli];
+            Y_[i] = Yvf_[i].oldTime()[celli];
         }
 
-        for (label i=0; i<nSpecie_; i++)
+        if (tabulation_.tabulates())
         {
-            phiq[i] = Yvf_[i].oldTime()[celli];
+            for (label i=0; i<nSpecie_; i++)
+            {
+                phiq[i] = Yvf_[i].oldTime()[celli];
+            }
+            phiq[nSpecie()] = T;
+            phiq[nSpecie() + 1] = p_;
+            phiq[nSpecie() + 2] = deltaT[celli];
         }
-        phiq[nSpecie()] = T;
-        phiq[nSpecie() + 1] = p_;
-        phiq[nSpecie() + 2] = deltaT[celli];
 
         // Initialise time progress
         scalar timeLeft = deltaT[celli];
@@ -840,7 +842,8 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
         // Set the RR vector (used in the solver)
         for (label i=0; i<nSpecie_; i++)
         {
-            RR_[i][celli] = rho0*(Y_[i] - Y0[i])/deltaT[celli];
+            RR_[i][celli] =
+                rho0*(Y_[i] - Yvf_[i].oldTime()[celli])/deltaT[celli];
         }
 
         if (cpuLoad_)

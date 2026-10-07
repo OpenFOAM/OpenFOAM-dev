@@ -63,6 +63,15 @@ Foam::specieCoeffs::specieCoeffs
                 specieName.size() - i - 1
             );
             exponent = scalar(atof(exponentStr.c_str()));
+
+            if (scalar(exponent) < 0)
+            {
+                FatalIOErrorInFunction(is)
+                    << "Negative exponent for specie " << specieName
+                    << " is not supported."
+                    << exit(FatalIOError);
+            }
+
             specieName = specieName(0, i);
         }
 
@@ -86,8 +95,6 @@ Foam::specieCoeffs::specieCoeffs
             << "Expected a word but found " << t.info()
             << exit(FatalIOError);
     }
-
-    exponentM1 = exponent - 1;
 }
 
 

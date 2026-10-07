@@ -160,6 +160,19 @@ void Foam::chemkinReader::checkCoeffs
     }
 }
 
+
+void Foam::chemkinReader::setTlimits
+(
+    const scalar Tlow,
+    const scalar Thigh
+)
+{
+
+    reactions_.Tlow() = max(reactions_.Tlow(), Tlow);
+    reactions_.Thigh() = min(reactions_.Thigh(), Thigh);
+}
+
+
 template<class ReactionRateType>
 void Foam::chemkinReader::addReactionType
 (
@@ -811,9 +824,6 @@ void Foam::chemkinReader::read
     const fileName& transportFileName
 )
 {
-    Reaction<thermoPhysics>::TlowDefault = 0;
-    Reaction<thermoPhysics>::ThighDefault = great;
-
     transportDict_.read(IFstream(transportFileName)());
 
     if (thermoFileName != fileName::null)

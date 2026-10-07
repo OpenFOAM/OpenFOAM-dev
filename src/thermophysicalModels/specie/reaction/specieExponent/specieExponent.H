@@ -49,11 +49,26 @@ class Ostream;
 
 // Forward declaration of friend functions and operators
 class specieExponent;
-scalar pow(scalar x, const specieExponent& e);
-specieExponent operator+(const specieExponent& a, const specieExponent& b);
-specieExponent operator-(const specieExponent& a, const specieExponent& b);
-specieExponent operator-(const specieExponent& a, const int32_t b);
-Ostream& operator<<(Ostream&, const specieExponent&);
+
+inline scalar pow(scalar c, const specieExponent& e);
+
+inline scalar dpowdc(const scalar c, const specieExponent& e);
+
+inline specieExponent operator+
+(
+    const specieExponent& a,
+    const specieExponent& b
+);
+
+inline specieExponent operator-
+(
+    const specieExponent& a,
+    const specieExponent& b
+);
+
+inline specieExponent operator-(const specieExponent& a, const int32_t b);
+
+inline Ostream& operator<<(Ostream&, const specieExponent&);
 
 
 /*---------------------------------------------------------------------------*\
@@ -113,7 +128,10 @@ public:
     // Friend Functions
 
         //- Compute the power of a number to a specie exponent
-        inline friend scalar pow(const scalar x, const specieExponent& e);
+        inline friend scalar pow(const scalar c, const specieExponent& e);
+
+        //- Compute the derivative of the power of a number to a specie exponent
+        inline friend scalar dpowdc(const scalar c, const specieExponent& e);
 
 
     // Friend Operators

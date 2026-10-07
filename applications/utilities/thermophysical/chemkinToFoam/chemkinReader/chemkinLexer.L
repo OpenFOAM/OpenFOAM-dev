@@ -674,18 +674,7 @@ bool finishReaction = false;
     }
 
 <readThermoSpecieName>{end} {
-        Reaction<chemkinReader::thermoPhysics>::TlowDefault = max
-        (
-            Reaction<chemkinReader::thermoPhysics>::TlowDefault,
-            currentLowT
-        );
-
-        Reaction<chemkinReader::thermoPhysics>::ThighDefault = min
-        (
-            Reaction<chemkinReader::thermoPhysics>::ThighDefault,
-            currentHighT
-        );
-
+        setTlimits(currentLowT, currentHighT);
         BEGIN(INITIAL);
     }
 

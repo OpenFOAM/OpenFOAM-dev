@@ -99,15 +99,46 @@ inline Foam::specieExponent Foam::specieExponent::operator-() const
 
 // * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::pow(const scalar x, const specieExponent& e)
+inline Foam::scalar Foam::pow(const scalar c, const specieExponent& e)
 {
     if (e.hasIntegerExponent())
     {
-        return integerPow(x, e.integerExponent_);
+        return integerPow(c, e.integerExponent_);
     }
     else
     {
-        return pow(x, e.scalarExponent_);
+        return pow(c, e.scalarExponent_);
+    }
+}
+
+
+inline Foam::scalar Foam::dpowdc(const scalar c, const specieExponent& e)
+{
+    if (e.hasIntegerExponent())
+    {
+        if (e.integerExponent_ >= 1)
+        {
+            return e.integerExponent_*integerPow(c, e.integerExponent_ - 1);
+        }
+        else // (e.integerExponent_ == 0)
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        if (e.scalarExponent_ >= 1)
+        {
+            return e.scalarExponent_*pow(c, e.scalarExponent_ - 1);
+        }
+        else if (e.scalarExponent_ == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return e.scalarExponent_*pow(max(c, small), e.scalarExponent_ - 1);
+        }
     }
 }
 

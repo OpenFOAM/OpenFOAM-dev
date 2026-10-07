@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,22 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Reaction.H"
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ThermoType>
-inline Foam::scalar Foam::Reaction<ThermoType>::Tlow() const
-{
-    return Tlow_;
-}
-
-
-template<class ThermoType>
-inline Foam::scalar Foam::Reaction<ThermoType>::Thigh() const
-{
-    return Thigh_;
-}
-
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 

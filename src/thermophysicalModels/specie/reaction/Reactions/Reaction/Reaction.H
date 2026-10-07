@@ -71,23 +71,6 @@ class Reaction
     public reaction,
     public ThermoType::thermoType
 {
-
-public:
-
-    // Static data
-
-        //- Default temperature limits of applicability of reaction rates
-        static scalar TlowDefault, ThighDefault;
-
-
-private:
-
-    // Private Data
-
-        //- Temperature limits of applicability of reaction rates
-        scalar Tlow_, Thigh_;
-
-
     // Private Member Functions
 
         //- Construct reaction thermo
@@ -198,12 +181,6 @@ public:
 
             //- Return the name of the reaction
             using reaction::name;
-
-            //- Return the lower temperature limit for the reaction
-            inline scalar Tlow() const;
-
-            //- Return the upper temperature limit for the reaction
-            inline scalar Thigh() const;
 
 
         // Hooks

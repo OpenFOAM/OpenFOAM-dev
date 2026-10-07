@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,14 +53,18 @@ class ReactionList
 :
     public PtrList<Reaction<ThermoType>>
 {
+    // Private Data
+
+        //- Temperature limits for the physical evaluation of the reaction rates
+        scalar Tlow_, Thigh_;
+
 
 public:
 
     // Constructors
 
-        //- Construct empty
-        ReactionList()
-        {}
+        //- Construct null
+        ReactionList();
 
         //- Construct from thermo list and dictionary
         ReactionList
@@ -84,6 +88,30 @@ public:
 
 
     // Public Member Functions
+
+        //- Return the low temperature limit
+        inline scalar Tlow() const
+        {
+            return Tlow_;
+        }
+
+        //- Return the high temperature limit
+        inline scalar Thigh() const
+        {
+            return Thigh_;
+        }
+
+        //- Return the low temperature limit
+        inline scalar& Tlow()
+        {
+            return Tlow_;
+        }
+
+        //- Return the high temperature limit
+        inline scalar& Thigh()
+        {
+            return Thigh_;
+        }
 
         //- Write
         void write(Ostream& os) const;

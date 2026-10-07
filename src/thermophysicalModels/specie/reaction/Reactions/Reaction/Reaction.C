@@ -25,16 +25,6 @@ License
 
 #include "Reaction.H"
 
-
-// * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
-
-template<class ThermoType>
-Foam::scalar Foam::Reaction<ThermoType>::TlowDefault(0);
-
-template<class ThermoType>
-Foam::scalar Foam::Reaction<ThermoType>::ThighDefault(great);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ThermoType>
@@ -99,9 +89,7 @@ Foam::Reaction<ThermoType>::Reaction
 )
 :
     reaction(species, lhs, rhs),
-    ThermoType::thermoType(speciesThermo[0]),
-    Tlow_(TlowDefault),
-    Thigh_(ThighDefault)
+    ThermoType::thermoType(speciesThermo[0])
 {
     setThermo(speciesThermo);
 }
@@ -115,9 +103,7 @@ Foam::Reaction<ThermoType>::Reaction
 )
 :
     reaction(r, species),
-    ThermoType::thermoType(r),
-    Tlow_(r.Tlow()),
-    Thigh_(r.Thigh())
+    ThermoType::thermoType(r)
 {}
 
 
@@ -130,9 +116,7 @@ Foam::Reaction<ThermoType>::Reaction
 )
 :
     reaction(species, dict),
-    ThermoType::thermoType(speciesThermo[0]),
-    Tlow_(dict.lookupOrDefault<scalar>("Tlow", TlowDefault)),
-    Thigh_(dict.lookupOrDefault<scalar>("Thigh", ThighDefault))
+    ThermoType::thermoType(speciesThermo[0])
 {
     setThermo(speciesThermo);
 }
@@ -449,9 +433,7 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcT
         {
             if (i == j)
             {
-                dCfdcj *=
-                    lhs()[i].exponent
-                   *pow(c[lhs()[i].index], lhs()[i].exponentM1);
+                dCfdcj *= dpowdc(c[lhs()[i].index], lhs()[i].exponent);
             }
             else
             {
@@ -496,9 +478,7 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcT
         {
             if (i == j)
             {
-                dCrcj *=
-                    rhs()[i].exponent
-                   *pow(c[rhs()[i].index], rhs()[i].exponentM1);
+                dCrcj *= dpowdc(c[rhs()[i].index], rhs()[i].exponent);
             }
             else
             {
