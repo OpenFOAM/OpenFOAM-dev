@@ -218,6 +218,12 @@ bool Foam::blendingMethods::linearDisplaced::canSegregate() const
 }
 
 
+bool Foam::blendingMethods::linearDisplaced::isComplete() const
+{
+    return blending_->isComplete();
+}
+
+
 bool Foam::blendingMethods::linearDisplaced::isDisplacedBy
 (
     const label displacingPhasei

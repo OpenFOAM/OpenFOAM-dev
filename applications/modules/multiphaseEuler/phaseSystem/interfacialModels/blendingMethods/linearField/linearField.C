@@ -224,6 +224,14 @@ bool Foam::blendingMethods::linearField::canSegregate() const
 }
 
 
+bool Foam::blendingMethods::linearField::isComplete() const
+{
+    return
+        belowBlending_->isComplete()
+     && aboveBlending_->isComplete();
+}
+
+
 bool Foam::blendingMethods::linearField::isDisplacedBy
 (
     const label displacingPhasei

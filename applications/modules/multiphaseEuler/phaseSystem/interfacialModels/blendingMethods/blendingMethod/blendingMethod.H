@@ -300,8 +300,12 @@ public:
         //- Return whether or not a phase can be considered continuous
         virtual bool canBeContinuous(const label index) const = 0;
 
-        //- Return whether or not this interface can segregate
+        //- Return whether or not the interface can segregate
         virtual bool canSegregate() const = 0;
+
+        //- Return whether or not this method partitions unity across the
+        //  entire blending space
+        virtual bool isComplete() const = 0;
 
         //- Return whether or not the interface is displaced by a third phase
         virtual bool isDisplacedBy(const label displacingPhasei) const = 0;

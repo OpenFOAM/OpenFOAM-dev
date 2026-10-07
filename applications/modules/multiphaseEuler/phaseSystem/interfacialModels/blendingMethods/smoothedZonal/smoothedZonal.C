@@ -271,6 +271,25 @@ bool Foam::blendingMethods::smoothedZonal::canSegregate() const
 }
 
 
+bool Foam::blendingMethods::smoothedZonal::isComplete() const
+{
+    if (!defaultBlending_->isComplete())
+    {
+        return false;
+    }
+
+    forAll(zoneIndices_, zonei)
+    {
+        if (!zoneBlendings_[zonei].isComplete())
+        {
+            return false;
+        }
+    }
+
+    return false;
+}
+
+
 bool Foam::blendingMethods::smoothedZonal::isDisplacedBy
 (
     const label displacingPhasei

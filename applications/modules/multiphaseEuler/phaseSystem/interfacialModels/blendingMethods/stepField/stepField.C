@@ -194,6 +194,14 @@ bool Foam::blendingMethods::stepField::canSegregate() const
 }
 
 
+bool Foam::blendingMethods::stepField::isComplete() const
+{
+    return
+        belowBlending_->isComplete()
+     && aboveBlending_->isComplete();
+}
+
+
 bool Foam::blendingMethods::stepField::isDisplacedBy
 (
     const label displacingPhasei

@@ -79,10 +79,10 @@ void Foam::blendedInterfacialModel::check
     )
     {
         WarningInFunction
-            << "A " << name << " was provided for "
+            << "A " << name << " was provided for '"
             << dispersedPhaseInterface(phase1, phase2).name()
-            << " but the associated blending does not permit " << phase2.name()
-            << " to be continuous so this model will not be used" << endl;
+            << "' but the associated blending does not allow '" << phase2.name()
+            << "' to be continuous so this model will not be used" << endl;
     }
 
     if
@@ -92,10 +92,10 @@ void Foam::blendedInterfacialModel::check
     )
     {
         WarningInFunction
-            << "A " << name << " was provided for "
+            << "A " << name << " was provided for '"
             << dispersedPhaseInterface(phase2, phase1).name()
-            << " but the associated blending does not permit " << phase1.name()
-            << " to be continuous so this model will not be used" << endl;
+            << "' but the associated blending does not allow '" << phase1.name()
+            << "' to be continuous so this model will not be used" << endl;
     }
 
     if
@@ -105,15 +105,100 @@ void Foam::blendedInterfacialModel::check
     )
     {
         WarningInFunction
-            << "A " << name << " was provided for "
+            << "A " << name << " was provided for '"
             << segregatedPhaseInterface(phase1, phase2).name()
-            << " but the associated blending does not permit segregation"
+            << "' but the associated blending does not permit segregation"
             << " so this model will not be used" << endl;
+    }
+
+    forAll(interface_.fluid().phases(), phasei)
+    {
+        const phaseModel& phase3 = interface_.fluid().phases()[phasei];
+
+        if
+        (
+           !blending_->isDisplacedBy(phasei)
+         && (
+                valid.generalDisplaced[phasei]
+             || valid.oneDispersedInTwoDisplaced[phasei]
+             || valid.twoDispersedInOneDisplaced[phasei]
+             || valid.segregatedDisplaced[phasei]
+            )
+        )
+        {
+            WarningInFunction
+                << "A " << name << " was provided for ";
+
+            DynamicList<word> interfaceNames(4);
+            if (valid.generalDisplaced[phasei])
+            {
+                interfaceNames.append
+                (
+                    displacedPhaseInterface
+                    (
+                        phase1,
+                        phase2,
+                        phase3
+                    ).name()
+                );
+            }
+            if (valid.oneDispersedInTwoDisplaced[phasei])
+            {
+                interfaceNames.append
+                (
+                    dispersedDisplacedPhaseInterface
+                    (
+                        phase1,
+                        phase2,
+                        phase3
+                    ).name()
+                );
+            }
+            if (valid.twoDispersedInOneDisplaced[phasei])
+            {
+                interfaceNames.append
+                (
+                    dispersedDisplacedPhaseInterface
+                    (
+                        phase2,
+                        phase1,
+                        phase3
+                    ).name()
+                );
+            }
+            if (valid.segregatedDisplaced[phasei])
+            {
+                interfaceNames.append
+                (
+                    segregatedDisplacedPhaseInterface
+                    (
+                        phase2,
+                        phase1,
+                        phase3
+                    ).name()
+                );
+            }
+
+            Info<< "'" << interfaceNames.first() << "'";
+            for (label i = 1; i < interfaceNames.size() - 1; ++ i)
+            {
+                Info<< ", '" << interfaceNames[i] << "'";
+            }
+            if (interfaceNames.size() > 1)
+            {
+                Info<< " and '" << interfaceNames.last() << "'";
+            }
+
+            Info<< " but the associated blending does not permit dispersal by"
+                << " phase '" << phase3.name() << "' so this model will not be"
+                << " used" << endl;
+        }
     }
 
     if
     (
         valid.general
+     && blending_->isComplete()
      && (can1In2 || can2In1 || canS)
      && (!can1In2 || valid.oneDispersedInTwo)
      && (!can2In1 || valid.twoDispersedInOne)
@@ -121,9 +206,9 @@ void Foam::blendedInterfacialModel::check
     )
     {
         WarningInFunction
-            << "A " << name << " was provided for "
+            << "A " << name << " was provided for '"
             << phaseInterface(phase1, phase2).name()
-            << " but other displaced and/or segregated models apply"
+            << "' but other displaced and/or segregated models apply"
             << " across the entire phase fraction space so this model"
             << " will not be used" << endl;
     }
@@ -135,6 +220,7 @@ void Foam::blendedInterfacialModel::check
         if
         (
             valid.generalDisplaced[phasei]
+         && blending_->isComplete()
          && (can1In2 || can2In1 || canS)
          && (!can1In2 || valid.oneDispersedInTwoDisplaced[phasei])
          && (!can2In1 || valid.twoDispersedInOneDisplaced[phasei])
@@ -142,9 +228,9 @@ void Foam::blendedInterfacialModel::check
         )
         {
             WarningInFunction
-                << "A " << name << " was provided for "
+                << "A " << name << " was provided for '"
                 << displacedPhaseInterface(phase1, phase2, phaseD).name()
-                << " but other displaced and/or segregated models apply"
+                << "' but other displaced and/or segregated models apply"
                 << " across the entire phase fraction space so this model"
                 << " will not be used" << endl;
         }
@@ -157,33 +243,33 @@ void Foam::blendedInterfacialModel::check
         WarningInFunction
             << "Blending for " << name << "s does not apply "
             << "any configuration-specific modelling, but no general model "
-            << "was provided for " << phaseInterface(phase1, phase2).name()
-            << ". Consider adding a general model for these phases, or if no "
-            << "model is needed then add a \"none\" model to suppress this "
+            << "was provided for '" << phaseInterface(phase1, phase2).name()
+            << "'. Consider adding a general model for these phases, or if no "
+            << "model is needed then add a 'none' model to suppress this "
             << "warning." << endl;
     }
 
     if (can1In2 && !valid.general && !valid.oneDispersedInTwo)
     {
         WarningInFunction
-            << "Blending for " << name << "s permits "
-            << phase2.name() << " to become continuous, but no model was "
-            << "provided for " << dispersedPhaseInterface(phase1, phase2).name()
-            << ". Consider adding a model for this configuration (or for "
-            << phaseInterface(phase1, phase2).name() << "), or if no model is "
-            << "needed then add a \"none\" model to suppress this warning."
+            << "Blending for " << name << "s permits '" << phase2.name()
+            << "' to become continuous, but no model was provided for '"
+            << dispersedPhaseInterface(phase1, phase2).name()
+            << "'. Consider adding a model for this configuration (or for '"
+            << phaseInterface(phase1, phase2).name() << "'), or if no model is "
+            << "needed then add a 'none' model to suppress this warning."
             << endl;
     }
 
     if (can2In1 && !valid.general && !valid.twoDispersedInOne)
     {
         WarningInFunction
-            << "Blending for " << name << "s permits "
-            << phase1.name() << " to become continuous, but no model was "
-            << "provided for " << dispersedPhaseInterface(phase2, phase1).name()
-            << ". Consider adding a model for this configuration (or for "
-            << phaseInterface(phase1, phase2).name() << "), or if no model is "
-            << "needed then add a \"none\" model to suppress this warning."
+            << "Blending for " << name << "s permits '" << phase1.name()
+            << "' to become continuous, but no model was provided for '"
+            << dispersedPhaseInterface(phase2, phase1).name()
+            << "'. Consider adding a model for this configuration (or for '"
+            << phaseInterface(phase1, phase2).name() << "'), or if no model is "
+            << "needed then add a 'none' model to suppress this warning."
             << endl;
     }
 
@@ -191,11 +277,11 @@ void Foam::blendedInterfacialModel::check
     {
         WarningInFunction
             << "Blending for " << name << "s permits "
-            << "segregation but no model was provided for "
+            << "segregation but no model was provided for '"
             << segregatedPhaseInterface(phase2, phase1).name()
-            << ". Consider adding a model for this configuration (or for "
-            << phaseInterface(phase1, phase2).name() << "), or if no model is "
-            << "needed then add a \"none\" model to suppress this warning."
+            << "'. Consider adding a model for this configuration (or for '"
+            << phaseInterface(phase1, phase2).name() << "'), or if no model is "
+            << "needed then add a 'none' model to suppress this warning."
             << endl;
     }
 }
@@ -303,9 +389,9 @@ void Foam::blendedInterfacialModel::calculateBlendingCoeffs
 
         forAll(alphas, phasei)
         {
-            const phaseModel& phaseD = interface_.fluid().phases()[phasei];
+            const phaseModel& phase3 = interface_.fluid().phases()[phasei];
 
-            if (interface_.contains(phaseD)) continue;
+            if (interface_.contains(phase3)) continue;
 
             // Get the displaced blending functions
             tmp<scalarGeoField> FD =
@@ -431,8 +517,6 @@ void Foam::blendedInterfacialModel::writeBlendingCoefficients
 
     const word prefix(name, ':', interface_.name(), ':');
 
-    Info<< indent << "Writing blending coefficients" << endl;
-
     auto write = [&name]
     (
         const phaseInterface& interface,
@@ -441,6 +525,8 @@ void Foam::blendedInterfacialModel::writeBlendingCoefficients
     )
     {
         f.rename(word(name, ':', interface.name(), ':', fName));
+        Info<< indent << "Writing blending coefficient to "
+            << f.relativeObjectPath() << endl;
         f.write();
     };
 
@@ -451,15 +537,15 @@ void Foam::blendedInterfacialModel::writeBlendingCoefficients
 
     forAll(fluid.phases(), phasei)
     {
-        const phaseModel& phaseD = fluid.phases()[phasei];
+        const phaseModel& phase3 = fluid.phases()[phasei];
 
-        if (interface_.contains(phaseD)) continue;
+        if (interface_.contains(phase3)) continue;
 
         const displacedPhaseInterface interfaceD
         (
             interface_.phase1(),
             interface_.phase2(),
-            phaseD
+            phase3
         );
 
         if (fGD.set(phasei)) write(interfaceD, "fG", fGD[phasei]);
@@ -723,11 +809,11 @@ void Foam::blendedInterfacialModel::postProcessBlendingCoefficients
 
             forAll(fluid.phases(), phasei)
             {
-                const phaseModel& phaseD = fluid.phases()[phasei];
+                const phaseModel& phase3 = fluid.phases()[phasei];
 
                 if (fGD.set(phasei))
                 {
-                    addField(displacedPhaseInterface(phase1, phase2, phaseD));
+                    addField(displacedPhaseInterface(phase1, phase2, phase3));
                 }
                 if (f1D2D.set(phasei))
                 {
@@ -737,7 +823,7 @@ void Foam::blendedInterfacialModel::postProcessBlendingCoefficients
                         (
                             phase1,
                             phase2,
-                            phaseD
+                            phase3
                         )
                     );
                 }
@@ -749,7 +835,7 @@ void Foam::blendedInterfacialModel::postProcessBlendingCoefficients
                         (
                             phase2,
                             phase1,
-                            phaseD
+                            phase3
                         )
                     );
                 }
@@ -761,7 +847,7 @@ void Foam::blendedInterfacialModel::postProcessBlendingCoefficients
                         (
                             phase1,
                             phase2,
-                            phaseD
+                            phase3
                         )
                     );
                 }
@@ -834,12 +920,10 @@ void Foam::blendedInterfacialModel::postProcessBlendingCoefficients
     }
 
     // Write
-    const fileName path =
-        fluid.mesh().time().globalPath()
-       /functionObjects::writeFile::outputPrefix
-       /name;
+    const fileName relativePath = functionObjects::writeFile::outputPrefix/name;
+    const fileName path = fluid.mesh().time().globalPath()/relativePath;
     Info<< indent <<  "Writing blending coefficients to "
-        << path/interface_.name() << endl;
+        << relativePath/interface_.name() << endl;
     if (nPhases <= 2)
     {
         // Strip out the first field and shuffle everything else up

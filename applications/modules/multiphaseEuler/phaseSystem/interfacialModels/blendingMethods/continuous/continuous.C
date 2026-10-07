@@ -134,6 +134,12 @@ bool Foam::blendingMethods::continuous::canSegregate() const
 }
 
 
+bool Foam::blendingMethods::continuous::isComplete() const
+{
+    return true;
+}
+
+
 bool Foam::blendingMethods::continuous::isDisplacedBy
 (
     const label displacingPhasei

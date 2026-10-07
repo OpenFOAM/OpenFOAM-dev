@@ -166,6 +166,10 @@ public:
         //- Return whether or not this interface can segregate
         virtual bool canSegregate() const;
 
+        //- Return whether or not this method partitions unity across the
+        //  entire blending space
+        virtual bool isComplete() const;
+
         //- Return whether or not the interface is displaced by a third phase
         virtual bool isDisplacedBy(const label displacingPhasei) const;
 

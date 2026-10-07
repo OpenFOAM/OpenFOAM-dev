@@ -148,6 +148,12 @@ bool Foam::blendingMethods::hyperbolic::canSegregate() const
 }
 
 
+bool Foam::blendingMethods::hyperbolic::isComplete() const
+{
+    return true;
+}
+
+
 bool Foam::blendingMethods::hyperbolic::isDisplacedBy
 (
     const label displacingPhasei
