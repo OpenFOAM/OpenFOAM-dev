@@ -176,7 +176,7 @@ void Foam::LUDecompose(scalarSquareMatrix& A, const scalar rowTol)
                 continue;
             }
 
-            // Update the remaining elements of the row
+            // Inner 'j' loop updates the remainder of row 'i'
             for (label j=k+1; j<m; j++)
             {
                 A(i, j) -= A(i, k)*A(k, j);
@@ -186,44 +186,33 @@ void Foam::LUDecompose(scalarSquareMatrix& A, const scalar rowTol)
 }
 
 
-void Foam::LUDecompose(scalarSymmetricSquareMatrix& A)
+void Foam::LUDecompose(scalarSymmetricSquareMatrix& A, const scalar rowTol)
 {
-    // Store result in upper triangular part of matrix
     const label m = A.m();
 
-    // Set upper triangular parts to zero.
-    for (label j=0; j<m; j++)
+    for (label i=0; i<m; i++)
     {
-        for (label k=j + 1; k<m; k++)
+        for (label k=0; k<i; k++)
         {
-            A(j, k) = 0;
-        }
-    }
+            // Compute the row multiplier for the lower triangular matrix L
+            A(i, k) /= A(k, k);
 
-    for (label j=0; j<m; j++)
-    {
-        scalar d = 0;
-
-        for (label k=0; k<j; k++)
-        {
-            scalar s = 0;
-
-            for (label i=0; i<k; i++)
+            // If the row multiplier is 0 skip the inner j loop
+            if (mag(A(i, k)) <= rowTol)
             {
-                s += A(i, k)*A(i, j);
+                A(i, k) = 0;
+                continue;
             }
 
-            s = (A(j, k) - s)/A(k, k);
-
-            A(k, j) = s;
-            A(j, k) = s;
-
-            d += sqr(s);
+            // Inner 'j' loop updates the remainder of row 'i'
+            // up to the and including the diagonal
+            for (label j=k+1; j<=i; j++)
+            {
+                A(i, j) -= A(i, k)*A(j, k);
+            }
         }
 
-        d = A(j, j) - d;
-
-        if (d < 0)
+        if (A(i, i) <= 0)
         {
             FatalErrorInFunction
                 << "Matrix is not symmetric positive-definite. Unable to "
@@ -231,7 +220,17 @@ void Foam::LUDecompose(scalarSymmetricSquareMatrix& A)
                 << abort(FatalError);
         }
 
-        A(j, j) = sqrt(d);
+        // Finalise the diagonal element
+        A(i, i) = sqrt(A(i, i));
+    }
+
+    // Copy the upper triangle to the lower for back-substitution
+    for (label i=0; i<m; ++i)
+    {
+        for (label j=i+1; j<m; ++j)
+        {
+            A(i, j) = A(j, i);
+        }
     }
 }
 
