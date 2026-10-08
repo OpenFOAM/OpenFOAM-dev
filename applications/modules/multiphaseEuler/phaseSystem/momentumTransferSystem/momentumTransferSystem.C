@@ -474,6 +474,7 @@ void Foam::momentumTransferSystem::invADVs
     scalarSquareMatrix AD(n);
     scalarField source(n);
     labelList pivotIndices(n);
+    scalarList pivotScale(n);
 
     forAll(ADVs[0][0], ci)
     {
@@ -487,7 +488,7 @@ void Foam::momentumTransferSystem::invADVs
 
         // Calculate the inverse of AD using LD decomposition
         // and back-substitution
-        LUDecompose(AD, pivotIndices);
+        LUDecompose(AD, pivotIndices, pivotScale);
 
         for (label j=0; j<n; j++)
         {

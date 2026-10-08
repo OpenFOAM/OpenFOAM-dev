@@ -49,7 +49,8 @@ Foam::LUscalarMatrix::LUscalarMatrix(const label n)
 :
     scalarSquareMatrix(n),
     comm_(Pstream::worldComm),
-    pivotIndices_(n)
+    pivotIndices_(n),
+    scale_(n)
 {}
 
 
@@ -57,9 +58,10 @@ Foam::LUscalarMatrix::LUscalarMatrix(const scalarSquareMatrix& matrix)
 :
     scalarSquareMatrix(matrix),
     comm_(Pstream::worldComm),
-    pivotIndices_(m())
+    pivotIndices_(m()),
+    scale_(m())
 {
-    LUDecompose(*this, pivotIndices_);
+    LUDecompose(*this, pivotIndices_, scale_);
 }
 
 
@@ -195,7 +197,8 @@ Foam::LUscalarMatrix::LUscalarMatrix
         }
 
         pivotIndices_.setSize(m());
-        LUDecompose(*this, pivotIndices_);
+        scale_.setSize(m());
+        LUDecompose(*this, pivotIndices_, scale_);
     }
 }
 
@@ -415,7 +418,8 @@ void Foam::LUscalarMatrix::printDiagonalDominance() const
 void Foam::LUscalarMatrix::decompose()
 {
     pivotIndices_.setSize(m());
-    LUDecompose(*this, pivotIndices_);
+    scale_.setSize(m());
+    LUDecompose(*this, pivotIndices_, scale_);
 }
 
 
@@ -423,7 +427,8 @@ void Foam::LUscalarMatrix::decompose(const scalarSquareMatrix& M)
 {
     scalarSquareMatrix::operator=(M);
     pivotIndices_.setSize(m());
-    LUDecompose(*this, pivotIndices_);
+    scale_.setSize(m());
+    LUDecompose(*this, pivotIndices_, scale_);
 }
 
 

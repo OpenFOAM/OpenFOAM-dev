@@ -63,8 +63,9 @@ template<class Type>
 Foam::scalar Foam::det(SquareMatrix<Type>& matrix)
 {
     labelList pivotIndices(matrix.m());
+    scalarList scale(matrix.m());
     label sign;
-    LUDecompose(matrix, pivotIndices, sign);
+    LUDecompose(matrix, pivotIndices, scale, sign);
 
     return detDecomposed(matrix, sign);
 }

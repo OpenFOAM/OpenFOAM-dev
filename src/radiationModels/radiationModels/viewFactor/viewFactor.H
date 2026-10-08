@@ -106,6 +106,9 @@ class viewFactor
         //- Pivot Indices for LU decomposition
         labelList pivotIndices_;
 
+        //- Pivot scale for LU decomposition
+        scalarList pivotScale_;
+
 
     // Private Member Functions
 

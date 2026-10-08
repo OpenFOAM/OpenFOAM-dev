@@ -53,10 +53,11 @@ void Foam::SIBS::SIMPR
     }
 
     labelList pivotIndices(n_);
+    scalarList pivotScale(n_);
 
     if (pivot_)
     {
-        LUDecompose(a, pivotIndices);
+        LUDecompose(a, pivotIndices, pivotScale);
     }
     else
     {

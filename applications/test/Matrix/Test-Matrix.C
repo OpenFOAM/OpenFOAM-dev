@@ -112,11 +112,13 @@ int main(int argc, char *argv[])
 
         scalarSquareMatrix sm(squareMatrix);
         labelList rhs(3, 0);
+        scalarList scale(3, 0.0);
         label sign;
-        LUDecompose(sm, rhs, sign);
+        LUDecompose(sm, rhs, scale, sign);
 
         Info<< "Decomposition = " << sm << endl;
         Info<< "Pivots = " << rhs << endl;
+        Info<< "Scale = " << scale << endl;
         Info<< "Sign = " << sign << endl;
         Info<< "det = " << detDecomposed(sm, sign) << endl;
     }

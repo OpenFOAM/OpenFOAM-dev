@@ -96,6 +96,7 @@ class Rosenbrock34
         mutable scalarSquareMatrix dfdy_;
         mutable scalarSquareMatrix a_;
         mutable labelList pivotIndices_;
+        mutable scalarList pivotScale_;
 
         static const scalar
             a21, a31, a32,

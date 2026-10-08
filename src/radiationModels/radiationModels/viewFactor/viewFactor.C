@@ -229,6 +229,7 @@ void Foam::radiationModels::viewFactor::initialise()
             );
 
             pivotIndices_.setSize(CLU_().m());
+            pivotScale_.setSize(CLU_().m());
         }
     }
 }
@@ -285,7 +286,8 @@ Foam::radiationModels::viewFactor::viewFactor(const volScalarField& T)
     nLocalCoarseFaces_(0),
     constEmissivity_(false),
     iterCounter_(0),
-    pivotIndices_(0)
+    pivotIndices_(0),
+    pivotScale_(0)
 {
     initialise();
 }
@@ -344,7 +346,8 @@ Foam::radiationModels::viewFactor::viewFactor
     nLocalCoarseFaces_(0),
     constEmissivity_(false),
     iterCounter_(0),
-    pivotIndices_(0)
+    pivotIndices_(0),
+    pivotScale_(0)
 {
     initialise();
 }
@@ -585,7 +588,7 @@ void Foam::radiationModels::viewFactor::calculate()
                         << "\nDecomposing C matrix..." << endl;
                 }
 
-                LUDecompose(CLU_(), pivotIndices_);
+                LUDecompose(CLU_(), pivotIndices_, pivotScale_);
             }
 
             for (label i=0; i<totalNCoarseFaces_; i++)

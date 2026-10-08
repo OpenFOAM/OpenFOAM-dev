@@ -67,6 +67,9 @@ class LUscalarMatrix
         //- The pivot indices used in the LU decomposition
         labelList pivotIndices_;
 
+        //- The row scaling used in the LU decomposition pivoting
+        scalarList scale_;
+
 
     // Private Member Functions
 

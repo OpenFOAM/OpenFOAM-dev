@@ -66,11 +66,12 @@ addCompoundToRunTimeSelectionTable
 void Foam::LUDecompose
 (
     scalarSquareMatrix& A,
-    labelList& pivotIndices
+    labelList& pivotIndices,
+    scalarList& scale
 )
 {
     label sign;
-    LUDecompose(A, pivotIndices, sign);
+    LUDecompose(A, pivotIndices, scale, sign);
 }
 
 
@@ -78,102 +79,79 @@ void Foam::LUDecompose
 (
     scalarSquareMatrix& A,
     labelList& pivotIndices,
+    scalarList& scale,
     label& sign
 )
 {
     const label m = A.m();
-    scalarList vv(m);
     sign = 1;
 
+    // Calculate row scales
     for (label i=0; i<m; i++)
     {
-        scalar largestCoeff = 0;
-        scalar temp;
-        const scalar* __restrict__ Ai = A[i];
-
+        scalar maxCoeff = 0.0;
         for (label j=0; j<m; j++)
         {
-            if ((temp = mag(Ai[j])) > largestCoeff)
-            {
-                largestCoeff = temp;
-            }
+            maxCoeff = max(maxCoeff, mag(A(i, j)));
         }
 
-        if (largestCoeff == 0)
+        if (maxCoeff == 0)
         {
-            FatalErrorInFunction
-                << "Singular A" << exit(FatalError);
+            FatalErrorInFunction << "Singular A" << exit(FatalError);
         }
 
-        vv[i] = 1.0/largestCoeff;
+        scale[i] = maxCoeff;
     }
 
-    for (label j=0; j<m; j++)
+    // ikj loop with row-swapping
+    for (label i=0; i<m; i++)
     {
-        scalar* __restrict__ Aj = A[j];
+        // Check in pivoting is required
+        label pivotRow = i;
+        scalar max_ratio = mag(A(i, i))/scale[i];
 
-        for (label i=0; i<j; i++)
+        for (label r=i+1; r<m; r++)
         {
-            scalar* __restrict__ Ai = A[i];
-
-            scalar sum = Ai[j];
-            for (label k=0; k<i; k++)
+            const scalar ratio = mag(A(r, i))/scale[r];
+            if (ratio > max_ratio)
             {
-                sum -= Ai[k]*A(k, j);
-            }
-            Ai[j] = sum;
-        }
-
-        label iMax = 0;
-
-        scalar largestCoeff = 0;
-        for (label i=j; i<m; i++)
-        {
-            scalar* __restrict__ Ai = A[i];
-            scalar sum = Ai[j];
-
-            for (label k=0; k<j; k++)
-            {
-                sum -= Ai[k]*A(k, j);
-            }
-
-            Ai[j] = sum;
-
-            scalar temp;
-            if ((temp = vv[i]*mag(sum)) >= largestCoeff)
-            {
-                largestCoeff = temp;
-                iMax = i;
+                max_ratio = ratio;
+                pivotRow = r;
             }
         }
 
-        pivotIndices[j] = iMax;
+        // Set the pivot row
+        pivotIndices[i] = pivotRow;
 
-        if (j != iMax)
+        // Swap rows if required
+        if (pivotRow != i)
         {
-            scalar* __restrict__ AiMax = A[iMax];
-
+            // Swap rows of A
             for (label k=0; k<m; k++)
             {
-                Swap(Aj[k], AiMax[k]);
+                Swap(A(i, k), A(pivotRow, k));
             }
 
+            //  Swap the scale elements
+            Swap(scale[i], scale[pivotRow]);
+
             sign *= -1;
-            vv[iMax] = vv[j];
         }
 
-        if (Aj[j] == 0)
+        // Check for singularity
+        if (mag(A(i, i)) < small)
         {
-            Aj[j] = small;
+            FatalErrorInFunction << "Singular A" << exit(FatalError);
         }
 
-        if (j != m-1)
+        // kj loop
+        for (label k=i+1; k<m; k++)
         {
-            const scalar rDiag = 1.0/Aj[j];
+            A(k, i) /= A(i, i);
 
-            for (label i=j+1; i<m; i++)
+            for (label j=i+1; j<m; j++)
             {
-                A(i, j) *= rDiag;
+                A(k, j) -= A(k, i)*A(i, j);
             }
         }
     }
@@ -192,7 +170,7 @@ void Foam::LUDecompose(scalarSquareMatrix& A, const scalar rowTol)
             A(i, k) /= A(k, k);
 
             // If the row multiplier is 0 skip the inner j loop
-            if (mag(A(i, k)) < rowTol)
+            if (mag(A(i, k)) <= rowTol)
             {
                 A(i, k) = 0;
                 continue;

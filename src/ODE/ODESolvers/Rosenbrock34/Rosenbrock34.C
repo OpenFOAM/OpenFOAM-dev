@@ -120,7 +120,8 @@ Foam::Rosenbrock34::Rosenbrock34(const ODESystem& ode, const dictionary& dict)
     dfdx_(n_),
     dfdy_(n_, n_),
     a_(n_, n_),
-    pivotIndices_(n_)
+    pivotIndices_(n_),
+    pivotScale_(n_)
 {}
 
 
@@ -142,6 +143,7 @@ bool Foam::Rosenbrock34::resize()
         resizeMatrix(dfdy_);
         resizeMatrix(a_);
         resizeField(pivotIndices_);
+        resizeField(pivotScale_);
 
         return true;
     }
@@ -176,7 +178,7 @@ Foam::scalar Foam::Rosenbrock34::solve
 
     if (pivot_)
     {
-        LUDecompose(a_, pivotIndices_);
+        LUDecompose(a_, pivotIndices_, pivotScale_);
     }
     else
     {

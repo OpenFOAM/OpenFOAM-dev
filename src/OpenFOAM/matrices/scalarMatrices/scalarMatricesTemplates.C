@@ -262,7 +262,8 @@ void Foam::LUsolve
 )
 {
     labelList pivotIndices(matrix.m());
-    LUDecompose(matrix, pivotIndices);
+    scalarList scale(matrix.m());
+    LUDecompose(matrix, pivotIndices, scale);
     LUBacksubstitute(matrix, pivotIndices, sourceSol);
 }
 

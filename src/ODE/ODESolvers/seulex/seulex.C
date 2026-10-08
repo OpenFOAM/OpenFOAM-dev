@@ -62,6 +62,7 @@ Foam::seulex::seulex(const ODESystem& ode, const dictionary& dict)
     dfdy_(n_),
     a_(n_),
     pivotIndices_(n_),
+    pivotScale_(n_),
     dxOpt_(iMaxx_),
     temp_(iMaxx_),
     y0_(n_),
@@ -128,7 +129,7 @@ bool Foam::seulex::seul
 
     if (pivot_)
     {
-        LUDecompose(a_, pivotIndices_);
+        LUDecompose(a_, pivotIndices_, pivotScale_);
     }
     else
     {
@@ -253,6 +254,7 @@ bool Foam::seulex::resize()
         resizeMatrix(dfdy_);
         resizeMatrix(a_);
         resizeField(pivotIndices_);
+        resizeField(pivotScale_);
         resizeField(y0_);
         resizeField(ySequence_);
         resizeField(scale_);
