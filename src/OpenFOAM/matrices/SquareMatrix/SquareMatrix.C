@@ -52,8 +52,9 @@ Foam::scalar Foam::det(const SquareMatrix<Type>& matrix)
     SquareMatrix<Type> matrixTmp = matrix;
 
     labelList pivotIndices(matrix.m());
+    scalarList scale(matrix.m());
     label sign;
-    LUDecompose(matrixTmp, pivotIndices, sign);
+    LUDecompose(matrixTmp, pivotIndices, scale, sign);
 
     return detDecomposed(matrixTmp, sign);
 }
