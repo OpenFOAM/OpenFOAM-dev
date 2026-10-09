@@ -103,10 +103,7 @@ Foam::multicomponentThermo::implementation::implementation
     defaultSpecieName_
     (
         requiresDefaultSpecie && species.size()
-      ? dict.lookupBackwardsCompatible<word>
-        (
-            {"defaultSpecie", "inertSpecie"}
-        )
+      ? dict.lookup<word>("defaultSpecie")
       : word("undefined")
     ),
     defaultSpeciei_
