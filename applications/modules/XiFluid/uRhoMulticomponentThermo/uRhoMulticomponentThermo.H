@@ -171,7 +171,8 @@ public:
                 mixture.species(),
                 mesh,
                 phaseName,
-                false
+                // Requires default specie if specified
+                dict.found("defaultSpecie")
             )
         {}
 };
