@@ -32,25 +32,25 @@ License
 template<class Type>
 void Foam::solve
 (
-    scalarSquareMatrix& tmpMatrix,
+    scalarSquareMatrix& A,
     List<Type>& sourceSol
 )
 {
-    label m = tmpMatrix.m();
+    const label m = A.m();
 
     // Elimination
     for (label i=0; i<m; i++)
     {
         label iMax = i;
-        scalar largestCoeff = mag(tmpMatrix(iMax, i));
+        scalar largestCoeff = mag(A(iMax, i));
 
         // Swap elements around to find a good pivot
         for (label j=i+1; j<m; j++)
         {
-            if (mag(tmpMatrix(j, i)) > largestCoeff)
+            if (mag(A(j, i)) > largestCoeff)
             {
                 iMax = j;
-                largestCoeff = mag(tmpMatrix(iMax, i));
+                largestCoeff = mag(A(iMax, i));
             }
         }
 
@@ -58,28 +58,26 @@ void Foam::solve
         {
             for (label k=i; k<m; k++)
             {
-                Swap(tmpMatrix(i, k), tmpMatrix(iMax, k));
+                Swap(A(i, k), A(iMax, k));
             }
             Swap(sourceSol[i], sourceSol[iMax]);
         }
 
         // Check that the system of equations isn't singular
-        if (mag(tmpMatrix(i, i)) < 1e-20)
+        if (mag(A(i, i)) < small)
         {
-            FatalErrorInFunction
-                << "Singular Matrix"
-                << exit(FatalError);
+            FatalErrorInFunction << "Singular Matrix" << exit(FatalError);
         }
 
         // Reduce to upper triangular form
         for (label j=i+1; j<m; j++)
         {
-            sourceSol[j] -= sourceSol[i]*(tmpMatrix(j, i)/tmpMatrix(i, i));
+            const scalar multiplier = A(j, i)/A(i, i);
+            sourceSol[j] -= multiplier*sourceSol[i];
 
             for (label k=m-1; k>=i; k--)
             {
-                tmpMatrix(j, k) -=
-                    tmpMatrix(i, k)*tmpMatrix(j, i)/tmpMatrix(i, i);
+                A(j, k) -= multiplier*A(i, k);
             }
         }
     }
@@ -87,14 +85,14 @@ void Foam::solve
     // Back-substitution
     for (label j=m-1; j>=0; j--)
     {
-        Type ntempvec = Zero;
+        Type a = Zero;
 
         for (label k=j+1; k<m; k++)
         {
-            ntempvec += tmpMatrix(j, k)*sourceSol[k];
+            a += A(j, k)*sourceSol[k];
         }
 
-        sourceSol[j] = (sourceSol[j] - ntempvec)/tmpMatrix(j, j);
+        sourceSol[j] = (sourceSol[j] - a)/A(j, j);
     }
 }
 
@@ -107,9 +105,9 @@ void Foam::solve
     const List<Type>& source
 )
 {
-    scalarSquareMatrix tmpMatrix = matrix;
+    scalarSquareMatrix A = matrix;
     psi = source;
-    solve(tmpMatrix, psi);
+    solve(A, psi);
 }
 
 
@@ -121,7 +119,7 @@ void Foam::LUBacksubstitute
     List<Type>& sourceSol
 )
 {
-    label m = luMatrix.m();
+    const label m = luMatrix.m();
 
     label ii = 0;
 
@@ -169,20 +167,19 @@ void Foam::LUBacksubstitute
     List<Type>& sourceSol
 )
 {
-    label m = luMatrix.m();
+    const label m = luMatrix.m();
 
     label ii = 0;
 
     for (label i=0; i<m; i++)
     {
         Type sum = sourceSol[i];
-        const scalar* __restrict__ luMatrixi = luMatrix[i];
 
         if (ii != 0)
         {
             for (label j=ii-1; j<i; j++)
             {
-                sum -= luMatrixi[j]*sourceSol[j];
+                sum -= luMatrix(i, j)*sourceSol[j];
             }
         }
         else if (sum != pTraits<Type>::zero)
@@ -196,14 +193,13 @@ void Foam::LUBacksubstitute
     for (label i=m-1; i>=0; i--)
     {
         Type sum = sourceSol[i];
-        const scalar* __restrict__ luMatrixi = luMatrix[i];
 
         for (label j=i+1; j<m; j++)
         {
-            sum -= luMatrixi[j]*sourceSol[j];
+            sum -= luMatrix(i, j)*sourceSol[j];
         }
 
-        sourceSol[i] = sum/luMatrixi[i];
+        sourceSol[i] = sum/luMatrix(i, i);
     }
 }
 
@@ -215,20 +211,19 @@ void Foam::LUBacksubstitute
     List<Type>& sourceSol
 )
 {
-    label m = luMatrix.m();
+    const label m = luMatrix.m();
 
     label ii = 0;
 
     for (label i=0; i<m; i++)
     {
         Type sum = sourceSol[i];
-        const scalar* __restrict__ luMatrixi = luMatrix[i];
 
         if (ii != 0)
         {
             for (label j=ii-1; j<i; j++)
             {
-                sum -= luMatrixi[j]*sourceSol[j];
+                sum -= luMatrix(i, j)*sourceSol[j];
             }
         }
         else if (sum != pTraits<Type>::zero)
@@ -236,20 +231,19 @@ void Foam::LUBacksubstitute
             ii = i+1;
         }
 
-        sourceSol[i] = sum/luMatrixi[i];
+        sourceSol[i] = sum/luMatrix(i, i);
     }
 
     for (label i=m-1; i>=0; i--)
     {
         Type sum = sourceSol[i];
-        const scalar* __restrict__ luMatrixi = luMatrix[i];
 
         for (label j=i+1; j<m; j++)
         {
-            sum -= luMatrixi[j]*sourceSol[j];
+            sum -= luMatrix(i, j)*sourceSol[j];
         }
 
-        sourceSol[i] = sum/luMatrixi[i];
+        sourceSol[i] = sum/luMatrix(i, i);
     }
 }
 
