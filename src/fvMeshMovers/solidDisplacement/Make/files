@@ -1,0 +1,3 @@
+solidDisplacement_fvMeshMover.C
+
+LIB = $(FOAM_LIBBIN)/libsolidDisplacement_fvMeshMover

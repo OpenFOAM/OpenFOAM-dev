@@ -131,14 +131,6 @@ void Foam::solvers::solid::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
-        if (!mesh_.mover().solidBodyMotion())
-        {
-            FatalErrorInFunction
-                << "Region " << name() << " of type " << type()
-                << " does not support non-solid body mesh motion"
-                << exit(FatalError);
-        }
-
         mesh_.move();
     }
 }
