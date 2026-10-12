@@ -516,6 +516,56 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 }
 
 
+bool Foam::phaseSystem::hasCAlphas() const
+{
+    return !interfaceCompressionCoefficients_.empty();
+}
+
+
+bool Foam::phaseSystem::hasCAlpha(const phaseInterfaceKey& key) const
+{
+    return interfaceCompressionCoefficients_.found(key);
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::phaseSystem::cAlpha(const phaseInterfaceKey& key) const
+{
+    if (hasCAlpha(key))
+    {
+        return interfaceCompressionCoefficients_[key].cAlpha<fvMesh>();
+    }
+    else
+    {
+        return volScalarField::New
+        (
+            interfaceCompressionCoefficient::typeName + ":cAlpha",
+            mesh_,
+            dimensionedScalar(dimless, 0)
+        );
+    }
+}
+
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::phaseSystem::cAlphaf(const phaseInterfaceKey& key) const
+{
+    if (hasCAlpha(key))
+    {
+        return interfaceCompressionCoefficients_[key].cAlpha<surfaceMesh>();
+    }
+    else
+    {
+        return surfaceScalarField::New
+        (
+            interfaceCompressionCoefficient::typeName + ":cAlpha",
+            mesh_,
+            dimensionedScalar(dimless, 0)
+        );
+    }
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::phaseSystem::sigma(const phaseInterfaceKey& key) const
 {
@@ -549,6 +599,15 @@ Foam::phaseSystem::sigma(const phaseInterfaceKey& key, const label patchi) const
             new scalarField(mesh_.boundary()[patchi].size(), 0)
         );
     }
+}
+
+
+Foam::tmp<Foam::surfaceVectorField> Foam::phaseSystem::nHatfv
+(
+    const phaseInterface& interface
+) const
+{
+    return nHatfv(interface.alpha1(), interface.alpha2());
 }
 
 

@@ -1,3 +1,4 @@
+
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
@@ -114,32 +115,101 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     {
         PtrList<surfaceScalarField> Ffs(momentumTransferSystem_.Fs());
 
-        const surfaceScalarField ghSnGradRho
+        UPtrList<surfaceScalarField> movingAlphafs(movingPhases.size());
+        forAll(movingPhases, movingPhasei)
+        {
+            const phaseModel& phase = movingPhases[movingPhasei];
+            movingAlphafs.set(movingPhasei, &alphafs[phase.index()]);
+        }
+
+        tmp<surfaceScalarField> tsumMovingAlphafs;
+        if (fluid.hasCAlphas())
+        {
+            tsumMovingAlphafs = movingAlphafs[0].clone();
+            for
+            (
+                label movingPhasei = 1;
+                movingPhasei < movingPhases.size();
+                movingPhasei ++
+            )
+            {
+                tsumMovingAlphafs.ref() += movingAlphafs[movingPhasei];
+            }
+        }
+
+        const surfaceScalarField ghSnGradRhoSf
         (
-            "ghSnGradRho",
+            "ghSnGradRhoSf",
             buoyancy.ghf*fvc::snGrad(rho)*mesh.magSf()
         );
 
-        UPtrList<surfaceScalarField> movingAlphafs(movingPhases.size());
-        PtrList<surfaceScalarField> Fgfs(movingPhases.size());
+        const surfaceScalarField gSf("gSf", buoyancy.g & mesh.Sf());
 
+        PtrList<surfaceScalarField> Fgfs(movingPhases.size());
         forAll(movingPhases, movingPhasei)
         {
             const phaseModel& phase = movingPhases[movingPhasei];
 
-            movingAlphafs.set(movingPhasei, &alphafs[phase.index()]);
+            const surfaceScalarField& alphaf = alphafs[phase.index()];
+
+            // Construct the relative buoyancy force term
+            tmp<surfaceScalarField> tclippedAlphaf =
+                fvc::interpolate(max(phase.alpha(), phase.residualAlpha()));
+            tmp<surfaceScalarField> talphagDeltaRhoSf =
+                fluid.hasCAlphas()
+              ? surfaceScalarField::New
+                (
+                    "alphagDeltaRhoSf",
+                    mesh,
+                    dimensionedScalar(ghSnGradRhoSf.dimensions(), scalar(0))
+                )
+              : tclippedAlphaf*gSf*fvc::interpolate(phase.rho() - rho);
+            if (fluid.hasCAlphas())
+            {
+                forAll(movingPhases, movingPhasej)
+                {
+                    if (movingPhasej == movingPhasei) continue;
+
+                    const phaseModel& otherPhase = movingPhases[movingPhasej];
+                    const phaseInterface interface(phase, otherPhase);
+
+                    auto otherAlphaDeltaRho =
+                       alphafs[otherPhase.index()]
+                      *fvc::interpolate(phase.rho() - otherPhase.rho());
+
+                    if (fluid.hasCAlpha(interface))
+                    {
+                        const surfaceScalarField cAlphaf
+                        (
+                            min(fluid.cAlphaf(interface), 1)
+                        );
+                        const surfaceVectorField n(fluid.nHatfv(interface));
+
+                        auto gParallel = buoyancy.g - (buoyancy.g & n)*n;
+
+                        talphagDeltaRhoSf.ref() +=
+                            (
+                                tclippedAlphaf()*(1 - cAlphaf)*gSf
+                              + alphaf*cAlphaf*(gParallel & mesh.Sf())
+                            )*otherAlphaDeltaRho;
+                    }
+                    else
+                    {
+                        talphagDeltaRhoSf.ref() +=
+                            tclippedAlphaf()*gSf*otherAlphaDeltaRho;
+                    }
+                }
+
+                talphagDeltaRhoSf.ref() /= tsumMovingAlphafs();
+            }
 
             Fgfs.set
             (
                 movingPhasei,
                 Ffs[phase.index()]
-              + alphafs[phase.index()]
-               *(
-                   ghSnGradRho
-                 - fluid.surfaceTension(phase)*mesh.magSf()
-                )
-              - fvc::interpolate(max(phase.alpha(), phase.residualAlpha()))
-               *fvc::interpolate(phase.rho() - rho)*(buoyancy.g & mesh.Sf())
+              + alphaf*ghSnGradRhoSf
+              - talphagDeltaRhoSf
+              - alphaf*fluid.surfaceTension(phase)*mesh.magSf()
             );
         }
 

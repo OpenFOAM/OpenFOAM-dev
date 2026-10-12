@@ -360,11 +360,20 @@ public:
             //- Return the mixture velocity
             tmp<volVectorField> U() const;
 
+            //- Return the interface compression coefficient for an interface
+            bool hasCAlphas() const;
+
+            //- Return the interface compression coefficient for an interface
+            bool hasCAlpha(const phaseInterfaceKey& key) const;
+
+            //- Return the interface compression coefficient for an interface
+            tmp<volScalarField> cAlpha(const phaseInterfaceKey& key) const;
+
+            //- Return the interface compression coefficient for an interface
+            tmp<surfaceScalarField> cAlphaf(const phaseInterfaceKey& key) const;
+
             //- Return the surface tension coefficient for an interface
-            tmp<volScalarField> sigma
-            (
-                const phaseInterfaceKey& key
-            ) const;
+            tmp<volScalarField> sigma(const phaseInterfaceKey& key) const;
 
             //- Return the surface tension coefficient for an interface on a
             //  patch
@@ -373,6 +382,9 @@ public:
                 const phaseInterfaceKey& key,
                 const label patchi
             ) const;
+
+            //- Normal to interface between two phases
+            tmp<surfaceVectorField> nHatfv(const phaseInterface&) const;
 
             //- Indicator of the proximity of the interface
             //  Field values are 1 near and 0 away for the interface.

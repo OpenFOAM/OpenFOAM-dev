@@ -449,7 +449,7 @@ void Foam::phaseSystem::solve
 
                 surfaceScalarField& alphaPhi = alphaPhis[movingPhasei];
 
-                if (!interfaceCompressionCoefficients_.empty())
+                if (hasCAlphas())
                 {
                     forAll(phases(), phasei)
                     {
@@ -458,20 +458,9 @@ void Foam::phaseSystem::solve
 
                         if (&phase2 == &phase) continue;
 
-                        auto interfaceCompressionCoefficentIter =
-                            interfaceCompressionCoefficients_.find
-                            (
-                                phaseInterface(phase, phase2)
-                            );
+                        const phaseInterface interface(phase, phase2);
 
-                        if
-                        (
-                            interfaceCompressionCoefficentIter
-                         == interfaceCompressionCoefficients_.end()
-                        ) continue;
-
-                        const blendedInterfaceCompressionCoefficient& cAlpha =
-                            *interfaceCompressionCoefficentIter();
+                        if (!hasCAlpha(interface)) continue;
 
                         const surfaceScalarField phir
                         (
@@ -485,7 +474,7 @@ void Foam::phaseSystem::solve
 
                         const surfaceScalarField phirc
                         (
-                            min(cAlpha.cAlpha<surfaceMesh>()*phic, max(phic))
+                            min(cAlphaf(interface)*phic, max(phic))
                            *nHatf(alpha, alpha2)
                         );
 
