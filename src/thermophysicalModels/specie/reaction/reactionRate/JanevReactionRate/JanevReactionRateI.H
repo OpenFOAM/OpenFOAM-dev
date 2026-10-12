@@ -75,27 +75,24 @@ inline void Foam::JanevReactionRate::postEvaluate() const
 
 inline Foam::scalar Foam::JanevReactionRate::operator()
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
     scalar lta = A_;
 
     if (mag(beta_) > vSmall)
     {
-        lta *= pow(T, beta_);
+        lta *= pow(s.T, beta_);
     }
 
     scalar expArg = 0;
 
     if (mag(Ta_) > vSmall)
     {
-        expArg -= Ta_/T;
+        expArg -= Ta_/s.T;
     }
 
-    scalar lnT = log(T);
+    scalar lnT = log(s.T);
 
     for (int n=0; n<nb_; n++)
     {
@@ -110,27 +107,24 @@ inline Foam::scalar Foam::JanevReactionRate::operator()
 
 inline Foam::scalar Foam::JanevReactionRate::ddT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
     scalar lta = A_;
 
     if (mag(beta_) > vSmall)
     {
-        lta *= pow(T, beta_);
+        lta *= pow(s.T, beta_);
     }
 
     scalar expArg = 0;
 
     if (mag(Ta_) > vSmall)
     {
-        expArg -= Ta_/T;
+        expArg -= Ta_/s.T;
     }
 
-    scalar lnT = log(T);
+    scalar lnT = log(s.T);
 
     for (int n=0; n<nb_; n++)
     {
@@ -146,7 +140,7 @@ inline Foam::scalar Foam::JanevReactionRate::ddT
 
     lta *= exp(expArg);
 
-    return lta*(beta_+Ta_/T+deriv)/T;
+    return lta*(beta_+Ta_/s.T+deriv)/s.T;
 }
 
 
@@ -158,10 +152,7 @@ inline bool Foam::JanevReactionRate::hasDdc() const
 
 inline void Foam::JanevReactionRate::ddc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const reaction::state& s,
     scalarField& ddc
 ) const
 {

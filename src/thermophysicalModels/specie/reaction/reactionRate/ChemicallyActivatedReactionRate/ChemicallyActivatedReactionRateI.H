@@ -102,19 +102,13 @@ inline Foam::scalar Foam::ChemicallyActivatedReactionRate
 <
     ReactionRate,
     ChemicallyActivationFunction
->::operator()
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
+>::operator()(const reaction::state& s) const
 {
-    const scalar k0 = k0_(p, T, c, li);
-    const scalar kInf = kInf_(p, T, c, li);
-    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar k0 = k0_(s);
+    const scalar kInf = kInf_(s);
+    const scalar M = thirdBodyEfficiencies_.M(s.c);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(T, Pr);
+    const scalar F = F_(s.T, Pr);
 
     return k0/(1 + Pr)*F;
 }
@@ -125,27 +119,21 @@ inline Foam::scalar Foam::ChemicallyActivatedReactionRate
 <
     ReactionRate,
     ChemicallyActivationFunction
->::ddT
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
+>::ddT(const reaction::state& s) const
 {
-    const scalar k0 = k0_(p, T, c, li);
-    const scalar kInf = kInf_(p, T, c, li);
-    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar k0 = k0_(s);
+    const scalar kInf = kInf_(s);
+    const scalar M = thirdBodyEfficiencies_.M(s.c);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(T, Pr);
+    const scalar F = F_(s.T, Pr);
 
-    const scalar dk0dT = k0_.ddT(p, T, c, li);
+    const scalar dk0dT = k0_.ddT(s);
 
     #if CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN
 
-    const scalar dkInfdT = kInf_.ddT(p, T, c, li);
+    const scalar dkInfdT = kInf_.ddT(s);
     const scalar dPrdT = (M*dk0dT - Pr*dkInfdT)/kInf;
-    const scalar dFdT = F_.ddT(T, Pr, F) + F_.ddPr(T, Pr, F)*dPrdT;
+    const scalar dFdT = F_.ddT(s.T, Pr, F) + F_.ddPr(s.T, Pr, F)*dPrdT;
 
     return
         dk0dT/(1 + Pr)*F
@@ -182,29 +170,26 @@ inline void Foam::ChemicallyActivatedReactionRate
     ChemicallyActivationFunction
 >::ddc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const reaction::state& s,
     scalarField& ddc
 ) const
 {
-    const scalar k0 = k0_(p, T, c, li);
-    const scalar kInf = kInf_(p, T, c, li);
-    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar k0 = k0_(s);
+    const scalar kInf = kInf_(s);
+    const scalar M = thirdBodyEfficiencies_.M(s.c);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(T, Pr);
+    const scalar F = F_(s.T, Pr);
 
     #if CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN
 
     scalarField dk0dc(c.size(), 0);
-    k0_.ddc(p, T, c, li, dk0dc);
+    k0_.ddc(s, dk0dc);
     scalarField dkInfdc(c.size(), 0);
-    kInf_.ddc(p, T, c, li, dkInfdc);
-    tmp<scalarField> tdMdc = thirdBodyEfficiencies_.dMdc(c);
+    kInf_.ddc(s, dkInfdc);
+    tmp<scalarField> tdMdc = thirdBodyEfficiencies_.dMdc(s.c);
     const scalarField& dMdc = tdMdc();
     scalarField dPrdc((M*dk0dc - Pr*dkInfdc + k0*dMdc)/kInf);
-    const scalar dFdPr = F_.ddPr(T, Pr, F);
+    const scalar dFdPr = F_.ddPr(s.T, Pr, F);
 
     ddc =
         dk0dc/(1 + Pr)*F
@@ -213,7 +198,7 @@ inline void Foam::ChemicallyActivatedReactionRate
 
     #else
 
-    k0_.ddc(p, T, c, li, ddc);
+    k0_.ddc(s, ddc);
     ddc *= 1/(1 + Pr)*F;
 
     #endif

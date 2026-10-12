@@ -113,13 +113,10 @@ template<class ThermoType, class ReactionRate>
 Foam::scalar
 Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kf
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
-    return kf_(p, T, c, li);
+    return kf_(s);
 }
 
 
@@ -128,13 +125,10 @@ Foam::scalar
 Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kr
 (
     const scalar,
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
-    return kr_(p, T, c, li);
+    return kr_(s);
 }
 
 
@@ -142,13 +136,10 @@ template<class ThermoType, class ReactionRate>
 Foam::scalar
 Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kr
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
-    return kr_(p, T, c, li);
+    return kr_(s);
 }
 
 
@@ -156,13 +147,10 @@ template<class ThermoType, class ReactionRate>
 Foam::scalar
 Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkfdT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
-    return kf_.ddT(p, T, c, li);
+    return kf_.ddT(s);
 }
 
 
@@ -170,15 +158,12 @@ template<class ThermoType, class ReactionRate>
 Foam::scalar
 Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkrdT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     const scalar dkfdT,
     const scalar kr
 ) const
 {
-    return kr_.ddT(p, T, c, li);
+    return kr_.ddT(s);
 }
 
 
@@ -193,30 +178,24 @@ hasDkdc() const
 template<class ThermoType, class ReactionRate>
 void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkfdc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     scalarField& dkfdc
 ) const
 {
-    kf_.ddc(p, T, c, li, dkfdc);
+    kf_.ddc(s, dkfdc);
 }
 
 
 template<class ThermoType, class ReactionRate>
 void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkrdc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     const scalarField& dkfdc,
     const scalar kr,
     scalarField& dkrdc
 ) const
 {
-    kr_.ddc(p, T, c, li, dkrdc);
+    kr_.ddc(s, dkrdc);
 }
 
 

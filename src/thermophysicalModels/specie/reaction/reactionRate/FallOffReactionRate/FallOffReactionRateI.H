@@ -89,17 +89,14 @@ template<class ReactionRate, class FallOffFunction>
 inline Foam::scalar
 Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::operator()
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const reaction::state& s
 ) const
 {
-    const scalar k0 = k0_(p, T, c, li);
-    const scalar kInf = kInf_(p, T, c, li);
-    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar k0 = k0_(s);
+    const scalar kInf = kInf_(s);
+    const scalar M = thirdBodyEfficiencies_.M(s.c);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(T, Pr);
+    const scalar F = F_(s.T, Pr);
 
     return kInf*(Pr/(1 + Pr))*F;
 }
@@ -109,25 +106,22 @@ template<class ReactionRate, class FallOffFunction>
 inline Foam::scalar
 Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::ddT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const reaction::state& s
 ) const
 {
-    const scalar k0 = k0_(p, T, c, li);
-    const scalar kInf = kInf_(p, T, c, li);
-    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar k0 = k0_(s);
+    const scalar kInf = kInf_(s);
+    const scalar M = thirdBodyEfficiencies_.M(s.c);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(T, Pr);
+    const scalar F = F_(s.T, Pr);
 
-    const scalar dkInfdT = kInf_.ddT(p, T, c, li);
+    const scalar dkInfdT = kInf_.ddT(s);
 
     #if FALL_OFF_FUNCTION_JACOBIAN
 
-    const scalar dk0dT = k0_.ddT(p, T, c, li);
+    const scalar dk0dT = k0_.ddT(s);
     const scalar dPrdT = (M*dk0dT - Pr*dkInfdT)/kInf;
-    const scalar dFdT = F_.ddT(T, Pr, F) + F_.ddPr(T, Pr, F)*dPrdT;
+    const scalar dFdT = F_.ddT(s.T, Pr, F) + F_.ddPr(s.T, Pr, F)*dPrdT;
 
     return
         dkInfdT*(Pr/(1 + Pr))*F
@@ -157,29 +151,26 @@ Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::hasDdc() const
 template<class ReactionRate, class FallOffFunction>
 inline void Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::ddc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const reaction::state& s,
     scalarField& ddc
 ) const
 {
-    const scalar k0 = k0_(p, T, c, li);
-    const scalar kInf = kInf_(p, T, c, li);
-    const scalar M = thirdBodyEfficiencies_.M(c);
+    const scalar k0 = k0_(s);
+    const scalar kInf = kInf_(s);
+    const scalar M = thirdBodyEfficiencies_.M(s.c);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(T, Pr);
+    const scalar F = F_(s.T, Pr);
 
     #if FALL_OFF_FUNCTION_JACOBIAN
 
     scalarField dk0dc(c.size(), 0);
-    k0_.ddc(p, T, c, li, dk0dc);
+    k0_.ddc(s, dk0dc);
     scalarField dkInfdc(c.size(), 0);
-    kInf_.ddc(p, T, c, li, dkInfdc);
-    tmp<scalarField> tdMdc = thirdBodyEfficiencies_.dMdc(c);
+    kInf_.ddc(s, dkInfdc);
+    tmp<scalarField> tdMdc = thirdBodyEfficiencies_.dMdc(s.c);
     const scalarField& dMdc = tdMdc();
     scalarField dPrdc((M*dk0dc - Pr*dkInfdc + k0*dMdc)/kInf);
-    const scalar dFdPr = F_.ddPr(T, Pr, F);
+    const scalar dFdPr = F_.ddPr(s.T, Pr, F);
 
     ddc =
         dkInfdc*(Pr/(1 + Pr))*F
@@ -188,7 +179,7 @@ inline void Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::ddc
 
     #else
 
-    kInf_.ddc(p, T, c, li, ddc);
+    kInf_.ddc(s, ddc);
     ddc *= (Pr/(1 + Pr))*F;
 
     #endif

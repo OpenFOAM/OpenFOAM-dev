@@ -66,6 +66,7 @@ SourceFiles
 #ifndef chemistryReductionMethod_H
 #define chemistryReductionMethod_H
 
+#include "reaction.H"
 #include "dictionary.H"
 #include "DynamicField.H"
 #include "boolList.H"
@@ -229,12 +230,9 @@ public:
         //- Reduce the mechanism
         virtual void reduceMechanism
         (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
+            const reaction::state& s,
             List<label>& ctos,
-            DynamicList<label>& stoc,
-            const label li
+            DynamicList<label>& stoc
         ) = 0;
 
         //- ...

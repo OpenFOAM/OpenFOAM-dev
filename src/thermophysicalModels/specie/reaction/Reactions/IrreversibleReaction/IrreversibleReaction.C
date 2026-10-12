@@ -97,13 +97,10 @@ void Foam::IrreversibleReaction<ThermoType, ReactionRate>::postEvaluate() const
 template<class ThermoType, class ReactionRate>
 Foam::scalar Foam::IrreversibleReaction<ThermoType, ReactionRate>::kf
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
-    return k_(p, T, c, li);
+    return k_(s);
 }
 
 
@@ -111,10 +108,7 @@ template<class ThermoType, class ReactionRate>
 Foam::scalar Foam::IrreversibleReaction<ThermoType, ReactionRate>::kr
 (
     const scalar kfwd,
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
     return 0;
@@ -124,10 +118,7 @@ Foam::scalar Foam::IrreversibleReaction<ThermoType, ReactionRate>::kr
 template<class ThermoType, class ReactionRate>
 Foam::scalar Foam::IrreversibleReaction<ThermoType, ReactionRate>::kr
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
     return 0;
@@ -138,23 +129,17 @@ template<class ThermoType, class ReactionRate>
 Foam::scalar
 Foam::IrreversibleReaction<ThermoType, ReactionRate>::dkfdT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
-    return k_.ddT(p, T, c, li);
+    return k_.ddT(s);
 }
 
 
 template<class ThermoType, class ReactionRate>
 Foam::scalar Foam::IrreversibleReaction<ThermoType, ReactionRate>::dkrdT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     const scalar dkfdT,
     const scalar kr
 ) const
@@ -173,24 +158,18 @@ bool Foam::IrreversibleReaction<ThermoType, ReactionRate>::hasDkdc() const
 template<class ThermoType, class ReactionRate>
 void Foam::IrreversibleReaction<ThermoType, ReactionRate>::dkfdc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     scalarField& dkfdc
 ) const
 {
-    k_.ddc(p, T, c, li, dkfdc);
+    k_.ddc(s, dkfdc);
 }
 
 
 template<class ThermoType, class ReactionRate>
 void Foam::IrreversibleReaction<ThermoType, ReactionRate>::dkrdc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     const scalarField& dkfdc,
     const scalar kr,
     scalarField& dkrdc

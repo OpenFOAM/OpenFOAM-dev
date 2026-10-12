@@ -56,22 +56,16 @@ inline void Foam::MichaelisMentenReactionRate::postEvaluate() const
 
 inline Foam::scalar Foam::MichaelisMentenReactionRate::operator()
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const reaction::state& s
 ) const
 {
-    return Vmax_/(Km_ + c[s_]);
+    return Vmax_/(Km_ + s.c[s_]);
 }
 
 
 inline Foam::scalar Foam::MichaelisMentenReactionRate::ddT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const reaction::state& s
 ) const
 {
     return 0;
@@ -86,15 +80,12 @@ inline bool Foam::MichaelisMentenReactionRate::hasDdc() const
 
 inline void Foam::MichaelisMentenReactionRate::ddc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const reaction::state& s,
     scalarField& ddc
 ) const
 {
     ddc = 0;
-    ddc[s_] = -Vmax_/sqr(Km_ + c[s_]);
+    ddc[s_] = -Vmax_/sqr(Km_ + s.c[s_]);
 }
 
 

@@ -74,13 +74,7 @@ void Foam::ReactionProxy<ThermoType>::postEvaluate() const
 
 
 template<class ThermoType>
-Foam::scalar Foam::ReactionProxy<ThermoType>::kf
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
+Foam::scalar Foam::ReactionProxy<ThermoType>::kf(const state& s) const
 {
     NotImplemented;
     return 0;
@@ -91,10 +85,7 @@ template<class ThermoType>
 Foam::scalar Foam::ReactionProxy<ThermoType>::kr
 (
     const scalar kfwd,
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const state& s
 ) const
 {
     NotImplemented;
@@ -103,13 +94,7 @@ Foam::scalar Foam::ReactionProxy<ThermoType>::kr
 
 
 template<class ThermoType>
-Foam::scalar Foam::ReactionProxy<ThermoType>::kr
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
+Foam::scalar Foam::ReactionProxy<ThermoType>::kr(const state& s) const
 {
     NotImplemented;
     return 0;
@@ -117,13 +102,7 @@ Foam::scalar Foam::ReactionProxy<ThermoType>::kr
 
 
 template<class ThermoType>
-Foam::scalar Foam::ReactionProxy<ThermoType>::dkfdT
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
+Foam::scalar Foam::ReactionProxy<ThermoType>::dkfdT(const state& s) const
 {
     NotImplemented;
     return 0;
@@ -133,10 +112,7 @@ Foam::scalar Foam::ReactionProxy<ThermoType>::dkfdT
 template<class ThermoType>
 Foam::scalar Foam::ReactionProxy<ThermoType>::dkrdT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     const scalar dkfdT,
     const scalar kr
 ) const
@@ -157,10 +133,7 @@ bool Foam::ReactionProxy<ThermoType>::hasDkdc() const
 template<class ThermoType>
 void Foam::ReactionProxy<ThermoType>::dkfdc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     scalarField& dkfdc
 ) const
 {
@@ -171,10 +144,7 @@ void Foam::ReactionProxy<ThermoType>::dkfdc
 template<class ThermoType>
 void Foam::ReactionProxy<ThermoType>::dkrdc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     const scalarField& dkfdc,
     const scalar kr,
     scalarField& dkrdc

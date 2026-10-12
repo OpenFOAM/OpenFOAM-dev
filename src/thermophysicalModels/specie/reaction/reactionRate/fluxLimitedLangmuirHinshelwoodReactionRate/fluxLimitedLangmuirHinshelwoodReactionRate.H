@@ -167,32 +167,13 @@ public:
         //- Post-evaluation hook
         inline void postEvaluate() const;
 
-        inline scalar operator()
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li
-        ) const;
+        inline scalar operator()(const reaction::state& s) const;
 
-        inline scalar ddT
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li
-        ) const;
+        inline scalar ddT(const reaction::state& s) const;
 
         inline bool hasDdc() const;
 
-        inline void ddc
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li,
-            scalarField& ddc
-        ) const;
+        inline void ddc(const reaction::state& s, scalarField& ddc) const;
 
         //- Write to stream
         inline void write(Ostream& os) const;

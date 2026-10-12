@@ -128,8 +128,8 @@ class Standard
         //- Temporary simplified mechanism mass fraction field
         DynamicField<scalar> sY_;
 
-        //- Temporary concentration field
-        mutable scalarField c_;
+        //- Temporary reaction state
+        mutable reaction::state s_;
 
         //- Temporary simplified mechanism concentration field
         DynamicField<scalar> sc_;

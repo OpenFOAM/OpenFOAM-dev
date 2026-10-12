@@ -234,12 +234,9 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::~DAC()
 template<class ThermoType>
 void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
+    const reaction::state& s,
     List<label>& ctos,
-    DynamicList<label>& stoc,
-    const label li
+    DynamicList<label>& stoc
 )
 {
     chemistryReductionMethod<ThermoType>::initReduceMechanism();
@@ -262,7 +259,7 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
 
         // for each reaction compute omegai
         scalar omegaf, omegar;
-        const scalar omegai = R.omega(p, T, c, li, omegaf, omegar);
+        const scalar omegai = R.omega(s, omegaf, omegar);
 
         // Then for each pair of species composing this reaction,
         // compute the rAB matrix (separate the numerator and
@@ -457,14 +454,14 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
             {
                 continue;
             }
-            Na[0] += sC_[i]*c[i];
-            Na[1] += sH_[i]*c[i];
-            Na[2] += sO_[i]*c[i];
+            Na[0] += sC_[i]*s.c[i];
+            Na[1] += sH_[i]*s.c[i];
+            Na[2] += sO_[i]*s.c[i];
             if (sC_[i]>nbCLarge_ || this->chemistry_.Y()[i].member() == "O2")
             {
-                Nal[0] += sC_[i]*c[i];
-                Nal[1] += sH_[i]*c[i];
-                Nal[2] += sO_[i]*c[i];
+                Nal[0] += sC_[i]*s.c[i];
+                Nal[1] += sH_[i]*s.c[i];
+                Nal[2] += sO_[i]*s.c[i];
             }
         }
 
@@ -562,7 +559,7 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
             }
         }
 
-        if (T>NOxThreshold_ && NOId_!=-1)
+        if (s.T > NOxThreshold_ && NOId_!=-1)
         {
             Q.push(NOId_);
             this->activeSpecies_[NOId_] = true;

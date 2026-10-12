@@ -62,6 +62,8 @@ public:
     //- Runtime type information
     TypeName("reversible");
 
+    using typename reaction::state;
+
 
     // Constructors
 
@@ -144,54 +146,26 @@ public:
         // ReversibleReaction rate coefficients
 
             //- Forward rate constant
-            virtual scalar kf
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li
-            ) const;
+            virtual scalar kf(const state& s) const;
 
             //- Reverse rate constant from the given forward rate constant
-            virtual scalar kr
-            (
-                const scalar kfwd,
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li
-            ) const;
+            virtual scalar kr(const scalar kfwd, const state& s) const;
 
             //- Reverse rate constant.
             //  Note this evaluates the forward rate constant and divides by
             //  the equilibrium constant
-            virtual scalar kr
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li
-            ) const;
+            virtual scalar kr(const state& s) const;
 
 
         // ReversibleReaction Jacobian functions
 
             //- Temperature derivative of forward rate
-            virtual scalar dkfdT
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li
-            ) const;
+            virtual scalar dkfdT(const state& s) const;
 
             //- Temperature derivative of backward rate
             virtual scalar dkrdT
             (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li,
+                const state& s,
                 const scalar dkfdT,
                 const scalar kr
             ) const;
@@ -200,22 +174,12 @@ public:
             virtual bool hasDkdc() const;
 
             //- Concentration derivative of forward rate
-            void dkfdc
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li,
-                scalarField& dkfdc
-            ) const;
+            void dkfdc(const state& s, scalarField& dkfdc) const;
 
             //- Concentration derivative of reverse rate
             void dkrdc
             (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li,
+                const state& s,
                 const scalarField& dkfdc,
                 const scalar kr,
                 scalarField& dkrdc

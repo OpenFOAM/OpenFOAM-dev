@@ -57,12 +57,9 @@ Foam::chemistryReductionMethods::PFA<ThermoType>::~PFA()
 template<class ThermoType>
 void Foam::chemistryReductionMethods::PFA<ThermoType>::reduceMechanism
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
+    const reaction::state& s,
     List<label>& ctos,
-    DynamicList<label>& stoc,
-    const label li
+    DynamicList<label>& stoc
 )
 {
     chemistryReductionMethod<ThermoType>::initReduceMechanism();
@@ -86,7 +83,7 @@ void Foam::chemistryReductionMethods::PFA<ThermoType>::reduceMechanism
 
         // for each reaction compute omegai
         scalar omegaf, omegar;
-        const scalar omegai = R.omega(p, T, c, li, omegaf, omegar);
+        const scalar omegai = R.omega(s, omegaf, omegar);
 
         // then for each pair of species composing this reaction,
         // compute the rAB matrix (separate the numerator and

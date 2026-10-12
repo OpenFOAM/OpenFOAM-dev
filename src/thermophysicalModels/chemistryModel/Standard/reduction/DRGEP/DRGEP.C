@@ -104,12 +104,9 @@ Foam::chemistryReductionMethods::DRGEP<ThermoType>::~DRGEP()
 template<class ThermoType>
 void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
+    const reaction::state& s,
     List<label>& ctos,
-    DynamicList<label>& stoc,
-    const label li
+    DynamicList<label>& stoc
 )
 {
     // Compute the rAB matrix
@@ -131,7 +128,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
 
         // for each reaction compute omegai
         scalar omegaf, omegar;
-        const scalar omegai = R.omega(p, T, c, li, omegaf, omegar);
+        const scalar omegai = R.omega(s, omegaf, omegar);
         omegaV[i] = omegai;
 
         // then for each pair of species composing this reaction,

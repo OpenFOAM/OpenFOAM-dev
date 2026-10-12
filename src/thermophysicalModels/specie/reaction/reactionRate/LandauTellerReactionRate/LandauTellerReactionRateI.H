@@ -78,34 +78,31 @@ inline void Foam::LandauTellerReactionRate::postEvaluate() const
 
 inline Foam::scalar Foam::LandauTellerReactionRate::operator()
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
     scalar lta = A_;
 
     if (mag(beta_) > vSmall)
     {
-        lta *= pow(T, beta_);
+        lta *= pow(s.T, beta_);
     }
 
     scalar expArg = 0;
 
     if (mag(Ta_) > vSmall)
     {
-        expArg -= Ta_/T;
+        expArg -= Ta_/s.T;
     }
 
     if (mag(B_) > vSmall)
     {
-        expArg += B_/cbrt(T);
+        expArg += B_/cbrt(s.T);
     }
 
     if (mag(C_) > vSmall)
     {
-        expArg += C_/sqr(cbrt(T));
+        expArg += C_/sqr(cbrt(s.T));
     }
 
     if (mag(expArg) > vSmall)
@@ -119,17 +116,14 @@ inline Foam::scalar Foam::LandauTellerReactionRate::operator()
 
 inline Foam::scalar Foam::LandauTellerReactionRate::ddT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
     scalar lta = A_;
 
     if (mag(beta_) > vSmall)
     {
-        lta *= pow(T, beta_);
+        lta *= pow(s.T, beta_);
     }
 
     scalar expArg = 0;
@@ -137,21 +131,21 @@ inline Foam::scalar Foam::LandauTellerReactionRate::ddT
 
     if (mag(Ta_) > vSmall)
     {
-        scalar TaT = Ta_/T;
+        scalar TaT = Ta_/s.T;
         expArg -= TaT;
         deriv += TaT;
     }
 
     if (mag(B_) > vSmall)
     {
-        scalar BT = B_/cbrt(T);
+        scalar BT = B_/cbrt(s.T);
         expArg += BT;
         deriv -= BT/3;
     }
 
     if (mag(C_) > vSmall)
     {
-        scalar CT = C_/sqr(cbrt(T));
+        scalar CT = C_/sqr(cbrt(s.T));
         expArg += CT;
         deriv -= 2*CT/3;
     }
@@ -161,7 +155,7 @@ inline Foam::scalar Foam::LandauTellerReactionRate::ddT
         lta *= exp(expArg);
     }
 
-    return lta*(beta_ + deriv)/T;
+    return lta*(beta_ + deriv)/s.T;
 }
 
 
@@ -173,10 +167,7 @@ inline bool Foam::LandauTellerReactionRate::hasDdc() const
 
 inline void Foam::LandauTellerReactionRate::ddc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const reaction::state& s,
     scalarField& ddc
 ) const
 {

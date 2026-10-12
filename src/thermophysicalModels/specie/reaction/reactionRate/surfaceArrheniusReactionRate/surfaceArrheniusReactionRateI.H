@@ -62,25 +62,19 @@ inline void Foam::surfaceArrheniusReactionRate::postEvaluate() const
 
 inline Foam::scalar Foam::surfaceArrheniusReactionRate::operator()
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const reaction::state& s
 ) const
 {
-    return ArrheniusReactionRate::operator()(p, T, c, li)*tAv_()[li];
+    return ArrheniusReactionRate::operator()(s)*tAv_()[s.li];
 }
 
 
 inline Foam::scalar Foam::surfaceArrheniusReactionRate::ddT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
+    const reaction::state& s
 ) const
 {
-    return ArrheniusReactionRate::ddT(p, T, c, li)*tAv_()[li];
+    return ArrheniusReactionRate::ddT(s)*tAv_()[s.li];
 }
 
 

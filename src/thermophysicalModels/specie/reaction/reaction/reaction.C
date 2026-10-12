@@ -88,6 +88,12 @@ Foam::reaction::reaction
 }
 
 
+Foam::reaction::state::state(const label nSpecie)
+:
+    c(nSpecie)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::reaction::write(Ostream& os) const

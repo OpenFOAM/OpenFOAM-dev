@@ -50,12 +50,9 @@ Foam::chemistryReductionMethods::none<ThermoType>::~none()
 template<class ThermoType>
 void Foam::chemistryReductionMethods::none<ThermoType>::reduceMechanism
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
+    const reaction::state& s,
     List<label>& ctos,
-    DynamicList<label>& stoc,
-    const label li
+    DynamicList<label>& stoc
 )
 {
     NotImplemented;

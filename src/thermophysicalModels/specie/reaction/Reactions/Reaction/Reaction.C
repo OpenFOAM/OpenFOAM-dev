@@ -270,26 +270,18 @@ Foam::dimensionSet Foam::Reaction<ThermoType>::krDims() const
 
 
 template<class ThermoType>
-void Foam::Reaction<ThermoType>::C
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
-    scalar& Cf,
-    scalar& Cr
-) const
+void Foam::Reaction<ThermoType>::C(const state& s, scalar& Cf, scalar& Cr) const
 {
-    Cf = pow(c[lhs()[0].index], lhs()[0].exponent);
+    Cf = pow(s.c[lhs()[0].index], lhs()[0].exponent);
     for(label i=1; i<lhs().size(); i++)
     {
-        Cf *= pow(c[lhs()[i].index], lhs()[i].exponent);
+        Cf *= pow(s.c[lhs()[i].index], lhs()[i].exponent);
     }
 
-    Cr = pow(c[rhs()[0].index], rhs()[0].exponent);
+    Cr = pow(s.c[rhs()[0].index], rhs()[0].exponent);
     for(label i=1; i<rhs().size(); i++)
     {
-        Cr *= pow(c[rhs()[i].index], rhs()[i].exponent);
+        Cr *= pow(s.c[rhs()[i].index], rhs()[i].exponent);
     }
 }
 
@@ -297,52 +289,40 @@ void Foam::Reaction<ThermoType>::C
 template<class ThermoType>
 Foam::scalar Foam::Reaction<ThermoType>::omega
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     scalar& omegaf,
     scalar& omegar
 ) const
 {
-    C(p, T, c, li, omegaf, omegar);
+    C(s, omegaf, omegar);
 
-    const scalar kf = this->kf(p, T, c, li);
+    const scalar kf = this->kf(s);
     omegaf = kf*omegaf;
-    omegar = kr(kf, p, T, c, li)*omegar;
+    omegar = kr(kf, s)*omegar;
 
     return omegaf - omegar;
 }
 
 
 template<class ThermoType>
-Foam::scalar Foam::Reaction<ThermoType>::omega
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li
-) const
+Foam::scalar Foam::Reaction<ThermoType>::omega(const state& s) const
 {
     scalar omegaf, omegar;
-    return omega(p, T, c, li, omegaf, omegar);
+    return omega(s, omegaf, omegar);
 }
 
 
 template<class ThermoType>
 void Foam::Reaction<ThermoType>::dNdtByV
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     scalarField& dNdtByV,
     const bool reduced,
     const List<label>& c2s,
     const label Nsi0
 ) const
 {
-    const scalar omega = this->omega(p, T, c, li);
+    const scalar omega = this->omega(s);
 
     if (reduced)
     {
@@ -372,10 +352,7 @@ void Foam::Reaction<ThermoType>::dNdtByV
 template<class ThermoType>
 void Foam::Reaction<ThermoType>::ddNdtByVdcT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const state& s,
     scalarField& dNdtByV,
     scalarSquareMatrix& ddNdtByVdcT,
     const bool reduced,
@@ -387,12 +364,12 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcT
 ) const
 {
     // Rate constants
-    const scalar kf = this->kf(p, T, c, li);
-    const scalar kr = this->kr(kf, p, T, c, li);
+    const scalar kf = this->kf(s);
+    const scalar kr = this->kr(kf, s);
 
     // Concentration products
     scalar Cf, Cr;
-    C(p, T, c, li, Cf, Cr);
+    C(s, Cf, Cr);
 
     // Overall reaction rate
     const scalar omega = kf*Cf - kr*Cr;
@@ -433,11 +410,11 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcT
         {
             if (i == j)
             {
-                dCfdcj *= dpowdc(c[lhs()[i].index], lhs()[i].exponent);
+                dCfdcj *= dpowdc(s.c[lhs()[i].index], lhs()[i].exponent);
             }
             else
             {
-                dCfdcj *= pow(c[lhs()[i].index], lhs()[i].exponent);
+                dCfdcj *= pow(s.c[lhs()[i].index], lhs()[i].exponent);
             }
         }
 
@@ -478,11 +455,11 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcT
         {
             if (i == j)
             {
-                dCrcj *= dpowdc(c[rhs()[i].index], rhs()[i].exponent);
+                dCrcj *= dpowdc(s.c[rhs()[i].index], rhs()[i].exponent);
             }
             else
             {
-                dCrcj *= pow(c[rhs()[i].index], rhs()[i].exponent);
+                dCrcj *= pow(s.c[rhs()[i].index], rhs()[i].exponent);
             }
         }
 
@@ -517,8 +494,8 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcT
     // Jacobian contributions from the derivative of the rate constants
     // w.r.t. temperature
     {
-        const scalar dkfdT = this->dkfdT(p, T, c, li);
-        const scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kr);
+        const scalar dkfdT = this->dkfdT(s);
+        const scalar dkrdT = this->dkrdT(s, dkfdT, kr);
         const scalar dwdT = dkfdT*Cf - dkrdT*Cr;
 
         if (reduced)
@@ -556,10 +533,10 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcT
         scalarField& dkfdc = cTWork0;
         scalarField& dkrdc = cTWork1;
 
-        this->dkfdc(p, T, c, li, dkfdc);
-        this->dkrdc(p, T, c, li, dkfdc, kr, dkrdc);
+        this->dkfdc(s, dkfdc);
+        this->dkrdc(s, dkfdc, kr, dkrdc);
 
-        forAll(c, j)
+        forAll(s.c, j)
         {
             const label sj = reduced ? c2s[j] : j;
             const label Nsi0j = Nsi0 + sj;

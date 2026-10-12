@@ -65,24 +65,21 @@ inline void Foam::powerSeriesReactionRate::postEvaluate() const
 
 inline Foam::scalar Foam::powerSeriesReactionRate::operator()
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
     scalar lta = A_;
 
     if (mag(beta_) > vSmall)
     {
-        lta *= pow(T, beta_);
+        lta *= pow(s.T, beta_);
     }
 
     scalar expArg = 0;
 
     forAll(coeffs_, n)
     {
-        expArg += coeffs_[n]/pow(T, n + 1);
+        expArg += coeffs_[n]/pow(s.T, n + 1);
     }
 
     lta *= exp(expArg);
@@ -93,17 +90,14 @@ inline Foam::scalar Foam::powerSeriesReactionRate::operator()
 
 inline Foam::scalar Foam::powerSeriesReactionRate::ddT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
     scalar lta = A_;
 
     if (mag(beta_) > vSmall)
     {
-        lta *= pow(T, beta_);
+        lta *= pow(s.T, beta_);
     }
 
     scalar expArg = 0;
@@ -111,14 +105,14 @@ inline Foam::scalar Foam::powerSeriesReactionRate::ddT
 
     forAll(coeffs_, n)
     {
-        scalar cT = coeffs_[n]/pow(T, n + 1);
+        scalar cT = coeffs_[n]/pow(s.T, n + 1);
         expArg += cT;
         deriv -= (n + 1)*cT;
     }
 
     lta *= exp(expArg);
 
-    return lta*(beta_+deriv)/T;
+    return lta*(beta_+deriv)/s.T;
 }
 
 
@@ -130,10 +124,7 @@ inline bool Foam::powerSeriesReactionRate::hasDdc() const
 
 inline void Foam::powerSeriesReactionRate::ddc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const reaction::state& s,
     scalarField& ddc
 ) const
 {

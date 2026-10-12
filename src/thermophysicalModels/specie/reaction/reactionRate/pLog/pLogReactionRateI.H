@@ -127,74 +127,68 @@ inline Foam::scalar Foam::pLogReactionRate::fp
 
 inline Foam::scalar Foam::pLogReactionRate::operator()
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
-    if (p <= coeffs_.first().p)
+    if (s.p <= coeffs_.first().p)
     {
-        return ki(coeffs_.first(), T);
+        return ki(coeffs_.first(), s.T);
     }
-    else if (p >= coeffs_.last().p)
+    else if (s.p >= coeffs_.last().p)
     {
-        return ki(coeffs_.last(), T);
+        return ki(coeffs_.last(), s.T);
     }
     else
     {
         label pi = 1;
 
         // Find the index of the pressure > p
-        while (p > coeffs_[pi].p)
+        while (s.p > coeffs_[pi].p)
         {
             pi++;
         }
 
         // Calculate the log reaction rate coefficients
         // for the bounding pressures
-        const scalar lnkim1(this->lnki(coeffs_[pi - 1], T));
-        const scalar lnki(this->lnki(coeffs_[pi], T));
+        const scalar lnkim1(this->lnki(coeffs_[pi - 1], s.T));
+        const scalar lnki(this->lnki(coeffs_[pi], s.T));
 
         // Interpolate the log reaction rate coefficients
-        return exp(lnkim1 + fp(p, pi)*(lnki - lnkim1));
+        return exp(lnkim1 + fp(s.p, pi)*(lnki - lnkim1));
     }
 }
 
 
 inline Foam::scalar Foam::pLogReactionRate::ddT
 (
-    const scalar p,
-    const scalar T,
-    const scalarField&,
-    const label
+    const reaction::state& s
 ) const
 {
-    if (p <= coeffs_.first().p)
+    if (s.p <= coeffs_.first().p)
     {
-        return ddTi(coeffs_.first(), T);
+        return ddTi(coeffs_.first(), s.T);
     }
-    else if (p >= coeffs_.last().p)
+    else if (s.p >= coeffs_.last().p)
     {
-        return ddTi(coeffs_.last(), T);
+        return ddTi(coeffs_.last(), s.T);
     }
     else
     {
         label pi = 1;
 
         // Find the index of the pressure > p
-        while (p > coeffs_[pi].p)
+        while (s.p > coeffs_[pi].p)
         {
             pi++;
         }
 
         // Calculate the log reaction rate coefficients
         // for the bounding pressures
-        const scalar lnkim1(this->lnki(coeffs_[pi - 1], T));
-        const scalar lnki(this->lnki(coeffs_[pi], T));
+        const scalar lnkim1(this->lnki(coeffs_[pi - 1], s.T));
+        const scalar lnki(this->lnki(coeffs_[pi], s.T));
 
         // Calculate the interpolate factor
-        const scalar fp = this->fp(p, pi);
+        const scalar fp = this->fp(s.p, pi);
 
         // Interpolate the log reaction rate coefficients
         const scalar k = exp(lnkim1 + fp*(lnki - lnkim1));
@@ -204,8 +198,8 @@ inline Foam::scalar Foam::pLogReactionRate::ddT
         return k*
         (
             coeffs_[pi - 1].beta + fp*(coeffs_[pi].beta - coeffs_[pi - 1].beta)
-          + (coeffs_[pi - 1].Ta + fp*(coeffs_[pi].Ta - coeffs_[pi - 1].Ta))/T
-        )/T;
+          + (coeffs_[pi - 1].Ta + fp*(coeffs_[pi].Ta - coeffs_[pi - 1].Ta))/s.T
+        )/s.T;
     }
 }
 
@@ -218,10 +212,7 @@ inline bool Foam::pLogReactionRate::hasDdc() const
 
 inline void Foam::pLogReactionRate::ddc
 (
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
+    const reaction::state& s,
     scalarField& ddc
 ) const
 {

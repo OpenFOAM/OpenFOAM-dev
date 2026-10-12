@@ -103,35 +103,16 @@ public:
         inline void postEvaluate() const;
 
         //- Return the rate
-        inline scalar operator()
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li
-        ) const;
+        inline scalar operator()(const reaction::state& s) const;
 
         //- The derivative of the rate w.r.t. temperature
-        inline scalar ddT
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li
-        ) const;
+        inline scalar ddT(const reaction::state& s) const;
 
         //- Is the rate a function of concentration?
         inline bool hasDdc() const;
 
         //- The derivative of the rate w.r.t. concentration
-        inline void ddc
-        (
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li,
-            scalarField& ddc
-        ) const;
+        inline void ddc(const reaction::state& s, scalarField& ddc) const;
 
         //- Write to stream
         inline void write(Ostream& os) const;
