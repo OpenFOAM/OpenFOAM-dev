@@ -377,7 +377,7 @@ public:
             virtual bool read(const dictionary& modelDict);
 
             //- Write data
-            virtual bool write(const bool write) const;
+            virtual bool write(const bool write = true) const;
 
 
     // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -318,7 +318,7 @@ public:
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp,
-                const bool write = true
+                const bool write
             ) const;
 
             //- Write positions to \<cloudName\>_positions.obj file

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,13 +150,6 @@ public:
         InfoProxy<cellModel> info() const
         {
             return *this;
-        }
-
-        //- WriteData member function required by regIOobject
-        bool writeData(Ostream& os) const
-        {
-            os << *this;
-            return os.good();
         }
 
 

@@ -77,7 +77,7 @@ public:
 
     // Member Functions
 
-        bool writeData(Ostream& os) const
+        virtual bool writeData(Ostream& os) const
         {
             static_cast<const dictionary&>(*this).write(os, false);
 

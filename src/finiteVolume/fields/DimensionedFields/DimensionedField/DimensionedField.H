@@ -467,7 +467,7 @@ public:
 
             bool writeData(Ostream&, const word& fieldDictEntry) const;
 
-            bool writeData(Ostream&) const;
+            virtual bool writeData(Ostream&) const;
 
 
     // Member Operators

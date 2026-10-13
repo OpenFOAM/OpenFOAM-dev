@@ -170,7 +170,7 @@ public:
         using regIOobject::read;
 
         //- WriteData function required for regIOobject write operation
-        bool writeData(Ostream&) const;
+        virtual bool writeData(Ostream&) const;
 
 
     // Member Operators

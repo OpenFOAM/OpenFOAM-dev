@@ -231,7 +231,10 @@ public:
                 NotImplemented;
             }
 
-            bool writeData(Ostream&) const
+
+        // regIOobject implementation
+
+            virtual bool writeData(Ostream&) const
             {
                 NotImplemented;
                 return false;

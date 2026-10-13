@@ -129,7 +129,7 @@ bool Foam::fvMeshMovers::pointMeshMover::write(const bool write) const
 {
     if (write)
     {
-        return pointMeshMoverPtr_->write();
+        return pointMeshMoverPtr_->write(write);
     }
     else
     {

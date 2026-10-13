@@ -331,9 +331,10 @@ public:
             //  empty field if not supported.
             virtual void getField(const List<pointIndexHit>&, labelList&) const;
 
+
         // regIOobject implementation
 
-            bool writeData(Ostream&) const
+            virtual bool writeData(Ostream&) const
             {
                 NotImplemented;
                 return false;

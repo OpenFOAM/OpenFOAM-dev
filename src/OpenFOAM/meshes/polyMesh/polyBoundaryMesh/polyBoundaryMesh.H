@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -251,15 +251,15 @@ public:
         );
 
         //- writeData member function required by regIOobject
-        bool writeData(Ostream&) const;
+        virtual bool writeData(Ostream&) const;
 
         //- Write using given format, version and form uncompression
-        bool writeObject
+        virtual bool writeObject
         (
             IOstream::streamFormat fmt,
             IOstream::versionNumber ver,
             IOstream::compressionType cmp,
-            const bool write = true
+            const bool write
         ) const;
 
 

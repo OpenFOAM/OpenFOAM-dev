@@ -229,7 +229,7 @@ public:
 
         // regIOobject implementation
 
-            bool writeData(Ostream&) const
+            virtual bool writeData(Ostream&) const
             {
                 NotImplemented;
                 return false;

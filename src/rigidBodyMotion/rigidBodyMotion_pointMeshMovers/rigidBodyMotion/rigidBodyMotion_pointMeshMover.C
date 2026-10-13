@@ -244,7 +244,7 @@ Foam::pointMeshMovers::rigidBodyMotion::~rigidBodyMotion()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::pointMeshMovers::rigidBodyMotion::write() const
+bool Foam::pointMeshMovers::rigidBodyMotion::write(const bool write) const
 {
     timeIOdictionary dict
     (
@@ -263,7 +263,7 @@ bool Foam::pointMeshMovers::rigidBodyMotion::write() const
     state().write(dict);
 
     return
-        pointMeshMovers::multiRigidBody::write()
+        pointMeshMovers::multiRigidBody::write(write)
      && dict.regIOobject::writeObject
         (
             IOstream::ASCII,

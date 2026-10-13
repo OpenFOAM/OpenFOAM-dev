@@ -206,7 +206,7 @@ public:
         const phaseInterface& interface() const;
 
         //- Dummy write for regIOobject
-        bool writeData(Ostream& os) const;
+        virtual bool writeData(Ostream& os) const;
 
 
     // Member Operators

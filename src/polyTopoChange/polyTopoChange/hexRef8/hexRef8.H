@@ -582,7 +582,7 @@ public:
                 IOstream::streamFormat,
                 IOstream::versionNumber,
                 IOstream::compressionType,
-                const bool write = true
+                const bool write
             ) const;
 
 

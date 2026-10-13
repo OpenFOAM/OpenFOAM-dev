@@ -683,7 +683,7 @@ public:
         void correct();
 
         //- Dummy write for regIOobject
-        bool writeData(Ostream&) const;
+        virtual bool writeData(Ostream&) const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

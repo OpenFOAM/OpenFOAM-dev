@@ -675,7 +675,7 @@ public:
         inline auto component(const direction&) const;
 
         //- WriteData member function required by regIOobject
-        bool writeData(Ostream&) const;
+        virtual bool writeData(Ostream&) const;
 
         //- Return transpose field expression
         //  (only if it is a tensor field)

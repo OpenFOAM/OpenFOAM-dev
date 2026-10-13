@@ -285,9 +285,10 @@ public:
                 surface().getField(info, values);
             }
 
+
         // regIOobject implementation
 
-            bool writeData(Ostream& os) const
+            virtual bool writeData(Ostream& os) const
             {
                 return surface().writeData(os);
             }

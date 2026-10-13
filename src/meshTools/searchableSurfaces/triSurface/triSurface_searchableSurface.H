@@ -351,7 +351,7 @@ public:
 
         // regIOobject implementation
 
-            bool writeData(Ostream&) const
+            virtual bool writeData(Ostream&) const
             {
                 NotImplemented;
                 return false;
@@ -363,7 +363,7 @@ public:
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp,
-                const bool write = true
+                const bool write
             ) const;
 
             //- Is object global

@@ -102,7 +102,7 @@ public:
 
 
     //- Destructor
-    ~SidedInterfacialModel();
+    virtual ~SidedInterfacialModel();
 
 
     // Member Functions
@@ -120,7 +120,7 @@ public:
         ModelType& modelInThe(const phaseModel& phase);
 
         //- Dummy write for regIOobject
-        bool writeData(Ostream& os) const;
+        virtual bool writeData(Ostream& os) const;
 
 
     // Member Operators
