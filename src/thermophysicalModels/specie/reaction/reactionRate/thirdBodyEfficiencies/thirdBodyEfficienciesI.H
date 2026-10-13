@@ -53,20 +53,12 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     const dictionary& dict
 )
 :
-    scalarField(species.size()),
+    scalarField(species.size(), 1.0),
     species_(species)
 {
     if (dict.found("coeffs"))
     {
         List<Tuple2<word, scalar>> coeffs(dict.lookup("coeffs"));
-        if (coeffs.size() != species_.size())
-        {
-            FatalIOErrorInFunction(dict)
-                << "number of efficiencies = " << coeffs.size()
-                << " is not equal to the number of species " << species_.size()
-                << exit(FatalIOError);
-        }
-
         forAll(coeffs, i)
         {
             operator[](species[coeffs[i].first()]) = coeffs[i].second();
@@ -107,11 +99,17 @@ Foam::thirdBodyEfficiencies::dMdc() const
 inline void Foam::thirdBodyEfficiencies::write(Ostream& os) const
 {
     List<Tuple2<word, scalar>> coeffs(species_.size());
+    label n = 0;
     forAll(coeffs, i)
     {
-        coeffs[i].first() = species_[i];
-        coeffs[i].second() = operator[](i);
+        if (operator[](i) != 1)
+        {
+            coeffs[n].first() = species_[i];
+            coeffs[n].second() = operator[](i);
+            n++;
+        }
     }
+    coeffs.setSize(n);
 
     writeEntry(os, "coeffs", coeffs);
 }
