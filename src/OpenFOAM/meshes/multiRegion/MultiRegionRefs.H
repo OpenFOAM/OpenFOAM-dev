@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,6 +169,9 @@ public:
 
         //- Access a region
         RegionRef<Region> operator[](const label regioni);
+
+        //- Return whether the named region is in the list
+        bool found(const word& regionName) const;
 
         //- Const-access a region
         RegionRef<const Region> operator[](const word& regionName) const;

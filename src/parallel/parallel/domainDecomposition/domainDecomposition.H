@@ -208,6 +208,9 @@ class domainDecomposition
             //- Are the processor meshes conformal?
             bool procsConformal() const;
 
+            //- Get the decomposition for the given named region
+            const domainDecomposition& regionDecomposition(const word&) const;
+
             //- Generate the reverse of proc-face-face addressing. -1 indicates
             //  a face that is on a (conformal) processor boundary and hence
             //  has multiple associated proc-face indices.

@@ -419,6 +419,27 @@ bool Foam::domainDecomposition::procsConformal() const
 }
 
 
+const Foam::domainDecomposition& Foam::domainDecomposition::regionDecomposition
+(
+    const word& regionName
+) const
+{
+    if (!regionMeshes_.found(regionName))
+    {
+        FatalErrorInFunction
+            << "Region '" << regionName_ << "' contains interfaces which "
+            << "require neighbouring regions to be available in order to "
+            << "decompose or reconstruct the mesh. This case therefore "
+            << "requires that 'decomposePar' and 'reconstructPar' are "
+            << "executed with the '-allRegions' option. This case must also "
+            << "be reconstructed in order to post-process it with 'paraFoam'."
+            << exit(FatalError);
+    }
+
+    return regionMeshes_[regionName]();
+}
+
+
 Foam::labelList Foam::domainDecomposition::completeFaceAddressing() const
 {
     labelList result (completeMesh().nFaces(), -labelMax);
@@ -499,7 +520,7 @@ Foam::domainDecomposition::nonConformalMappedWallProcOffsets
             refCast<const nonConformalMappedWallFvPatch>(fvp);
 
         const domainDecomposition& nbrDecomposition =
-            regionMeshes_[ncmwFvp.nbrRegionName()]();
+            regionDecomposition(ncmwFvp.nbrRegionName());
 
         const fvMesh& nbrCompleteMesh = nbrDecomposition.completeMesh();
 
@@ -618,7 +639,7 @@ void Foam::domainDecomposition::decomposeNonConformalMappedWallAddressing
         );
 
     const domainDecomposition& nbrDecomposition =
-        regionMeshes_[ncmwFvp.nbrRegionName()]();
+        regionDecomposition(ncmwFvp.nbrRegionName());
 
     const fvMesh& nbrCompleteMesh = nbrDecomposition.completeMesh();
 
@@ -922,7 +943,7 @@ void Foam::domainDecomposition::reconstructNonConformalMappedWallAddressing
     const bool owner = ncmwFvp.owner();
 
     const domainDecomposition& nbrDecomposition =
-        regionMeshes_[ncmwFvp.nbrRegionName()]();
+        regionDecomposition(ncmwFvp.nbrRegionName());
 
     const label nbrNcmwPatchi =
         nbrDecomposition.completeMesh()
