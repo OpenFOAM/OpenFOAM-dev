@@ -107,11 +107,6 @@ bool Foam::multiDomainDecomposition::readDecompose(const bool doSets)
         this->operator[](regioni)().unconformReadDecompose();
     }
 
-    forAll(*this, regioni)
-    {
-        this->operator[](regioni)().writeReadDecompose(decomposed, doSets);
-    }
-
     return decomposed;
 }
 
@@ -136,11 +131,6 @@ bool Foam::multiDomainDecomposition::readReconstruct(const bool doSets)
     forAll(*this, regioni)
     {
         this->operator[](regioni)().unconformReadReconstruct();
-    }
-
-    forAll(*this, regioni)
-    {
-        this->operator[](regioni)().writeReadReconstruct(reconstructed, doSets);
     }
 
     return reconstructed;

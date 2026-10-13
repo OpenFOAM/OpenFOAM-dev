@@ -394,6 +394,8 @@ int main(int argc, char *argv[])
      && regionMeshes.readDecompose(decomposeSets)
     )
     {
+        regionMeshes.writeProcs(decomposeSets);
+
         if (writeCellProc)
         {
             forAll(regionNames, regioni)

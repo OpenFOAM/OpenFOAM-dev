@@ -354,12 +354,12 @@ class domainDecomposition
         //- Write the processor meshes' points for an instance different from
         //  the current. Used to additionally write out points associated with
         //  the face instance.
-        void writeProcPoints(const fileName& inst);
+        void writeProcPoints(const fileName& inst) const;
 
         //- Write the complete mesh's points for an instance different from
         //  the current. Used to additionally write out points associated with
         //  the face instance.
-        void writeCompletePoints(const fileName& inst);
+        void writeCompletePoints(const fileName& inst) const;
 
         //- Get the complete index for a given processor set element
         template<class SetType>
@@ -455,9 +455,6 @@ public:
         //- Synchronise non-conformal structure after read-decompose
         void unconformReadDecompose();
 
-        //- Write following read-decompose
-        void writeReadDecompose(const bool decomposed, const bool doSets);
-
         //- Read in the processor meshes. Read the complete mesh if it is
         //  available and up to date relative to the processor meshes, or
         //  reconstruct if not. Return whether or not reconstruction happened.
@@ -468,9 +465,6 @@ public:
 
         //- Synchronise non-conformal structure after read-reconstruct
         void unconformReadReconstruct();
-
-        //- Write following read-reconstruct
-        void writeReadReconstruct(const bool reconstructed, const bool doSets);
 
         //- Read-update the complete mesh only
         fvMesh::readUpdateState readUpdateComplete();

@@ -296,6 +296,8 @@ int main(int argc, char *argv[])
     multiDomainDecomposition regionMeshes(runTimes, meshPath, regionNames);
     if (regionMeshes.readReconstruct(!noReconstructSets))
     {
+        regionMeshes.writeComplete(!noReconstructSets);
+
         if (writeCellProc)
         {
             forAll(regionNames, regioni)
