@@ -56,7 +56,7 @@ inline Foam::SRIFallOffFunction::SRIFallOffFunction(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::SRIFallOffFunction::operator()
+inline Foam::scalar Foam::SRIFallOffFunction::F
 (
     const scalar T,
     const scalar Pr

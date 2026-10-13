@@ -73,6 +73,9 @@ public:
             scalarField c;
             label li;
 
+            scalar rT;
+            scalar lnT;
+
             state(const label nSpecie);
 
             inline void reset

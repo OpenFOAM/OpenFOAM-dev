@@ -73,7 +73,7 @@ inline void Foam::JanevReactionRate::postEvaluate() const
 {}
 
 
-inline Foam::scalar Foam::JanevReactionRate::operator()
+inline Foam::scalar Foam::JanevReactionRate::k
 (
     const reaction::state& s
 ) const

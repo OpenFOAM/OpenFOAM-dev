@@ -53,7 +53,7 @@ inline Foam::TroeFallOffFunction::TroeFallOffFunction(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::TroeFallOffFunction::operator()
+inline Foam::scalar Foam::TroeFallOffFunction::F
 (
     const scalar T,
     const scalar Pr
@@ -77,7 +77,7 @@ inline Foam::scalar Foam::TroeFallOffFunction::operator()
     const scalar x3 = 1 + sqr(x2);
     const scalar x4 = logFcent/x3;
 
-    return pow(10, x4);
+    return exp10(x4);
 }
 
 

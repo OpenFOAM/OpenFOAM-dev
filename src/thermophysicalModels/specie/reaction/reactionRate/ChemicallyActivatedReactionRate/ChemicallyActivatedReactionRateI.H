@@ -102,13 +102,13 @@ inline Foam::scalar Foam::ChemicallyActivatedReactionRate
 <
     ReactionRate,
     ChemicallyActivationFunction
->::operator()(const reaction::state& s) const
+>::k(const reaction::state& s) const
 {
-    const scalar k0 = k0_(s);
-    const scalar kInf = kInf_(s);
-    const scalar M = thirdBodyEfficiencies_.M(s.c);
+    const scalar k0 = k0_.k(s);
+    const scalar kInf = kInf_.k(s);
+    const scalar M = thirdBodyEfficiencies_.M(s);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(s.T, Pr);
+    const scalar F = F_.F(s.T, Pr);
 
     return k0/(1 + Pr)*F;
 }
@@ -121,11 +121,11 @@ inline Foam::scalar Foam::ChemicallyActivatedReactionRate
     ChemicallyActivationFunction
 >::ddT(const reaction::state& s) const
 {
-    const scalar k0 = k0_(s);
-    const scalar kInf = kInf_(s);
-    const scalar M = thirdBodyEfficiencies_.M(s.c);
+    const scalar k0 = k0_.k(s);
+    const scalar kInf = kInf_.k(s);
+    const scalar M = thirdBodyEfficiencies_.M(s);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(s.T, Pr);
+    const scalar F = F_.F(s.T, Pr);
 
     const scalar dk0dT = k0_.ddT(s);
 
@@ -174,11 +174,11 @@ inline void Foam::ChemicallyActivatedReactionRate
     scalarField& ddc
 ) const
 {
-    const scalar k0 = k0_(s);
-    const scalar kInf = kInf_(s);
-    const scalar M = thirdBodyEfficiencies_.M(s.c);
+    const scalar k0 = k0_.k(s);
+    const scalar kInf = kInf_.k(s);
+    const scalar M = thirdBodyEfficiencies_.M(s);
     const scalar Pr = k0/kInf*M;
-    const scalar F = F_(s.T, Pr);
+    const scalar F = F_.F(s.T, Pr);
 
     #if CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN
 
@@ -186,7 +186,7 @@ inline void Foam::ChemicallyActivatedReactionRate
     k0_.ddc(s, dk0dc);
     scalarField dkInfdc(c.size(), 0);
     kInf_.ddc(s, dkInfdc);
-    tmp<scalarField> tdMdc = thirdBodyEfficiencies_.dMdc(s.c);
+    tmp<scalarField> tdMdc = thirdBodyEfficiencies_.dMdc(s);
     const scalarField& dMdc = tdMdc();
     scalarField dPrdc((M*dk0dc - Pr*dkInfdc + k0*dMdc)/kInf);
     const scalar dFdPr = F_.ddPr(s.T, Pr, F);

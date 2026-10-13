@@ -116,7 +116,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kf
     const state& s
 ) const
 {
-    return kf_(s);
+    return kf_.k(s);
 }
 
 
@@ -128,7 +128,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kr
     const state& s
 ) const
 {
-    return kr_(s);
+    return kr_.k(s);
 }
 
 
@@ -139,7 +139,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kr
     const state& s
 ) const
 {
-    return kr_(s);
+    return kr_.k(s);
 }
 
 

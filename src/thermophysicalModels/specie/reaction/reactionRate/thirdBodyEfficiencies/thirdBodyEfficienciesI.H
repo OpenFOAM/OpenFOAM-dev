@@ -82,12 +82,15 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
 
 // * * * * * * * * * * * * * * * Member functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarField& c) const
+inline Foam::scalar Foam::thirdBodyEfficiencies::M
+(
+    const reaction::state& s
+) const
 {
     scalar M = 0;
     forAll(*this, i)
     {
-        M += operator[](i)*c[i];
+        M += operator[](i)*s.c[i];
     }
 
     return M;
@@ -95,7 +98,7 @@ inline Foam::scalar Foam::thirdBodyEfficiencies::M(const scalarField& c) const
 
 
 inline const Foam::scalarField&
-Foam::thirdBodyEfficiencies::dMdc(const scalarField& c) const
+Foam::thirdBodyEfficiencies::dMdc() const
 {
     return *this;
 }

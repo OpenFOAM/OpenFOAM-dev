@@ -74,11 +74,7 @@ public:
             return "Lindemann";
         }
 
-        inline scalar operator()
-        (
-            const scalar T,
-            const scalar Pr
-        ) const;
+        inline scalar F(const scalar T, const scalar Pr) const;
 
         inline scalar ddT
         (

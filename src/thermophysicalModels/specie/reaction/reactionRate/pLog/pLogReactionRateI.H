@@ -125,7 +125,7 @@ inline Foam::scalar Foam::pLogReactionRate::fp
 }
 
 
-inline Foam::scalar Foam::pLogReactionRate::operator()
+inline Foam::scalar Foam::pLogReactionRate::k
 (
     const reaction::state& s
 ) const

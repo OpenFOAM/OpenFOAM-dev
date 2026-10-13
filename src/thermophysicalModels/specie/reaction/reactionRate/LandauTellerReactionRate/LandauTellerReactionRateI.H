@@ -76,7 +76,7 @@ inline void Foam::LandauTellerReactionRate::postEvaluate() const
 {}
 
 
-inline Foam::scalar Foam::LandauTellerReactionRate::operator()
+inline Foam::scalar Foam::LandauTellerReactionRate::k
 (
     const reaction::state& s
 ) const

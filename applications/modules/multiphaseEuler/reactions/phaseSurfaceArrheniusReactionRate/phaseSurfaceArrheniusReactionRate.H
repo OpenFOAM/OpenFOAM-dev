@@ -103,8 +103,8 @@ public:
         //- Post-evaluation hook
         inline void postEvaluate() const;
 
-        //- Evaluate the rate
-        inline scalar operator()(const reaction::state& s) const;
+        //- Evaluate the rate constant
+        inline scalar k(const reaction::state& s) const;
 
         //- Evaluate the derivative
         inline scalar ddT(const reaction::state& s) const;

@@ -63,7 +63,7 @@ inline void Foam::powerSeriesReactionRate::postEvaluate() const
 {}
 
 
-inline Foam::scalar Foam::powerSeriesReactionRate::operator()
+inline Foam::scalar Foam::powerSeriesReactionRate::k
 (
     const reaction::state& s
 ) const

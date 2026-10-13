@@ -66,14 +66,14 @@ inline void Foam::thirdBodyArrheniusReactionRate::postEvaluate() const
 }
 
 
-inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::operator()
+inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::k
 (
     const reaction::state& s
 ) const
 {
     return
-        thirdBodyEfficiencies_.M(s.c)
-       *ArrheniusReactionRate::operator()(s);
+        thirdBodyEfficiencies_.M(s)
+       *ArrheniusReactionRate::k(s);
 }
 
 
@@ -83,7 +83,7 @@ inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::ddT
 ) const
 {
     return
-        thirdBodyEfficiencies_.M(s.c)
+        thirdBodyEfficiencies_.M(s)
        *ArrheniusReactionRate::ddT(s);
 }
 
@@ -100,8 +100,8 @@ inline void Foam::thirdBodyArrheniusReactionRate::ddc
     scalarField& ddc
 ) const
 {
-    ddc = thirdBodyEfficiencies_.dMdc(s.c);
-    ddc *= ArrheniusReactionRate::operator()(s);
+    ddc = thirdBodyEfficiencies_.dMdc();
+    ddc *= ArrheniusReactionRate::k(s);
 }
 
 

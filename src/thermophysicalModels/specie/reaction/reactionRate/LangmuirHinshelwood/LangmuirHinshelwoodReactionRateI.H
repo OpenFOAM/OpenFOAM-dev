@@ -72,7 +72,7 @@ inline void Foam::LangmuirHinshelwoodReactionRate::postEvaluate() const
 {}
 
 
-inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
+inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::k
 (
     const reaction::state& s
 ) const

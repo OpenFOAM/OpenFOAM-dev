@@ -54,7 +54,7 @@ inline void Foam::MichaelisMentenReactionRate::postEvaluate() const
 {}
 
 
-inline Foam::scalar Foam::MichaelisMentenReactionRate::operator()
+inline Foam::scalar Foam::MichaelisMentenReactionRate::k
 (
     const reaction::state& s
 ) const

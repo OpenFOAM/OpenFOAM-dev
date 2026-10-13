@@ -84,10 +84,10 @@ public:
     // Member Functions
 
         //- Calculate and return M, the concentration of the third-bodies
-        inline scalar M(const scalarField& c) const;
+        inline scalar M(const reaction::state& s) const;
 
         //- Return the derivative of M, w.r.t. the species concentrations
-        inline const scalarField& dMdc(const scalarField& c) const;
+        inline const scalarField& dMdc() const;
 
         //- Write to stream
         inline void write(Ostream& os) const;

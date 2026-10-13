@@ -70,24 +70,12 @@ inline void Foam::ArrheniusReactionRate::postEvaluate() const
 {}
 
 
-inline Foam::scalar Foam::ArrheniusReactionRate::operator()
+inline Foam::scalar Foam::ArrheniusReactionRate::k
 (
     const reaction::state& s
 ) const
 {
-    scalar ak = A_;
-
-    if (mag(beta_) > vSmall)
-    {
-        ak *= pow(s.T, beta_);
-    }
-
-    if (mag(Ta_) > vSmall)
-    {
-        ak *= exp(-Ta_/s.T);
-    }
-
-    return ak;
+    return A_*exp(beta_*s.lnT - Ta_*s.rT);
 }
 
 
@@ -96,19 +84,7 @@ inline Foam::scalar Foam::ArrheniusReactionRate::ddT
     const reaction::state& s
 ) const
 {
-    scalar ak = A_;
-
-    if (mag(beta_) > vSmall)
-    {
-        ak *= pow(s.T, beta_);
-    }
-
-    if (mag(Ta_) > vSmall)
-    {
-        ak *= exp(-Ta_/s.T);
-    }
-
-    return ak*(beta_+Ta_/s.T)/s.T;
+    return A_*exp(beta_*s.lnT - Ta_*s.rT)*(beta_ + Ta_*s.rT)*s.rT;
 }
 
 

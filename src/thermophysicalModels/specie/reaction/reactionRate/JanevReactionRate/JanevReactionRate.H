@@ -104,8 +104,8 @@ public:
         //- Post-evaluation hook
         inline void postEvaluate() const;
 
-        //- Return the rate
-        inline scalar operator()(const reaction::state& s) const;
+        //- Return the rate constant
+        inline scalar k(const reaction::state& s) const;
 
         //- The derivative of the rate w.r.t. temperature
         inline scalar ddT(const reaction::state& s) const;

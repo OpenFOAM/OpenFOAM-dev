@@ -61,6 +61,9 @@ inline void Foam::reaction::state::reset
     p = p_;
     T = T_;
     li = li_;
+
+    rT = 1/T;
+    lnT = log(T);
 }
 
 
@@ -72,10 +75,8 @@ inline void Foam::reaction::state::reset
     const label li_
 )
 {
-    p = p_;
-    T = T_;
+    reset(p_, T_, li_);
     c = c_;
-    li = li_;
 }
 
 

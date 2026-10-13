@@ -60,12 +60,12 @@ inline void Foam::surfaceArrheniusReactionRate::postEvaluate() const
 }
 
 
-inline Foam::scalar Foam::surfaceArrheniusReactionRate::operator()
+inline Foam::scalar Foam::surfaceArrheniusReactionRate::k
 (
     const reaction::state& s
 ) const
 {
-    return ArrheniusReactionRate::operator()(s)*tAv_()[s.li];
+    return ArrheniusReactionRate::k(s)*tAv_()[s.li];
 }
 
 

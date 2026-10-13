@@ -40,7 +40,7 @@ inline Foam::LindemannFallOffFunction::LindemannFallOffFunction
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::LindemannFallOffFunction::operator()
+inline Foam::scalar Foam::LindemannFallOffFunction::F
 (
     const scalar,
     const scalar

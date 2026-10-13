@@ -100,7 +100,7 @@ Foam::scalar Foam::ReversibleReaction<ThermoType, ReactionRate>::kf
     const state& s
 ) const
 {
-    return k_(s);
+    return k_.k(s);
 }
 
 

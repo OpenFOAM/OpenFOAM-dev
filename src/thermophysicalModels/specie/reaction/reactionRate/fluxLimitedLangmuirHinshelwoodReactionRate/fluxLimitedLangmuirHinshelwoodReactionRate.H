@@ -167,12 +167,16 @@ public:
         //- Post-evaluation hook
         inline void postEvaluate() const;
 
-        inline scalar operator()(const reaction::state& s) const;
+        //- Return the rate constant
+        inline scalar k(const reaction::state& s) const;
 
+        //- The derivative of the rate w.r.t. temperatur
         inline scalar ddT(const reaction::state& s) const;
 
+        //- Is the rate a function of concentration?
         inline bool hasDdc() const;
 
+        //- The derivative of the rate w.r.t. concentration
         inline void ddc(const reaction::state& s, scalarField& ddc) const;
 
         //- Write to stream

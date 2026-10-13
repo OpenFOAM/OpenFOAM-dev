@@ -217,7 +217,7 @@ Foam::fluxLimitedLangmuirHinshelwoodReactionRate::postEvaluate() const
 
 
 inline Foam::scalar
-Foam::fluxLimitedLangmuirHinshelwoodReactionRate::operator()
+Foam::fluxLimitedLangmuirHinshelwoodReactionRate::k
 (
     const reaction::state& s
 ) const
