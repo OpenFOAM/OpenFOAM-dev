@@ -116,7 +116,7 @@ Foam::species::thermo<Thermo, Type>::K(const scalar p, const scalar T) const
 {
     using namespace constant::thermodynamic;
 
-    scalar arg = -this->Y()*this->gStd(T)/(RR*T);
+    const scalar arg = -this->Y()*this->gStd(T)/(RR*T);
 
     if (arg < 600)
     {
@@ -158,13 +158,22 @@ Foam::species::thermo<Thermo, Type>::Kc(const scalar p, const scalar T) const
     //
     const scalar nm = this->Y()/this->W();
 
-    if (equal(nm, small))
+    if (mag(nm) < small)
     {
         return Kp(p, T);
     }
     else
     {
-        return Kp(p, T)*pow(pStd/(RR*T), nm);
+        // Check for integer nm
+        const scalar nmi = std::round(nm);
+        if (mag(nm - nmi) < small)
+        {
+            return Kp(p, T)*integerPow(pStd/(RR*T), label(nmi));
+        }
+        else
+        {
+            return Kp(p, T)*pow(pStd/(RR*T), nm);
+        }
     }
 }
 
@@ -181,7 +190,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::Kx
     // !!! This looks wrong, but it's not. See comments in 'thermo::Kc'.
     const scalar nm = this->Y()/this->W();
 
-    if (equal(nm, small))
+    if (mag(nm) < small)
     {
         return Kp(p, T);
     }
@@ -205,7 +214,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::Kn
     // !!! This looks wrong, but it's not. See comments in 'thermo::Kc'.
     const scalar nm = this->Y()/this->W();
 
-    if (equal(nm, small))
+    if (mag(nm) < small)
     {
         return Kp(p, T);
     }
@@ -405,7 +414,7 @@ Foam::species::thermo<Thermo, Type>::dKcdTbyKc
     // !!! This looks wrong, but it's not. See comments in 'thermo::Kc'.
     const scalar nm = this->Y()/this->W();
 
-    if (equal(nm, small))
+    if (mag(nm) < small)
     {
         return dKcdTbyKc;
     }
