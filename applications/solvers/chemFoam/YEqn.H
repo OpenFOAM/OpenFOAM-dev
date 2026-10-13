@@ -1,8 +1,10 @@
+forAll(Y, i)
 {
-    forAll(Y, specieI)
-    {
-        volScalarField& Yi = Y[specieI];
+    volScalarField& Yi = Y[i];
 
-        solve(fvm::ddt(rho, Yi) - chemistry.RR()[specieI], "Yi");
-    }
+    Yi.internalFieldRef() =
+    (
+        rho.oldTime()()*Yi.oldTime()()
+      + runTime.deltaT()*chemistry.RR()[i]
+    )/rho();
 }
