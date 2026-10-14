@@ -137,7 +137,8 @@ void Foam::meshReader::writeMeshLabelList
     (
         fmt,
         IOstream::currentVersion,
-        IOstream::UNCOMPRESSED
+        IOstream::UNCOMPRESSED,
+        true
     );
 }
 

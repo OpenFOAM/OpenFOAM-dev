@@ -141,7 +141,7 @@ bool Foam::AveragingMethod<Type>::writeData(Ostream& os) const
 
 
 template<class Type>
-bool Foam::AveragingMethod<Type>::write() const
+bool Foam::AveragingMethod<Type>::write(const bool updateInstance) const
 {
     const pointMesh& pointMesh_(pointMesh::New(mesh_));
 
@@ -237,10 +237,10 @@ bool Foam::AveragingMethod<Type>::write() const
     pointGrad.primitiveFieldRef() /= pointVolume;
 
     // write
-    if (!cellValue.write()) return false;
-    if (!cellGrad.write()) return false;
-    if (!pointValue.write()) return false;
-    if (!pointGrad.write()) return false;
+    if (!cellValue.write(updateInstance)) return false;
+    if (!cellGrad.write(updateInstance)) return false;
+    if (!pointValue.write(updateInstance)) return false;
+    if (!pointGrad.write(updateInstance)) return false;
 
     return true;
 }

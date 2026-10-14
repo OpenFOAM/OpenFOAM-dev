@@ -264,14 +264,14 @@ bool Foam::fv::solidElectricalConduction::read(const dictionary& dict)
 }
 
 
-bool Foam::fv::solidElectricalConduction::write() const
+bool Foam::fv::solidElectricalConduction::write(const bool updateInstance) const
 {
     if (writeSigma_)
     {
         return
             sigmaScalarPtr_.valid()
-          ? sigmaScalarPtr_->write()
-          : sigmaTensorPtr_->write();
+          ? sigmaScalarPtr_->write(updateInstance)
+          : sigmaTensorPtr_->write(updateInstance);
     }
     else
     {

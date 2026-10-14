@@ -367,7 +367,8 @@ writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool updateInstance
 ) const
 {
     if (fmt == IOstream::ASCII)
@@ -378,7 +379,7 @@ writeObject
         const_cast<word&>(CompactIOContainer<Type>::typeName) =
             IOContainer<Type>::typeName;
 
-        bool good = regIOobject::writeObject(fmt, ver, cmp);
+        bool good = regIOobject::writeObject(fmt, ver, cmp, updateInstance);
 
         // Change type back
         const_cast<word&>(CompactIOContainer<Type>::typeName) = oldTypeName;
@@ -398,7 +399,8 @@ writeObject
         const_cast<word&>(CompactIOContainer<Type>::typeName) =
             IOContainer<Type>::typeName;
 
-        bool good = regIOobject::writeObject(IOstream::ASCII, ver, cmp);
+        bool good =
+            regIOobject::writeObject(IOstream::ASCII, ver, cmp, updateInstance);
 
         // Change type back
         const_cast<word&>(CompactIOContainer<Type>::typeName) = oldTypeName;
@@ -407,7 +409,7 @@ writeObject
     }
     else
     {
-        return regIOobject::writeObject(fmt, ver, cmp);
+        return regIOobject::writeObject(fmt, ver, cmp, updateInstance);
     }
 }
 

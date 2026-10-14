@@ -2037,16 +2037,17 @@ bool Foam::LagrangianMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool updateInstance
 ) const
 {
-    return objectRegistry::writeObject(fmt, ver, cmp);
+    return objectRegistry::writeObject(fmt, ver, cmp, updateInstance);
 }
 
 
-bool Foam::LagrangianMesh::write() const
+bool Foam::LagrangianMesh::write(const bool updateInstance) const
 {
-    return objectRegistry::write();
+    return objectRegistry::write(updateInstance);
 }
 
 

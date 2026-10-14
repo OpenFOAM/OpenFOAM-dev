@@ -116,7 +116,7 @@ public:
         virtual void distribute(const polyDistributionMap&);
 
         //- Write points0 if the mesh topology changed
-        virtual bool write() const;
+        virtual bool write(const bool updateInstance = true) const;
 
 
     // Member Operators

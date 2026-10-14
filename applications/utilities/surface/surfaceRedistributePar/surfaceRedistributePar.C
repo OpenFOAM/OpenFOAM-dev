@@ -212,7 +212,8 @@ int main(int argc, char *argv[])
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            ioDict.time().writeCompression()
+            ioDict.time().writeCompression(),
+            true
         );
     }
 

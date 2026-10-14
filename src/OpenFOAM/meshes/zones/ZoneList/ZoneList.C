@@ -577,12 +577,13 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool updateInstance
 ) const
 {
     if (this->size())
     {
-        return regIOobject::writeObject(fmt, ver, cmp);
+        return regIOobject::writeObject(fmt, ver, cmp, updateInstance);
     }
     else
     {

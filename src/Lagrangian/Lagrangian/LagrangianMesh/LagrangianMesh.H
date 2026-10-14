@@ -934,11 +934,12 @@ public:
             (
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
-                IOstream::compressionType cmp
+                IOstream::compressionType cmp,
+                const bool updateInstance
             ) const;
 
             //- Write settings from the database
-            virtual bool write() const;
+            virtual bool write(const bool updateInstance = true) const;
 
 
     // Member Operators

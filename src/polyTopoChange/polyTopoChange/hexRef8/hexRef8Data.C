@@ -372,24 +372,24 @@ void Foam::hexRef8Data::distribute(const polyDistributionMap& map)
 }
 
 
-bool Foam::hexRef8Data::write() const
+bool Foam::hexRef8Data::write(const bool updateInstance) const
 {
     bool ok = true;
     if (cellLevelPtr_.valid())
     {
-        ok = ok && cellLevelPtr_().write();
+        ok = ok && cellLevelPtr_().write(updateInstance);
     }
     if (pointLevelPtr_.valid())
     {
-        ok = ok && pointLevelPtr_().write();
+        ok = ok && pointLevelPtr_().write(updateInstance);
     }
     if (level0EdgePtr_.valid())
     {
-        ok = ok && level0EdgePtr_().write();
+        ok = ok && level0EdgePtr_().write(updateInstance);
     }
     if (refHistoryPtr_.valid())
     {
-        ok = ok && refHistoryPtr_().write();
+        ok = ok && refHistoryPtr_().write(updateInstance);
     }
     return ok;
 }

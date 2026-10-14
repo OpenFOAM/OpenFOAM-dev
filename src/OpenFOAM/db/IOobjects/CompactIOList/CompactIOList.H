@@ -181,7 +181,8 @@ public:
         (
             IOstream::streamFormat,
             IOstream::versionNumber,
-            IOstream::compressionType
+            IOstream::compressionType,
+            const bool updateInstance
         ) const;
 
         //- WriteData function required for regIOobject write operation

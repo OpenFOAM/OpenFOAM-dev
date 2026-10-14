@@ -249,13 +249,14 @@ bool pointZoneSet::writeObject
 (
     IOstream::streamFormat s,
     IOstream::versionNumber v,
-    IOstream::compressionType c
+    IOstream::compressionType c,
+    const bool updateInstance
 ) const
 {
     // Write shadow pointSet
     word oldTypeName = typeName;
     const_cast<word&>(type()) = pointSet::typeName;
-    bool ok = pointSet::writeObject(s, v, c);
+    bool ok = pointSet::writeObject(s, v, c, updateInstance);
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify pointZone
@@ -283,7 +284,7 @@ bool pointZoneSet::writeObject
         pointZones[zoneID] = addressing_;
     }
 
-    return ok && pointZones.write();
+    return ok && pointZones.write(updateInstance);
 }
 
 

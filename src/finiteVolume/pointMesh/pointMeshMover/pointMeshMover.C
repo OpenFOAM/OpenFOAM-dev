@@ -120,7 +120,7 @@ void Foam::pointMeshMover::twoDCorrectPoints(pointField& p) const
 }
 
 
-bool Foam::pointMeshMover::write() const
+bool Foam::pointMeshMover::write(const bool updateInstance) const
 {
     return true;
 }

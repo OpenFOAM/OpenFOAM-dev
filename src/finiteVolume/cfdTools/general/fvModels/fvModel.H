@@ -413,7 +413,7 @@ public:
             virtual bool read(const dictionary& dict);
 
             //- Write fvModel data
-            virtual bool write() const;
+            virtual bool write(const bool updateInstance = true) const;
 };
 
 

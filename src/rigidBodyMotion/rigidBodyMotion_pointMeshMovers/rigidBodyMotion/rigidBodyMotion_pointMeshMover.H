@@ -204,7 +204,7 @@ public:
     // Member Functions
 
         //- Write motion state information for restart
-        virtual bool write() const;
+        virtual bool write(const bool updateInstance = true) const;
 
 
     // Member Operators

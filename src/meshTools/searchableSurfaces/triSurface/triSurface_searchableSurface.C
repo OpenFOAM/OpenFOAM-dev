@@ -906,7 +906,8 @@ bool Foam::searchableSurfaces::triSurface::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool updateInstance
 ) const
 {
     fileName fullPath;

@@ -125,9 +125,9 @@ void Foam::fvMeshMovers::pointMeshMover::distribute
 }
 
 
-bool Foam::fvMeshMovers::pointMeshMover::write() const
+bool Foam::fvMeshMovers::pointMeshMover::write(const bool updateInstance) const
 {
-    return pointMeshMoverPtr_->write();
+    return pointMeshMoverPtr_->write(updateInstance);
 }
 
 

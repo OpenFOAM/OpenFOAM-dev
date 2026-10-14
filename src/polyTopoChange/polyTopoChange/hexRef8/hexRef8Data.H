@@ -115,7 +115,7 @@ public:
         void distribute(const polyDistributionMap&);
 
         //- Write
-        bool write() const;
+        bool write(const bool updateInstance = true) const;
 
 
     // Member Operators

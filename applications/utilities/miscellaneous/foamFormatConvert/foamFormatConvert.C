@@ -141,7 +141,8 @@ bool writeZones(const word& name, const fileName& meshDir, Time& runTime)
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            runTime.writeCompression()
+            runTime.writeCompression(),
+            true
         );
     }
 
@@ -415,7 +416,8 @@ int main(int argc, char *argv[])
                 (
                     runTime.writeFormat(),
                     IOstream::currentVersion,
-                    runTime.writeCompression()
+                    runTime.writeCompression(),
+                    true
                 );
 
                 // Do local scan for valid cloud objects

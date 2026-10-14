@@ -1680,7 +1680,7 @@ void Foam::fvMesh::reorderPatches
     #define ReorderPatchFieldsType(Type, FieldType)                            \
         ReorderPatchFields<FieldType<Type>>                                    \
         (                                                                      \
-            const_cast<objectRegistry&>(db()),                             \
+            const_cast<objectRegistry&>(db()),                                 \
             newToOld                                                           \
         );
     FOR_ALL_FIELD_TYPES(ReorderPatchFieldsType, VolField);
@@ -1693,7 +1693,8 @@ bool Foam::fvMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool updateInstance
 ) const
 {
     bool ok = true;
@@ -1712,7 +1713,7 @@ bool Foam::fvMesh::writeObject
             *polyFacesBfPtr_
         );
 
-        ok = ok & polyFaces.write();
+        ok = ok & polyFaces.write(updateInstance);
     }
 
     // Write geometry out at a higher precision
@@ -1722,13 +1723,13 @@ bool Foam::fvMesh::writeObject
     // Write the mesh flux if old-old-time volumes exist
     if (phiPtr_ && V00Ptr_)
     {
-        ok = ok && phiPtr_->write();
+        ok = ok && phiPtr_->write(updateInstance);
     }
 
     // Write old-time volumes if old-old-time volumes exist
     if (V0Ptr_ && V00Ptr_)
     {
-        ok = ok && V0Ptr_->write();
+        ok = ok && V0Ptr_->write(updateInstance);
     }
 
     // Restore the default precision
@@ -1736,25 +1737,25 @@ bool Foam::fvMesh::writeObject
 
     if (stitcher_.valid())
     {
-        stitcher_->write();
+        stitcher_->write(updateInstance);
     }
 
     if (topoChanger_.valid())
     {
-        topoChanger_->write();
+        topoChanger_->write(updateInstance);
     }
 
     if (distributor_.valid())
     {
-        distributor_->write();
+        distributor_->write(updateInstance);
     }
 
     if (mover_.valid())
     {
-        mover_->write();
+        mover_->write(updateInstance);
     }
 
-    return ok && polyMesh::writeObject(fmt, ver, cmp);
+    return ok && polyMesh::writeObject(fmt, ver, cmp, updateInstance);
 }
 
 

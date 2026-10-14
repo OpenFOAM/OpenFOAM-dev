@@ -463,13 +463,14 @@ bool faceZoneSet::writeObject
 (
     IOstream::streamFormat s,
     IOstream::versionNumber v,
-    IOstream::compressionType c
+    IOstream::compressionType c,
+    const bool updateInstance
 ) const
 {
     // Write shadow faceSet
     word oldTypeName = typeName;
     const_cast<word&>(type()) = faceSet::typeName;
-    bool ok = faceSet::writeObject(s, v, c);
+    bool ok = faceSet::writeObject(s, v, c, updateInstance);
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify faceZone
@@ -498,7 +499,7 @@ bool faceZoneSet::writeObject
         faceZones[zoneID].resetAddressing(addressing_, flipMap_);
     }
 
-    return ok && faceZones.write();
+    return ok && faceZones.write(updateInstance);
 }
 
 

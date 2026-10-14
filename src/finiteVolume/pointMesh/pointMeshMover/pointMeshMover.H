@@ -141,7 +141,7 @@ public:
         virtual void mapMesh(const polyMeshMap&) = 0;
 
         //- Optionally write motion state information for restart
-        virtual bool write() const;
+        virtual bool write(const bool updateInstance = true) const;
 };
 
 

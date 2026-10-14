@@ -200,7 +200,8 @@ public:
         (
             IOstream::streamFormat,
             IOstream::versionNumber,
-            IOstream::compressionType
+            IOstream::compressionType,
+            const bool updateInstance
         ) const;
 
         //- Return const reference to the all zone

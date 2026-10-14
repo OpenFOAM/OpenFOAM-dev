@@ -596,7 +596,8 @@ bool Foam::objectRegistry::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool updateInstance
 ) const
 {
     bool ok = true;
@@ -616,7 +617,7 @@ bool Foam::objectRegistry::writeObject
 
         if (iter()->writeOpt() != NO_WRITE)
         {
-            ok = iter()->writeObject(fmt, ver, cmp) && ok;
+            ok = iter()->writeObject(fmt, ver, cmp, updateInstance) && ok;
         }
     }
 

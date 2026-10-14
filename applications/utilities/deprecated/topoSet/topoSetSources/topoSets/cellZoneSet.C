@@ -248,13 +248,14 @@ bool cellZoneSet::writeObject
 (
     IOstream::streamFormat s,
     IOstream::versionNumber v,
-    IOstream::compressionType c
+    IOstream::compressionType c,
+    const bool updateInstance
 ) const
 {
     // Write shadow cellSet
     word oldTypeName = typeName;
     const_cast<word&>(type()) = cellSet::typeName;
-    bool ok = cellSet::writeObject(s, v, c);
+    bool ok = cellSet::writeObject(s, v, c, updateInstance);
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify cellZone
@@ -282,7 +283,7 @@ bool cellZoneSet::writeObject
         cellZones[zoneID] = addressing_;
     }
 
-    return ok && cellZones.write();
+    return ok && cellZones.write(updateInstance);
 }
 
 

@@ -105,7 +105,8 @@ void Foam::lagrangian::Cloud<ParticleType>::writeCloudUniformProperties() const
     (
         IOstream::ASCII,
         IOstream::currentVersion,
-        time().writeCompression()
+        time().writeCompression(),
+        true
     );
 }
 
@@ -238,14 +239,15 @@ bool Foam::lagrangian::Cloud<ParticleType>::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool updateInstance
 ) const
 {
     writeCloudUniformProperties();
 
     writeFields();
 
-    return cloud::writeObject(fmt, ver, cmp);
+    return cloud::writeObject(fmt, ver, cmp, updateInstance);
 }
 
 

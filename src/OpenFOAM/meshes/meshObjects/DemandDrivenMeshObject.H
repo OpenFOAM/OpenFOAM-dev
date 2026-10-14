@@ -212,7 +212,8 @@ public:
         (
             IOstream::streamFormat,
             IOstream::versionNumber,
-            IOstream::compressionType
+            IOstream::compressionType,
+            const bool updateInstance
         ) const
         {
             return true;

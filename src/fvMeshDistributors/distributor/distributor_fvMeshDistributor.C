@@ -161,7 +161,10 @@ void Foam::fvMeshDistributors::distributor::distribute
 {}
 
 
-bool Foam::fvMeshDistributors::distributor::write() const
+bool Foam::fvMeshDistributors::distributor::write
+(
+    const bool updateInstance
+) const
 {
     return true;
 }

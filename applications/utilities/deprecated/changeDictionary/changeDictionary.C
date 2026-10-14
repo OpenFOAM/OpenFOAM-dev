@@ -398,7 +398,8 @@ int main(int argc, char *argv[])
                 (
                     runTime.writeFormat(),
                     runTime.writeFormat(),
-                    IOstream::UNCOMPRESSED
+                    IOstream::UNCOMPRESSED,
+                    true
                 );
             }
             else
