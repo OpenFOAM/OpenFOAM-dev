@@ -101,27 +101,20 @@ bool Foam::stateModel::stateModelWriter::writeData(Ostream& os) const
 }
 
 
-bool Foam::stateModel::writeState(const bool write) const
+bool Foam::stateModel::writeState() const
 {
-    if (write)
-    {
-        bool allOk = true;
+    bool allOk = true;
 
-        const bool ok = stateModel::stateModelWriter(*this, false).write();
+    const bool ok = stateModel::stateModelWriter(*this, false).write();
+    allOk = allOk && ok;
+
+    if (Pstream::parRun())
+    {
+        const bool ok = stateModel::stateModelWriter(*this, true).write();
         allOk = allOk && ok;
-
-        if (Pstream::parRun())
-        {
-            const bool ok = stateModel::stateModelWriter(*this, true).write();
-            allOk = allOk && ok;
-        }
-
-        return allOk;
     }
-    else
-    {
-        return true;
-    }
+
+    return allOk;
 }
 
 

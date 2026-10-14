@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -734,8 +734,7 @@ Foam::fileOperations::uncollatedFileOperation::NewOFstream
     const fileName& filePath,
     IOstream::streamFormat format,
     IOstream::versionNumber version,
-    IOstream::compressionType compression,
-    const bool write
+    IOstream::compressionType compression
 ) const
 {
     return autoPtr<Ostream>

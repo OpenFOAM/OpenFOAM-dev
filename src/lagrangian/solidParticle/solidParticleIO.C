@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,8 @@ void Foam::solidParticle::writeFields(const lagrangian::Cloud<solidParticle>& c)
         i++;
     }
 
-    d.write(np > 0);
-    U.write(np > 0);
+    d.write();
+    U.write();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -367,8 +367,7 @@ writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     if (fmt == IOstream::ASCII)
@@ -379,7 +378,7 @@ writeObject
         const_cast<word&>(CompactIOContainer<Type>::typeName) =
             IOContainer<Type>::typeName;
 
-        bool good = regIOobject::writeObject(fmt, ver, cmp, write);
+        bool good = regIOobject::writeObject(fmt, ver, cmp);
 
         // Change type back
         const_cast<word&>(CompactIOContainer<Type>::typeName) = oldTypeName;
@@ -399,7 +398,7 @@ writeObject
         const_cast<word&>(CompactIOContainer<Type>::typeName) =
             IOContainer<Type>::typeName;
 
-        bool good = regIOobject::writeObject(IOstream::ASCII, ver, cmp, write);
+        bool good = regIOobject::writeObject(IOstream::ASCII, ver, cmp);
 
         // Change type back
         const_cast<word&>(CompactIOContainer<Type>::typeName) = oldTypeName;
@@ -408,7 +407,7 @@ writeObject
     }
     else
     {
-        return regIOobject::writeObject(fmt, ver, cmp, write);
+        return regIOobject::writeObject(fmt, ver, cmp);
     }
 }
 

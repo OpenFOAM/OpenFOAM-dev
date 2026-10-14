@@ -5447,8 +5447,7 @@ bool Foam::hexRef8::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     if (cellLevel_.size() != mesh_.nCells())
@@ -5468,13 +5467,13 @@ bool Foam::hexRef8::writeObject
     }
 
     bool writeOk =
-        cellLevel_.writeObject(fmt, ver, cmp, write)
-     && pointLevel_.writeObject(fmt, ver, cmp, write)
-     && level0Edge_.writeObject(fmt, ver, cmp, write);
+        cellLevel_.writeObject(fmt, ver, cmp)
+     && pointLevel_.writeObject(fmt, ver, cmp)
+     && level0Edge_.writeObject(fmt, ver, cmp);
 
     if (history_.active())
     {
-        writeOk = writeOk && history_.writeObject(fmt, ver, cmp, write);
+        writeOk = writeOk && history_.writeObject(fmt, ver, cmp);
     }
 
     writeOpt() = IOobject::NO_WRITE;

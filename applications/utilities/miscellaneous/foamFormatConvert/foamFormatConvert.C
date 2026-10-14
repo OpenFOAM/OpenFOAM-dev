@@ -141,8 +141,7 @@ bool writeZones(const word& name, const fileName& meshDir, Time& runTime)
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            runTime.writeCompression(),
-            true
+            runTime.writeCompression()
         );
     }
 
@@ -183,8 +182,7 @@ bool writeOptionalMeshObject
 (
     const word& name,
     const fileName& meshDir,
-    Time& runTime,
-    const bool write
+    Time& runTime
 )
 {
     IOobject io
@@ -207,14 +205,14 @@ bool writeOptionalMeshObject
     combineReduce(classNames, uniqueEqOp());
 
     // Check for correct type
-    if (classNames[0] == T::typeName)
+    if (haveFile && classNames[0] == T::typeName)
     {
         Info<< "        Reading " << classNames[0]
             << " : " << name << endl;
-        T meshObject(io, write && haveFile);
+        T meshObject(io);
 
         Info<< "        Writing " << name << endl;
-        writeOk = meshObject.regIOobject::write(write && haveFile);
+        writeOk = meshObject.regIOobject::write();
     }
 
     return writeOk;
@@ -417,10 +415,8 @@ int main(int argc, char *argv[])
                 (
                     runTime.writeFormat(),
                     IOstream::currentVersion,
-                    runTime.writeCompression(),
-                    parcels.size()
+                    runTime.writeCompression()
                 );
-
 
                 // Do local scan for valid cloud objects
                 IOobjectList sprayObjs(runTime, runTime.name(), dir);
@@ -451,8 +447,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
                     if (writeOk) continue;
 
@@ -460,8 +455,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
                     if (writeOk) continue;
 
@@ -469,8 +463,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
                     if (writeOk) continue;
 
@@ -478,8 +471,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
                     if (writeOk) continue;
 
@@ -487,8 +479,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
                     if (writeOk) continue;
 
@@ -496,8 +487,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
                     if (writeOk) continue;
 
@@ -505,8 +495,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
                     if (writeOk) continue;
 
@@ -514,8 +503,7 @@ int main(int argc, char *argv[])
                     (
                         name,
                         dir,
-                        runTime,
-                        parcels.size() > 0
+                        runTime
                     );
 
                     if (!writeOk)

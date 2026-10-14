@@ -2065,17 +2065,10 @@ bool Foam::fileOperations::masterUncollatedFileOperation::writeObject
     const regIOobject& io,
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     fileName filePath(io.objectPath());
-
-    if (debug)
-    {
-        Pout<< "masterUncollatedFileOperation::writeObject :"
-            << " io:" << filePath << " write:" << write << endl;
-    }
 
     // Make sure to pick up any new times
     setTime(io.time());
@@ -2087,8 +2080,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::writeObject
             filePath,
             fmt,
             ver,
-            cmp,
-            write
+            cmp
         )
     );
     Ostream& os = osPtr();
@@ -2350,8 +2342,7 @@ Foam::fileOperations::masterUncollatedFileOperation::NewOFstream
     const fileName& filePath,
     IOstream::streamFormat format,
     IOstream::versionNumber version,
-    IOstream::compressionType compression,
-    const bool write
+    IOstream::compressionType compression
 ) const
 {
     return autoPtr<Ostream>
@@ -2362,8 +2353,7 @@ Foam::fileOperations::masterUncollatedFileOperation::NewOFstream
             format,
             version,
             compression,
-            false,      // append
-            write
+            false       // append
         )
     );
 }

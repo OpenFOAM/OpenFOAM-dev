@@ -231,7 +231,7 @@ bool Foam::LagrangianModel::read(const dictionary& dict)
 }
 
 
-bool Foam::LagrangianModel::write(const bool write) const
+bool Foam::LagrangianModel::write() const
 {
     return true;
 }

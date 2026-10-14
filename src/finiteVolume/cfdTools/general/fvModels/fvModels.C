@@ -343,8 +343,7 @@ bool Foam::fvModels::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     bool allOk = true;
@@ -353,7 +352,7 @@ bool Foam::fvModels::writeObject
 
     forAll(modelList, i)
     {
-        const bool ok = modelList[i].write(write);
+        const bool ok = modelList[i].write();
         allOk = (allOk && ok);
     }
 

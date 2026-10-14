@@ -101,7 +101,7 @@ public:
         virtual void distribute(const polyDistributionMap&);
 
         //- Write the motion solver state
-        virtual bool write(const bool write = true) const;
+        virtual bool write() const;
 
 
     // Member Operators

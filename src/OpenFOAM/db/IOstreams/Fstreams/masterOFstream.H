@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,9 +58,6 @@ class masterOFstream
 
         const bool append_;
 
-        //- Should file be written
-        const bool write_;
-
 
     // Private Member Functions
 
@@ -79,8 +76,7 @@ public:
             const streamFormat format = ASCII,
             const versionNumber version = currentVersion,
             const compressionType compression = UNCOMPRESSED,
-            const bool append = false,
-            const bool write = true
+            const bool append = false
         );
 
 

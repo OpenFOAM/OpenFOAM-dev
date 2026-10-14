@@ -139,7 +139,7 @@ public:
         virtual void distribute(const polyDistributionMap&) = 0;
 
         //- Write the mover state
-        virtual bool write(const bool write = true) const
+        virtual bool write() const
         {
             return true;
         }

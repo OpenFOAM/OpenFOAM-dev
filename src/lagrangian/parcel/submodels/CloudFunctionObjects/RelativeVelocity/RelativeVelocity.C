@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,8 @@ License
 template<class CloudType>
 void Foam::RelativeVelocity<CloudType>::write()
 {
+    if (!returnReduce(this->owner().size(), sumOp())) return;
+
     IOField<vector> URel
     (
         this->owner().fieldIOobject("URel", IOobject::NO_READ),
@@ -58,7 +60,7 @@ void Foam::RelativeVelocity<CloudType>::write()
         ++ i;
     }
 
-    URel.write(this->owner().size() > 0);
+    URel.write();
 }
 
 

@@ -390,8 +390,7 @@ public:
                 const regIOobject&,
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
-                IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool write = true
+                IOstream::compressionType compression=IOstream::UNCOMPRESSED
             ) const;
 
 
@@ -415,8 +414,7 @@ public:
                 const fileName& filePath,
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
-                IOstream::compressionType compression=IOstream::UNCOMPRESSED,
-                const bool write = true
+                IOstream::compressionType compression=IOstream::UNCOMPRESSED
             ) const = 0;
 
 

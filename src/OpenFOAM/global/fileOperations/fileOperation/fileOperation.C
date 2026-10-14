@@ -519,53 +519,49 @@ bool Foam::fileOperation::writeObject
     const regIOobject& io,
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
-    if (write)
-    {
-        const fileName filePath(io.objectPath());
+    const fileName filePath(io.objectPath());
 
-        mkDir(filePath.path());
+    mkDir(filePath.path());
 
-        autoPtr<Ostream> osPtr
+    autoPtr<Ostream> osPtr
+    (
+        NewOFstream
         (
-            NewOFstream
-            (
-                filePath,
-                fmt,
-                ver,
-                cmp
-            )
-        );
+            filePath,
+            fmt,
+            ver,
+            cmp
+        )
+    );
 
-        if (!osPtr.valid())
-        {
-            return false;
-        }
-
-        Ostream& os = osPtr();
-
-        // If any of these fail, return (leave error handling to Ostream class)
-        if (!os.good())
-        {
-            return false;
-        }
-
-        if (!io.writeHeader(os))
-        {
-            return false;
-        }
-
-        // Write the data to the Ostream
-        if (!io.writeData(os))
-        {
-            return false;
-        }
-
-        IOobject::writeEndDivider(os);
+    if (!osPtr.valid())
+    {
+        return false;
     }
+
+    Ostream& os = osPtr();
+
+    // If any of these fail, return (leave error handling to Ostream class)
+    if (!os.good())
+    {
+        return false;
+    }
+
+    if (!io.writeHeader(os))
+    {
+        return false;
+    }
+
+    // Write the data to the Ostream
+    if (!io.writeData(os))
+    {
+        return false;
+    }
+
+    IOobject::writeEndDivider(os);
 
     return true;
 }

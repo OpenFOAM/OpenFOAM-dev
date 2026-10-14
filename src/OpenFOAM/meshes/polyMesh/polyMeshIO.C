@@ -555,8 +555,7 @@ bool Foam::polyMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     if (faces_.writeOpt() == AUTO_WRITE)
@@ -599,7 +598,7 @@ bool Foam::polyMesh::writeObject
 
     const_cast<polyMesh&>(*this).points_.writeOpt() = IOobject::NO_WRITE;
 
-    const bool written = objectRegistry::writeObject(fmt, ver, cmp, write);
+    const bool written = objectRegistry::writeObject(fmt, ver, cmp);
 
     const_cast<polyMesh&>(*this).setTopologyWrite(IOobject::NO_WRITE);
 

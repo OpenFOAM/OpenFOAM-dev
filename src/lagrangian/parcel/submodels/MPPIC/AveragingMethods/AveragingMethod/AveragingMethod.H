@@ -176,7 +176,7 @@ public:
         virtual bool writeData(Ostream&) const;
 
         //- Write using setting from DB
-        virtual bool write(const bool write = true) const;
+        virtual bool write() const;
 
         //- Return an internal field of the average
         virtual tmp<Field<Type>> primitiveField() const = 0;

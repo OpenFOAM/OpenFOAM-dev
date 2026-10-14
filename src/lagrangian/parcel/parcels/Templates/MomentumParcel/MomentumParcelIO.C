@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -232,18 +232,16 @@ void Foam::MomentumParcel<ParcelType>::writeFields(const CloudType& c)
         i++;
     }
 
-    const bool write = np > 0;
-
-    moving.write(write);
-    typeId.write(write);
-    nParticle.write(write);
-    d.write(write);
-    dTarget.write(write);
-    U.write(write);
-    rho.write(write);
-    age.write(write);
-    tTurb.write(write);
-    UTurb.write(write);
+    moving.write();
+    typeId.write();
+    nParticle.write();
+    d.write();
+    dTarget.write();
+    U.write();
+    rho.write();
+    age.write();
+    tTurb.write();
+    UTurb.write();
 }
 
 
