@@ -1693,8 +1693,7 @@ bool Foam::fvMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     bool ok = true;
@@ -1713,7 +1712,7 @@ bool Foam::fvMesh::writeObject
             *polyFacesBfPtr_
         );
 
-        ok = ok & polyFaces.write(write);
+        ok = ok & polyFaces.write();
     }
 
     // Write geometry out at a higher precision
@@ -1723,13 +1722,13 @@ bool Foam::fvMesh::writeObject
     // Write the mesh flux if old-old-time volumes exist
     if (phiPtr_ && V00Ptr_)
     {
-        ok = ok && phiPtr_->write(write);
+        ok = ok && phiPtr_->write();
     }
 
     // Write old-time volumes if old-old-time volumes exist
     if (V0Ptr_ && V00Ptr_)
     {
-        ok = ok && V0Ptr_->write(write);
+        ok = ok && V0Ptr_->write();
     }
 
     // Restore the default precision
@@ -1737,25 +1736,25 @@ bool Foam::fvMesh::writeObject
 
     if (stitcher_.valid())
     {
-        stitcher_->write(write);
+        stitcher_->write();
     }
 
     if (topoChanger_.valid())
     {
-        topoChanger_->write(write);
+        topoChanger_->write();
     }
 
     if (distributor_.valid())
     {
-        distributor_->write(write);
+        distributor_->write();
     }
 
     if (mover_.valid())
     {
-        mover_->write(write);
+        mover_->write();
     }
 
-    return ok && polyMesh::writeObject(fmt, ver, cmp, write);
+    return ok && polyMesh::writeObject(fmt, ver, cmp);
 }
 
 

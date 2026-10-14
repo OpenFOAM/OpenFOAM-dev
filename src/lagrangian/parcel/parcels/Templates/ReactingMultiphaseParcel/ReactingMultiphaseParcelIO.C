@@ -233,7 +233,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
             const ReactingMultiphaseParcel<ParcelType>& p = iter();
             mass0[i++] = p.mass0_;
         }
-        mass0.write(np > 0);
+        mass0.write();
 
         // Write the composition fractions
         const wordList& stateLabels = compModel.stateLabels();
@@ -259,7 +259,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
                 YGas[i++] = p0.YGas()[j]*p0.Y()[idGas];
             }
 
-            YGas.write(np > 0);
+            YGas.write();
         }
 
         const label idLiquid = compModel.idLiquid();
@@ -283,7 +283,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
                 YLiquid[i++] = p0.YLiquid()[j]*p0.Y()[idLiquid];
             }
 
-            YLiquid.write(np > 0);
+            YLiquid.write();
         }
 
         const label idSolid = compModel.idSolid();
@@ -307,7 +307,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
                 YSolid[i++] = p0.YSolid()[j]*p0.Y()[idSolid];
             }
 
-            YSolid.write(np > 0);
+            YSolid.write();
         }
     }
 }

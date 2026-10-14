@@ -481,7 +481,7 @@ public:
         virtual void distribute(const polyDistributionMap&);
 
         //- Write the stitcher state
-        virtual bool write(const bool write = true) const
+        virtual bool write() const
         {
             return true;
         }

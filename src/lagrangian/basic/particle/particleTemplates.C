@@ -77,7 +77,7 @@ void Foam::particle::writeFields(const TrackCloudType& c)
     label np = c.size();
 
     IOPosition<TrackCloudType> ioP(c);
-    ioP.write(np > 0);
+    ioP.write();
 
     IOField<label> origProc
     (
@@ -98,8 +98,8 @@ void Foam::particle::writeFields(const TrackCloudType& c)
         i++;
     }
 
-    origProc.write(np > 0);
-    origId.write(np > 0);
+    origProc.write();
+    origId.write();
 }
 
 

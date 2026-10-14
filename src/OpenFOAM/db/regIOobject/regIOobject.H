@@ -301,12 +301,11 @@ public:
             (
                 IOstream::streamFormat,
                 IOstream::versionNumber,
-                IOstream::compressionType,
-                const bool write
+                IOstream::compressionType
             ) const;
 
             //- Write using setting from DB
-            virtual bool write(const bool write = true) const;
+            virtual bool write() const;
 
 
     // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,14 +248,13 @@ bool cellZoneSet::writeObject
 (
     IOstream::streamFormat s,
     IOstream::versionNumber v,
-    IOstream::compressionType c,
-    const bool write
+    IOstream::compressionType c
 ) const
 {
     // Write shadow cellSet
     word oldTypeName = typeName;
     const_cast<word&>(type()) = cellSet::typeName;
-    bool ok = cellSet::writeObject(s, v, c, write);
+    bool ok = cellSet::writeObject(s, v, c);
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify cellZone
@@ -283,7 +282,7 @@ bool cellZoneSet::writeObject
         cellZones[zoneID] = addressing_;
     }
 
-    return ok && cellZones.write(write);
+    return ok && cellZones.write();
 }
 
 

@@ -123,7 +123,7 @@ public:
         virtual const objectRegistry& db() const = 0;
 
         //- Write state
-        bool writeState(const bool write) const;
+        bool writeState() const;
 
         //- Write state
         virtual void writeState(Ostream& os) const;

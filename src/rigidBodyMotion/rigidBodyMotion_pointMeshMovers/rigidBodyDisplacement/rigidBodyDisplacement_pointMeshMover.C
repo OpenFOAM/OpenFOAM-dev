@@ -333,7 +333,7 @@ void Foam::pointMeshMovers::rigidBodyDisplacement::distribute
 }
 
 
-bool Foam::pointMeshMovers::rigidBodyDisplacement::write(const bool write) const
+bool Foam::pointMeshMovers::rigidBodyDisplacement::write() const
 {
     timeIOdictionary dict
     (
@@ -352,13 +352,12 @@ bool Foam::pointMeshMovers::rigidBodyDisplacement::write(const bool write) const
     state().write(dict);
 
     return
-        pointMeshMover::write(write)
+        pointMeshMover::write()
      && dict.regIOobject::writeObject
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            poly().time().writeCompression(),
-            true
+            poly().time().writeCompression()
         );
 }
 

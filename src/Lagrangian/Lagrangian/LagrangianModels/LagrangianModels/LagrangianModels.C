@@ -418,8 +418,7 @@ bool Foam::LagrangianModels::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     bool allOk = true;
@@ -428,10 +427,10 @@ bool Foam::LagrangianModels::writeObject
 
     forAll(modelList, i)
     {
-        const bool ok = modelList[i].write(write);
+        const bool ok = modelList[i].write();
         allOk = allOk && ok;
 
-        const bool okState = modelList[i].writeState(write);
+        const bool okState = modelList[i].writeState();
         allOk = allOk && okState;
     }
 

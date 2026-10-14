@@ -175,8 +175,7 @@ void Foam::meshReader::writeMesh
     (
         fmt,
         IOstream::currentVersion,
-        IOstream::UNCOMPRESSED,
-        true
+        IOstream::UNCOMPRESSED
     );
     writeAux(mesh);
 }

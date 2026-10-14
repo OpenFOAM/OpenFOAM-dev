@@ -199,7 +199,7 @@ bool Foam::fvModel::read(const dictionary& dict)
 }
 
 
-bool Foam::fvModel::write(const bool write) const
+bool Foam::fvModel::write() const
 {
     return true;
 }

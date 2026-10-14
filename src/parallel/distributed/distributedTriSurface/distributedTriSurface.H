@@ -456,8 +456,7 @@ public:
             (
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
-                IOstream::compressionType cmp,
-                const bool write
+                IOstream::compressionType cmp
             ) const;
 
             //- Is object global

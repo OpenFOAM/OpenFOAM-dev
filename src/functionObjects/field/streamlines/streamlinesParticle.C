@@ -577,13 +577,13 @@ void Foam::streamlinesParticle::writeFields
         i++;
     }
 
-    lifeTime.write(np > 0);
-    trackIndex.write(np > 0);
-    trackPartIndex.write(np > 0);
-    age.write(np > 0);
-    transform.write(np > 0);
-    sampledPositions.write(np > 0);
-    sampledAges.write(np > 0);
+    lifeTime.write();
+    trackIndex.write();
+    trackPartIndex.write();
+    age.write();
+    transform.write();
+    sampledPositions.write();
+    sampledAges.write();
 }
 
 
@@ -591,7 +591,6 @@ void Foam::streamlinesParticle::writeFields
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const streamlinesParticle& p)
 {
-
     os  << static_cast<const particle&>(p)
         << token::SPACE << p.lifeTime_
         << token::SPACE << p.trackIndex_

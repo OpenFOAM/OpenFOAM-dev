@@ -192,7 +192,7 @@ Foam::pointMeshMovers::sixDoFRigidBodyMotion::~sixDoFRigidBodyMotion()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::pointMeshMovers::sixDoFRigidBodyMotion::write(const bool write) const
+bool Foam::pointMeshMovers::sixDoFRigidBodyMotion::write() const
 {
     timeIOdictionary dict
     (
@@ -211,13 +211,12 @@ bool Foam::pointMeshMovers::sixDoFRigidBodyMotion::write(const bool write) const
     state().write(dict);
 
     return
-        pointMeshMovers::multiRigidBody::write(write)
+        pointMeshMovers::multiRigidBody::write()
      && dict.regIOobject::writeObject
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            poly().time().writeCompression(),
-            true
+            poly().time().writeCompression()
         );
 }
 

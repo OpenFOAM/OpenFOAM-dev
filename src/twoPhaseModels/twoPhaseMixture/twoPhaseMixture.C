@@ -125,8 +125,7 @@ Foam::twoPhaseMixture::readPhasePropertiesDict
                     (
                         IOstream::ASCII,
                         IOstream::currentVersion,
-                        IOstream::UNCOMPRESSED,
-                        true
+                        IOstream::UNCOMPRESSED
                     );
 
                     phasePropertiesDict.remove(phases[i]);
@@ -136,8 +135,7 @@ Foam::twoPhaseMixture::readPhasePropertiesDict
                 (
                     IOstream::ASCII,
                     IOstream::currentVersion,
-                    IOstream::UNCOMPRESSED,
-                    true
+                    IOstream::UNCOMPRESSED
                 );
 
                 WarningInFunction

@@ -148,9 +148,10 @@ bool Foam::fv::OUForce::read(const dictionary& dict)
 }
 
 
-bool Foam::fv::OUForce::write(const bool write) const
+bool Foam::fv::OUForce::write() const
 {
     const volVectorField& U = mesh().lookupObject<volVectorField>(UName_);
+
     writeEk(U, K_);
 
     return true;

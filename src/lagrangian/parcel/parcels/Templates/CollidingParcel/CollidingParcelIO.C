@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -264,19 +264,17 @@ void Foam::CollidingParcel<ParcelType>::writeFields(const CloudType& c)
         i++;
     }
 
-    const bool write = (np > 0);
+    f.write();
+    angularMomentum.write();
+    torque.write();
 
-    f.write(write);
-    angularMomentum.write(write);
-    torque.write(write);
-
-    collisionRecordsPairAccessed.write(write);
-    collisionRecordsPairOrigProcOfOther.write(write);
-    collisionRecordsPairOrigIdOfOther.write(write);
-    collisionRecordsPairData.write(write);
-    collisionRecordsWallAccessed.write(write);
-    collisionRecordsWallPRel.write(write);
-    collisionRecordsWallData.write(write);
+    collisionRecordsPairAccessed.write();
+    collisionRecordsPairOrigProcOfOther.write();
+    collisionRecordsPairOrigIdOfOther.write();
+    collisionRecordsPairData.write();
+    collisionRecordsWallAccessed.write();
+    collisionRecordsWallPRel.write();
+    collisionRecordsWallData.write();
 }
 
 

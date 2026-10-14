@@ -133,8 +133,8 @@ public:
 
     // Writing
 
-        //- Write using given format, version and compression
-        virtual bool write(const bool write = true) const;
+        //- Write
+        virtual bool write() const;
 
 
     // Member Operators

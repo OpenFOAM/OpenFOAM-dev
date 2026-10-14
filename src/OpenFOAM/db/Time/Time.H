@@ -376,8 +376,7 @@ public:
             (
                 IOstream::streamFormat,
                 IOstream::versionNumber,
-                IOstream::compressionType,
-                const bool write
+                IOstream::compressionType
             ) const;
 
             //- Write the objects now (not at end of iteration) and continue

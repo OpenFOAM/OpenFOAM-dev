@@ -2375,8 +2375,7 @@ bool Foam::searchableSurfaces::distributedTriSurface::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     // Make sure dictionary goes to same directory as surface
@@ -2403,7 +2402,7 @@ bool Foam::searchableSurfaces::distributedTriSurface::writeObject
     }
 
     // Dictionary needs to be written in ascii - binary output not supported.
-    return dict_.writeObject(IOstream::ASCII, ver, cmp, true);
+    return dict_.writeObject(IOstream::ASCII, ver, cmp);
 }
 
 

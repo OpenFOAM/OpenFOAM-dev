@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,15 +74,13 @@ Foam::masterOFstream::masterOFstream
     const streamFormat format,
     const versionNumber version,
     const compressionType compression,
-    const bool append,
-    const bool write
+    const bool append
 )
 :
     OStringStream(format, version),
     filePath_(filePath),
     compression_(compression),
-    append_(append),
-    write_(write)
+    append_(append)
 {}
 
 
@@ -106,16 +104,12 @@ Foam::masterOFstream::~masterOFstream()
 
         if (uniform)
         {
-            if (Pstream::master() && write_)
+            if (Pstream::master())
             {
                 checkWrite(filePath_, str());
             }
             return;
         }
-        boolList write(Pstream::nProcs());
-        write[Pstream::myProcNo()] = write_;
-        Pstream::gatherList(write);
-
 
         // Different files
         PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
@@ -135,10 +129,7 @@ Foam::masterOFstream::~masterOFstream()
         {
             // Write my own data
             {
-                if (write[Pstream::myProcNo()])
-                {
-                    checkWrite(filePaths[Pstream::myProcNo()], str());
-                }
+                checkWrite(filePaths[Pstream::myProcNo()], str());
             }
 
             for (label proci = 1; proci < Pstream::nProcs(); proci++)
@@ -148,14 +139,11 @@ Foam::masterOFstream::~masterOFstream()
 
                 is.read(buf.begin(), buf.size());
 
-                if (write[proci])
-                {
-                    checkWrite
-                    (
-                        filePaths[proci],
-                        string(buf.begin(), buf.size())
-                    );
-                }
+                checkWrite
+                (
+                    filePaths[proci],
+                    string(buf.begin(), buf.size())
+                );
             }
         }
     }

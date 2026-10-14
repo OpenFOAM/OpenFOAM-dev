@@ -227,8 +227,7 @@ void Foam::MomentumCloud<CloudType>::postEvolve()
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            this->time().writeCompression(),
-            true
+            this->time().writeCompression()
         );
     }
 }

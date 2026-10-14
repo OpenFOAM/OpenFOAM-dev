@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,23 +217,21 @@ void Foam::molecule::writeFields(const lagrangian::Cloud<molecule>& mC)
         i++;
     }
 
-    const bool write = np > 0;
+    Q.write();
+    v.write();
+    a.write();
+    pi.write();
+    tau.write();
+    specialPosition.write();
+    special.write();
+    id.write();
 
-    Q.write(write);
-    v.write(write);
-    a.write(write);
-    pi.write(write);
-    tau.write(write);
-    specialPosition.write(write);
-    special.write(write);
-    id.write(write);
+    piGlobal.write();
+    tauGlobal.write();
 
-    piGlobal.write(write);
-    tauGlobal.write(write);
-
-    orientation1.write(write);
-    orientation2.write(write);
-    orientation3.write(write);
+    orientation1.write();
+    orientation2.write();
+    orientation3.write();
 
     Info<< "writeFields " << mC.name() << endl;
 

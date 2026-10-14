@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,8 +248,7 @@ bool Foam::Time::writeTimeDict() const
     (
         IOstream::ASCII,
         IOstream::currentVersion,
-        IOstream::UNCOMPRESSED,
-        true
+        IOstream::UNCOMPRESSED
     );
 }
 
@@ -258,8 +257,7 @@ bool Foam::Time::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool write
+    IOstream::compressionType cmp
 ) const
 {
     if (writeTime())
@@ -268,7 +266,7 @@ bool Foam::Time::writeObject
 
         if (writeOK)
         {
-            writeOK = objectRegistry::writeObject(fmt, ver, cmp, write);
+            writeOK = objectRegistry::writeObject(fmt, ver, cmp);
         }
 
         if (writeOK)
