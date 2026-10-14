@@ -173,7 +173,7 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
     // Evaluate the concentrations
     for (label i=0; i<Y_.size(); i ++)
     {
-        s_.c[i] = rhoM/specieThermos_[i].W()*Y_[i];
+        s_.c[i] = rhoM*Y_[i]/specieThermos_[i].W();
     }
 
     s_.reset(p_, T, li);
@@ -184,7 +184,7 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
     {
         if (!mechRed_.reactionDisabled(ri))
         {
-            reactions_[ri].dNdtByV(s_, dYTdt, reduction_, cTos_, 0);
+            reactions_[ri].dNdtByV(s_, dYTdt, reduction_, cTos_);
         }
     }
 
@@ -261,7 +261,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     // Evaluate the concentrations
     for (label i=0; i<Y_.size(); i ++)
     {
-        s_.c[i] = rhoM/specieThermos_[i].W()*Y_[i];
+        s_.c[i] = rhoM*Y_[i]/specieThermos_[i].W();
     }
 
     s_.reset(p_, T, li);
@@ -316,7 +316,6 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
                 ddNdtByVdcT,
                 reduction_,
                 cTos_,
-                0,
                 nSpecie_,
                 YTWork_[1],
                 YTWork_[2]
@@ -462,13 +461,12 @@ Foam::chemistryModels::Standard<ThermoType>::reactionRR
 
         for (label i=0; i<nSpecie_; i++)
         {
-            const scalar Yi = Yvf_[i][celli];
-            s_.c[i] = rho*Yi/specieThermos_[i].W();
+            s_.c[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
         }
 
         s_.reset(p, T, celli);
-        scalar omegaf, omegar;
 
+        scalar omegaf, omegar;
         RR[celli] = R.omega(s_, omegaf, omegar);
     }
 
@@ -526,15 +524,14 @@ Foam::chemistryModels::Standard<ThermoType>::specieReactionRR
 
         for (label i=0; i<nSpecie_; i++)
         {
-            const scalar Yi = Yvf_[i][celli];
-            s_.c[i] = rho*Yi/specieThermos_[i].W();
+            s_.c[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
         }
 
         s_.reset(p, T, celli);
 
         dNdtByV = Zero;
 
-        R.dNdtByV(s_, dNdtByV, reduction_, cTos_, 0);
+        R.dNdtByV(s_, dNdtByV, reduction_, cTos_);
 
         for (label i=0; i<nSpecie_; i++)
         {
@@ -583,8 +580,7 @@ void Foam::chemistryModels::Standard<ThermoType>::calculate()
 
         for (label i=0; i<nSpecie_; i++)
         {
-            const scalar Yi = Yvf_[i][celli];
-            s_.c[i] = rho*Yi/specieThermos_[i].W();
+            s_.c[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
         }
 
         s_.reset(p, T, celli);
@@ -595,7 +591,7 @@ void Foam::chemistryModels::Standard<ThermoType>::calculate()
         {
             if (!mechRed_.reactionDisabled(ri))
             {
-                reactions_[ri].dNdtByV(s_, dNdtByV, reduction_, cTos_, 0);
+                reactions_[ri].dNdtByV(s_, dNdtByV, reduction_, cTos_);
             }
         }
 

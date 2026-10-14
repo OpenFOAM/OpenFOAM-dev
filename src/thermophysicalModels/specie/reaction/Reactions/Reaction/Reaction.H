@@ -206,13 +206,18 @@ public:
         // Reaction rate coefficients
 
             //- Concentration powers
-            void C(const state& s, scalar& Cf, scalar& Cr) const;
+            inline void C(const state& s, scalar& Cf, scalar& Cr) const;
 
             //- Net reaction rate
-            scalar omega(const state& s, scalar& omegaf, scalar& omegar) const;
+            inline scalar omega
+            (
+                const state& s,
+                scalar& omegaf,
+                scalar& omegar
+            ) const;
 
             //- Net reaction rate
-            scalar omega(const state& s) const;
+            inline scalar omega(const state& s) const;
 
             //- The net reaction rate for each species involved
             void dNdtByV
@@ -220,8 +225,7 @@ public:
                 const state& s,
                 scalarField& dNdtByV,
                 const bool reduced,
-                const List<label>& c2s,
-                const label Nsi0
+                const List<label>& c2s
             ) const;
 
 
@@ -274,7 +278,6 @@ public:
                 scalarSquareMatrix& ddNdtByVdcT,
                 const bool reduced,
                 const List<label>& c2s,
-                const label csi0,
                 const label Tsi,
                 scalarField& cTWork0,
                 scalarField& cTWork1

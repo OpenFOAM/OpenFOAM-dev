@@ -25,6 +25,56 @@ License
 
 #include "Reaction.H"
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermoType>
+inline void Foam::Reaction<ThermoType>::C
+(
+    const state& s,
+    scalar& Cf,
+    scalar& Cr
+) const
+{
+    Cf = pow(s.c[lhs()[0].index], lhs()[0].exponent);
+    for(label i=1; i<lhs().size(); i++)
+    {
+        Cf *= pow(s.c[lhs()[i].index], lhs()[i].exponent);
+    }
+
+    Cr = pow(s.c[rhs()[0].index], rhs()[0].exponent);
+    for(label i=1; i<rhs().size(); i++)
+    {
+        Cr *= pow(s.c[rhs()[i].index], rhs()[i].exponent);
+    }
+}
+
+
+template<class ThermoType>
+inline Foam::scalar Foam::Reaction<ThermoType>::omega
+(
+    const state& s,
+    scalar& omegaf,
+    scalar& omegar
+) const
+{
+    C(s, omegaf, omegar);
+
+    const scalar kf = this->kf(s);
+    omegaf = kf*omegaf;
+    omegar = kr(kf, s)*omegar;
+
+    return omegaf - omegar;
+}
+
+
+template<class ThermoType>
+inline Foam::scalar Foam::Reaction<ThermoType>::omega(const state& s) const
+{
+    scalar omegaf, omegar;
+    return omega(s, omegaf, omegar);
+}
+
+
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
 template<class ThermoType>
