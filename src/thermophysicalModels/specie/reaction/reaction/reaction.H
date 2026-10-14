@@ -75,6 +75,7 @@ public:
 
             scalar rT;
             scalar lnT;
+            scalar C;
 
             state(const label nSpecie);
 

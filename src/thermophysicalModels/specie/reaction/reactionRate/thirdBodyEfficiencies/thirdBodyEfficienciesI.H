@@ -31,19 +31,31 @@ License
 inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
 (
     const speciesTable& species,
-    const scalarList& efficiencies
+    const List<Tuple2<word, scalar>>& efficiencies
 )
 :
-    scalarField(efficiencies),
-    species_(species)
+    species_(species),
+    efficiencies_(species.size(), 1.0)
 {
-    if (size() != species_.size())
+    nonUnitySpecies_.setSize(efficiencies.size());
+    nonUnityEfficienciesM1_.setSize(efficiencies.size());
+    label n = 0;
+
+    forAll(efficiencies, i)
     {
-        FatalErrorInFunction
-            << "number of efficiencies = " << size()
-            << " is not equal to the number of species " << species_.size()
-            << exit(FatalError);
+        if (efficiencies[i].second() != 1)
+        {
+            efficiencies_[species[efficiencies[i].first()]] =
+                efficiencies[i].second();
+
+            nonUnitySpecies_[n] = species[efficiencies[i].first()];
+            nonUnityEfficienciesM1_[n] = efficiencies[i].second() - 1;
+            n++;
+        }
     }
+
+    nonUnitySpecies_.setSize(n);
+    nonUnityEfficienciesM1_.setSize(n);
 }
 
 
@@ -53,23 +65,12 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     const dictionary& dict
 )
 :
-    scalarField(species.size(), 1.0),
-    species_(species)
-{
-    if (dict.found("coeffs"))
-    {
-        List<Tuple2<word, scalar>> coeffs(dict.lookup("coeffs"));
-        forAll(coeffs, i)
-        {
-            operator[](species[coeffs[i].first()]) = coeffs[i].second();
-        }
-    }
-    else
-    {
-        scalar defaultEff = dict.lookup<scalar>("defaultEfficiency");
-        scalarField::operator=(defaultEff);
-    }
-}
+    thirdBodyEfficiencies
+    (
+        species,
+        dict.lookup<List<Tuple2<word, scalar>>>("coeffs")
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * Member functions  * * * * * * * * * * * * * //
@@ -79,10 +80,10 @@ inline Foam::scalar Foam::thirdBodyEfficiencies::M
     const reaction::state& s
 ) const
 {
-    scalar M = 0;
-    forAll(*this, i)
+    scalar M = s.C;
+    forAll(nonUnitySpecies_, i)
     {
-        M += operator[](i)*s.c[i];
+        M += nonUnityEfficienciesM1_[i]*s.c[nonUnitySpecies_[i]];
     }
 
     return M;
@@ -92,26 +93,20 @@ inline Foam::scalar Foam::thirdBodyEfficiencies::M
 inline const Foam::scalarField&
 Foam::thirdBodyEfficiencies::dMdc() const
 {
-    return *this;
+    return efficiencies_;
 }
 
 
 inline void Foam::thirdBodyEfficiencies::write(Ostream& os) const
 {
-    List<Tuple2<word, scalar>> coeffs(species_.size());
-    label n = 0;
-    forAll(coeffs, i)
+    List<Tuple2<word, scalar>> efficiencies(nonUnitySpecies_.size());
+    forAll(nonUnitySpecies_, i)
     {
-        if (operator[](i) != 1)
-        {
-            coeffs[n].first() = species_[i];
-            coeffs[n].second() = operator[](i);
-            n++;
-        }
+        efficiencies[i].first() = species_[nonUnitySpecies_[i]];
+        efficiencies[i].second() = nonUnityEfficienciesM1_[i] + 1;
     }
-    coeffs.setSize(n);
 
-    writeEntry(os, "coeffs", coeffs);
+    writeEntry(os, "coeffs", efficiencies);
 }
 
 

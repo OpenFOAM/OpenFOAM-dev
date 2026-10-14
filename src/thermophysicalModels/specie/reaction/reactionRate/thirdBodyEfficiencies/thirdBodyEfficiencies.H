@@ -54,23 +54,30 @@ Ostream& operator<<(Ostream&, const thirdBodyEfficiencies&);
 \*---------------------------------------------------------------------------*/
 
 class thirdBodyEfficiencies
-:
-    public scalarField
 {
     // Private Data
 
         const speciesTable& species_;
+
+        //- Third-body efficiencies
+        scalarField efficiencies_;
+
+        //- Specie indices with non-unity third-body efficiencies
+        labelList nonUnitySpecies_;
+
+        //- Non-unity third-body efficiencies - 1
+        scalarField nonUnityEfficienciesM1_;
 
 
 public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from table of efficiencies
         inline thirdBodyEfficiencies
         (
             const speciesTable& species,
-            const scalarList& efficiencies
+            const List<Tuple2<word, scalar>>& efficiencies
         );
 
         //- Construct from dictionary

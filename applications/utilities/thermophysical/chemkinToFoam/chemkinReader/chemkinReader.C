@@ -249,7 +249,7 @@ void Foam::chemkinReader::addPressureDependentReaction
     const fallOffFunctionType fofType,
     DynamicList<specieCoeffs>& lhs,
     DynamicList<specieCoeffs>& rhs,
-    const scalarList& efficiencies,
+    const List<Tuple2<word, scalar>>& efficiencies,
     const scalarList& k0Coeffs,
     const scalarList& kInfCoeffs,
     const HashTable<scalarList>& reactionCoeffsTable,
@@ -419,7 +419,7 @@ void Foam::chemkinReader::addReaction
 (
     DynamicList<specieCoeffs>& lhs,
     DynamicList<specieCoeffs>& rhs,
-    const scalarList& efficiencies,
+    const List<Tuple2<word, scalar>>& efficiencies,
     const reactionType rType,
     const reactionRateType rrType,
     const fallOffFunctionType fofType,
