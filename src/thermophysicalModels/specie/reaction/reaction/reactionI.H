@@ -62,6 +62,7 @@ inline void Foam::reaction::state::reset
     T = T_;
     li = li_;
 
+    lnp = log(p);
     rT = 1/T;
     lnT = log(T);
     C = sum(c);

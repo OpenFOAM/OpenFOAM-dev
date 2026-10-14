@@ -80,18 +80,30 @@ private:
 
         //- Return the Arrhenius rate coefficient
         //  for given pressure coefficients
-        inline scalar ki(const pCoeffs& coeffs, const scalar T) const;
+        inline scalar ki
+        (
+            const pCoeffs& coeffs,
+            const reaction::state& s
+        ) const;
 
         //- Return the log of the Arrhenius rate coefficient
         // for given pressure coefficients
-        inline scalar lnki(const pCoeffs& coeffs, const scalar T) const;
+        inline scalar lnki
+        (
+            const pCoeffs& coeffs,
+            const reaction::state& s
+        ) const;
 
         //- Return the temperature derivative of the Arrhenius rate coefficient
         // for given pressure coefficients
-        inline scalar ddTi(const pCoeffs& coeffs, const scalar T) const;
+        inline scalar ddTi
+        (
+            const pCoeffs& coeffs,
+            const reaction::state& s
+        ) const;
 
         //- Return the pressure interpolation fraction for the given pressure
-        inline scalar fp(const scalar p, const label pi) const;
+        inline scalar fp(const scalar lnp, const label pi) const;
 
 
 public:

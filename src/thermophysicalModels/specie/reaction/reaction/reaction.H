@@ -73,6 +73,7 @@ public:
             scalarField c;
             label li;
 
+            scalar lnp;
             scalar rT;
             scalar lnT;
             scalar C;
