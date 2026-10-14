@@ -81,36 +81,8 @@ inline Foam::scalar Foam::LandauTellerReactionRate::k
     const reaction::state& s
 ) const
 {
-    scalar lta = A_;
-
-    if (mag(beta_) > vSmall)
-    {
-        lta *= pow(s.T, beta_);
-    }
-
-    scalar expArg = 0;
-
-    if (mag(Ta_) > vSmall)
-    {
-        expArg -= Ta_/s.T;
-    }
-
-    if (mag(B_) > vSmall)
-    {
-        expArg += B_/cbrt(s.T);
-    }
-
-    if (mag(C_) > vSmall)
-    {
-        expArg += C_/sqr(cbrt(s.T));
-    }
-
-    if (mag(expArg) > vSmall)
-    {
-        lta *= exp(expArg);
-    }
-
-    return lta;
+    const scalar cbrtT = cbrt(s.T);
+    return A_*exp(beta_*s.lnT - Ta_*s.rT + B_/cbrtT + C_/sqr(cbrtT));
 }
 
 
@@ -119,43 +91,10 @@ inline Foam::scalar Foam::LandauTellerReactionRate::ddT
     const reaction::state& s
 ) const
 {
-    scalar lta = A_;
-
-    if (mag(beta_) > vSmall)
-    {
-        lta *= pow(s.T, beta_);
-    }
-
-    scalar expArg = 0;
-    scalar deriv = 0;
-
-    if (mag(Ta_) > vSmall)
-    {
-        scalar TaT = Ta_/s.T;
-        expArg -= TaT;
-        deriv += TaT;
-    }
-
-    if (mag(B_) > vSmall)
-    {
-        scalar BT = B_/cbrt(s.T);
-        expArg += BT;
-        deriv -= BT/3;
-    }
-
-    if (mag(C_) > vSmall)
-    {
-        scalar CT = C_/sqr(cbrt(s.T));
-        expArg += CT;
-        deriv -= 2*CT/3;
-    }
-
-    if (mag(expArg) > vSmall)
-    {
-        lta *= exp(expArg);
-    }
-
-    return lta*(beta_ + deriv)/s.T;
+    const scalar cbrtT = cbrt(s.T);
+    const scalar k = A_*exp(beta_*s.lnT - Ta_*s.rT + B_/cbrtT + C_/sqr(cbrtT));
+    const scalar deriv = beta_ + Ta_*s.rT - B_/(3*cbrtT) - 2*C_/(3*cbrtT);
+    return k*deriv*s.rT;
 }
 
 

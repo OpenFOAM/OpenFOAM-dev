@@ -228,14 +228,14 @@ Foam::fluxLimitedLangmuirHinshelwoodReactionRate::k
         const label ip1 = i + 1;
 
         const scalar kc =
-            A_[ip1]*pow(s.T, beta_[ip1])*exp(-Ta_[ip1]/s.T)
+            A_[ip1]*exp(beta_[ip1]*s.lnT - Ta_[ip1]*s.rT)
            *pow(s.c[ra_[i]], m_[ip1]);
 
         sumkc += kc;
     }
 
-    const scalar TaByT0 = Ta_[0]/s.T;
-    const scalar k0 = A_[0]*pow(s.T, beta_[0])*exp(-TaByT0);
+    const scalar TaByT0 = Ta_[0]*s.rT;
+    const scalar k0 = A_[0]*exp(beta_[0]*s.lnT - TaByT0);
 
     scalar r = k0/max(pow(a_ + sumkc, m_[0]), rootVSmall);
 
@@ -276,15 +276,15 @@ inline Foam::scalar Foam::fluxLimitedLangmuirHinshelwoodReactionRate::ddT
         const label ip1 = i + 1;
 
         const scalar kc =
-            A_[ip1]*pow(s.T, beta_[ip1])*exp(-Ta_[ip1]/s.T)
+            A_[ip1]*exp(beta_[ip1]*s.rT - Ta_[ip1]*s.rT)
            *pow(s.c[ra_[i]], m_[ip1]);
 
         sumkc += kc;
-        sumBetaKc += (beta_[ip1] + Ta_[ip1]/s.T)*kc;
+        sumBetaKc += (beta_[ip1] + Ta_[ip1]*s.rT)*kc;
     }
 
-    const scalar TaByT0 = Ta_[0]/s.T;
-    const scalar k0 = A_[0]*pow(s.T, beta_[0])*exp(-TaByT0);
+    const scalar TaByT0 = Ta_[0]*s.rT;
+    const scalar k0 = A_[0]*exp(beta_[0]*s.rT - TaByT0);
 
     scalar ddT =
        ((beta_[0] + TaByT0)*k0*(a_ + sumkc) - m_[0]*k0*sumBetaKc)

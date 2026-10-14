@@ -68,23 +68,16 @@ inline Foam::scalar Foam::powerSeriesReactionRate::k
     const reaction::state& s
 ) const
 {
-    scalar lta = A_;
+    scalar expArg = beta_*s.lnT;
 
-    if (mag(beta_) > vSmall)
-    {
-        lta *= pow(s.T, beta_);
-    }
-
-    scalar expArg = 0;
-
+    scalar rTn = 1;
     forAll(coeffs_, n)
     {
-        expArg += coeffs_[n]/pow(s.T, n + 1);
+        rTn *= s.rT;
+        expArg += coeffs_[n]*rTn;
     }
 
-    lta *= exp(expArg);
-
-    return lta;
+    return A_*exp(expArg);
 }
 
 
@@ -93,26 +86,18 @@ inline Foam::scalar Foam::powerSeriesReactionRate::ddT
     const reaction::state& s
 ) const
 {
-    scalar lta = A_;
+    scalar expArg = beta_*s.lnT;
+    scalar deriv = beta_;
 
-    if (mag(beta_) > vSmall)
-    {
-        lta *= pow(s.T, beta_);
-    }
-
-    scalar expArg = 0;
-    scalar deriv = 0;
-
+    scalar rTn = 1;
     forAll(coeffs_, n)
     {
-        scalar cT = coeffs_[n]/pow(s.T, n + 1);
-        expArg += cT;
-        deriv -= (n + 1)*cT;
+        rTn *= s.rT;
+        expArg += coeffs_[n]*rTn;
+        deriv -= (n + 1)*coeffs_[n]*rTn;
     }
 
-    lta *= exp(expArg);
-
-    return lta*(beta_+deriv)/s.T;
+    return A_*exp(expArg)*deriv*s.rT;
 }
 
 
