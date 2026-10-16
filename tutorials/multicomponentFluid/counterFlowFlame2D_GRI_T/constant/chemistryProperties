@@ -14,21 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeEtc "caseDicts/solvers/chemistry/TDAC/chemistryProperties.cfg"
+#includeEtc "caseDicts/solvers/chemistry/TDAC/tabulationProperties.cfg"
 
 initialChemicalTimeStep 1e-7;
-//maxChemicalTimeStep 1e-3;
 
 ode
 {
     solver          seulex;
     absTol          1e-8;
     relTol          1e-1;
-}
-
-reduction
-{
-    tolerance   1e-4;
 }
 
 tabulation
