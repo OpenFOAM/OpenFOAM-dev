@@ -53,6 +53,8 @@ fvMesh/zeroDimensionalFvMesh/zeroDimensionalFvMesh.C
 
 fvMesh/fvCellZone/fvCellZone.C
 
+fvMesh/fvCellZoneIndexBoundaryField/fvCellZoneIndexBoundaryField.C
+
 fvBoundaryMesh = fvMesh/fvBoundaryMesh
 $(fvBoundaryMesh)/fvBoundaryMesh.C
 

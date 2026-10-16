@@ -14,6 +14,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+populationBalanceSetSizeDistribution
+{
+    type                populationBalanceSetSizeDistribution;
+    libs                ("libmultiphaseEulerFunctionObjects.so");
+    phase               air1;
+    distribution
+    {
+        type                multiFixedValue;
+        Q                   3;
+        file                "constant/initialDistribution.air1";
+    }
+}
+
 #includeFunc populationBalanceSizeDistribution
 (
     name=numberDensity,

@@ -54,7 +54,6 @@ interfacialModels/blendingMethods/displaced/displaced.C
 interfacialModels/blendingMethods/stepDisplaced/stepDisplaced.C
 interfacialModels/blendingMethods/linearDisplaced/linearDisplaced.C
 interfacialModels/blendingMethods/zonal/zonal.C
-interfacialModels/blendingMethods/zonal/zonalBoundaryIndices.C
 interfacialModels/blendingMethods/smoothedZonal/smoothedZonal.C
 interfacialModels/blendingMethods/smoothedZonal/smoothedZonalMasks.C
 interfacialModels/blendingMethods/stepField/stepField.C

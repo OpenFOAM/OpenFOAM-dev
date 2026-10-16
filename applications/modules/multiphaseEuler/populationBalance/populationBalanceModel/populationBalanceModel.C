@@ -728,9 +728,9 @@ Foam::populationBalanceModel::populationBalanceModel
     uniquePhases_(),
     diameters_(),
     uniqueDiameters_(),
-    fs_(),
     dSphs_(),
     vs_(),
+    fs_(),
     Su_(),
     Sp_(),
     dmdtfs_(),
@@ -794,6 +794,31 @@ Foam::populationBalanceModel::populationBalanceModel
             << name_ << " only has " << nGroups() << exit(FatalError);
     }
 
+    // Create a discretisation in representative spherical diameter space
+    dSphs_ =
+        oneDimensionalDiscretisation::New
+        (
+            "dSph",
+            dimensions::length,
+            nGroups(),
+            typeDict().subDict("sphericalDiameters")
+        )->dimensionedCoordinates();
+
+    // Build the groups' representative volumes
+    vs_.resize(nGroups());
+    forAll(dSphs_, i)
+    {
+        vs_.set
+        (
+            i,
+            new dimensionedScalar
+            (
+                "v" + Foam::name(i),
+                constant::mathematical::pi/6*pow3(dSphs_[i])
+            )
+        );
+    }
+
     // Read/initialise the group fraction fields
     fs_.resize(nGroups());
     forAll(fs_, i)
@@ -816,52 +841,8 @@ Foam::populationBalanceModel::populationBalanceModel
         );
     }
 
-    // Create a discretisation in representative spherical diameter space
-    dSphs_ =
-        oneDimensionalDiscretisation::New
-        (
-            "dSph",
-            dimensions::length,
-            nGroups(),
-            typeDict().subDict("sphericalDiameters")
-        )->dimensionedCoordinates();
-
-    // Build the groups' representative volumes
-    vs_.resize(nGroups());
-    forAll(fs_, i)
-    {
-        vs_.set
-        (
-            i,
-            new dimensionedScalar
-            (
-                "v" + Foam::name(i),
-                constant::mathematical::pi/6*pow3(dSphs_[i])
-            )
-        );
-    }
-
     // Print some confirmatory information about the setup
-    forAll(uniquePhases_, uniquePhasei)
-    {
-        const phaseModel& phase = uniquePhases_[uniquePhasei];
-        const diameterModels::populationBalance& diameter =
-            uniqueDiameters_[uniquePhasei];
-
-        Info<< indent << "Phase: " << phase.name() << incrIndent << endl;
-
-        for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
-        {
-            Info<< indent << "Group #" << i
-                << ": dSph = " << dSphs_[i].value()
-                << ", min/average/max fraction = "
-                << min(fs_[i]()).value() << '/'
-                << average(fs_[i]()).value() << '/'
-                << max(fs_[i]()).value() << endl;
-        }
-
-        Info<< decrIndent;
-    }
+    info();
 
     // Create source terms
     Su_.setSize(nGroups());
@@ -1705,6 +1686,31 @@ void Foam::populationBalanceModel::correct()
             )
            /alphas_()
            *uniquePhases_[uniquePhasei].U();
+    }
+}
+
+
+void Foam::populationBalanceModel::info() const
+{
+    forAll(uniquePhases_, uniquePhasei)
+    {
+        const phaseModel& phase = uniquePhases_[uniquePhasei];
+        const diameterModels::populationBalance& diameter =
+            uniqueDiameters_[uniquePhasei];
+
+        Info<< indent << "Phase: " << phase.name() << incrIndent << endl;
+
+        for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
+        {
+            Info<< indent << "Group #" << i
+                << ": dSph = " << dSphs_[i].value()
+                << ", min/average/max fraction = "
+                << min(fs_[i]()).value() << '/'
+                << average(fs_[i]()).value() << '/'
+                << max(fs_[i]()).value() << endl;
+        }
+
+        Info<< decrIndent;
     }
 }
 

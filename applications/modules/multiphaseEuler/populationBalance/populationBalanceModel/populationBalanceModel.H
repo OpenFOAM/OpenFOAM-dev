@@ -295,14 +295,14 @@ private:
         //- A minimal list of the diameter models in this population balance
         UPtrList<const diameterModels::populationBalance> uniqueDiameters_;
 
-        //- The group fractions
-        PtrList<volScalarField> fs_;
-
         //- The representative spherical diameters of the groups
         PtrList<dimensionedScalar> dSphs_;
 
         //- The representative volumes of the groups
         PtrList<dimensionedScalar> vs_;
+
+        //- The group fractions
+        PtrList<volScalarField> fs_;
 
         //- Explicit coalescence and breakup source terms
         PtrList<volInternalScalarField> Su_;
@@ -549,18 +549,6 @@ public:
         inline const UPtrList<const diameterModels::populationBalance>&
             uniqueDiameters() const;
 
-        //- Access the group fractions
-        inline const PtrList<volScalarField>& fs() const;
-
-        //- Modify the group fractions
-        inline PtrList<volScalarField>& fs();
-
-        //- Access a group fraction
-        inline const volScalarField& f(const label i) const;
-
-        //- Modify a group fraction
-        inline volScalarField& f(const label i);
-
         //- Access the representative spherical diameters of the groups
         inline const PtrList<dimensionedScalar>& dSphs() const;
 
@@ -572,6 +560,18 @@ public:
 
         //- Access the representative volumes diameters of a group
         inline const dimensionedScalar& v(const label i) const;
+
+        //- Access the group fractions
+        inline const PtrList<volScalarField>& fs() const;
+
+        //- Modify the group fractions
+        inline PtrList<volScalarField>& fs();
+
+        //- Access a group fraction
+        inline const volScalarField& f(const label i) const;
+
+        //- Modify a group fraction
+        inline volScalarField& f(const label i);
 
         //- Access the shape model
         const populationBalance::shapeModel& shape() const;
@@ -681,6 +681,9 @@ public:
 
         //- Correct derived quantities
         void correct();
+
+        //- Print distribution
+        void info() const;
 
         //- Dummy write for regIOobject
         virtual bool writeData(Ostream&) const;

@@ -71,7 +71,6 @@ Description
 
 SourceFiles
     zonal.C
-    zonalBoundaryIndices.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -95,12 +94,6 @@ class zonal
 :
     public blendingMethod
 {
-    // Private classes
-
-        //- Zone boundary indexing information
-        class boundaryIndices;
-
-
     // Private Data
 
         //- The blending method outside the zones

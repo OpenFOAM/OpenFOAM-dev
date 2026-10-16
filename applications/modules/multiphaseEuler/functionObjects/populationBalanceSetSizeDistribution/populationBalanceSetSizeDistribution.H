@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,9 @@ Description
     the group fraction fields with values obtained by integrating a given
     distribution.
 
-    This function will only execute in post-processing mode.
+    If run in post-processing mode, then it will set the fields and write them
+    out. If executed at run-time then it will set the fields at the start of
+    the run but not then write them out.
 
     Example of function object specification:
     \verbatim
@@ -49,6 +51,51 @@ Description
             type        tabulatedDensity;
             Q           3;
             file        "constant/initialDistribution.bubbles";
+        }
+    }
+    \endverbatim
+
+    Example of function object specification, using different distributions in
+    different zones:
+    \verbatim
+    populationBalanceSetSizeDistribution
+    {
+        type        populationBalanceSetSizeDistribution;
+        libs        ("libmultiphaseEulerFunctionObjects.so");
+
+        populationBalance bubbles;
+
+        default
+        {
+            type        multiFixedValue;
+            Q           3;
+            file        "constant/defaultDistribution";
+        }
+
+        zones
+        {
+            myCellZone0
+            {
+                type        RosinRammler;
+                Q           0;
+                min         0.2 [mm];
+                max         2 [mm];
+                d           1 [mm];
+                n           2;
+            }
+
+            myCellZone1
+            {
+                type        tabulatedDensity;
+                Q           3;
+                distribution
+                (
+                    (10e-6 0.0025)
+                    (15e-6 0.0528)
+                    (20e-6 0.2795)
+                    ...
+                );
+            }
         }
     }
     \endverbatim
@@ -104,8 +151,32 @@ private:
         //- Name of the phase
         const word phaseName_;
 
-        //- Distribution
-        autoPtr<distribution> distribution_;
+        //- Default distribution
+        autoPtr<distribution> defaultDistribution_;
+
+        //- The indices of the zones for which non-default distributions apply
+        labelList zoneIndices_;
+
+        //- The distributions applied to the zones
+        PtrList<distribution> zoneDistributions_;
+
+
+    // Private Member Functions
+
+        //- Set a population balance field
+        template<class EtaVArg>
+        void setField
+        (
+            const populationBalanceModel& popBal,
+            const EtaVArg& etaVArg,
+            volScalarField& f
+        );
+
+        //- Set the population balance fields
+        void setFields();
+
+        //- Write the population balance fields
+        void writeFields();
 
 
 public:
