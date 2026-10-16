@@ -249,6 +249,7 @@ void Foam::chemkinReader::addPressureDependentReaction
     const fallOffFunctionType fofType,
     DynamicList<specieCoeffs>& lhs,
     DynamicList<specieCoeffs>& rhs,
+    const scalar defaultThirdBodyEfficiency,
     const List<Tuple2<word, scalar>>& efficiencies,
     const scalarList& k0Coeffs,
     const scalarList& kInfCoeffs,
@@ -285,7 +286,12 @@ void Foam::chemkinReader::addPressureDependentReaction
                         kInfCoeffs[2]/RR
                     ),
                     LindemannFallOffFunction(),
-                    thirdBodyEfficiencies(speciesTable_, efficiencies)
+                    thirdBodyEfficiencies
+                    (
+                        speciesTable_,
+                        defaultThirdBodyEfficiency,
+                        efficiencies
+                    )
                 )
             );
             break;
@@ -340,7 +346,12 @@ void Foam::chemkinReader::addPressureDependentReaction
                         TroeCoeffs[2],
                         TroeCoeffs[3]
                     ),
-                    thirdBodyEfficiencies(speciesTable_, efficiencies)
+                    thirdBodyEfficiencies
+                    (
+                        speciesTable_,
+                        defaultThirdBodyEfficiency,
+                        efficiencies
+                    )
                 )
             );
             break;
@@ -397,7 +408,12 @@ void Foam::chemkinReader::addPressureDependentReaction
                         SRICoeffs[3],
                         SRICoeffs[4]
                     ),
-                    thirdBodyEfficiencies(speciesTable_, efficiencies)
+                    thirdBodyEfficiencies
+                    (
+                        speciesTable_,
+                        defaultThirdBodyEfficiency,
+                        efficiencies
+                    )
                 )
             );
             break;
@@ -419,6 +435,7 @@ void Foam::chemkinReader::addReaction
 (
     DynamicList<specieCoeffs>& lhs,
     DynamicList<specieCoeffs>& rhs,
+    const scalar defaultThirdBodyEfficiency,
     const List<Tuple2<word, scalar>>& efficiencies,
     const reactionType rType,
     const reactionRateType rrType,
@@ -567,14 +584,24 @@ void Foam::chemkinReader::addReaction
                             Afactor*concFactor*ArrheniusCoeffs[0],
                             ArrheniusCoeffs[1],
                             ArrheniusCoeffs[2]/RR,
-                            thirdBodyEfficiencies(speciesTable_, efficiencies)
+                            thirdBodyEfficiencies
+                            (
+                                speciesTable_,
+                                defaultThirdBodyEfficiency,
+                                efficiencies
+                            )
                         ),
                         thirdBodyArrheniusReactionRate
                         (
                             AfactorRev*concFactor*reverseArrheniusCoeffs[0],
                             reverseArrheniusCoeffs[1],
                             reverseArrheniusCoeffs[2]/RR,
-                            thirdBodyEfficiencies(speciesTable_, efficiencies)
+                            thirdBodyEfficiencies
+                            (
+                                speciesTable_,
+                                defaultThirdBodyEfficiency,
+                                efficiencies
+                            )
                         )
                     )
                 );
@@ -590,7 +617,12 @@ void Foam::chemkinReader::addReaction
                         Afactor*concFactor*ArrheniusCoeffs[0],
                         ArrheniusCoeffs[1],
                         ArrheniusCoeffs[2]/RR,
-                        thirdBodyEfficiencies(speciesTable_, efficiencies)
+                        thirdBodyEfficiencies
+                        (
+                            speciesTable_,
+                            defaultThirdBodyEfficiency,
+                            efficiencies
+                        )
                     )
                 );
             }
@@ -637,6 +669,7 @@ void Foam::chemkinReader::addReaction
                 fofType,
                 lhs,
                 rhs,
+                defaultThirdBodyEfficiency,
                 efficiencies,
                 reactionCoeffsTable[reactionRateTypeNames[rrType]],
                 ArrheniusCoeffs,
@@ -655,6 +688,7 @@ void Foam::chemkinReader::addReaction
                 fofType,
                 lhs,
                 rhs,
+                defaultThirdBodyEfficiency,
                 efficiencies,
                 ArrheniusCoeffs,
                 reactionCoeffsTable[reactionRateTypeNames[rrType]],

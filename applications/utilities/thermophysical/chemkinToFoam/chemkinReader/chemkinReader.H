@@ -282,6 +282,7 @@ private:
             const fallOffFunctionType fofType,
             DynamicList<specieCoeffs>& lhs,
             DynamicList<specieCoeffs>& rhs,
+            const scalar defaultThirdBodyEfficiency,
             const List<Tuple2<word, scalar>>& thirdBodyEfficiencies,
             const scalarList& k0Coeffs,
             const scalarList& kInfCoeffs,
@@ -295,6 +296,7 @@ private:
         (
             DynamicList<specieCoeffs>& lhs,
             DynamicList<specieCoeffs>& rhs,
+            const scalar defaultThirdBodyEfficiency,
             const List<Tuple2<word, scalar>>& thirdBodyEfficiencies,
             const reactionType rType,
             const reactionRateType rrType,

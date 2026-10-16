@@ -59,14 +59,17 @@ class thirdBodyEfficiencies
 
         const speciesTable& species_;
 
+        //- Default efficiency
+        scalar defaultEfficiency_;
+
         //- Third-body efficiencies
         scalarField efficiencies_;
 
         //- Specie indices with non-unity third-body efficiencies
-        labelList nonUnitySpecies_;
+        labelList thirdBodySpecies_;
 
-        //- Non-unity third-body efficiencies - 1
-        scalarField nonUnityEfficienciesM1_;
+        //- Third-body efficiencies - reference
+        scalarField efficienciesMdefault_;
 
 
 public:
@@ -77,6 +80,7 @@ public:
         inline thirdBodyEfficiencies
         (
             const speciesTable& species,
+            const scalar defaultEfficiency,
             const List<Tuple2<word, scalar>>& efficiencies
         );
 

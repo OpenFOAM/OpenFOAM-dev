@@ -31,31 +31,34 @@ License
 inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
 (
     const speciesTable& species,
+    const scalar defaultEfficiency,
     const List<Tuple2<word, scalar>>& efficiencies
 )
 :
     species_(species),
-    efficiencies_(species.size(), 1.0)
+    defaultEfficiency_(defaultEfficiency),
+    efficiencies_(species.size(), defaultEfficiency_)
 {
-    nonUnitySpecies_.setSize(efficiencies.size());
-    nonUnityEfficienciesM1_.setSize(efficiencies.size());
+    thirdBodySpecies_.setSize(efficiencies.size());
+    efficienciesMdefault_.setSize(efficiencies.size());
     label n = 0;
 
     forAll(efficiencies, i)
     {
-        if (efficiencies[i].second() != 1)
+        if (efficiencies[i].second() != defaultEfficiency_)
         {
             efficiencies_[species[efficiencies[i].first()]] =
                 efficiencies[i].second();
 
-            nonUnitySpecies_[n] = species[efficiencies[i].first()];
-            nonUnityEfficienciesM1_[n] = efficiencies[i].second() - 1;
+            thirdBodySpecies_[n] = species[efficiencies[i].first()];
+            efficienciesMdefault_[n] =
+                efficiencies[i].second() - defaultEfficiency_;
             n++;
         }
     }
 
-    nonUnitySpecies_.setSize(n);
-    nonUnityEfficienciesM1_.setSize(n);
+    thirdBodySpecies_.setSize(n);
+    efficienciesMdefault_.setSize(n);
 }
 
 
@@ -68,7 +71,12 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     thirdBodyEfficiencies
     (
         species,
-        dict.lookup<List<Tuple2<word, scalar>>>("coeffs")
+        dict.lookup<scalar>("defaultEfficiency"),
+        dict.lookupOrDefault<List<Tuple2<word, scalar>>>
+        (
+            "efficiencies",
+            List<Tuple2<word, scalar>>()
+        )
     )
 {}
 
@@ -80,10 +88,10 @@ inline Foam::scalar Foam::thirdBodyEfficiencies::M
     const reaction::state& s
 ) const
 {
-    scalar M = s.C;
-    forAll(nonUnitySpecies_, i)
+    scalar M = defaultEfficiency_*s.C;
+    forAll(thirdBodySpecies_, i)
     {
-        M += nonUnityEfficienciesM1_[i]*s.c[nonUnitySpecies_[i]];
+        M += efficienciesMdefault_[i]*s.c[thirdBodySpecies_[i]];
     }
 
     return M;
@@ -99,14 +107,21 @@ Foam::thirdBodyEfficiencies::dMdc() const
 
 inline void Foam::thirdBodyEfficiencies::write(Ostream& os) const
 {
-    List<Tuple2<word, scalar>> efficiencies(nonUnitySpecies_.size());
-    forAll(nonUnitySpecies_, i)
-    {
-        efficiencies[i].first() = species_[nonUnitySpecies_[i]];
-        efficiencies[i].second() = nonUnityEfficienciesM1_[i] + 1;
-    }
+    writeEntry(os, "defaultEfficiency", defaultEfficiency_);
 
-    writeEntry(os, "coeffs", efficiencies);
+    if (thirdBodySpecies_.size())
+    {
+        List<Tuple2<word, scalar>> efficiencies(thirdBodySpecies_.size());
+
+        forAll(thirdBodySpecies_, i)
+        {
+            efficiencies[i].first() = species_[thirdBodySpecies_[i]];
+            efficiencies[i].second() =
+                efficienciesMdefault_[i] + defaultEfficiency_;
+        }
+
+        writeEntry(os, "efficiencies", efficiencies);
+    }
 }
 
 

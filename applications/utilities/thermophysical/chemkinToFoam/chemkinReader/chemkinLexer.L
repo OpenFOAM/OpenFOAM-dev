@@ -328,6 +328,7 @@ DynamicList<specieCoeffs> rhs;
 
 scalarList ArrheniusCoeffs(3);
 DynamicList<scalar> reactionCoeffs;
+scalar defaultThirdBodyEfficiency = 1;
 List<Tuple2<word, scalar>> thirdBodyEfficiencies;
 label currentThirdBodyIndex = -1;
 
@@ -797,6 +798,7 @@ bool finishReaction = false;
                     (
                         lhs,
                         rhs,
+                        defaultThirdBodyEfficiency,
                         thirdBodyEfficiencies,
                         rType,
                         rrType,
@@ -809,6 +811,7 @@ bool finishReaction = false;
                     rType = unknownReactionType;
                     rrType = Arrhenius;
                     fofType = unknownFallOffFunctionType;
+                    defaultThirdBodyEfficiency = 1;
                     thirdBodyEfficiencies.clear();
                     pDependentSpecieName = word::null;
                     lrhsPtr = &lhs;
@@ -851,6 +854,7 @@ bool finishReaction = false;
                     (
                         lhs,
                         rhs,
+                        defaultThirdBodyEfficiency,
                         thirdBodyEfficiencies,
                         rType,
                         rrType,
@@ -863,6 +867,7 @@ bool finishReaction = false;
                     rType = unknownReactionType;
                     rrType = Arrhenius;
                     fofType = unknownFallOffFunctionType;
+                    defaultThirdBodyEfficiency = 1;
                     thirdBodyEfficiencies.clear();
                     pDependentSpecieName = word::null;
                     lrhsPtr = &lhs;
@@ -1248,6 +1253,7 @@ bool finishReaction = false;
                 (
                     lhs,
                     rhs,
+                    defaultThirdBodyEfficiency,
                     thirdBodyEfficiencies,
                     rType,
                     rrType,
@@ -1260,6 +1266,7 @@ bool finishReaction = false;
                 rType = unknownReactionType;
                 rrType = Arrhenius;
                 fofType = unknownFallOffFunctionType;
+                defaultThirdBodyEfficiency = 1;
                 thirdBodyEfficiencies.clear();
                 pDependentSpecieName = word::null;
                 lrhsPtr = &lhs;
@@ -1407,7 +1414,11 @@ bool finishReaction = false;
             rhsThirdBodyCounter++;
         }
 
-        if (pDependentSpecieName != "M")
+        if (pDependentSpecieName == "M")
+        {
+            defaultThirdBodyEfficiency = 1;
+        }
+        else
         {
             HashTable<label>::iterator specieIndexIter
             (
@@ -1416,6 +1427,7 @@ bool finishReaction = false;
 
             if (specieIndexIter != specieIndices_.end())
             {
+                defaultThirdBodyEfficiency = 0;
                 thirdBodyEfficiencies.clear();
                 thirdBodyEfficiencies.append({pDependentSpecieName, 1.0});
             }
@@ -1580,6 +1592,7 @@ bool finishReaction = false;
             (
                 lhs,
                 rhs,
+                defaultThirdBodyEfficiency,
                 thirdBodyEfficiencies,
                 rType,
                 rrType,
