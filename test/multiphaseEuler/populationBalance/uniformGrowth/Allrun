@@ -14,9 +14,6 @@ internalFieldValue()
 
 run()
 {
-    runApplication ${1:+-s} $1 foamPostProcess -solver multiphaseEuler \
-        -func populationBalanceSetSizeDistribution
-
     runApplication ${1:+-s} $1 foamRun
 
     tLast=$(foamListTimes -latestTime)
@@ -88,7 +85,6 @@ case $mode in
     all)
         rm -f include && ln -s include.growth include
         run growth
-        rm -f 0/alpha.air[12] 0/f[0-9]*.air[12]
         rm -f include && ln -s include.shrinkage include
         run shrinkage
         ;;

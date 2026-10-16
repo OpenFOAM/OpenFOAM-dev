@@ -9,8 +9,6 @@ runApplication blockMesh
 
 # Run
 runApplication decomposePar
-runParallel -s populationBalanceSetPhaseSizeDistribution foamPostProcess \
-    -solver multiphaseEuler -func populationBalanceSetPhaseSizeDistribution
 runParallel foamRun
 runApplication reconstructPar -latestTime
 
