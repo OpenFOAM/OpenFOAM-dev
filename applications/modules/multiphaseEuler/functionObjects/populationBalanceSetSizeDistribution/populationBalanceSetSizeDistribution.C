@@ -24,9 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "populationBalanceSetSizeDistribution.H"
+#include "fvCellZoneIndexBoundaryField.H"
 #include "distribution.H"
-#include "addToRunTimeSelectionTable.H"
 #include "populationBalance.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,6 +46,196 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
+
+template<class EtaVArg>
+void Foam::functionObjects::populationBalanceSetSizeDistribution::setField
+(
+    const populationBalanceModel& popBal,
+    const EtaVArg& etaVArg,
+    volScalarField& f
+)
+{
+    const fvCellZoneIndexBoundaryField& zoneIndexBf =
+        fvCellZoneIndexBoundaryField::New(mesh(), zoneIndices_);
+
+    f == popBal.etaV(etaVArg, defaultDistribution_());
+
+    PtrList<dimensionedScalar> zoneEtaVs(zoneIndices_.size());
+    forAll(zoneIndices_, zonei)
+    {
+        zoneEtaVs.set
+        (
+            zonei,
+            new dimensionedScalar
+            (
+                popBal.etaV(etaVArg, zoneDistributions_[zonei])
+            )
+        );
+    }
+
+    forAll(zoneIndices_, zonei)
+    {
+        const cellZone& cells = mesh().cellZones()[zoneIndices_[zonei]];
+
+        UIndirectList<scalar>(f.primitiveFieldRef(), cells) =
+            zoneEtaVs[zonei].value();
+    }
+
+    volScalarField::BoundaryField& fBf = f.boundaryFieldRef();
+
+    forAll(mesh().boundary(), patchi)
+    {
+        forAll(mesh().boundary()[patchi], patchFacei)
+        {
+            const label zonei = zoneIndexBf[patchi][patchFacei];
+
+            if (zonei != -1)
+            {
+                fBf[patchi][patchFacei] = zoneEtaVs[zonei].value();
+            }
+        }
+    }
+}
+
+
+void Foam::functionObjects::populationBalanceSetSizeDistribution::setFields()
+{
+    if (popBalName_ != word::null)
+    {
+        populationBalanceModel& popBal =
+            obr_.lookupObjectRef<populationBalanceModel>(popBalName_);
+
+        // Set the group fractions for the population balance
+        forAll(popBal.fs(), i)
+        {
+            setField(popBal, i, popBal.f(i));
+        }
+
+        // Set the volume fractions if there are multiple phases in this
+        // population balance. But retain the same total amount of phase across
+        // the population balance as a whole.
+        if (popBal.uniquePhases().size() > 1)
+        {
+            tmp<volScalarField> talphas =
+                volScalarField::New
+                (
+                    IOobject::groupName("alpha", popBal.name()),
+                    mesh(),
+                    dimensionedScalar(dimless, scalar(0))
+                );
+            volScalarField& alphas = talphas.ref();
+            forAll(popBal.uniquePhases(), uniquePhasei)
+            {
+                alphas += popBal.uniquePhases()[uniquePhasei];
+            }
+
+            forAll(popBal.uniquePhases(), uniquePhasei)
+            {
+                const phaseModel& phase = popBal.uniquePhases()[uniquePhasei];
+
+                volScalarField& alpha = const_cast<phaseModel&>(phase);
+
+                setField
+                (
+                    popBal,
+                    labelPair
+                    (
+                        popBal.uniqueDiameters()[uniquePhasei].iFirst(),
+                        popBal.uniqueDiameters()[uniquePhasei].iLast()
+                    ),
+                    alpha
+                );
+
+                alpha *= alphas;
+            }
+        }
+
+        popBal.info();
+    }
+    else
+    {
+        const diameterModels::populationBalance& diameter =
+            refCast<const diameterModels::populationBalance>
+            (
+                obr_.lookupObject<phaseSystem>
+                (
+                    phaseSystem::propertiesName
+                ).phases()[phaseName_].diameter()
+            );
+
+        populationBalanceModel& popBal =
+            const_cast<populationBalanceModel&>(diameter.popBal());
+
+        // Set the group fractions for this phase
+        for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
+        {
+            setField(popBal, i, popBal.f(i));
+        }
+
+        popBal.info();
+    }
+}
+
+
+void Foam::functionObjects::populationBalanceSetSizeDistribution::writeFields()
+{
+    if (popBalName_ != word::null)
+    {
+        const populationBalanceModel& popBal =
+            obr_.lookupObject<populationBalanceModel>(popBalName_);
+
+        // Write the group fractions for the population balance
+        forAll(popBal.fs(), i)
+        {
+            const volScalarField& fi = popBal.f(i);
+
+            Info<< indent << "Writing " << fi.name() << endl;
+
+            fi.write();
+        }
+
+        // Write the volume fractions if there are multiple phases in this
+        // population balance
+        if (popBal.uniquePhases().size() > 1)
+        {
+            forAll(popBal.uniquePhases(), uniquePhasei)
+            {
+                const volScalarField& alpha =
+                    popBal.uniquePhases()[uniquePhasei];
+
+                Info<< indent << "Writing " << alpha.name() << endl;
+
+                alpha.write();
+            }
+        }
+    }
+    else
+    {
+        const diameterModels::populationBalance& diameter =
+            refCast<const diameterModels::populationBalance>
+            (
+                obr_.lookupObject<phaseSystem>
+                (
+                    phaseSystem::propertiesName
+                ).phases()[phaseName_].diameter()
+            );
+
+        const populationBalanceModel& popBal = diameter.popBal();
+
+        // Write the group fractions for this phase
+        for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
+        {
+            const volScalarField& fi = popBal.f(i);
+
+            Info<< indent << "Writing " << fi.name() << endl;
+
+            fi.write();
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::populationBalanceSetSizeDistribution::
@@ -57,17 +248,7 @@ populationBalanceSetSizeDistribution
 :
     fvMeshFunctionObject(name, runTime, dict),
     popBalName_(dict.lookupOrDefault("populationBalance", word::null)),
-    phaseName_(dict.lookupOrDefault("phase", word::null)),
-    distribution_
-    (
-        distribution::New
-        (
-            dimensions::length,
-            dict.subDict("distribution"),
-            3,
-            -1
-        )
-    )
+    phaseName_(dict.lookupOrDefault("phase", word::null))
 {
     const bool havePopBal = popBalName_ != word::null;
     const bool havePhase = phaseName_ != word::null;
@@ -80,7 +261,53 @@ populationBalanceSetSizeDistribution
             << exit(FatalIOError);
     }
 
-    read(dict);
+    const bool haveDistribution = dict.found("distribution");
+    const bool haveDefaultOrZones =
+        dict.found("default") || dict.found("zones");
+    if (haveDistribution == haveDefaultOrZones)
+    {
+        FatalIOErrorInFunction(dict)
+            << (haveDistribution ? "both" : "neither") << " of keywords "
+            << "distribution " << (haveDistribution ? "and" : "or")
+            << "default/zones defined in dictionary " << dict.name()
+            << exit(FatalIOError);
+    }
+
+    defaultDistribution_.set
+    (
+        distribution::New
+        (
+            dimensions::length,
+            dict.subDict(haveDistribution ? "distribution" : "default"),
+            3,
+            -1
+        ).ptr()
+    );
+
+    if (haveDefaultOrZones)
+    {
+        const dictionary& zonesDict = dict.subDict("zones");
+
+        forAllConstIter(dictionary, zonesDict, iter)
+        {
+            zoneIndices_.append(mesh().cellZones().findIndex(iter().keyword()));
+            zoneDistributions_.append
+            (
+                distribution::New
+                (
+                    dimensions::length,
+                    iter().dict(),
+                    3,
+                    -1
+                ).ptr()
+            );
+        }
+    }
+
+    if (!functionObject::postProcess && mesh().time().timeIndex() == 0)
+    {
+        setFields();
+    }
 }
 
 
@@ -101,114 +328,16 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::execute()
 
 bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
 {
-    if (!functionObject::postProcess)
+    if (functionObject::postProcess)
     {
-        WarningInFunction
-            << "The " << typeName << " function cannot be executed at run-time"
-            << endl;
+        Info<< nl << indent << name() << token::COLON << endl << incrIndent;
 
-        return false;
+        setFields();
+
+        writeFields();
+
+        Info<< decrIndent;
     }
-
-    Info<< nl << indent << name() << token::COLON << endl << incrIndent;
-
-    if (popBalName_ != word::null)
-    {
-        populationBalanceModel& popBal =
-            obr_.lookupObjectRef<populationBalanceModel>(popBalName_);
-
-        HashTable<const diameterModels::populationBalance*> diameterPtrs;
-
-        // Set the group fractions for the population balance
-        forAll(popBal.fs(), i)
-        {
-            volScalarField& fi = popBal.f(i);
-
-            fi == popBal.etaV(i, distribution_());
-
-            Info<< indent << "Writing " << fi.name() << endl;
-
-            fi.write();
-
-            diameterPtrs.insert
-            (
-                popBal.phases()[i].name(),
-                &popBal.diameters()[i]
-            );
-        }
-
-        // Set the volume fractions if there are multiple phases in this
-        // population balance
-        if (diameterPtrs.size() > 1)
-        {
-            tmp<volScalarField> talphas =
-                volScalarField::New
-                (
-                    IOobject::groupName("alpha", popBal.name()),
-                    mesh(),
-                    dimensionedScalar(dimless, scalar(0))
-                );
-            volScalarField& alphas = talphas.ref();
-
-            forAllConstIter
-            (
-                HashTable<const diameterModels::populationBalance*>,
-                diameterPtrs,
-                iter
-            )
-            {
-                alphas += iter()->phase();
-            }
-
-            forAllConstIter
-            (
-                HashTable<const diameterModels::populationBalance*>,
-                diameterPtrs,
-                iter
-            )
-            {
-                volScalarField& alpha =
-                    const_cast<phaseModel&>(iter()->phase());
-
-                const label i0 = iter()->iFirst();
-                const label i1 = iter()->iLast();
-
-                alpha == popBal.etaV(labelPair(i0, i1), distribution_)*alphas;
-
-                Info<< indent << "Writing " << alpha.name() << endl;
-
-                alpha.write();
-            }
-        }
-    }
-    else
-    {
-        diameterModels::populationBalance& diameter =
-            refCast<diameterModels::populationBalance>
-            (
-                obr_.lookupObjectRef<phaseSystem>
-                (
-                    phaseSystem::propertiesName
-                ).phases()[phaseName_].diameter()
-            );
-
-        populationBalanceModel& popBal =
-            obr_.lookupObjectRef<populationBalanceModel>(diameter.popBalName());
-
-        // Set the group fractions for this phase
-        for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
-        {
-            volScalarField& fi = popBal.f(i);
-
-            fi == popBal.etaV(i, distribution_());
-
-            Info<< indent << "Writing " << fi.name() << endl;
-
-            fi.write();
-        }
-    }
-
-    Info<< decrIndent;
 
     return true;
 }

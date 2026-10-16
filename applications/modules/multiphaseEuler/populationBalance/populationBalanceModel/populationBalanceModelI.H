@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,34 +90,6 @@ Foam::populationBalanceModel::uniqueDiameters() const
 }
 
 
-inline const Foam::PtrList<Foam::volScalarField>&
-Foam::populationBalanceModel::fs() const
-{
-    return fs_;
-}
-
-
-inline Foam::PtrList<Foam::volScalarField>& Foam::populationBalanceModel::fs()
-{
-    return fs_;
-}
-
-
-inline const Foam::volScalarField& Foam::populationBalanceModel::f
-(
-    const label i
-) const
-{
-    return fs_[i];
-}
-
-
-inline Foam::volScalarField& Foam::populationBalanceModel::f(const label i)
-{
-    return fs_[i];
-}
-
-
 inline const Foam::PtrList<Foam::dimensionedScalar>&
 Foam::populationBalanceModel::dSphs() const
 {
@@ -147,6 +119,34 @@ inline const Foam::dimensionedScalar& Foam::populationBalanceModel::v
 ) const
 {
     return vs_[i];
+}
+
+
+inline const Foam::PtrList<Foam::volScalarField>&
+Foam::populationBalanceModel::fs() const
+{
+    return fs_;
+}
+
+
+inline Foam::PtrList<Foam::volScalarField>& Foam::populationBalanceModel::fs()
+{
+    return fs_;
+}
+
+
+inline const Foam::volScalarField& Foam::populationBalanceModel::f
+(
+    const label i
+) const
+{
+    return fs_[i];
+}
+
+
+inline Foam::volScalarField& Foam::populationBalanceModel::f(const label i)
+{
+    return fs_[i];
 }
 
 

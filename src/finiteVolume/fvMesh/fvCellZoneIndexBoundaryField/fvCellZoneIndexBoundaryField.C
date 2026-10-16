@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "zonalBoundaryIndices.H"
+#include "fvCellZoneIndexBoundaryField.H"
 #include "surfaceFields.H"
 #include "cyclicFvPatch.H"
 
@@ -31,27 +31,26 @@ License
 
 namespace Foam
 {
-namespace blendingMethods
-{
-    defineTypeNameAndDebug(zonal::boundaryIndices, 0);
-}
+    defineTypeNameAndDebug(fvCellZoneIndexBoundaryField, 0);
 }
 
 
 // * * * * * * * * * * * * * * Protected Constructors  * * * * * * * * * * * //
 
-Foam::blendingMethods::zonal::boundaryIndices::boundaryIndices
+Foam::fvCellZoneIndexBoundaryField::fvCellZoneIndexBoundaryField
 (
     const word& name,
     const fvMesh& mesh,
     const labelList& zoneIndices
 )
 :
-    DemandDrivenMeshObject<fvMesh, MoveableMeshObject, boundaryIndices>
-    (
-        name,
-        mesh
-    ),
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        fvCellZoneIndexBoundaryField
+    >
+    (name, mesh),
     labelListList(mesh.boundary().size())
 {
     surfaceLabelField::Boundary zoneIndexOwnerBf
@@ -112,8 +111,8 @@ Foam::blendingMethods::zonal::boundaryIndices::boundaryIndices
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-const Foam::blendingMethods::zonal::boundaryIndices&
-Foam::blendingMethods::zonal::boundaryIndices::New
+const Foam::fvCellZoneIndexBoundaryField&
+Foam::fvCellZoneIndexBoundaryField::New
 (
     const fvMesh& mesh,
     const labelList& zoneIndices
@@ -123,10 +122,10 @@ Foam::blendingMethods::zonal::boundaryIndices::New
     <
         fvMesh,
         MoveableMeshObject,
-        boundaryIndices
+        fvCellZoneIndexBoundaryField
     >::New
     (
-        Foam::name(Hash<labelList>()(zoneIndices)),
+        typeName + ':' + Foam::name(Hash<labelList>()(zoneIndices)),
         mesh,
         zoneIndices
     );
@@ -135,13 +134,13 @@ Foam::blendingMethods::zonal::boundaryIndices::New
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::blendingMethods::zonal::boundaryIndices::~boundaryIndices()
+Foam::fvCellZoneIndexBoundaryField::~fvCellZoneIndexBoundaryField()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::blendingMethods::zonal::boundaryIndices::movePoints()
+bool Foam::fvCellZoneIndexBoundaryField::movePoints()
 {
     return true;
 }

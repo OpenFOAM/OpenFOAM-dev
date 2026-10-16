@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "zonal.H"
-#include "zonalBoundaryIndices.H"
+#include "fvCellZoneIndexBoundaryField.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,8 +48,8 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::zonal::f
 {
     const fvMesh& mesh = defaultF().mesh();
 
-    const boundaryIndices& zoneIndexBf =
-        boundaryIndices::New(mesh, zoneIndices_);
+    const fvCellZoneIndexBoundaryField& zoneIndexBf =
+        fvCellZoneIndexBoundaryField::New(mesh, zoneIndices_);
 
     tmp<volScalarField> tf(defaultF);
     volScalarField& f = tf.ref();

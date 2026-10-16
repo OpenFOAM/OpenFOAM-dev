@@ -22,36 +22,48 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blendingMethods::zonal::boundaryIndices
+    Foam::fvCellZoneIndexBoundaryField
 
 Description
-    Mesh object for storing zone boundary indexing information
+    Mesh object which provides a boundary label field containing the indices of
+    the zones in the adjacent cells. Relates to a supplied sub-set of the
+    zones. The resulting indices are into that subset rather than into the list
+    of all the cell zones in the mesh. If the zones overlap, the latter zone
+    takes precedence.
+
+    Useful when applying a zonal model to both the internal and the boundary of
+    a geometric field. Handles couplings so that processor faces are given the
+    zone of their neighbouring cell. This ensures that a zonal model is applied
+    correctly on processor patches.
 
 SourceFiles
     zonalBoundaryIndices.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zonalBoundaryIndices_H
-#define zonalBoundaryIndices_H
+#ifndef fvCellZoneIndexBoundaryField_H
+#define fvCellZoneIndexBoundaryField_H
 
-#include "zonal.H"
 #include "DemandDrivenMeshObject.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blendingMethods
-{
 
 /*---------------------------------------------------------------------------*\
-                    Class zonal::boundaryIndices Declaration
+                    Class fvCellZoneIndexBoundaryField Declaration
 \*---------------------------------------------------------------------------*/
 
-class zonal::boundaryIndices
+class fvCellZoneIndexBoundaryField
 :
-    public DemandDrivenMeshObject<fvMesh, MoveableMeshObject, boundaryIndices>,
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        MoveableMeshObject,
+        fvCellZoneIndexBoundaryField
+    >,
     public labelListList
 {
 protected:
@@ -60,14 +72,14 @@ protected:
     <
         fvMesh,
         MoveableMeshObject,
-        boundaryIndices
+        fvCellZoneIndexBoundaryField
     >;
 
 
     // Protected Constructors
 
         //- Construct from a mesh and a list of zones
-        explicit boundaryIndices
+        explicit fvCellZoneIndexBoundaryField
         (
             const word& name,
             const fvMesh& mesh,
@@ -78,16 +90,19 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("zonal::boundaryIndices");
+    TypeName("fvCellZoneIndexBoundaryField");
 
 
     // Constructors
 
         //- Disallow default bitwise copy construction
-        boundaryIndices(const boundaryIndices&) = delete;
+        fvCellZoneIndexBoundaryField
+        (
+            const fvCellZoneIndexBoundaryField&
+        ) = delete;
 
         //- Construct and return for the given set of zones
-        static const boundaryIndices& New
+        static const fvCellZoneIndexBoundaryField& New
         (
             const fvMesh& mesh,
             const labelList& zoneIndices
@@ -95,7 +110,7 @@ public:
 
 
     //- Destructor
-    virtual ~boundaryIndices();
+    virtual ~fvCellZoneIndexBoundaryField();
 
 
     // Member Functions
@@ -107,7 +122,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace blendingMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
