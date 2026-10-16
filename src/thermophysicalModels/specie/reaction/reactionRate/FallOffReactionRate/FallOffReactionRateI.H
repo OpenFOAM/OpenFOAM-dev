@@ -179,7 +179,6 @@ inline void Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::ddc
 
     #else
 
-    Info << kInf_ << endl;
     kInf_.ddc(s, ddc);
     ddc *= (Pr/(1 + Pr))*F;
 

@@ -93,7 +93,7 @@ inline Foam::scalar Foam::LandauTellerReactionRate::ddT
 {
     const scalar cbrtT = cbrt(s.T);
     const scalar k = A_*exp(beta_*s.lnT - Ta_*s.rT + B_/cbrtT + C_/sqr(cbrtT));
-    const scalar deriv = beta_ + Ta_*s.rT - B_/(3*cbrtT) - 2*C_/(3*cbrtT);
+    const scalar deriv = beta_ + Ta_*s.rT - B_/(3*cbrtT) - 2*C_/(3*sqr(cbrtT));
     return k*deriv*s.rT;
 }
 
