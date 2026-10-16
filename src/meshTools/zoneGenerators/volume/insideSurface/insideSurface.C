@@ -53,7 +53,7 @@ Foam::labelList Foam::zoneGenerators::insideSurface::select
 {
     labelList indices(pts.size());
 
-    List<volumeType> volType;
+    List<volumeType> volType(pts.size());
     surfacePtr_->getVolumeType(pts, volType);
 
     label nInZone = 0;
