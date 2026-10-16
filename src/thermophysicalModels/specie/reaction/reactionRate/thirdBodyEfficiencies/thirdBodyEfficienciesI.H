@@ -72,7 +72,13 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
     (
         species,
         dict.lookup<scalar>("defaultEfficiency"),
-        dict.lookupOrDefault<List<Tuple2<word, scalar>>>
+        dict.found("efficiency")
+      ? List<Tuple2<word, scalar>>
+        (
+            1,
+            dict.lookup<Tuple2<word, scalar>>("efficiency")
+        )
+      : dict.lookupOrDefault<List<Tuple2<word, scalar>>>
         (
             "efficiencies",
             List<Tuple2<word, scalar>>()
@@ -109,7 +115,20 @@ inline void Foam::thirdBodyEfficiencies::write(Ostream& os) const
 {
     writeEntry(os, "defaultEfficiency", defaultEfficiency_);
 
-    if (thirdBodySpecies_.size())
+    if (thirdBodySpecies_.size() == 1)
+    {
+        writeEntry
+        (
+            os,
+            "efficiency",
+            Tuple2<word, scalar>
+            (
+                species_[thirdBodySpecies_[0]],
+                efficienciesMdefault_[0] + defaultEfficiency_
+            )
+        );
+    }
+    else if (thirdBodySpecies_.size())
     {
         List<Tuple2<word, scalar>> efficiencies(thirdBodySpecies_.size());
 
