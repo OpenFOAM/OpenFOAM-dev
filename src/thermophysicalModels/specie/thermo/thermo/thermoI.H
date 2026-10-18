@@ -168,7 +168,7 @@ Foam::species::thermo<Thermo, Type>::Kc(const scalar p, const scalar T) const
         const scalar nmi = std::round(nm);
         if (mag(nm - nmi) < small)
         {
-            return Kp(p, T)*integerPow(pStd/(RR*T), label(nmi));
+            return Kp(p, T)*pow(pStd/(RR*T), int(nmi));
         }
         else
         {

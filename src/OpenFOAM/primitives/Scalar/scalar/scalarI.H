@@ -27,63 +27,10 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::integerPow(const scalar x, const label e)
-{
-    if (e == 0)
-    {
-        return 1;
-    }
-    else if (e == 1)
-    {
-        return x;
-    }
-    else if (e == -1)
-    {
-        return 1/x;
-    }
-
-    scalar xx = e > 0 ? x : 1/x;
-
-    scalar y = 1;
-
-    for (label i = e; i != 0; i /= 2)
-    {
-        if (i % 2)
-        {
-            y *= xx;
-        }
-
-        xx *= xx;
-    }
-
-    return y;
-}
-
-
-inline Foam::scalar Foam::integerRoot(const scalar x, const label e)
-{
-    switch (e)
-    {
-        case -4: return 1/pow025(x);
-        case -3: return 1/cbrt(x);
-        case -2: return 1/sqrt(x);
-        case -1: return 1/x;
-        case 0: return NaN;
-        case 1: return x;
-        case 2: return sqrt(x);
-        case 3: return cbrt(x);
-        case 4: return pow025(x);
-    }
-
-    return pow(x, scalar(1)/e);
-}
-
-
 template<typename T, typename Tlim>
 inline auto maxMin(const T& t, const Tlim& mint, const Tlim& maxt)
 {
     return Foam::min(Foam::max(t, mint), maxt);
 }
-
 
 // ************************************************************************* //

@@ -103,7 +103,7 @@ inline Foam::scalar Foam::pow(const scalar c, const specieExponent& e)
 {
     if (e.hasIntegerExponent())
     {
-        return integerPow(c, e.integerExponent_);
+        return pow(c, e.integerExponent_);
     }
     else
     {
@@ -118,7 +118,7 @@ inline Foam::scalar Foam::dpowdc(const scalar c, const specieExponent& e)
     {
         if (e.integerExponent_ >= 1)
         {
-            return e.integerExponent_*integerPow(c, e.integerExponent_ - 1);
+            return e.integerExponent_*pow(c, e.integerExponent_ - 1);
         }
         else // (e.integerExponent_ == 0)
         {

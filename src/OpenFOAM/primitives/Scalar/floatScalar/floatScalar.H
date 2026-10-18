@@ -94,22 +94,26 @@ inline Scalar mag(const Scalar s)
 }
 
 
-#define MAXMINPOW(retType, type1, type2)          \
+MAXMIN(Scalar, Scalar, Scalar)
+MAXMIN(Scalar, Scalar, int32_t)
+MAXMIN(Scalar, int32_t, Scalar)
+MAXMIN(Scalar, Scalar, int64_t)
+MAXMIN(Scalar, int64_t, Scalar)
+
+
+#define POW(type1, type2)                         \
                                                   \
-MAXMIN(retType, type1, type2)                     \
-                                                  \
-inline double pow(const type1 s, const type2 e)   \
+inline Scalar pow(const type1 s, const type2 e)   \
 {                                                 \
-    return ::powf(s, e);                          \
+    return ::powf(Scalar(s), Scalar(e));          \
 }
 
-MAXMINPOW(Scalar, Scalar, Scalar)
-MAXMINPOW(Scalar, Scalar, int)
-MAXMINPOW(Scalar, int, Scalar)
-MAXMINPOW(Scalar, Scalar, long)
-MAXMINPOW(Scalar, long, Scalar)
+POW(Scalar, Scalar)
+POW(Scalar, double)
+POW(int32_t, Scalar)
+POW(int64_t, Scalar)
 
-#undef MAXMINPOW
+#undef POW
 
 
 #define transFunc(func)            \
@@ -159,6 +163,12 @@ inline Scalar yn(const int n, const Scalar s)
     return ::ynf(n, s);
 }
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #undef Scalar
 #undef ScalarVGreat
 #undef ScalarVSmall
@@ -168,13 +178,6 @@ inline Scalar yn(const int n, const Scalar s)
 #undef readScalar
 #undef transFunc
 #undef cFunc
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

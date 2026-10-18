@@ -54,31 +54,6 @@ struct powOp
 
     static const bool associative = false;
 
-    static scalar value(const scalar a, const float b)
-    {
-        return pow(a, b);
-    }
-
-    static scalar value(const scalar a, const double b)
-    {
-        return pow(a, b);
-    }
-
-    static scalar value(const scalar a, const long double b)
-    {
-        return pow(a, b);
-    }
-
-    static scalar value(const scalar a, const int32_t b)
-    {
-        return integerPow(a, b);
-    }
-
-    static scalar value(const scalar a, const int64_t b)
-    {
-        return integerPow(a, b);
-    }
-
     template<class A, class B>
     static auto value(const A& a, const B& b)
     {
@@ -100,16 +75,6 @@ struct integerPowOp
         expression::Operation<void>::precedence;
 
     static const bool associative = false;
-
-    static scalar value(const scalar a, const int32_t b)
-    {
-        return integerPow(a, b);
-    }
-
-    static scalar value(const scalar a, const int64_t b)
-    {
-        return integerPow(a, b);
-    }
 
     template<class A, class B>
     static auto value(const A& a, const B& b)

@@ -394,6 +394,88 @@ inline Scalar protectedDivideAndClip01(const Scalar a, const Scalar b)
 }
 
 
+template<typename Int>
+inline Scalar IntegerPow(const Scalar x, const Int e)
+{
+    if (e == 0)
+    {
+        return 1;
+    }
+    else if (e == 1)
+    {
+        return x;
+    }
+    else if (e == -1)
+    {
+        return 1/x;
+    }
+
+    Scalar xx = e > 0 ? x : 1/x;
+
+    Scalar y = 1;
+
+    for (label i = e; i != 0; i /= 2)
+    {
+        if (i % 2)
+        {
+            y *= xx;
+        }
+
+        xx *= xx;
+    }
+
+    return y;
+}
+
+template<typename Int>
+inline Scalar IntegerRoot(const Scalar x, const Int e)
+{
+    switch (e)
+    {
+        case -4: return 1/pow025(x);
+        case -3: return 1/cbrt(x);
+        case -2: return 1/sqrt(x);
+        case -1: return 1/x;
+        case 0: return ScalarNaN;
+        case 1: return x;
+        case 2: return sqrt(x);
+        case 3: return cbrt(x);
+        case 4: return pow025(x);
+    }
+
+    return pow(x, Scalar(1)/e);
+}
+
+inline Scalar integerPow(const Scalar x, const int32_t e)
+{
+    return IntegerPow(x, e);
+}
+
+inline Scalar integerPow(const Scalar x, const int64_t e)
+{
+    return IntegerPow(x, e);
+}
+
+inline Scalar pow(const Scalar x, const int32_t e)
+{
+    return integerPow(x, e);
+}
+
+inline Scalar pow(const Scalar x, const int64_t e)
+{
+    return integerPow(x, e);
+}
+
+inline Scalar integerRoot(const Scalar x, const int32_t e)
+{
+    return IntegerRoot(x, e);
+}
+
+inline Scalar integerRoot(const Scalar x, const int64_t e)
+{
+    return IntegerRoot(x, e);
+}
+
 // * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
 Scalar readScalar(Istream&);
