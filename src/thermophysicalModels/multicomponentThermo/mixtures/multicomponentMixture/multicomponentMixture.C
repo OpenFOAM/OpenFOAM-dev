@@ -105,15 +105,8 @@ Foam::multicomponentMixture<ThermoType>::specieComposition
 
 
 template<class ThermoType>
-const Foam::boolList&
+Foam::boolList&
 Foam::multicomponentMixture<ThermoType>::speciesActive() const
-{
-    return active_;
-}
-
-
-template<class ThermoType>
-Foam::boolList& Foam::multicomponentMixture<ThermoType>::speciesActive()
 {
     return active_;
 }

@@ -90,7 +90,7 @@ public:
         // Active/Inactive handling
 
             //- Access the specie active flags
-            virtual const boolList& speciesActive() const = 0;
+            virtual boolList& speciesActive() const = 0;
 
             //- Synchronise the specie active flags
             virtual void syncSpeciesActive() const = 0;

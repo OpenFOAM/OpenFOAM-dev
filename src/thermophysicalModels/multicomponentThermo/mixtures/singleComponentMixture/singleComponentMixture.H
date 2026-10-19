@@ -97,14 +97,7 @@ public:
         }
 
         //- Access the specie active flags
-        const boolList& speciesActive() const
-        {
-            NotImplemented;
-            return boolList::null();
-        }
-
-        //- Access the specie active flags
-        boolList& speciesActive()
+        boolList& speciesActive() const
         {
             NotImplemented;
             return const_cast<boolList&>(boolList::null());

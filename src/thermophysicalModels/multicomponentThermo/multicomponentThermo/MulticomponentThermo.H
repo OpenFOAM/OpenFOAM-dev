@@ -127,13 +127,7 @@ public:
         // Specie active list
 
             //- Access the specie active flags
-            virtual const boolList& speciesActive() const
-            {
-                return BaseThermo::mixtureType::speciesActive();
-            }
-
-            //- Access the specie active flags
-            virtual boolList& speciesActive()
+            virtual boolList& speciesActive() const
             {
                 return BaseThermo::mixtureType::speciesActive();
             }

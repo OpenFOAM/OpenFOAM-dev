@@ -67,7 +67,7 @@ protected:
         scalar stoicRatio_;
 
         //- List of specie active flags
-        boolList active_;
+        mutable boolList active_;
 
 
 public:
@@ -108,13 +108,7 @@ public:
         }
 
         //- Access the specie active flags
-        const boolList& speciesActive() const
-        {
-            return active_;
-        }
-
-        //- Access the specie active flags
-        boolList& speciesActive()
+        boolList& speciesActive() const
         {
             return active_;
         }

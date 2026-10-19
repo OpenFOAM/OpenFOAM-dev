@@ -72,7 +72,7 @@ private:
         List<List<specieElement>> specieCompositions_;
 
         //- List of specie active flags
-        boolList active_;
+        mutable boolList active_;
 
         //- Cached IO error locations for delayed error messages
         List<IOerrorLocation> specieDictLocations_;
@@ -119,10 +119,7 @@ public:
         const List<specieElement>& specieComposition(const label speciei) const;
 
         //- Access the specie active flags
-        const boolList& speciesActive() const;
-
-        //- Access the specie active flags
-        boolList& speciesActive();
+        boolList& speciesActive() const;
 };
 
 
