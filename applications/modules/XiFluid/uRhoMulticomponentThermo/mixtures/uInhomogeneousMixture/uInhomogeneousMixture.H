@@ -65,8 +65,11 @@ protected:
         //- Stoichiometric air/fuel ratio
         scalar stoicRatio_;
 
+        //- List of available species
+        mutable boolList availableSpecies_;
+
         //- List of specie active flags
-        mutable boolList active_;
+        mutable boolList activeSpecies_;
 
 
 public:
@@ -101,10 +104,16 @@ public:
             return species_;
         }
 
-        //- Access the specie active flags
-        boolList& speciesActive() const
+        //- Access the specie availability list
+        boolList& availableSpecies() const
         {
-            return active_;
+            return availableSpecies_;
+        }
+
+        //- Access the specie active flags
+        boolList& activeSpecies() const
+        {
+            return activeSpecies_;
         }
 
         //- Return the stoichiometric air/fuel ratio

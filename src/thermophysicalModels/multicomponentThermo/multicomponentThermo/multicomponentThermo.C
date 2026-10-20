@@ -112,7 +112,8 @@ Foam::multicomponentThermo::implementation::implementation
       ? species[defaultSpecieName_]
       : -1
     ),
-    Y_(species.size())
+    Y_(species.size()),
+    availableSpecies_(species.size(), false)
 {
     if
     (
@@ -128,6 +129,7 @@ Foam::multicomponentThermo::implementation::implementation
     }
 
     bool Yset = false;
+    bool defaultAvailable = false;
 
     // Read the species' mass fractions
     forAll(species, i)
@@ -161,6 +163,11 @@ Foam::multicomponentThermo::implementation::implementation
                 )
             );
 
+            if (max(Y_[i]).value() > 0)
+            {
+                availableSpecies_[i] = true;
+            }
+
             Yset = true;
         }
         else
@@ -181,6 +188,11 @@ Foam::multicomponentThermo::implementation::implementation
                     mesh,
                     dimless
                 );
+
+                if (max(Ydefault_()).value() > 0)
+                {
+                    defaultAvailable = true;
+                }
             }
 
             Y_.set
@@ -199,6 +211,8 @@ Foam::multicomponentThermo::implementation::implementation
                     Ydefault_()
                 )
             );
+
+            availableSpecies_[i] = defaultAvailable;
         }
     }
 
@@ -228,22 +242,29 @@ Foam::label Foam::multicomponentThermo::implementation::defaultSpecie() const
 }
 
 
+Foam::boolList&
+Foam::multicomponentThermo::implementation::availableSpecies() const
+{
+    return availableSpecies_;
+}
+
+
 void Foam::multicomponentThermo::implementation::syncSpeciesActive() const
 {
     if (Pstream::parRun())
     {
-        boolList& speciesActive =
-            const_cast<boolList&>(this->speciesActive());
+        boolList& activeSpecies =
+            const_cast<boolList&>(this->activeSpecies());
 
-        Pstream::listCombineGather(speciesActive, orEqOp());
-        Pstream::listCombineScatter(speciesActive);
+        Pstream::listCombineGather(activeSpecies, orEqOp());
+        Pstream::listCombineScatter(activeSpecies);
 
         PtrList<volScalarField>& Y =
             const_cast<PtrList<volScalarField>&>(this->Y());
 
         forAll(Y, speciei)
         {
-            if (speciesActive[speciei])
+            if (activeSpecies[speciei])
             {
                 Y[speciei].writeOpt() = IOobject::AUTO_WRITE;
             }

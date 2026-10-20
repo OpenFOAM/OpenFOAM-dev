@@ -49,7 +49,7 @@ Foam::coefficientMulticomponentMixture<ThermoType>::thermoMixture
     const scalarFieldListSlice& Y
 ) const
 {
-    const boolList& active(this->speciesActive());
+    const boolList& active(this->activeSpecies());
     mixture_ = Y[0]*this->specieThermos()[0];
 
     for (label i=1; i<Y.size(); i++)

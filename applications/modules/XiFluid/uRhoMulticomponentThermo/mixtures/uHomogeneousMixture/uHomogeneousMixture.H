@@ -94,8 +94,15 @@ public:
             return speciesTable::null;
         }
 
+        //- Access the specie availability list
+        boolList& availableSpecies() const
+        {
+            NotImplemented;
+            return const_cast<boolList&>(boolList::null());
+        }
+
         //- Access the specie active flags
-        boolList& speciesActive() const
+        boolList& activeSpecies() const
         {
             NotImplemented;
             return const_cast<boolList&>(boolList::null());

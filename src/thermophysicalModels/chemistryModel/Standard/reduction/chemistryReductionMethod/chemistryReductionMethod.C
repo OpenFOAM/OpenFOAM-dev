@@ -146,7 +146,7 @@ void Foam::chemistryReductionMethod<ThermoType>::endReduceMechanism
         {
             stoc[j] = i;
             ctos[i] = j++;
-            if (!chemistry_.thermo().speciesActive()[i])
+            if (!chemistry_.thermo().activeSpecies()[i])
             {
                 chemistry_.thermo().setSpecieActive(i);
             }

@@ -87,10 +87,13 @@ public:
             virtual label defaultSpecie() const = 0;
 
 
-        // Active/Inactive handling
+        // Specie availability, active/inactive
+
+            //- Access the specie availability list
+            virtual boolList& availableSpecies() const = 0;
 
             //- Access the specie active flags
-            virtual boolList& speciesActive() const = 0;
+            virtual boolList& activeSpecies() const = 0;
 
             //- Synchronise the specie active flags
             virtual void syncSpeciesActive() const = 0;
@@ -325,6 +328,9 @@ protected:
 
         mutable tmp<volScalarField> Ydefault_;
 
+        //- List of available species (non-zero mass-fraction)
+        mutable boolList availableSpecies_;
+
 
     // Protected Member Functions
 
@@ -358,6 +364,9 @@ public:
 
         //- The index of the default specie
         virtual label defaultSpecie() const;
+
+        //- Access the specie availability list
+        virtual boolList& availableSpecies() const;
 
         //- Synchronise the specie active flags
         virtual void syncSpeciesActive() const;
