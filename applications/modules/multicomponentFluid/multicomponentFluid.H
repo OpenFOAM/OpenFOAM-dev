@@ -92,8 +92,6 @@ protected:
     // Reactions
 
         autoPtr<reactionModel> reaction;
-        boolList speciesActive;
-        multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
 
 
     // Thermophysical transport
