@@ -24,10 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dimensionSet.H"
-#include "dimensions.H"
 #include "dimensionedScalar.H"
-#include "NamedEnum.H"
-#include "OStringStream.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,24 +32,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(dimensionSet, 1);
 }
-
-const Foam::autoPtr<Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>>
-    dimensionTypeNamesPtr_
-    (
-        new Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>
-        {
-            "mass",
-            "length",
-            "time",
-            "temperature",
-            "moles",
-            "current",
-            "luminousIntensity"
-        }
-    );
-
-const Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>&
-    Foam::dimensionSet::dimensionTypeNames_ = dimensionTypeNamesPtr_();
 
 const Foam::scalar Foam::dimensionSet::smallExponent = rootSmall;
 

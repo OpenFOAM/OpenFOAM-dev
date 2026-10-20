@@ -28,6 +28,24 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+const Foam::autoPtr<Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>>
+    dimensionTypeNamesPtr_
+    (
+        new Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>
+        {
+            "mass",
+            "length",
+            "time",
+            "temperature",
+            "moles",
+            "current",
+            "luminousIntensity"
+        }
+    );
+
+const Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>&
+    Foam::dimensionSet::dimensionTypeNames_ = dimensionTypeNamesPtr_();
+
 const Foam::dimensionSet Foam::dimensions::invalid
 (
     vGreat, vGreat, vGreat, vGreat, vGreat, vGreat, vGreat
