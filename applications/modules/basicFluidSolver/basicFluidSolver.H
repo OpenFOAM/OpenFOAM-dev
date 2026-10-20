@@ -63,14 +63,17 @@ class basicFluidSolver
 {
     // Control parameters
 
+        //- Maximum allowed mesh Courant number
+        scalar maxMeshCo;
+
+        //- Switch to check the mesh Courant number after mesh change
+        bool checkMeshCourantNo;
+
         //- Maximum allowed Courant number
         scalar maxCo;
 
         //- Maximum time-step
         scalar maxDeltaT_;
-
-        //- Switch to check the mesh Courant number after mesh change
-        bool checkMeshCourantNo;
 
 
     // Continuity properties
@@ -101,11 +104,14 @@ protected:
         //- Switch to correct the flux after mesh change
         bool correctPhi;
 
+        //- Current maximum mesh Courant number for time-step control
+        scalar meshCoNum_;
+
         //- Current maximum Courant number for time-step control
         scalar CoNum_;
 
         //- Check mesh Courant numbers for moving mesh cases
-        void meshCourantNo() const;
+        void correctMeshCourantNo();
 
         //- Correct the cached Courant numbers
         void correctCoNum(const surfaceScalarField& phi);

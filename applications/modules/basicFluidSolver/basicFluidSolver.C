@@ -52,6 +52,15 @@ bool Foam::solvers::basicFluidSolver::read()
 {
     solver::read();
 
+    maxMeshCo =
+        runTime.controlDict().lookupOrDefault<scalar>("maxMeshCo", vGreat);
+
+    checkMeshCourantNo = pimple.dict().lookupOrDefault
+    (
+        "checkMeshCourantNo",
+        runTime.controlDict().found("maxMeshCo")
+    );
+
     maxCo =
         runTime.controlDict().lookupOrDefault<scalar>("maxCo", vGreat);
 
@@ -66,16 +75,10 @@ bool Foam::solvers::basicFluidSolver::read()
         mesh.dynamic()
     );
 
-    checkMeshCourantNo = pimple.dict().lookupOrDefault
-    (
-        "checkMeshCourantNo",
-        false
-    );
-
     return true;
 }
 
-void Foam::solvers::basicFluidSolver::meshCourantNo() const
+void Foam::solvers::basicFluidSolver::correctMeshCourantNo()
 {
     if (checkMeshCourantNo)
     {
@@ -84,10 +87,8 @@ void Foam::solvers::basicFluidSolver::meshCourantNo() const
             fvi::surfaceSum(mag(mesh.phi()))().primitiveField()
         );
 
-        const scalar meshCoNum
-        (
-            0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue()
-        );
+        meshCoNum_ =
+            0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue();
 
         const scalar meanMeshCoNum
         (
@@ -97,7 +98,7 @@ void Foam::solvers::basicFluidSolver::meshCourantNo() const
         );
 
         Info<< "Mesh Courant Number mean: " << meanMeshCoNum
-            << " max: " << meshCoNum << endl;
+            << " max: " << meshCoNum_ << endl;
     }
 }
 
@@ -210,9 +211,11 @@ void Foam::solvers::basicFluidSolver::continuityErrors
 Foam::solvers::basicFluidSolver::basicFluidSolver(fvMesh& mesh)
 :
     solver(mesh),
-    maxCo(0),
-    maxDeltaT_(0),
+    maxMeshCo(vGreat),
+    maxCo(vGreat),
+    maxDeltaT_(vGreat),
     cumulativeContErr(0),
+    meshCoNum_(0),
     CoNum_(0),
     CoNum(CoNum_)
 {
@@ -236,6 +239,11 @@ Foam::scalar Foam::solvers::basicFluidSolver::maxDeltaT() const
     if (maxCo < vGreat && CoNum > small)
     {
         deltaT = min(deltaT, maxCo/CoNum*runTime.deltaTValue());
+    }
+
+    if (maxMeshCo < vGreat && meshCoNum_ > small)
+    {
+        deltaT = min(deltaT, maxMeshCo/meshCoNum_*runTime.deltaTValue());
     }
 
     return deltaT;

@@ -78,7 +78,7 @@ void Foam::solvers::multiphaseEuler::motionCorrector()
                 );
             }
 
-            meshCourantNo();
+            correctMeshCourantNo();
         }
 
         divU.clear();

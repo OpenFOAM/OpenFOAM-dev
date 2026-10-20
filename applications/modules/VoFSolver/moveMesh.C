@@ -102,7 +102,7 @@ void Foam::solvers::VoFSolver::motionCorrector()
                 fvc::makeRelative(phi_, U);
             }
 
-            meshCourantNo();
+            correctMeshCourantNo();
 
             correctInterface();
         }

@@ -48,7 +48,7 @@ void Foam::solvers::shockFluid::motionCorrector()
                 // ...
             }
 
-            meshCourantNo();
+            correctMeshCourantNo();
         }
     }
 }

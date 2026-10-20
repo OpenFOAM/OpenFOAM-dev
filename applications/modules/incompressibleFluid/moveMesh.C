@@ -69,7 +69,7 @@ void Foam::solvers::incompressibleFluid::motionCorrector()
                 fvc::makeRelative(phi_, U);
             }
 
-            meshCourantNo();
+            correctMeshCourantNo();
         }
     }
 }

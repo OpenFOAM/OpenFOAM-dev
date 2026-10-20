@@ -76,7 +76,7 @@ void Foam::solvers::isothermalFluid::motionCorrector()
                 fvc::makeRelative(phi_, rho, U);
             }
 
-            meshCourantNo();
+            correctMeshCourantNo();
         }
     }
 }
