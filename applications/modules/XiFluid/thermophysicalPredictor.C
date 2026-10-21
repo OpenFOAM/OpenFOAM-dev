@@ -479,6 +479,9 @@ void Foam::solvers::XiFluid::HuSolve
         // Combustion source
         fvm::Sp(bSource, hu)
 
+        // Unburnt gas reaction heat release
+      + thermo_.alphau()()*uReaction_->Qdot()
+
         // Other sources
       + fvModels().source(b, rho, hu)
     );
@@ -523,6 +526,9 @@ void Foam::solvers::XiFluid::HbSolve
      ==
         // Combustion source
       - bSource*(uThermo.he()() + uThermo.hf()()() - bThermo.hf()()())
+
+        // Burnt gas reaction heat release
+      + thermo_.alphab()()*bReaction_->Qdot()
 
         // Other sources
       + fvModels().source(c, rho, hb)
