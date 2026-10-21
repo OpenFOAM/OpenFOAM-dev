@@ -17,5 +17,14 @@ FoamFile
 #includeFunc multiValveEngineState
 #includeFunc bXiProgress
 #includeFunc cellMin(b)
+#includeFunc isoSurface
+(
+    name=kernel,
+    writeControl=adjustableRunTime,
+    writeIntervals=((-180 none) (-15 1) (5 once)),
+    isoField=b,
+    isoValue=0.5,
+    fields=(Xi)
+)
 
 // ************************************************************************* //

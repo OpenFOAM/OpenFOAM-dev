@@ -14,8 +14,8 @@ libs     ("libutilityFunctionObjects.so");
 type     coded;
 
 // Only prints at time 0 (zero)
-executeControl runTimes;
-executeTimes   (0);
+executeControl runTime;
+executeIntervals ((0 once));
 
 // Parameters, which can be read from other files using macro expansions, e.g.
 // magU  ${${FOAM_CASE}/0/U!Uinlet};

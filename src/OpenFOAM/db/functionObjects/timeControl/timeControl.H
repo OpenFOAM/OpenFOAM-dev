@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,6 @@ public:
         outputTime,         //!< Execute/write every 'Interval' write times
         adjustableRunTime,  //!< Execute/write every 'Interval' run time period
         runTime,            //!< Execute/write every 'Interval' run time period
-        runTimes,           //!< Execute/write at specified list of run times
         clockTime,          //!< Execute/write every 'Interval' CPU time period
         cpuTime,            //!< Execute/write every 'Interval' CPU time period
         none                //!< No execution
@@ -78,7 +77,7 @@ private:
         const word prefix_;
 
         //- String representation of timeControls enums
-        static const NamedEnum<timeControls, 9> timeControlNames_;
+        static const NamedEnum<timeControls, 8> timeControlNames_;
 
         //- Type of time control
         timeControls timeControl_;
@@ -92,32 +91,92 @@ private:
         //- Begin time for execution - defaults to Time::beginTime
         scalar beginTime_;
 
-        //- Execution interval steps for timeStep mode
-        //  a value <= 1 means execute at every time step
-        label intervalSteps_;
+        //- Counter for the number of write times
+        label writeTimeIndex_;
 
-        //- Execution interval
-        scalar interval_;
+        //- Times at which intervals apply
+        scalarList intervalTimes_;
 
-        //- List of times (for runTimes option)
-        scalarList times_;
+        //- Integer interval sizes. Counts of the numbers of steps between
+        //  executions. For timeStep, writeTime, outputTime.
+        List<label> intervalCounts_;
 
-        //- Time delta used for time -> index (for runTimes option)
-        scalar timeDelta_;
+        //- Scalar interval sizes. Physical or compute times between
+        //  executions. For adjustableRunTime, runTime, runTime, cpuTime.
+        List<scalar> intervalPeriods_;
 
-        //- Hash set of mesh mapping time indices (for runTimes option)
-        HashSet<int64_t, Hash<int64_t>> timeIndices_;
+        //- When we get to the end of the list of intervals, should we start
+        //  over, or should we use the last interval forever
+        bool repeat_;
 
-        //- Index of previous execution
-        mutable label executionIndex_;
+        //- Index of the current interval
+        label intervalIndex_;
+
+        //- Current execution index. Incremented on execution to mark the time
+        //  as having been executed and prevent re-execution.
+        label executionIndex_;
+
+        //- Offset for counts
+        label offsetCount_;
+
+        //- Offset for periods
+        scalar offsetPeriod_;
 
 
     // Private Member Functions
 
-        //- Round the given scalar down to the nearest label. As a static_cast
-        //  to label, except that negative numbers are rounded down rather than
-        //  towards zero.
-        static label roundDown(const scalar);
+        //- Read the intervals
+        template<class Type, class Units>
+        void readIntervals
+        (
+            const word& intervalName,
+            const dictionary& dict,
+            const Units& units,
+            List<Type>& intervalSizes
+        );
+
+        //- Read the intervals with a default single interval
+        template<class Type, class Units>
+        void readIntervals
+        (
+            const word& intervalName,
+            const dictionary& dict,
+            const Units& units,
+            const bool allowDefault,
+            const Type& defaultInterval,
+            List<Type>& intervalSizes
+        );
+
+        //- Return the amount of the given time spent repeating
+        scalar repeating(const scalar t) const;
+
+        //- Return a time just after the given time
+        scalar after(const scalar t) const;
+
+        //- Update the interval
+        template<class Type>
+        void update
+        (
+            const List<Type>& intervalSizes,
+            const scalar t,
+            const Type& x0,
+            const Type& x,
+            label& intervalIndex,
+            label& executionIndex,
+            Type& offset
+        ) const;
+
+        //- Return whether or not to execute
+        template<class Type>
+        bool execute
+        (
+            const List<Type>& intervalSizes,
+            const scalar t,
+            const Type& x0,
+            const Type& x,
+            const Type& dx,
+            Type& offset
+        );
 
 
 public:
@@ -155,7 +214,7 @@ public:
         bool execute();
 
         //- Return the time to the next write
-        scalar timeToNextAction();
+        scalar timeToNextAction() const;
 
         //- Return control
         inline timeControls control() const;

@@ -73,8 +73,14 @@ Foam::functionObjects::timeControl::timeControl
     // of the function object's execute and write hooks.
     if (!foPtr_->executeAtStart())
     {
-        executeControl_.execute();
-        writeControl_.execute();
+        if (executeControl_.active())
+        {
+            executeControl_.execute();
+        }
+        if (writeControl_.active())
+        {
+            writeControl_.execute();
+        }
     }
 }
 
@@ -117,7 +123,11 @@ bool Foam::functionObjects::timeControl::write()
 
 bool Foam::functionObjects::timeControl::end()
 {
-    if (executeControl_.execute() || writeControl_.execute())
+    if
+    (
+        (executeControl_.active() && executeControl_.execute())
+     || (writeControl_.active() && writeControl_.execute())
+    )
     {
         foPtr_->end();
     }

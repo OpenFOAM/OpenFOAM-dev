@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,12 +63,11 @@ Description
         endTime           | End time                       | no  |
         executeAtStart    | Execute at start time switch   | no  | yes
         executeControl    | See time controls below        | no  | timeStep
-        executeInterval   | Steps between each execution   | no  |
-        executeTimes      | List of execution times        | no  |
+        executeInterval   | Steps or time between each execution | no | 1
+        executeIntervals  | Table of steps/times between each execution | no |
         writeControl      | See time controls below        | no  | timeStep
-        writeInterval     | Steps between each write       | no  |
-        writeTimes        | List of write times            | no  |
-        writeFrequencies  | List of write frequencies      | no  |
+        writeInterval     | Steps or time between each write | no | 1
+        writeIntervals    | Table of steps/times between each write | no |
     \endtable
 
     Time controls:
@@ -78,7 +77,6 @@ Description
         writeTime         | Execute/write every 'Interval' write times
         adjustableRunTime | Execute/write every 'Interval' run time period
         runTime           | Execute/write every 'Interval' run time period
-        runTimes          | Execute/write at specified list of run times
         clockTime         | Execute/write every 'Interval' clock time period
         cpuTime           | Execute/write every 'Interval' CPU time period
         none              | No execution

@@ -24,11 +24,87 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "timeControl.H"
+#include "Function1UnitSets.H"
 #include "PstreamReduceOps.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+//- Create a unit conversion object for tuples of scalar intervals
+Function1s::unitSets tupleUnits(const unitSet& x, const unitSet& value)
+{
+    return Function1s::unitSets({x, value});
+}
+
+
+//- Create a unit conversion object for tuples of integer intervals
+const unitSet& tupleUnits(const unitSet& x, const nil&)
+{
+    return x;
+}
+
+
+//- Read a tuple of scalar intervals
+template<class Convert>
+void convert
+(
+    Tuple2<scalar, token>& t,
+    const Function1s::unitSets& units,
+    const Convert& convert
+)
+{
+    convert(t.first(), units.x);
+
+    if (t.second().isNumber())
+    {
+        scalar s = t.second().number();
+        convert(s, units.value);
+        t.second() = token(s, t.second().lineNumber());
+    }
+}
+
+
+//- Read a tuple of integer intervals
+template<class Convert>
+void convert
+(
+    Tuple2<scalar, token>& t,
+    const unitSet& units,
+    const Convert& convert
+)
+{
+    convert(t.first(), units);
+}
+
+
+//- Get the value from a token
+template<class Type>
+Type tokenValue(const token& t);
+
+
+//- Get the scalar value from a token
+template<>
+scalar tokenValue<scalar>(const token& t)
+{
+    return t.number();
+}
+
+
+//- Get the integer value from a token
+template<>
+label tokenValue<label>(const token& t)
+{
+    return t.labelToken();
+}
+
+}
+
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-const Foam::NamedEnum<Foam::timeControl::timeControls, 9>
+const Foam::NamedEnum<Foam::timeControl::timeControls, 8>
 Foam::timeControl::timeControlNames_
 {
     "timeStep",
@@ -36,7 +112,6 @@ Foam::timeControl::timeControlNames_
     "outputTime",
     "adjustableRunTime",
     "runTime",
-    "runTimes",
     "clockTime",
     "cpuTime",
     "none"
@@ -45,9 +120,311 @@ Foam::timeControl::timeControlNames_
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::label Foam::timeControl::roundDown(const scalar t)
+template<class Type, class Units>
+void Foam::timeControl::readIntervals
+(
+    const word& intervalName,
+    const dictionary& dict,
+    const Units& units,
+    List<Type>& intervalSizes
+)
 {
-    return t < 0 ? label(t) - 1 : label(t);
+    const bool haveInterval = dict.found(intervalName);
+    const bool haveIntervals = dict.found(intervalName + "s");
+
+    if (haveInterval == haveIntervals)
+    {
+        FatalIOErrorInFunction(dict)
+            << (haveInterval ? "both" : "neither") << " of keywords "
+            << intervalName << " " << (haveInterval ? "and" : "or") << " "
+            << intervalName << "s defined in dictionary " << dict.name()
+            << exit(FatalIOError);
+    }
+
+    if (haveInterval)
+    {
+        intervalTimes_.resize(1);
+        intervalTimes_[0] = startTime_;
+
+        intervalSizes.resize(1);
+        intervalSizes[0] = dict.lookup<Type>(intervalName, units);
+
+        repeat_ = false;
+    }
+    else
+    {
+        List<Tuple2<scalar, token>> intervalTimeAndTokens =
+            dict.lookup<List<Tuple2<scalar, token>>>
+            (
+                intervalName + "s",
+                tupleUnits(time_.userUnits(), units)
+            );
+
+        intervalTimes_.resize(intervalTimeAndTokens.size());
+        intervalSizes.resize(intervalTimeAndTokens.size());
+
+        forAll(intervalTimeAndTokens, intervali)
+        {
+            const Tuple2<scalar, token>& timeAndToken =
+                intervalTimeAndTokens[intervali];
+
+            intervalTimes_[intervali] = timeAndToken.first();
+
+            // Check monotonicity
+            if
+            (
+                intervali
+             && timeAndToken.first()
+             <= intervalTimeAndTokens[intervali - 1].first()
+            )
+            {
+                FatalIOErrorInFunction(dict)
+                    << intervalName + "s do not increase monotonically"
+                    << exit(FatalIOError);
+            }
+
+            auto error = [&]()
+            {
+                FatalIOErrorInFunction(dict)
+                    << intervalName << " '" << timeAndToken.second()
+                    << "' not recognised. Valid non-numeric values are "
+                    << "'none', 'once' and 'repeat'." << exit(FatalIOError);
+            };
+
+            // Numeric interval
+            if (timeAndToken.second().isNumber())
+            {
+                intervalSizes[intervali] =
+                    tokenValue<Type>(timeAndToken.second());
+
+                if (intervalSizes[intervali] <= 0)
+                {
+                    FatalIOErrorInFunction(dict)
+                        << intervalName << " '" << intervalSizes[intervali]
+                        << "' is not positive" << exit(FatalIOError);
+                }
+            }
+
+            // Keyword interval
+            else if (timeAndToken.second().isWord())
+            {
+                const word& key = timeAndToken.second().wordToken();
+
+                if (key == "none")
+                {
+                    intervalSizes[intervali] = pTraits<Type>::max;
+                }
+                else if (key == "once")
+                {
+                    intervalSizes[intervali] = pTraits<Type>::min;
+                }
+                else if (key == "repeat")
+                {
+                    if (intervali != intervalTimeAndTokens.size() - 1)
+                    {
+                        FatalIOErrorInFunction(dict)
+                            << intervalName << " '" << key
+                            << "' must come last" << exit(FatalIOError);
+                    }
+
+                    intervalSizes[intervali] = 0;
+                    repeat_ = true;
+                }
+                else
+                {
+                    error();
+                }
+            }
+
+            // Unrecognised interval
+            else
+            {
+                error();
+            }
+        }
+    }
+}
+
+
+template<class Type, class Units>
+void Foam::timeControl::readIntervals
+(
+    const word& intervalName,
+    const dictionary& dict,
+    const Units& units,
+    const bool allowDefault,
+    const Type& defaultInterval,
+    List<Type>& intervalSizes
+)
+{
+    const bool haveInterval = dict.found(intervalName);
+    const bool haveIntervals = dict.found(intervalName + "s");
+
+    if (allowDefault && !haveInterval && !haveIntervals)
+    {
+        intervalTimes_.resize(1);
+        intervalTimes_[0] = startTime_;
+
+        intervalSizes.resize(1);
+        intervalSizes[0] = defaultInterval;
+
+        repeat_ = false;
+    }
+    else
+    {
+        readIntervals<Type>
+        (
+            intervalName,
+            dict,
+            units,
+            intervalSizes
+        );
+    }
+}
+
+
+Foam::scalar Foam::timeControl::repeating(const scalar t) const
+{
+    if (repeat_)
+    {
+        const scalar period =
+            intervalTimes_.last() - intervalTimes_.first();
+
+        return label(max(t - intervalTimes_.first(), 0)/period)*period;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+Foam::scalar Foam::timeControl::after(const scalar t) const
+{
+    return t == 0 ? rootVSmall : t + rootSmall*mag(t);
+}
+
+
+template<class Type>
+void Foam::timeControl::update
+(
+    const List<Type>& intervalSizes,
+    const scalar t,
+    const Type& x0,
+    const Type& x,
+    label& intervalIndex,
+    label& executionIndex,
+    Type& offset
+) const
+{
+    // Find the current interval
+    const label intervalIndex0 = intervalIndex;
+    intervalIndex = max(intervalIndex, 0);
+    const scalar t0 = repeating(t);
+    if (repeat_)
+    {
+        for
+        (
+            ;
+            max(t - t0, 0) < intervalTimes_[intervalIndex]
+         || max(t - t0, 0) >= intervalTimes_[intervalIndex + 1];
+            intervalIndex = (intervalIndex + 1) % (intervalTimes_.size() - 1)
+        );
+    }
+    else
+    {
+        for
+        (
+            ;
+            intervalIndex < intervalTimes_.size() - 1
+         && t >= intervalTimes_[intervalIndex + 1];
+         ++ intervalIndex
+        );
+    }
+
+    // If in a new interval then compute the new execution index and offset
+    if (intervalIndex != intervalIndex0)
+    {
+        const Type size = intervalSizes[intervalIndex];
+
+        if (size == pTraits<Type>::max)
+        {
+            // Don't write
+            executionIndex = 0;
+            offset = 0;
+        }
+        else if (size == pTraits<Type>::min)
+        {
+            // Write once
+            executionIndex = -1;
+            offset = 0;
+        }
+        else
+        {
+            // Set the execution index and offset. Note: Round down, rather
+            // than rounding towards zero, as is standard for integer division.
+            const label executionIndex0 = executionIndex;
+            const Type offset0 = offset;
+            executionIndex = label((x - x0)/size);
+            if (x - x0 < 0) executionIndex --;
+            offset = 0;
+
+            // If we have two valid/positive interval sizes then set the offset
+            // to ensure a gap bounded by the sizes
+            if (intervalIndex0 >= 0 && intervalSizes[intervalIndex0] > 0)
+            {
+                const Type size0 = intervalSizes[intervalIndex0];
+
+                const Type xDelta =
+                    ((executionIndex + 1)*size + x0 + offset)
+                  - (executionIndex0*size0 + x0 + offset0);
+
+                const Type minSize = min(size0, size);
+                const Type maxSize = max(size0, size);
+
+                if (xDelta < minSize) offset = minSize - xDelta;
+                if (xDelta > maxSize) offset = maxSize - xDelta;
+            }
+        }
+    }
+}
+
+
+template<class Type>
+bool Foam::timeControl::execute
+(
+    const List<Type>& intervalSizes,
+    const scalar t,
+    const Type& x0,
+    const Type& x,
+    const Type& dx,
+    Type& offset
+)
+{
+    // Not yet in range
+    if (t < intervalTimes_.first()) return false;
+
+    // Update the interval
+    update
+    (
+        intervalSizes,
+        t,
+        x0,
+        x,
+        intervalIndex_,
+        executionIndex_,
+        offset
+    );
+
+    // Determine the current execution index. Note: Round down, rather
+    // than rounding towards zero, as is standard for integer division.
+    const label executionIndex0 = executionIndex_;
+    const Type size = mag(intervalSizes[intervalIndex_]);
+    executionIndex_ = label((x + dx - x0 - offset)/size);
+    if (x + dx - x0 - offset < 0) executionIndex_ --;
+
+    // Return whether or not the index changed
+    return executionIndex_ > executionIndex0;
 }
 
 
@@ -66,10 +443,15 @@ Foam::timeControl::timeControl
     startTime_(time_.beginTime().value()),
     endTime_(vGreat),
     beginTime_(time_.beginTime().value()),
-    intervalSteps_(0),
-    interval_(-1),
-    timeDelta_(0),
-    executionIndex_(0)
+    writeTimeIndex_(0),
+    intervalTimes_(),
+    intervalCounts_(),
+    intervalPeriods_(),
+    repeat_(false),
+    intervalIndex_(labelMin),
+    executionIndex_(labelMin),
+    offsetCount_(0),
+    offsetPeriod_(0)
 {
     read(dict);
 }
@@ -85,10 +467,6 @@ Foam::timeControl::~timeControl()
 
 void Foam::timeControl::read(const dictionary& dict)
 {
-    dict.readIfPresent("startTime", time().userUnits(), startTime_);
-    dict.readIfPresent("endTime", time().userUnits(), endTime_);
-    dict.readIfPresent("beginTime", time().userUnits(), beginTime_);
-
     word controlName(prefix_ + "Control");
     word intervalName(prefix_ + "Interval");
 
@@ -106,147 +484,83 @@ void Foam::timeControl::read(const dictionary& dict)
         intervalName = "outputInterval";
     }
 
-    if (dict.found(controlName))
-    {
-        timeControl_ = timeControlNames_.read(dict.lookup(controlName));
-    }
-    else
-    {
-        timeControl_ = timeControls::timeStep;
-    }
+    timeControl_ =
+        timeControlNames_.lookupOrDefault
+        (
+            controlName,
+            dict,
+            timeControls::timeStep
+        );
+
+    dict.readIfPresent("startTime", time().userUnits(), startTime_);
+    dict.readIfPresent("endTime", time().userUnits(), endTime_);
+    dict.readIfPresent("beginTime", time().userUnits(), beginTime_);
+
+    writeTimeIndex_ = 0;
+
+    intervalIndex_ = labelMin;
+    executionIndex_ = labelMin;
+    offsetCount_ = 0;
+    offsetPeriod_ = 0;
 
     switch (timeControl_)
     {
         case timeControls::timeStep:
-        {
-            intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 0);
+            readIntervals<label>
+            (
+                intervalName,
+                dict,
+                nil(),
+                true,
+                1,
+                intervalCounts_
+            );
             break;
-        }
 
         case timeControls::writeTime:
         case timeControls::outputTime:
-        {
-            intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 1);
+            readIntervals<label>
+            (
+                intervalName,
+                dict,
+                nil(),
+                true,
+                1,
+                intervalCounts_
+            );
             break;
-        }
 
         case timeControls::adjustableRunTime:
         case timeControls::runTime:
-        {
-            interval_ = dict.lookup<scalar>(intervalName, time_.userUnits());
-            executionIndex_ =
-                roundDown
-                (
-                    (
-                        max(time_.value(), startTime_)
-                      - beginTime_
-                      - 0.5*time_.deltaTValue()
-                    )
-                   /interval_
-                );
+            readIntervals<scalar>
+            (
+                intervalName,
+                dict,
+                time_.userUnits(),
+                intervalPeriods_
+            );
             break;
-        }
-
-        case timeControls::runTimes:
-        {
-            const word timesName(prefix_ + "Times");
-            const word frequenciesName(prefix_ + "Frequencies");
-            const bool repeat = dict.lookupOrDefault(prefix_ + "Repeat", false);
-
-            timeDelta_ =
-                dict.lookupOrDefault
-                (
-                    "timeDelta",
-                    units::none,
-                    scalar(1e-3*time_.userDeltaTValue())
-                );
-
-            if (dict.found(timesName))
-            {
-                times_ = dict.lookup<scalarList>(timesName, units::none);
-            }
-            else if (dict.found(frequenciesName))
-            {
-                List<Pair<scalar>> frequencies(dict.lookup(frequenciesName));
-
-                const scalar userEndTime =
-                    time_.timeToUserTime(time_.endTime().value());
-
-                if (!repeat)
-                {
-                    frequencies.append
-                    (
-                        {userEndTime, frequencies.last().second()}
-                    );
-                }
-
-                const scalar frequenciesDuration =
-                    frequencies.last().first() - frequencies.first().first();
-
-                DynamicList<scalar> times(1, frequencies[0].first());
-                label i = 0;
-                label repeati = 0;
-                while (times[i] < userEndTime)
-                {
-                    for(label pi=0; pi<frequencies.size()-1; pi++)
-                    {
-                        while
-                        (
-                            times[i]
-                          < frequencies[pi + 1].first()
-                          + repeati*frequenciesDuration - timeDelta_
-                        )
-                        {
-                            times(i + 1) = times[i] + frequencies[pi].second();
-                            i++;
-                        }
-                    }
-                    repeati++;
-                }
-
-                times_ = times;
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "Undefined " << timesName
-                    << " or " << frequenciesName << " for output control: "
-                    << timeControlNames_[timeControl_] << nl
-                    << exit(FatalError);
-            }
-
-            forAll(times_, i)
-            {
-                timeIndices_.insert
-                (
-                    int64_t((times_[i] + timeDelta_/2.0)/timeDelta_)
-                );
-            }
-
-            intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 1);
-            break;
-        }
 
         case timeControls::clockTime:
         case timeControls::cpuTime:
-        {
-            interval_ = dict.lookup<scalar>(intervalName, time_.userUnits());
+            readIntervals<scalar>
+            (
+                intervalName,
+                dict,
+                dimensions::time,
+                intervalPeriods_
+            );
             break;
-        }
 
         case timeControls::none:
-        {
             break;
-        }
 
         default:
-        {
             FatalErrorInFunction
-                << "Undefined output control: "
+                << "Undefined time control: "
                 << timeControlNames_[timeControl_] << nl
                 << exit(FatalError);
             break;
-        }
     }
 }
 
@@ -262,118 +576,88 @@ bool Foam::timeControl::active() const
 
 bool Foam::timeControl::execute()
 {
-    if (!active())
-    {
-        return false;
-    }
+    if (time_.writeTime()) writeTimeIndex_ ++;
 
     switch (timeControl_)
     {
         case timeControls::timeStep:
-        {
             return
-                intervalSteps_ <= 1
-             || time_.timeIndex() % intervalSteps_ == 0;
-            break;
-        }
+                execute<label>
+                (
+                    intervalCounts_,
+                    after(time_.value()),
+                    0,
+                    time_.timeIndex() - 1,
+                    1,
+                    offsetCount_
+                );
 
         case timeControls::writeTime:
         case timeControls::outputTime:
-        {
-            if
-            (
-                time_.writeTime()
-             || time_.timeIndex() == time_.startTimeIndex()
-            )
-            {
-                const bool execute =
-                    intervalSteps_ <= 1
-                 || executionIndex_ % intervalSteps_ == 0;
-                executionIndex_++;
-                return execute;
-            }
-            break;
-        }
+            return
+                execute<label>
+                (
+                    intervalCounts_,
+                    after(time_.value()),
+                    0,
+                    writeTimeIndex_,
+                    0,
+                    offsetCount_
+                );
 
         case timeControls::runTime:
         case timeControls::adjustableRunTime:
-        {
-            const label executionIndex =
-                roundDown
+            return
+                execute<scalar>
                 (
-                    (
-                        time_.value()
-                      - beginTime_
-                      + 0.5*time_.deltaTValue()
-                    )
-                   /interval_
+                    intervalPeriods_,
+                    after(time_.value()),
+                    beginTime_,
+                    time_.value() - time_.deltaTValue()/2,
+                    time_.deltaTValue(),
+                    offsetPeriod_
                 );
-            if (executionIndex > executionIndex_)
-            {
-                executionIndex_ = executionIndex;
-                return true;
-            }
-            break;
-        }
-
-        case timeControls::runTimes:
-        {
-            return timeIndices_.found
-            (
-                (time_.userTimeValue() + timeDelta_/2)/timeDelta_
-            );
-        }
 
         case timeControls::clockTime:
-        {
-            const label executionIndex = label
-            (
-                returnReduce(label(time_.elapsedClockTime()), maxOp())
-               /interval_
-            );
-            if (executionIndex > executionIndex_)
-            {
-                executionIndex_ = executionIndex;
-                return true;
-            }
-            break;
-        }
+            return
+                execute<scalar>
+                (
+                    intervalPeriods_,
+                    after(time_.value()),
+                    0,
+                    returnReduce(label(time_.elapsedClockTime()), maxOp()),
+                    0,
+                    offsetPeriod_
+                );
 
         case timeControls::cpuTime:
-        {
-            const label executionIndex = label
-            (
-                returnReduce(time_.elapsedCpuTime(), maxOp())
-               /interval_
-            );
-            if (executionIndex > executionIndex_)
-            {
-                executionIndex_ = executionIndex;
-                return true;
-            }
-            break;
-        }
+            return
+                execute<scalar>
+                (
+                    intervalPeriods_,
+                    after(time_.value()),
+                    0,
+                    returnReduce(label(time_.elapsedCpuTime()), maxOp()),
+                    0,
+                    offsetPeriod_
+                );
 
         case timeControls::none:
-        {
             return false;
-        }
 
         default:
-        {
             FatalErrorInFunction
-                << "Undefined output control: "
+                << "Undefined time control: "
                 << timeControlNames_[timeControl_] << nl
                 << exit(FatalError);
-            break;
-        }
+            return false;
     }
 
     return false;
 }
 
 
-Foam::scalar Foam::timeControl::timeToNextAction()
+Foam::scalar Foam::timeControl::timeToNextAction() const
 {
     if (time_.value() > endTime_) return vGreat;
 
@@ -383,60 +667,68 @@ Foam::scalar Foam::timeControl::timeToNextAction()
         case timeControls::writeTime:
         case timeControls::outputTime:
         case timeControls::runTime:
-        case timeControls::clockTime:
-        case timeControls::cpuTime:
-        case timeControls::none:
-        {
             return vGreat;
-            break;
-        }
 
         case timeControls::adjustableRunTime:
         {
-            return
-                (executionIndex_ + 1)*interval_
-              - (time_.value() - beginTime_);
-            break;
-        }
+            const scalar tInterval =
+                intervalIndex_ >= 0
+              ? (
+                    intervalIndex_ < intervalPeriods_.size() - 1
+                  ? intervalTimes_[intervalIndex_ + 1]
+                  + repeating(after(time_.value()))
+                  : vGreat
+                )
+              : startTime_;
 
-        case timeControls::runTimes:
-        {
-            scalar realTimeToNextAction = vGreat;
+            scalar tNext =
+                intervalIndex_ >= 0
+              ? (
+                    (executionIndex_ + 1)
+                   *mag(intervalPeriods_[intervalIndex_])
+                  + beginTime_ + offsetPeriod_
+                )
+              : vGreat;
 
-            forAll(times_, i)
+            if (tNext > tInterval)
             {
-                if
+                label intervalIndexStar = intervalIndex_;
+                label executionIndexStar = executionIndex_;
+                scalar offsetPeriodStar = offsetPeriod_;
+
+                update<scalar>
                 (
-                    time_.userTimeToTime(times_[i]) < startTime_
-                 || time_.userTimeToTime(times_[i]) > endTime_
-                ) continue;
+                    intervalPeriods_,
+                    after(tInterval),
+                    beginTime_,
+                    tInterval - time_.deltaTValue()/2,
+                    intervalIndexStar,
+                    executionIndexStar,
+                    offsetPeriodStar
+                );
 
-                const scalar userTimeToThisAction =
-                    times_[i] - time_.userTimeValue();
-
-                if (userTimeToThisAction > timeDelta_)
-                {
-                    realTimeToNextAction =
-                        min
-                        (
-                            realTimeToNextAction,
-                            time_.userTimeToTime(userTimeToThisAction)
-                        );
-                }
+                tNext =
+                    executionIndexStar < 0
+                  ? tInterval
+                  : (executionIndexStar + 1)
+                   *mag(intervalPeriods_[intervalIndexStar])
+                  + beginTime_ + offsetPeriodStar;
             }
 
-            return realTimeToNextAction;
-            break;
+            return tNext - time_.value();
         }
 
+        case timeControls::clockTime:
+        case timeControls::cpuTime:
+        case timeControls::none:
+            return vGreat;
+
         default:
-        {
             FatalErrorInFunction
-                << "Undefined output control: "
+                << "Undefined time control: "
                 << timeControlNames_[timeControl_] << nl
                 << exit(FatalError);
-            break;
-        }
+            return vGreat;
     }
 
     return vGreat;
