@@ -111,6 +111,8 @@ Foam::ubMixtureMaps::uMulticomponentbInhomogeneous::prompt
     PtrList<volInternalScalarField> Yp(1);
     Yp.set(bInhomogeneousMixture::FT, Yu[fu_]());
 
+    bThermo_.availableSpecies() = true;
+
     return Yp;
 }
 
@@ -160,6 +162,8 @@ void Foam::ubMixtureMaps::uMulticomponentbInhomogeneous::reset
     {
         Yu[pr_[i].first()] = b*Yu[pr_[i].first()] + c*pr_[i].second()*prb;
     }
+
+    uThermo_.availableSpecies() = true;
 }
 
 

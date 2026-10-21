@@ -77,6 +77,8 @@ Foam::ubMixtureMaps::uInhomogeneousbInhomogeneous::prompt
     PtrList<volInternalScalarField> Yp(1);
     Yp.set(bInhomogeneousMixture::FT, Yu[uInhomogeneousMixture::FU]());
 
+    bThermo_.availableSpecies() = true;
+
     return Yp;
 }
 

@@ -150,6 +150,8 @@ Foam::ubMixtureMaps::uInhomogeneousbMulticomponent::prompt
         }
     }
 
+    bThermo_.availableSpecies() = true;
+
     return Yp;
 }
 

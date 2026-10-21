@@ -43,7 +43,6 @@ Foam::bInhomogeneousMixture::bInhomogeneousMixture
 :
     species_({"ft"}),
     stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio")),
-    availableSpecies_(1, true),
     activeSpecies_(1, true)
 {}
 
