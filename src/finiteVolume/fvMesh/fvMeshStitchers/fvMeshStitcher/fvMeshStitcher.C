@@ -1633,13 +1633,13 @@ void Foam::fvMeshStitcher::intersect
 }
 
 
-bool Foam::fvMeshStitcher::disconnectThis
+void Foam::fvMeshStitcher::disconnectThis
 (
     const bool changing,
     const bool geometric
 )
 {
-    if (!stitches() || mesh_.conformal()) return false;
+    if (!stitches() || mesh_.conformal()) return;
 
     // Determine which patches are coupled
     const boolList patchCoupleds =
@@ -1682,19 +1682,17 @@ bool Foam::fvMeshStitcher::disconnectThis
     meshObjects::topoChange<lduMesh>(mesh_, map);
 
     const_cast<Time&>(mesh_.time()).functionObjects().topoChange(map);
-
-    return true;
 }
 
 
-bool Foam::fvMeshStitcher::connectThis
+void Foam::fvMeshStitcher::connectThis
 (
     const bool changing,
     const bool geometric,
     const bool load
 )
 {
-    if (!stitches() || !mesh_.conformal()) return false;
+    if (!stitches() || !mesh_.conformal()) return;
 
     // Create a copy of the conformal poly face addressing
     IOobject polyFacesBfIO(word::null, mesh_.pointsInstance(), mesh_);
@@ -1964,8 +1962,6 @@ bool Foam::fvMeshStitcher::connectThis
     meshObjects::topoChange<lduMesh>(mesh_, map);
 
     const_cast<Time&>(mesh_.time()).functionObjects().topoChange(map);
-
-    return true;
 }
 
 
@@ -2295,35 +2291,17 @@ bool Foam::fvMeshStitcher::stitches() const
 }
 
 
-bool Foam::fvMeshStitcher::disconnect
+void Foam::fvMeshStitcher::disconnect
 (
     const bool changing,
     const bool geometric
 )
 {
-    if (!changing)
-    {
-        return disconnectThis(changing, geometric);
-    }
-
-    // Get all the connected region meshes
-    MultiRegionUList<fvMesh> regionMeshes(this->regionMeshes());
-
-    // Disconnect them all
-    bool result = false;
-    forAll(regionMeshes, i)
-    {
-        if (regionMeshes[i]().stitcher().disconnectThis(changing, geometric))
-        {
-            result = true;
-        }
-    }
-
-    return result;
+    disconnectThis(changing, geometric);
 }
 
 
-bool Foam::fvMeshStitcher::connect
+void Foam::fvMeshStitcher::connect
 (
     const bool changing,
     const bool geometric,
@@ -2332,7 +2310,9 @@ bool Foam::fvMeshStitcher::connect
 {
     if (!changing)
     {
-        return connectThis(changing, geometric, load);
+        connectThis(changing, geometric, load);
+
+        return;
     }
 
     // Connection requires all regions to be available and at a consistent
@@ -2340,28 +2320,16 @@ bool Foam::fvMeshStitcher::connect
     // ready, then this function just flips the ready flag for this region. If
     // they are all ready, then this function stitches all of them.
 
-    ready_ = true;
-
     // Get all the connected region meshes
     MultiRegionUList<fvMesh> regionMeshes(this->regionMeshes());
+
+    // Set this mesh as being ready
+    ready_ = true;
 
     // If any mesh is not ready, then don't do anything
     forAll(regionMeshes, i)
     {
-        if (!regionMeshes[i]().stitcher().ready_)
-        {
-            return false;
-        }
-    }
-
-    // All meshes are ready, so connect all of them up
-    bool result = false;
-    forAll(regionMeshes, i)
-    {
-        if (regionMeshes[i]().stitcher().connectThis(changing, geometric, load))
-        {
-            result = true;
-        }
+        if (!regionMeshes[i]().stitcher().ready_) return;
     }
 
     // Set all meshes as not ready, in preparation for the next iteration
@@ -2370,7 +2338,25 @@ bool Foam::fvMeshStitcher::connect
         regionMeshes[i]().stitcher().ready_ = false;
     }
 
-    return result;
+    // If everything is still non-conformal, that means none of the region
+    // meshes has changed, so there is nothing to do
+    bool allNonConformal = true;
+    forAll(regionMeshes, i)
+    {
+        allNonConformal = allNonConformal && !regionMeshes[i]().conformal();
+    }
+    if (allNonConformal) return;
+
+    // Un-stitch any meshes which are still non-conformal, and then stitch
+    // everything back together again
+    forAll(regionMeshes, i)
+    {
+        regionMeshes[i]().stitcher().disconnectThis(changing, geometric);
+    }
+    forAll(regionMeshes, i)
+    {
+        regionMeshes[i]().stitcher().connectThis(changing, geometric, load);
+    }
 }
 
 

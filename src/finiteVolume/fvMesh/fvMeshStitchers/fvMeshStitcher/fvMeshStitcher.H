@@ -303,14 +303,14 @@ private:
 
             //- Disconnect the mesh by removing faces from the
             //  nonConformalCyclics
-            bool disconnectThis
+            void disconnectThis
             (
                 const bool changing,
                 const bool geometric
             );
 
             //- Connect the mesh by adding faces into the nonConformalCyclics
-            bool connectThis
+            void connectThis
             (
                 const bool changing,
                 const bool geometric,
@@ -453,14 +453,14 @@ public:
         bool stitches() const;
 
         //- Disconnect the mesh by removing faces from the nonConformalCyclics
-        bool disconnect
+        void disconnect
         (
             const bool changing,
             const bool geometric
         );
 
         //- Connect the mesh by adding faces into the nonConformalCyclics
-        bool connect
+        void connect
         (
             const bool changing,
             const bool geometric,
