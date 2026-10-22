@@ -215,7 +215,8 @@ Foam::label Foam::patchToPatches::nearest::finalise
     const vectorField& srcPointNormals,
     const vectorField& srcPointNormals0,
     const primitiveOldTimePatch& tgtPatch,
-    const transformer& tgtToSrc
+    const transformer& tgtToSrc,
+    const unsigned char report
 )
 {
     // Keep only the closest opposing face
@@ -241,10 +242,11 @@ Foam::label Foam::patchToPatches::nearest::finalise
             srcPointNormals,
             srcPointNormals0,
             tgtPatch,
-            tgtToSrc
+            tgtToSrc,
+            report
         );
 
-    if (debug)
+    if (nCouples != 0 && (report & patchToPatch::report::extent))
     {
         auto countNonEmpty = [](const List<DynamicList<label>>& ll)
         {

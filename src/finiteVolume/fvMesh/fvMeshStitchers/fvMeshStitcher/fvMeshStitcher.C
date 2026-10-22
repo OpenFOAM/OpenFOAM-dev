@@ -1714,6 +1714,7 @@ void Foam::fvMeshStitcher::connectThis
     const bool anyPatchCoupleds = gAny(patchCoupleds);
 
     // Access all the intersections in advance. Makes the log nicer.
+    bool anyIntersecting = false;
     forAll(mesh_.boundary(), patchi)
     {
         if (!patchCoupleds[patchi]) continue;
@@ -1727,7 +1728,13 @@ void Foam::fvMeshStitcher::connectThis
 
             if (nccFvp.owner())
             {
-                nccFvp.nonConformalCyclicPoly().intersection();
+                anyIntersecting =
+                    nccFvp.nonConformalCyclicPoly().intersection
+                    (
+                        changing
+                      ? patchToPatch::report::extent
+                      : patchToPatch::report::all
+                    ).intersecting() || anyIntersecting;
             }
         }
         else if (isA<nonConformalProcessorCyclicFvPatch>(fvp))
@@ -1740,7 +1747,13 @@ void Foam::fvMeshStitcher::connectThis
             const nonConformalMappedWallFvPatch& ownerNcmwFvp =
                 ncmwFvp.owner() ? ncmwFvp : ncmwFvp.nbrPatch();
 
-            ownerNcmwFvp.nonConformalMappedWallPoly().intersection();
+            anyIntersecting =
+                ownerNcmwFvp.nonConformalMappedWallPoly().intersection
+                (
+                    changing
+                  ? patchToPatch::report::extent
+                  : patchToPatch::report::all
+                ).intersecting() || anyIntersecting;
         }
         else
         {
@@ -1752,12 +1765,19 @@ void Foam::fvMeshStitcher::connectThis
 
     if (anyPatchCoupleds)
     {
-        Info<< indent << typeName << ": Connecting";
+        Info<< indent << typeName << ":";
         if (mesh_.name() != polyMesh::defaultRegion)
         {
-            Info<< " region " << mesh_.name();
+            Info<< ' ' << mesh_.name();
         }
+
         Info<< incrIndent << endl;
+
+        if (!anyIntersecting)
+        {
+            Info<< indent << Warning.title().c_str()
+                << "No intersection" << endl;
+        }
     }
 
     // Create copies of geometry fields to be modified
@@ -1846,7 +1866,7 @@ void Foam::fvMeshStitcher::connectThis
             }
         }
 
-        if (mesh_.moving())
+        if (debug && mesh_.moving())
         {
             // Create a boundary field of the imbalance between the mesh fluxes
             // on either side of interfaces
@@ -1932,16 +1952,21 @@ void Foam::fvMeshStitcher::connectThis
 
         const scalarField pvf(projectedVolumeFraction());
         const scalar gMaxPvf = gMax(pvf);
-        Info<< indent << "Cell min/average/max projected volume fraction = "
-            << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMaxPvf << endl;
-        if (gMaxPvf > minWarnProjectedVolumeFraction_)
+        Info<< indent;
+        if (changing && gMaxPvf > minWarnProjectedVolumeFraction_)
         {
-            WarningInFunction
-                << "Maximum projected volume fraction " << gMaxPvf << " may "
-                << "cause instability." << nl << indent << "Volumetric "
-                << "distortion can be minimised by making the side of the "
-                << "interface" << nl << indent << "with smaller or more "
-                << "finely layered cells the neighbour." << nl << indent
+            Info<< Warning.title().c_str();
+        }
+        Info<< "Cell min/average/max projected volume fraction = "
+            << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMaxPvf << endl;
+        if (!changing && gMaxPvf > minWarnProjectedVolumeFraction_)
+        {
+            Info<< indent << Warning.title().c_str()
+                << "Maximum projected volume fraction " << gMaxPvf
+                << " may cause" << nl << indent << "instability. Volumetric "
+                << "distortion can be minimised by making the side of" << nl
+                << indent << "the interface with smaller or more finely "
+                << "layered cells the neighbour." << nl << indent
                 << "This is done by specifying this side second to "
                 << "createNonConformalCouples;" << nl << indent << "either on "
                 << "the command line, or in the patches (and regions) entries "

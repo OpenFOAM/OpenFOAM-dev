@@ -241,7 +241,8 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
     const vectorField& srcPointNormals,
     const vectorField& srcPointNormals0,
     const primitiveOldTimePatch& tgtPatch,
-    const transformer& tgtToSrc
+    const transformer& tgtToSrc,
+    const unsigned char report
 )
 {
     const label nCouples =
@@ -251,7 +252,8 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
             srcPointNormals,
             srcPointNormals0,
             tgtPatch,
-            tgtToSrc
+            tgtToSrc,
+            report
         );
 
     // Transfer weight addressing into actual addressing (if not done in the
@@ -279,7 +281,7 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
         }
     }
 
-    if (debug)
+    if (nCouples != 0 && (report & patchToPatch::report::extent))
     {
         auto histogram = [](const List<DynamicList<label>>& ll)
         {
@@ -298,11 +300,9 @@ Foam::label Foam::patchToPatches::inverseDistance::finalise
             return result;
         };
 
-        Info<< indent
-            << "Number of source faces by number of target connections = "
+        Info<< indent << "Source stencil size count = "
             << histogram(srcLocalTgtFaces_) << nl
-            << indent
-            << "Number of target faces by number of source connections = "
+            << indent << "Target stencil size count = "
             << histogram(tgtLocalSrcFaces_) << endl;
     }
 

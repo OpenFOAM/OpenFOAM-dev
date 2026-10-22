@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,10 @@ public:
         bool owner() const;
 
         //- Access the intersection engine
-        const patchToPatches::intersection& intersection() const;
+        const patchToPatches::intersection& intersection
+        (
+            const unsigned char report = patchToPatch::report::all
+        ) const;
 
         //- Clear out data on mesh change
         void clearOut(const bool move);

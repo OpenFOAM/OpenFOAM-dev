@@ -280,7 +280,10 @@ bool Foam::nonConformalCyclicPolyPatch::coupled() const
 
 
 const Foam::patchToPatches::intersection&
-Foam::nonConformalCyclicPolyPatch::intersection() const
+Foam::nonConformalCyclicPolyPatch::intersection
+(
+    const unsigned char report
+) const
 {
     if (!owner())
     {
@@ -306,10 +309,10 @@ Foam::nonConformalCyclicPolyPatch::intersection() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
-        const string inRegionName =
-            mesh.name() == polyMesh::defaultRegion
-          ? ""
-          : " in region " + mesh.name();
+        const word meshPrefix =
+            mesh.name() != polyMesh::defaultRegion
+          ? mesh.name() + '!'
+          : word();
 
         intersection_.update
         (
@@ -317,11 +320,13 @@ Foam::nonConformalCyclicPolyPatch::intersection() const
             ncb.patchPointNormals(origPatchIndex()),
             nbrPatch().origPatch(),
             transform(),
-            {
-                origPatchName() + inRegionName,
-                nbrPatch().origPatchName() + inRegionName
-            },
-            cyclicTransform::str()
+            Pair<const string&>
+            (
+                meshPrefix + origPatchName(),
+                meshPrefix + nbrPatch().origPatchName()
+            ),
+            cyclicTransform::str(),
+            report
         );
 
         intersectionIsValid_ = 2;
@@ -358,11 +363,6 @@ Foam::nonConformalCyclicPolyPatch::rays() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
-        const string inRegionName =
-            mesh.name() == polyMesh::defaultRegion
-          ? ""
-          : " in region " + mesh.name();
-
         rays_.update
         (
             primitiveOldTimePatch
@@ -380,11 +380,19 @@ Foam::nonConformalCyclicPolyPatch::rays() const
                 mesh.oldPoints()
             ),
             transform(),
-            {
-                origPatchName() + inRegionName,
-                nbrPatch().origPatchName() + inRegionName
-            },
-            cyclicTransform::str()
+            mesh.name() == polyMesh::defaultRegion
+          ? Pair<const string&>
+            (
+                origPatchName(),
+                nbrPatch().origPatchName()
+            )
+          : Pair<const string&>
+            (
+                mesh.name() + '!' + origPatchName(),
+                mesh.name() + '!' + nbrPatch().origPatchName()
+            ),
+            cyclicTransform::str(),
+            patchToPatch::report::extent
         );
 
         raysIsValid_ = 2;

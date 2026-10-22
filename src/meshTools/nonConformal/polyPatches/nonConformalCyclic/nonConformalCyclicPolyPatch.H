@@ -264,7 +264,10 @@ public:
         virtual bool coupled() const;
 
         //- Access the intersection engine
-        const patchToPatches::intersection& intersection() const;
+        const patchToPatches::intersection& intersection
+        (
+            const unsigned char report = patchToPatch::report::all
+        ) const;
 
         //- Access the rays engine
         const patchToPatches::rays& rays() const;

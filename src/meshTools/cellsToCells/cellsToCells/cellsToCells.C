@@ -250,9 +250,17 @@ Foam::scalar Foam::cellsToCells::update
         return 0;
     }
 
-    Info<< indent << typeName << ": Calculating couplings between "
-        << srcTotalSize << " source cells and " << tgtTotalSize
-        << " target cells" << incrIndent << endl;
+    const bool srcIsRegion = srcMesh.name() != polyMesh::defaultRegion;
+    const bool tgtIsRegion = tgtMesh.name() != polyMesh::defaultRegion;
+    static const char* noRegion = "the default region";
+    const char* srcMeshName = srcIsRegion ? srcMesh.name().c_str() : noRegion;
+    const char* tgtMeshName = tgtIsRegion ? tgtMesh.name().c_str() : noRegion;
+    Info<< indent << typeName << ":";
+    if (srcIsRegion || tgtIsRegion)
+    {
+        Info<< " " << srcMeshName << " and " << tgtMeshName;
+    }
+    Info<< endl << incrIndent;
 
     singleProcess_ =
         patchToPatchTools::singleProcess
@@ -374,7 +382,8 @@ Foam::scalar Foam::cellsToCells::update
     if (nCouples != 0)
     {
         Info<< indent << "Overlapping volume = " << V << endl
-            << indent << nCouples << " couplings calculated in "
+            << indent << nCouples << " couplings calculated between "
+            << srcTotalSize << " and " << tgtTotalSize << " cells in "
             << time.cpuTimeIncrement() << 's' << endl;
     }
     else

@@ -138,7 +138,10 @@ bool Foam::nonConformalMappedPatchBase::owner() const
 
 
 const Foam::patchToPatches::intersection&
-Foam::nonConformalMappedPatchBase::intersection() const
+Foam::nonConformalMappedPatchBase::intersection
+(
+    const unsigned char report
+) const
 {
     if (!owner())
     {
@@ -168,21 +171,28 @@ Foam::nonConformalMappedPatchBase::intersection() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
+        const word meshPrefix =
+            mesh.name() != polyMesh::defaultRegion
+          ? mesh.name() + '!'
+          : word();
+        const word nbrMeshPrefix =
+            nbrRegionName() != polyMesh::defaultRegion
+          ? nbrRegionName() + '!'
+          : word();
+
         intersection_.update
         (
             patch_.origPatch(),
             ncb.patchPointNormals(patch_.origPatchIndex()),
             nbrMappedPatch().patch_.origPatch(),
             transform_.transform(),
-            {
-                patch_.origPatchName()
-              + " in region "
-              + mesh.name(),
-                nbrMappedPatch().patch_.origPatchName()
-              + " in region "
-              + nbrRegionName()
-            },
-            transform_.str()
+            Pair<const string&>
+            (
+                meshPrefix + patch_.origPatchName(),
+                nbrMeshPrefix + nbrMappedPatch().patch_.origPatchName()
+            ),
+            transform_.str(),
+            report
         );
 
         intersectionIsValid_ = 2;

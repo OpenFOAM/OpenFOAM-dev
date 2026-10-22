@@ -109,7 +109,8 @@ protected:
             const vectorField& srcPointNormals,
             const vectorField& srcPointNormals0,
             const primitiveOldTimePatch& tgtPatch,
-            const transformer& tgtToSrc
+            const transformer& tgtToSrc,
+            const unsigned char report
         );
 
         //- For each source face, the coupled target weights

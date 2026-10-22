@@ -46,7 +46,8 @@ Foam::label Foam::patchToPatches::matching::finalise
     const vectorField& srcPointNormals,
     const vectorField& srcPointNormals0,
     const primitiveOldTimePatch& tgtPatch,
-    const transformer& tgtToSrc
+    const transformer& tgtToSrc,
+    const unsigned char report
 )
 {
     const label nCouples =
@@ -56,7 +57,8 @@ Foam::label Foam::patchToPatches::matching::finalise
             srcPointNormals,
             srcPointNormals0,
             tgtPatch,
-            tgtToSrc
+            tgtToSrc,
+            report
         );
 
     // Make sure every face references exactly one face

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,8 @@ Foam::label Foam::patchToPatches::rays::finalise
     const vectorField& srcPointNormals,
     const vectorField& srcPointNormals0,
     const primitiveOldTimePatch& tgtPatch,
-    const transformer& tgtToSrc
+    const transformer& tgtToSrc,
+    const unsigned char report
 )
 {
     const label nCouples =
@@ -148,8 +149,31 @@ Foam::label Foam::patchToPatches::rays::finalise
             srcPointNormals,
             srcPointNormals0,
             tgtPatch,
-            tgtToSrc
+            tgtToSrc,
+            report
         );
+
+    if (nCouples != 0 && (report & patchToPatch::report::extent))
+    {
+        auto countNonEmpty = [](const List<DynamicList<label>>& ll)
+        {
+            label result = 0;
+
+            forAll(ll, i)
+            {
+                result += !ll[i].empty();
+            }
+
+            return returnReduce(result, sumOp());
+        };
+
+        Info<< indent
+            << "Coupled " << countNonEmpty(srcLocalTgtFaces_)
+            << "/" << returnReduce(srcLocalTgtFaces_.size(), sumOp())
+            << " source faces and " << countNonEmpty(tgtLocalSrcFaces_)
+            << "/" << returnReduce(tgtLocalSrcFaces_.size(), sumOp())
+            << " target faces" << endl;
+    }
 
     // Transform the source-local target patch back to the target
     if (!isSingleProcess() && !isNull(tgtToSrc))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,7 +243,8 @@ protected:
                 const vectorField& srcPointNormals,
                 const vectorField& srcPointNormals0,
                 const primitiveOldTimePatch& tgtPatch,
-                const transformer& tgtToSrc
+                const transformer& tgtToSrc,
+                const unsigned char report
             );
 
 
@@ -271,6 +272,19 @@ public:
         (const bool reverse),
         (reverse)
     );
+
+
+    //- Reporting enumeration
+    struct report
+    {
+        enum : unsigned char
+        {
+            number = 1,
+            extent = 2,
+            quality = 4,
+            all = 7
+        };
+    };
 
 
     // Constructors
@@ -372,7 +386,8 @@ public:
                 const transformer& tgtToSrc = NullObjectRef<transformer>(),
                 const Pair<const string&>& srcTgtPatchNames =
                     NullObjectRef<Pair<const string&>>(),
-                const string& tgtToSrcName = string::null
+                const string& tgtToSrcName = string::null,
+                const unsigned char report = patchToPatch::report::all
             );
 
             //- Update addressing and weights for the given patches
@@ -384,7 +399,8 @@ public:
                 const transformer& tgtToSrc = NullObjectRef<transformer>(),
                 const Pair<const string&>& srcTgtPatchNames =
                     NullObjectRef<Pair<const string&>>(),
-                const string& tgtToSrcName = string::null
+                const string& tgtToSrcName = string::null,
+                const unsigned char report = patchToPatch::report::all
             );
 
 

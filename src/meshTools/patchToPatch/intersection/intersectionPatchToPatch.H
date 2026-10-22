@@ -229,6 +229,9 @@ private:
             //- The proportion of the target faces that are coupled
             List<scalar> tgtCoverage_;
 
+            //- Flag to indicate whether the patches are intersecting
+            bool intersecting_;
+
 
         //- Triangulation engine
         mutable polygonTriangulate triEngine_;
@@ -354,7 +357,8 @@ private:
             const vectorField& srcPointNormals,
             const vectorField& srcPointNormals0,
             const primitiveOldTimePatch& tgtPatch,
-            const transformer& tgtToSrc
+            const transformer& tgtToSrc,
+            const unsigned char report
         );
 
         //- For each source face, the coupled target weights
@@ -399,6 +403,9 @@ public:
 
 
     // Member Functions
+
+        //- Return whether the patches are intersecting
+        inline bool intersecting() const;
 
         //- For each source face, the source and target areas for each
         //  target coupling

@@ -145,18 +145,40 @@ Foam::meshToMesh::meshToMesh
         }
     }
 
-    // Calculate cell addressing and weights
-    Info<< "Creating cellsToCells between source mesh "
-        << srcMesh_.name() << " and target mesh " << tgtMesh_.name()
-        << " using " << cellsInterpolationType << endl << incrIndent;
+    const bool srcIsRegion = srcMesh.name() != polyMesh::defaultRegion;
+    const bool tgtIsRegion = tgtMesh.name() != polyMesh::defaultRegion;
+    static const char* noRegion = "the default region";
+    const char* srcMeshName = srcIsRegion ? srcMesh.name().c_str() : noRegion;
+    const char* tgtMeshName = tgtIsRegion ? tgtMesh.name().c_str() : noRegion;
+    const word srcMeshPrefix = srcIsRegion ? srcMesh.name() + '!' : word();
+    const word tgtMeshPrefix = tgtIsRegion ? tgtMesh.name() + '!' : word();
+    Info<< indent << typeName << ":";
+    if (srcIsRegion || tgtIsRegion)
+    {
+        Info<< " " << srcMeshName << " and " << tgtMeshName;
+    }
+    Info<< endl << incrIndent;
+    static const char* cStr = "cells ";
+    static const char* apfStr = "and patch faces ";
+    static const char* umStr = "using method ";
+    const bool sameInterp = cellsInterpolationType == patchInterpolationType;
+    const bool sameExtrap = cellsExtrapolationType == patchExtrapolationType;
+    Info<< indent << "Interpolating " << cStr;
+    if (sameInterp) Info<< apfStr;
+    Info<< umStr << cellsInterpolationType;
+    if (!sameInterp) Info<< apfStr << umStr << patchInterpolationType;
+    Info<< endl << indent << "Extrapolating " << cStr;
+    if (sameExtrap) Info<< apfStr;
+    Info<< umStr << cellsExtrapolationType;
+    if (!sameExtrap) Info<< apfStr << umStr << patchExtrapolationType;
+    Info<< endl << decrIndent;
 
+    // Calculate cell addressing and weights
     cellsInterpolation_ = cellsToCells::New(cellsInterpolationType);
     cellsInterpolation_->update(srcMesh_, tgtMesh_);
 
     srcCellsExtrapolation_.clear();
     tgtCellsExtrapolation_.clear();
-
-    Info<< decrIndent;
 
     // Calculate patch addressing and weights
     patchInterpolations_.setSize(patchIndices_.size());
@@ -170,10 +192,6 @@ Foam::meshToMesh::meshToMesh
         const polyPatch& srcPp = srcMesh_.boundary()[srcPatchi];
         const polyPatch& tgtPp = tgtMesh_.boundary()[tgtPatchi];
 
-        Info<< "Creating patchToPatch between source patch "
-            << srcPp.name() << " and target patch " << tgtPp.name()
-            << " using " << patchInterpolationType << endl << incrIndent;
-
         patchInterpolations_.set
         (
             i,
@@ -184,10 +202,14 @@ Foam::meshToMesh::meshToMesh
         (
             srcPp,
             PatchTools::pointNormals(srcMesh_, srcPp),
-            tgtPp
+            tgtPp,
+            NullObjectRef<transformer>(),
+            Pair<const string&>
+            (
+                srcMeshPrefix + srcPp.name(),
+                tgtMeshPrefix + tgtPp.name()
+            )
         );
-
-        Info<< decrIndent;
     }
 }
 
