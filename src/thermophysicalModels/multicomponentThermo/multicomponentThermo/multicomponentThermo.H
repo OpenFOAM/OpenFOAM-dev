@@ -96,7 +96,7 @@ public:
             virtual boolList& activeSpecies() const = 0;
 
             //- Synchronise the specie active flags
-            virtual void syncSpeciesActive() const = 0;
+            virtual void syncActiveSpecies() const = 0;
 
             //- Set specie active
             inline void setSpecieActive(const label speciei) const;
@@ -369,7 +369,7 @@ public:
         virtual boolList& availableSpecies() const;
 
         //- Synchronise the specie active flags
-        virtual void syncSpeciesActive() const;
+        virtual void syncActiveSpecies() const;
 
         //- Access the mass-fraction fields
         virtual PtrList<volScalarField>& Y();

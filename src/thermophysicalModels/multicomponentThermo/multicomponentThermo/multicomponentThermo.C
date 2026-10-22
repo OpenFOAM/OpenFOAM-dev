@@ -249,7 +249,7 @@ Foam::multicomponentThermo::implementation::availableSpecies() const
 }
 
 
-void Foam::multicomponentThermo::implementation::syncSpeciesActive() const
+void Foam::multicomponentThermo::implementation::syncActiveSpecies() const
 {
     if (Pstream::parRun())
     {
@@ -266,6 +266,7 @@ void Foam::multicomponentThermo::implementation::syncSpeciesActive() const
         {
             if (activeSpecies[speciei])
             {
+                availableSpecies_[speciei] = true;
                 Y[speciei].writeOpt() = IOobject::AUTO_WRITE;
             }
         }
