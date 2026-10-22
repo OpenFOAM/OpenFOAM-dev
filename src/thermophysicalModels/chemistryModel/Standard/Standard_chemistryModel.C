@@ -831,6 +831,10 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
     {
         this->thermo().syncActiveSpecies();
     }
+    else
+    {
+        this->thermo().availableSpecies() = true;
+    }
 
     return deltaTMin;
 }
