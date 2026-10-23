@@ -85,8 +85,6 @@ Foam::ubMixtureMaps::uInhomogeneousEGRbInhomogeneous::prompt
       + Yu[uInhomogeneousEGRMixture::EGR]()/(uIEGR.stoicRatio() + 1)
     );
 
-    bThermo_.availableSpecies() = true;
-
     return Yp;
 }
 
@@ -121,8 +119,6 @@ void Foam::ubMixtureMaps::uInhomogeneousEGRbInhomogeneous::reset
 
     fuu = b*fuu + c*fub;
     egr = b*egr + c*(1 - fub - oxb);
-
-    uThermo_.availableSpecies() = true;
 }
 
 

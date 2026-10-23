@@ -36,7 +36,7 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
 
     forAll(Y, i)
     {
-        if (thermo_.availableSpecies()[i])
+        if (thermo_.activeSpecies()[i])
         {
             fields.add(Y[i]);
         }

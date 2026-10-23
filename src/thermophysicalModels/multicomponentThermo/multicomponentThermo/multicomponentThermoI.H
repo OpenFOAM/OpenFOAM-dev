@@ -42,7 +42,6 @@ inline void Foam::multicomponentThermo::setSpecieActive
 ) const
 {
     activeSpecies()[speciei] = true;
-    availableSpecies()[speciei] = true;
     const_cast<volScalarField&>(Y()[speciei]).writeOpt() = IOobject::AUTO_WRITE;
 }
 
@@ -59,7 +58,7 @@ inline void Foam::multicomponentThermo::setSpecieInactive
 
 inline bool Foam::multicomponentThermo::solveSpecie(const label speciei) const
 {
-    return speciei != defaultSpecie() && availableSpecies()[speciei];
+    return speciei != defaultSpecie() && activeSpecies()[speciei];
 }
 
 

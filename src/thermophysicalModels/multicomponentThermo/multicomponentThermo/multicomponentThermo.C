@@ -112,8 +112,7 @@ Foam::multicomponentThermo::implementation::implementation
       ? species[defaultSpecieName_]
       : -1
     ),
-    Y_(species.size()),
-    availableSpecies_(species.size(), false)
+    Y_(species.size())
 {
     if
     (
@@ -129,7 +128,6 @@ Foam::multicomponentThermo::implementation::implementation
     }
 
     bool Yset = false;
-    bool defaultAvailable = false;
 
     // Read the species' mass fractions
     forAll(species, i)
@@ -163,11 +161,6 @@ Foam::multicomponentThermo::implementation::implementation
                 )
             );
 
-            if (max(Y_[i]).value() > 0)
-            {
-                availableSpecies_[i] = true;
-            }
-
             Yset = true;
         }
         else
@@ -188,11 +181,6 @@ Foam::multicomponentThermo::implementation::implementation
                     mesh,
                     dimless
                 );
-
-                if (max(Ydefault_()).value() > 0)
-                {
-                    defaultAvailable = true;
-                }
             }
 
             Y_.set
@@ -211,8 +199,6 @@ Foam::multicomponentThermo::implementation::implementation
                     Ydefault_()
                 )
             );
-
-            availableSpecies_[i] = defaultAvailable;
         }
     }
 
@@ -242,13 +228,6 @@ Foam::label Foam::multicomponentThermo::implementation::defaultSpecie() const
 }
 
 
-Foam::boolList&
-Foam::multicomponentThermo::implementation::availableSpecies() const
-{
-    return availableSpecies_;
-}
-
-
 void Foam::multicomponentThermo::implementation::syncActiveSpecies() const
 {
     if (Pstream::parRun())
@@ -266,7 +245,6 @@ void Foam::multicomponentThermo::implementation::syncActiveSpecies() const
         {
             if (activeSpecies[speciei])
             {
-                availableSpecies_[speciei] = true;
                 Y[speciei].writeOpt() = IOobject::AUTO_WRITE;
             }
         }
