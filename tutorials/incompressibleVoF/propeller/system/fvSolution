@@ -94,7 +94,10 @@ PIMPLE
 
 relaxationFactors
 {
-    "(U|k|epsilon).*"   1;
+    fields
+    {
+        "(U|k|epsilon).*"   1;
+    }
 }
 
 cache

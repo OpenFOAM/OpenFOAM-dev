@@ -61,9 +61,6 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
 }
 
-relaxationFactors
-{}
-
 cache
 {
     grad(U);
