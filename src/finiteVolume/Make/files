@@ -559,6 +559,8 @@ finiteVolume/fvc/fvcMeshPhi.C
 finiteVolume/fvc/fvcSmooth.C
 finiteVolume/fvc/fvcReconstructMag.C
 
+cfdTools/preLoad/preLoad.C
+
 general = cfdTools/general
 $(general)/findRefCell/findRefCell.C
 $(general)/constrainHbyA/constrainHbyA.C
