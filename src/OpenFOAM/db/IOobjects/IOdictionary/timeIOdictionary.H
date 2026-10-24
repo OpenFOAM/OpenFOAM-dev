@@ -60,7 +60,7 @@ public:
     // Constructors
 
         //- Construct given an IOobject and actual type name
-        timeIOdictionary(const IOobject& io);
+        timeIOdictionary(const IOobject& io, const word& wantedType = typeName);
 
         //- Construct given an IOobject and dictionary
         timeIOdictionary(const IOobject&, const dictionary&);

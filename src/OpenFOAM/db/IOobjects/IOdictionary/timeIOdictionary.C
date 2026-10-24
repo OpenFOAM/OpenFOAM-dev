@@ -29,12 +29,13 @@ License
 
 Foam::timeIOdictionary::timeIOdictionary
 (
-    const IOobject& io
+    const IOobject& io,
+    const word& wantedType
 )
 :
-    IOdictionary(io, typeName)
+    IOdictionary(io, wantedType)
 {
-    readHeaderOk(IOstream::ASCII, typeName);
+    readHeaderOk(IOstream::ASCII, wantedType);
 
     // For if MUST_READ_IF_MODIFIED
     addWatch();
