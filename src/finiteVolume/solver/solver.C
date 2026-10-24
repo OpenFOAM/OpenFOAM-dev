@@ -25,6 +25,7 @@ License
 
 #include "solver.H"
 #include "localEulerDdtScheme.H"
+#include "preLoad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -89,6 +90,8 @@ Foam::solver::solver(fvMesh& mesh)
 {
     deltaTFactor =
         mesh.time().controlDict().lookupOrDefault<scalar>("deltaTFactor", 1.2);
+
+    preLoad::New(mesh);
 }
 
 
