@@ -126,13 +126,6 @@ class CrankNicolsonDdtScheme
 
         public:
 
-            //- Constructor from file for restart.
-            DDt0Field
-            (
-                const IOobject& io,
-                const fvMesh& mesh
-            );
-
             //- Constructor from components, initialised to zero with given
             //  dimensions.
             DDt0Field
@@ -143,13 +136,10 @@ class CrankNicolsonDdtScheme
             );
 
             //- Return the start-time index
-            label startTimeIndex() const;
-
-            //- Cast to the underlying GeoField
-            GeoField& operator()();
-
-            //- Assignment to a GeoField
-            void operator=(const GeoField& gf);
+            label startTimeIndex() const
+            {
+                return startTimeIndex_;
+            }
         };
 
 
@@ -161,35 +151,44 @@ class CrankNicolsonDdtScheme
     // Private Member Functions
 
         template<class GeoField>
-        DDt0Field<GeoField>& ddt0_
+        GeoField& ddt0_
         (
             const word& name,
-            const dimensionSet& dims
+            const dimensionSet& dims,
+            label& ddt0StartTimeIndex
         );
 
         //- Check if the ddt0 needs to be evaluated for this time-step
         template<class GeoField>
-        bool evaluate(const DDt0Field<GeoField>& ddt0) const;
+        bool evaluate(const GeoField& ddt0) const;
 
         //- Return the coefficient for Euler scheme for the first time-step
         //  for and CN thereafter
         template<class GeoField>
-        scalar coef_(const DDt0Field<GeoField>&) const;
+        scalar coef_(const GeoField&, const label ddt0StartTimeIndex) const;
 
         //- Return the old time-step coefficient for Euler scheme for the
         //  second time-step and for CN thereafter
         template<class GeoField>
-        scalar coef0_(const DDt0Field<GeoField>&) const;
+        scalar coef0_(const GeoField&, const label ddt0StartTimeIndex) const;
 
         //- Return the reciprocal time-step coefficient for Euler for the
         //  first time-step and CN thereafter
         template<class GeoField>
-        dimensionedScalar rDtCoef_(const DDt0Field<GeoField>&) const;
+        dimensionedScalar rDtCoef_
+        (
+            const GeoField&,
+            const label ddt0StartTimeIndex
+        ) const;
 
         //- Return the reciprocal old time-step coefficient for Euler for the
         //  second time-step and CN thereafter
         template<class GeoField>
-        dimensionedScalar rDtCoef0_(const DDt0Field<GeoField>&) const;
+        dimensionedScalar rDtCoef0_
+        (
+            const GeoField&,
+            const label ddt0StartTimeIndex
+        ) const;
 
         //- Return ddt0 multiplied by the off-centering coefficient
         template<class GeoField>
