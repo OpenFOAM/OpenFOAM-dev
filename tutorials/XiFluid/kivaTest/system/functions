@@ -21,7 +21,13 @@ FoamFile
 (
     name=kernel,
     writeControl=adjustableRunTime,
-    writeIntervals=((-180 none) (-15 1) (5 once)),
+    writeIntervals=
+    (
+        (-180 none)
+        (-15 1)
+        (5 5)
+        (30 once)
+    ),
     isoField=b,
     isoValue=0.5,
     fields=(Xi)
