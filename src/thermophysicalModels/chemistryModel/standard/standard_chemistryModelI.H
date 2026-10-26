@@ -23,9 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "standard_chemistryModel.H"
 #include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline const Foam::PtrList<Foam::reaction>&
+Foam::chemistryModels::standard::reactions() const
+{
+    return reactions_;
+}
+
 
 inline Foam::autoPtr<Foam::OFstream>
 Foam::chemistryModels::standard::logFile(const word& name) const
@@ -44,6 +52,21 @@ Foam::chemistryModels::standard::logFile(const word& name) const
 inline Foam::label Foam::chemistryModels::standard::nSpecie() const
 {
     return nSpecie_;
+}
+
+
+inline Foam::label Foam::chemistryModels::standard::nReaction() const
+{
+    return reactions_.size();
+}
+
+
+inline const Foam::word& Foam::chemistryModels::standard::reactionName
+(
+    const label reactioni
+) const
+{
+    return reactions_[reactioni].name();
 }
 
 
@@ -67,9 +90,9 @@ Foam::chemistryModels::standard::Y() const
 }
 
 
-inline bool Foam::chemistryModels::standard::reduction() const
+inline bool Foam::chemistryModels::standard::reduced() const
 {
-    return reduction_;
+    return reduced_;
 }
 
 
@@ -78,7 +101,7 @@ inline Foam::label Foam::chemistryModels::standard::sToc
     const label si
 ) const
 {
-    if (reduction_)
+    if (reduced_)
     {
         return sToc_[si];
     }
@@ -89,19 +112,26 @@ inline Foam::label Foam::chemistryModels::standard::sToc
 }
 
 
-inline Foam::label Foam::chemistryModels::standard::cTos
+inline Foam::label Foam::chemistryModels::standard::c2s
 (
     const label ci
 ) const
 {
-    if (reduction_)
+    if (reduced_)
     {
-        return cTos_[ci];
+        return c2s_[ci];
     }
     else
     {
         return ci;
     }
+}
+
+
+inline const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>&
+Foam::chemistryModels::standard::RR() const
+{
+    return RR_;
 }
 
 

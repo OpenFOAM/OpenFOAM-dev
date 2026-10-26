@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "reactionModel.H"
+#include "templateName.H"
 #include "noReaction.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
@@ -62,12 +63,11 @@ Foam::autoPtr<Foam::reactionModel> Foam::reactionModel::New
 
     Info<< indentOrNl << "Selecting reaction model " << modelType << endl;
 
-    const wordList cmpts2(basicThermo::splitThermoName(modelType, 2));
-    const wordList cmpts3(basicThermo::splitThermoName(modelType, 3));
-    if (cmpts2.size() == 2 || cmpts3.size() == 3)
+    // Backwards compatibility check
+    const wordList cmpts(templateName::split(modelType));
+    if (cmpts.size() == 2 || cmpts.size() == 3)
     {
-        modelType = cmpts2.size() ? cmpts2[0] : cmpts3[0];
-
+        modelType = cmpts[0];
         WarningInFunction
             << "Template parameters are no longer required when selecting a "
             << reactionModel::typeName << ". This information is now "

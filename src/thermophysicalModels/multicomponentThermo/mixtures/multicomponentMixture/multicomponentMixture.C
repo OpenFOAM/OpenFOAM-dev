@@ -34,7 +34,9 @@ Foam::multicomponentMixture<ThermoType>::multicomponentMixture
     const dictionary& dict
 )
 :
-    species_(dict.lookup("species"))
+    species_(dict.lookup("species")),
+    specieThermos_(species_.size()),
+    activeSpecies_(species_.size(), true)
 {
     read(dict);
 }
@@ -43,70 +45,25 @@ Foam::multicomponentMixture<ThermoType>::multicomponentMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::multicomponentMixture<ThermoType>::read
-(
-    const dictionary& dict
-)
+void Foam::multicomponentMixture<ThermoType>::read(const dictionary& dict)
 {
-    specieThermos_.setSize(species_.size());
-    specieCompositions_.setSize(species_.size());
-    specieDictLocations_.setSize(species_.size());
-    activeSpecies_.setSize(species_.size(), true);
-
     forAll(species_, speciei)
     {
-        const dictionary& specieDict = dict.subDict(species_[speciei]);
-
         specieThermos_.set
         (
             speciei,
-            new ThermoType(species_[speciei], specieDict)
+            new ThermoType
+            (
+                species_[speciei],
+                dict.subDict(species_[speciei])
+            )
         );
-
-        if (specieDict.isDict("elements"))
-        {
-            const dictionary& specieElementsDict =
-                specieDict.subDict("elements");
-
-            const wordList elementsNames(specieElementsDict.toc());
-
-            specieCompositions_[speciei].resize(elementsNames.size());
-
-            forAll(elementsNames, eni)
-            {
-                specieCompositions_[speciei][eni].name() = elementsNames[eni];
-                specieCompositions_[speciei][eni].nAtoms() =
-                    specieElementsDict.lookupOrDefault(elementsNames[eni], 0);
-            }
-        }
-
-        specieDictLocations_[speciei] = IOerrorLocation(specieDict);
     }
 }
 
 
 template<class ThermoType>
-const Foam::List<Foam::specieElement>&
-Foam::multicomponentMixture<ThermoType>::specieComposition
-(
-    const label speciei
-) const
-{
-    if (specieCompositions_[speciei].empty())
-    {
-        FatalIOErrorInFunction(specieDictLocations_[speciei])
-            << "Elemental composition not specified for specie "
-            << specieThermos_[speciei].name()
-            << exit(FatalIOError);
-    }
-
-    return specieCompositions_[speciei];
-}
-
-
-template<class ThermoType>
-Foam::boolList&
-Foam::multicomponentMixture<ThermoType>::activeSpecies() const
+Foam::boolList& Foam::multicomponentMixture<ThermoType>::activeSpecies() const
 {
     return activeSpecies_;
 }

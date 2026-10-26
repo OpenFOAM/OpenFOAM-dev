@@ -36,7 +36,7 @@ SourceFiles
 #define singleStepReaction_H
 
 #include "reactionModel.H"
-#include "reaction.H"
+#include "reactionCoeffs.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,7 +58,7 @@ protected:
     // Protected data
 
         //- The single-step reaction
-        reaction reaction_;
+        reactionCoeffs reaction_;
 
         //- Stoichiometric air-fuel mass ratio
         dimensionedScalar stoicRatio_;
@@ -129,7 +129,7 @@ public:
         // Access functions
 
             //- Return the single step reaction
-            inline const reaction& singleReaction() const;
+            inline const reactionCoeffs& singleReaction() const;
 
             //- Return the stoichiometric air-fuel mass ratio
             inline const dimensionedScalar& stoicRatio() const;

@@ -26,7 +26,7 @@ License
 #include "error.H"
 #include "sootModel.H"
 #include "noSoot.H"
-#include "basicThermo.H"
+#include "templateName.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -46,16 +46,15 @@ Foam::radiationModels::sootModel::New
     }
 
     // Backwards compatibility check
-    const wordList cmpts(basicThermo::splitThermoName(modelType, 3));
+    const wordList cmpts(templateName::split(modelType));
     if (cmpts.size() == 3)
     {
         modelType = cmpts[0];
-
         WarningInFunction
             << "Template parameters are no longer required when selecting a "
             << sootModel::typeName << ". This information is now "
             << "obtained directly from the thermodynamics. Actually selecting "
-            << "combustion model " << modelType << "." << endl;
+            << "soot model " << modelType << "." << endl;
     }
 
     typename dictionaryConstructorTable::iterator cstrIter =

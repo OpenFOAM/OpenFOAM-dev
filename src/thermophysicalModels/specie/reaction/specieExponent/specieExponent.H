@@ -44,9 +44,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of classes
-class Ostream;
-
 // Forward declaration of friend functions and operators
 class specieExponent;
 
@@ -67,8 +64,6 @@ inline specieExponent operator-
 );
 
 inline specieExponent operator-(const specieExponent& a, const int32_t b);
-
-inline Ostream& operator<<(Ostream&, const specieExponent&);
 
 
 /*---------------------------------------------------------------------------*\
@@ -156,13 +151,11 @@ public:
             const specieExponent& a,
             const int32_t b
         );
-
-
-    // IOstream Operators
-
-        //- Write to output stream
-        inline friend Ostream& operator<<(Ostream& os, const specieExponent& e);
 };
+
+
+//- Write to a stream
+inline Ostream& operator<<(Ostream&, const specieExponent&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

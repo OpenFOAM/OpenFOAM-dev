@@ -1,7 +1,24 @@
 atomicWeights/atomicWeights.C
+
 specie/specie.C
+
 reaction/specieCoeffs/specieCoeffs.C
+reaction/specieThermosRef/specieThermosRef.C
+reaction/reactionCoeffs/reactionCoeffs.C
 reaction/reaction/reaction.C
+reaction/reaction/reactionNew.C
+reaction/reactionList/reactionList.C
+
+reaction/reactionRates/Arrhenius/Arrhenius_reactionRates.C
+reaction/reactionRates/LandauTeller/LandauTeller_reactionRates.C
+reaction/reactionRates/ThirdBody/ThirdBody_reactionRates.C
+reaction/reactionRates/pLog/pLog_reactionRates.C
+reaction/reactionRates/Janev/Janev_reactionRates.C
+reaction/reactionRates/powerSeries/powerSeries_reactionRates.C
+reaction/reactionRates/MichaelisMenten/MichaelisMenten_reactionRates.C
+reaction/reactionRates/LangmuirHinshelwood/LangmuirHinshelwood_reactionRates.C
+reaction/reactionRates/FallOff/FallOff_reactionRates.C
+reaction/reactionRates/ChemicallyActivated/ChemicallyActivated_reactionRates.C
 
 thermophysicalFunctions/integratedNonUniformTable1/integratedNonUniformTable1.C
 thermophysicalFunctions/APIdiffusionCoefficient/APIdiffusionCoefficient.C

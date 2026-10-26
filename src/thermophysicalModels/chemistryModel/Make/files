@@ -1,26 +1,29 @@
+reaction/reactionRate/fluxLimitedLangmuirHinshelwood/fluxLimitedLangmuirHinshelwood_reactionRates.C
+reaction/reactionRate/Surface/Surface_reactionRates.C
+
 chemistryModel/chemistryModel.C
 chemistryModel/chemistryModelNew.C
 
 standard/standard_chemistryModel.C
-standard/standardChemistryModels.C
 
-Standard/reduction/chemistryReductionMethod/chemistryReductionMethods.C
-Standard/reduction/noChemistryReduction/noChemistryReductionMethods.C
-Standard/reduction/DAC/DACChemistryReductionMethods.C
-Standard/reduction/DRG/DRGChemistryReductionMethods.C
-Standard/reduction/DRGEP/DRGEPChemistryReductionMethods.C
-Standard/reduction/EFA/EFAChemistryReductionMethods.C
-Standard/reduction/PFA/PFAChemistryReductionMethods.C
+Standard/Standard_chemistryModels.C
 
-Standard/tabulation/chemistryTabulationMethod/chemistryTabulationMethod.C
-Standard/tabulation/chemistryTabulationMethod/chemistryTabulationMethodNew.C
-Standard/tabulation/noChemistryTabulation/noChemistryTabulation.C
-Standard/tabulation/ISAT/ISAT.C
-Standard/tabulation/ISAT/chemPointISAT/chemPointISAT.C
-Standard/tabulation/ISAT/binaryNode/binaryNode.C
-Standard/tabulation/ISAT/binaryTree/binaryTree.C
+standard/reduction/chemistryReductionMethod/chemistryReductionMethod.C
+standard/reduction/chemistryReductionMethod/chemistryReductionMethodNew.C
+standard/reduction/noChemistryReduction/noChemistryReduction.C
+standard/reduction/DAC/DAC.C
+standard/reduction/DRG/DRG.C
+standard/reduction/DRGEP/DRGEP.C
+standard/reduction/EFA/EFA.C
+standard/reduction/PFA/PFA.C
 
-reaction/makeReactions.C
+standard/tabulation/chemistryTabulationMethod/chemistryTabulationMethod.C
+standard/tabulation/chemistryTabulationMethod/chemistryTabulationMethodNew.C
+standard/tabulation/noChemistryTabulation/noChemistryTabulation.C
+standard/tabulation/ISAT/ISAT.C
+standard/tabulation/ISAT/chemPointISAT/chemPointISAT.C
+standard/tabulation/ISAT/binaryNode/binaryNode.C
+standard/tabulation/ISAT/binaryTree/binaryTree.C
 
 functionObjects/adjustTimeStepToChemistry/adjustTimeStepToChemistry.C
 functionObjects/reactionRates/reactionRates.C

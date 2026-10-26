@@ -65,7 +65,10 @@ SourceFiles
 
 #include "chemistryModel.H"
 #include "ODESolver.H"
+#include "specieThermosRef.H"
+#include "reactionList.H"
 #include "generatedCellZone.H"
+#include "DynamicField.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -73,8 +76,8 @@ SourceFiles
 namespace Foam
 {
 
-template<class ThermoType>
 class chemistryReductionMethod;
+class chemistryTabulationMethod;
 
 namespace chemistryModels
 {
@@ -88,9 +91,55 @@ class standard
     public chemistryModel,
     public ODESystem
 {
+    // Private Classes
+
+        //- Class to define scope of reaction evaluation. Runs pre-evaluate
+        //  hook on all reactions on construction and post-evaluate on
+        //  destruction.
+        class reactionEvaluationScope
+        {
+            const standard& chemistry_;
+
+        public:
+
+            reactionEvaluationScope(const standard& chemistry)
+            :
+                chemistry_(chemistry)
+            {
+                forAll(chemistry_.reactions_, i)
+                {
+                    chemistry_.reactions_[i].preEvaluate();
+                }
+            }
+
+            ~reactionEvaluationScope()
+            {
+                forAll(chemistry_.reactions_, i)
+                {
+                    chemistry_.reactions_[i].postEvaluate();
+                }
+            }
+        };
+
+
+    // Private Member Functions
+
+        //- Return the species' molar weights in a list
+        static scalarList specieWs(const fluidMulticomponentThermo& thermo);
+
+        //- Return the species' formation enthalpies in a list
+        static scalarList specieHfs(const fluidMulticomponentThermo& thermo);
+
+        //- Solve the reaction system for the given time step
+        //  of given type and return the characteristic time
+        //  Variable number of species added
+        template<class DeltaTType>
+        scalar solve(const DeltaTType& deltaT);
+
+
 protected:
 
-    // Protected data
+    // Protected Data
 
         //- Enumeration for the type of Jacobian to be calculated by the
         //  chemistryModel
@@ -103,21 +152,42 @@ protected:
         //- Jacobian type names
         static const NamedEnum<jacobianType, 2> jacobianTypeNames;
 
-        //- Optional cellZone to limit where the chemistry is integrated
-        generatedCellZone zone_;
-
         //- Reference to the field of specie mass fractions
         const PtrList<volScalarField>& Yvf_;
 
         //- Number of species
         label nSpecie_;
 
-        //- Is chemistry reduction active
-        bool reduction_;
+        //- Reactions
+        const reactionList reactions_;
+
+        //- Reduction method
+        autoPtr<chemistryReductionMethod> reductionPtr_;
+
+        //- Reduction method reference
+        chemistryReductionMethod& reduction_;
+
+        //- Is chemistry reduction active?
+        bool reduced_;
+
+        //- Tabulation method
+        autoPtr<chemistryTabulationMethod> tabulationPtr_;
+
+        //- Tabulation method reference
+        chemistryTabulationMethod& tabulation_;
+
+        //- Optional cellZone to limit where the chemistry is integrated
+        generatedCellZone zone_;
+
+        //- Local cache of the species' molecular weights
+        const scalarList specieWs_;
+
+        //- Local cache of the species' formation enthalpies
+        const scalarList specieHfs_;
 
         //- Temporary map from complete to simplified concentration fields
         //  c -> sc
-        mutable List<label> cTos_;
+        mutable List<label> c2s_;
 
         //- Temporary map from simplified to complete concentration fields
         //  sc -> c
@@ -132,11 +202,35 @@ protected:
         //- Constant pressure for the current ODE integration
         mutable scalar p_;
 
+        //- List of reaction rate per specie [kg/m^3/s]
+        PtrList<volInternalScalarField> RR_;
+
+        //- Temporary mass fraction field
+        mutable scalarField Y_;
+
+        //- Temporary simplified mechanism mass fraction field
+        mutable DynamicField<scalar> sY_;
+
+        //- Temporary reaction state
+        mutable reaction::state s_;
+
+        //- Specie-temperature workspace fields
+        mutable FixedList<scalarField, 3> YTWork_;
+
+        //- Specie-temperature workspace matrices
+        mutable FixedList<scalarSquareMatrix, 2> YTYTWork_;
+
+        //- Log file for average time spent solving the chemistry
+        autoPtr<OFstream> cpuSolveFile_;
+
+        //- Switch to select performance logging
+        Switch log_;
+
+        //- Switch to enable per-cell CPU load caching for load-balancing
+        Switch cpuLoad_;
+
 
 public:
-
-    template<class ThermoType>
-    friend class Foam::chemistryReductionMethod;
 
     //- Runtime type information
     TypeName("standard");
@@ -145,7 +239,11 @@ public:
     // Constructors
 
         //- Construct from thermo
-        standard(const fluidMulticomponentThermo& thermo);
+        standard
+        (
+            const fluidMulticomponentThermo& thermo,
+            const specieThermosRef& specieThermos
+        );
 
         //- Disallow default bitwise copy construction
         standard(const standard&) = delete;
@@ -157,11 +255,20 @@ public:
 
     // Member Functions
 
+        //- The reactions
+        inline const PtrList<reaction>& reactions() const;
+
         //- Create and return a TDAC log file of the given name
         inline autoPtr<OFstream> logFile(const word& name) const;
 
         //- The number of species
         inline virtual label nSpecie() const;
+
+        //- The number of reactions
+        inline virtual label nReaction() const;
+
+        //- Return the name of reactioni
+        virtual inline const word& reactionName(const label reactioni) const;
 
         //- Allow the reduction method to reset the number of species
         inline void setNSpecie(const label newNs);
@@ -173,7 +280,7 @@ public:
         inline const PtrList<volScalarField>& Y() const;
 
         //- Return true if mechanism reduction is active
-        inline bool reduction() const;
+        inline bool reduced() const;
 
         //- Return the index in the complete set of species
         //  corresponding to the index si in the simplified set of species
@@ -181,7 +288,56 @@ public:
 
         //- Return the index in the simplified set of species
         //  corresponding to the index si in the complete set of species
-        inline label cTos(const label ci) const;
+        inline label c2s(const label ci) const;
+
+
+        // Overrides to chemistryModel functions
+
+            //- Return reaction rates of the species [kg/m^3/s]
+            virtual inline const PtrList<volInternalScalarField>& RR() const;
+
+            //- Return the rate of reactioni [kmol/m^3/s]
+            virtual tmp<volInternalScalarField> reactionRR
+            (
+                const label reactioni
+            ) const;
+
+            //- Return reaction rates of the species in reactioni [kg/m^3/s]
+            virtual PtrList<volInternalScalarField> specieReactionRR
+            (
+                const label reactioni
+            ) const;
+
+            //- Calculates the reaction rates
+            virtual void calculate();
+
+            //- Solve the reaction system for the given time step
+            //  and return the characteristic time
+            virtual scalar solve(const scalar deltaT);
+
+            //- Solve the reaction system for the given time step
+            //  and return the characteristic time
+            virtual scalar solve(const scalarField& deltaT);
+
+            //- Return the chemical time scale
+            virtual tmp<volInternalScalarField> tc() const;
+
+            //- Return the heat release rate [kg/m/s^3]
+            virtual tmp<volInternalScalarField> Qdot() const;
+
+
+        // ODE solution functions
+
+            //- Solve the ODE system
+            virtual void solve
+            (
+                scalar& p,
+                scalar& T,
+                scalarField& Y,
+                const label li,
+                scalar& deltaT,
+                scalar& subDeltaT
+            ) const;
 
 
     // Member Operators

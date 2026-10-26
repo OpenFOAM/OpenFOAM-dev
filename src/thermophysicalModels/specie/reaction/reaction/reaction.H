@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,115 +25,151 @@ Class
     Foam::reaction
 
 Description
-    Reaction base-class holding the specie names and coefficients
+    Base-class for reactions
 
 SourceFiles
     reactionI.H
     reaction.C
+    reactionNew.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef reaction_H
 #define reaction_H
 
-#include "speciesTable.H"
-#include "specieCoeffs.H"
-#include "scalarField.H"
+#include "reactionCoeffs.H"
+#include "specieThermosRef.H"
+#include "scalarMatrices.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-
-class reaction;
-
-inline Ostream& operator<<(Ostream&, const reaction&);
-
 /*---------------------------------------------------------------------------*\
                           Class reaction Declaration
 \*---------------------------------------------------------------------------*/
 
 class reaction
+:
+    public reactionCoeffs
 {
-
 public:
 
-    // Static data
-
-        //- Number of un-named reactions
-        static label nUnNamedReactions;
+    // Public Data Types
 
         //- Reaction state structure
-        struct state
+        struct state;
+
+        //- A "no" complete-to-simplified map. A hard-coded identity map.
+        struct noc2s;
+
+        //- Enumeration of the reactant's Jacobian density
+        enum class jacobianDensity
         {
-            scalar p;
-            scalar T;
-            scalarField c;
-            label li;
-
-            scalar lnp;
-            scalar rT;
-            scalar lnT;
-            scalar C;
-
-            state(const label nSpecie);
-
-            inline void reset
-            (
-                const scalar p,
-                const scalar T,
-                const label li
-            );
-
-            inline void reset
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li
-            );
+            reactants,
+            reactantsAndProducts,
+            all
         };
 
 
 private:
 
-    // Private Data
-
-        //- Name of reaction
-        const word name_;
-
-        //- List of specie names present in reaction system
-        const speciesTable& species_;
-
-        //- Specie info for the left-hand-side of the reaction
-        List<specieCoeffs> lhs_;
-
-        //- Specie info for the right-hand-side of the reaction
-        List<specieCoeffs> rhs_;
-
-
     // Private Member Functions
 
-        //- Return new reaction ID for un-named reactions
-        label getNewReactionIndex();
+        //- Map from old/backwards-compatible types to current types
+        static HashTable<word> backwardTypeToType();
+
+        //- Convert from an old/backwards-compatible type to a current type
+        static word backwardTypeToType(const word&);
+
+        //- Dynamically compile a thermo reaction
+        static bool compile
+        (
+            const specieThermosRef& specieThermos,
+            ITstream& typeIts,
+            const word& type,
+            const word& typeThermo,
+            const word& table
+        );
+
+
+protected:
+
+    // Protected Member Data
+
+        //- Work array the size of the left hand side
+        mutable scalarField lWork_;
+
+        //- Work array the size of the right hand side
+        mutable scalarField rWork_;
+
+
+    // Protected Member Functions
+
+        //- Dimensions of the rate constant
+        static inline dimensionSet kDimensions
+        (
+            const List<specieCoeffs>& coeffs
+        );
+
+        //- Return the product of the concentrations raised to their exponents
+        static inline scalar cPowExponentProduct
+        (
+            const List<specieCoeffs>& coeffs,
+            const state& s
+        );
+
+        //- Return the product of the concentrations raised to their exponents
+        static inline scalar cPowExponentProduct
+        (
+            const List<specieCoeffs>& coeffs,
+            const state& s,
+            scalarField& dResultDc
+        );
 
 
 public:
 
-    // Constructors
+    //- Runtime type information
+    TypeName("reaction");
 
-        //- Construct from components
-        reaction
+
+    // Declare run-time constructor selection tables
+
+        declareRunTimeSelectionTable
         (
-            const speciesTable& species,
-            const List<specieCoeffs>& lhs,
-            const List<specieCoeffs>& rhs
+            autoPtr,
+            reaction,
+            dictionary,
+            (
+                const speciesTable& species,
+                const specieThermosRef& specieThermos,
+                const dictionary& dict
+            ),
+            (species, specieThermos, dict)
         );
 
-        //- Construct as copy given new speciesTable
-        reaction(const reaction&, const speciesTable& species);
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            reaction,
+            objectRegistry,
+            (
+                const speciesTable& species,
+                const specieThermosRef& specieThermos,
+                const objectRegistry& ob,
+                const dictionary& dict
+            ),
+            (species, specieThermos, ob, dict)
+        );
+
+
+    // Constructors
+
+        //- Construct from coefficients
+        reaction(const reactionCoeffs&);
 
         //- Construct from dictionary
         reaction
@@ -143,8 +179,29 @@ public:
         );
 
 
+    // Selectors
+
+        //- Return a pointer to new reaction created from a dictionary
+        static autoPtr<reaction> New
+        (
+            const speciesTable& species,
+            const specieThermosRef& specieThermos,
+            const dictionary& dict
+        );
+
+        //- Return a pointer to new reaction created from an objectRegistry and
+        //  a dictionary
+        static autoPtr<reaction> New
+        (
+            const speciesTable& species,
+            const specieThermosRef& specieThermos,
+            const objectRegistry& ob,
+            const dictionary& dict
+        );
+
+
     //- Destructor
-    ~reaction()
+    virtual ~reaction()
     {}
 
 
@@ -152,32 +209,194 @@ public:
 
         // Access
 
-            //- Return the name of the reaction
-            inline const word& name() const;
+            //- Return the selection type
+            virtual word selectionType() const;
 
-            //- Return the components of the left hand side
-            inline const List<specieCoeffs>& lhs() const;
+            //- Return this reaction's Jacobian density
+            virtual jacobianDensity density() const = 0;
 
-            //- Return the components of the right hand side
-            inline const List<specieCoeffs>& rhs() const;
 
-            //- Return the specie list
-            inline const speciesTable& species() const;
+        // Hooks
+
+            //- Pre-evaluation hook
+            virtual void preEvaluate() const = 0;
+
+            //- Post-evaluation hook
+            virtual void postEvaluate() const = 0;
+
+
+        // Reaction rates
+
+            //- Net reaction rate
+            inline scalar omega(const state& s) const;
+
+            //- Net reaction rate
+            virtual scalar omega
+            (
+                const state& s,
+                scalar& omegaf,
+                scalar& omegar
+            ) const = 0;
+
+            //- Net reaction rate and derivatives
+            virtual scalar omega
+            (
+                const state& s,
+                scalar& dOmegaDT,
+                scalarField& dOmegaDc
+            ) const = 0;
+
+            //- The net reaction rate for each species involved, given the
+            //  total net reaction rate
+            template<class C2S>
+            inline void dNdtByV
+            (
+                const scalar omega,
+                scalarField& dNdtByV,
+                const C2S& c2s
+            ) const;
+
+            //- The net reaction rate for each species involved, given the
+            //  total net reaction rate
+            inline void dNdtByV
+            (
+                const scalar omega,
+                scalarField& dNdtByV,
+                const bool reduced,
+                const List<label>& c2s
+            ) const;
+
+            //- The net reaction rate for each species involved
+            template<class C2S>
+            inline void dNdtByV
+            (
+                const state& s,
+                scalarField& dNdtByV,
+                const C2S& c2s
+            ) const;
+
+            //- The net reaction rate for each species involved
+            inline void dNdtByV
+            (
+                const state& s,
+                scalarField& dNdtByV,
+                const bool reduced,
+                const List<label>& c2s
+            ) const;
+
+
+        // Jacobian of reaction rates
+
+            //- Derivative of the net reaction rate for each species involved
+            //  w.r.t. the concentration and temperature
+            template<class C2S>
+            inline void ddNdtByVdcT
+            (
+                const state& s,
+                scalarField& dNdtByV,
+                scalarSquareMatrix& ddNdtByVdcT,
+                const C2S& c2s,
+                const label Tj
+            ) const;
+
+            //- Derivative of the net reaction rate for each species involved
+            //  w.r.t. the concentration and temperature
+            virtual inline void ddNdtByVdcT
+            (
+                const state& s,
+                scalarField& dNdtByV,
+                scalarSquareMatrix& ddNdtByVdcT,
+                const bool reduced,
+                const List<label>& c2s,
+                const label Tj
+            ) const;
 
 
         //- Write
-        void write(Ostream&) const;
+        virtual void write(Ostream&) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
         void operator=(const reaction&) = delete;
+};
 
 
-    // Ostream Operator
+//- Write to a stream
+Ostream& operator<<(Ostream&, const reaction&);
 
-        friend Ostream& operator<<(Ostream&, const reaction&);
+
+/*---------------------------------------------------------------------------*\
+                       Class reaction::state Declaration
+\*---------------------------------------------------------------------------*/
+
+struct reaction::state
+{
+    // Public Member Data
+
+        //- Pressure
+        scalar p;
+
+        //- Temperature
+        scalar T;
+
+        //- Species' concentrations
+        scalarField c;
+
+        //- Index
+        label li;
+
+        //- Logarithm of the pressure
+        scalar lnp;
+
+        //- Reciprocal of the temperature
+        scalar rT;
+
+        //- Logarithm of the temperature
+        scalar lnT;
+
+        //- Total concentration of all species
+        scalar C;
+
+        //- Work arrays the size of the number of species
+        mutable FixedList<scalarField, 3> specieWork_;
+
+
+    // Constructors
+
+        //- Construct for a number of species
+        state(const label nSpecie);
+
+
+    // Member Functions
+
+        //- Reset all values apart from species' concentrations
+        inline void reset
+        (
+            const scalar p,
+            const scalar T,
+            const label li
+        );
+
+        //- Reset all values
+        inline void reset
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li
+        );
+};
+
+
+/*---------------------------------------------------------------------------*\
+                       Class reaction::state Declaration
+\*---------------------------------------------------------------------------*/
+
+struct reaction::noc2s
+{
+    inline label operator[](const label c) const;
 };
 
 

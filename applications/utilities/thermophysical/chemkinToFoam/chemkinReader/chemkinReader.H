@@ -40,7 +40,7 @@ SourceFiles
 #include "typeInfo.H"
 #include "Switch.H"
 #include "HashPtrTable.H"
-#include "ReactionList.H"
+#include "reactionList.H"
 #include "DynamicList.H"
 #include "labelList.H"
 #include "speciesTable.H"
@@ -172,6 +172,8 @@ private:
 
         static const char* fallOffFunctionNames[4];
 
+        static const char* reactionName_;
+
 
         void initReactionKeywordTable();
 
@@ -207,7 +209,7 @@ private:
         speciesCompositionTable speciesComposition_;
 
         //- List of the reactions
-        ReactionList<thermoPhysics> reactions_;
+        reactionList reactions_;
 
         //- Transport properties dictionary
         dictionary transportDict_;
@@ -403,7 +405,7 @@ public:
         }
 
         //- List of the reactions
-        const ReactionList<thermoPhysics>& reactions() const
+        const reactionList& reactions() const
         {
             return reactions_;
         }

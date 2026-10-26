@@ -35,8 +35,8 @@ SourceFiles
 #ifndef multicomponentMixture_H
 #define multicomponentMixture_H
 
-#include "PtrList.H"
-#include "specieElement.H"
+#include "speciesTable.H"
+#include "boolList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,14 +68,8 @@ private:
         //- List of specie thermo
         PtrList<ThermoType> specieThermos_;
 
-        //- Table of species composition
-        List<List<specieElement>> specieCompositions_;
-
         //- List of specie active flags
         mutable boolList activeSpecies_;
-
-        //- Cached IO error locations for delayed error messages
-        List<IOerrorLocation> specieDictLocations_;
 
 
 public:
@@ -114,9 +108,6 @@ public:
         {
             return specieThermos_[speciei];
         }
-
-        //- Return composition based on index
-        const List<specieElement>& specieComposition(const label speciei) const;
 
         //- Access the specie active flags
         boolList& activeSpecies() const;

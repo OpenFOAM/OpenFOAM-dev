@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,48 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "reaction.H"
-#include "dictionary.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
-
-Foam::label Foam::reaction::nUnNamedReactions(0);
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::label Foam::reaction::getNewReactionIndex()
+namespace Foam
 {
-    return nUnNamedReactions++;
+    defineTypeNameAndDebug(reaction, 0);
+    defineRunTimeSelectionTable(reaction, dictionary);
+    defineRunTimeSelectionTable(reaction, objectRegistry);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::reaction::reaction
-(
-    const speciesTable& species,
-    const List<specieCoeffs>& lhs,
-    const List<specieCoeffs>& rhs
-)
+Foam::reaction::reaction(const reactionCoeffs& r)
 :
-    name_("un-named-reaction-" + Foam::name(getNewReactionIndex())),
-    species_(species),
-    lhs_(lhs),
-    rhs_(rhs)
-{}
-
-
-Foam::reaction::reaction
-(
-    const reaction& r,
-    const speciesTable& species
-)
-:
-    name_(r.name() + "Copy"),
-    species_(species),
-    lhs_(r.lhs_),
-    rhs_(r.rhs_)
+    reactionCoeffs(r),
+    lWork_(lhs().size()),
+    rWork_(rhs().size())
 {}
 
 
@@ -75,36 +51,39 @@ Foam::reaction::reaction
     const dictionary& dict
 )
 :
-    name_(dict.dictName()),
-    species_(species)
-{
-    specieCoeffs::setLRhs
-    (
-        IStringStream(dict.lookup("reaction"))(),
-        species_,
-        lhs_,
-        rhs_
-    );
-}
+    reactionCoeffs(species, dict),
+    lWork_(lhs().size()),
+    rWork_(rhs().size())
+{}
 
 
 Foam::reaction::state::state(const label nSpecie)
 :
-    c(nSpecie)
+    c(nSpecie),
+    specieWork_(scalarField(nSpecie))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::word Foam::reaction::selectionType() const
+{
+    return type();
+}
+
+
 void Foam::reaction::write(Ostream& os) const
 {
-    OStringStream reaction;
-    writeEntry
-    (
-        os,
-        "reaction",
-        specieCoeffs::reactionStr(reaction, species_, lhs_, rhs_)
-    );
+    reactionCoeffs::write(os);
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Foam::Ostream& os, const reaction& r)
+{
+    r.write(os);
+    return os;
 }
 
 

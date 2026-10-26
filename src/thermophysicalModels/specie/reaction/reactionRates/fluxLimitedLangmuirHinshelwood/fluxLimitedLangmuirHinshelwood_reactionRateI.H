@@ -1,0 +1,371 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "fluxLimitedLangmuirHinshelwood_reactionRate.H"
+#include "mathematicalConstants.H"
+#include "thermodynamicConstants.H"
+
+using namespace Foam::constant::mathematical;
+using namespace Foam::constant::thermodynamic;
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+inline Foam::scalar Foam::reactionRates::fluxLimitedLangmuirHinshelwood::Av
+(
+    const label li
+) const
+{
+    if (AvUniform_)
+    {
+        return Av_;
+    }
+    else
+    {
+        return tAv_()[li];
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+inline Foam::reactionRates::fluxLimitedLangmuirHinshelwood::
+fluxLimitedLangmuirHinshelwood
+(
+    const speciesTable& st,
+    const objectRegistry& ob,
+    const dimensionSet& dims,
+    const dictionary& dict
+)
+:
+    nReactants_(),
+    additionalAdsorbableSpecieNames_
+    (
+        dict.lookupOrDefault
+        (
+            "additionalAdsorbableSpecies",
+            wordList()
+        )
+    ),
+    ra_(),
+    a_(dict.lookupOrDefault("a", scalar(1))),
+    A_(dict.lookup("A")),
+    Ta_(dict.lookup("Ta")),
+    beta_(),
+    m_(),
+    limited_(dict.found("s")),
+    AvUniform_(limited_ ? dict.lookup("Av")[0].isNumber() : true),
+    Av_(limited_ && AvUniform_ ? dict.lookup<scalar>("Av") : 0),
+    AvName_(limited_ && !AvUniform_ ? dict.lookup<word>("Av") : word::null),
+    nu_(),
+    exp_(),
+    s_(),
+    W_(),
+    ob_(ob),
+    tAv_(nullptr)
+{
+    const reactionCoeffs r(st, dict);
+
+    nReactants_ = r.lhs().size();
+
+    ra_.setSize(nReactants_ + additionalAdsorbableSpecieNames_.size());
+    nu_.setSize(nReactants_);
+    exp_.setSize(nReactants_);
+
+    forAll(r.lhs(), i)
+    {
+        ra_[i] = r.lhs()[i].index;
+        nu_[i] = r.lhs()[i].stoichCoeff;
+        exp_[i] = r.lhs()[i].exponent;
+    }
+
+    forAll(additionalAdsorbableSpecieNames_, i)
+    {
+        ra_[nReactants_ + i] = st[additionalAdsorbableSpecieNames_[i]];
+    }
+
+    beta_ =
+        dict.lookupOrDefault
+        (
+            "beta",
+            scalarList
+            (
+                1 + nReactants_ + additionalAdsorbableSpecieNames_.size(),
+                scalar(0)
+            )
+        );
+
+    m_ =
+        dict.lookupOrDefault
+        (
+            "m",
+            scalarList
+            (
+                1 + nReactants_ + additionalAdsorbableSpecieNames_.size(),
+                scalar(1)
+            )
+        );
+
+    if (!dict.found("m"))
+    {
+        m_[0] = 2;
+    }
+
+    s_ = dict.lookupOrDefault("s", scalarList(nReactants_, scalar(0)));
+
+    W_ =
+        limited_
+      ? scalarList(dict.lookup("W"))
+      : scalarList(nReactants_, scalar(0));
+
+    const scalar nCoeffs =
+        1 + nReactants_ + additionalAdsorbableSpecieNames_.size();
+
+    if (A_.size() != nCoeffs)
+    {
+        FatalIOErrorInFunction(dict)
+           << "Number of A coefficients != " << nCoeffs
+           << exit(FatalIOError);
+    }
+
+    if (Ta_.size() != nCoeffs)
+    {
+        FatalIOErrorInFunction(dict)
+           << "Number of Ta coefficients != " << nCoeffs
+           << exit(FatalIOError);
+    }
+
+    if (beta_.size() != nCoeffs)
+    {
+        FatalIOErrorInFunction(dict)
+           << "Number of beta coefficients != " << nCoeffs
+           << exit(FatalIOError);
+    }
+
+    if (m_.size() != nCoeffs)
+    {
+        FatalIOErrorInFunction(dict)
+           << "Number of m coefficients != " << nCoeffs
+           << exit(FatalIOError);
+    }
+
+    if (s_.size() != nReactants_)
+    {
+        FatalIOErrorInFunction(dict)
+           << "Number of s coefficients != "
+           << nReactants_ << exit(FatalIOError);
+    }
+
+    if (W_.size() != nReactants_)
+    {
+        FatalIOErrorInFunction(dict)
+           << "Number of W coefficients != "
+           << nReactants_ << exit(FatalIOError);
+    }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline void
+Foam::reactionRates::fluxLimitedLangmuirHinshelwood::preEvaluate() const
+{
+    if (!AvUniform_)
+    {
+        tAv_ = ob_.lookupObject<volInternalScalarField>(AvName_);
+    }
+}
+
+
+inline void
+Foam::reactionRates::fluxLimitedLangmuirHinshelwood::postEvaluate() const
+{
+    if (!AvUniform_)
+    {
+        tAv_ = tmp<volInternalScalarField>(nullptr);
+    }
+}
+
+
+inline Foam::scalar
+Foam::reactionRates::fluxLimitedLangmuirHinshelwood::k
+(
+    const reaction::state& s
+) const
+{
+    scalar sumkc = 0;
+    forAll(ra_, i)
+    {
+        const label ip1 = i + 1;
+
+        const scalar kc =
+            A_[ip1]*exp(beta_[ip1]*s.lnT - Ta_[ip1]*s.rT)
+           *pow(s.c[ra_[i]], m_[ip1]);
+
+        sumkc += kc;
+    }
+
+    const scalar TaByT0 = Ta_[0]*s.rT;
+    const scalar k0 = A_[0]*exp(beta_[0]*s.lnT - TaByT0);
+
+    scalar r = k0/max(pow(a_ + sumkc, m_[0]), rootVSmall);
+
+    if (limited_)
+    {
+        scalar rc = 1;
+        forAll(exp_, i)
+        {
+            rc *= pow(s.c[ra_[i]], exp_[i]);
+        }
+
+        if (rc > rootVSmall)
+        {
+            forAll(s_, i)
+            {
+                r = min
+                (
+                    r,
+                    (s_[i]*s.c[ra_[i]]/(nu_[i]*rc))*sqrt(RR*s.T/(twoPi*W_[i]))
+                );
+            }
+        }
+    }
+
+    return this->Av(s.li)*r;
+}
+
+
+inline Foam::scalar Foam::reactionRates::fluxLimitedLangmuirHinshelwood::ddT
+(
+    const reaction::state& s
+) const
+{
+    scalar sumkc = 0;
+    scalar sumBetaKc = 0;
+    forAll(ra_, i)
+    {
+        const label ip1 = i + 1;
+
+        const scalar kc =
+            A_[ip1]*exp(beta_[ip1]*s.lnT - Ta_[ip1]*s.rT)
+           *pow(s.c[ra_[i]], m_[ip1]);
+
+        sumkc += kc;
+        sumBetaKc += (beta_[ip1] + Ta_[ip1]*s.rT)*kc;
+    }
+
+    const scalar TaByT0 = Ta_[0]*s.rT;
+    const scalar k0 = A_[0]*exp(beta_[0]*s.lnT - TaByT0);
+
+    scalar ddT =
+       ((beta_[0] + TaByT0)*k0*(a_ + sumkc) - m_[0]*k0*sumBetaKc)
+      /(max(pow(a_ + sumkc, m_[0] + 1), rootVSmall)*s.T);
+
+    if (limited_)
+    {
+        scalar rc = 1;
+        forAll(exp_, i)
+        {
+            rc *= pow(s.c[ra_[i]], exp_[i]);
+        }
+
+        scalar r = k0/pow(a_ + sumkc, m_[0]);
+
+        if (rc > rootVSmall)
+        {
+            label l = -1;
+
+            forAll(s_, i)
+            {
+                const scalar rl =
+                    (s_[i]*s.c[ra_[i]]/(nu_[i]*rc))*sqrt(RR*s.T/(twoPi*W_[i]));
+
+                if (rl < r)
+                {
+                    l = i;
+                    r = rl;
+                }
+            }
+
+            if (l != -1)
+            {
+                ddT =
+                    (s_[l]*s.c[ra_[l]]/(nu_[l]*rc))
+                   *0.5*sqrt(RR/(twoPi*W_[l]*s.T));
+            }
+        }
+    }
+
+    return this->Av(s.li)*ddT;
+}
+
+
+inline void Foam::reactionRates::fluxLimitedLangmuirHinshelwood::ddc
+(
+    const reaction::state& s,
+    scalarField& ddc
+) const
+{
+    NotImplemented;
+}
+
+
+inline void Foam::reactionRates::fluxLimitedLangmuirHinshelwood::write
+(
+    Ostream& os
+) const
+{
+    writeEntry
+    (
+        os,
+        "additionalAdsorbableSpecies",
+        additionalAdsorbableSpecieNames_
+    );
+    writeEntry(os, "a", a_);
+    writeEntry(os, "A", A_);
+    writeEntry(os, "Ta", Ta_);
+    writeEntry(os, "beta", beta_);
+    writeEntry(os, "m", m_);
+    if (limited_)
+    {
+        writeEntry(os, "s", s_);
+        writeEntry(os, "W", W_);
+    }
+}
+
+
+// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
+
+inline Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const reactionRates::fluxLimitedLangmuirHinshelwood& lhrr
+)
+{
+    lhrr.write(os);
+    return os;
+}
+
+
+// ************************************************************************* //

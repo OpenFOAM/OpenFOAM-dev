@@ -1517,17 +1517,12 @@ bool finishReaction = false;
 
         if (!found)
         {
-            word side("l.h.s.");
-
-            if (lrhsPtr == &rhs)
-            {
-                side = "r.h.s.";
-            }
-
             FatalErrorInFunction
                 << "Specie " << currentSpecieName
                 << " on line " << lineNo_
-                << " not present in " << side << " of reaction " << nl << lrhs
+                << " not present in "
+                << (lrhsPtr == &lhs ? "l.h.s." : "r.h.s.")
+                << " of reaction"
                 << exit(FatalError);
         }
 

@@ -44,10 +44,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-class specieCoeffs;
-Ostream& operator<<(Ostream&, const specieCoeffs&);
-
 /*---------------------------------------------------------------------------*\
                         Class specieCoeffs Declaration
 \*---------------------------------------------------------------------------*/
@@ -71,44 +67,10 @@ public:
     // Constructors
 
         //- Construct null
-        specieCoeffs()
-        :
-            index(-labelMax),
-            stoichCoeff(NaN),
-            exponent()
-        {}
+        specieCoeffs();
 
         //- Construct from species table and input stream
         specieCoeffs(const speciesTable& species, Istream& is);
-
-
-    // Member Functions
-
-        //- Construct the left- and right-hand-side reaction coefficients
-        static void setLRhs
-        (
-            Istream&,
-            const speciesTable&,
-            List<specieCoeffs>& lhs,
-            List<specieCoeffs>& rhs
-        );
-
-        //- Write the string representation of the specieCoeffs list
-        static void reactionStr
-        (
-            OStringStream& reaction,
-            const speciesTable&,
-            const List<specieCoeffs>& scs
-        );
-
-        //- Return string representation of reaction
-        static string reactionStr
-        (
-            OStringStream& reaction,
-            const speciesTable&,
-            const List<specieCoeffs>& lhs,
-            const List<specieCoeffs>& rhs
-        );
 
 
     // Member Operators
@@ -126,13 +88,7 @@ public:
         }
 
         //- Write to output stream
-        friend Ostream& operator<<(Ostream& os, const specieCoeffs& sc)
-        {
-            os  << sc.index << token::SPACE
-                << sc.stoichCoeff << token::SPACE
-                << sc.exponent;
-            return os;
-        }
+        void write(const speciesTable& species, Ostream& os) const;
 };
 
 

@@ -25,6 +25,7 @@ License
 
 #include "basicThermo.H"
 #include "wordIOList.H"
+#include "templateName.H"
 #include "compileTemplate.H"
 
 // * * * * * * * * * * * Private Static Member Functions * * * * * * * * * * //
@@ -112,10 +113,10 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
             {
                 const wordList names
                 (
-                    splitThermoName(validThermoTypeNames[i], 7)
+                    templateName::split(validThermoTypeNames[i])
                 );
 
-                if (names.size())
+                if (names.size() == 7)
                 {
                     validThermoTypeNameCmpts.append(names);
                 }

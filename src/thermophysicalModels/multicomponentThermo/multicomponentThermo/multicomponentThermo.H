@@ -41,6 +41,7 @@ SourceFiles
 #include "basicThermo.H"
 #include "MulticomponentThermo.H"
 #include "speciesTable.H"
+#include "specieElement.H"
 #include "DimensionedFieldListSlicer.H"
 #include "GeometricFieldListSlicer.H"
 
@@ -85,6 +86,15 @@ public:
 
             //- The index of the default specie
             virtual label defaultSpecie() const = 0;
+
+
+        // Species elemental compositions
+
+            //- Get the elements in a numbered specie
+            virtual const List<specieElement>& specieElements
+            (
+                const label speciei
+            ) const = 0;
 
 
         // Specie active/inactive
@@ -325,6 +335,12 @@ class multicomponentThermo::implementation
         //  the sum of the mass-fractions is tested to be within 1 +/- 1e-3
         scalar normalisationLimit_;
 
+        //- The species' elemental compositions
+        List<List<specieElement>> specieElements_;
+
+        //- Cached IO error locations for delayed error messages
+        List<IOerrorLocation> specieDictLocations_;
+
         //- Species mass fractions
         PtrList<volScalarField> Y_;
 
@@ -362,6 +378,12 @@ public:
         //  -1 if no default specie selected
         //  -2 if the specie mass-fractions are not normal i.e. do not sum to 1
         virtual label defaultSpecie() const;
+
+        //- Get the elements in a numbered specie
+        virtual const List<specieElement>& specieElements
+        (
+            const label speciei
+        ) const;
 
         //- Synchronise the specie active flags
         virtual void syncActiveSpecies() const;

@@ -120,8 +120,46 @@ Foam::multicomponentThermo::implementation::implementation
     (
         dict.lookupOrDefault<scalar>("normalisationLimit", 1e-3)
     ),
+    specieElements_(species.size()),
+    specieDictLocations_(species.size()),
     Y_(species.size())
 {
+    if
+    (
+        species.size()
+     && defaultSpecieName_ != "undefined"
+     && defaultSpeciei_ == -1
+    )
+    {
+        FatalIOErrorInFunction(dict)
+            << "default specie " << defaultSpecieName_
+            << " not found in available species " << species
+            << exit(FatalIOError);
+    }
+
+    // Optionally read the species' elemental compositions
+    if (normal) forAll(species, speciei)
+    {
+        const dictionary& specieDict = dict.subDict(species[speciei]);
+
+        if (!specieDict.found("elements")) continue;
+
+        const dictionary& specieElementsDict = specieDict.subDict("elements");
+
+        const wordList elementsNames(specieElementsDict.toc());
+
+        specieElements_[speciei].resize(elementsNames.size());
+
+        forAll(elementsNames, eni)
+        {
+            specieElements_[speciei][eni].name() = elementsNames[eni];
+            specieElements_[speciei][eni].nAtoms() =
+                specieElementsDict.lookupOrDefault(elementsNames[eni], 0);
+        }
+
+        specieDictLocations_[speciei] = IOerrorLocation(specieDict);
+    }
+
     bool Yset = false;
 
     // Read the species' mass fractions
@@ -221,6 +259,24 @@ Foam::multicomponentThermo::implementation::~implementation()
 Foam::label Foam::multicomponentThermo::implementation::defaultSpecie() const
 {
     return defaultSpeciei_;
+}
+
+
+const Foam::List<Foam::specieElement>&
+Foam::multicomponentThermo::implementation::specieElements
+(
+    const label speciei
+) const
+{
+    if (specieElements_[speciei].empty())
+    {
+        FatalIOErrorInFunction(specieDictLocations_[speciei])
+            << "Elemental composition not specified for specie "
+            << species()[speciei]
+            << exit(FatalIOError);
+    }
+
+    return specieElements_[speciei];
 }
 
 

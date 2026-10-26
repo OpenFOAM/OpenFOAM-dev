@@ -132,6 +132,7 @@ $(strings)/functionName/functionNameIO.C
 $(strings)/wordRe/wordRe.C
 $(strings)/lists/hashedWordList.C
 $(strings)/stringOps/stringOps.C
+$(strings)/templateName/templateName.C
 
 ops = primitives/ops
 $(ops)/flipOp.C

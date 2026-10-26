@@ -166,19 +166,6 @@ public:
         template<class FieldType>
         static const basicThermo& lookupThermo(const FieldType& f);
 
-        //- Split name of thermo package into a list of the components names
-        static wordList splitThermoName
-        (
-            const word& thermoName,
-            const int nCmpt
-        );
-
-        //- Split name of thermo package into a list of named components names
-        static List<Pair<word>> thermoNameComponents
-        (
-            const word& thermoName
-        );
-
 
     // Selectors
 

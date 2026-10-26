@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "chemistryModel.H"
-#include "basicThermo.H"
+#include "thermoName.H"
 #include "compileTemplate.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
@@ -52,8 +52,9 @@ Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
         chemistryDict.lookupOrDefault<word>("type", "standard")
     );
 
-    Info<< indentOrNl
-        << "Selecting chemistryModel " << type << endl;
+    Info<< indentOrNl << "Selecting chemistryModel " << type << endl;
+
+    printDictionary print(chemistryDict);
 
     // Check if the non-templated chemistryModel type exists on the table
     // providing support for third-party implementations which are independent
@@ -68,7 +69,7 @@ Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
             type, '<', thermo.thermoName(), '>'
         );
 
-        Info<< "Instantiated as " << instantiatedType << endl;
+        Info<< indent << "Instantiated as " << instantiatedType << endl;
 
         // Check if the chemistryModel type exists templated on
         // the current thermodynamics
@@ -79,15 +80,12 @@ Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
             if
             (
                 dynamicCode::allowSystemOperations
-            && !dynamicCode::resolveTemplate
-                (
-                    chemistryModel::typeName
-                ).empty()
+            && !dynamicCode::resolveTemplate(chemistryModel::typeName).empty()
             )
             {
                 List<Pair<word>> substitutions
                 (
-                    basicThermo::thermoNameComponents(thermo.thermoName())
+                    thermoName::components(thermo.thermoName())
                 );
 
                 substitutions.append({"type", type});
@@ -119,18 +117,12 @@ Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
                 const wordList names(thermoConstructorTablePtr_->sortedToc());
 
                 wordList thisCmpts(1, word::null);
-                thisCmpts.append
-                (
-                    basicThermo::splitThermoName(thermo.thermoName(), 5)
-                );
+                thisCmpts.append(templateName::split(thermo.thermoName()));
 
                 List<wordList> validNames(1, {"type"});
                 forAll(names, i)
                 {
-                    const wordList cmpts
-                    (
-                        basicThermo::splitThermoName(names[i], 6)
-                    );
+                    const wordList cmpts(templateName::split(names[i]));
 
                     if
                     (
@@ -164,10 +156,7 @@ Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
                 );
                 forAll(names, i)
                 {
-                    validCmpts.append
-                    (
-                        basicThermo::splitThermoName(names[i], 6)
-                    );
+                    validCmpts.append(templateName::split(names[i]));
                 }
 
                 FatalIOErrorInFunction(chemistryDict)

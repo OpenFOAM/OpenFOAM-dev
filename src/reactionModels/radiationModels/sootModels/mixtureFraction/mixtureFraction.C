@@ -87,7 +87,7 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
             reactionModel::reactionPropertiesName
         );
 
-    const reaction& singleReaction = ssReaction.singleReaction();
+    const reactionCoeffs& singleReaction = ssReaction.singleReaction();
 
     scalar totalMol = 0;
     forAll(singleReaction.rhs(), i)

@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Standard_chemistryModel.H"
-#include "extrapolatedCalculatedFvPatchFields.H"
-#include "cpuLoad.H"
+#include "multicomponentMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -35,93 +34,31 @@ Foam::chemistryModels::Standard<ThermoType>::Standard
     const fluidMulticomponentThermo& thermo
 )
 :
-    standard(thermo),
-    log_(this->lookupOrDefault("log", false)),
-    cpuLoad_(this->lookupOrDefault("cpuLoad", false)),
+    standard
+    (
+        thermo,
+        SpecieThermosRef<ThermoType>
+        (
+            dynamicCast<const multicomponentMixture<ThermoType>>
+            (
+                thermo
+            ).specieThermos()
+        )
+    ),
     jacobianType_
     (
         this->found("jacobian")
       ? jacobianTypeNames.read(this->lookup("jacobian"))
       : jacobianType::fast
     ),
-    mixture_
+    specieThermos_
     (
-        dynamicCast<const multicomponentMixture<ThermoType>>(this->thermo())
-    ),
-    specieThermos_(mixture_.specieThermos()),
-    reactions_(thermo.species(), specieThermos_, this->mesh(), *this),
-    RR_(nSpecie_),
-    Y_(nSpecie_),
-    s_(nSpecie_),
-    YTWork_(scalarField(nSpecie_ + 1)),
-    YTYTWork_(scalarSquareMatrix(nSpecie_ + 1)),
-    mechRedPtr_
-    (
-        chemistryReductionMethod<ThermoType>::New
+        dynamicCast<const multicomponentMixture<ThermoType>>
         (
-            *this,
-            *this
-        )
-    ),
-    mechRed_(*mechRedPtr_),
-    tabulationPtr_(chemistryTabulationMethod::New(*this, *this)),
-    tabulation_(*tabulationPtr_)
-{
-    // Create the fields for the chemistry sources
-    forAll(RR_, fieldi)
-    {
-        RR_.set
-        (
-            fieldi,
-            new volInternalScalarField
-            (
-                IOobject
-                (
-                    "RR." + Yvf_[fieldi].name(),
-                    this->mesh().time().name(),
-                    this->mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                thermo.mesh(),
-                dimensionedScalar(dimensions::density/dimensions::time, 0)
-            )
-        );
-    }
-
-    Info<< "chemistryModel: Number of species = " << nSpecie_
-        << " and reactions = " << nReaction() << endl;
-
-    // When the mechanism reduction method is used, the 'active' flag for every
-    // species should be initialised (by default 'active' is true)
-    if (reduction_)
-    {
-        forAll(Yvf_, i)
-        {
-            typeIOobject<volScalarField> header
-            (
-                Yvf_[i].name(),
-                this->mesh().time().name(),
-                this->mesh(),
-                IOobject::NO_READ
-            );
-
-            // Check if the species file is provided, if not set inactive
-            // and NO_WRITE
-            if (!header.headerOk())
-            {
-                this->thermo().setSpecieInactive(i);
-            }
-        }
-
-        this->thermo().syncActiveSpecies();
-    }
-
-    if (log_)
-    {
-        cpuSolveFile_ = logFile("cpu_solve.out");
-    }
-}
+            this->thermo()
+        ).specieThermos()
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -142,7 +79,7 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
     scalarField& dYTdt
 ) const
 {
-    if (reduction_)
+    if (reduced_)
     {
         forAll(sToc_, i)
         {
@@ -182,9 +119,9 @@ void Foam::chemistryModels::Standard<ThermoType>::derivatives
     dYTdt = Zero;
     forAll(reactions_, ri)
     {
-        if (!mechRed_.reactionDisabled(ri))
+        if (!reduction_.reactionDisabled(ri))
         {
-            reactions_[ri].dNdtByV(s_, dYTdt, reduction_, cTos_);
+            reactions_[ri].dNdtByV(s_, dYTdt, reduced_, c2s_);
         }
     }
 
@@ -225,7 +162,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     scalarSquareMatrix& J
 ) const
 {
-    if (reduction_)
+    if (reduced_)
     {
         forAll(sToc_, i)
         {
@@ -246,7 +183,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     );
 
     // Evaluate the specific volumes and mixture density
-    scalarField& v = YTWork_[0];
+    scalarField& v = YTWork_.elmt<0>();
     for (label i=0; i<Y_.size(); i++)
     {
         v[i] = 1/specieThermos_[i].rho(p_, T);
@@ -267,7 +204,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     s_.reset(p_, T, li);
 
     // Evaluate the derivatives of concentration w.r.t. mass fraction
-    scalarSquareMatrix& dcdY = YTYTWork_[0];
+    scalarSquareMatrix& dcdY = YTYTWork_.elmt<0>();
     for (label i=0; i<nSpecie_; i++)
     {
         const scalar rhoMByWi = rhoM/specieThermos_[sToc(i)].W();
@@ -297,7 +234,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
 
     // Evaluate contributions from reactions
     dYTdt = Zero;
-    scalarSquareMatrix& ddNdtByVdcT = YTYTWork_[1];
+    scalarSquareMatrix& ddNdtByVdcT = YTYTWork_.elmt<1>();
     for (label i=0; i<nSpecie_ + 1; i++)
     {
         for (label j=0; j<nSpecie_ + 1; j++)
@@ -307,18 +244,16 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     }
     forAll(reactions_, ri)
     {
-        if (!mechRed_.reactionDisabled(ri))
+        if (!reduction_.reactionDisabled(ri))
         {
             reactions_[ri].ddNdtByVdcT
             (
                 s_,
                 dYTdt,
                 ddNdtByVdcT,
-                reduction_,
-                cTos_,
-                nSpecie_,
-                YTWork_[1],
-                YTWork_[2]
+                reduced_,
+                c2s_,
+                nSpecie_
             );
         }
     }
@@ -368,7 +303,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     // Evaluate the effect on the thermodynamic system ...
 
     // Evaluate the mixture Cp and its derivative
-    scalarField& Cp = YTWork_[3];
+    scalarField& Cp = YTWork_.elmt<1>();
     scalar CpM = 0, dCpMdT = 0;
     for (label i=0; i<Y_.size(); i++)
     {
@@ -378,7 +313,7 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     }
 
     // dT/dt
-    scalarField& ha = YTWork_[4];
+    scalarField& ha = YTWork_.elmt<2>();
     scalar& dTdt = dYTdt[nSpecie_];
     for (label i=0; i<nSpecie_; i++)
     {
@@ -412,634 +347,6 @@ void Foam::chemistryModels::Standard<ThermoType>::jacobian
     }
     ddTdtdT -= dTdt*dCpMdT;
     ddTdtdT /= CpM;
-}
-
-
-template<class ThermoType>
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
-Foam::chemistryModels::Standard<ThermoType>::reactionRR
-(
-    const label reactioni
-) const
-{
-    tmp<volInternalScalarField> tRR =
-        volInternalScalarField::New
-        (
-            "RR:" + reactions_[reactioni].name(),
-            this->mesh(),
-            dimensionedScalar
-            (
-                dimensions::moles/dimensions::volume/dimensions::time,
-                0
-            )
-        );
-    volInternalScalarField& RR = tRR.ref();
-
-    if (!this->chemistry_ || mechRed_.reactionDisabled(reactioni))
-    {
-        return tRR;
-    }
-
-    tmp<volScalarField> trhovf(this->thermo().rho());
-    const volScalarField& rhovf = trhovf();
-
-    const volScalarField& Tvf = this->thermo().T();
-    const volScalarField& pvf = this->thermo().p();
-
-    reactionEvaluationScope scope(*this);
-
-    const Reaction<ThermoType>& R = reactions_[reactioni];
-
-    const label nZoneCells = zone_.nCells();
-    for(label zci = 0; zci<nZoneCells; zci++)
-    {
-        const label celli = zone_.celli(zci);
-
-        const scalar rho = rhovf[celli];
-        const scalar T = Tvf[celli];
-        const scalar p = pvf[celli];
-
-        for (label i=0; i<nSpecie_; i++)
-        {
-            s_.c[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
-        }
-
-        s_.reset(p, T, celli);
-
-        scalar omegaf, omegar;
-        RR[celli] = R.omega(s_, omegaf, omegar);
-    }
-
-    return tRR;
-}
-
-
-template<class ThermoType>
-Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
-Foam::chemistryModels::Standard<ThermoType>::specieReactionRR
-(
-    const label reactioni
-) const
-{
-    PtrList<volInternalScalarField> RR(nSpecie_);
-    for (label i=0; i<nSpecie_; i++)
-    {
-        RR.set
-        (
-            i,
-            volInternalScalarField::New
-            (
-                "RR:" + reactions_[reactioni].name() + ":" + Yvf_[i].name(),
-                this->mesh(),
-                dimensionedScalar(dimensions::density/dimensions::time, 0)
-            ).ptr()
-        );
-    }
-
-    if (!this->chemistry_ || mechRed_.reactionDisabled(reactioni))
-    {
-        return RR;
-    }
-
-    tmp<volScalarField> trhovf(this->thermo().rho());
-    const volScalarField& rhovf = trhovf();
-
-    const volScalarField& Tvf = this->thermo().T();
-    const volScalarField& pvf = this->thermo().p();
-
-    scalarField& dNdtByV = YTWork_[0];
-
-    reactionEvaluationScope scope(*this);
-
-    const Reaction<ThermoType>& R = reactions_[reactioni];
-
-    const label nZoneCells = zone_.nCells();
-    for(label zci = 0; zci<nZoneCells; zci++)
-    {
-        const label celli = zone_.celli(zci);
-
-        const scalar rho = rhovf[celli];
-        const scalar T = Tvf[celli];
-        const scalar p = pvf[celli];
-
-        for (label i=0; i<nSpecie_; i++)
-        {
-            s_.c[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
-        }
-
-        s_.reset(p, T, celli);
-
-        dNdtByV = Zero;
-
-        R.dNdtByV(s_, dNdtByV, reduction_, cTos_);
-
-        for (label i=0; i<nSpecie_; i++)
-        {
-            RR[i][celli] = dNdtByV[i]*specieThermos_[i].W();
-        }
-    }
-
-    return RR;
-}
-
-
-template<class ThermoType>
-void Foam::chemistryModels::Standard<ThermoType>::calculate()
-{
-    if (!this->chemistry_)
-    {
-        return;
-    }
-
-    if (!zone_.all())
-    {
-        forAll(RR_, fieldi)
-        {
-            RR_[fieldi] = Zero;
-        }
-    }
-
-    tmp<volScalarField> trhovf(this->thermo().rho());
-    const volScalarField& rhovf = trhovf();
-
-    const volScalarField& Tvf = this->thermo().T();
-    const volScalarField& pvf = this->thermo().p();
-
-    scalarField& dNdtByV = YTWork_[0];
-
-    reactionEvaluationScope scope(*this);
-
-    const label nZoneCells = zone_.nCells();
-    for(label zci = 0; zci<nZoneCells; zci++)
-    {
-        const label celli = zone_.celli(zci);
-
-        const scalar rho = rhovf[celli];
-        const scalar T = Tvf[celli];
-        const scalar p = pvf[celli];
-
-        for (label i=0; i<nSpecie_; i++)
-        {
-            s_.c[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
-        }
-
-        s_.reset(p, T, celli);
-
-        dNdtByV = Zero;
-
-        forAll(reactions_, ri)
-        {
-            if (!mechRed_.reactionDisabled(ri))
-            {
-                reactions_[ri].dNdtByV(s_, dNdtByV, reduction_, cTos_);
-            }
-        }
-
-        for (label i=0; i<mechRed_.nActiveSpecies(); i++)
-        {
-            RR_[sToc(i)][celli] = dNdtByV[i]*specieThermos_[sToc(i)].W();
-        }
-    }
-}
-
-
-template<class ThermoType>
-template<class DeltaTType>
-Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
-(
-    const DeltaTType& deltaT
-)
-{
-    optionalCpuLoad& chemistryCpuLoad
-    (
-        optionalCpuLoad::New(name() + ":cpuLoad", this->mesh(), cpuLoad_)
-    );
-
-    // CPU time logging
-    cpuTime solveCpuTime;
-    scalar totalSolveCpuTime = 0;
-
-    if (!this->chemistry_)
-    {
-        return great;
-    }
-
-    if (!zone_.all())
-    {
-        forAll(RR_, fieldi)
-        {
-            RR_[fieldi] = Zero;
-        }
-    }
-
-    const volScalarField& rho0vf =
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->thermo().phasePropertyName("rho")
-        ).oldTime();
-
-    const volScalarField& T0vf = this->thermo().T().oldTime();
-    const volScalarField& p0vf = this->thermo().p().oldTime();
-
-    reactionEvaluationScope scope(*this);
-
-    // Tabulated state vector (Yi, T, p, deltaT)
-    scalarField phiq;
-    scalarField Rphiq;
-    if (tabulation_.tabulates())
-    {
-        phiq.setSize(nEqns() + 2);
-        Rphiq.setSize(nEqns() + 2);
-    }
-
-    // Minimum chemical timestep
-    scalar deltaTMin = great;
-
-    tabulation_.reset();
-    chemistryCpuLoad.resetCpuTime();
-
-    zone_.regenerate();
-    const label nZoneCells = zone_.nCells();
-    for(label zci = 0; zci<nZoneCells; zci++)
-    {
-        const label celli = zone_.celli(zci);
-
-        const scalar rho0 = rho0vf[celli];
-
-        p_ = p0vf[celli];
-        scalar T = T0vf[celli];
-
-        for (label i=0; i<nSpecie_; i++)
-        {
-            Y_[i] = Yvf_[i].oldTime()[celli];
-        }
-
-        if (tabulation_.tabulates())
-        {
-            for (label i=0; i<nSpecie_; i++)
-            {
-                phiq[i] = Yvf_[i].oldTime()[celli];
-            }
-            phiq[nSpecie()] = T;
-            phiq[nSpecie() + 1] = p_;
-            phiq[nSpecie() + 2] = deltaT[celli];
-        }
-
-        // Initialise time progress
-        scalar timeLeft = deltaT[celli];
-
-        // Not sure if this is necessary
-        Rphiq = Zero;
-
-        // When tabulation is active (short-circuit evaluation for retrieve)
-        // It first tries to retrieve the solution of the system with the
-        // information stored through the tabulation method
-        if (tabulation_.retrieve(phiq, Rphiq))
-        {
-            // Retrieved solution stored in Rphiq
-            // and normalise the mass-fractions
-            scalar Yt = 0;
-            for (label i=0; i<nSpecie(); i++)
-            {
-                Yt += Rphiq[i];
-            }
-            for (label i=0; i<nSpecie(); i++)
-            {
-                Y_[i] = Rphiq[i]/Yt;
-            }
-            T = Rphiq[nSpecie()];
-        }
-        // This position is reached when tabulation is not used OR
-        // if the solution is not retrieved.
-        // In the latter case, it adds the information to the tabulation
-        // (it will either expand the current data or add a new stored point).
-        else
-        {
-            if (reduction_)
-            {
-                // Compute concentrations
-                for (label i=0; i<nSpecie_; i++)
-                {
-                    s_.c[i] = rho0*Y_[i]/specieThermos_[i].W();
-                }
-
-                s_.reset(p_, T, celli);
-
-                // Reduce mechanism change the number of species (only active)
-                mechRed_.reduceMechanism(s_, cTos_, sToc_);
-
-                // Set the simplified mass fraction field
-                sY_.setSize(nSpecie_);
-                for (label i=0; i<nSpecie_; i++)
-                {
-                    sY_[i] = Y_[sToc(i)];
-                }
-            }
-
-            if (log_)
-            {
-                // Reset the solve time
-                solveCpuTime.cpuTimeIncrement();
-            }
-
-            // Calculate the chemical source terms
-            while (timeLeft > small)
-            {
-                scalar dt = timeLeft;
-                if (reduction_)
-                {
-                    // Solve the reduced set of ODE
-                    solve
-                    (
-                        p_,
-                        T,
-                        sY_,
-                        celli,
-                        dt,
-                        deltaTChem_[celli]
-                    );
-
-                    for (label i=0; i<mechRed_.nActiveSpecies(); i++)
-                    {
-                        Y_[sToc_[i]] = sY_[i];
-                    }
-                }
-                else
-                {
-                    solve(p_, T, Y_, celli, dt, deltaTChem_[celli]);
-                }
-                timeLeft -= dt;
-            }
-
-            if (log_)
-            {
-                totalSolveCpuTime += solveCpuTime.cpuTimeIncrement();
-            }
-
-            // If tabulation is used, we add the information computed here to
-            // the stored points (either expand or add)
-            if (tabulation_.tabulates())
-            {
-                forAll(Y_, i)
-                {
-                    Rphiq[i] = Y_[i];
-                }
-                Rphiq[Rphiq.size()-3] = T;
-                Rphiq[Rphiq.size()-2] = p_;
-                Rphiq[Rphiq.size()-1] = deltaT[celli];
-
-                tabulation_.add
-                (
-                    phiq,
-                    Rphiq,
-                    mechRed_.nActiveSpecies(),
-                    celli,
-                    deltaT[celli]
-                );
-            }
-
-            // When operations are done and if mechanism reduction is active,
-            // the number of species (which also affects nEqns) is set back
-            // to the total number of species (stored in the mechRed object)
-            if (reduction_)
-            {
-                setNSpecie(mechRed_.nSpecie());
-            }
-
-            deltaTMin = min(deltaTChem_[celli], deltaTMin);
-            deltaTChem_[celli] = min(deltaTChem_[celli], deltaTChemMax_);
-        }
-
-        // Set the RR vector (used in the solver)
-        for (label i=0; i<nSpecie_; i++)
-        {
-            RR_[i][celli] =
-                rho0*(Y_[i] - Yvf_[i].oldTime()[celli])/deltaT[celli];
-        }
-
-        if (cpuLoad_)
-        {
-            chemistryCpuLoad.cpuTimeIncrement(celli);
-        }
-    }
-
-    if (log_)
-    {
-        cpuSolveFile_()
-            << this->time().userTimeValue()
-            << "    " << totalSolveCpuTime << endl;
-    }
-
-    mechRed_.update();
-    tabulation_.update();
-
-    if (reduction_)
-    {
-        this->thermo().syncActiveSpecies();
-    }
-
-    return deltaTMin;
-}
-
-
-template<class ThermoType>
-Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
-(
-    const scalar deltaT
-)
-{
-    // Don't allow the time-step to change more than a factor of 2
-    return min
-    (
-        this->solve<UniformField<scalar>>(UniformField<scalar>(deltaT)),
-        2*deltaT
-    );
-}
-
-
-template<class ThermoType>
-Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
-(
-    const scalarField& deltaT
-)
-{
-    return this->solve<scalarField>(deltaT);
-}
-
-
-template<class ThermoType>
-Foam::tmp<Foam::volInternalScalarField>
-Foam::chemistryModels::Standard<ThermoType>::tc() const
-{
-    tmp<volInternalScalarField> ttc
-    (
-        volInternalScalarField::New
-        (
-            "tc",
-            this->mesh(),
-            dimensionedScalar(dimensions::time, small)
-        )
-    );
-    scalarField& tc = ttc.ref();
-
-    if (!this->chemistry_)
-    {
-        return ttc;
-    }
-
-    tmp<volScalarField> trhovf(this->thermo().rho());
-    const volScalarField& rhovf = trhovf();
-
-    const volScalarField& Tvf = this->thermo().T();
-    const volScalarField& pvf = this->thermo().p();
-
-    reactionEvaluationScope scope(*this);
-
-    const label nZoneCells = zone_.nCells();
-    for(label zci = 0; zci<nZoneCells; zci++)
-    {
-        const label celli = zone_.celli(zci);
-
-        const scalar rho = rhovf[celli];
-        const scalar T = Tvf[celli];
-        const scalar p = pvf[celli];
-
-        for (label i=0; i<nSpecie_; i++)
-        {
-            s_.c[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
-        }
-
-        s_.reset(p, T, celli);
-
-        // A reaction's rate scale is calculated as its molar
-        // production rate divided by the total number of moles in the
-        // system.
-        //
-        // The system rate scale is the average of the reactions' rate
-        // scales weighted by the reactions' molar production rates. This
-        // weighting ensures that dominant reactions provide the largest
-        // contribution to the system rate scale.
-        //
-        // The system time scale is then the reciprocal of the system rate
-        // scale.
-        //
-        // Contributions from forward and reverse reaction rates are
-        // handled independently and identically so that reversible
-        // reactions produce the same result as the equivalent pair of
-        // irreversible reactions.
-
-        scalar sumW = 0, sumWRateByCTot = 0;
-        forAll(reactions_, i)
-        {
-            const Reaction<ThermoType>& R = reactions_[i];
-            scalar omegaf, omegar;
-            R.omega(s_, omegaf, omegar);
-
-            scalar wf = 0;
-            forAll(R.rhs(), j)
-            {
-                wf += R.rhs()[j].stoichCoeff*omegaf;
-            }
-            sumW += wf;
-            sumWRateByCTot += sqr(wf);
-
-            scalar wr = 0;
-            forAll(R.lhs(), j)
-            {
-                wr += R.lhs()[j].stoichCoeff*omegar;
-            }
-            sumW += wr;
-            sumWRateByCTot += sqr(wr);
-        }
-
-        tc[celli] =
-            sumWRateByCTot == 0 ? vGreat : sumW/sumWRateByCTot*sum(s_.c);
-    }
-
-    return ttc;
-}
-
-
-template<class ThermoType>
-Foam::tmp<Foam::volInternalScalarField>
-Foam::chemistryModels::Standard<ThermoType>::Qdot() const
-{
-    tmp<volInternalScalarField> tQdot
-    (
-        volInternalScalarField::New
-        (
-            "Qdot",
-            this->mesh_,
-            dimensionedScalar(dimensions::powerDensity, 0)
-        )
-    );
-
-    if (!this->chemistry_)
-    {
-        return tQdot;
-    }
-
-    reactionEvaluationScope scope(*this);
-
-    scalarField& Qdot = tQdot.ref();
-
-    forAll(Yvf_, i)
-    {
-        const label nZoneCells = zone_.nCells();
-        for(label zci = 0; zci<nZoneCells; zci++)
-        {
-            const label celli = zone_.celli(zci);
-
-            const scalar hi = specieThermos_[i].hf();
-            Qdot[celli] -= hi*RR_[i][celli];
-        }
-    }
-
-    return tQdot;
-}
-
-
-template<class ThermoType>
-void Foam::chemistryModels::Standard<ThermoType>::solve
-(
-    scalar& p,
-    scalar& T,
-    scalarField& c,
-    const label li,
-    scalar& deltaT,
-    scalar& subDeltaT
-) const
-{
-    // Reset the size of the ODE system to the simplified size when mechanism
-    // reduction is active
-    if (odeSolver_->resize())
-    {
-        odeSolver_->resizeField(cT_);
-    }
-
-    const label nSpecie = this->nSpecie();
-
-    // Copy the concentration, T and P to the total solve-vector
-    for (int i=0; i<nSpecie; i++)
-    {
-        cT_[i] = c[i];
-    }
-    cT_[nSpecie] = T;
-
-    if (debug)
-    {
-        scalarField dcT(this->nEqns(), rootSmall);
-        dcT[nSpecie] = T*rootSmall;
-        this->check(0, cT_, dcT, li);
-    }
-
-    odeSolver_->solve(0, deltaT, cT_, li, subDeltaT);
-
-    for (int i=0; i<nSpecie; i++)
-    {
-        c[i] = max(0.0, cT_[i]);
-    }
-    T = cT_[nSpecie];
 }
 
 

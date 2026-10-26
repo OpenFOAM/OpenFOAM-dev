@@ -34,7 +34,7 @@ namespace reactionModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const Foam::reaction& singleStepReaction::singleReaction() const
+inline const Foam::reactionCoeffs& singleStepReaction::singleReaction() const
 {
     return reaction_;
 }

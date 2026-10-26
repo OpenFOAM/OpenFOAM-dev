@@ -44,8 +44,6 @@ SourceFiles
 #define Standard_chemistryModel_H
 
 #include "standard_chemistryModel.H"
-#include "multicomponentMixture.H"
-#include "ReactionList.H"
 #include "chemistryReductionMethod.H"
 #include "chemistryTabulationMethod.H"
 
@@ -65,104 +63,13 @@ class Standard
 :
     public standard
 {
-    // Private classes
-
-        //- Class to define scope of reaction evaluation. Runs pre-evaluate
-        //  hook on all reactions on construction and post-evaluate on
-        //  destruction.
-        class reactionEvaluationScope
-        {
-            const Standard<ThermoType>& chemistry_;
-
-        public:
-
-            reactionEvaluationScope
-            (
-                const Standard<ThermoType>& chemistry
-            )
-            :
-                chemistry_(chemistry)
-            {
-                forAll(chemistry_.reactions_, i)
-                {
-                    chemistry_.reactions_[i].preEvaluate();
-                }
-            }
-
-            ~reactionEvaluationScope()
-            {
-                forAll(chemistry_.reactions_, i)
-                {
-                    chemistry_.reactions_[i].postEvaluate();
-                }
-            }
-        };
-
-
     // Private data
-
-        //- Switch to select performance logging
-        Switch log_;
-
-        //- Switch to enable per-cell CPU load caching for load-balancing
-        Switch cpuLoad_;
 
         //- Type of the Jacobian to be calculated
         const jacobianType jacobianType_;
 
-        //- Reference to the multi component mixture
-        const multicomponentMixture<ThermoType>& mixture_;
-
         //- Thermodynamic data of the species
         const PtrList<ThermoType>& specieThermos_;
-
-        //- Reactions
-        const ReactionList<ThermoType> reactions_;
-
-        //- List of reaction rate per specie [kg/m^3/s]
-        PtrList<volInternalScalarField> RR_;
-
-        //- Temporary mass fraction field
-        mutable scalarField Y_;
-
-        //- Temporary simplified mechanism mass fraction field
-        DynamicField<scalar> sY_;
-
-        //- Temporary reaction state
-        mutable reaction::state s_;
-
-        //- Temporary simplified mechanism concentration field
-        DynamicField<scalar> sc_;
-
-        //- Specie-temperature-pressure workspace fields
-        mutable FixedList<scalarField, 5> YTWork_;
-
-        //- Specie-temperature-pressure workspace matrices
-        mutable FixedList<scalarSquareMatrix, 2> YTYTWork_;
-
-        //- Mechanism reduction method
-        autoPtr<chemistryReductionMethod<ThermoType>> mechRedPtr_;
-
-        //- Mechanism reduction method reference
-        chemistryReductionMethod<ThermoType>& mechRed_;
-
-        //- Tabulation method
-        autoPtr<chemistryTabulationMethod> tabulationPtr_;
-
-        //- Tabulation method reference
-        chemistryTabulationMethod& tabulation_;
-
-        //- Log file for average time spent solving the chemistry
-        autoPtr<OFstream> cpuSolveFile_;
-
-
-    // Private Member Functions
-
-        //- Solve the reaction system for the given time step
-        //  of given type and return the characteristic time
-        //  Variable number of species added
-        template<class DeltaTType>
-        scalar solve(const DeltaTType& deltaT);
 
 
 public:
@@ -186,62 +93,6 @@ public:
 
     // Member Functions
 
-        // Access
-
-            //- Return reference to the mixture
-            inline const multicomponentMixture<ThermoType>& mixture() const;
-
-            //- The reactions
-            inline const PtrList<Reaction<ThermoType>>& reactions() const;
-
-            //- Thermodynamic data of the species
-            inline const PtrList<ThermoType>& specieThermos() const;
-
-
-        // Overrides to chemistryModel functions
-
-            //- The number of reactions
-            virtual inline label nReaction() const;
-
-            //- Return reaction rates of the species [kg/m^3/s]
-            virtual inline const PtrList<volInternalScalarField>& RR() const;
-
-            //- Return the name of reactioni
-            virtual inline const word& reactionName
-            (
-                const label reactioni
-            ) const;
-
-            //- Return the rate of reactioni [kmol/m^3/s]
-            virtual tmp<volInternalScalarField> reactionRR
-            (
-                const label reactioni
-            ) const;
-
-            //- Return reaction rates of the species in reactioni [kg/m^3/s]
-            virtual PtrList<volInternalScalarField> specieReactionRR
-            (
-                const label reactioni
-            ) const;
-
-            //- Calculates the reaction rates
-            virtual void calculate();
-
-            //- Solve the reaction system for the given time step
-            //  and return the characteristic time
-            virtual scalar solve(const scalar deltaT);
-
-            //- Solve the reaction system for the given time step
-            //  and return the characteristic time
-            virtual scalar solve(const scalarField& deltaT);
-
-            //- Return the chemical time scale
-            virtual tmp<volInternalScalarField> tc() const;
-
-            //- Return the heat release rate [kg/m/s^3]
-            virtual tmp<volInternalScalarField> Qdot() const;
-
-
         // ODE solution functions
 
             //- Calculate the ODE derivatives
@@ -263,17 +114,6 @@ public:
                 scalarSquareMatrix& J
             ) const;
 
-            //- Solve the ODE system
-            virtual void solve
-            (
-                scalar& p,
-                scalar& T,
-                scalarField& Y,
-                const label li,
-                scalar& deltaT,
-                scalar& subDeltaT
-            ) const;
-
 
     // Member Operators
 
@@ -286,10 +126,6 @@ public:
 
 } // End namespace chemistryModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "Standard_chemistryModelI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

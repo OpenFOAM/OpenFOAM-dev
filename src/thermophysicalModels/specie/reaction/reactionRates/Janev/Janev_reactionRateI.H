@@ -1,0 +1,158 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "Janev_reactionRate.H"
+#include "physicoChemicalConstants.H"
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+inline Foam::reactionRates::Janev::Janev
+(
+    const scalar A,
+    const scalar beta,
+    const scalar Ta,
+    const FixedList<scalar, nb_> b
+)
+:
+    beta_(beta),
+    A_(A),
+    Ta_(Ta),
+    b_(b)
+{}
+
+
+inline Foam::reactionRates::Janev::Janev
+(
+    const speciesTable&,
+    const dimensionSet& dims,
+    const dictionary& dict
+)
+:
+    beta_(dict.lookup<scalar>("beta", dimless)),
+    A_(dict.lookup<scalar>("A", dims/pow(dimensions::temperature, beta_))),
+    Ta_
+    (
+        dict.found("Ta") || !dict.found("Ea")
+      ? dict.lookup<scalar>("Ta", dimensions::temperature)
+      : dict.lookup<scalar>("Ea", dimensions::energy/dimensions::moles)
+       /constant::physicoChemical::RR.value()
+    ),
+    b_(dict.lookup("b"))
+{}
+
+
+inline Foam::reactionRates::Janev::Janev
+(
+    const speciesTable& species,
+    const objectRegistry& ob,
+    const dimensionSet& dims,
+    const dictionary& dict
+)
+:
+    Janev(species, dims, dict)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline void Foam::reactionRates::Janev::preEvaluate() const
+{}
+
+
+inline void Foam::reactionRates::Janev::postEvaluate() const
+{}
+
+
+inline Foam::scalar Foam::reactionRates::Janev::k
+(
+    const reaction::state& s
+) const
+{
+    scalar expArg = beta_*s.lnT - Ta_*s.rT + b_[0] + b_[1]*s.lnT;
+
+    scalar lnTn = s.lnT;
+    for (int n=2; n<nb_; n++)
+    {
+        lnTn *= s.lnT;
+        expArg += b_[n]*lnTn;
+    }
+
+    return A_*exp(expArg);
+}
+
+
+inline Foam::scalar Foam::reactionRates::Janev::ddT
+(
+    const reaction::state& s
+) const
+{
+    scalar expArg = beta_*s.lnT - Ta_*s.rT + b_[0] + b_[1]*s.lnT;
+    scalar deriv = beta_ + Ta_*s.rT + b_[1];
+
+    scalar lnTn = s.lnT;
+    for (int n=2; n<nb_; n++)
+    {
+        deriv += n*b_[n]*lnTn;
+        lnTn *= s.lnT;
+        expArg += b_[n]*lnTn;
+    }
+
+    return A_*exp(expArg)*deriv*s.rT;
+}
+
+
+inline void Foam::reactionRates::Janev::ddc
+(
+    const reaction::state& s,
+    scalarField& ddc
+) const
+{
+    NotImplemented;
+}
+
+
+inline void Foam::reactionRates::Janev::write(Ostream& os) const
+{
+    writeKeyword(os, "A") << A_ << nl;
+    writeKeyword(os, "beta") << beta_ << nl;
+    writeKeyword(os, "Ta") << Ta_ << nl;
+    writeKeyword(os, "b") << b_ << nl;
+}
+
+
+// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
+
+inline Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const reactionRates::Janev& rr
+)
+{
+    rr.write(os);
+    return os;
+}
+
+
+// ************************************************************************* //
