@@ -181,6 +181,13 @@ Foam::codedBase::codedBase
 {}
 
 
+Foam::codedBase::codedBase(const codedBase& cb)
+:
+    dynamicCode(cb),
+    reloadable_(false) // Avoid unloadLibrary by copy deletion
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::codedBase::~codedBase()

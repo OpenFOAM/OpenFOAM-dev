@@ -121,6 +121,9 @@ public:
             const bool reloadable = true
         );
 
+        //- Copy constructor
+        codedBase(const codedBase&);
+
 
     //- Destructor
     virtual ~codedBase();
