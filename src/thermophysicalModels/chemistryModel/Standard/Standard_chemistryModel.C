@@ -697,9 +697,15 @@ Foam::scalar Foam::chemistryModels::Standard<ThermoType>::solve
         if (tabulation_.retrieve(phiq, Rphiq))
         {
             // Retrieved solution stored in Rphiq
+            // and normalise the mass-fractions
+            scalar Yt = 0;
             for (label i=0; i<nSpecie(); i++)
             {
-                Y_[i] = Rphiq[i];
+                Yt += Rphiq[i];
+            }
+            for (label i=0; i<nSpecie(); i++)
+            {
+                Y_[i] = Rphiq[i]/Yt;
             }
             T = Rphiq[nSpecie()];
         }
