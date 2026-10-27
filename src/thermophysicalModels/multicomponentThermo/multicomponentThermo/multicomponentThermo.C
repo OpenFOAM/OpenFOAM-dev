@@ -33,14 +33,11 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::multicomponentThermo::implementation::correctMassFractions
-(
-    const speciesTable& species
-)
+void Foam::multicomponentThermo::implementation::scaleMassFractions()
 {
-    if (species.size())
+    if (Y_.size())
     {
         tmp<volScalarField> tYt
         (
@@ -55,29 +52,33 @@ void Foam::multicomponentThermo::implementation::correctMassFractions
 
         for (label i=1; i<Y_.size(); i++)
         {
+            Y_[i].bound(0, 1);
             Yt += Y_[i];
         }
 
-        if (min(Yt).value() == 0 && max(Yt).value() == 0)
+        const scalar minYt = min(Yt).value();
+        const scalar maxYt = max(Yt).value();
+
+        if (minYt == 0 && maxYt == 0)
         {
             FatalErrorInFunction
                 << "Sum of specie mass fractions = 0"
                 << exit(FatalError);
         }
 
-        if (min(Yt).value() < 0.999)
+        if (minYt < 1 - normalisationLimit_)
         {
             FatalErrorInFunction
-                << "Min sum of specie mass fractions " << min(Yt).value()
-                << " < 0.999"
+                << "Min sum of specie mass fractions " << minYt
+                << " < " << 1 - normalisationLimit_
                 << exit(FatalError);
         }
 
-        if (max(Yt).value() > 1.001)
+        if (maxYt > 1 + normalisationLimit_)
         {
             FatalErrorInFunction
-                << "Max sum of specie mass fractions " << max(Yt).value()
-                << " > 1.001"
+                << "Max sum of specie mass fractions " << maxYt
+                << " > " << 1 + normalisationLimit_
                 << exit(FatalError);
         }
 
@@ -111,6 +112,10 @@ Foam::multicomponentThermo::implementation::implementation
         requiresDefaultSpecie && species.size()
       ? species[defaultSpecieName_]
       : -1
+    ),
+    normalisationLimit_
+    (
+        dict.lookupOrDefault<scalar>("normalisationLimit", 1e-3)
     ),
     Y_(species.size())
 {
@@ -203,9 +208,9 @@ Foam::multicomponentThermo::implementation::implementation
     }
 
     // If the mass fractions have been specified check and normalise
-    if (Yset && defaultSpeciei_ != -1)
+    if (Yset)
     {
-        correctMassFractions(species);
+        scaleMassFractions();
     }
 }
 
@@ -282,29 +287,33 @@ void Foam::multicomponentThermo::implementation::normaliseY()
                 volScalarField::New
                 (
                     IOobject::groupName("Yt", phaseName()),
-                    Y()[0].mesh(),
+                    Y_[0].mesh(),
                     dimensionedScalar(dimless, 0)
                 )
             );
             volScalarField& Yt = tYt.ref();
 
-            forAll(Y(), i)
+            forAll(Y_, i)
             {
                 if (solveSpecie(i))
                 {
-                    Y()[i].boundLower(0);
-                    Yt += Y()[i];
+                    Y_[i].bound(0, 1);
+                    Yt += Y_[i];
                 }
             }
 
-            Y()[defaultSpeciei_] = scalar(1) - Yt;
-            Y()[defaultSpeciei_].boundLower(0);
+            Y_[defaultSpeciei_] = scalar(1) - Yt;
+            Y_[defaultSpeciei_].boundLower(0);
         }
 
         if (Ydefault_.valid() && Ydefault_->writeOpt() == IOobject::NO_WRITE)
         {
             Ydefault_.clear();
         }
+    }
+    else
+    {
+        scaleMassFractions();
     }
 }
 
