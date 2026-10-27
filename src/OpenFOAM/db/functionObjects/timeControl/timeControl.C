@@ -600,8 +600,8 @@ bool Foam::timeControl::execute()
                     intervalCounts_,
                     after(time_.value()),
                     0,
-                    writeTimeIndex_,
-                    0,
+                    writeTimeIndex_ - 1,
+                    1,
                     offsetCount_
                 );
 
