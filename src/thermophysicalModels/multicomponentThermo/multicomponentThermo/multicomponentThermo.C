@@ -97,19 +97,18 @@ Foam::multicomponentThermo::implementation::implementation
     const dictionary& dict,
     const speciesTable& species,
     const fvMesh& mesh,
-    const word& phaseName,
-    const bool requiresDefaultSpecie
+    const word& phaseName
 )
 :
     defaultSpecieName_
     (
-        requiresDefaultSpecie && species.size()
+        species.size()
       ? dict.lookup<word>("defaultSpecie")
       : word("undefined")
     ),
     defaultSpeciei_
     (
-        requiresDefaultSpecie && species.size()
+        species.size()
       ? species[defaultSpecieName_]
       : -1
     ),

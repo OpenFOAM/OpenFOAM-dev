@@ -345,8 +345,7 @@ public:
             const dictionary&,
             const speciesTable&,
             const fvMesh&,
-            const word&,
-            const bool requiresDefaultSpecie = false
+            const word&
         );
 
 
