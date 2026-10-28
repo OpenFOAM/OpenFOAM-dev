@@ -305,6 +305,13 @@ void Foam::multicomponentThermo::implementation::normaliseY()
     {
         scaleMassFractions();
     }
+    else
+    {
+        forAll(Y_, i)
+        {
+            Y_[i].bound(0, 1);
+        }
+    }
 }
 
 
