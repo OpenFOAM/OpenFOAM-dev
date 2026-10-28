@@ -39,6 +39,7 @@ void Foam::multicomponentThermo::implementation::scaleMassFractions()
 {
     if (Y_.size())
     {
+        InfoInFunction << endl;
         tmp<volScalarField> tYt
         (
             volScalarField::New
@@ -103,12 +104,12 @@ Foam::multicomponentThermo::implementation::implementation
     defaultSpecieName_
     (
         species.size()
-      ? dict.lookup<word>("defaultSpecie")
+      ? dict.lookupOrDefault<word>("defaultSpecie", "undefined")
       : word("undefined")
     ),
     defaultSpeciei_
     (
-        species.size()
+        species.size() && dict.found("defaultSpecie")
       ? species[defaultSpecieName_]
       : -1
     ),
@@ -207,7 +208,7 @@ Foam::multicomponentThermo::implementation::implementation
     }
 
     // If the mass fractions have been specified check and normalise
-    if (Yset)
+    if (Yset && defaultSpeciei_ != -1)
     {
         scaleMassFractions();
     }
@@ -310,10 +311,10 @@ void Foam::multicomponentThermo::implementation::normaliseY()
             Ydefault_.clear();
         }
     }
-    else
-    {
-        scaleMassFractions();
-    }
+    // else
+    // {
+    //     scaleMassFractions();
+    // }
 }
 
 
