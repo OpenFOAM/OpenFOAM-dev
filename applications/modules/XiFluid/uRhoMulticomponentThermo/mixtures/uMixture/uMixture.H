@@ -43,12 +43,15 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class uMixture Declaration
+                          Class uMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 class uMixture
 {
 public:
+
+    // Most uMixtures are not normal i.e. mass-fractions do not sum to 1
+    static const bool normal = false;
 
     // Constructors
 

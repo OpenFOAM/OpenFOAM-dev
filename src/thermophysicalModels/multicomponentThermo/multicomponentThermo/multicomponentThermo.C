@@ -39,7 +39,6 @@ void Foam::multicomponentThermo::implementation::scaleMassFractions()
 {
     if (Y_.size())
     {
-        InfoInFunction << endl;
         tmp<volScalarField> tYt
         (
             volScalarField::New
@@ -98,20 +97,23 @@ Foam::multicomponentThermo::implementation::implementation
     const dictionary& dict,
     const speciesTable& species,
     const fvMesh& mesh,
-    const word& phaseName
+    const word& phaseName,
+    const bool normal
 )
 :
     defaultSpecieName_
     (
-        species.size()
+        normal && species.size()
       ? dict.lookupOrDefault<word>("defaultSpecie", "undefined")
       : word("undefined")
     ),
     defaultSpeciei_
     (
-        species.size() && dict.found("defaultSpecie")
-      ? species[defaultSpecieName_]
-      : -1
+        normal
+      ? species.size() && dict.found("defaultSpecie")
+          ? species[defaultSpecieName_]
+          : -1
+      : -2
     ),
     normalisationLimit_
     (
@@ -119,19 +121,6 @@ Foam::multicomponentThermo::implementation::implementation
     ),
     Y_(species.size())
 {
-    if
-    (
-        species.size()
-     && defaultSpecieName_ != "undefined"
-     && defaultSpeciei_ == -1
-    )
-    {
-        FatalIOErrorInFunction(dict)
-            << "default specie " << defaultSpecieName_
-            << " not found in available species " << species
-            << exit(FatalIOError);
-    }
-
     bool Yset = false;
 
     // Read the species' mass fractions
@@ -207,8 +196,9 @@ Foam::multicomponentThermo::implementation::implementation
         }
     }
 
-    // If the mass fractions have been specified check and normalise
-    if (Yset && defaultSpeciei_ != -1)
+    // If the mass fractions have been specified
+    // check and normalise if normal
+    if (Yset && defaultSpeciei_ != -2)
     {
         scaleMassFractions();
     }
@@ -278,7 +268,7 @@ Foam::multicomponentThermo::implementation::Y() const
 
 void Foam::multicomponentThermo::implementation::normaliseY()
 {
-    if (defaultSpeciei_ != -1)
+    if (defaultSpeciei_ >= 0)
     {
         if (species().size())
         {
@@ -311,10 +301,10 @@ void Foam::multicomponentThermo::implementation::normaliseY()
             Ydefault_.clear();
         }
     }
-    // else
-    // {
-    //     scaleMassFractions();
-    // }
+    else if (defaultSpeciei_ == -1)
+    {
+        scaleMassFractions();
+    }
 }
 
 

@@ -159,7 +159,8 @@ public:
                 dict,
                 mixture.species(),
                 mesh,
-                phaseName
+                phaseName,
+                MixtureType::normal
             )
         {}
 };

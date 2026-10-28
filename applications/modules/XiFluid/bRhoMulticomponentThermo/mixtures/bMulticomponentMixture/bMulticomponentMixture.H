@@ -59,6 +59,9 @@ public:
     //- Runtime type information
     ClassName("bMulticomponent");
 
+    //- uMulticomponentMixture in normal, i.e. mass-fractions sum to 1
+    static const bool normal = true;
+
 
     // Constructors
 

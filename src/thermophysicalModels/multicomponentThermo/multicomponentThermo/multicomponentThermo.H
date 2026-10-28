@@ -316,6 +316,8 @@ class multicomponentThermo::implementation
         word defaultSpecieName_;
 
         //- The index of the default specie
+        //  -1 if no default specie selected
+        //  -2 if the specie mass-fractions are not normal i.e. do not sum to 1
         label defaultSpeciei_;
 
         //- Mass-fraction sum error limit for scaling normalisation
@@ -345,7 +347,8 @@ public:
             const dictionary&,
             const speciesTable&,
             const fvMesh&,
-            const word&
+            const word&,
+            const bool normal = true
         );
 
 
@@ -356,6 +359,8 @@ public:
     // Member Functions
 
         //- The index of the default specie
+        //  -1 if no default specie selected
+        //  -2 if the specie mass-fractions are not normal i.e. do not sum to 1
         virtual label defaultSpecie() const;
 
         //- Synchronise the specie active flags

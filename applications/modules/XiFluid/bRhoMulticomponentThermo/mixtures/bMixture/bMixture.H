@@ -43,12 +43,15 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class bMixture Declaration
+                           Class bMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 class bMixture
 {
 public:
+
+    // Most bMixtures are not normal i.e. mass-fractions do not sum to 1
+    static const bool normal = false;
 
     // Constructors
 
