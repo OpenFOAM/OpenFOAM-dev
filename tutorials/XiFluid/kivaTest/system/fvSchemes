@@ -30,12 +30,12 @@ divSchemes
 
     div(phi,U)          Gauss upwind;
 
-    div(phi,b)          Gauss vanAlbada01;
-    div(phiXi,Xi)       Gauss limitedVanAlbada 1 10;
+    div(phi,b)          Gauss vanAlbada;
+    div(phiXi,Xi)       Gauss vanAlbada;
 
-    div(alphaPhi,fu)    Gauss vanAlbada01;
-    div(alphaPhi,ft)    Gauss vanAlbada01;
-    div(alphaPhi,egr)   Gauss vanAlbada01;
+    div(alphaPhi,fu)    Gauss vanAlbada;
+    div(alphaPhi,ft)    Gauss vanAlbada;
+    div(alphaPhi,egr)   Gauss vanAlbada;
     div(alphaPhi,h)     Gauss vanAlbada;
     div(alphaPhi,K)     Gauss vanAlbada;
 

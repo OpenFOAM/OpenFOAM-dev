@@ -30,12 +30,12 @@ divSchemes
 
     div(phi,U)          Gauss limitedLinearV 1;
 
-    div(phi,b)          Gauss limitedLinear01 1;
+    div(phi,b)          Gauss limitedLinear 1;
     div(phiXi,Xi)       Gauss limitedLinear 1;
 
-    div(alphaPhi,fu)    Gauss limitedLinear01 1;
-    div(alphaPhi,ft)    Gauss limitedLinear01 1;
-    div(alphaPhi,egr)   Gauss limitedLinear01 1;
+    div(alphaPhi,fu)    Gauss limitedLinear 1;
+    div(alphaPhi,ft)    Gauss limitedLinear 1;
+    div(alphaPhi,egr)   Gauss limitedLinear 1;
     div(alphaPhi,h)     Gauss limitedLinear 1;
     div(alphaPhi,K)     Gauss limitedLinear 1;
 

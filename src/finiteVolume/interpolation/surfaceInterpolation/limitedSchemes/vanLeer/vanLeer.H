@@ -77,7 +77,14 @@ public:
             faceFlux, phiP, phiN, gradcP, gradcN, d
         );
 
-        return (r + mag(r))/(1 + mag(r));
+        // if (mag(phiP) > 1e-8 && mag(phiN) > 1e-8)
+        // {
+            return (r + mag(r))/(1 + mag(r));
+        // }
+        // else
+        // {
+        //     return 1;
+        // }
     }
 };
 

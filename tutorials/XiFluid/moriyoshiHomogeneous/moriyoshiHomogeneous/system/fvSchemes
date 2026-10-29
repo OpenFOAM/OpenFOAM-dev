@@ -30,7 +30,7 @@ divSchemes
 
     div(phi,U)          Gauss limitedLinearV 1;
 
-    div(phi,b)          Gauss limitedLinear01 1;
+    div(phi,b)          Gauss limitedLinear 1;
     div(phiXi,Xi)       Gauss limitedLinear 1;
 
     div(alphaPhi,h)     Gauss limitedLinear 1;

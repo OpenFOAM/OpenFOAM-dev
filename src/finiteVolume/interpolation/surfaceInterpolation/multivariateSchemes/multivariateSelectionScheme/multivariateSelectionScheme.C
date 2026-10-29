@@ -29,7 +29,6 @@ License
 #include "surfaceFields.H"
 #include "upwind.H"
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -76,6 +75,7 @@ Foam::multivariateSelectionScheme<Type>::multivariateSelectionScheme
             schemes_.lookup(iter()->name())
         )().limiter(*iter())
     );
+    limiter.rename(schemes_.name().name());
 
     for (++iter; iter != this->fields().end(); ++iter)
     {
@@ -89,6 +89,13 @@ Foam::multivariateSelectionScheme<Type>::multivariateSelectionScheme
                 schemes_.lookup(iter()->name())
             )().limiter(*iter())
         );
+    }
+
+    if (debug)
+    {
+        InfoInFunction
+            << limiter.name()
+            << ": average limiter " << average(limiter) << endl;
     }
 
     weights_ =
