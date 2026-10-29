@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,19 +72,12 @@ public:
         const vector& d
     ) const
     {
-        scalar r = LimiterFunc::r
+        const scalar r = LimiterFunc::r
         (
             faceFlux, phiP, phiN, gradcP, gradcN, d
         );
 
-        // if (mag(phiP) > 1e-8 && mag(phiN) > 1e-8)
-        // {
-            return (r + mag(r))/(1 + mag(r));
-        // }
-        // else
-        // {
-        //     return 1;
-        // }
+        return (r + mag(r))/(1 + mag(r));
     }
 };
 
