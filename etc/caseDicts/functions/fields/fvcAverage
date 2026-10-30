@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates a cell-centred volField by averaging the face values of a
+    surfaceField using fvc::average.
+
+\*---------------------------------------------------------------------------*/
+
+type            fvcAverage;
+libs            ("libfieldFunctionObjects.so");
+
+field           <fieldName>;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

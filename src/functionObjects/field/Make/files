@@ -49,6 +49,7 @@ MachNo/MachNo.C
 shearStress/shearStress.C
 totalEnthalpy/totalEnthalpy.C
 reconstruct/reconstruct.C
+fvcAverage/fvcAverage_functionObject.C
 power/power.C
 tr/tr.C
 
