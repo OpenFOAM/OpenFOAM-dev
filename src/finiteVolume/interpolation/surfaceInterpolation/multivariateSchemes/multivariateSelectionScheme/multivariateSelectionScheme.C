@@ -28,6 +28,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "upwind.H"
+#include "fvcAverage.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,7 +76,7 @@ Foam::multivariateSelectionScheme<Type>::multivariateSelectionScheme
             schemes_.lookup(iter()->name())
         )().limiter(*iter())
     );
-    limiter.rename(schemes_.name().name());
+    limiter.rename(word("Limiter(", schemes_.name().name(), ')'));
 
     for (++iter; iter != this->fields().end(); ++iter)
     {
@@ -93,8 +94,7 @@ Foam::multivariateSelectionScheme<Type>::multivariateSelectionScheme
 
     if (debug)
     {
-        InfoInFunction
-            << limiter.name()
+        Info<< type() << " " << limiter.name()
             << ": average limiter " << average(limiter) << endl;
     }
 

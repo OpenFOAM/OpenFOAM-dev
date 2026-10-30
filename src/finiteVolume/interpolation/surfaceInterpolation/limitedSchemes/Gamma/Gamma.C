@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LimitedScheme.H"
-#include "Limited.H"
+#include "Filtered.H"
 #include "Gamma.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -36,8 +36,8 @@ namespace Foam
 
     makeLLimitedSurfaceInterpolationTypeScheme
     (
-        limitedGamma,
-        LimitedLimiter,
+        filteredGamma,
+        FilteredLimiter,
         GammaLimiter,
         NVDTVD,
         magSqr,

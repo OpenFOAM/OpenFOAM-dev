@@ -29,7 +29,13 @@ divSchemes
     default         none;
 
     div(phi,U)      Gauss limitedLinearV 1;
-    div(phi,Yi_h)   Gauss limitedLinear 1;
+
+    div(phi,Yi_h)   Gauss multivariateSelection
+    {
+        ".*"            filteredVanLeer 1e-6;
+        h               limitedLinear 1;
+    };
+
     div(phi,K)      Gauss limitedLinear 1;
     div(phid,p)     Gauss limitedLinear 1;
     div(phi,epsilon) Gauss limitedLinear 1;

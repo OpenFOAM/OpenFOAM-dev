@@ -15,5 +15,11 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #includeFunc Qdot
+#includeFunc fvcAverage(Limiter(div(phi,Yi_h)))
+#includeFunc writeObjects
+(
+    Limiter(div(phi,Yi_h)),
+    fvcAverage(Limiter(div(phi,Yi_h)))
+)
 
 // ************************************************************************* //

@@ -39,8 +39,6 @@ SourceFiles
 #ifndef vanAlbada_H
 #define vanAlbada_H
 
-#include "vector.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -57,6 +55,9 @@ class vanAlbadaLimiter
 {
 
 public:
+
+    //- Maximum asymptotic value of the limiter
+    static constexpr scalar maxLimit = 1;
 
     vanAlbadaLimiter(Istream&)
     {}

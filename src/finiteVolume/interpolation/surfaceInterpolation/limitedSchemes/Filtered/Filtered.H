@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::LimitedLimiter
+    Foam::FilteredLimiter
 
 Description
-    Foam::LimitedLimiter
+    Foam::FilteredLimiter
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Limited_H
-#define Limited_H
+#ifndef Filtered_H
+#define Filtered_H
 
 #include "vector.H"
 
@@ -40,54 +40,35 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class LimitedLimiter Declaration
+                       Class FilteredLimiter Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class LimitedScheme>
-class LimitedLimiter
+class FilteredLimiter
 :
     public LimitedScheme
 {
-    //- Lower and upper bound of the variable
-    scalar lowerBound_, upperBound_;
-
-    void checkParameters(Istream& is)
-    {
-        if (lowerBound_ > upperBound_)
-        {
-            FatalIOErrorInFunction(is)
-                << "Invalid bounds.  Lower = " << lowerBound_
-                << "  Upper = " << upperBound_
-                << ".  Lower bound is higher than the upper bound."
-                << exit(FatalIOError);
-        }
-    }
+    //- Lower limit of the variable below which the limiter is not applied
+    scalar lowerLimit_;
 
 
 public:
 
-    LimitedLimiter
+    FilteredLimiter
     (
-        const scalar lowerBound,
-        const scalar upperBound,
+        const scalar lowerLimit,
         Istream& is
     )
     :
         LimitedScheme(is),
-        lowerBound_(lowerBound),
-        upperBound_(upperBound)
-    {
-        checkParameters(is);
-    }
+        lowerLimit_(lowerLimit)
+    {}
 
-    LimitedLimiter(Istream& is)
+    FilteredLimiter(Istream& is)
     :
         LimitedScheme(is),
-        lowerBound_(readScalar(is)),
-        upperBound_(readScalar(is))
-    {
-        checkParameters(is);
-    }
+        lowerLimit_(readScalar(is))
+    {}
 
 
     scalar limiter
@@ -101,22 +82,13 @@ public:
         const vector& d
     ) const
     {
-        // If not between the lower and upper bounds use upwind
         if
         (
-            (faceFlux > 0 && (phiP < lowerBound_ || phiN > upperBound_))
-         || (faceFlux < 0 && (phiN < lowerBound_ || phiP > upperBound_))
-         /*
-            phiP < lowerBound_
-         || phiP > upperBound_
-         || phiN < lowerBound_
-         || phiN > upperBound_
-         */
+            mag(phiP) > lowerLimit_
+         && mag(phiN) > lowerLimit_
+         && mag(d & gradcP) > lowerLimit_
+         && mag(d & gradcN) > lowerLimit_
         )
-        {
-            return 0;
-        }
-        else
         {
             return LimitedScheme::limiter
             (
@@ -128,6 +100,10 @@ public:
                 gradcN,
                 d
             );
+        }
+        else
+        {
+            return LimitedScheme::maxLimit;
         }
     }
 };

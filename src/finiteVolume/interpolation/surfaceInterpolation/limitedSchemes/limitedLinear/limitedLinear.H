@@ -60,6 +60,9 @@ class limitedLinearLimiter
 
 public:
 
+    //- Maximum asymptotic value of the limiter
+    static constexpr scalar maxLimit = 1;
+
     limitedLinearLimiter(Istream& is)
     :
         k_(readScalar(is))

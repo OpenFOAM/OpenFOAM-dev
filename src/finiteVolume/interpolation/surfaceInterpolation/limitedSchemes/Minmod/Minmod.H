@@ -38,8 +38,6 @@ SourceFiles
 #ifndef Minmod_H
 #define Minmod_H
 
-#include "vector.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -56,6 +54,9 @@ class MinmodLimiter
 {
 
 public:
+
+    //- Maximum asymptotic value of the limiter
+    static constexpr scalar maxLimit = 1;
 
     MinmodLimiter(Istream&)
     {}

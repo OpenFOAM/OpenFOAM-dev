@@ -39,8 +39,6 @@ SourceFiles
 #ifndef Gamma_H
 #define Gamma_H
 
-#include "vector.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -58,6 +56,9 @@ class GammaLimiter
     scalar k_;
 
 public:
+
+    //- Maximum asymptotic value of the limiter
+    static constexpr scalar maxLimit = 1;
 
     GammaLimiter(Istream& is)
     :

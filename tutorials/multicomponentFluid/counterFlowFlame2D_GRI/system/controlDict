@@ -48,4 +48,9 @@ adjustTimeStep  yes;
 
 maxCo           0.4;
 
+cacheTemporaryObjects
+(
+    Limiter(div(phi,Yi_h))
+);
+
 // ************************************************************************* //

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LimitedScheme.H"
-#include "Limited.H"
+#include "Filtered.H"
 #include "vanAlbada.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -36,8 +36,8 @@ namespace Foam
 
     makeLLimitedSurfaceInterpolationTypeScheme
     (
-        limitedVanAlbada,
-        LimitedLimiter,
+        filteredVanAlbada,
+        FilteredLimiter,
         vanAlbadaLimiter,
         NVDTVD,
         magSqr,

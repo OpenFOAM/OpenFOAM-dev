@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LimitedScheme.H"
+#include "Filtered.H"
 #include "Minmod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -32,6 +33,16 @@ namespace Foam
 {
     makeLimitedSurfaceInterpolationScheme(Minmod, MinmodLimiter)
     makeLimitedVSurfaceInterpolationScheme(MinmodV, MinmodLimiter)
+
+    makeLLimitedSurfaceInterpolationTypeScheme
+    (
+        filteredMinmod,
+        FilteredLimiter,
+        MinmodLimiter,
+        NVDTVD,
+        magSqr,
+        scalar
+    )
 }
 
 // ************************************************************************* //
