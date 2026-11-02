@@ -36,6 +36,7 @@ divSchemes
         h               limitedLinear 1;
     };
 
+    div(phi,K)      Gauss limitedLinear 1;
     div(phid,p)     Gauss limitedLinear 1;
     div(phi,epsilon) Gauss limitedLinear 1;
     div(phi,k) Gauss limitedLinear 1;

@@ -105,6 +105,15 @@ public:
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const = 0;
 
+        //- Return the net diffusion adjusted mass flux [W/m^2]
+        virtual tmp<surfaceScalarField> phi
+        (
+            const tmp<surfaceScalarField>& phi_
+        ) const
+        {
+            return phi_;
+        }
+
         //- Predict the thermophysical transport coefficients if possible
         //  without solving thermophysical transport model equations
         virtual void predict() = 0;

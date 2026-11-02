@@ -178,6 +178,12 @@ public:
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
+        //- Return the net diffusion adjusted mass flux [W/m^2]
+        virtual tmp<surfaceScalarField> phi
+        (
+            const tmp<surfaceScalarField>& phi_
+        ) const;
+
         //- Update the diffusion coefficients
         virtual void predict();
 

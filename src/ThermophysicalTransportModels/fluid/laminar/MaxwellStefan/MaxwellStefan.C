@@ -419,6 +419,13 @@ MaxwellStefan<BasicThermophysicalTransportModel>::MaxwellStefan
     invA(A.m()),
     D_(W.size())
 {
+    if (this->thermo().defaultSpecie() < 0)
+    {
+        FatalErrorInFunction
+           << "Required defaultSpecie not specified"
+           << exit(FatalError);
+    }
+
     // Set the molecular weights of the species
     forAll(W, i)
     {

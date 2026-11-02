@@ -397,6 +397,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
             }
         }
 
+        if (this->thermo().defaultSpecie() >= 0)
         {
             const label i = this->thermo().defaultSpecie();
 
@@ -450,6 +451,7 @@ tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::q
             }
         }
 
+        if (this->thermo().defaultSpecie() >= 0)
         {
             const label i = this->thermo().defaultSpecie();
 
@@ -525,6 +527,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
         }
     }
 
+    if (this->thermo().defaultSpecie() >= 0)
     {
         const label i = this->thermo().defaultSpecie();
 
@@ -615,6 +618,36 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
     else
     {
         return BasicThermophysicalTransportModel::divj(Yi);
+    }
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::phi
+(
+    const tmp<surfaceScalarField>& phi_
+) const
+{
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+
+    if (Y.size() && this->thermo().defaultSpecie() < 0)
+    {
+        surfaceScalarField sumj(this->j(Y[0]));
+
+        for (label i=1; i<Y.size(); i++)
+        {
+            sumj += this->j(Y[i]);
+        }
+
+        return surfaceScalarField::New
+        (
+            phi_().name(),
+            phi_ - sumj*this->thermo().mesh().magSf()
+        );
+    }
+    else
+    {
+        return phi_;
     }
 }
 
