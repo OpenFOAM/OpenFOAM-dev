@@ -50,48 +50,64 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
     {
         forAll(Y, i)
         {
-            Dm_.set(i, DmFuncs_[i].value(p, T));
+            Dm_.set
+            (
+                i,
+                volScalarField::New
+                (
+                    "Dm_" + Y[i].name(),
+                    DmFuncs_[i].value(p, T)
+                )
+            );
         }
     }
     else
     {
-        const volScalarField Wm(this->thermo().W());
-        volScalarField sumXbyD
-        (
-            volScalarField::New
+        PtrList<volScalarField> sumrDm(Y.size());
+
+        forAll(Y, i)
+        {
+            sumrDm.set
             (
-                "sumXbyD",
-                T.mesh(),
-                inv(dimensions::kinematicDiffusivity)/Wm.dimensions()
-            )
-        );
+                i,
+                volScalarField::New
+                (
+                    "sumrDm_" + name(i),
+                    T.mesh(),
+                    dimensionedScalar
+                    (
+                        dimensions::moles
+                       /(dimensions::mass*dimensions::kinematicDiffusivity),
+                        0
+                    )
+                )
+            );
+
+            for(label j=0; j<i; j++)
+            {
+                const volScalarField Dji(DFuncs_[j][i].value(p, T));
+                const dimensionedScalar Wi(this->thermo().Wi(i));
+                const dimensionedScalar Wj(this->thermo().Wi(j));
+
+                sumrDm[i] += Y[j]*(1/Wj + (1/Wi - 1/Wj)*Y[i])/Dji;
+                sumrDm[j] += Y[i]*(1/Wi + (1/Wj - 1/Wi)*Y[j])/Dji;
+            }
+        }
+
+        const volScalarField Wm(this->thermo().W());
 
         forAll(Dm_, i)
         {
-            sumXbyD = Zero;
-
-            forAll(Y, j)
-            {
-                if (j != i)
-                {
-                    sumXbyD +=
-                        Y[j]
-                       /(
-                            this->thermo().Wi(j)
-                           *(
-                                i < j
-                              ? DFuncs_[i][j].value(p, T)
-                              : DFuncs_[j][i].value(p, T)
-                           )
-                       );
-                }
-            }
-
+            // For numerical stability set as Yi -> 1, Dm -> Dii
             Dm_.set
             (
                 i,
-                (1/Wm - Y[i]/this->thermo().Wi(i))
-               /max(sumXbyD, dimensionedScalar(sumXbyD.dimensions(), small))
+                volScalarField::New
+                (
+                    "Dm_" + Y[i].name(),
+                    max(1 - Y[i], small)
+                   /max(sumrDm[i]*Wm, small/DFuncs_[i][i].value(p, T))
+                )
             );
         }
     }
