@@ -370,11 +370,11 @@ MaxwellStefan<BasicThermophysicalTransportModel>::Di() const
     if (!Di_.size())
     {
         const PtrList<volScalarField>& Y = this->thermo().Y();
-        Di_.setSize(Y.size()); // <-- Mark as to be computed from now on
+        Di_.setSize(Y.size()); // <-- Mark to be computed from now on
         updateDii();
     }
 
-    return Dii_;
+    return Di_;
 }
 
 
@@ -688,7 +688,7 @@ tmp<scalarField> MaxwellStefan<BasicThermophysicalTransportModel>::q
       - (
             this->alpha().boundaryField()[patchi]
            *this->kappaEff(patchi)
-           *this->thermo().T().boundaryField()[patchi]
+           *this->thermo().T().boundaryField()[patchi].snGrad()
         )
     );
 
