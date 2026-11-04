@@ -39,6 +39,7 @@ void Foam::multicomponentThermo::implementation::scaleMassFractions()
 {
     if (Y_.size())
     {
+        Y_[0].bound(0, 1);
         tmp<volScalarField> tYt
         (
             volScalarField::New
