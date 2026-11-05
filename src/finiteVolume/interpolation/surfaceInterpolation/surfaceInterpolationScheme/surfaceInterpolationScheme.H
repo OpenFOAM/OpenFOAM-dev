@@ -108,6 +108,13 @@ public:
         //- Disallow default bitwise copy construction
         surfaceInterpolationScheme(const surfaceInterpolationScheme&) = delete;
 
+        //- Dummy clone function
+        //  to support PtrList<surfaceInterpolationScheme<Type>>
+        tmp<surfaceInterpolationScheme<Type>> clone() const
+        {
+            NotImplemented;
+            return tmp<surfaceInterpolationScheme<Type>>(nullptr);
+        }
 
 
     // Selectors

@@ -443,6 +443,7 @@ $(schemes)/cellCoBlended/cellCoBlended.C
 $(schemes)/deferred/deferred.C
 $(schemes)/localMax/localMax.C
 $(schemes)/localMin/localMin.C
+$(schemes)/zonal/zonal_surfaceInterpolationScheme.C
 
 $(schemes)/linearFit/linearFit.C
 $(schemes)/biLinearFit/biLinearFit.C
