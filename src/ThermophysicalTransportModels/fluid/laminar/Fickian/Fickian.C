@@ -98,6 +98,8 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
 
         forAll(Dm_, i)
         {
+            const volScalarField Dii(DFuncs_[i][i].value(p, T));
+
             // For numerical stability set as Yi -> 1, Dm -> Dii
             Dm_.set
             (
@@ -105,8 +107,8 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
                 volScalarField::New
                 (
                     "Dm_" + Y[i].name(),
-                    max(1 - Y[i], small)
-                   /max(sumrDm[i]*Wm, small/DFuncs_[i][i].value(p, T))
+                    Dii*max(1 - Y[i], small)
+                   /max(Dii*sumrDm[i]*Wm, small)
                 )
             );
         }
