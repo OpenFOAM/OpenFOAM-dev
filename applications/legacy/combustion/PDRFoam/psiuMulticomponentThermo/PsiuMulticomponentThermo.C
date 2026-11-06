@@ -30,7 +30,10 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
+void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate
+(
+    const bool correctBCs
+)
 {
     const scalarField& hCells = this->he_;
     const scalarField& heuCells = this->heu_;
@@ -106,6 +109,13 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
 
         if (TPf.fixesValue())
         {
+            if (correctBCs)
+            {
+                // Update temperature boundary condition
+                // for consistency with updated internal temperature
+                TPf.evaluate();
+            }
+
             forAll(TPf, facei)
             {
                 auto composition =
@@ -205,7 +215,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::PsiuMulticomponentThermo
 {
     this->heuBoundaryCorrection(this->heu_);
 
-    calculate();
+    calculate(false);
 
     this->psi_.oldTime(); // Switch on saving old time
 }
@@ -221,7 +231,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::~PsiuMulticomponentThermo()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::PsiuMulticomponentThermo<BaseThermo>::correct()
+void Foam::PsiuMulticomponentThermo<BaseThermo>::correct(const bool correctBCs)
 {
     if (BaseThermo::debug)
     {
@@ -231,7 +241,7 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::correct()
     // force the saving of the old-time values
     this->psi_.oldTime();
 
-    calculate();
+    calculate(correctBCs);
 
     if (BaseThermo::debug)
     {

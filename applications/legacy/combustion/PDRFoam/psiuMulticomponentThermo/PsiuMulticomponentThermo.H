@@ -64,7 +64,7 @@ class PsiuMulticomponentThermo
     // Private Member Functions
 
         //- Calculate the thermo variables
-        void calculate();
+        void calculate(const bool correctBCs);
 
 
 public:
@@ -88,7 +88,7 @@ public:
     // Member Functions
 
         //- Update properties
-        virtual void correct();
+        virtual void correct(const bool correctBCs = true);
 
 
         // Mass fractions

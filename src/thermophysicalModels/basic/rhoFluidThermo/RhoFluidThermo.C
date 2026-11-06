@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::RhoFluidThermo<BaseThermo>::calculate()
+void Foam::RhoFluidThermo<BaseThermo>::calculate(const bool correctBCs)
 {
     const scalarField& hCells = this->he();
     const scalarField& pCells = this->p_;
@@ -112,6 +112,13 @@ void Foam::RhoFluidThermo<BaseThermo>::calculate()
 
         if (pT.fixesValue())
         {
+            if (correctBCs)
+            {
+                // Update temperature boundary condition
+                // for consistency with updated internal temperature
+                pT.evaluate();
+            }
+
             forAll(pT, facei)
             {
                 auto composition =
@@ -175,7 +182,7 @@ Foam::RhoFluidThermo<BaseThermo>::RhoFluidThermo
 :
     BaseThermo(mesh, phaseName)
 {
-    calculate();
+    calculate(false);
 }
 
 
@@ -189,14 +196,14 @@ Foam::RhoFluidThermo<BaseThermo>::~RhoFluidThermo()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::RhoFluidThermo<BaseThermo>::correct()
+void Foam::RhoFluidThermo<BaseThermo>::correct(const bool correctBCs)
 {
     if (BaseThermo::debug)
     {
         InfoInFunction << endl;
     }
 
-    calculate();
+    calculate(correctBCs);
 
     if (BaseThermo::debug)
     {

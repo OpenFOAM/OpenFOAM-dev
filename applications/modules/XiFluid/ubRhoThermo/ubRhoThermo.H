@@ -166,7 +166,7 @@ public:
         virtual const word& phaseName() const;
 
         //- Update properties
-        virtual void correct();
+        virtual void correct(const bool correctBCs = true);
 
         //- Return the name of the mixture (not implemented)
         virtual word mixtureName() const;

@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::PsiThermo<BaseThermo>::calculate()
+void Foam::PsiThermo<BaseThermo>::calculate(const bool correctBCs)
 {
     const scalarField& hCells = this->he_;
     const scalarField& pCells = this->p_;
@@ -106,6 +106,13 @@ void Foam::PsiThermo<BaseThermo>::calculate()
 
         if (pT.fixesValue())
         {
+            if (correctBCs)
+            {
+                // Update temperature boundary condition
+                // for consistency with updated internal temperature
+                pT.evaluate();
+            }
+
             forAll(pT, facei)
             {
                 auto composition =
@@ -167,7 +174,7 @@ Foam::PsiThermo<BaseThermo>::PsiThermo
 :
     BaseThermo(mesh, phaseName)
 {
-    calculate();
+    calculate(false);
 
     // Switch on saving old time
     this->psi_.oldTime();
@@ -184,7 +191,7 @@ Foam::PsiThermo<BaseThermo>::~PsiThermo()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::PsiThermo<BaseThermo>::correct()
+void Foam::PsiThermo<BaseThermo>::correct(const bool correctBCs)
 {
     if (BaseThermo::debug)
     {
@@ -194,7 +201,7 @@ void Foam::PsiThermo<BaseThermo>::correct()
     // force the saving of the old-time values
     this->psi_.oldTime();
 
-    calculate();
+    calculate(correctBCs);
 
     if (BaseThermo::debug)
     {

@@ -376,7 +376,7 @@ const Foam::volVectorField& Foam::constSolidThermo::Kappa() const
 }
 
 
-void Foam::constSolidThermo::correct()
+void Foam::constSolidThermo::correct(const bool correctBCs)
 {
     T_ = e_/Cv_;
 }

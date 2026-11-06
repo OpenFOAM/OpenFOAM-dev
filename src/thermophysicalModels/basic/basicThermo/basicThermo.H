@@ -240,7 +240,7 @@ public:
         ) const;
 
         //- Update properties
-        virtual void correct() = 0;
+        virtual void correct(const bool correctBCs = true) = 0;
 
         //- Name of the mixture
         virtual word mixtureName() const = 0;

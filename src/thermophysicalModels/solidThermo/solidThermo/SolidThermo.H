@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ protected:
     // Private Member Functions
 
         //- Calculate the thermo variables
-        void calculate();
+        void calculate(const bool correctBCs);
 
 
 public:
@@ -83,7 +83,7 @@ public:
     // Member Functions
 
         //- Update properties
-        virtual void correct();
+        virtual void correct(const bool correctBCs = true);
 
         //- Return true if thermal conductivity is isotropic
         virtual bool isotropic() const

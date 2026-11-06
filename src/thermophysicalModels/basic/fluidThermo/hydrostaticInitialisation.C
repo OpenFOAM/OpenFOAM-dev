@@ -72,7 +72,7 @@ void Foam::hydrostaticInitialisation
         if (!mesh.time().restart())
         {
             p = ph_rgh + rho*gh + pRef;
-            thermo.correct();
+            thermo.correct(false);
             rho = thermo.rho();
 
             label nCorr
@@ -101,7 +101,7 @@ void Foam::hydrostaticInitialisation
                 ph_rghEqn.solve();
 
                 p = ph_rgh + rho*gh + pRef;
-                thermo.correct();
+                thermo.correct(false);
                 rho = thermo.rho();
 
                 Info<< "Hydrostatic pressure variation "

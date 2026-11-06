@@ -418,7 +418,7 @@ public:
 
 
         //- Update properties
-        virtual void correct();
+        virtual void correct(const bool correctBCs = true);
 };
 
 

@@ -136,10 +136,10 @@ Foam::word Foam::ubRhoThermo::thermoName() const
 }
 
 
-void Foam::ubRhoThermo::correct()
+void Foam::ubRhoThermo::correct(const bool correctBCs)
 {
-    uThermo_->correct();
-    bThermo_->correct();
+    uThermo_->correct(correctBCs);
+    bThermo_->correct(correctBCs);
 
     rho_ = 1.0/(b_/uThermo_->rho() + c_/bThermo_->rho());
     psi_ = 1.0/(b_/uThermo_->psi() + c_/bThermo_->psi());

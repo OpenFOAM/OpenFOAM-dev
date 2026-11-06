@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::SolidThermo<BaseThermo>::calculate()
+void Foam::SolidThermo<BaseThermo>::calculate(const bool correctBCs)
 {
     const bool isotropic = this->isotropic();
 
@@ -115,6 +115,13 @@ void Foam::SolidThermo<BaseThermo>::calculate()
 
         if (pT.fixesValue())
         {
+            if (correctBCs)
+            {
+                // Update temperature boundary condition
+                // for consistency with updated internal temperature
+                pT.evaluate();
+            }
+
             forAll(pT, facei)
             {
                 auto composition =
@@ -205,7 +212,7 @@ Foam::SolidThermo<BaseThermo>::SolidThermo
         dimensionedVector(dimensions::thermalConductivity, Zero)
     )
 {
-    calculate();
+    calculate(false);
 }
 
 
@@ -219,14 +226,14 @@ Foam::SolidThermo<BaseThermo>::~SolidThermo()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::SolidThermo<BaseThermo>::correct()
+void Foam::SolidThermo<BaseThermo>::correct(const bool correctBCs)
 {
     if (BaseThermo::debug)
     {
         InfoInFunction << endl;
     }
 
-    calculate();
+    calculate(correctBCs);
 
     if (BaseThermo::debug)
     {
