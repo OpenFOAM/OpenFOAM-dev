@@ -1004,7 +1004,10 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
             << endl << this->info() << endl;
     }
 
-    readIfPresent();
+    if (!readIfPresent())
+    {
+        boundaryField_.evaluate();
+    }
 }
 
 
@@ -1040,7 +1043,10 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 
     tdf.clear();
 
-    readIfPresent();
+    if (!readIfPresent())
+    {
+        boundaryField_.evaluate();
+    }
 }
 
 
