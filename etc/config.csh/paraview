@@ -52,18 +52,23 @@ case none:
 
 case system:
 
-    which pvdataserver > /dev/null
+    # Get the version from pvdataserver, because unlike paraview or pvserver
+    # this can be run without needing to load graphics libraries
+    set pvdataserverVersion=`unset LD_LIBRARY_PATH && \
+        timeout 10 pvdataserver --version`
+
     if ( $status == 0 ) then
         # Determine the version
-        setenv ParaView_VERSION `unset LD_LIBRARY_PATH && \
-                                 pvdataserver --version | \
-                                 awk '{print $NF}'`
+        setenv ParaView_VERSION `echo $pvdataserverVersion | sed 's/^.* //g'`
         setenv ParaView_MAJOR `echo $ParaView_VERSION | sed 's/\.[^\.]\+$//g'`
 
         # Set the plugin directory
         setenv PV_PLUGIN_PATH $FOAM_LIBBIN/paraview-$ParaView_MAJOR
         setenv LD_LIBRARY_PATH ${PV_PLUGIN_PATH}:${LD_LIBRARY_PATH}
     endif
+
+    unset pvdataserverVersion
+    breaksw
 
 case paraviewopenfoam:
 

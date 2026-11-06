@@ -53,18 +53,23 @@ none)
 
 system)
 
-    if which pvdataserver > /dev/null 2>&1
+    # Get the version from pvdataserver, because unlike paraview or pvserver
+    # this can be run without needing to load graphics libraries
+    pvdataserverVersion=$(unset LD_LIBRARY_PATH && \
+        timeout 10 pvdataserver --version 2> /dev/null)
+
+    if [ $? -eq 0 ]
     then
         # Determine the version
-        export ParaView_VERSION=$(unset LD_LIBRARY_PATH && \
-                                  pvdataserver --version 2> /dev/null | \
-                                  awk '{print $NF}')
+        export ParaView_VERSION=${pvdataserverVersion##* }
         export ParaView_MAJOR=${ParaView_VERSION%.*}
 
         # Set the plugin directory
         export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
         export LD_LIBRARY_PATH=$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
     fi
+
+    unset pvdataserverVersion
     ;;
 
 paraviewopenfoam)
