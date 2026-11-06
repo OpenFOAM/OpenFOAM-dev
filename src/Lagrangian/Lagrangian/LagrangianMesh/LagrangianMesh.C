@@ -1057,7 +1057,8 @@ Foam::LagrangianMesh::LagrangianMesh
     statesPtr_(nullptr),
     offsetsPtr_(nullptr),
     subMeshIndex_(0),
-    schemesPtr_(nullptr)
+    schemesPtr_(nullptr),
+    globalData_(*this)
 {
     writeOpt() = writeOption;
 

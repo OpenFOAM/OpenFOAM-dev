@@ -12,6 +12,7 @@ LagrangianState/LagrangianState.C
 LagrangianMesh/LagrangianMesh.C
 LagrangianMesh/LagrangianSubMesh/LagrangianSubMesh.C
 LagrangianMesh/LagrangianBoundaryMesh/LagrangianBoundaryMesh.C
+LagrangianMesh/globalLagrangianMeshData/globalLagrangianMeshData.C
 
 # Equations
 LagrangianEqn/LagrangianVectorSp.C

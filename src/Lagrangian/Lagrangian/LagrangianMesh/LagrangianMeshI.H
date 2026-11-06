@@ -150,6 +150,13 @@ inline uint64_t Foam::LagrangianMesh::subMeshIndex() const
 }
 
 
+inline const Foam::globalLagrangianMeshData&
+Foam::LagrangianMesh::globalData() const
+{
+    return globalData_;
+}
+
+
 inline Foam::label Foam::LagrangianMesh::size() const
 {
     return coordinates().size();

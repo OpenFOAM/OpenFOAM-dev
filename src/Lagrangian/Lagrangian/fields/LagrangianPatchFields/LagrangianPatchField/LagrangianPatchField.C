@@ -382,6 +382,30 @@ void Foam::LagrangianPatchField<Type>::reset(const LagrangianPatchField<Type>&)
 
 
 template<class Type>
+void Foam::LagrangianPatchField<Type>::initEvaluate(const Pstream::commsTypes)
+{
+    if (!patch_.boundaryMesh().mesh().changing()) return;
+
+    FatalErrorInFunction
+        << "Cannot evaluate a Lagrangian patch field without providing "
+        << "the tracked fraction field"
+        << exit(FatalError);
+}
+
+
+template<class Type>
+void Foam::LagrangianPatchField<Type>::evaluate(const Pstream::commsTypes)
+{
+    if (!patch_.boundaryMesh().mesh().changing()) return;
+
+    FatalErrorInFunction
+        << "Cannot evaluate a Lagrangian patch field without providing "
+        << "the tracked fraction field"
+        << exit(FatalError);
+}
+
+
+template<class Type>
 void Foam::LagrangianPatchField<Type>::initEvaluate
 (
     PstreamBuffers&,

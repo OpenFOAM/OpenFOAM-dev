@@ -281,6 +281,18 @@ public:
 
         // Evaluation
 
+            //- Initialise evaluation of the patch field. Doesn't actually do
+            //  anything other than insist that the patch is empty. This just
+            //  provides interface consistency with other patch field types.
+            //  Actual evaluation is handled by the overload below.
+            void initEvaluate(const Pstream::commsTypes);
+
+            //- Initialise evaluation of the patch field. Doesn't actually do
+            //  anything other than insist that the patch is empty. This just
+            //  provides interface consistency with other patch field types.
+            //  Actual evaluation is handled by the overload below.
+            void evaluate(const Pstream::commsTypes);
+
             //- Initialise evaluation of the patch field
             virtual void initEvaluate
             (

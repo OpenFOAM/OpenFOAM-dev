@@ -46,6 +46,7 @@ SourceFiles
 #include "LagrangianSolution.H"
 #include "LagrangianState.H"
 #include "LagrangianSubMesh.H"
+#include "globalLagrangianMeshData.H"
 #include "labelIODynamicField.H"
 #include "polyMesh.H"
 
@@ -167,6 +168,9 @@ private:
 
         //- Solution controls created on demand
         mutable autoPtr<LagrangianSolution> solutionPtr_;
+
+        //- Global mesh data
+        globalLagrangianMeshData globalData_;
 
 
     // Private Member Functions
@@ -678,6 +682,9 @@ public:
 
             //- Access the solution controls
             const LagrangianSolution& solution() const;
+
+            //- Access the global mesh data
+            inline const globalLagrangianMeshData& globalData() const;
 
             //- Lookup all current-time fields of the given type
             template<class GeoField>
