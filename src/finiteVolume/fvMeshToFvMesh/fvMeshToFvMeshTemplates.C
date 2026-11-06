@@ -174,7 +174,8 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         (
             typedName("interpolate(" + srcFld.name() + ")"),
             srcToTgt<Type>(srcFld.internalField())(),
-            tgtPatchFields
+            tgtPatchFields,
+            srcFld.sources().table()
         );
     typename VolField<Type>::BoundaryField& tgtBfld =
         ttgtFld.ref().boundaryFieldRef();
@@ -227,7 +228,8 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         (
             typedName("interpolate(" + srcFld.name() + ")"),
             srcToTgt<Type>(srcFld(), leftOverTgtFld())(),
-            leftOverTgtFld.boundaryField()
+            leftOverTgtFld.boundaryField(),
+            leftOverTgtFld.sources().table()
         );
     typename VolField<Type>::BoundaryField& tgtBfld =
         ttgtFld.ref().boundaryFieldRef();
