@@ -65,7 +65,7 @@ bool Foam::functionObjects::log::calc()
         store
         (
             resultName_,
-            clip_ ? eval(Foam::log(max(x, clipValue_))) : eval(Foam::log(x))
+            clip_ ? Foam::log(max(x, clipValue_)) : Foam::log(x)
         );
 
         // Reinstate dimension checking
