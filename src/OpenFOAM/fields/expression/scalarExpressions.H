@@ -188,7 +188,7 @@ struct atan2Op
 };
 
 // Atan2 function
-BinaryFunction(atan2);
+BinaryEagerFunction(atan2);
 
 /*---------------------------------------------------------------------------*\
                             Class jnOp Declaration
@@ -236,7 +236,7 @@ struct ynOp
 };
 
 // Bessel function yn
-BinaryFunction(yn);
+BinaryEagerFunction(yn);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
