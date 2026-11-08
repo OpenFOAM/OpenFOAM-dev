@@ -136,12 +136,17 @@ UnaryOpFunction(negPart)
 // Eager unary scalar functions pre-evaluated and cached as tmp fields
 // to avoid interference with loop optimisation
 // Benefit demonstrated on x86 processors with sse2 and avx512
+
+// Note: for some expressions exp, sin and cos are slightly faster
+// without eager evaluation on processors without avx512
+// or without avx512 optimisation i.e. without the native option
 UnaryOpEagerFunction(exp)
-UnaryOpEagerFunction(log)
-UnaryOpEagerFunction(log10)
 UnaryOpEagerFunction(sin)
 UnaryOpEagerFunction(cos)
+
 UnaryOpEagerFunction(tan)
+UnaryOpEagerFunction(log)
+UnaryOpEagerFunction(log10)
 UnaryOpEagerFunction(asin)
 UnaryOpEagerFunction(acos)
 UnaryOpEagerFunction(atan)
