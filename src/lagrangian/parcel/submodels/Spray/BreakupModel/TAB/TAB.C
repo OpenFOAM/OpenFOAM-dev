@@ -71,7 +71,9 @@ template<class CloudType>
 Foam::TAB<CloudType>::TAB(const TAB<CloudType>& bum)
 :
     BreakupModel<CloudType>(bum),
-    SMDCalcMethod_(bum.SMDCalcMethod_)
+    rrd_(bum.rrd_),
+    SMDCalcMethod_(bum.SMDCalcMethod_),
+    SMDMethod_(bum.SMDMethod_)
 {}
 
 
