@@ -24,7 +24,7 @@ reactions
 {
     oxidation
     {
-        type        irreversibleArrhenius;
+        type        Irreversible<Arrhenius>;
 
         reaction    "O2^0 + TiCl4 = TiO2 + 2Cl2";
 

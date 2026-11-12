@@ -28,7 +28,7 @@ reactions
 {
     oxidation
     {
-        type        irreversibleArrhenius;
+        type        Irreversible<Arrhenius>;
 
         reaction    "O2^0 + TiCl4 = TiO2 + 2Cl2";
 
@@ -39,7 +39,7 @@ reactions
 
     oxidationAtSurface
     {
-        type        irreversiblePhaseSurfaceArrhenius;
+        type        Irreversible<PhaseSurface<Arrhenius>>;
 
         reaction    "O2^0 + TiCl4 = TiO2_s + 2Cl2";
 
