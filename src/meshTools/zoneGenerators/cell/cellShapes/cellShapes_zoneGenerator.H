@@ -33,8 +33,7 @@ Usage
         Property     | Description         | Required | Default value
         type         | Type: cellShapes    | yes      |
         name         | Name of the zone    | no       | zoneGenerator name
-        shape        | Cell shape          | no       |
-        shapes       | List of cell shapes | no       | ()
+        shapes       | Cell shape or list of cell shapes | yes      |
     \endtable
 
     To create a cellZone of the hex cells:
@@ -42,7 +41,7 @@ Usage
         hexCells
         {
             type        cellShapes;
-            shape       hex;
+            shapes      hex;
         }
     \endverbatim
 
