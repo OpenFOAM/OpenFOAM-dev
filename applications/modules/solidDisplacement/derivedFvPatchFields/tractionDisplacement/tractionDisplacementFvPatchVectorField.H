@@ -128,19 +128,6 @@ public:
 
     // Member Functions
 
-        // Access
-
-            virtual const vectorField& traction() const
-            {
-                return traction_;
-            }
-
-            virtual vectorField& traction()
-            {
-                return traction_;
-            }
-
-
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField

@@ -1,0 +1,39 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      D;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions          [length];
+
+internalField       uniform (0 0 0);
+
+boundaryField
+{
+    cantilever
+    {
+        type            coupledTractionDisplacement;
+        rhoFluid        1 [kg/m^3];
+        value           uniform (0 0 0);
+    }
+
+    fixed
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //
