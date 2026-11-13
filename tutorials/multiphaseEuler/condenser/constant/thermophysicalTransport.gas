@@ -25,9 +25,34 @@ RAS
 
     D
     {
-        H2O-H2O     0;
-        O2-O2       0;
-        N2-N2       0;
+        // Fickian uses self-diffusion coefficients for stabilisation
+        // They have to be non-zero
+        H2O-H2O
+        {
+            type        FullerDiffusionCoefficient;
+            Va          12.7;
+            Vb          12.7;
+            Ma          18.01528;
+            Mb          18.01528;
+        };
+
+        O2-O2
+        {
+            type        FullerDiffusionCoefficient;
+            Va          16.6;
+            Vb          16.6;
+            Ma          31.9988;
+            Mb          31.9988;
+        };
+
+        N2-N2
+        {
+            type        FullerDiffusionCoefficient;
+            Va          17.9;
+            Vb          17.9;
+            Ma          28.0134;
+            Mb          28.0134;
+        };
 
         O2-H2O
         {
