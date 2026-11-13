@@ -88,7 +88,7 @@ boundary
         neighbourPatch  cantilever;
         neighbourRegion cantilever;
         method          intersection;
-        matchTolerance  0.1;
+        matchTolerance  1e-3;
         faces
         (
             (1 13 17 5)

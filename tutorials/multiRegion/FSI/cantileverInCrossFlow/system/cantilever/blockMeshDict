@@ -48,7 +48,7 @@ boundary
         neighbourPatch  cantilever;
         neighbourRegion fluid;
         method          intersection;
-        matchTolerance  0.1;
+        matchTolerance  1e-3;
         faces
         (
             (3 7 6 2)
