@@ -107,6 +107,8 @@ protected:
         //- Lame's coefficient
         const volScalarField lambda;
 
+        const volScalarField DD;
+
         const volScalarField threeK;
 
         const volScalarField threeKalpha;

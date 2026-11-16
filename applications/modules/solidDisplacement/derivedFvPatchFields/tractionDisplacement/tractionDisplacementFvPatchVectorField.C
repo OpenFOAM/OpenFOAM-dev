@@ -65,7 +65,17 @@ tractionDisplacementFvPatchVectorField
         )
     )
 {
-    fvPatchVectorField::operator=(patchInternalField());
+    if (dict.found("value"))
+    {
+        fvPatchVectorField::operator=
+        (
+            vectorField("value", iF.dimensions(), dict, p.size())
+        );
+    }
+    else
+    {
+        fvPatchVectorField::operator=(patchInternalField());
+    }
     gradient() = Zero;
 }
 

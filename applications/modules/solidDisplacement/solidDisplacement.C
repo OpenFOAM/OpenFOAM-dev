@@ -105,6 +105,8 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
       : eval(nu*E/((1 + nu)*(1 - 2*nu)))
     ),
 
+    DD("DD", 2*mu + lambda),
+
     threeK
     (
         thermo_.planeStress()
@@ -120,7 +122,9 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
         (
             "sigmaD",
             runTime.name(),
-            mesh
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
         ),
         mu*twoSymm(fvc::grad(D_)) + lambda*(I*tr(fvc::grad(D_)))
     ),
@@ -131,13 +135,15 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
         (
             "divSigmaExp",
             runTime.name(),
-            mesh
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
         ),
         fvi::div(sigmaD)
       - (
             compactNormalStress
-          ? fvi::laplacian(2*mu + lambda, D_, "laplacian(DD,D)")
-          : fvi::div((2*mu + lambda)*fvc::grad(D_), "div(sigmaD)")
+          ? fvi::div(DD*fvc::grad(D_), "div(sigmaD)")
+          : fvi::laplacian(DD, D_)
         )
     ),
 
@@ -193,7 +199,7 @@ void Foam::solvers::solidDisplacement::pressureCorrector()
             (
                 fvm::d2dt2(rho, D)
              ==
-                fvm::laplacian(2*mu + lambda, D, "laplacian(DD,D)")
+                fvm::laplacian(DD, D)
               + divSigmaExp
               + rho*fvModels().d2dt2(D)
             );
@@ -225,11 +231,7 @@ void Foam::solvers::solidDisplacement::pressureCorrector()
 
         if (compactNormalStress)
         {
-            divSigmaExp = fvi::div
-            (
-                sigmaD - (2*mu + lambda)*gradD,
-                "div(sigmaD)"
-            );
+            divSigmaExp = fvi::div(sigmaD - DD*gradD, "div(sigmaD)");
         }
         else
         {
