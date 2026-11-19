@@ -179,7 +179,6 @@ public:
 
         //- Assign-subtract to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
-
         void operator-=(const Expression& e);
 
         void operator-=(const pType&);

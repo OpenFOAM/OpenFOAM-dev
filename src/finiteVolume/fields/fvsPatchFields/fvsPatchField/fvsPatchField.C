@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fvsPatchField.H"
 #include "IOobject.H"
 #include "dictionary.H"
 #include "fvMesh.H"
@@ -188,37 +189,6 @@ void Foam::fvsPatchField<Type>::write(Ostream& os) const
 template<class Type>
 void Foam::fvsPatchField<Type>::operator=
 (
-    const UList<Type>& ul
-)
-{
-    Field<Type>::operator=(ul);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator=
-(
-    const Field<Type>& ul
-)
-{
-    Field<Type>::operator=(ul);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator=
-(
-    const fvsPatchField<Type>& ptf
-)
-{
-    check(ptf);
-    Field<Type>::operator=(static_cast<const Field<Type>&>(ptf));
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator=
-(
     const expression::Assignment<Field<Type>>& a
 )
 {
@@ -244,177 +214,164 @@ void Foam::fvsPatchField<Type>::operator=(const Expression& e)
 
 
 template<class Type>
-void Foam::fvsPatchField<Type>::operator+=
+void Foam::fvsPatchField<Type>::operator=
 (
-    const fvsPatchField<Type>& ptf
+    const Type& t
 )
 {
-    check(ptf);
-    Field<Type>::operator+=(ptf);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator-=
-(
-    const fvsPatchField<Type>& ptf
-)
-{
-    check(ptf);
-    Field<Type>::operator-=(ptf);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator*=
-(
-    const fvsPatchField<scalar>& ptf
-)
-{
-    if (&patch_ != &ptf.patch())
-    {
-        FatalErrorInFunction
-            << "incompatible patches for patch fields"
-            << abort(FatalError);
-    }
-
-    Field<Type>::operator*=(ptf);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator/=
-(
-    const fvsPatchField<scalar>& ptf
-)
-{
-    if (&patch_ != &ptf.patch())
-    {
-        FatalErrorInFunction
-            << abort(FatalError);
-    }
-
-    Field<Type>::operator/=(ptf);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator+=
-(
-    const Field<Type>& tf
-)
-{
-    Field<Type>::operator+=(tf);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator-=
-(
-    const Field<Type>& tf
-)
-{
-    Field<Type>::operator-=(tf);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator*=
-(
-    const scalarField& tf
-)
-{
-    Field<Type>::operator*=(tf);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator/=
-(
-    const scalarField& tf
-)
-{
-    Field<Type>::operator/=(tf);
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                t
+            )
+        )
+    );
 }
 
 
 template<class Type>
 void Foam::fvsPatchField<Type>::operator=
 (
-    const Type& t
+    const UList<Type>& ul
 )
 {
-    Field<Type>::operator=(t);
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                ul
+            )
+        )
+    );
 }
 
 
 template<class Type>
-void Foam::fvsPatchField<Type>::operator+=
+void Foam::fvsPatchField<Type>::operator=
 (
-    const Type& t
+    const Field<Type>& f
 )
 {
-    Field<Type>::operator+=(t);
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                f
+            )
+        )
+    );
 }
 
 
 template<class Type>
-void Foam::fvsPatchField<Type>::operator-=
-(
-    const Type& t
-)
-{
-    Field<Type>::operator-=(t);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator*=
-(
-    const scalar s
-)
-{
-    Field<Type>::operator*=(s);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator/=
-(
-    const scalar s
-)
-{
-    Field<Type>::operator/=(s);
-}
-
-
-template<class Type>
-void Foam::fvsPatchField<Type>::operator==
+void Foam::fvsPatchField<Type>::operator=
 (
     const fvsPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(static_cast<const Field<Type>&>(ptf));
+    check(ptf);
+
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                ptf
+            )
+        )
+    );
 }
 
 
 template<class Type>
-void Foam::fvsPatchField<Type>::operator==
-(
-    const Field<Type>& tf
-)
+template<class TypeOrExpression>
+void Foam::fvsPatchField<Type>::operator+=(const TypeOrExpression& toe)
 {
-    Field<Type>::operator=(tf);
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this) + toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
 }
 
 
 template<class Type>
-void Foam::fvsPatchField<Type>::operator==
-(
-    const Type& t
-)
+template<class TypeOrExpression>
+void Foam::fvsPatchField<Type>::operator-=(const TypeOrExpression& toe)
 {
-    Field<Type>::operator=(t);
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this) - toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
+}
+
+
+template<class Type>
+template<class TypeOrExpression>
+void Foam::fvsPatchField<Type>::operator*=(const TypeOrExpression& toe)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this)*toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
+}
+
+
+template<class Type>
+template<class TypeOrExpression>
+void Foam::fvsPatchField<Type>::operator/=(const TypeOrExpression& toe)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this)/toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
 }
 
 
@@ -439,6 +396,65 @@ void Foam::fvsPatchField<Type>::operator==(const Expression& e)
             expression::assignment<Field<Type>>
             (
                 expression::access(e, expression::Base())
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::fvsPatchField<Type>::operator==
+(
+    const Type& t
+)
+{
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                t
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::fvsPatchField<Type>::operator==
+(
+    const Field<Type>& f
+)
+{
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                f
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::fvsPatchField<Type>::operator==
+(
+    const fvsPatchField<Type>& ptf
+)
+{
+    check(ptf);
+
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                ptf
             )
         )
     );

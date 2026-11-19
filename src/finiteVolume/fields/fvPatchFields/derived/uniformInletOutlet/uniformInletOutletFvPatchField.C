@@ -184,13 +184,16 @@ void Foam::uniformInletOutletFvPatchField<Type>::reset
 template<class Type>
 void Foam::uniformInletOutletFvPatchField<Type>::operator=
 (
-    const fvPatchField<Type>& ptf
+    const expression::Assignment<Field<Type>>& a
 )
 {
-    fvPatchField<Type>::operator=
+    tmp<Field<Type>> ptf(new Field<Type>(this->size()));
+    a.assign(ptf.ref());
+
+    Field<Type>::operator=
     (
         this->valueFraction()*this->refValue()
-        + (1 - this->valueFraction())*ptf
+      + (1 - this->valueFraction())*ptf
     );
 }
 

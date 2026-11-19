@@ -101,18 +101,6 @@ const Foam::Time& Foam::pointPatchField<Type>::time() const
 
 
 template<class Type>
-void Foam::pointPatchField<Type>::write(Ostream& os) const
-{
-    writeEntry(os, "type", type());
-
-    if (overridesConstraint())
-    {
-        writeEntry(os, "patchType", patch().type());
-    }
-}
-
-
-template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::pointPatchField<Type>::patchInternalField() const
 {
@@ -279,6 +267,13 @@ void Foam::pointPatchField<Type>::setInternalField
 
 
 template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::pointPatchField<Type>::field() const
+{
+    return patchInternalField();
+}
+
+
+template<class Type>
 void Foam::pointPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!updated_)
@@ -287,6 +282,271 @@ void Foam::pointPatchField<Type>::evaluate(const Pstream::commsTypes)
     }
 
     updated_ = false;
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::write(Ostream& os) const
+{
+    writeEntry(os, "type", type());
+
+    if (overridesConstraint())
+    {
+        writeEntry(os, "patchType", patch().type());
+    }
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Type>
+template<class Expression, class>
+void Foam::pointPatchField<Type>::operator=(const Expression& e)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access(e, expression::Base())
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::operator=
+(
+    const Type& t
+)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                t
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::operator=
+(
+    const UList<Type>& ul
+)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                ul
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::operator=
+(
+    const Field<Type>& f
+)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                f
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::operator=
+(
+    const pointPatchField<Type>& ptf
+)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                ptf.field()
+            )
+        )
+    );
+}
+
+
+template<class Type>
+template<class TypeOrExpression>
+void Foam::pointPatchField<Type>::operator+=(const TypeOrExpression& toe)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this) + toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
+}
+
+
+template<class Type>
+template<class TypeOrExpression>
+void Foam::pointPatchField<Type>::operator-=(const TypeOrExpression& toe)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this) - toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
+}
+
+
+template<class Type>
+template<class TypeOrExpression>
+void Foam::pointPatchField<Type>::operator*=(const TypeOrExpression& toe)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this)*toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
+}
+
+
+template<class Type>
+template<class TypeOrExpression>
+void Foam::pointPatchField<Type>::operator/=(const TypeOrExpression& toe)
+{
+    operator=
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access
+                (
+                    (*this)/toe,
+                    expression::Base()
+                )
+            )
+        )
+    );
+}
+
+
+template<class Type>
+template<class Expression, class>
+void Foam::pointPatchField<Type>::operator==(const Expression& e)
+{
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                expression::access(e, expression::Base())
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::operator==
+(
+    const Type& t
+)
+{
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                t
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::operator==
+(
+    const Field<Type>& f
+)
+{
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                f
+            )
+        )
+    );
+}
+
+
+template<class Type>
+void Foam::pointPatchField<Type>::operator==
+(
+    const pointPatchField<Type>& ptf
+)
+{
+    operator==
+    (
+        static_cast<const expression::Assignment<Field<Type>>&>
+        (
+            expression::assignment<Field<Type>>
+            (
+                ptf.field()
+            )
+        )
+    );
 }
 
 

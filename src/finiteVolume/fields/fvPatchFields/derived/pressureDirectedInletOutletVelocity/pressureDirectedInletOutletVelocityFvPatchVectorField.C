@@ -177,10 +177,13 @@ void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::write
 
 void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::operator=
 (
-    const fvPatchField<vector>& pvf
+    const expression::Assignment<vectorField>& a
 )
 {
-    fvPatchField<vector>::operator=
+    tmp<vectorField> pvf(new vectorField(size()));
+    a.assign(pvf.ref());
+
+    vectorField::operator=
     (
         valueFraction()*(inletDir_*(inletDir_ & pvf))
       + (1 - valueFraction())*pvf

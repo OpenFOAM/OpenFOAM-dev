@@ -85,10 +85,16 @@ void Foam::pressureInletUniformVelocityFvPatchVectorField::updateCoeffs()
 
 void Foam::pressureInletUniformVelocityFvPatchVectorField::operator=
 (
-    const fvPatchField<vector>& pvf
+    const expression::Assignment<vectorField>& a
 )
 {
-    operator==(patch().nf()*gSum(patch().Sf() & pvf)/gSum(patch().magSf()));
+    tmp<vectorField> pvf(new vectorField(size()));
+    a.assign(pvf.ref());
+
+    vectorField::operator=
+    (
+        patch().nf()*gSum(patch().Sf() & pvf)/gSum(patch().magSf())
+    );
 }
 
 

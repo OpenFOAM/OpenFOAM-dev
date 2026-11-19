@@ -129,7 +129,7 @@ Foam::transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 template<class Type>
 void Foam::transformFvPatchField<Type>::operator=
 (
-    const fvPatchField<Type>& ptf
+    const expression::Assignment<Field<Type>>& a
 )
 {
     this->evaluate();

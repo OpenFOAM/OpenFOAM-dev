@@ -182,7 +182,8 @@ public:
 
     // Member Operators
 
-        virtual void operator=(const fvPatchField<Type>& pvf);
+        //- Virtual assign to an expression
+        virtual void operator=(const expression::Assignment<Field<Type>>&);
 
         //- Inherit assignment
         using mixedFvPatchField<Type>::operator=;

@@ -190,27 +190,9 @@ public:
 
     // Member Operators
 
-        using fvPatchField<Type>::operator=;
-
-        virtual void operator=(const UList<Type>&) {}
-        virtual void operator=(const Field<Type>&) {}
-        virtual void operator=(const fvPatchField<Type>&) {}
-        virtual void operator+=(const fvPatchField<Type>&) {}
-        virtual void operator-=(const fvPatchField<Type>&) {}
-        virtual void operator*=(const fvPatchField<scalar>&) {}
-        virtual void operator/=(const fvPatchField<scalar>&) {}
-
-        virtual void operator+=(const Field<Type>&) {}
-        virtual void operator-=(const Field<Type>&) {}
-
-        virtual void operator*=(const Field<scalar>&) {}
-        virtual void operator/=(const Field<scalar>&) {}
-
-        virtual void operator=(const Type&) {}
-        virtual void operator+=(const Type&) {}
-        virtual void operator-=(const Type&) {}
-        virtual void operator*=(const scalar) {}
-        virtual void operator/=(const scalar) {}
+        //- Virtual assign to an expression
+        virtual void operator=(const expression::Assignment<Field<Type>>&)
+        {}
 };
 
 

@@ -47,6 +47,7 @@ SourceFiles
 #include "pointPatchFieldMapperFwd.H"
 #include "fieldTypes.H"
 #include "autoPtr.H"
+#include "expressionAssignment.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -409,6 +410,10 @@ public:
                 const Field<Type1>& pF
             ) const;
 
+            //- Return the field. The stored boundary field, if there is one,
+            //  otherwise the patch internal field;
+            virtual tmp<Field<Type>> field() const;
+
 
         // Mapping functions
 
@@ -455,58 +460,46 @@ public:
 
     // Member Operators
 
-        virtual void operator=(const UList<Type>&) {}
-        virtual void operator=(const Field<Type>&) {}
-        virtual void operator=(const pointPatchField<Type>&) {}
-        virtual void operator=(pointPatchField<Type>&&) {}
-        virtual void operator=(const Type&) {}
+        //- Virtual assign to an expression
+        virtual void operator=(const expression::Assignment<Field<Type>>&)
+        {}
 
-        //- Assign to an expression
+        //- Templated assign to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
-        void operator=(const Expression& e) {}
+        void operator=(const Expression& e);
 
-        void operator+=(const pointPatchField<Type>&) {}
-        void operator+=(const Field<Type>&) {}
-        void operator+=(const Type&) {}
+        void operator=(const Type&);
+        void operator=(const UList<Type>&);
+        void operator=(const Field<Type>&);
+        void operator=(const pointPatchField<Type>&);
 
-        //- Assign-add to an expression
+        //- Templated assign-add to an expression
+        template<class TypeOrExpression>
+        void operator+=(const TypeOrExpression& toe);
+
+        //- Templated assign-subtract to an expression
+        template<class TypeOrExpression>
+        void operator-=(const TypeOrExpression& toe);
+
+        //- Templated assign-multiply to an expression
+        template<class TypeOrExpression>
+        void operator*=(const TypeOrExpression& toe);
+
+        //- Templated assign-divide to an expression
+        template<class TypeOrExpression>
+        void operator/=(const TypeOrExpression& toe);
+
+        //- Virtual force-assign to an expression
+        virtual void operator==(const expression::Assignment<Field<Type>>&)
+        {}
+
+        //- Templated force-assign to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
-        void operator+=(const Expression& e) {}
+        void operator==(const Expression& e);
 
-        void operator-=(const pointPatchField<Type>&) {}
-        void operator-=(const Field<Type>&) {}
-        void operator-=(const Type&) {}
-
-        //- Assign-subtract to an expression
-        template<class Expression, class = EnableIfExpressionable<Expression>>
-        void operator-=(const Expression& e) {}
-
-        void operator*=(const pointPatchField<scalar>&) {}
-        void operator*=(const Field<scalar>&) {}
-        void operator*=(const scalar) {}
-
-        //- Assign-multiply to an expression
-        template<class Expression, class = EnableIfExpressionable<Expression>>
-        void operator*=(const Expression& e) {}
-
-        void operator/=(const pointPatchField<scalar>&) {}
-        void operator/=(const Field<scalar>&) {}
-        void operator/=(const scalar) {}
-
-        //- Assign-divide to an expression
-        template<class Expression, class = EnableIfExpressionable<Expression>>
-        void operator/=(const Expression& e) {}
-
-        // Force an assignment irrespective of form of patch. These do nothing
-        // unless the patch actually has boundary values.
-
-        virtual void operator==(const pointPatchField<Type>&) {}
-        virtual void operator==(const Field<Type>&) {}
-        virtual void operator==(const Type&) {}
-
-        //- Assign to an expression
-        template<class Expression, class = EnableIfExpressionable<Expression>>
-        void operator==(const Expression& e) {}
+        void operator==(const Type&);
+        void operator==(const Field<Type>&);
+        void operator==(const pointPatchField<Type>&);
 
 
     // Ostream operator

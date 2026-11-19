@@ -124,11 +124,9 @@ public:
         //- Inherit assignment
         using fixedValueFvPatchScalarField::operator=;
 
-        // Disallow forced assignment
-
-        virtual void operator==(const fvPatchScalarField&) {}
-        virtual void operator==(const Field<scalar>&) {}
-        virtual void operator==(const scalar&) {}
+        //- Virtual force-assign to an expression
+        virtual void operator==(const expression::Assignment<scalarField>& a)
+        {}
 };
 
 

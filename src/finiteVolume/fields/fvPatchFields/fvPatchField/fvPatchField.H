@@ -554,49 +554,44 @@ public:
 
     // Member Operators
 
-        virtual void operator=(const UList<Type>&);
-
-        virtual void operator=(const Field<Type>&);
-
-        virtual void operator=(const fvPatchField<Type>&);
-
         //- Virtual assign to an expression
-        virtual void operator=(const expression::Assignment<Field<Type>>& a);
+        virtual void operator=(const expression::Assignment<Field<Type>>&);
 
         //- Templated assign to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
         void operator=(const Expression& e);
 
-        virtual void operator+=(const fvPatchField<Type>&);
-        virtual void operator-=(const fvPatchField<Type>&);
-        virtual void operator*=(const fvPatchField<scalar>&);
-        virtual void operator/=(const fvPatchField<scalar>&);
+        void operator=(const Type&);
+        void operator=(const UList<Type>&);
+        void operator=(const Field<Type>&);
+        void operator=(const fvPatchField<Type>&);
 
-        virtual void operator+=(const Field<Type>&);
-        virtual void operator-=(const Field<Type>&);
+        //- Templated assign-add to an expression
+        template<class TypeOrExpression>
+        void operator+=(const TypeOrExpression& toe);
 
-        virtual void operator*=(const Field<scalar>&);
-        virtual void operator/=(const Field<scalar>&);
+        //- Templated assign-subtract to an expression
+        template<class TypeOrExpression>
+        void operator-=(const TypeOrExpression& toe);
 
-        virtual void operator=(const Type&);
-        virtual void operator+=(const Type&);
-        virtual void operator-=(const Type&);
-        virtual void operator*=(const scalar);
-        virtual void operator/=(const scalar);
+        //- Templated assign-multiply to an expression
+        template<class TypeOrExpression>
+        void operator*=(const TypeOrExpression& toe);
 
-
-        // Force an assignment irrespective of form of patch
-
-        virtual void operator==(const fvPatchField<Type>&);
-        virtual void operator==(const Field<Type>&);
-        virtual void operator==(const Type&);
+        //- Templated assign-divide to an expression
+        template<class TypeOrExpression>
+        void operator/=(const TypeOrExpression& toe);
 
         //- Virtual force-assign to an expression
         virtual void operator==(const expression::Assignment<Field<Type>>&);
 
-        //- Templated force-assign
+        //- Templated force-assign to an expression
         template<class Expression, class = EnableIfExpressionable<Expression>>
         void operator==(const Expression& e);
+
+        void operator==(const Type&);
+        void operator==(const Field<Type>&);
+        void operator==(const fvPatchField<Type>&);
 
 
     // Ostream operator

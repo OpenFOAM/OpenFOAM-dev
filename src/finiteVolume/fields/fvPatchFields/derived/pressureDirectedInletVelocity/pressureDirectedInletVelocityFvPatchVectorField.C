@@ -29,7 +29,6 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::pressureDirectedInletVelocityFvPatchVectorField::
@@ -166,10 +165,13 @@ void Foam::pressureDirectedInletVelocityFvPatchVectorField::write
 
 void Foam::pressureDirectedInletVelocityFvPatchVectorField::operator=
 (
-    const fvPatchField<vector>& pvf
+    const expression::Assignment<vectorField>& a
 )
 {
-    fvPatchField<vector>::operator=(inletDir_*(inletDir_ & pvf));
+    tmp<vectorField> pvf(new vectorField(size()));
+    a.assign(pvf.ref());
+
+    vectorField::operator=(inletDir_*(inletDir_ & pvf));
 }
 
 

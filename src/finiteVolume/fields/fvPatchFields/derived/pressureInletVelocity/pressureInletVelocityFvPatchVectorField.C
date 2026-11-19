@@ -128,10 +128,13 @@ void Foam::pressureInletVelocityFvPatchVectorField::write(Ostream& os) const
 
 void Foam::pressureInletVelocityFvPatchVectorField::operator=
 (
-    const fvPatchField<vector>& pvf
+    const expression::Assignment<vectorField>& a
 )
 {
-    fvPatchField<vector>::operator=(patch().nf()*(patch().nf() & pvf));
+    tmp<vectorField> pvf(new vectorField(size()));
+    a.assign(pvf.ref());
+
+    vectorField::operator=(patch().nf()*(patch().nf() & pvf));
 }
 
 

@@ -167,12 +167,17 @@ const
 
 void Foam::fixedNormalInletOutletVelocityFvPatchVectorField::operator=
 (
-    const fvPatchField<vector>& pvf
+    const expression::Assignment<vectorField>& a
 )
 {
     tmp<vectorField> normalValue = transform(valueFraction(), refValue());
+
+    tmp<vectorField> pvf(new vectorField(this->size()));
+    a.assign(pvf.ref());
+
     tmp<vectorField> transformGradValue = transform(I - valueFraction(), pvf);
-    fvPatchField<vector>::operator=(normalValue + transformGradValue);
+
+    vectorField::operator=(normalValue + transformGradValue);
 }
 
 

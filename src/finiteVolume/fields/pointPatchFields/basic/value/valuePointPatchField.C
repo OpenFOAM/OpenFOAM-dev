@@ -117,6 +117,13 @@ Foam::valuePointPatchField<Type>::valuePointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::valuePointPatchField<Type>::field() const
+{
+    return static_cast<const Field<Type>&>(*this);
+}
+
+
+template<class Type>
 void Foam::valuePointPatchField<Type>::map
 (
     const pointPatchField<Type>& ptf,
@@ -182,100 +189,20 @@ void Foam::valuePointPatchField<Type>::write(Ostream& os) const
 template<class Type>
 void Foam::valuePointPatchField<Type>::operator=
 (
-    const valuePointPatchField<Type>& ptf
+    const expression::Assignment<Field<Type>>& a
 )
 {
-    Field<Type>::operator=(ptf);
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator=
-(
-    const pointPatchField<Type>& ptf
-)
-{
-    Field<Type>::operator=(this->patchInternalField());
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator=
-(
-    pointPatchField<Type>&& ptf
-)
-{
-    Field<Type>::operator=(this->patchInternalField());
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator=
-(
-    const Field<Type>& ul
-)
-{
-    Field<Type>::operator=(ul);
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator=
-(
-    const UList<Type>& ul
-)
-{
-    Field<Type>::operator=(ul);
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator=
-(
-    const Type& t
-)
-{
-    Field<Type>::operator=(t);
+    a.assign(static_cast<Field<Type>&>(*this));
 }
 
 
 template<class Type>
 void Foam::valuePointPatchField<Type>::operator==
 (
-    const valuePointPatchField<Type>& ptf
+    const expression::Assignment<Field<Type>>& a
 )
 {
-    Field<Type>::operator=(ptf);
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator==
-(
-    const pointPatchField<Type>& ptf
-)
-{
-    Field<Type>::operator=(this->patchInternalField());
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator==
-(
-    const Field<Type>& tf
-)
-{
-    Field<Type>::operator=(tf);
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::operator==
-(
-    const Type& t
-)
-{
-    Field<Type>::operator=(t);
+    a.assign(static_cast<Field<Type>&>(*this));
 }
 
 

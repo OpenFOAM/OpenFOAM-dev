@@ -142,10 +142,13 @@ void Foam::pressureNormalInletOutletVelocityFvPatchVectorField::write
 
 void Foam::pressureNormalInletOutletVelocityFvPatchVectorField::operator=
 (
-    const fvPatchField<vector>& pvf
+    const expression::Assignment<vectorField>& a
 )
 {
-    fvPatchField<vector>::operator=
+    tmp<vectorField> pvf(new vectorField(size()));
+    a.assign(pvf.ref());
+
+    vectorField::operator=
     (
         valueFraction()*(patch().nf()*(patch().nf() & pvf))
       + (1 - valueFraction())*pvf
