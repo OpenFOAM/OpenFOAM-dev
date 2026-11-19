@@ -94,7 +94,7 @@ void oscillatingDisplacementPointPatchVectorField::updateCoeffs()
     const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
 
-    Field<vector>::operator=(amplitude_*sin(omega_*t.value()));
+    operator==(amplitude_*sin(omega_*t.value()));
 
     fixedValuePointPatchVectorField::updateCoeffs();
 }

@@ -100,7 +100,7 @@ lumpedMassTemperatureFvPatchScalarField
         }
     }
 
-    fvPatchScalarField::operator=(T_.value());
+    scalarField::operator=(T_.value());
 }
 
 

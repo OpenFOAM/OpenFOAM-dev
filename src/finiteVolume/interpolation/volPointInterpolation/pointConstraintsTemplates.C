@@ -92,18 +92,11 @@ void Foam::pointConstraints::setPatchFields
     PointField<Type>& pf
 )
 {
-    typename PointField<Type>::
-        BoundaryField& pfbf = pf.boundaryFieldRef();
+    typename PointField<Type>::BoundaryField& pfbf = pf.boundaryFieldRef();
 
     forAll(pfbf, patchi)
     {
-        pointPatchField<Type>& ppf = pfbf[patchi];
-
-        if (isA<valuePointPatchField<Type>>(ppf))
-        {
-            refCast<valuePointPatchField<Type>>(ppf) =
-                ppf.patchInternalField();
-        }
+        pfbf[patchi] = pfbf[patchi].patchInternalField();
     }
 }
 

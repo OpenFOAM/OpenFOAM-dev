@@ -45,7 +45,7 @@ rotatingWallVelocityFvPatchVectorField
 {
     if (dict.found("value"))
     {
-        fvPatchField<vector>::operator=
+        Field<vector>::operator=
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );
@@ -108,7 +108,7 @@ void Foam::rotatingWallVelocityFvPatchVectorField::updateCoeffs()
     // Remove the component of Up normal to the wall
     // just in case it is not exactly circular
     const vectorField n(patch().nf());
-    vectorField::operator=(Up - n*(n & Up));
+    operator==(Up - n*(n & Up));
 
     fixedValueFvPatchVectorField::updateCoeffs();
 }

@@ -118,6 +118,9 @@ public:
 
         //- Inherit assignment
         using fixedValuePointPatchField<${TemplateType}>::operator=;
+
+        //- Inherit force-assignment
+        using valuePointPatchField<${TemplateType}>::operator==;
 };
 
 

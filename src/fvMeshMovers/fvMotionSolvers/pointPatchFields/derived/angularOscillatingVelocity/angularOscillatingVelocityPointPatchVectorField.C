@@ -148,7 +148,7 @@ void angularOscillatingVelocityPointPatchVectorField::updateCoeffs()
     vector axisHat = axis_/mag(axis_);
     vectorField p0Rel(p0_ - origin_);
 
-    vectorField::operator=
+    operator==
     (
         (
             p0_

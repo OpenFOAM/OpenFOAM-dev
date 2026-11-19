@@ -50,7 +50,7 @@ uniformFixedValuePointPatchField
 {
     if (dict.found("value"))
     {
-        fixedValuePointPatchField<Type>::operator==
+        Field<Type>::operator=
         (
             Field<Type>("value", iF.dimensions(), dict, p.size())
         );
@@ -58,7 +58,7 @@ uniformFixedValuePointPatchField
     else
     {
         const scalar t = this->time().value();
-        fixedValuePointPatchField<Type>::operator=(uniformValue_->value(t));
+        Field<Type>::operator=(uniformValue_->value(t));
     }
 }
 
@@ -78,7 +78,7 @@ uniformFixedValuePointPatchField
 {
     // For safety re-evaluate
     const scalar t = this->time().value();
-    fixedValuePointPatchField<Type>::operator=(uniformValue_->value(t));
+    Field<Type>::operator=(uniformValue_->value(t));
 }
 
 
@@ -95,7 +95,7 @@ uniformFixedValuePointPatchField
 {
     // For safety re-evaluate
     const scalar t = this->time().value();
-    fixedValuePointPatchField<Type>::operator==(uniformValue_->value(t));
+    Field<Type>::operator=(uniformValue_->value(t));
 }
 
 
@@ -110,7 +110,7 @@ void Foam::uniformFixedValuePointPatchField<Type>::updateCoeffs()
     }
 
     const scalar t = this->time().value();
-    fixedValuePointPatchField<Type>::operator==(uniformValue_->value(t));
+    operator==(uniformValue_->value(t));
 
     fixedValuePointPatchField<Type>::updateCoeffs();
 }

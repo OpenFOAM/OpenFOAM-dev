@@ -89,7 +89,7 @@ timeVaryingMappedFixedValuePointPatchField
 
     if (dict.found("value"))
     {
-        fixedValuePointPatchField<Type>::operator==
+        Field<Type>::operator==
         (
             Field<Type>("value", iF.dimensions(), dict, p.size())
         );
@@ -459,7 +459,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
                 << sampleTimes_[startSampleTime_].name() << nl;
         }
 
-        this->operator==(startSampledValues_);
+        operator==(startSampledValues_);
         wantedAverage = startAverage_;
     }
     else
@@ -478,7 +478,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
                 << " with weight:" << s << endl;
         }
 
-        this->operator==((1 - s)*startSampledValues_ + s*endSampledValues_);
+        operator==((1 - s)*startSampledValues_ + s*endSampledValues_);
         wantedAverage = (1 - s)*startAverage_ + s*endAverage_;
     }
 
@@ -507,7 +507,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
                 Pout<< "updateCoeffs :"
                     << " offsetting with:" << offset << endl;
             }
-            this->operator==(fld + offset);
+            operator==(fld + offset);
         }
         else
         {
@@ -518,14 +518,14 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
                 Pout<< "updateCoeffs :"
                     << " scaling with:" << scale << endl;
             }
-            this->operator==(scale*fld);
+            operator==(scale*fld);
         }
     }
 
     // Apply offset to mapped values
     if (offset_.valid())
     {
-        this->operator==
+        operator==
         (
             *this + offset_->value(this->time().value())
         );

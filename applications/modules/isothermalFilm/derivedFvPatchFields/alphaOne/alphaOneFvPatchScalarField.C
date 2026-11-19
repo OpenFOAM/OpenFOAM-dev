@@ -89,7 +89,7 @@ void Foam::alphaOneFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    fvPatchScalarField::operator=(1.0);
+    scalarField::operator=(1.0);
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }

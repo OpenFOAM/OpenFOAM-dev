@@ -50,14 +50,14 @@ phaseHydrostaticPressureFvPatchScalarField
 
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchScalarField::operator=(this->refValue());
+        scalarField::operator=(this->refValue());
     }
 
     this->refGrad() = 0.0;

@@ -41,7 +41,7 @@ surfaceNormalFixedValueFvPatchVectorField
     fixedValueFvPatchVectorField(p, iF, dict, false),
     refValue_("refValue", iF.dimensions(), dict, p.size())
 {
-    fvPatchVectorField::operator=(refValue_*patch().nf());
+    vectorField::operator=(refValue_*patch().nf());
 }
 
 
@@ -59,7 +59,7 @@ surfaceNormalFixedValueFvPatchVectorField
 {
     // Note: calculate product only on ptf to avoid multiplication on
     // unset values in reconstructPar.
-    fvPatchVectorField::operator=
+    vectorField::operator=
     (
         mapper(eval(ptf.refValue_*ptf.patch().nf()))
     );
@@ -116,7 +116,8 @@ void Foam::surfaceNormalFixedValueFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    fvPatchVectorField::operator=(refValue_*patch().nf());
+    operator==(refValue_*patch().nf());
+
     fvPatchVectorField::updateCoeffs();
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ zeroFixedValuePointPatchField
 :
     fixedValuePointPatchField<Type>(p, iF, dict, false)
 {
-    fixedValuePointPatchField<Type>::operator=(Zero);
+    Field<Type>::operator=(Zero);
 }
 
 
@@ -67,7 +67,7 @@ zeroFixedValuePointPatchField
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper)
 {
     // For safety re-evaluate
-    fixedValuePointPatchField<Type>::operator=(Zero);
+    Field<Type>::operator=(Zero);
 }
 
 
@@ -82,7 +82,7 @@ zeroFixedValuePointPatchField
     fixedValuePointPatchField<Type>(ptf, iF)
 {
     // For safety re-evaluate
-    fixedValuePointPatchField<Type>::operator=(Zero);
+    Field<Type>::operator=(Zero);
 }
 
 

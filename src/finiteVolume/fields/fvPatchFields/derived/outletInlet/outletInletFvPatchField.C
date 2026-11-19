@@ -60,14 +60,14 @@ Foam::outletInletFvPatchField<Type>::outletInletFvPatchField
 
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator=
+        Field<Type>::operator=
         (
             Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<Type>::operator=(this->refValue());
+        Field<Type>::operator=(this->refValue());
     }
 
     this->refGrad() = Zero;

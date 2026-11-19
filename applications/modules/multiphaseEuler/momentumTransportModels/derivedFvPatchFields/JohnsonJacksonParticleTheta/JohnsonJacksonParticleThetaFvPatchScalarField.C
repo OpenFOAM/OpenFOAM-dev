@@ -72,7 +72,7 @@ JohnsonJacksonParticleThetaFvPatchScalarField
             << abort(FatalError);
     }
 
-    fvPatchScalarField::operator=
+    scalarField::operator=
     (
         scalarField("value", iF.dimensions(), dict, p.size())
     );

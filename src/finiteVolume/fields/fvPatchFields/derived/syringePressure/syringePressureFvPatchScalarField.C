@@ -53,7 +53,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
     curTimeIndex_(-1)
 {
     scalar ps = (psI_*VsI_ + ams_/psi_)/Vs(time().value());
-    fvPatchField<scalar>::operator=(ps);
+    Field<scalar>::operator=(ps);
 }
 
 

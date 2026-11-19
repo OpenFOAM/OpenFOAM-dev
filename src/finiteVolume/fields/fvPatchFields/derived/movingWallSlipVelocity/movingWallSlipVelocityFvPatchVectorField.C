@@ -58,7 +58,7 @@ movingWallSlipVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(p, iF)
 {
-    fvPatchVectorField::operator=
+    vectorField::operator=
     (
         vectorField("value", iF.dimensions(), dict, p.size())
     );

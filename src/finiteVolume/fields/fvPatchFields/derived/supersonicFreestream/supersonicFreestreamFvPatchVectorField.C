@@ -49,14 +49,14 @@ supersonicFreestreamFvPatchVectorField
 {
     if (dict.found("value"))
     {
-        fvPatchField<vector>::operator=
+        Field<vector>::operator=
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<vector>::operator=(patchInternalField());
+        Field<vector>::operator=(patchInternalField());
     }
 
     refValue() = *this;

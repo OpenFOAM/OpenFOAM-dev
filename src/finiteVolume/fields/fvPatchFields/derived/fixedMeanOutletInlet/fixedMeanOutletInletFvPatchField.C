@@ -51,7 +51,7 @@ Foam::fixedMeanOutletInletFvPatchField<Type>::fixedMeanOutletInletFvPatchField
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
-    fvPatchField<Type>::operator=
+    Field<Type>::operator=
     (
         Field<Type>("value", iF.dimensions(), dict, p.size())
     );

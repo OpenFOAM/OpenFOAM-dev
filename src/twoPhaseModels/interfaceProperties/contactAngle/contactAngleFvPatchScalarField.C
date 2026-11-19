@@ -70,7 +70,7 @@ Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
     else
     {
         gradient() = 0.0;
-        fvPatchField<scalar>::operator=(patchInternalField());
+        scalarField::operator=(patchInternalField());
     }
 }
 

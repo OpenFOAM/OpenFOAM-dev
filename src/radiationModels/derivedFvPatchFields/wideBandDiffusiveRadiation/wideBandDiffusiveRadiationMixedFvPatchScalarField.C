@@ -63,7 +63,7 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
         valueFraction() =
             scalarField("valueFraction", units::fraction, dict, p.size());
 
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
@@ -77,7 +77,7 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
             4.0*physicoChemical::sigma.value()*pow4(Tp)*emissivity()/pi;
         refGrad() = 0.0;
 
-        fvPatchScalarField::operator=(refValue());
+        scalarField::operator=(refValue());
     }
 }
 

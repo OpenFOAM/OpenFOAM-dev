@@ -84,7 +84,7 @@ specieTransferMassFractionFvPatchScalarField
       : propertyNames_.read(dict.lookup("property"))
     )
 {
-    fvPatchScalarField::operator=
+    scalarField::operator=
     (
         scalarField("value", iF.dimensions(), dict, p.size())
     );

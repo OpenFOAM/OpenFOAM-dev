@@ -43,7 +43,7 @@ fluxCorrectedVelocityFvPatchVectorField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {
-    fvPatchVectorField::operator=(patchInternalField());
+    vectorField::operator=(patchInternalField());
 }
 
 

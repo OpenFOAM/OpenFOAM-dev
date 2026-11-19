@@ -100,7 +100,7 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
     // If the value is not supplied set to the internal field
     if (!dict.found("value"))
     {
-        fvPatchField<Type>::operator=(patchInternalField());
+        Field<Type>::operator=(patchInternalField());
     }
 }
 

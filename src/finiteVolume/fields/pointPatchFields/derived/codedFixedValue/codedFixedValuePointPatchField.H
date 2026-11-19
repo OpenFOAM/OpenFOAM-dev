@@ -197,7 +197,10 @@ public:
     // Member Operators
 
         //- Inherit assignment
-        using fixedValuePointPatchField<Type>::operator=;
+        using pointPatchField<Type>::operator=;
+
+        //- Inherit force-assignment
+        using pointPatchField<Type>::operator==;
 };
 
 

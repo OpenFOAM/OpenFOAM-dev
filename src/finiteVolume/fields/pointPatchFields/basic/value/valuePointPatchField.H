@@ -164,8 +164,14 @@ public:
         //- Virtual assign to an expression
         virtual void operator=(const expression::Assignment<Field<Type>>&);
 
+        //- Inherit other assignment operators
+        using pointPatchField<Type>::operator=;
+
         //- Virtual force-assign to an expression
         virtual void operator==(const expression::Assignment<Field<Type>>&);
+
+        //- Inherit other force-assignment operators
+        using pointPatchField<Type>::operator==;
 };
 
 

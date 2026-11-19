@@ -57,7 +57,7 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 
     valueFraction() = 1.0;
 
-    fvPatchScalarField::operator=(refValue());
+    scalarField::operator=(refValue());
 }
 
 

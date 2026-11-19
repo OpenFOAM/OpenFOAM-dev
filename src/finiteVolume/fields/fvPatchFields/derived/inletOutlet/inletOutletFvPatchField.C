@@ -41,7 +41,7 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
     this->refValue() = Zero;
     this->refGrad() = Zero;
     this->valueFraction() = 0;
-    fvPatchField<Type>::operator=(Zero);
+    Field<Type>::operator=(Zero);
 }
 
 
@@ -64,14 +64,14 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
 
         if (dict.found("value"))
         {
-            fvPatchField<Type>::operator=
+            Field<Type>::operator=
             (
                 Field<Type>("value", iF.dimensions(), dict, p.size())
             );
         }
         else
         {
-            fvPatchField<Type>::operator=(this->refValue());
+            Field<Type>::operator=(this->refValue());
         }
 
         this->refGrad() = Zero;

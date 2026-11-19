@@ -47,7 +47,7 @@ fixedNormalInletOutletVelocityFvPatchVectorField
         fvPatchVectorField::New(p, iF, dict.subDict("normalVelocity"))
     )
 {
-    fvPatchVectorField::operator=
+    vectorField::operator=
     (
         vectorField("value", iF.dimensions(), dict, p.size())
     );

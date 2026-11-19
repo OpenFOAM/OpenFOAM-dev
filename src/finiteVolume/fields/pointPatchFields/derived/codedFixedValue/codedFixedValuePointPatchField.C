@@ -168,8 +168,7 @@ void Foam::codedFixedValuePointPatchField<Type>::updateCoeffs()
 
     const_cast<pointPatchField<Type>&>(fvp).updateCoeffs();
 
-    // Copy through value
-    this->operator==(fvp);
+    operator==(fvp);
 
     fixedValuePointPatchField<Type>::updateCoeffs();
 }

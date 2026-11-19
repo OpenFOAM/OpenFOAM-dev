@@ -187,6 +187,9 @@ public:
 
         //- Inherit assignment
         using fixedValuePointPatchField<Type>::operator=;
+
+        //- Inherit force-assignment
+        using valuePointPatchField<Type>::operator==;
 };
 
 

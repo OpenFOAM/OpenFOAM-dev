@@ -43,14 +43,14 @@ Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
 {
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<scalar>::operator=(p_);
+        scalarField::operator=(p_);
     }
 }
 

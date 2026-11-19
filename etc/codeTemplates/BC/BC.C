@@ -71,13 +71,13 @@ CONSTRUCT
     this->valueFraction() = 0.0;
 
     this->refValue() = FIELD("fieldData", iF.dimensions(), dict, p.size());
-    FVPATCHF::operator=(this->refValue());
+    FIELD::operator=(this->refValue());
 
     PARENT::evaluate();
 
     /*
     // Initialise with the value entry if evaluation is not possible
-    FVPATCHF::operator=
+    FIELD::operator=
     (
         FIELD("value", iF.dimensions(), dict, p.size())
     );
@@ -167,7 +167,7 @@ void Foam::CLASS::updateCoeffs()
         return;
     }
 
-    PARENT::operator==
+    this->operator==
     (
         data_
       + fieldData_

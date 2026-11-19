@@ -47,7 +47,7 @@ Foam::meanInletOutletFvPatchScalarField::meanInletOutletFvPatchScalarField
 
     if (dict.found("value"))
     {
-        fvPatchField<scalar>::operator=
+        Field<scalar>::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );

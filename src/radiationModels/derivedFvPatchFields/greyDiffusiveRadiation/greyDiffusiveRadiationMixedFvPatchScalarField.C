@@ -62,7 +62,7 @@ greyDiffusiveRadiationMixedFvPatchScalarField
         valueFraction() =
             scalarField("valueFraction", units::fraction, dict, p.size());
 
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
@@ -73,7 +73,7 @@ greyDiffusiveRadiationMixedFvPatchScalarField
         refGrad() = 0.0;
         valueFraction() = 1.0;
 
-        fvPatchScalarField::operator=(refValue());
+        scalarField::operator=(refValue());
     }
 }
 

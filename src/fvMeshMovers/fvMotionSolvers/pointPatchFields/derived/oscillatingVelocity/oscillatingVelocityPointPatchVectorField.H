@@ -137,6 +137,9 @@ public:
 
         //- Inherit assignment
         using fixedValuePointPatchVectorField::operator=;
+
+        //- Inherit force-assignment
+        using pointPatchVectorField::operator==;
 };
 
 

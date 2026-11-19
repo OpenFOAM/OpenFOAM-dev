@@ -50,14 +50,14 @@ inletOutletTotalTemperatureFvPatchScalarField
     this->refValue() = Zero;
     if (dict.found("value"))
     {
-        fvPatchField<scalar>::operator=
+        Field<scalar>::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<scalar>::operator=(T0_);
+        Field<scalar>::operator=(T0_);
     }
 
     this->refGrad() = Zero;

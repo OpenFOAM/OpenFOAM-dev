@@ -41,14 +41,14 @@ Foam::MRFstaticNoSlipFvPatchVectorField::MRFstaticNoSlipFvPatchVectorField
 {
     if (dict.found("value"))
     {
-        fvPatchField<vector>::operator=
+        Field<vector>::operator=
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<vector>::operator=(Zero);
+        Field<vector>::operator=(Zero);
     }
 }
 
@@ -86,7 +86,7 @@ void Foam::MRFstaticNoSlipFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    fvPatchField<vector>::operator=(Zero);
+    Field<vector>::operator=(Zero);
     makeRelative(*this);
 
     // Remove the component of Up normal to the wall

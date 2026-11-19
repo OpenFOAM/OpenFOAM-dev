@@ -125,14 +125,14 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 {
     if (dict.found("value"))
     {
-        fvPatchField<scalar>::operator=
+        Field<scalar>::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<scalar>::operator=(p0_);
+        Field<scalar>::operator=(p0_);
     }
 }
 

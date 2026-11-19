@@ -44,14 +44,14 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
 {
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-         fvPatchScalarField::operator=(0.0);
+         scalarField::operator=(0.0);
     }
 }
 

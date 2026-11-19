@@ -58,14 +58,14 @@ uniformTotalPressureFvPatchScalarField
 {
     if (dict.found("value"))
     {
-        fvPatchField<scalar>::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchScalarField::operator==(p0_->value(time().value()));
+        scalarField::operator=(p0_->value(time().value()));
     }
 }
 
@@ -89,7 +89,7 @@ uniformTotalPressureFvPatchScalarField
 {
     // Set the patch pressure to the current total pressure
     // This is not ideal but avoids problems with the creation of patch faces
-    fvPatchScalarField::operator==(p0_->value(time().value()));
+    scalarField::operator=(p0_->value(time().value()));
 }
 
 

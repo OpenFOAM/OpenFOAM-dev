@@ -48,14 +48,14 @@ variableHeightFlowRateFvPatchScalarField
 
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchScalarField::operator=(patchInternalField());
+        scalarField::operator=(patchInternalField());
     }
 
     this->refGrad() = 0.0;

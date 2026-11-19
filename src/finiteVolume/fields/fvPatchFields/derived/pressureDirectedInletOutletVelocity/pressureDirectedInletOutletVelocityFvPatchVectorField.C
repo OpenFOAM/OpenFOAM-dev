@@ -44,7 +44,7 @@ pressureDirectedInletOutletVelocityFvPatchVectorField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     inletDir_("inletDirection", dimless, dict, p.size())
 {
-    fvPatchVectorField::operator=
+    vectorField::operator=
     (
         vectorField("value", iF.dimensions(), dict, p.size())
     );

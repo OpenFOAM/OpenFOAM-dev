@@ -178,7 +178,7 @@ coupledTemperatureFvPatchScalarField
         qs_ = new scalarField(p.size(), Qs_/gSum(patch().magSf()));
     }
 
-    fvPatchScalarField::operator=
+    scalarField::operator=
     (
         scalarField("value", iF.dimensions(), dict, p.size())
     );

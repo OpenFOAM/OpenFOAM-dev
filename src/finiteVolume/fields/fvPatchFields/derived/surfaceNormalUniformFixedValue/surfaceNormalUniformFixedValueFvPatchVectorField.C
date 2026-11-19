@@ -98,10 +98,7 @@ void Foam::surfaceNormalUniformFixedValueFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    fvPatchVectorField::operator=
-    (
-        uniformValue_->value(time().value())*patch().nf()
-    );
+    operator==(uniformValue_->value(time().value())*patch().nf());
 
     fvPatchVectorField::updateCoeffs();
 }

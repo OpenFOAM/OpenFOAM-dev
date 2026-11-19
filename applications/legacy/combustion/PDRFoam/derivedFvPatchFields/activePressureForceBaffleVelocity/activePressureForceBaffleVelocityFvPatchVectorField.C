@@ -61,7 +61,7 @@ activePressureForceBaffleVelocityFvPatchVectorField
     fBased_(dict.lookup<bool>("forceBased")),
     baffleActivated_(0)
 {
-    fvPatchVectorField::operator=(Zero);
+    vectorField::operator=(Zero);
 
     if (p.size() > 0)
     {

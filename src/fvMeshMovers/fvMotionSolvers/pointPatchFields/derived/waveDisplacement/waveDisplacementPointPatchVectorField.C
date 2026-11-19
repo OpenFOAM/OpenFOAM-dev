@@ -139,7 +139,7 @@ void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
         endRamp_->value(points[points.size() - 1] - points)
     );
 
-    Field<vector>::operator=
+    operator==
     (
         timeRamp*startRamp*endRamp*amplitude_*cos(omega_*t.value() - points)
     );

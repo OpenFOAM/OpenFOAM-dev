@@ -47,14 +47,14 @@ transonicEntrainmentPressureFvPatchScalarField
 {
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchScalarField::operator=(p0_);
+        scalarField::operator=(p0_);
     }
 
     refValue() = p0_;

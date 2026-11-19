@@ -463,14 +463,14 @@ externalCoupledMixedFvPatchField
 {
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator=
+        Field<Type>::operator=
         (
             Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<Type>::operator=(patchInternalField());
+        Field<Type>::operator=(patchInternalField());
     }
 
     commsDir_.expand();

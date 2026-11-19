@@ -41,14 +41,14 @@ Foam::MRFnoSlipFvPatchVectorField::MRFnoSlipFvPatchVectorField
 {
     if (dict.found("value"))
     {
-        fvPatchField<vector>::operator=
+        Field<vector>::operator=
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<vector>::operator=(Zero);
+        Field<vector>::operator=(Zero);
     }
 }
 
@@ -86,7 +86,7 @@ void Foam::MRFnoSlipFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    fvPatchField<vector>::operator=(Zero);
+    Field<vector>::operator=(Zero);
     makeAbsolute(*this);
 
     fixedValueFvPatchVectorField::updateCoeffs();

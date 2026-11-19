@@ -135,7 +135,7 @@ void oscillatingVelocityPointPatchVectorField::updateCoeffs()
     const Time& t = mesh.time();
     const pointPatch& p = this->patch();
 
-    Field<vector>::operator=
+    operator==
     (
         (p0_ + amplitude_*sin(omega_*t.value()) - p.localPoints())
        /t.deltaTValue()

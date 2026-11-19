@@ -116,10 +116,7 @@ void Foam::uniformFixedValueFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    fvPatchField<Type>::operator==
-    (
-        uniformValue_->value(time().value())
-    );
+    this->operator==(uniformValue_->value(time().value()));
 
     fixedValueFvPatchField<Type>::updateCoeffs();
 }

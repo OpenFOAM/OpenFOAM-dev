@@ -43,7 +43,7 @@ pressureNormalInletOutletVelocityFvPatchVectorField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {
-    fvPatchVectorField::operator=
+    vectorField::operator=
     (
         vectorField("value", iF.dimensions(), dict, p.size())
     );

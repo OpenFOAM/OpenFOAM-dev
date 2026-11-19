@@ -71,7 +71,7 @@ thermalBaffle1DFvPatchScalarField
       & mappedPatchBaseBase::from::differentPatch
     );
 
-    fvPatchScalarField::operator=
+    scalarField::operator=
     (
         scalarField("value", iF.dimensions(), dict, p.size())
     );

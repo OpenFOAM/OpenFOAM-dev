@@ -43,7 +43,7 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
 {
     if (dict.found("value") && dict.found("gradient"))
     {
-        fvPatchField<scalar>::operator=
+        Field<scalar>::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
@@ -57,7 +57,7 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
     }
     else
     {
-        fvPatchField<scalar>::operator=(patchInternalField());
+        Field<scalar>::operator=(patchInternalField());
         gradient() = Zero;
     }
 }

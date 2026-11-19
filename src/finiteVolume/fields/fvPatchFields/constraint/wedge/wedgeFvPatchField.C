@@ -126,7 +126,7 @@ void Foam::wedgeFvPatchField<Type>::evaluate(const Pstream::commsTypes)
         this->updateCoeffs();
     }
 
-    fvPatchField<Type>::operator==
+    this->operator==
     (
         transform
         (

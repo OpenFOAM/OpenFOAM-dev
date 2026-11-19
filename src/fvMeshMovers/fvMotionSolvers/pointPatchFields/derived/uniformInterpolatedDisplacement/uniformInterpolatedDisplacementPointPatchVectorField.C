@@ -84,7 +84,7 @@ void Foam::uniformInterpolatedDisplacementPointPatchVectorField::updateCoeffs()
     }
 
     // Extract back from the internal field
-    this->operator==
+    operator==
     (
         patchInternalField(pointInterpolator_->curPointField()())
     );

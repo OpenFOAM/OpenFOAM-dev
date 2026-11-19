@@ -61,7 +61,7 @@ activeBaffleVelocityFvPatchVectorField
     ),
     curTimeIndex_(-1)
 {
-    fvPatchVectorField::operator=(Zero);
+    vectorField::operator=(Zero);
 }
 
 

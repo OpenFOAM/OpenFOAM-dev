@@ -115,7 +115,7 @@ void Foam::fixedProfileFvPatchField<Type>::updateCoeffs()
 
     const scalarField dirCmpt((direction_ & patch().Cf()) - origin_);
 
-    fvPatchField<Type>::operator==(profile_->value(dirCmpt));
+    this->operator==(profile_->value(dirCmpt));
 
     fixedValueFvPatchField<Type>::updateCoeffs();
 }

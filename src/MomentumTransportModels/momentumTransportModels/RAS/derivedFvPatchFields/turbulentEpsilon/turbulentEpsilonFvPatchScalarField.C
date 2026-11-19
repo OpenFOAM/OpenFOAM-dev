@@ -52,7 +52,7 @@ turbulentEpsilonFvPatchScalarField
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
-    fvPatchScalarField::operator=
+    scalarField::operator=
     (
         scalarField("value", iF.dimensions(), dict, p.size())
     );

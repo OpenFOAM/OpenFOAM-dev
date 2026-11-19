@@ -91,7 +91,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
     {
         valuePresent_ = true;
 
-        calculatedFvPatchField<Type>::operator=
+        Field<Type>::operator=
         (
             Field<Type>("value", iF.dimensions(), dict_, p.size())
         );
@@ -107,7 +107,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
             << "    Extrapolating the internal field to the patch."
             << endl;
 
-        calculatedFvPatchField<Type>::operator=(this->patchInternalField());
+        Field<Type>::operator=(this->patchInternalField());
     }
 
     forAllConstIter(dictionary, dict_, iter)

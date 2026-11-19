@@ -425,7 +425,7 @@ void surfaceDisplacementPointPatchVectorField::updateCoeffs()
         }
     }
 
-    this->operator==(currentDisplacement+offset);
+    operator==(currentDisplacement + offset);
 
     fixedValuePointPatchVectorField::updateCoeffs();
 }

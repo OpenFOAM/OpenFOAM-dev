@@ -66,14 +66,14 @@ Foam::waveInletOutletFvPatchField<Type>::waveInletOutletFvPatchField
 {
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator=
+        Field<Type>::operator=
         (
             Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<Type>::operator=(this->patchInternalField());
+        Field<Type>::operator=(this->patchInternalField());
     }
 
     this->refValue() = Zero;

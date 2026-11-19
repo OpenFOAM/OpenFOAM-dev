@@ -49,14 +49,14 @@ freestreamPressureFvPatchScalarField
 
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchScalarField::operator=(freestreamValue());
+        scalarField::operator=(freestreamValue());
     }
 
     refGrad() = Zero;

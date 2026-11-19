@@ -147,7 +147,7 @@ void angularOscillatingDisplacementPointPatchVectorField::updateCoeffs()
     vector axisHat = axis_/mag(axis_);
     vectorField p0Rel(p0_ - origin_);
 
-    vectorField::operator=
+    operator==
     (
         p0Rel*(cos(angle) - 1)
       + (axisHat ^ p0Rel*sin(angle))

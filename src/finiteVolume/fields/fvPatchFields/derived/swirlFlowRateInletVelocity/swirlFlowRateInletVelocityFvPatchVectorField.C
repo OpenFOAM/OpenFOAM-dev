@@ -179,7 +179,7 @@ swirlFlowRateInletVelocityFvPatchVectorField
 
     if (dict.found("value"))
     {
-        fvPatchField<vector>::operator=
+        Field<vector>::operator=
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );

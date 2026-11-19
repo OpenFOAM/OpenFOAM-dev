@@ -47,7 +47,7 @@ filmSurfaceVelocityFvPatchVectorField
 
     if (dict.found("value"))
     {
-        fvPatchVectorField::operator=
+        vectorField::operator=
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );
@@ -55,7 +55,7 @@ filmSurfaceVelocityFvPatchVectorField
     else
     {
         // If the value entry is not present initialise to zero-gradient
-        fvPatchVectorField::operator=(patchInternalField());
+        vectorField::operator=(patchInternalField());
     }
 }
 

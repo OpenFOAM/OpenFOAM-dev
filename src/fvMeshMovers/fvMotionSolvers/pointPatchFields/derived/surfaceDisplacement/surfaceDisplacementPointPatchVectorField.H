@@ -189,14 +189,11 @@ public:
 
     // Member Operators
 
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const surfaceDisplacementPointPatchVectorField&
-        ) = delete;
-
         //- Inherit assignment
         using fixedValuePointPatchVectorField::operator=;
+
+        //- Inherit force-assignment
+        using valuePointPatchField<vector>::operator==;
 };
 
 

@@ -62,7 +62,7 @@ Foam::internalFvPatchField<Type>::internalFvPatchField
             << exit(FatalIOError);
     }
 
-    fvPatchField<Type>::operator=(patchInternalField());
+    Field<Type>::operator=(patchInternalField());
 }
 
 
@@ -110,7 +110,8 @@ void Foam::internalFvPatchField<Type>::evaluate(const Pstream::commsTypes)
         this->updateCoeffs();
     }
 
-    fvPatchField<Type>::operator==(patchInternalField());
+    this->operator==(patchInternalField());
+
     fvPatchField<Type>::evaluate();
 }
 

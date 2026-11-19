@@ -45,14 +45,14 @@ Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
 
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator=
+        Field<Type>::operator=
         (
             Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<Type>::operator=(freestreamValue());
+        Field<Type>::operator=(freestreamValue());
     }
 }
 

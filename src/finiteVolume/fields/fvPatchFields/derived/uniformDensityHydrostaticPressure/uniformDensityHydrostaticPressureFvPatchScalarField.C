@@ -51,14 +51,14 @@ uniformDensityHydrostaticPressureFvPatchScalarField
 {
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchField<scalar>::operator=(pRef_);
+        scalarField::operator=(pRef_);
     }
 }
 

@@ -52,14 +52,14 @@ totalFlowRateAdvectiveDiffusiveFvPatchScalarField
 
     if (dict.found("value"))
     {
-        fvPatchScalarField::operator=
+        scalarField::operator=
         (
             Field<scalar>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fvPatchScalarField::operator=(refValue());
+        scalarField::operator=(refValue());
     }
 }
 

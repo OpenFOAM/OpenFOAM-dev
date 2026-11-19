@@ -50,7 +50,7 @@ specieTransferTemperatureFvPatchScalarField
 {
     if (readValue)
     {
-        fvPatchScalarField::operator==
+        scalarField::operator=
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );

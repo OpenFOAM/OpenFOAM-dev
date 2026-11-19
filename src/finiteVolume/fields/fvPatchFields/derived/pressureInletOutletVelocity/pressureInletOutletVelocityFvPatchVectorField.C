@@ -59,7 +59,7 @@ pressureInletOutletVelocityFvPatchVectorField
 
     if (dict.found("value"))
     {
-        fvPatchVectorField::operator=
+        vectorField::operator=
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );
