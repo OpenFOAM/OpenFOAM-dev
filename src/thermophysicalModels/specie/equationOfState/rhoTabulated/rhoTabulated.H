@@ -178,7 +178,7 @@ public:
             //  Not implemented
             inline scalar h(const scalar p, const scalar T) const;
 
-            //- Return Cp contribution [J/kg/k]
+            //- Return Cp contribution [J/kg/K]
             //  Not implemented
             inline scalar Cp(scalar p, scalar T) const;
 
@@ -186,7 +186,7 @@ public:
             //  Not implemented
             inline scalar e(const scalar p, const scalar T) const;
 
-            //- Return Cv contribution [J/kg/k]
+            //- Return Cv contribution [J/kg/K]
             //  Not implemented
             inline scalar Cv(scalar p, scalar T) const;
 
@@ -204,7 +204,7 @@ public:
             //- Return compression factor []
             inline scalar Z(scalar p, scalar T) const;
 
-            //- Return (Cp - Cv) [J/kg/k]
+            //- Return (Cp - Cv) [J/kg/K]
             //  Not implemented
             inline scalar CpMCv(scalar p, scalar T) const;
 

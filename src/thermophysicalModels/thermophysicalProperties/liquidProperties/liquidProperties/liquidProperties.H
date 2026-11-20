@@ -232,7 +232,7 @@ public:
             //  Note: currently it is assumed the liquid is incompressible
             inline scalar psi(const scalar p, const scalar T) const;
 
-            //- Return (Cp - Cv) [J/kg/k]
+            //- Return (Cp - Cv) [J/kg/K]
             //  Note: currently it is assumed the liquid is incompressible
             //  so CpMCv = 0
             inline scalar CpMCv(const scalar p, const scalar T) const;

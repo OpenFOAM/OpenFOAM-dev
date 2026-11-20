@@ -159,13 +159,13 @@ public:
             //- Return enthalpy contribution [J/kg]
             inline scalar h(const scalar p, const scalar T) const;
 
-            //- Return Cp contribution [J/kg/k]
+            //- Return Cp contribution [J/kg/K]
             inline scalar Cp(scalar p, scalar T) const;
 
             //- Return internal energy contribution [J/kg]
             inline scalar e(const scalar p, const scalar T) const;
 
-            //- Return Cv contribution [J/kg/k]
+            //- Return Cv contribution [J/kg/K]
             inline scalar Cv(scalar p, scalar T) const;
 
             //- Return entropy contribution to the integral of Cp/T [J/kg/K]
@@ -180,7 +180,7 @@ public:
             //- Return compression factor []
             inline scalar Z(scalar p, scalar T) const;
 
-            //- Return (Cp - Cv) [J/kg/k]
+            //- Return (Cp - Cv) [J/kg/K]
             inline scalar CpMCv(scalar p, scalar T) const;
 
             //- Return volumetric coefficient of thermal expansion [1/T]
