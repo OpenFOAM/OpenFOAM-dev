@@ -180,6 +180,9 @@ public:
             //- Return const access to the source name
             inline const word& name() const;
 
+            //- Return name as the keyword
+            inline const word& keyword() const;
+
             //- Return const access to the mesh database
             inline const fvMesh& mesh() const;
 

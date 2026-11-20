@@ -31,6 +31,12 @@ inline const Foam::word& Foam::fvConstraint::name() const
 }
 
 
+inline const Foam::word& Foam::fvConstraint::keyword() const
+{
+    return name_;
+}
+
+
 inline const Foam::fvMesh& Foam::fvConstraint::mesh() const
 {
     return mesh_;
