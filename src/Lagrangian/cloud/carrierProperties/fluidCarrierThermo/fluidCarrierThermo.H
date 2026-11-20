@@ -136,6 +136,8 @@ public:
             //- Dynamic viscosity [kg/m/s]
             virtual const CloudDerivedField<scalar>& mu() const = 0;
 
+            using fluidLagrangianSubThermo::nu;
+
             //- Kinematic viscosity [m^2/s]
             virtual const CloudDerivedField<scalar>& nu() const = 0;
 };
