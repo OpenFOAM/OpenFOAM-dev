@@ -53,7 +53,13 @@ namespace fv
 void Foam::fv::meanVelocityForce::readCoeffs(const dictionary& dict)
 {
     UName_ = dict.lookupOrDefault<word>("U", "U");
-    Ubar_ = dict.lookup<vector>("Ubar");
+    UbarFunction_ = Function1<vector>::New
+    (
+        "Ubar",
+        mesh().time().userUnits(),
+        dimensions::velocity,
+        dict
+    );
     relaxation_ = dict.lookupOrDefault<scalar>("relaxation", 1);
 }
 
@@ -78,6 +84,7 @@ void Foam::fv::meanVelocityForce::writeProps
                 IOobject::NO_WRITE
             )
         );
+        propsDict.add("Ubar", Ubar_);
         propsDict.add("gradient", gradP);
         propsDict.regIOobject::write();
     }
@@ -97,8 +104,8 @@ Foam::fv::meanVelocityForce::meanVelocityForce
     fvConstraint(name, modelType, mesh, dict),
     zone_(mesh, coeffs(dict)),
     UName_(word::null),
-    Ubar_(vector::uniform(NaN)),
     relaxation_(NaN),
+    Ubar_(vector::uniform(NaN)),
     gradP0_(0),
     dGradP_(0),
     rAPtr_(nullptr)
@@ -171,6 +178,8 @@ bool Foam::fv::meanVelocityForce::constrain
         mesh(),
         dimensionedVector(eqn.dimensions()/dimensions::volume, Zero)
     );
+
+    Ubar_ = UbarFunction_->value(mesh().time().value());
 
     const scalar gradP = gradP0_ + dGradP_;
 

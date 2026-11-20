@@ -57,6 +57,7 @@ SourceFiles
 
 #include "fvConstraint.H"
 #include "fvCellZone.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,11 +82,14 @@ class meanVelocityForce
         //- Name of the velocity field
         word UName_;
 
-        //- Average velocity
-        vector Ubar_;
+        //- Average velocity function
+        autoPtr<Function1<vector>> UbarFunction_;
 
         //- Relaxation factor
         scalar relaxation_;
+
+        //- Average velocity
+        mutable vector Ubar_;
 
         //- Pressure gradient before correction
         mutable scalar gradP0_;
@@ -140,6 +144,12 @@ public:
         const vector& Ubar() const
         {
             return Ubar_;
+        }
+
+        //- Return the current pressure gradient
+        scalar gradP() const
+        {
+            return gradP0_ + dGradP_;
         }
 
         //- Return the list of fields constrained by the fvConstraint
