@@ -464,14 +464,14 @@ bool Foam::functionObjects::comfort::execute()
     if (foundObject<volScalarField>("k"))
     {
         const volScalarField& k = lookupObject<volScalarField>("k");
-        TI = sqrt(2/3*k)/Umag;
+        TI = 100*sqrt((2.0/3.0)*k)/Umag;
     }
 
     // For unit correctness
     const dimensionedScalar correctUnit
     (
         "correctUnit",
-        dimensionSet(0,- 1.62, 1.62, -1, 0, 0, 0),
+        dimensionSet(0, -1.62, 1.62, -1, 0, 0, 0),
         1
     );
 
