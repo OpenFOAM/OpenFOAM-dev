@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ Foam::C9H20::C9H20()
         1.56e+4
     ),
     rho_("rho", 62.06019846, 0.26147, 594.6, 0.28281),
-    pv_("pv", 109.35, -90304.0, -12.882, 7.8544e-06, 2.0),
+    pv_("pv", 109.35, -9030.4, -12.882, 7.8544e-06, 2.0),
     hl_("hl", 594.60, 470691.886665939, 0.38522, 0.0, 0.0, 0.0),
     Cp_
     (
