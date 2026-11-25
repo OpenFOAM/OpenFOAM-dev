@@ -55,6 +55,9 @@ class solidDisplacementThermo
         //- Switch to enable plane stress
         Switch planeStress_;
 
+        //- Plane stress 0 component
+        label planeStressCmpt_;
+
         //- Switch to enable thermal stress
         Switch thermalStress_;
 
@@ -94,6 +97,19 @@ public:
         bool planeStress() const
         {
             return planeStress_;
+        }
+
+        //- Returns true to enable plane stress
+        label planeStressCmpt() const
+        {
+            if (!planeStress_)
+            {
+                FatalErrorInFunction
+                    << "planeStressCmpt only valid for planeStress cases"
+                    << exit(FatalError);
+            }
+
+            return planeStressCmpt_;
         }
 
         //- Returns true to enable thermal stress

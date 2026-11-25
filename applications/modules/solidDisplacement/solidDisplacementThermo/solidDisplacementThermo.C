@@ -42,12 +42,34 @@ Foam::solidDisplacementThermo::solidDisplacementThermo
 )
 :
     constSolidThermo(mesh, phaseName),
-    planeStress_(lookup("planeStress")),
+    planeStress_(false),
+    planeStressCmpt_(-1),
     thermalStress_(lookup("thermalStress")),
     E_(readProperty<scalar>("E", dimensions::pressure)),
     nu_(readProperty<scalar>("nu", dimless)),
     alphav_(readProperty<scalar>("alphav", dimless/dimensions::temperature))
-{}
+{
+    if (mesh.nSolutionD() == 2)
+    {
+        lookup("planeStress") >> planeStress_;
+
+        if (planeStress_)
+        {
+            if (mesh.solutionD()[0] == 0)
+            {
+                planeStressCmpt_ = symmTensor::XX;
+            }
+            else if (mesh.solutionD()[1] == 0)
+            {
+                planeStressCmpt_ = symmTensor::YY;
+            }
+            else
+            {
+                planeStressCmpt_ = symmTensor::ZZ;
+            }
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -271,6 +271,16 @@ void Foam::solvers::solidDisplacement::postSolve()
             sigma = sigma - I*(threeKalpha*thermo.T());
         }
 
+        // For planeStress set the normal component of sigma to 0
+        if (thermo_.planeStress())
+        {
+            sigma.replace
+            (
+                thermo.planeStressCmpt(),
+                dimensionedScalar(sigma.dimensions(), 0)
+            );
+        }
+
         volScalarField sigmaEq
         (
             IOobject
