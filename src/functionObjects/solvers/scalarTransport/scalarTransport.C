@@ -123,7 +123,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
     D_("D", dimensions::kinematicViscosity, NaN),
     Dname_(word::null),
     alphal_("alphal", dimless, NaN),
-    alphat_("alphal", dimless, NaN),
+    alphat_("alphat", dimless, NaN),
     s_
     (
         IOobject
