@@ -172,23 +172,37 @@ void Foam::domainDecomposition::processInterCyclics
 
             if (nccPp.owner() != owner) continue;
 
-            const polyPatch& origPp = nccPp.origPatch();
-            const polyPatch& nbrOrigPp = nccPp.nbrPatch().origPatch();
-
-            const labelUList& origPatchFaceCells = origPp.faceCells();
-            const labelUList& nbrOrigPatchFaceCells = nbrOrigPp.faceCells();
-
-            // Add all possible interfaces between processors that contain the
-            // original patches
-            forAll(origPatchFaceCells, origFacei)
+            // Determine the set of processors connected to the original patches
+            auto patchProcs = [&](const polyPatch& patch)
             {
-                const label ownerProc =
-                    cellProc[origPatchFaceCells[origFacei]];
+                boolList visited(nProcs(), false);
+                DynamicList<label> dynProcs(nProcs());
 
-                forAll(nbrOrigPatchFaceCells, nbrOrigFacei)
+                forAll(patch, patchFacei)
                 {
-                    const label nbrProc =
-                        cellProc[nbrOrigPatchFaceCells[nbrOrigFacei]];
+                    const label proci = cellProc[patch.faceCells()[patchFacei]];
+
+                    if (visited[proci]) continue;
+
+                    visited[proci] = true;
+                    dynProcs.append(proci);
+                }
+
+                labelList procs;
+                procs.transfer(dynProcs);
+                return procs;
+            };
+            const labelList ownerProcs = patchProcs(nccPp.origPatch());
+            const labelList nbrProcs = patchProcs(nccPp.nbrPatch().origPatch());
+
+            // Add an (empty) interface for each pair of processors
+            forAll(ownerProcs, owneri)
+            {
+                const label ownerProc = ownerProcs[owneri];
+
+                forAll(nbrProcs, nbri)
+                {
+                    const label nbrProc = nbrProcs[nbri];
 
                     if
                     (
