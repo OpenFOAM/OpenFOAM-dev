@@ -160,7 +160,7 @@ void Foam::Time::setControls()
 
     // Check if time directory exists
     // If not increase time precision to see if it is formatted differently.
-    if (!fileHandler().exists(timePath(), false, true))
+    if (!fileHandler().isDir(fileHandler().filePath(timePath())))
     {
         int oldPrecision = curPrecision_;
         int requiredPrecision = -1;
@@ -176,7 +176,7 @@ void Foam::Time::setControls()
             setTime(startTime_, 0);
 
             // Check the existence of the time directory with the new format
-            if (fileHandler().exists(timePath(), false, true))
+            if (fileHandler().isDir(fileHandler().filePath(timePath())))
             {
                 requiredPrecision = curPrecision_;
             }
