@@ -242,7 +242,7 @@ void Foam::cellCuts::syncProc()
                             else
                             {
                                 label oppFp = relCut[i]-1;
-                                label fp = f.size()-1-oppFp;
+                                label fp = oppFp == 0 ? 0 : f.size()-oppFp;
                                 absoluteCut[i] = vertToEVert(f[fp]);
                             }
                         }
